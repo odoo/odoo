@@ -109,7 +109,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             account_id=self.internet_account,
         )
 
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_on_exceeded_per_transaction_limit(self):
         '''
@@ -154,7 +154,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_a,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         with freeze_time('2024-07-06'):
             move_1 = self._create_invoice_one_line(
@@ -163,7 +163,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_b,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
         with freeze_time('2024-07-16'):
             move_2 = self._create_invoice_one_line(
@@ -179,7 +179,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_c,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move_3.l10n_in_warning, False)
+        self.assertEqual(move_3.l10n_in_warning, {})
 
         with freeze_time('2024-09-16'):
             move_4 = self._create_invoice_one_line(
@@ -201,7 +201,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.internet_account,
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         move_1 = self._create_invoice_one_line(
             partner_id=self.partner_foreign_2,
@@ -209,7 +209,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_b,
             account_id=self.internet_account,
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
         # same pan number
         move_2 = self._create_invoice_one_line(
@@ -217,7 +217,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.internet_account,
         )
-        self.assertEqual(move_2.l10n_in_warning, False)
+        self.assertEqual(move_2.l10n_in_warning, {})
 
         move_3 = self._create_invoice_one_line(
             partner_id=self.partner_b,
@@ -236,7 +236,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 price_unit=20000,
                 company_id=self.branch_a,
             )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         with freeze_time('2024-07-06'):
             move_1 = self._create_invoice_one_line(
@@ -244,7 +244,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 price_unit=20000,
                 company_id=self.branch_b,
             )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
         with freeze_time('2024-08-06'):
             move_2 = self._create_invoice_one_line(
@@ -259,14 +259,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 price_unit=5000,
                 company_id=self.branch_a,
             )
-        self.assertEqual(move_3.l10n_in_warning, False)
+        self.assertEqual(move_3.l10n_in_warning, {})
 
         with freeze_time('2024-10-07'):
             move_4 = self._create_invoice_one_line(
                 price_unit=20000,
                 company_id=self.branch_b,
             )
-        self.assertEqual(move_4.l10n_in_warning, False)
+        self.assertEqual(move_4.l10n_in_warning, {})
 
         with freeze_time('2024-11-08'):
             move_5 = self._create_invoice_one_line(
@@ -286,7 +286,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.internet_account
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         move_1 = self._create_invoice_one_line(
             partner_id=self.partner_b,
@@ -296,14 +296,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self._reverse_invoice(move, date='2024-09-01')
 
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
         move_2 = self._create_invoice_one_line(
             price_unit=2000,
             company_id=self.branch_a,
             account_id=self.internet_account
         )
-        self.assertEqual(move_2.l10n_in_warning, False)
+        self.assertEqual(move_2.l10n_in_warning, {})
 
     def test_tcs_tds_warning_cleared_on_available_tax(self):
         '''
@@ -318,7 +318,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
         )
 
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_for_multiple_accounts_in_lines(self):
         '''
@@ -347,7 +347,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         self.tds_wizard_entry(move=move_1, lines=[(self.tax_194ib, 100000), (self.tax_194j, 100000), (self.tax_194c, 100000)])
         move_1.button_draft()
         move_1.action_post()
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
     def test_tcs_tds_warning_for_if_line_has_price_zero(self):
         '''
@@ -366,7 +366,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             price_unit=0,
             company_id=self.branch_a,
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
     def test_tcs_tds_warning_for_all_lines_do_not_have_taxes(self):
         '''
@@ -382,7 +382,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
         self.tds_wizard_entry(move=move, lines=[(self.tax_194c, 100000)])
         move.line_ids.remove_move_reconcile()
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_for_company_branches(self):
         '''
@@ -422,7 +422,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.sale_account
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_tds_use_in_invoice(self):
         '''
@@ -434,7 +434,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             price_unit=110000,
             company_id=self.branch_a,
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_for_multiple_accounts_same_section_in_lines(self):
         '''
@@ -458,14 +458,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 self._prepare_invoice_line(price_unit=13000, account_id=self.purchase_account),
             ],
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
         move_2 = self._create_invoice_one_line(
             price_unit=30000,
             company_id=self.branch_a,
             account_id=self.house_expense_account,
         )
-        self.assertEqual(move_2.l10n_in_warning, False)
+        self.assertEqual(move_2.l10n_in_warning, {})
 
         move_3 = self._create_invoice_one_line(
             price_unit=10000,
@@ -485,14 +485,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             account_id=self.purchase_account,
         )
         move.button_cancel()
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         move_1 = self._create_invoice_one_line(
             price_unit=25000,
             company_id=self.branch_a,
             account_id=self.purchase_account,
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertEqual(move_1.l10n_in_warning, {})
 
         move_2 = self._create_invoice_one_line(
             price_unit=85000,

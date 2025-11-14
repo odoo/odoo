@@ -535,8 +535,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertRecordValues(wizard, [{
             'move_id': invoice.id,
             'sending_methods': ['email', 'manual'],
-            'extra_edis': False,
-            'extra_edi_checkboxes': False,
+            'extra_edis': {},
+            'extra_edi_checkboxes': {},
             'pdf_report_id': wizard._get_default_pdf_report_id(invoice).id,
             'display_pdf_report_id': False,
             'template_id': wizard._get_default_mail_template_id(invoice).id,

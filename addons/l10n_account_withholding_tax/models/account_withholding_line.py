@@ -444,7 +444,7 @@ class AccountWithholdingLine(models.AbstractModel):
         # /!\ Please keep this aligned with _prepare_withholding_lines_commands to ensure correct computation.
         return frozendict({
             'name': self.name,
-            'analytic_distribution': self.analytic_distribution,
+            'analytic_distribution': self.analytic_distribution or False,
             'account': self.account_id.id,
             'tax_id': self.tax_id.id,
             'skip': False,

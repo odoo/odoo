@@ -108,7 +108,7 @@ class TestResPartner(TestCrmCommon):
                 [{'iconClass': 'fa-star', 'label': 'Opportunities', 'value': 3, 'tagClass': 'o_tag_color_8'},
                  {'iconClass': 'fa-usd', 'label': 'Sale Orders', 'value': 1, 'tagClass': 'o_tag_color_2'}],
                 [{'iconClass': 'fa-star', 'label': 'Opportunities', 'value': 2, 'tagClass': 'o_tag_color_8'}],
-                False,
+                [],
             ),
             strict=True,
         ):

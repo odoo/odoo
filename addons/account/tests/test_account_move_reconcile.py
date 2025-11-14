@@ -5196,10 +5196,10 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             analytic_account_b.id: 100,
         }
         analytic_distribution_a_serialized = {
-            str(analytic_account_a.id): 100,
+            str(analytic_account_a.id): 100.0,
         }
         analytic_distribution_b_serialized = {
-            str(analytic_account_b.id): 100,
+            str(analytic_account_b.id): 100.0,
         }
 
         tax = self.env['account.tax'].create({
@@ -5383,10 +5383,10 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             analytic_account_b.id: 100,
         }
         analytic_distribution_a_serialized = {
-            str(analytic_account_a.id): 100,
+            str(analytic_account_a.id): 100.0,
         }
         analytic_distribution_b_serialized = {
-            str(analytic_account_b.id): 100,
+            str(analytic_account_b.id): 100.0,
         }
 
         tax = self.env['account.tax'].create({

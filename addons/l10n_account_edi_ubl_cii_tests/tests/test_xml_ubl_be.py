@@ -582,7 +582,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self.assertRecordValues(wizard, [{
             'sending_methods': ['manual'],
             'invoice_edi_format': 'ubl_bis3',
-            'extra_edi_checkboxes': False,
+            'extra_edi_checkboxes': {},
         }])
         self._assert_mail_attachments_widget(wizard, [
             {

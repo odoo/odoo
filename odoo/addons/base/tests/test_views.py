@@ -438,7 +438,7 @@ class TestViewInheritance(ViewCase):
             ],
         )
 
-        self.assertEqual(child_primary_no_arch.invalid_locators, False)
+        self.assertEqual(child_primary_no_arch.invalid_locators, [])
 
     def test_invalid_locators_with_valid_xpath(self):
         """ Check ir.ui.view's invalid_locators field is computed correctly."""
@@ -537,7 +537,7 @@ class TestViewInheritance(ViewCase):
         # Assert that accessing invalid_locators does not cause database writes.
         actual_queries = []
         with contextmanager(lambda: self._patchExecute(actual_queries))():
-            self.assertEqual(child_applied.invalid_locators, False)
+            self.assertEqual(child_applied.invalid_locators, [])
         self.assertTrue(len(actual_queries) > 0)
 
         re_sql_update = re.compile(r'\bupdate\b', re.IGNORECASE)
@@ -546,7 +546,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(child_view.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 8}])
         self.assertEqual(child_view2.invalid_locators, [{'tag': 'field', 'attrib': {'name': 'user_id', 'position': 'after'}, 'sourceline': 5}])
         self.assertEqual(child_view3.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 2}])
-        self.assertEqual(child_view4.invalid_locators, False)
+        self.assertEqual(child_view4.invalid_locators, [])
 
     def test_nested_move_invalid_locator(self):
         """ Check ir.ui.view's invalid_locators field is computed correctly."""
@@ -575,7 +575,7 @@ class TestViewInheritance(ViewCase):
             </data>
             """,
         })
-        self.assertEqual(child_view.invalid_locators, False)
+        self.assertEqual(child_view.invalid_locators, [])
 
         child_view.arch = """
             <data>

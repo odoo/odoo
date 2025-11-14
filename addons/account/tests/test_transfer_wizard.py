@@ -560,8 +560,8 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         transfer_move = self.env['account.move'].browse(wizard.do_action()['res_id'])
 
         self.assertRecordValues(transfer_move.line_ids, [
-            {'balance': -4000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 25}},
-            {'balance': 1000, 'analytic_distribution': {str(self.analytic_account_1.id): 100}},
-            {'balance': 2000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 50}},
-            {'balance': 1000, 'analytic_distribution': False},
+            {'balance': -4000.0, 'analytic_distribution': {str(self.analytic_account_1.id): 50.0, str(self.analytic_account_2.id): 25.0}},
+            {'balance': 1000.0, 'analytic_distribution': {str(self.analytic_account_1.id): 100.0}},
+            {'balance': 2000.0, 'analytic_distribution': {str(self.analytic_account_1.id): 50.0, str(self.analytic_account_2.id): 50.0}},
+            {'balance': 1000.0, 'analytic_distribution': False},
         ])

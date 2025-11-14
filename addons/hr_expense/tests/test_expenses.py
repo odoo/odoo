@@ -281,7 +281,7 @@ class TestExpenses(TestExpenseCommon):
                 'tax_ids': [],
                 'tax_amount_currency': 0.00,
                 'untaxed_amount_currency': 200.00,
-                'analytic_distribution': False,
+                'analytic_distribution': {},
                 'split_expense_origin_id': expense.id,
             }, {
                 'name': expense.name,
@@ -291,7 +291,7 @@ class TestExpenses(TestExpenseCommon):
                 'tax_ids': [self.tax_purchase_a.id],
                 'tax_amount_currency': 39.13,
                 'untaxed_amount_currency': 260.87,
-                'analytic_distribution': {str(self.analytic_account_1.id): 100},
+                'analytic_distribution': {str(self.analytic_account_1.id): 100.0},
                 'split_expense_origin_id': expense.id,
             }, {
                 'name': expense.name,
@@ -301,7 +301,7 @@ class TestExpenses(TestExpenseCommon):
                 'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
                 'tax_amount_currency': 115.38,
                 'untaxed_amount_currency': 384.62,
-                'analytic_distribution': {str(self.analytic_account_2.id): 100},
+                'analytic_distribution': {str(self.analytic_account_2.id): 100.0},
                 'split_expense_origin_id': expense.id,
             }
         ])

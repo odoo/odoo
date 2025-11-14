@@ -665,13 +665,13 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             {'balance': -200.0,   'analytic_distribution': False},
             # withholding lines:
             {'balance': 2.0,      'analytic_distribution': {
-                str(self.analytic_account_3.id): 50,
-                str(self.analytic_account_4.id): 50,
+                str(self.analytic_account_3.id): 50.0,
+                str(self.analytic_account_4.id): 50.0,
             }},
             # base line:
             {'balance': 200.0,    'analytic_distribution': {
-                str(self.analytic_account_3.id): 50,
-                str(self.analytic_account_4.id): 50,
+                str(self.analytic_account_3.id): 50.0,
+                str(self.analytic_account_4.id): 50.0,
             }},
             # Counterpart:
             {'balance': -200.0,   'analytic_distribution': False},

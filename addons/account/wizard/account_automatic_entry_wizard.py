@@ -194,12 +194,12 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     distribution_values = counterpart_distribution_amount[grouping_key]
                     distribution_values[account_id] = (line.balance * distribution + distribution_values.get(account_id, 0) * 100) / 100
             counterpart_balances[grouping_key]['analytic_distribution'] = counterpart_distribution_amount[grouping_key] or {}
-            grouped_source_lines[(
+            grouped_source_lines[
                 line.partner_id,
                 line.currency_id,
                 line.account_id,
-                line.analytic_distribution and frozendict(line.analytic_distribution),
-            )] += line
+                frozendict(line.analytic_distribution) if line.analytic_distribution else False,
+            ] += line
 
         # Generate counterpart lines' vals
         for (counterpart_partner, counterpart_currency), counterpart_vals in counterpart_balances.items():

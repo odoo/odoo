@@ -2192,7 +2192,7 @@ class AccountTax(models.Model):
         return {
             'partner_id': base_line['partner_id'].id,
             'currency_id': base_line['currency_id'].id,
-            'analytic_distribution': base_line['analytic_distribution'],
+            'analytic_distribution': base_line['analytic_distribution'] or False,
             'account_id': base_line['account_id'].id,
             'tax_ids': [Command.set(base_line['tax_ids'].ids)],
         }
@@ -2222,7 +2222,7 @@ class AccountTax(models.Model):
                 base_line_grouping_key['analytic_distribution']
                 if tax.analytic or not tax_rep.use_in_tax_closing
                 else False
-            ),
+            ) or False,
             'account_id': tax_rep_data['account'].id or base_line_grouping_key['account_id'],
             'tax_ids': [Command.set(tax_rep_data['taxes'].ids)],
             'tax_tag_ids': [Command.set(tax_rep_data['tax_tags'].ids)],
@@ -2245,7 +2245,7 @@ class AccountTax(models.Model):
             'partner_id': tax_line['partner_id'].id,
             'currency_id': tax_line['currency_id'].id,
             'group_tax_id': tax_line['group_tax_id'].id,
-            'analytic_distribution': tax_line['analytic_distribution'],
+            'analytic_distribution': tax_line['analytic_distribution'] or False,
             'account_id': tax_line['account_id'].id,
             'tax_ids': [Command.set(tax_line['tax_ids'].ids)],
             'tax_tag_ids': [Command.set(tax_line['tax_tag_ids'].ids)],
