@@ -15,6 +15,19 @@ registry.category("web_tour.tours").add('website_sale.product_page_zoom', {
             expectUnloadPage: true,
         },
         {
+            content: "check that the product image has a srcset",
+            trigger: imageSelector,
+            run() {
+                const img = document.querySelector(imageSelector);
+                if (!img?.srcset) {
+                    throw new Error('Image srcset attribute missing');
+                }
+                if (!img?.srcset.includes('image_512')) {
+                    throw new Error('Srcset should list at least image_512');
+                }
+            },
+        },
+        {
             content: "click on the image",
             trigger: imageSelector,
             run: "click",
