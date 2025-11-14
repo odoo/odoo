@@ -108,7 +108,7 @@
             <i class="fa fa-fw fa-caret-left" role="img"/>
             <i class="fa fa-fw fa-caret-down" role="img"/>
         </a>
-        <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if category_collapsed else ''}"
+        <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if (not category or category_collapsed) else ''}"
             t-attf-id="collapse-#{category.id if category else 0}">
             <t t-set="is_member" t-value="current_slide.channel_id.is_member"/>
             <t t-set="can_access_channel" t-value="is_member or current_slide.channel_id.can_publish"/>
