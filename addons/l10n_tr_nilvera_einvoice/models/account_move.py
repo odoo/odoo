@@ -4,6 +4,7 @@ from urllib.parse import quote, urlencode, urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 MOVE_TYPE_CATEGORY_MAP = {
@@ -203,22 +204,20 @@ class AccountMove(models.Model):
             response = client.request("GET", f"/{invoice_channel}/{quote(document_category)}", params={"StatusCode": ["succeed"]})
             if not response.get('Content'):
                 return
+
             journal = self._l10n_tr_get_nilvera_invoice_journal(journal_type)
-            document_uuids, document_uuids_records, document_uuids_references = self._l10n_tr_build_document_uuids_list(response)
+            response_document_uuids = [content.get('UUID') for content in response.get('Content')]
+            existing_document_uuids = self.env['account.move'].search([
+                ('l10n_tr_nilvera_uuid', 'in', response_document_uuids),
+            ]).mapped('l10n_tr_nilvera_uuid')
             moves = self.env['account.move']
-            for document_uuid in document_uuids:
+
+            for document_uuid in response_document_uuids:
                 # Skip invoices that have already been downloaded.
-                if document_uuid in document_uuids_records:
+                if document_uuid in existing_document_uuids:
                     continue
-                move = document_uuids_records.get(document_uuid)
-                # If an account.move doesn't exist, create it and attach the document
-                if not move:
-                    move = self._l10n_tr_nilvera_get_invoice_from_uuid(client, journal, document_uuid, document_category, invoice_channel)
-                    self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid, document_category, invoice_channel)
-                # If account.move exists, but doesn't have a reference and its reference is found in the nilvera document references, attach the document
-                elif not move.ref and (nilvera_reference := document_uuids_references.get(document_uuid)):
-                    move.ref = nilvera_reference
-                    self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid, document_category, invoice_channel)
+                move = self._l10n_tr_nilvera_get_invoice_from_uuid(client, journal, document_uuid, document_category, invoice_channel)
+                self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid, document_category, invoice_channel)
                 moves |= move
                 self.env.cr.commit()
             journal._notify_einvoices_received(moves)
@@ -237,6 +236,7 @@ class AccountMove(models.Model):
             return self.env.company.l10n_tr_nilvera_purchase_journal_id
         return None
 
+    @api.deprecated("Deprecated since 19.0, logic moved to _l10n_tr_nilvera_get_documents")
     def _l10n_tr_build_document_uuids_list(self, response):
         contents = response.get("Content", [])
         document_uuids = [content.get("UUID") for content in contents if content.get("UUID")]
@@ -302,7 +302,7 @@ class AccountMove(models.Model):
             f"/{invoice_channel}/{quote(document_category)}/{quote(document_uuid)}/pdf",
         )
 
-        filename = f'{invoice.ref}.pdf' if invoice.ref else 'Nilvera PDF.pdf'
+        filename = f'{invoice.ref}.pdf' if invoice.ref else invoice._get_invoice_nilvera_pdf_report_filename()
 
         attachment = self.env['ir.attachment'].create({
             'name': filename,
@@ -315,6 +315,23 @@ class AccountMove(models.Model):
         # The created attachement coming form Nilvera should be the main attachment
         invoice.message_main_attachment_id = attachment
         invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachment.ids)
+
+    def l10n_tr_nilvera_get_pdf(self):
+        with _get_nilvera_client(self.env.company) as client:
+            for invoice in self:
+                if (
+                        invoice.l10n_tr_nilvera_customer_status not in {'einvoice', 'earchive'}
+                        or invoice.message_main_attachment_id.id != invoice.invoice_pdf_report_id.id
+                        or invoice.l10n_tr_nilvera_send_status != 'succeed'
+                ):
+                    continue
+                self._l10n_tr_nilvera_add_pdf_to_invoice(
+                    client,
+                    invoice,
+                    invoice.l10n_tr_nilvera_uuid,
+                    document_category="Sale",
+                    invoice_channel=invoice.l10n_tr_nilvera_customer_status,
+                )
 
     def _l10n_tr_nilvera_einvoice_get_error_messages_from_response(self, response):
         msg = ""
@@ -354,6 +371,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.partner_id.l10n_tr_nilvera_customer_alias_id.name
 
+    def _get_invoice_nilvera_pdf_report_filename(self):
+        """ Get the filename of the Nilvera PDF invoice report. """
+        self.ensure_one()
+        return f"{self._get_move_display_name().replace(' ', '_').replace('/', '_')}_einvoice.pdf"
+
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------
@@ -379,3 +401,37 @@ class AccountMove(models.Model):
             ('move_type', 'in', self._l10n_tr_types_to_update_status()),
         ])
         invoices_to_update._l10n_tr_nilvera_get_submitted_document_status()
+
+    def _cron_nilvera_get_sale_pdf(self, batch_size=100):
+        """ Fetches the Nilvera generated PDFs for the sales generated on Odoo. """
+        # We fetch all invoices whose message_main_attachment_id is the same
+        # as their invoice_pdf_report_id attachment. After we add the Nilvera
+        # PDF, `_l10n_tr_nilvera_add_pdf_to_invoice` will set
+        # `message_main_attachment_id` to the Nilvera attachment, so they
+        # won't be picked up by next runs.
+        # This is a workaround to do this in stable without adding a dedicated field.
+        sql = SQL("""
+          SELECT am.id
+            FROM account_move am
+            JOIN ir_attachment ia
+              ON ia.res_model = 'account.move'
+             AND ia.res_id = am.id
+             AND ia.mimetype = 'application/pdf'
+             AND ia.res_field = 'invoice_pdf_report_file'
+           WHERE am.message_main_attachment_id = ia.id
+             AND am.l10n_tr_nilvera_send_status = 'succeed'
+             AND am.move_type = 'out_invoice'
+           LIMIT %s
+        """, batch_size)
+        move_ids = [row[0] for row in self.env.execute_query(sql)]
+        invoice_to_fetch_pdf = self.env['account.move'].browse(move_ids)
+        for company, invoices in invoice_to_fetch_pdf.grouped("company_id").items():
+            with _get_nilvera_client(company) as client:
+                for invoice in invoices:
+                    self._l10n_tr_nilvera_add_pdf_to_invoice(
+                        client,
+                        invoice,
+                        invoice.l10n_tr_nilvera_uuid,
+                        document_category="Sale",
+                        invoice_channel=invoice.l10n_tr_nilvera_customer_status,
+                    )
