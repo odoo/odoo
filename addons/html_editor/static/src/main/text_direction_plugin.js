@@ -40,7 +40,10 @@ export class TextDirectionPlugin extends Plugin {
         ].filter((n) => isTextNode(n) && isContentEditable(n) && n.nodeValue.trim().length);
         const blocks = new Set(
             targetedTextNodes.map(
-                (textNode) => closestElement(textNode, "ul,ol") || closestBlock(textNode)
+                (textNode) =>
+                    closestElement(textNode, "ul,ol") ||
+                    closestElement(textNode, "[data-embedded='toggleBlock']") ||
+                    closestBlock(textNode)
             )
         );
 
