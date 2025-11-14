@@ -77,6 +77,13 @@ describe("custom selection", () => {
         const clientX = cellRect.right;
         const clientY = cellRect.top + cellRect.height / 2;
 
+        // Simulate mousemove at the right border of first cell.
+        await manuallyDispatchProgrammaticEvent(firstTd, "mousemove", {
+            detail: 1,
+            clientX,
+            clientY,
+        });
+
         // Simulate mousedown at the right border of first cell.
         await manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
             detail: 1,

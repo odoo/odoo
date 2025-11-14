@@ -2,6 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import {
     click,
     hover,
+    manuallyDispatchProgrammaticEvent,
     queryAll,
     queryAllAttributes,
     queryOne,
@@ -1594,6 +1595,175 @@ test("should redistribute excess width from larger columns to current column", a
             </table>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
+    );
+});
+
+test("should reset row heights on double-clicking the shared border", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr style="height: 38px;"><td class="a"><p><br></p></td></tr>
+                    <tr style="height: 100px;"><td class="b"><p><br></p></td></tr>
+                    <tr style="height: 150px;"><td class="c"><p><br></p></td></tr>
+                    <tr style="height: 38px;"><td class="d"><p><br></p></td></tr>
+                </tbody>
+            </table>
+        `)
+    );
+
+    const td = el.querySelector("td.b");
+    const rect = td.getBoundingClientRect();
+    await manuallyDispatchProgrammaticEvent(td, "dblclick", {
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.bottom,
+    });
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr style=""><td class="a"><p><br></p></td></tr>
+                    <tr style=""><td class="b"><p><br></p></td></tr>
+                    <tr style=""><td class="c"><p><br></p></td></tr>
+                    <tr style=""><td class="d"><p><br></p></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+    );
+});
+
+test("should redistribute excess width on double-clicking the shared column border", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 700px">
+                <tbody>
+                    <tr>
+                        <td style="width: 120px;" class="a">1</td>
+                        <td style="width: 80px;" class="b">2</td>
+                        <td style="width: 50px;" class="c">3</td>
+                        <td style="width: 200px;" class="d">4</td>
+                        <td style="width: 50px;" class="e">5</td>
+                        <td style="width: 80px;" class="f">6</td>
+                        <td style="width: 120px;" class="g">7</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 120px;" class="h">8</td>
+                        <td style="width: 80px;" class="i">9</td>
+                        <td style="width: 50px;" class="j">10</td>
+                        <td style="width: 200px;" class="k">11</td>
+                        <td style="width: 50px;" class="l">12</td>
+                        <td style="width: 80px;" class="m">13</td>
+                        <td style="width: 120px;" class="n">14</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    const td = el.querySelector("td.d");
+    const tdRect = td.getBoundingClientRect();
+    await manuallyDispatchProgrammaticEvent(td, "dblclick", {
+        clientX: tdRect.right,
+        clientY: tdRect.top + tdRect.height / 2,
+    });
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table" style="width: 700px">
+                <tbody>
+                    <tr>
+                        <td style="width: 120px;" class="a">1</td>
+                        <td style="width: 80px;" class="b">2</td>
+                        <td style="" class="c">3</td>
+                        <td style="" class="d">4</td>
+                        <td style="" class="e">5</td>
+                        <td style="width: 80px;" class="f">6</td>
+                        <td style="width: 120px;" class="g">7</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 120px;" class="h">8</td>
+                        <td style="width: 80px;" class="i">9</td>
+                        <td style="" class="j">10</td>
+                        <td style="" class="k">11</td>
+                        <td style="" class="l">12</td>
+                        <td style="width: 80px;" class="m">13</td>
+                        <td style="width: 120px;" class="n">14</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+    );
+});
+
+test("should take width from larger columns when double-clicking the shared column border", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 700px">
+                <tbody>
+                    <tr>
+                        <td style="width: 120px;" class="a">1</td>
+                        <td style="width: 80px;" class="b">2</td>
+                        <td style="width: 115px;" class="c">3</td>
+                        <td style="width: 70px;" class="d">4</td>
+                        <td style="width: 115px;" class="e">5</td>
+                        <td style="width: 80px;" class="f">6</td>
+                        <td style="width: 120px;" class="g">7</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 120px;" class="h">8</td>
+                        <td style="width: 80px;" class="i">9</td>
+                        <td style="width: 1150px;" class="j">10</td>
+                        <td style="width: 70px;" class="k">11</td>
+                        <td style="width: 115px;" class="l">12</td>
+                        <td style="width: 80px;" class="m">13</td>
+                        <td style="width: 120px;" class="n">14</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+
+    const td = el.querySelector("td.d");
+    const rect = td.getBoundingClientRect();
+
+    await manuallyDispatchProgrammaticEvent(td, "dblclick", {
+        clientX: rect.right - 1,
+        clientY: rect.top + rect.height / 2,
+    });
+
+    await animationFrame();
+
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table" style="width: 700px">
+                <tbody>
+                    <tr>
+                        <td style="width: 120px;" class="a">1</td>
+                        <td style="width: 80px;" class="b">2</td>
+                        <td style="" class="c">3</td>
+                        <td style="" class="d">4</td>
+                        <td style="" class="e">5</td>
+                        <td style="width: 80px;" class="f">6</td>
+                        <td style="width: 120px;" class="g">7</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 120px;" class="h">8</td>
+                        <td style="width: 80px;" class="i">9</td>
+                        <td style="" class="j">10</td>
+                        <td style="" class="k">11</td>
+                        <td style="" class="l">12</td>
+                        <td style="width: 80px;" class="m">13</td>
+                        <td style="width: 120px;" class="n">14</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
     );
 });
 
