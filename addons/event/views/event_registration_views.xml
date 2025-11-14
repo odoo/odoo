@@ -21,6 +21,7 @@
                 <field name="event_slot_id" domain="[('event_id', '=', event_id)]"/>
                 <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
                 <field name="activity_ids" widget="list_activity"/>
+                <field name="registration_answer_ids" string="Selected Answers" widget="many2many_tags" optional="hide" readonly="1"/>
                 <field name="state" decoration-info="state in ('draft', 'open')"
                        decoration-success="state == 'done'"
                        decoration-muted="state == 'cancel'" widget="badge"/>
@@ -145,6 +146,7 @@
                             <span class="text-truncate" invisible="not company_name">
                                 <i class="fa fa-building" title="Attendee Company"/> <field name="company_name"/>
                             </span>
+                            <field name="registration_answer_choice_ids" class="mt-1" widget="many2many_tags"/>
                             <div id="event_ticket_id">
                                 <field name="registration_properties"/>
                                 <div t-if="record.event_slot_id.raw_value">
@@ -205,6 +207,7 @@
                 <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('company_name', 'ilike', self)]"/>
                 <field name="company_id"/>
                 <field name="partner_id"/>
+                <field name="registration_answer_ids" string="Selected Answers"/>
                 <field name="event_ticket_id" string="Ticket"/>
                 <field name="event_id"/>
                 <field name="event_user_id" string="Responsible" invisible="1"/>
