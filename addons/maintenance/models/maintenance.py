@@ -330,7 +330,6 @@ class MaintenanceRequest(models.Model):
                 request.close_date = False
             if not request.close_date and request.state == 'done':
                 request.close_date = fields.Date.today()
-        maintenance_requests.activity_update()
         return maintenance_requests
 
     def write(self, vals):
@@ -358,42 +357,7 @@ class MaintenanceRequest(models.Model):
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
-        if 'state' in vals:
-            self.activity_feedback(['maintenance.mail_act_maintenance_request'])
-            self.activity_update()
-        if vals.get('user_id') or vals.get('schedule_date'):
-            self.activity_update()
-        if self._need_new_activity(vals):
-            # need to change description of activity also so unlink old and create new activity
-            self.activity_unlink(['maintenance.mail_act_maintenance_request'])
-            self.activity_update()
         return res
-
-    def _need_new_activity(self, vals):
-        return vals.get('equipment_id')
-
-    def _get_activity_note(self):
-        self.ensure_one()
-        if self.equipment_id:
-            return _('Request planned for %s', self.equipment_id._get_html_link())
-        return False
-
-    def activity_update(self):
-        """ Update maintenance activities based on current record set state.
-        It reschedule, unlink or create maintenance request activities. """
-        self.filtered(lambda request: not request.schedule_date).activity_unlink(['maintenance.mail_act_maintenance_request'])
-        for request in self.filtered(lambda request: request.schedule_date):
-            date_dl = fields.Datetime.from_string(request.schedule_date).date()
-            updated = request.activity_reschedule(
-                ['maintenance.mail_act_maintenance_request'],
-                date_deadline=date_dl,
-                new_user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
-            if not updated:
-                note = request._get_activity_note()
-                request.activity_schedule(
-                    'maintenance.mail_act_maintenance_request',
-                    fields.Datetime.from_string(request.schedule_date).date(),
-                    note=note, user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
 
     def _add_followers(self):
         for request in self:
