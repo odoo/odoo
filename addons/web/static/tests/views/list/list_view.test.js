@@ -7559,6 +7559,38 @@ test(`click on header in empty list with sample data`, async () => {
     });
 });
 
+test(`list grouped by m2o with sample data with more than 5 real groups`, async () => {
+    Foo._records = [];
+    onRpc("web_read_group", () => ({
+        // simulate 6, empty, real groups
+        groups: [1, 2, 3, 4, 5, 6].map((id) => ({
+            __count: 0,
+            __records: [],
+            m2o: [id, `Value ${id}`],
+            __extra_domain: [["m2o", "=", id]],
+        })),
+        length: 6,
+    }));
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list sample="1"><field name="foo"/></list>`,
+        groupBy: ["m2o"],
+    });
+    expect(`.o_list_view .o_content`).toHaveClass("o_view_sample_data");
+    expect(`.o_list_table`).toHaveCount(1);
+    expect(`.o_group_header`).toHaveCount(6);
+    expect(queryAllTexts(`.o_group_header`)).toEqual([
+        "Value 1 (3)",
+        "Value 2 (3)",
+        "Value 3 (3)",
+        "Value 4 (3)",
+        "Value 5 (2)",
+        "Value 6 (2)",
+    ]);
+});
+
 test.tags("desktop");
 test(`non empty editable list with sample data: delete all records`, async () => {
     await mountView({
