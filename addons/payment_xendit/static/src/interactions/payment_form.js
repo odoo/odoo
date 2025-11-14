@@ -136,7 +136,7 @@ patch(PaymentForm.prototype, {
                     // charging.
                     if (processingValues['should_tokenize']) {
                         Xendit.card.createAuthentication({
-                            amount: processingValues.amount,
+                            amount: processingValues['rounded_amount'],
                             token_id: token.id
                         }, async (err, result) => {
                             await this._xenditHandleResponse(err, result, processingValues, 'auth');
