@@ -21,6 +21,7 @@ export class SetupEditorPlugin extends Plugin {
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         closest_savable_providers: withSequence(10, (el) => el.closest(".o_editable")),
+        o_editable_selectors: "[data-oe-model]",
         unremovable_node_predicates: (node) => node.classList?.contains("o_editable"),
     };
 
