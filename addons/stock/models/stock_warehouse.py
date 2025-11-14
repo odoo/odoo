@@ -151,10 +151,6 @@ class StockWarehouse(models.Model):
             # create route selectable on the product to resupply the warehouse from another one
             warehouse.create_resupply_routes(warehouse.resupply_wh_ids)
 
-            # update partner data if partner assigned
-            if vals.get('partner_id'):
-                self._update_partner_data(vals['partner_id'], vals.get('company_id'))
-
             # manually update locations' warehouse since it didn't exist at their creation time
             view_location_id = self.env['stock.location'].browse(vals.get('view_location_id'))
             (view_location_id | view_location_id.with_context(active_test=False).child_ids).write({'warehouse_id': warehouse.id})
@@ -200,14 +196,6 @@ class StockWarehouse(models.Model):
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             old_resupply_whs = {warehouse.id: warehouse.resupply_wh_ids for warehouse in warehouses}
-
-        # If another partner assigned
-        if vals.get('partner_id'):
-            if vals.get('company_id'):
-                warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
-            else:
-                for warehouse in self:
-                    warehouse._update_partner_data(vals['partner_id'], warehouse.company_id.id)
 
         if vals.get('code') or vals.get('name'):
             warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
@@ -333,18 +321,6 @@ class StockWarehouse(models.Model):
                         'group_stock_multi_locations': True,
                     }).execute()
                 group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, group_stock_multi_locations.id)]})
-
-    @api.model
-    def _update_partner_data(self, partner_id, company_id):
-        if not partner_id:
-            return
-        ResCompany = self.env['res.company']
-        if company_id:
-            transit_loc = ResCompany.browse(company_id).internal_transit_location_id.id
-            self.env['res.partner'].browse(partner_id).with_company(company_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
-        else:
-            transit_loc = self.env.company.internal_transit_location_id.id
-            self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
 
     def _create_or_update_sequences_and_picking_types(self):
         """ Create or update existing picking types for a warehouse.
