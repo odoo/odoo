@@ -26,10 +26,13 @@ function ePOSPrint(children) {
 export class EpsonPrinter extends BasePrinter {
     setup({ printer }) {
         super.setup(...arguments);
-        this.url = window.location.protocol + "//" + printer.epson_printer_ip;
+
+        const protocol = printer.use_lna ? "http:" : window.location.protocol;
+        this.url = protocol + "//" + printer.epson_printer_ip;
         this.address = this.url + "/cgi-bin/epos/service.cgi?devid=local_printer";
         this.id = printer.id;
         this.name = printer.name;
+        this.use_lna = printer.use_lna;
     }
 
     /**
@@ -65,12 +68,18 @@ export class EpsonPrinter extends BasePrinter {
      * @override
      */
     async sendPrintingJob(img) {
+        const params = {
+            method: "POST",
+            body: img,
+            signal: AbortSignal.timeout(15000),
+        };
+
+        if (this.use_lna) {
+            params.targetAddressSpace = "local";
+        }
+
         try {
-            const res = await fetch(this.address, {
-                method: "POST",
-                body: img,
-                signal: AbortSignal.timeout(15000),
-            });
+            const res = await fetch(this.address, params);
             const body = await res.text();
             const parser = new DOMParser();
             const parsedBody = parser.parseFromString(body, "application/xml");
