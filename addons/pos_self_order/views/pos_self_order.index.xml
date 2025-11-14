@@ -12,6 +12,7 @@
                         csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
                         access_token: '<t t-esc="access_token" />',
                         debug: "<t t-esc="debug"/>",
+                        use_lna: <t t-esc="'true' if use_lna else 'false'"/>,
                         __session_info__: <t t-esc="json.dumps(session_info)"/>,
                     };
                 </script>
