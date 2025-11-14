@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, queryAllAttributes, queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockMatchMedia } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     clearRegistry,
@@ -15,11 +15,12 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { startRouter } from "@web/core/browser/router";
 import { user } from "@web/core/user";
 import { getOrigin } from "@web/core/utils/urls";
 
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
-import { odooAccountItem, preferencesItem } from "@web/webclient/user_menu/user_menu_items";
+import { odooAccountItem, preferencesItem, shareUrlMenuItem } from "@web/webclient/user_menu/user_menu_items";
 
 const userMenuRegistry = registry.category("user_menuitems");
 
@@ -178,4 +179,30 @@ test("can use component as registry item", async () => {
     await mountWithCleanup(UserMenu);
     await contains("button.dropdown-toggle").click();
     expect(".o-dropdown--menu span.component-class").toHaveText("Example Component");
+});
+
+test("Share URL item is present in the user menu when running as PWA", async () => {
+    patchWithCleanup(browser.navigator, {
+        share: async () => {
+            expect.step("navigator.share");
+        },
+    });
+    startRouter(); // reload the router to make sure navigator.share is defined
+            
+    mockMatchMedia({ ["display-mode"]: "standalone" });
+    userMenuRegistry.add("share_url", shareUrlMenuItem);
+    await mountWithCleanup(UserMenu);
+    await contains("button.dropdown-toggle").click();
+    expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
+    expect(".o-dropdown--menu .dropdown-item").toHaveText("Share");
+    await contains(".o-dropdown--menu .dropdown-item").click();
+    expect.verifySteps(["navigator.share"]);
+});
+
+test("Share URL item is not present in the user menu when not running as PWA", async () => {
+    mockMatchMedia({ ["display-mode"]: "browser" });
+    userMenuRegistry.add("share_url", shareUrlMenuItem);
+    await mountWithCleanup(UserMenu);
+    await contains(".o_user_menu").click();
+    expect(".o-dropdown--menu .dropdown-item").not.toHaveCount();
 });

@@ -1,9 +1,10 @@
 import { Component, markup } from "@odoo/owl";
-import { isMacOS } from "@web/core/browser/feature_detection";
+import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
+import { router } from "@web/core/browser/router";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 import { post } from "@web/core/network/http_service";
@@ -92,7 +93,7 @@ export function odooAccountItem(env) {
 function installPWAItem(env) {
     let description = _t("Install App");
     let callback = () => env.services.pwa.show();
-    let show = () => env.services.pwa.isAvailable;
+    let hide = !env.services.pwa.isAvailable;
     const currentApp = env.services.menu.getCurrentApp();
     if (currentApp && ["barcode", "field-service", "shop-floor"].includes(currentApp.actionPath)) {
         // While the feature could work with all apps, we have decided to only
@@ -106,14 +107,14 @@ function installPWAItem(env) {
                 )}`
             );
         };
-        show = () => !env.services.pwa.isScopedApp;
+        hide = env.services.pwa.isScopedApp;
     }
     return {
         type: "item",
         id: "install_pwa",
         description,
         callback,
-        show,
+        hide,
         sequence: 65,
     };
 }
@@ -136,6 +137,21 @@ function logOutItem(env) {
     };
 }
 
+export function shareUrlMenuItem(env) {
+    return {
+        type: "item",
+        hide: !router.shareUrl || env.isSmall || !isDisplayStandalone(),
+        id: "share_url",
+        description: markup`
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <span>${_t("Share")}</span>
+                <span class="fa fa-share-alt"></span>
+            </div>`,
+        callback: router.shareUrl,
+        sequence: 25,
+    };
+}
+
 registry
     .category("user_menuitems")
     .add("support", supportItem)
@@ -144,4 +160,5 @@ registry
     .add("preferences", preferencesItem)
     .add("odoo_account", odooAccountItem)
     .add("install_pwa", installPWAItem)
-    .add("log_out", logOutItem);
+    .add("log_out", logOutItem)
+    .add("share_url", shareUrlMenuItem);
