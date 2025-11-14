@@ -4556,7 +4556,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
                 __extra_domain: [["product_id", "=", "3"]],
             },
         ],
-        length: 2,
+        length: 1,
     }));
 
     await mountView({
@@ -4578,6 +4578,43 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
     expect(".o_kanban_group:first .o_column_title").toHaveText("hello");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(16);
     expect(".o_kanban_record").toHaveText("hello");
+});
+
+test(`kanban grouped by m2o with sample data with more than 5 real groups`, async () => {
+    Partner._records = [];
+    onRpc("web_read_group", () => ({
+        // simulate 6, empty, real groups
+        groups: [1, 2, 3, 4, 5, 6].map((id) => ({
+            __count: 0,
+            __records: [],
+            product_id: [id, `Value ${id}`],
+            __extra_domain: [["product_id", "=", id]],
+        })),
+        length: 6,
+    }));
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban sample="1">
+                <templates>
+                    <div t-name="card">
+                        <field name="product_id"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_content").toHaveClass("o_view_sample_data");
+    expect(queryAllTexts(`.o_kanban_group .o_column_title`)).toEqual([
+        "Value 1",
+        "Value 2",
+        "Value 3",
+        "Value 4",
+        "Value 5",
+        "Value 6",
+    ]);
 });
 
 test.tags("desktop");

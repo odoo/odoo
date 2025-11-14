@@ -6,7 +6,7 @@ import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
-import { pick } from "@web/core/utils/objects";
+import { deepCopy, pick } from "@web/core/utils/objects";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
@@ -161,6 +161,7 @@ export class RelationalModel extends Model {
         this.specialDataCaches = markRaw(params.state?.specialDataCaches || {});
         this.useSendBeaconToSaveUrgently = params.useSendBeaconToSaveUrgently || false;
         this.withCache = this.constructor.withCache && this.env.config?.cache;
+        this.initialSampleGroups = undefined; // real groups to populate with sample records
 
         this._urgentSave = false;
     }
@@ -191,6 +192,9 @@ export class RelationalModel extends Model {
      * @type {Model["load"]}
      */
     async load(params = {}) {
+        if (this.orm.isSample && this.initialSampleGroups?.length) {
+            this.orm.setGroups(this.initialSampleGroups);
+        }
         const config = this._getNextConfig(this.config, params);
         if (!this.isReady) {
             // We want the control panel to be displayed directly, without waiting for data to be
@@ -858,6 +862,16 @@ export class RelationalModel extends Model {
             context: { read_group_expand: true, ...config.context },
         };
         const orm = cache ? this.orm.cache(cache) : this.orm;
-        return orm.webReadGroup(config.resModel, config.domain, config.groupBy, aggregates, params);
+        const result = await orm.webReadGroup(
+            config.resModel,
+            config.domain,
+            config.groupBy,
+            aggregates,
+            params
+        );
+        if (!this.initialSampleGroups) {
+            this.initialSampleGroups = deepCopy(result.groups);
+        }
+        return result;
     }
 }
