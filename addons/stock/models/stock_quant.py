@@ -1138,8 +1138,13 @@ class StockQuant(models.Model):
         if from_cron:
             self.env['ir.cron']._commit_progress(remaining=len(all_quants_to_unlink))
 
+        first = True
         for quants_to_unlink in split_every(1000, all_quants_to_unlink, self.browse):
+            if not first and from_cron:  # transactions could have happened after commit progress that makes quants != 0 anymore
+                self.env.cr.execute(query, params)  # reread all, not optimal but should be fast
+                quants_to_unlink = self.browse([quant['id'] for quant in self.env.cr.dictfetchall() if quant['id'] in quants_to_unlink.ids])
             quants_to_unlink.sudo().unlink()
+            first = False
             if from_cron:
                 self.env['ir.cron']._commit_progress(processed=len(quants_to_unlink))
 
@@ -1208,49 +1213,64 @@ class StockQuant(models.Model):
 
             This method detects such duplicates and consolidates them into a single quant.
         """
-        def deduplicate_sql(dups):
-            rows = [
-                (to_update.id, qty_sum, reserved_qty_sum, inventory_qty_sum or 0.0, in_date_min, to_delete[0].ids)
-                for *_, [to_update, *to_delete], qty_sum, reserved_qty_sum, inventory_qty_sum, in_date_min in dups
-            ]
-            self.env.cr.execute_values("""
-                WITH dupes(to_update_id, quantity, reserved_quantity, inventory_quantity, in_date, to_unlink_ids) AS (
-                    VALUES %s
-                ),
-                _up AS (
-                    UPDATE stock_quant q
-                    SET quantity = d.quantity,
-                        reserved_quantity = GREATEST(0, d.reserved_quantity),
-                        inventory_quantity = d.inventory_quantity,
-                        in_date = d.in_date
-                    FROM dupes d
-                    WHERE q.id = d.to_update_id
-                )
-                DELETE FROM stock_quant sq USING dupes d WHERE sq.id = ANY(d.to_unlink_ids);
-            """, rows)
-            self.env.invalidate_all()
+        def get_duplicates(domain):
+            return self.env['stock.quant'].sudo()._read_group(
+                domain=domain,
+                groupby=['product_id', 'company_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+                aggregates=['id:recordset'],
+                having=[('__count', '>', 1)]  # More then 1 record on groupby
+            )
 
-        domain = Domain.TRUE
+        def deduplicate_sql(dups):
+            query = """WITH
+                        dupes AS (
+                            SELECT min(id) as to_update_quant_id,
+                                (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
+                                GREATEST(0, SUM(reserved_quantity)) as reserved_quantity,
+                                SUM(inventory_quantity) as inventory_quantity,
+                                SUM(quantity) as quantity,
+                                MIN(in_date) as in_date
+                            FROM stock_quant
+                            WHERE id in %s
+                            GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
+                            HAVING count(id) > 1
+                        ),
+                        _up AS (
+                            UPDATE stock_quant q
+                                SET quantity = d.quantity,
+                                    reserved_quantity = d.reserved_quantity,
+                                    inventory_quantity = d.inventory_quantity,
+                                    in_date = d.in_date
+                            FROM dupes d
+                            WHERE d.to_update_quant_id = q.id
+                        )
+                    DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
+            """
+            duplicates_ids = [i for dup in dups for i in dup[-1].ids]
+            self.env.cr.execute(query, [tuple(duplicates_ids)])
+
         from_cron = self.env.context.get('cron_id')
+        domain = Domain.TRUE
         if self._ids and not from_cron:
             domain = [
                 ('location_id', 'in', self.location_id.ids),
                 ('product_id', 'in', self.product_id.ids),
             ]
-        duplicates = self.env['stock.quant'].sudo()._read_group(
-            domain=domain,
-            groupby=['product_id', 'company_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
-            aggregates=['id:recordset', 'quantity:sum', 'reserved_quantity:sum', 'inventory_quantity:sum', 'in_date:min'],
-            having=[('__count', '>', 1)]  # More then 1 record on groupby
-        )
+        duplicates = get_duplicates(domain)
+        if not duplicates:
+            return
 
         if from_cron:
             self.env['ir.cron']._commit_progress(remaining=len(duplicates))
-            for dups_chunk in split_every(1000, duplicates):
-                deduplicate_sql(dups_chunk)
+
+        for dups_chunk in split_every(1000, duplicates):
+            deduplicate_sql(dups_chunk)
+
+            if from_cron:
                 self.env['ir.cron']._commit_progress(processed=len(dups_chunk))
-        else:
-            deduplicate_sql(duplicates)
+
+        duplicate_ids = [i for duplicates in duplicates for i in duplicates[-1].ids]
+        self.env["stock.quant"].browse(duplicate_ids).invalidate_recordset()  # Makes sure other crons don't use cached quants
 
     @api.model
     def _is_inventory_mode(self):

@@ -2465,7 +2465,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             processing them in order of reservation date and priority.
         """
         domain = self._get_moves_to_assign_domain(False)
-        all_moves_to_assign = self.search(domain, limit=None, order='reservation_date, priority desc, date asc, id asc')
+        all_moves_to_assign = self.search(domain, order='reservation_date, priority desc, date asc, id asc')
 
         from_cron = self.env.context.get('cron_id')
         if from_cron:

@@ -686,7 +686,9 @@ class StockWarehouseOrderpoint(models.Model):
         from_cron = self.env.context.get('cron_id')
         if from_cron:
             self.env['ir.cron']._commit_progress(remaining=len(all_orderpoints))
+
         for orderpoints in split_every(1000, all_orderpoints.ids, self.browse):
+            # Could fail if an auto order point is deleted between commits but okay
             orderpoints.sudo()._compute_qty_to_order_computed()
             orderpoints.sudo()._compute_deadline_date()
             orderpoints.sudo()._procure_orderpoint_confirm(company_id=False, raise_user_error=False)
