@@ -76,12 +76,6 @@ export class WebsiteForum extends Interaction {
             forumRegisterUrlEl.href = forumLogin;
         }
 
-        // Initialize forum's tooltips
-        this.el.querySelectorAll("[data-bs-toggle='tooltip']").forEach((el) => {
-            const bsTooltip = window.Tooltip.getOrCreateInstance(el);
-            this.registerCleanup(() => bsTooltip.dispose());
-        });
-
         this.el.querySelectorAll("[data-bs-toggle='popover']").forEach((el) => {
             const bsPopover = window.Popover.getOrCreateInstance(el);
             this.registerCleanup(() => bsPopover.dispose());
