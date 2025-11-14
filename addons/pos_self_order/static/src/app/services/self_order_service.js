@@ -23,6 +23,7 @@ import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
+import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -151,6 +152,12 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
+
+        if (this.config.self_ordering_mode === "kiosk") {
+            initLNA(this.notification);
+        } else {
+            odoo.use_lna = false;
+        }
     }
 
     get selfService() {
