@@ -75,39 +75,16 @@ export class KanbanController extends Component {
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {
-            setup() {
-                super.setup(...arguments);
-                this.initialSampleGroups = undefined;
-            }
-
             /**
              * @override
              */
             hasData() {
-                if (this.root.groups) {
-                    if (!this.root.groups.length) {
-                        // While we don't have any data, we want to display the column quick create and
-                        // example background. Return true so that we don't get sample data instead
-                        return true;
-                    }
-                    return this.root.groups.some((group) => group.hasData);
+                if (this.root.groups && !this.root.groups.length) {
+                    // While we don't have any data, we want to display the column quick create and
+                    // example background. Return true so that we don't get sample data instead
+                    return true;
                 }
                 return super.hasData();
-            }
-
-            async load() {
-                if (this.orm.isSample && this.initialSampleGroups) {
-                    this.orm.setGroups(this.initialSampleGroups);
-                }
-                return super.load(...arguments);
-            }
-
-            async _webReadGroup() {
-                const result = await super._webReadGroup(...arguments);
-                if (!this.initialSampleGroups) {
-                    this.initialSampleGroups = JSON.parse(JSON.stringify(result.groups));
-                }
-                return result;
             }
 
             removeSampleDataInGroups() {
