@@ -7,6 +7,7 @@ import datetime
 import dateutil
 import email
 import email.policy
+import encodings
 import hashlib
 import hmac
 import json
@@ -37,6 +38,12 @@ from ..web_push import push_to_end_point, DeviceUnreachableError, ENCRYPTION_BLO
 MAX_DIRECT_PUSH = 5
 
 _logger = logging.getLogger(__name__)
+
+# monkey-patching encodings so that it will recognize `charset=cp-850` in emails
+# as a correct alias for cp850 when decoding email parts with the email python library.
+# The key "cp_850" will implicitly match "cp_850" and "cp-850"
+# See https://stackoverflow.com/a/51961225
+encodings.aliases.aliases['cp_850'] = 'cp850'
 
 
 class MailThread(models.AbstractModel):
