@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <template xml:space="preserve">
     <t t-name="mail.MessageReactionList">
-        <Dropdown state="preview" position="'top-middle'" menuClass="'mt-1 overflow-visible ' + store.discussDropdownMenuClass(this)" manual="true">
+        <Dropdown state="preview" position="'top-middle'" menuClass="'mt-1 overflow-visible ' + store.discussDropdownMenuClass(this)" manual="true" bottomSheet="false">
             <t t-call="mail.MessageReactionList.button" />
             <t t-set-slot="content">
                 <t t-call="mail.MessageReactionList.preview"/>
