@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.5a1+e\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-23 07:06+0000\n"
-"PO-Revision-Date: 2025-07-23 07:06+0000\n"
+"POT-Creation-Date: 2025-11-13 15:35+0000\n"
+"PO-Revision-Date: 2025-11-13 15:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -307,6 +307,11 @@ msgid "<option value=\"\">select...</option>"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_move_form_inherit_l10n_my_myinvois
+msgid "<span class=\"o_stat_text\">MyInvois<br/>Documents</span>"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
 msgid ""
 "<span class=\"text-success fa fa-check\" title=\"Validation Successful\" invisible=\"not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'valid'\"/>\n"
@@ -318,11 +323,6 @@ msgstr ""
 msgid ""
 "<span invisible=\"l10n_my_edi_mode != 'test'\">• In Pre-Production mode Odoo"
 " will send the invoices to a non-production service.</span>"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_move_form_inherit_l10n_my_myinvois
-msgid "<span>MyInvois<br/>Documents</span>"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -493,6 +493,11 @@ msgid "Create Consolidated Invoices"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model,website_form_label:l10n_my_edi.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_l10n_my_edi_industry_classification__create_uid
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_consolidate_invoice_wizard__create_uid
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__create_uid
@@ -578,6 +583,11 @@ msgstr ""
 #. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
 msgid "EI00000000020"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model,name:l10n_my_edi.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -689,6 +699,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_company_form_inherit_l10n_my_myinvois
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
 msgid "Identification"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,help:l10n_my_edi.field_res_config_settings__l10n_my_edi_company_vat
+msgid "Identification Number for selected type"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -905,8 +920,6 @@ msgid "MyInvois Document"
 msgstr ""
 
 #. module: l10n_my_edi
-#. odoo-python
-#: code:addons/l10n_my_edi/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_list_view
 msgid "MyInvois Documents"
 msgstr ""
@@ -976,6 +989,11 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document_status_update_wizard__new_status
 msgid "New status to set on the document."
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1078,6 +1096,11 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__rating_ids
+msgid "Ratings"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1193,11 +1216,6 @@ msgid "Submit To MyInvois"
 msgstr ""
 
 #. module: l10n_my_edi
-#: model:ir.model,name:l10n_my_edi.model_account_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_exemption_reason
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__l10n_my_edi_exemption_reason
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__myinvois_exemption_reason
@@ -1248,14 +1266,6 @@ msgid ""
 "The TIN number of the supplier in the invoices does not match with the one provided at the time of registering for the e-invoice service.\n"
 "If the TIN of the supplier's record changed after that, you will need to archive your EDI Proxy User and re-register.\n"
 "The TIN found in the document is %(tin_number)s"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model:ir.model.fields,help:l10n_my_edi.field_res_config_settings__l10n_my_edi_company_vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1422,6 +1432,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
 msgid "This document has been %(status)s for reason: %(reason)s"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.constraint,message:l10n_my_edi.constraint_account_edi_proxy_client_user_unique_identification_l10n_my_edi
+msgid "This edi identification is already assigned to an active user"
 msgstr ""
 
 #. module: l10n_my_edi
