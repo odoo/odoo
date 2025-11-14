@@ -2123,3 +2123,32 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_req_form.holiday_status_id = self.holidays_type_hours
 
         self.assertFalse(leave_req_form.date_to)
+
+    def test_flexible_schedule_full_day_off(self):
+        """this tests checks that if the morning and afternoon have been selected as time off and the schedule type of
+        the employee is flexible, the time considered off is a full day."""
+        calendar = self.env['resource.calendar'].sudo().create({
+            'company_id': False,
+            'name': 'Flexible 40h/week',
+            'tz': 'UTC',
+            'hours_per_day': 8.0,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+            'schedule_type': 'flexible',
+        })
+        self.employee_hruser.write({
+            'is_flexible': True,
+            'resource_calendar_id': calendar.id
+        })
+        flex_leave = self.env['hr.leave'].create({
+            'name': "Full Day Leave",
+            'employee_id': self.employee_hruser.id,
+            'holiday_status_id': self.holidays_type_half.id,
+            'request_date_from': "2025-08-29",
+            'request_date_to': "2025-08-29",
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'pm',
+        })
+
+        leave = flex_leave._get_durations()
+        self.assertEqual(leave[flex_leave.id][0], 1, "The total leaves should be 1.")
