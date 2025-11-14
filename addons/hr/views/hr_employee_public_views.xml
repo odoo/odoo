@@ -13,7 +13,8 @@
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
-                    <field name="job_id"/>
+                    <field name="job_title"/>
+                    <field name="job_id" invisible="1"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
@@ -98,7 +99,8 @@
                                         <group string="work">
                                             <field name="company_id" groups="base.group_multi_company"/>
                                             <field name="department_id"/>
-                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                            <field name="job_title" string="Job Title"/>
+                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager" invisible="1"/>
                                             <field name="parent_id" widget="many2one_avatar_employee"/>
                                         </group>
                                         <group string="Location" name="location">
@@ -189,7 +191,8 @@
                                     </div>
                                     <field class="fw-bolder" name="name" placeholder="Employee's Name"/>
                                 </div>
-                                <field t-if="record.job_id.raw_value" name="job_id"/>
+                                <field t-if="record.job_title.raw_value" name="job_title"/>
+                                <field t-elif="record.job_id.raw_value" name="job_id"/>
                                 <div t-if="record.work_email.raw_value" class="text-truncate">
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email"/>
