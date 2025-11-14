@@ -53,7 +53,6 @@ import { SearchPowerboxPlugin } from "./main/powerbox/search_powerbox_plugin";
 import { StarPlugin } from "./main/star_plugin";
 import { TableAlignPlugin } from "./main/table/table_align_plugin";
 import { TablePlugin } from "./main/table/table_plugin";
-import { TableResizePlugin } from "./main/table/table_resize_plugin";
 import { TableUIPlugin } from "./main/table/table_ui_plugin";
 import { TabulationPlugin } from "./main/tabulation_plugin";
 import { TextDirectionPlugin } from "./main/text_direction_plugin";
@@ -79,6 +78,7 @@ import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_previ
 import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
 import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
+import { ResizePlugin } from "./main/resize_plugin";
 
 export const CORE_PLUGINS = [
     BaseContainerPlugin,
@@ -147,10 +147,10 @@ export const MAIN_PLUGINS = [
     PositionPlugin,
     TextDirectionPlugin,
     InlineCodePlugin,
-    TableResizePlugin,
     FilePlugin,
     PlaceholderPlugin,
     SelectionPlaceholderPlugin,
+    ResizePlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [

@@ -1284,7 +1284,7 @@ test("removing an image caption inside a table should wrap image in a base conta
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
-            `<table>
+            `<table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td>
@@ -1306,7 +1306,7 @@ test("removing an image caption inside a table should wrap image in a base conta
             await click(".o-we-toolbar button[name='image_caption']");
         },
         contentAfter: unformat(
-            `<table>
+            `<table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td>

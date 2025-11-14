@@ -28,6 +28,7 @@ import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
+import { getElementHoveredEdge } from "@html_editor/utils/perspective_utils";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -126,6 +127,22 @@ export class TablePlugin extends Plugin {
         color_target_providers: (node) => closestElement(node, ".o_selected_td"),
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
 
+        /** Resizing Parameters */
+        resizing_parameters: [
+            {
+                resizableElementsSelector: "td, th",
+                parentContainerSelector: "table",
+                allowedEdges: ["left", "right"],
+                minSize: 33,
+            },
+            {
+                parentContainerSelector: "table",
+                resizableElementsSelector: "tr",
+                allowedEdges: ["top", "bottom"],
+                minSize: 33,
+            },
+        ],
+
         /** Handlers */
         on_selectionchange_handlers: this.updateSelectionTable.bind(this),
         on_will_break_line_handlers: this.resetTableSelection.bind(this),
@@ -138,6 +155,7 @@ export class TablePlugin extends Plugin {
         },
         normalize_processors: this.normalizeTable.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+        resize_target_processors: this.processTableResizeTargets.bind(this),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
         on_undone_handlers: () => {
             delete this.tableGridMap;
@@ -188,6 +206,7 @@ export class TablePlugin extends Plugin {
     };
 
     setup() {
+        this.addDomListener(this.editable, "dblclick", this.fitToContent);
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
         this.addDomListener(this.editable, "keydown", (ev) => {
@@ -212,6 +231,31 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
+    }
+
+    processTableResizeTargets(item, neighbor, position) {
+        if (!isTableCell(item)) {
+            return [item, neighbor];
+        }
+        const table = closestElement(item, "table");
+        const tableGrid = this.buildTableGrid(table);
+        const rowIndex = getRowIndex(item);
+        const row = tableGrid[rowIndex];
+        const columnIndex =
+            position === "middle" ? row.findLastIndex((c) => c === item) : row.indexOf(item);
+        const adjacentColumnIndex = row.indexOf(neighbor);
+        let colgroup = table.querySelector("colgroup");
+        if (!colgroup) {
+            colgroup = this.document.createElement("colgroup");
+            for (const cell of tableGrid[0]) {
+                const col = this.document.createElement("col");
+                col.style.width = cell.getBoundingClientRect().width / (cell.colSpan || 1) + "px";
+                colgroup.appendChild(col);
+            }
+            table.insertBefore(colgroup, table.firstChild);
+        }
+        const columns = colgroup.children;
+        return [columns[columnIndex], columns[adjacentColumnIndex]];
     }
 
     handlePasteTableIntoExistingTable(selection, clipboardRoot) {
@@ -866,6 +910,48 @@ export class TablePlugin extends Plugin {
             }px`;
         });
         this.normalizeColumnWidth(table);
+    }
+
+    /**
+     * Resizes rows and columns based on the mouse's double-click on the borders.
+     * Adjusts width of columns or height of rows depending on the cursor position.
+     * Adjacent rows/columns are resized as well.
+     *
+     * @param {MouseEvent} ev - The double-click mouse event.
+     */
+    fitToContent(ev) {
+        const target = ev.target;
+        const isHoveringTdBorder =
+            isTableCell(target) && getElementHoveredEdge({ x: ev.clientX, y: ev.clientY }, target);
+        if (!isHoveringTdBorder) {
+            return;
+        }
+        if (["left", "right"].includes(isHoveringTdBorder)) {
+            const table = closestElement(target, "table");
+            const currentColumnIndex = getColumnIndex(target);
+            const firstRow = table.rows[0];
+            this.resetColumnWidth(firstRow.cells[currentColumnIndex]);
+            const isLeftSideClick = isHoveringTdBorder === "left";
+            if (
+                (isLeftSideClick && currentColumnIndex > 0) ||
+                (!isLeftSideClick && currentColumnIndex < table.rows[0].cells.length - 1)
+            ) {
+                const siblingColumnIndex = isLeftSideClick
+                    ? currentColumnIndex - 1
+                    : currentColumnIndex + 1;
+                this.resetColumnWidth(firstRow.cells[siblingColumnIndex]);
+            }
+        } else if (["top", "bottom"].includes(isHoveringTdBorder)) {
+            const currentRow = target.parentElement;
+            this.resetRowHeight(currentRow);
+            const siblingRow =
+                isHoveringTdBorder === "top"
+                    ? currentRow.previousElementSibling
+                    : currentRow.nextElementSibling;
+            if (siblingRow) {
+                this.resetRowHeight(siblingRow);
+            }
+        }
     }
 
     /**
