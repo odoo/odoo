@@ -155,8 +155,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_qty_invoiced(self):
         invoiced_quantities = self._prepare_qty_invoiced()
         for line in self:
-            if not line.qty_invoiced or line in invoiced_quantities:
-                line.qty_invoiced = invoiced_quantities[line]
+            line.qty_invoiced = invoiced_quantities[line]
 
             # compute qty_to_invoice
             if line.order_id.state == 'purchase':
