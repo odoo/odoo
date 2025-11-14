@@ -74,7 +74,7 @@
                         }"/>
                         <Wysiwyg t-if="composerService.htmlEnabled" class="'w-100 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="onLoadWysiwyg"/>
                         <t t-else="">
-                                <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin text-body user-select-auto"
+                                <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin o-discuss-text-body user-select-auto"
                                 t-att-class="inputClasses"
                                 t-ref="textarea"
                                 t-on-keydown="onKeydown"
