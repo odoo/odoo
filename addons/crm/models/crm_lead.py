@@ -1225,14 +1225,15 @@ class CrmLead(models.Model):
 
         if query_result['count_user_closed_year'] == 1:
             return _('Go, go, go! Congrats for your first deal.')
-        elif self.expected_revenue and query_result['max_team_31'] < self.expected_revenue:
-            return _('Boom! Team record for the past 30 days.')
-        elif self.expected_revenue and query_result['max_team_7'] < self.expected_revenue:
-            return _('Yeah! Best deal out of the last 7 days for the team.')
-        elif self.expected_revenue and query_result['max_user_31'] < self.expected_revenue:
-            return _('You just beat your personal record for the past 30 days.')
-        elif self.expected_revenue and query_result['max_user_7'] < self.expected_revenue:
-            return _('You just beat your personal record for the past 7 days.')
+        elif self.expected_revenue:
+            if query_result['max_team_31'] and query_result['max_team_31'] < self.expected_revenue:
+                return _('Boom! Team record for the past 30 days.')
+            elif query_result['max_team_7'] and query_result['max_team_7'] < self.expected_revenue:
+                return _('Yeah! Best deal out of the last 7 days for the team.')
+            elif query_result['max_user_31'] and query_result['max_user_31'] < self.expected_revenue:
+                return _('You just beat your personal record for the past 30 days.')
+            elif query_result['max_user_7'] and query_result['max_user_7'] < self.expected_revenue:
+                return _('You just beat your personal record for the past 7 days.')
         elif query_result['count_user_closed_today'] == 5:
             return _('You\'re on fire! Fifth deal won today 🔥')
         elif query_result['count_user_closed_today'] == 1 and query_result['count_user_closed_yesterday'] and query_result['count_user_closed_minus2day'] and not query_result['count_user_closed_minus3day']:
