@@ -2,6 +2,12 @@ import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
 import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
+import {
+    isAndroidApp,
+    isDisplayStandalone,
+    isIosApp,
+} from "@web/core/browser/feature_detection";
+import { router } from "@web/core/browser/router";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
@@ -29,6 +35,8 @@ export class BurgerMenu extends Component {
             isBurgerOpened: false,
         });
         this.swipeStartX = null;
+        this.router = router;
+        this.isDisplayStandalone = isDisplayStandalone() || isAndroidApp() || isIosApp();
         useBus(this.env.bus, "HOME-MENU:TOGGLED", () => {
             this._closeBurger();
         });
@@ -57,6 +65,9 @@ export class BurgerMenu extends Component {
         }
         this._closeBurger();
         this.swipeStartX = null;
+    }
+    _shareUrl() {
+        router.shareUrl();
     }
 }
 

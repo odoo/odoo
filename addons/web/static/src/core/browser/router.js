@@ -239,6 +239,21 @@ function urlToState(urlObj) {
     return state;
 }
 
+async function shareUrl() {
+    // avoid exposing /scoped_app urls to the user and replace them with /odoo when possible
+    const url = browser.location.href.replace("/scoped_app", "/odoo");
+    await browser.navigator
+        .share({
+            url,
+            title: document.title,
+        })
+        .catch((e) => {
+            if (!(e instanceof DOMException && e.name === "AbortError")) {
+                throw e;
+            }
+        });
+}
+
 let state;
 let pushTimeout;
 let pushArgs;
@@ -263,6 +278,9 @@ export function startRouter() {
     };
     _lockedKeys = new Set(["debug", "lang"]);
     _hiddenKeysFromUrl = new Set([...PATH_KEYS, "actionStack"]);
+    if (browser.navigator.share) {
+        router.shareUrl = shareUrl;
+    }
 }
 
 /**
