@@ -2119,11 +2119,11 @@ test("changing order of group by", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "formatted_read_grouping_sets") {
-                expect.step(args.kwargs.order || "NO_ORDER");
+                expect.step(args.kwargs.order);
             }
         },
     });
-    expect.verifySteps(["NO_ORDER"]);
+    expect.verifySteps(["foo"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -2144,7 +2144,7 @@ test("changing order of group by", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["NO_ORDER"]);
+    expect.verifySteps(["foo"]);
 });
 
 test("change date order", async () => {
@@ -2172,6 +2172,33 @@ test("change date order", async () => {
     });
     await animationFrame();
     expect.verifySteps(["date:year asc,date:month desc"]);
+});
+
+test("Order are set for all dimensions", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        mockRPC: async function (route, args) {
+            if (args.method === "formatted_read_grouping_sets") {
+                expect.step(args.kwargs.order);
+            }
+        },
+    });
+    expect.verifySteps([""]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            columns: [
+                { fieldName: "date", granularity: "year", order: "asc" },
+                { fieldName: "foo" },
+            ],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps(["date:year asc,foo"]);
 });
 
 test("duplicated dimension on col and row with different granularity", async () => {
