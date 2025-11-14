@@ -3,8 +3,8 @@ import {
     sectionAndNoteFieldOne2Many,
     SectionAndNoteListRenderer,
     getSectionRecords,
-    getParentSectionRecord,
 } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
+import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_service';
 import { registry } from '@web/core/registry';
 
@@ -16,33 +16,84 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         this.copyFields.push('is_optional');
     }
 
-    get showOptionalButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.is_optional;
+    get disableOptionalButton() {
+        return this.shouldCollapse(this.record, 'is_optional');
+    }
+
+    get isCurrentSectionOptional() {
+        if (this.props.list.records.length === 0) return false;
+
+        return this.shouldCollapse(
+            this.props.list.records[this.props.list.records.length - 1],
+            'is_optional',
+            true
+        );
+    }
+
+    /**
+     * Override to set the default `product_uom_qty` to 0 for new lines created under an optional
+     * section.
+     */
+    add(params){
+        params.context = this.getCreateContext(params);
+        super.add(params);
+    }
+
+    getCreateContext(params) {
+        const evaluatedContext = makeContext([params.context]);
+        // A falsy context indicates a product line (no `display_type` specified)
+        if(!evaluatedContext[`default_display_type`] && this.isCurrentSectionOptional) {
+            return { ...evaluatedContext, default_product_uom_qty: 0 };
         }
-        return true;
+        return params.context;
+    }
+
+    /**
+     * Override to set the default `product_uom_qty` to 0 for new lines inserted by optional
+     * sections from dropdown.
+     */
+    getInsertLineContext(record, addSubSection) {
+        if (this.shouldCollapse(record, 'is_optional', true) && !addSubSection) {
+            return {
+                ...super.getInsertLineContext(record, addSubSection),
+                default_product_uom_qty: 0
+            };
+        }
+        return super.getInsertLineContext(record, addSubSection);
     }
 
     getRowClass(record) {
         let rowClasses = super.getRowClass(record);
-        if (record.data.is_optional || this.shouldCollapse(record, 'is_optional')) {
+        if (this.shouldCollapse(record, 'is_optional', true)) {
             rowClasses += ' text-primary';
         }
         return rowClasses;
     }
 
     async toggleIsOptional(record) {
+        const setOptional = !record.data.is_optional;
+
         const commands = [(x2ManyCommands.update(record.resId || record._virtualId, {
-            is_optional: !record.data.is_optional,
+            is_optional: setOptional,
         }))];
 
         for (const sectionRecord of getSectionRecords(this.props.list, record)) {
-            commands.push(
-                x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
-                    ...(!record.data.is_optional ? { product_uom_qty: 0 } : {}),
-                })
-            );
+            let changes = {};
+
+            if (!sectionRecord.data.display_type) {
+                changes = setOptional
+                    ? { product_uom_qty: 0 }
+                    : { product_uom_qty: sectionRecord.data.product_uom_qty || 1 };
+            }
+
+            if (Object.keys(changes).length) {
+                commands.push(
+                    x2ManyCommands.update(
+                        sectionRecord.resId || sectionRecord._virtualId,
+                        changes
+                    )
+                );
+            }
         }
 
         await this.props.list.applyCommands(commands, { sort: true });
