@@ -62,6 +62,7 @@ class PosController(PortalAccount):
 
         # The POS only works in one company, so we enforce the one of the session in the context
         session_info = pos_session._update_session_info(request.env['ir.http'].session_info())
+        use_lna = bool(pos_session.env["ir.config_parameter"].get_param("point_of_sale.use_lna"))
         context = {
             'from_backend': 1 if from_backend else 0,
             'use_pos_fake_tours': True if k.get('tours', False) else False,
@@ -70,6 +71,7 @@ class PosController(PortalAccount):
             'pos_session_id': pos_session.id,
             'pos_config_id': pos_session.config_id.id,
             'access_token': pos_session.config_id.access_token,
+            'use_lna': use_lna,
         }
         response = request.render('point_of_sale.index', context)
         response.headers['Cache-Control'] = 'no-store'
