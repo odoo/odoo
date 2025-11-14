@@ -208,7 +208,12 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             shapeAnimationSpeed: "0",
         };
         const json = editingElement.dataset.oeShapeData;
-        return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
+        if (json) {
+            Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"')));
+            // Compatibility with old shapes.
+            defaultData.shape = defaultData.shape.replace("web_editor", "html_builder");
+        }
+        return defaultData;
     }
     /**
      * Returns the src of the shape corresponding to the current parameters.
@@ -313,14 +318,17 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         return backgroundShapesDefinition;
     }
     getBackgroundShapes() {
-        const entries = Object.values(this.getBackgroundShapeGroups())
-            .map((x) =>
-                Object.values(x.subgroups)
-                    .map((x) => Object.entries(x.shapes))
-                    .flat()
-            )
-            .flat();
-        return Object.fromEntries(entries);
+        if (!this.backgroundShapesById) {
+            const entries = Object.values(this.getBackgroundShapeGroups())
+                .map((x) =>
+                    Object.values(x.subgroups)
+                        .map((x) => Object.entries(x.shapes))
+                        .flat()
+                )
+                .flat();
+            this.backgroundShapesById = Object.fromEntries(entries);
+        }
+        return this.backgroundShapesById;
     }
 }
 
