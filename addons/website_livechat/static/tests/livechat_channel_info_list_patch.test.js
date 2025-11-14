@@ -43,3 +43,64 @@ test("shows language, country and recent page views", async () => {
     await contains("div > span", { text: "General website" });
     await contains("span", { text: "Home (21:00) → Contact (21:20)" });
 });
+
+test("Show recent conversations in channel info list", async () => {
+    const pyEnv = await startServer();
+    const visitorId = pyEnv["website.visitor"].create({
+        website_id: pyEnv["website"].create({ name: "General website" }),
+    });
+    const customerPartnerId = pyEnv["res.partner"].create({
+        name: "Bob",
+        user_ids: [pyEnv["res.users"].create({ name: "Bob" })],
+    });
+    // At least two ongoing chats so that sort function ends up comparing two
+    // ongoing chats.
+    const channelId = pyEnv["discuss.channel"]
+        .create([
+            {
+                channel_member_ids: [
+                    Command.create({
+                        partner_id: customerPartnerId,
+                        livechat_member_type: "visitor",
+                    }),
+                ],
+                channel_type: "livechat",
+                livechat_status: "in_progress",
+                livechat_visitor_id: visitorId,
+            },
+            {
+                channel_member_ids: [
+                    Command.create({
+                        partner_id: customerPartnerId,
+                        livechat_member_type: "visitor",
+                    }),
+                ],
+                channel_type: "livechat",
+                livechat_status: "in_progress",
+                livechat_visitor_id: visitorId,
+            },
+            {
+                channel_member_ids: [
+                    Command.create({
+                        partner_id: customerPartnerId,
+                        livechat_member_type: "visitor",
+                    }),
+                    Command.create({
+                        partner_id: serverState.partnerId,
+                        livechat_member_type: "agent",
+                    }),
+                ],
+                livechat_operator_id: serverState.partnerId,
+                channel_type: "livechat",
+                livechat_status: "in_progress",
+                livechat_visitor_id: visitorId,
+            },
+        ])
+        .at(-1);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-livechat-LivechatChannelInfoList-recentConversation", {
+        count: 2,
+        text: "Bob",
+    });
+});
