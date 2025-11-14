@@ -4,6 +4,7 @@ import {
     backgroundImagePartsToCss,
     getImageSrc,
 } from "@html_editor/utils/image";
+import { loadImage } from "@html_editor/utils/image_processing";
 import { rpc } from "@web/core/network/rpc";
 
 /**
@@ -20,6 +21,7 @@ import { rpc } from "@web/core/network/rpc";
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
     static shared = ["savePendingImages"];
+    static dependencies = ["imagePostProcess"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -142,29 +144,30 @@ export class ImageSavePlugin extends Plugin {
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
         let altData = undefined;
+        const altImages = {};
         const isImageField = !!el.closest("[data-oe-type=image]");
+
+        const loadedImgEl = await loadImage(getImageSrc(el));
+        const maxSize = loadedImgEl.width;
         if (el.dataset.mimetype === "image/webp" && isImageField) {
             // Generate alternate sizes and format for reports.
             altData = {};
-            const image = document.createElement("img");
-            image.src = getImageSrc(el);
-            await new Promise((resolve) => image.addEventListener("load", resolve));
-            const originalSize = Math.max(image.width, image.height);
+            const originalSize = Math.max(loadedImgEl.width, loadedImgEl.height);
             const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
             for (const size of [originalSize, ...smallerSizes]) {
                 const ratio = size / originalSize;
                 const canvas = document.createElement("canvas");
-                canvas.width = image.width * ratio;
-                canvas.height = image.height * ratio;
+                canvas.width = loadedImgEl.width * ratio;
+                canvas.height = loadedImgEl.height * ratio;
                 const ctx = canvas.getContext("2d");
                 ctx.fillStyle = "rgb(255, 255, 255)";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(
-                    image,
+                    loadedImgEl,
                     0,
                     0,
-                    image.width,
-                    image.height,
+                    loadedImgEl.width,
+                    loadedImgEl.height,
                     0,
                     0,
                     canvas.width,
@@ -174,35 +177,75 @@ export class ImageSavePlugin extends Plugin {
                     "image/jpeg": canvas.toDataURL("image/jpeg").split(",")[1],
                 };
                 if (size !== originalSize) {
-                    altData[size]["image/webp"] = canvas
-                        .toDataURL("image/webp")
-                        .split(",")[1];
+                    altData[size]["image/webp"] = canvas.toDataURL("image/webp").split(",")[1];
                 }
             }
         }
-        const newAttachmentSrc = await rpc(
+        if (!isImageField && !isBackground && el.dataset.mimetype !== "image/gif") {
+            // We are using these sizes instead of the normally used 128, 256, ...
+            // because we want to optimize smartphone data usage and loading time.
+            // Each sizes in smallerSizes fits a certain category of smartphone,
+            // while still limiting the number of image generated.
+            const smallerSizes = [750, 900, 1080, 1280].filter(
+                // We only generate sizes smaller than 85% of the original size
+                (size) => size < Math.floor(maxSize * 0.85)
+            );
+            if (smallerSizes.length) {
+                const imgCloneEl = el.cloneNode(true);
+                for (const size of smallerSizes) {
+                    const updateImageSize = await this.dependencies.imagePostProcess.processImage({
+                        img: imgCloneEl,
+                        newDataset: { resizeWidth: size },
+                    });
+                    updateImageSize();
+                    if (getImageSrc(imgCloneEl)) {
+                        altImages[size] = this.getImageBase64Payload(imgCloneEl);
+                    }
+                }
+            }
+        }
+        const newAttachmentUrls = await rpc(
             `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
-                data: getImageSrc(el).split(",")[1],
+                data: this.getImageBase64Payload(el),
                 alt_data: altData,
+                alt_images: Object.keys(altImages).length ? altImages : null,
                 mimetype: isBackground
                     ? el.dataset.mimetype
                     : el.getAttribute("src").split(":")[1].split(";")[0],
                 name: el.dataset.fileName ? el.dataset.fileName : null,
             }
         );
+
+        const srcset = [];
+        if (Object.keys(altImages).length) {
+            for (const size in altImages) {
+                if (newAttachmentUrls[size]) {
+                    srcset.push(`${newAttachmentUrls[size]} ${size}w`);
+                }
+            }
+            srcset.push(`${newAttachmentUrls["original"]} ${maxSize}w`);
+        }
+
         el.classList.remove("o_modified_image_to_save");
         if (isBackground) {
             const parts = backgroundImageCssToParts(el.style["background-image"]);
-            parts.url = `url('${newAttachmentSrc}')`;
+            parts.url = `url('${newAttachmentUrls["original"]}')`;
             const combined = backgroundImagePartsToCss(parts);
             el.style["background-image"] = combined;
         } else {
-            el.setAttribute("src", newAttachmentSrc);
+            el.setAttribute("src", newAttachmentUrls["original"]);
+            if (srcset.length) {
+                el.setAttribute("srcset", srcset.join(", "));
+            }
         }
         this.dispatchTo("on_image_saved_handlers", { imageEl: el });
+    }
+
+    getImageBase64Payload(el) {
+        return getImageSrc(el).split(",")[1];
     }
 
     getRecordInfo(editableEl = null) {

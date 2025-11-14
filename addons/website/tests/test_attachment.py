@@ -48,3 +48,6 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
             'raw': text,
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_link_to_document', login="admin")
+
+    def test_04_image_srcset(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_image_srcset', login="admin")
