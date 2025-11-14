@@ -9,6 +9,7 @@ import {
     keydownShiftTab,
     keydownTab,
     splitBlock,
+    switchDirection,
 } from "../_helpers/user_actions";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
@@ -915,6 +916,119 @@ describe("Insert (paste, drop) inside toggle title", () => {
                 <div class="oe_unbreakable">brol</div>
                 <div class="o-paragraph">[]World</div>
             `)
+        );
+    });
+});
+
+describe("Toggle block: Switch Direction", () => {
+    test("should properly switch the direction of the toggle block (rtl)", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(
+                `
+                <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
+                    <div data-embedded-editable="title">
+                        <p>HelloWorld[]</p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <p>asdf</p>
+                    </div>
+                </div>
+            `
+            ),
+            {
+                config: getConfig([toggleBlockEmbedding]),
+            }
+        );
+        await embeddedToggleMountedPromise;
+        switchDirection(editor);
+        expect(getContent(el)).toBe(
+            unformat(
+                `
+                <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false" dir="rtl">
+                    <div class="d-flex flex-row align-items-center">
+                        <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
+                            \ufeff<i class="fa align-self-center fa-caret-right"></i>\ufeff
+                        </button>
+                        <div class="flex-fill ms-1">
+                            <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
+                                <p>HelloWorld[]</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-4 ms-1 d-none">
+                        <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
+                            <p>asdf</p>
+                        </div>
+                    </div>
+                </div>
+            `
+            )
+        );
+    });
+    test("should insert a new sibling toggle block with RTL direction on Enter", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(
+                `<div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false" dir="rtl">
+                    <div data-embedded-editable="title">
+                        <p>HelloWorld[]</p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <p>asdf</p>
+                    </div>
+                </div>
+            `
+            ),
+            {
+                config: getConfig([toggleBlockEmbedding]),
+            }
+        );
+        patchWithCleanup(ToggleBlockPlugin.prototype, {
+            getUniqueIdentifier() {
+                return "2";
+            },
+        });
+        embeddedToggleMountedPromise = new Deferred();
+        splitBlock(editor);
+        await embeddedToggleMountedPromise;
+        expect(getContent(el)).toBe(
+            unformat(
+                `
+                <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false" dir="rtl">
+                    <div class="d-flex flex-row align-items-center">
+                        <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
+                            \ufeff<i class="fa align-self-center fa-caret-right"></i>\ufeff
+                        </button>
+                        <div class="flex-fill ms-1">
+                            <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
+                                <p>HelloWorld</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-4 ms-1 d-none">
+                        <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
+                            <p>asdf</p>
+                        </div>
+                    </div>
+                </div>
+                <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{"toggleBlockId":"2"}' dir="rtl">
+                    <div class="d-flex flex-row align-items-center">
+                        <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
+                            <i class="fa align-self-center fa-caret-right"></i>
+                        </button>
+                        <div class="flex-fill ms-1">
+                            <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
+                                <p placeholder="Toggle title" class="o-we-hint">[]<br></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-4 ms-1 d-none">
+                        <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
+                            <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                        </div>
+                    </div>
+                </div>
+            `
+            )
         );
     });
 });
