@@ -44,7 +44,7 @@
 
         <!-- Schedulers -->
         <record forcecreate="True" id="ir_cron_scheduler_orderpoints_action" model="ir.cron">
-            <field name="name">Scheduler: Run Orderpoints</field>
+            <field name="name">Stock: Run Orderpoints</field>
             <field name="model_id" ref="model_stock_warehouse_orderpoint"/>
             <field name="state">code</field>
             <field name="code">model._run_scheduler_orderpoints()</field>
@@ -54,7 +54,7 @@
         </record>
 
         <record forcecreate="True" id="ir_cron_scheduler_reservations_action" model="ir.cron">
-            <field name="name">Scheduler: Run Reservations</field>
+            <field name="name">Stock: Run Reservations</field>
             <field name="model_id" ref="model_stock_move"/>
             <field name="state">code</field>
             <field name="code">model._run_scheduler_reservations()</field>
@@ -64,7 +64,7 @@
         </record>
 
         <record forcecreate="True" id="ir_cron_scheduler_merge_quants_action" model="ir.cron">
-            <field name="name">Scheduler: Merge Quants</field>
+            <field name="name">Stock: Merge Quants</field>
             <field name="model_id" ref="model_stock_quant"/>
             <field name="state">code</field>
             <field name="code">model._merge_quants()</field>
@@ -74,7 +74,7 @@
         </record>
 
         <record forcecreate="True" id="ir_cron_scheduler_clean_reservations_action" model="ir.cron">
-            <field name="name">Scheduler: Clean Reservations</field>
+            <field name="name">Stock: Clean Reservations</field>
             <field name="model_id" ref="model_stock_quant"/>
             <field name="state">code</field>
             <field name="code">model._clean_reservations()</field>
@@ -84,7 +84,7 @@
         </record>
 
         <record forcecreate="True" id="ir_cron_scheduler_unlink_zero_quants_action" model="ir.cron">
-            <field name="name">Scheduler: Clean Quants </field>
+            <field name="name">Stock: Clean Quants </field>
             <field name="model_id" ref="model_stock_quant"/>
             <field name="state">code</field>
             <field name="code">model._unlink_zero_quants()</field>

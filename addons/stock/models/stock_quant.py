@@ -403,7 +403,7 @@ class StockQuant(models.Model):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
         self = self._set_view_context()
         if not self.env['ir.config_parameter'].sudo().get_bool('stock.skip_quant_tasks'):
-            self._merge_quants()
+            self._merge_quants(domain=self._get_quant_view_domain())
             self._unlink_zero_quants()
 
         ctx = dict(self.env.context or {})
@@ -1205,13 +1205,15 @@ class StockQuant(models.Model):
                 self.env['ir.cron']._commit_progress(processed=len(quants_chunk))
 
     @api.model
-    def _merge_quants(self):
+    def _merge_quants(self, domain=Domain.TRUE):
         """ Merges duplicated quant lines (which happens when two transactions are called
             concurrently via `_update_available_quantity` with identical parameters).
             --> `_update_available_quantity` creates multiple `stock.quant` rows for
             the same combination to make sure the transactions do not rollback.
 
             This method detects such duplicates and consolidates them into a single quant.
+
+            :param domain: used to narrow the quants to be merged
         """
         def get_duplicates(domain):
             return self.env['stock.quant'].sudo()._read_group(
@@ -1249,17 +1251,11 @@ class StockQuant(models.Model):
             duplicates_ids = [i for dup in dups for i in dup[-1].ids]
             self.env.cr.execute(query, [tuple(duplicates_ids)])
 
-        from_cron = self.env.context.get('cron_id')
-        domain = Domain.TRUE
-        if self._ids and not from_cron:
-            domain = [
-                ('location_id', 'in', self.location_id.ids),
-                ('product_id', 'in', self.product_id.ids),
-            ]
         duplicates = get_duplicates(domain)
         if not duplicates:
             return
 
+        from_cron = self.env.context.get('cron_id')
         if from_cron:
             self.env['ir.cron']._commit_progress(remaining=len(duplicates))
 
@@ -1349,6 +1345,17 @@ class StockQuant(models.Model):
             self = self.with_context(inventory_mode=True)
         return self
 
+    def _get_quant_view_domain(self):
+        """ Helper to narrow the quant cleaning when opening inventory view"""
+        ctx = self.env.context
+        if ctx.get("single_product", False) and ctx.get("default_product_id", False):
+            return Domain([('product_id', '=', int(ctx['default_product_id']))])
+        elif ctx.get("product_tmpl_ids", False):
+            return Domain([('product_tmpl_id', 'in', ctx['product_tmpl_ids'])])  # eg bom kit stock, product variants
+        elif ctx.get("search_default_internal_loc", False):
+            return Domain([('location_id.usage', '=', 'internal'), ('location_id.warehouse_id', '!=', False)])
+        return Domain.TRUE
+
     @api.model
     def _get_quants_action(self, extend=False):
         """ Returns an action to open (non-inventory adjustment) quant view.
@@ -1358,7 +1365,7 @@ class StockQuant(models.Model):
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
         if not self.env['ir.config_parameter'].sudo().get_bool('stock.skip_quant_tasks'):
-            self._merge_quants()
+            self._merge_quants(domain=self._get_quant_view_domain())
             self._unlink_zero_quants()
         ctx = dict(self.env.context or {})
         ctx['inventory_report_mode'] = True
