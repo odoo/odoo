@@ -11,6 +11,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_crm_partner_assign.controllers.main import (
@@ -203,6 +204,17 @@ class TestPartnerLeadPortal(TestCrmCommon):
             'email_from': email_2,
         })
         self.assertEqual(test_partner.email, email_2, 'Adress email on the partner must be updated')
+
+        # Portal user must be able to write to the thread
+        old_message_ids = opportunity.message_ids
+        with MockRequest(self.env(user=self.user_portal)):
+            res = ThreadController().mail_message_post(
+                "crm.lead",
+                opportunity.id,
+                {"body": "Test message"},
+            )
+        new_message_ids = opportunity.message_ids - old_message_ids
+        self.assertEqual(res['message_id'], new_message_ids.id)
 
     def test_portal_mixin_url(self):
         record_action = self.lead_portal._get_access_action(access_uid=self.user_portal.id)
