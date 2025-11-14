@@ -24,20 +24,33 @@ export class Colibri {
         this.core = core;
         this.interaction = new I(el, core.env, this);
         this.interaction.setup();
+        this.bufferedClicks = [];
     }
 
     async start() {
+        const bufferHandler = (ev) => {
+            this.bufferedClicks.push({ ev, target: ev.target });
+        };
+
+        this.el.addEventListener("click", bufferHandler, true);
         await this.interaction.willStart();
+        this.el.removeEventListener("click", bufferHandler, true);
+
         if (this.isDestroyed) {
             return;
         }
         this.isReady = true;
         const content = this.interaction.dynamicContent;
+        let toReplay = [];
         if (content) {
-            this.processContent(content);
+            toReplay = this.processContent(content);
             this.updateContent();
+            this.bufferedClicks = [];
         }
         this.interaction.start();
+        for (const [handler, ev] of toReplay) {
+            handler(ev);
+        }
     }
 
     addListener(nodes, event, fn, options) {
@@ -185,7 +198,7 @@ export class Colibri {
             }
             for (const cl in value) {
                 let toApply = value[cl];
-                for (let c of cl.trim().split(" ")) {
+                for (const c of cl.trim().split(" ")) {
                     if (toApply === INITIAL_VALUE) {
                         toApply = initialValue[cl];
                     }
@@ -250,7 +263,9 @@ export class Colibri {
     processContent(content) {
         for (const sel in content) {
             if (sel.startsWith("t-")) {
-                throw new Error(`Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`);
+                throw new Error(
+                    `Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`
+                );
             }
             let nodes;
             if (this.dynamicNodes.has(sel)) {
@@ -259,12 +274,20 @@ export class Colibri {
                 nodes = this.getNodes(sel);
                 this.dynamicNodes.set(sel, nodes);
             }
+            const toReplay = [];
             const descr = content[sel];
             for (const directive in descr) {
                 const value = descr[directive];
                 if (directive.startsWith("t-on-")) {
                     const ev = directive.slice(5);
                     const [event, handler, options] = this.addListener(nodes, ev, value);
+                    if (event === "click" && this.bufferedClicks.length) {
+                        for (const { ev, target } of this.bufferedClicks) {
+                            if (target.matches(sel)) {
+                                toReplay.push([handler, ev]);
+                            }
+                        }
+                    }
                     this.mapSelectorToListeners(sel, event, handler, options);
                 } else if (directive.startsWith("t-att-")) {
                     const attr = directive.slice(6);
@@ -283,6 +306,7 @@ export class Colibri {
                     throw new Error(`Invalid directive: '${directive}'${suffix}`);
                 }
             }
+            return toReplay;
         }
     }
 
@@ -350,7 +374,9 @@ export class Colibri {
                     if (!owl) {
                         owl = odoo.loader.modules.get("@odoo/owl");
                     }
-                    const value = node.children.length ? owl.markup(node.innerHTML) : node.textContent;
+                    const value = node.children.length
+                        ? owl.markup(node.innerHTML)
+                        : node.textContent;
                     valuePerNode.set(node, value);
                 }
                 this.applyTOut(node, definition.call(interaction, node), tOut[2].get(node));
