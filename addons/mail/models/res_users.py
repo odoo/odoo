@@ -491,7 +491,10 @@ class ResUsers(models.Model):
             [("user_id", "=", self.env.uid)],
             order='id desc', limit=search_limit,
         )
+        return self._divide_activities_in_groups(activities)
 
+    def _divide_activities_in_groups(self, activities):
+        """Group activities per model for the systray. Only the most urgent activity is kept per record."""
         user_company_ids = self.env.user.company_ids.ids
         is_all_user_companies_allowed = set(user_company_ids) == set(self.env.context.get('allowed_company_ids') or [])
 
@@ -503,9 +506,6 @@ class ResUsers(models.Model):
                 activities_rec_groups[activity.res_model][activity.res_id] += activity
             else:
                 activities_rec_groups["mail.activity"][activity.id] += activity
-        model_activity_states = {
-            'mail.activity': {'overdue_count': 0, 'today_count': 0, 'planned_count': 0, 'total_count': 0}
-        }
         for model_name, activities_by_record in activities_rec_groups.items():
             res_ids = [id_ for id_ in activities_by_record if id_]
             Model = self.env[model_name]
@@ -521,50 +521,45 @@ class ResUsers(models.Model):
             if has_model_access_right and unallowed_records and not is_all_user_companies_allowed:
                 unallowed_records -= (unallowed_records & existing).with_context(
                     allowed_company_ids=user_company_ids)._filtered_access('read')
-            model_activity_states[model_name] = {'overdue_count': 0, 'today_count': 0, 'planned_count': 0, 'total_count': 0}
-            for record_id, activities in activities_by_record.items():
+            for record_id, record_activities in activities_by_record.items():
+                most_urgent = min(record_activities, key=lambda a: (a.date_deadline, a.id))
                 if record_id in unallowed_records.ids:
-                    model_key = 'mail.activity'
-                    activities_model_groups['mail.activity'] += activities
+                    activities_model_groups['mail.activity'] += most_urgent
                 elif record_id in allowed_records.ids:
-                    model_key = model_name
-                    activities_model_groups[model_name] += activities
+                    activities_model_groups[model_name] += most_urgent
                 elif record_id:
                     continue
 
-                if 'overdue' in activities.mapped('state'):
-                    model_activity_states[model_key]['overdue_count'] += 1
-                    model_activity_states[model_key]['total_count'] += 1
-                elif 'today' in activities.mapped('state'):
-                    model_activity_states[model_key]['today_count'] += 1
-                    model_activity_states[model_key]['total_count'] += 1
-                else:
-                    model_activity_states[model_key]['planned_count'] += 1
-
         model_ids = [self.env["ir.model"]._get_id(name) for name in activities_model_groups]
-        user_activities = {}
-        for model_name, activities in activities_model_groups.items():
-            Model = self.env[model_name]
-            module = Model._original_module
-            icon = (module and modules.module.get_module_icon(module)) or "/base/static/description/icon.png"
-            model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
-            user_activities[model_name] = {
-                "id": model.id,
-                "name": model.name if model_name != "mail.activity" else _("Other Activities"),
-                "model": model_name,
-                "type": "activity",
-                "icon": icon,
-                # activity more important than archived status, active_test is too broad
-                "domain": [('active', 'in', [True, False])] if model_name != "mail.activity" and "active" in Model else [],
-                "total_count": model_activity_states[model_name]['total_count'],
-                "today_count": model_activity_states[model_name]['today_count'],
-                "overdue_count": model_activity_states[model_name]['overdue_count'],
-                "planned_count": model_activity_states[model_name]['planned_count'],
-                "view_type": getattr(Model, '_systray_view', 'list'),
-            }
-            if model_name == 'mail.activity':
-                user_activities[model_name]['activity_ids'] = activities.ids
-        return list(user_activities.values())
+        self.env['ir.model'].sudo().browse(model_ids).fetch(['name'])
+
+        return [
+            self._format_activity_group(model_name, activities)
+            for model_name, activities in activities_model_groups.items()
+        ]
+
+    def _format_activity_group(self, model_name, activities):
+        Model = self.env[model_name]
+        module = Model._original_module
+        icon = (module and modules.module.get_module_icon(module)) or "/base/static/description/icon.png"
+        model = self.env['ir.model']._get(model_name)
+        states = activities.mapped('state')
+
+        return {
+            "id": model.id,
+            "name": model.name if model_name != "mail.activity" else _("Other Activities"),
+            "model": model_name,
+            "type": "activity",
+            "icon": icon,
+            # activity more important than archived status, active_test is too broad
+            "domain": [('active', 'in', [True, False])] if model_name != "mail.activity" and "active" in Model else [],
+            "total_count": states.count('overdue') + states.count('today'),
+            "today_count": states.count('today'),
+            "overdue_count": states.count('overdue'),
+            "planned_count": states.count('planned'),
+            "view_type": getattr(Model, '_systray_view', 'list'),
+            "activity_ids": activities.ids,
+        }
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.attr("share")

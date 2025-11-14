@@ -466,6 +466,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         cls.test_activities = cls.env['mail.activity']
         for record, summary, dt, creator, user_id, role_id in (
             (cls.test_record, "Summary Today'", cls.dt_reference, cls.user_employee, cls.user_employee.id, False),
+            (cls.test_record, "Summary Today Copy'", cls.dt_reference, cls.user_employee, cls.user_employee.id, False),
             (cls.test_record, "Role Tomorrow", cls.dt_reference + timedelta(days=1), cls.user_admin, False, cls.test_role_1.id),
             (cls.test_record, "Role Only Today", cls.dt_reference, cls.user_admin, False, cls.test_role_2.id),
             (cls.test_record_2, "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee, cls.user_employee.id, cls.test_role_1.id),
@@ -482,8 +483,8 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
                 role_id=role_id,
             )
 
-        cls.test_role_only_activities = cls.test_activities[1:3]
-        cls.test_lead_activities = cls.test_activities[4:]
+        cls.test_role_only_activities = cls.test_activities[2:4]
+        cls.test_lead_activities = cls.test_activities[5:]
         cls.test_activities_removed = cls.deleted_record.activity_ids
         cls.test_activities_company_2 = cls.test_lead_records[3].activity_ids
 
