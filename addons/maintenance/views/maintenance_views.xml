@@ -16,15 +16,17 @@
                 <field name="maintenance_team_id"/>
                 <filter string="My Maintenances" name="my_maintenances" domain="[('user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="To Do" name="todo" domain="[('stage_id.done', '=', False)]"/>
-                <filter string="Done" name="done" domain="[('stage_id.done', '=', True)]"/>
+                <filter string="Open" name="todo" domain="[('state', 'not in', ['done', 'cancelled'])]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
                 <separator/>
-                <filter string="Blocked" name="kanban_state_block" domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'blocked')]"/>
-                <filter string="Ready" name="done" domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'done')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'normal')]"/>
+                <filter string="Changes Requested" name="changes_requested" domain="[('state', '=', 'changes_requested')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
                 <separator/>
-                <filter string="High-priority" name="high_priority" domain="[('stage_id.done', '=', False), ('priority', '=', '3')]"/>
+                <filter string="High-priority" name="high_priority" domain="[('state', 'not in', ['done', 'cancelled']), ('priority', '=', '3')]"/>
                 <separator/>
-                <filter string="Unscheduled" name="unscheduled" domain="[('stage_id.done', '=', False), ('schedule_date', '=', False)]"/>
+                <filter string="Unscheduled" name="unscheduled" domain="[('state', 'not in', ['done', 'cancelled']), ('schedule_date', '=', False)]"/>
                 <separator/>
                 <filter name="filter_schedule_date" date="schedule_date"/>
                 <filter name="filter_close_date" date="close_date"/>
@@ -83,15 +85,12 @@
                 <field name="company_id" invisible="1"/>
                 <field name="category_id" invisible="1"/>
                 <header>
-                    <button string="Cancel" name="archive_equipment_request" type="object" invisible="archive"/>
-                    <button string="Reopen Request" name="reset_equipment_request" type="object" invisible="not archive"/>
-                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}" invisible="archive"/>
+                    <button string="Cancel" name="cancel_equipment_request" type="object" invisible="state == 'cancelled'"/>
+                    <button string="Reopen Request" name="reset_equipment_request" type="object" invisible="state != 'cancelled'"/>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}" invisible="state == 'cancelled'"/>
                 </header>
                 <sheet>
-                    <div invisible="not archive">
-                        <span class="badge text-bg-warning float-end">Cancelled</span>
-                    </div>
-                    <field name="kanban_state" widget="state_selection"/>
+                    <field name="state" widget="maintenance_request_state_selection" class="float-end"/>
                     <div class="oe_title">
                         <label for="name" string="Request"/>
                         <h1>
@@ -103,8 +102,7 @@
                             <field name="owner_user_id" string="Requested By" invisible="1"/>
                             <field name="equipment_id" context="{'default_company_id':company_id, 'default_category_id':category_id}" required="1"/>
                             <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" invisible="not equipment_id"/>
-                            <field name="done" invisible="1"/>
-                            <field name="close_date" readonly="True" invisible="not done"/>
+                            <field name="close_date" readonly="True" invisible="state != 'done'"/>
                             <field name="archive" invisible="1"/>
                             <field name="maintenance_type" widget="radio"/>
                         </group>
@@ -152,8 +150,7 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <kanban highlight_color="color" default_group_by="stage_id" sample="1">
-                <field name="archive" />
-                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
+                <progressbar field="state" colors='{"done": "success", "cancelled": "danger"}'/>
                 <templates>
                     <t t-name="menu">
                         <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit...</a></t>
@@ -161,23 +158,22 @@
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="card">
-                        <field name="name" class="fw-bold fs-5"/>
-                        <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/></span>
-                        <span t-if="record.equipment_id.raw_value"><field name="equipment_id"/><span t-if="record.category_id.raw_value"> (<field name="category_id"/>)</span></span>
-                        <field name="schedule_date"/>
-                        <footer>
-                            <div class="d-flex">
-                                <field name="priority" widget="priority"/>
-                                <field name="activity_ids" widget="kanban_activity" class="ms-3"/>
-                            </div>
-                            <div class="d-flex ms-auto align-items-center">
-                                <div class="badge text-bg-warning float-end" invisible="not archive">
-                                    Cancelled
+                        <main t-att-class="['done', 'cancelled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/></span>
+                            <span t-if="record.equipment_id.raw_value"><field name="equipment_id"/><span t-if="record.category_id.raw_value"> (<field name="category_id"/>)</span></span>
+                            <field name="schedule_date"/>
+                            <footer>
+                                <div class="d-flex">
+                                    <field name="priority" widget="priority"/>
+                                    <field name="activity_ids" widget="kanban_activity" class="ms-3"/>
                                 </div>
-                                <field name="kanban_state" widget="state_selection" class="ms-1"/>
-                                <field name="user_id" widget="many2one_avatar_user" class="ms-1"/>
-                            </div>
-                        </footer>
+                                <div class="d-flex ms-auto align-items-center">
+                                    <field name="state" widget="maintenance_request_state_selection"/>
+                                    <field name="user_id" widget="many2one_avatar_user" class="ms-1"/>
+                                </div>
+                            </footer>
+                        </main>
                     </t>
                 </templates>
             </kanban>
@@ -241,9 +237,9 @@
                 <field name="repeat_unit" invisible="1"/>
                 <field name="repeat_type" invisible="1"/>
                 <field name="repeat_until" invisible="1"/>
-                <field name="done" invisible="1"/>
                 <field name="archive" invisible="1"/>
                 <field name="duration" invisible="1"/>
+                <field name="state" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -376,7 +372,7 @@
                             class="oe_stat_button"
                             context="{'search_default_active': True, 'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
                             icon="fa-wrench">
-                            <field string="Maintenance" name="maintenance_open_count" widget="statinfo"/>
+                            <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -598,7 +594,7 @@
                         type="action"
                         class="oe_stat_button"
                         icon="fa-wrench">
-                        <field string="Maintenance" name="maintenance_open_count" widget="statinfo"/>
+                        <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                     </button>
                 </div>
                 <div class="oe_title">
@@ -699,7 +695,6 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="fold"/>
-                <field name="done"/>
             </list>
         </field>
     </record>
@@ -821,17 +816,17 @@
                                     </div>
                                     <div role="menuitem">
                                         <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
-                                            To Do
-                                        </a>
-                                    </div>
-                                    <div role="menuitem">
-                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_progress': 1}">
-                                            In Progress
+                                            Open
                                         </a>
                                     </div>
                                     <div role="menuitem">
                                         <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_done': 1}">
                                             Done
+                                        </a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_cancelled': 1}">
+                                            Cancelled
                                         </a>
                                     </div>
                                 </div>
@@ -867,7 +862,7 @@
                                 </button>
                             </div>
                             <div class="col-6">
-                                <a t-if="record.todo_request_count_date.raw_value > 0" name="%(hr_equipment_request_action_cal)d" type="action" context="{'search_default_todo': 1, 'search_default_maintenance_team_id': id}" class="d-block">
+                                <a t-if="record.todo_request_count_date.raw_value > 0" name="%(hr_equipment_request_action_cal)d" type="action" context="{'search_default_maintenance_team_id': id}" class="d-block">
                                     <field name="todo_request_count_date"/>
                                     Scheduled
                                 </a>
@@ -875,11 +870,11 @@
                                     <field name="todo_request_count_high_priority"/>
                                     Top Priorities
                                 </a>
-                                <a t-if="record.todo_request_count_block.raw_value > 0" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}" class="d-block">
-                                    <field name="todo_request_count_block"/>
-                                    Blocked
+                                <a t-if="record.todo_request_count_changes_requested.raw_value > 0" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_changes_requested': 1}" class="d-block">
+                                    <field name="todo_request_count_changes_requested"/>
+                                    Changes Requested
                                 </a>
-                                <a t-if="record.todo_request_count_unscheduled.raw_value > 0" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1, 'search_default_unscheduled': 1}" class="d-block">
+                                <a t-if="record.todo_request_count_unscheduled.raw_value > 0" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}" class="d-block">
                                     <field name="todo_request_count_unscheduled"/>
                                     Unscheduled
                                 </a>

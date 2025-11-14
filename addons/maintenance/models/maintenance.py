@@ -17,7 +17,6 @@ class MaintenanceStage(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=20)
     fold = fields.Boolean('Folded in Maintenance Pipe')
-    done = fields.Boolean('Request Done')
 
 
 class MaintenanceEquipmentCategory(models.Model):
@@ -53,11 +52,11 @@ class MaintenanceEquipmentCategory(models.Model):
             category.equipment_count = mapped_data.get(category.id, 0)
 
     def _compute_maintenance_count(self):
-        maintenance_data = self.env['maintenance.request']._read_group([('category_id', 'in', self.ids)], ['category_id', 'archive'], ['__count'])
-        mapped_data = {(category.id, archive): count for category, archive, count in maintenance_data}
+        maintenance_data = self.env['maintenance.request']._read_group([('category_id', 'in', self.ids)], ['category_id', 'state'], ['__count'])
+        mapped_data = {(category.id, state): count for category, state, count in maintenance_data}
         for category in self:
-            category.maintenance_open_count = mapped_data.get((category.id, False), 0)
-            category.maintenance_count = category.maintenance_open_count + mapped_data.get((category.id, True), 0)
+            category.maintenance_open_count = sum(mapped_data.get((category.id, state), 0) for state in ['normal', 'changes_requested', 'approved'])
+            category.maintenance_count = category.maintenance_open_count + sum(mapped_data.get((category.id, state), 0) for state in ['done', 'cancelled'])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_maintenance_requests(self):
@@ -91,10 +90,10 @@ class MaintenanceMixin(models.AbstractModel):
             if record.maintenance_team_id.company_id and record.maintenance_team_id.company_id.id != record.company_id.id:
                 record.maintenance_team_id = False
 
-    @api.depends('effective_date', 'maintenance_ids.stage_id', 'maintenance_ids.close_date', 'maintenance_ids.schedule_date')
+    @api.depends('effective_date', 'maintenance_ids.state', 'maintenance_ids.close_date', 'maintenance_ids.schedule_date')
     def _compute_maintenance_request(self):
         for record in self:
-            maintenance_requests = record.maintenance_ids.filtered(lambda mr: mr.maintenance_type == 'corrective' and mr.stage_id.done)
+            maintenance_requests = record.maintenance_ids.filtered(lambda mr: mr.maintenance_type == 'corrective' and mr.state == 'done')
             failure_dates = [(request.schedule_date or request.create_date).date() for request in maintenance_requests]
             record.mttr = len(maintenance_requests) and sum((request.close_date - failure_date).days
                 if request.close_date else 0
@@ -103,11 +102,11 @@ class MaintenanceMixin(models.AbstractModel):
             record.mtbf = record.latest_failure_date and (record.latest_failure_date - record.effective_date).days / len(maintenance_requests) or 0
             record.estimated_next_failure = record.mtbf and record.latest_failure_date + relativedelta(days=record.mtbf) or False
 
-    @api.depends('maintenance_ids.stage_id.done', 'maintenance_ids.archive')
+    @api.depends('maintenance_ids.state')
     def _compute_maintenance_count(self):
         for record in self:
             record.maintenance_count = len(record.maintenance_ids)
-            record.maintenance_open_count = len(record.maintenance_ids.filtered(lambda mr: not mr.stage_id.done and not mr.archive))
+            record.maintenance_open_count = len(record.maintenance_ids.filtered(lambda mr: mr.state not in ['done', 'cancelled']))
 
 
 class MaintenanceEquipment(models.Model):
@@ -223,8 +222,13 @@ class MaintenanceRequest(models.Model):
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
     color = fields.Integer('Color Index')
     close_date = fields.Date('Close Date', help="Date the maintenance was finished. ")
-    kanban_state = fields.Selection([('normal', 'In Progress'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
-                                    string='Kanban State', required=True, default='normal', tracking=True)
+    state = fields.Selection([
+        ('normal', 'In Progress'),
+        ('changes_requested', 'Changes Requested'),
+        ('approved', 'Approved'),
+        ('done', 'Done'),
+        ('cancelled', 'Cancelled'),
+    ], string='State', required=True, default='normal', tracking=True, copy=False)
     # active = fields.Boolean(default=True, help="Set active to false to hide the maintenance request without deleting it.")
     archive = fields.Boolean(default=False, help="Set archive to true to hide the maintenance request without deleting it.")
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
@@ -236,7 +240,6 @@ class MaintenanceRequest(models.Model):
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, index=True, default=_get_default_team_id,
                                           compute='_compute_maintenance_team_id', store=True, readonly=False, check_company=True)
     duration = fields.Float(help="Duration in hours.", compute='_compute_duration', store=True)
-    done = fields.Boolean(related='stage_id.done')
     instruction_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
         string="Instruction", default="text"
@@ -258,14 +261,13 @@ class MaintenanceRequest(models.Model):
     ], default="forever", string="Until")
     repeat_until = fields.Date(string="End Date")
 
-    def archive_equipment_request(self):
-        self.write({'archive': True, 'recurring_maintenance': False})
+    def cancel_equipment_request(self):
+        self.write({'state': 'cancelled', 'recurring_maintenance': False})
 
     def reset_equipment_request(self):
         """ Reinsert the maintenance request into the maintenance pipe in the first stage"""
         first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
-        # self.write({'active': True, 'stage_id': first_stage_obj.id})
-        self.write({'archive': False, 'stage_id': first_stage_obj.id})
+        self.write({'state': 'normal', 'stage_id': first_stage_obj.id})
 
     @api.constrains('schedule_end')
     def _check_schedule_end(self):
@@ -330,20 +332,20 @@ class MaintenanceRequest(models.Model):
                 request._add_followers()
             if request.equipment_id and not request.maintenance_team_id:
                 request.maintenance_team_id = request.maintenance_team_id
-            if request.close_date and not request.stage_id.done:
+            if request.close_date and request.state != 'done':
                 request.close_date = False
-            if not request.close_date and request.stage_id.done:
+            if not request.close_date and request.state == 'done':
                 request.close_date = fields.Date.today()
         maintenance_requests.activity_update()
         return maintenance_requests
 
     def write(self, vals):
-        # Overridden to reset the kanban_state to normal whenever
+        # Overridden to reset the state to normal whenever
         # the stage (stage_id) of the Maintenance Request changes.
-        if vals and 'kanban_state' not in vals and 'stage_id' in vals:
-            vals['kanban_state'] = 'normal'
+        if vals and 'state' not in vals and 'stage_id' in vals:
+            self.filtered(lambda request: request.state in ['changes_requested', 'approved']).state = 'normal'
         now = fields.Datetime.now()
-        if 'stage_id' in vals and self.env['maintenance.stage'].browse(vals['stage_id']).done:
+        if vals.get('state') == 'done':
             for request in self:
                 if request.maintenance_type != 'preventive' or not request.recurring_maintenance:
                     continue
@@ -356,12 +358,13 @@ class MaintenanceRequest(models.Model):
                         'schedule_end': schedule_end,
                         'stage_id': request._default_stage().id,
                     })
+            self.close_date = fields.Date.today()
+        elif 'state' in vals:
+            self.filtered('close_date').close_date = False
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
-        if 'stage_id' in vals:
-            self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
-            self.filtered(lambda m: not m.stage_id.done).write({'close_date': False})
+        if 'state' in vals:
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
             self.activity_update()
         if vals.get('user_id') or vals.get('schedule_date'):
@@ -433,23 +436,20 @@ class MaintenanceTeam(models.Model):
     todo_request_count = fields.Integer(string="Number of Requests", compute='_compute_todo_requests')
     todo_request_count_date = fields.Integer(string="Number of Requests Scheduled", compute='_compute_todo_requests')
     todo_request_count_high_priority = fields.Integer(string="Number of Requests in High Priority", compute='_compute_todo_requests')
-    todo_request_count_block = fields.Integer(string="Number of Requests Blocked", compute='_compute_todo_requests')
+    todo_request_count_changes_requested = fields.Integer(string="Number of Requests with Changes Requested", compute='_compute_todo_requests')
     todo_request_count_unscheduled = fields.Integer(string="Number of Requests Unscheduled", compute='_compute_todo_requests')
     alias_id = fields.Many2one(help="Email alias for this maintenance team.")
 
-    @api.depends('request_ids.stage_id.done')
+    @api.depends('request_ids.state')
     def _compute_todo_requests(self):
         for team in self:
-            team.todo_request_ids = self.env['maintenance.request'].search([('maintenance_team_id', '=', team.id), ('stage_id.done', '=', False), ('archive', '=', False)])
-            data = self.env['maintenance.request']._read_group(
-                [('maintenance_team_id', '=', team.id), ('stage_id.done', '=', False), ('archive', '=', False)],
-                ['schedule_date:year', 'priority', 'kanban_state'],
-                ['__count']
-            )
+            domain = [('maintenance_team_id', '=', team.id), ('state', 'not in', ['done', 'cancelled'])]
+            team.todo_request_ids = self.env['maintenance.request'].search(domain)
+            data = self.env['maintenance.request']._read_group(domain, ['schedule_date:year', 'priority', 'state'], ['__count'])
             team.todo_request_count = sum(count for (_, _, _, count) in data)
             team.todo_request_count_date = sum(count for (schedule_date, _, _, count) in data if schedule_date)
             team.todo_request_count_high_priority = sum(count for (_, priority, _, count) in data if priority == '3')
-            team.todo_request_count_block = sum(count for (_, _, kanban_state, count) in data if kanban_state == 'blocked')
+            team.todo_request_count_changes_requested = sum(count for (_, _, state, count) in data if state == 'changes_requested')
             team.todo_request_count_unscheduled = team.todo_request_count - team.todo_request_count_date
 
     @api.depends('equipment_ids')
