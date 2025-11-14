@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 11:22+0000\n"
-"PO-Revision-Date: 2025-09-11 11:22+0000\n"
+"POT-Creation-Date: 2025-11-13 15:31+0000\n"
+"PO-Revision-Date: 2025-11-13 15:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:l10n_dk_nemhandel.nemhandel_onboarding_tour
 msgid ""
 "<span><strong><b>Good job!</b> You're registered on Nemhandel.</strong>\n"
-"            <br>You can now fill in the data for your customers and send them invoices\n"
+"            <br>You can now fill in the data for your customers and send them invoices electronically\n"
 "        </span>"
 msgstr ""
 
@@ -220,6 +220,11 @@ msgid "Contact email is required"
 msgstr ""
 
 #. module: l10n_dk_nemhandel
+#: model:ir.model,website_form_label:l10n_dk_nemhandel.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_dk_nemhandel
 #: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__create_uid
 msgid "Created by"
 msgstr ""
@@ -240,7 +245,17 @@ msgid "Deregister"
 msgstr ""
 
 #. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_edi_proxy_client_user__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_edi_xml_oioubl_21__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move_send_batch_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -292,16 +307,6 @@ msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr ""
 
 #. module: l10n_dk_nemhandel
-#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.account_journal_dashboard_kanban_view
-msgid "Fetch Nemhandel invoice status"
-msgstr ""
-
-#. module: l10n_dk_nemhandel
-#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.account_journal_dashboard_kanban_view
-msgid "Fetch from Nemhandel"
-msgstr ""
-
-#. module: l10n_dk_nemhandel
 #: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
 msgid "Fill in the code below that we sent you by SMS to"
 msgstr ""
@@ -312,7 +317,17 @@ msgid "IBAN"
 msgstr ""
 
 #. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_edi_proxy_client_user__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_edi_xml_oioubl_21__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move_send_batch_wizard__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -421,6 +436,7 @@ msgid "Nemhandel EDI operating mode"
 msgstr ""
 
 #. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__nemhandel_edi_user
 #: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_edi_user
 msgid "Nemhandel Edi User"
 msgstr ""
@@ -628,6 +644,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_dk_nemhandel/models/res_company.py:0
 msgid "Please install the phonenumbers library."
+msgstr ""
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid ""
+"Please set a journal for Nemhandel invoices on %s before receiving "
+"documents."
 msgstr ""
 
 #. module: l10n_dk_nemhandel
