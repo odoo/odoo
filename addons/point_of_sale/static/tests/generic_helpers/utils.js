@@ -31,8 +31,8 @@ export function refresh() {
         async () => {
             await new Promise((resolve) => {
                 const checkTransaction = () => {
-                    const activeTransactions = posmodel.data.indexedDB.activeTransactions;
-                    if (activeTransactions.size === 0) {
+                    const activeTransactions = posmodel.data.indexedDB?.activeTransactions;
+                    if (!activeTransactions || activeTransactions.size === 0) {
                         window.location.reload();
                         resolve();
                     } else {

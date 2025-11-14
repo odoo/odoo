@@ -34,11 +34,23 @@ export class PosPreset extends Base {
     }
 
     get nextSlot() {
-        const dateNow = DateTime.now();
-        const sqlDate = dateNow.toFormat("yyyy-MM-dd");
+        return this.getFirstAvailableSlot(DateTime.now());
+    }
+    getFirstAvailableSlot(dateTime) {
+        const sqlDate = dateTime.toFormat("yyyy-MM-dd");
         return Object.values(this.uiState.availabilities[sqlDate]).find(
-            (s) => !s.isFull && s.datetime > dateNow
+            (s) => !s.isFull && s.datetime > dateTime
         );
+    }
+    getNextSlotAcrossDays(days = 7) {
+        const dateNow = DateTime.now();
+        for (let i = 0; i < days; i++) {
+            const nextSlot = this.getFirstAvailableSlot(dateNow.plus({ days: i }));
+            if (nextSlot) {
+                return nextSlot;
+            }
+        }
+        return false;
     }
 
     get availabilities() {
@@ -91,10 +103,11 @@ export class PosPreset extends Base {
         const usage = this.slotsUsage;
         const interval = this.interval_time;
         const slots = {};
+        const now = DateTime.now();
 
         // Compute slots for next 7 days
         for (const i of [...Array(7).keys()]) {
-            const dateNow = DateTime.now().plus({ days: i });
+            const dateNow = now.plus({ days: i });
             const getDateTime = (hour) =>
                 DateTime.fromObject({
                     year: dateNow.year,
@@ -104,7 +117,7 @@ export class PosPreset extends Base {
                     minute: Math.round((hour % 1) * 60),
                 });
             const dayOfWeek = (dateNow.weekday - 1).toString();
-            const date = DateTime.now().plus({ days: i }).toFormat("yyyy-MM-dd");
+            const date = dateNow.toFormat("yyyy-MM-dd");
             const attToday = this.attendance_ids.filter((a) => a.dayofweek === dayOfWeek);
             slots[date] = [];
 
@@ -114,16 +127,18 @@ export class PosPreset extends Base {
 
                 let start = dateOpening;
                 while (start >= dateOpening && start <= dateClosing && interval > 0) {
-                    const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
+                    if (start > now) {
+                        const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
 
-                    if (slots[date][sqlDatetime]) {
-                        slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
-                    } else {
-                        slots[date][sqlDatetime] = {
-                            periode: attendance.day_period,
-                            datetime: start,
-                            order_ids: new Set(usage[sqlDatetime] || []),
-                        };
+                        if (slots[date][sqlDatetime]) {
+                            slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
+                        } else {
+                            slots[date][sqlDatetime] = {
+                                periode: attendance.day_period,
+                                datetime: start,
+                                order_ids: new Set(usage[sqlDatetime] || []),
+                            };
+                        }
                     }
 
                     start = start.plus({ minutes: interval });
@@ -132,6 +147,48 @@ export class PosPreset extends Base {
         }
 
         this.uiState.availabilities = slots;
+    }
+
+    getClosedBadge() {
+        if (!this.use_timing) {
+            return { color: "danger", label: "Closed" };
+        }
+
+        const nextSlot = this.getNextSlotAcrossDays();
+        const now = DateTime.now();
+        const diffDays = nextSlot.datetime.diff(now, "days").days;
+        const diffHours = nextSlot.datetime.diff(now, "hours").hours;
+        const localized = nextSlot.datetime.setLocale(nextSlot.datetime.loc.locale);
+
+        // Same day
+        if (diffDays < 1 || diffHours < 12) {
+            return {
+                color: "success",
+                label: localized.toLocaleString({ hour: "numeric", minute: "numeric" }),
+            };
+        }
+
+        // Tomorrow
+        if (diffDays < 2) {
+            return {
+                color: "warning",
+                label: "Tomorrow ",
+            };
+        }
+
+        // Within a week
+        if (diffDays <= 7) {
+            return {
+                color: "warning",
+                label: localized.toLocaleString({ weekday: "long" }),
+            };
+        }
+
+        // Beyond a week
+        return {
+            color: "warning",
+            label: localized.toLocaleString({ month: "numeric", day: "numeric" }),
+        };
     }
 }
 

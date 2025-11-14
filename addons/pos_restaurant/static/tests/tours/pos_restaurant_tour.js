@@ -438,10 +438,10 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
-            Chrome.selectPresetTimingSlotHour("12:00"),
-            Chrome.presetTimingSlotIs("12:00"),
+            Chrome.selectPresetTimingSlotHour("15:00"),
+            Chrome.presetTimingSlotIs("15:00"),
             checkPreparationTicketData([{ name: "Water", qty: 1 }], {
-                visibleInDom: ["Takeaway", "12:00"],
+                visibleInDom: ["Takeaway", "15:00"],
             }),
         ].flat(),
 });

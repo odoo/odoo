@@ -34,7 +34,10 @@ export class OrderReceipt extends Component {
     }
 
     get qrCode() {
-        const baseUrl = this.order.session._base_url;
+        const baseUrl = this.order.session?._base_url;
+        if (!baseUrl) {
+            return "";
+        }
         const url = `${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`;
         return generateQRCodeDataUrl(url);
     }

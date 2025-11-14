@@ -15,6 +15,20 @@ export function isClosed() {
     };
 }
 
+export function hasNoClosedBadge() {
+    return {
+        content: `Check if the POS has no closed badge`,
+        trigger: `body:not(:has(.preset_btn > .badge))`,
+    };
+}
+
+export function hasClosedBadge() {
+    return {
+        content: `Check if the POS has closed badge`,
+        trigger: `.preset_btn > .badge`,
+    };
+}
+
 export function isOpened() {
     return {
         content: `Check if the POS is opened`,

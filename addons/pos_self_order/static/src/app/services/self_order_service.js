@@ -61,7 +61,6 @@ export class SelfOrder extends Reactive {
         this.rpcLoading = false;
         this.paymentError = false;
         this.selectedOrderUuid = null;
-        this.ordering = false;
         this.orderTakeAwayState = {};
         this.orderSubscribtion = new Set();
         this.kitchenPrinters = [];
@@ -93,7 +92,6 @@ export class SelfOrder extends Reactive {
             this.data.connectWebSocket("STATUS", ({ status }) => {
                 if (status === "closed") {
                     this.pos_session = [];
-                    this.ordering = false;
                 } else {
                     // reload to get potential new settings
                     // more easier than RPC for now
@@ -366,6 +364,10 @@ export class SelfOrder extends Reactive {
         return this.createNewOrder();
     }
 
+    get currentOrderPreset() {
+        return this.currentOrder?.preset_id;
+    }
+
     createNewOrder() {
         const autoSelectedPresets =
             this.models["pos.preset"].length === 1 && this.config.use_presets;
@@ -391,6 +393,14 @@ export class SelfOrder extends Reactive {
 
     get kioskMode() {
         return this.config.self_ordering_mode === "kiosk";
+    }
+
+    get mobileOrderingMode() {
+        return this.config.self_ordering_mode === "mobile";
+    }
+
+    get menuOnlyMode() {
+        return this.config.self_ordering_mode === "consultation";
     }
 
     markupDescriptions() {
@@ -512,10 +522,6 @@ export class SelfOrder extends Reactive {
         }
     }
     async initKioskData() {
-        if (this.session && this.access_token) {
-            this.ordering = true;
-        }
-
         await this.config.cacheReceiptLogo();
 
         window.addEventListener("click", (event) => {
@@ -549,14 +555,20 @@ export class SelfOrder extends Reactive {
                         (t) => t.identifier === tableIdentifier
                     );
                 }
-
-                this.ordering = true;
-            }
-
-            if (!this.ordering) {
-                return;
             }
         }
+    }
+
+    get ordering() {
+        if (this.kioskMode) {
+            return this.session && this.access_token;
+        }
+
+        if (this.mobileOrderingMode) {
+            return (this.session || this.currentOrderPreset?.use_timing) && this.access_token;
+        }
+
+        return false;
     }
 
     cancelOrder() {

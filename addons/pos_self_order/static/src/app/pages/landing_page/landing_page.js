@@ -107,7 +107,7 @@ export class LandingPage extends Component {
         ) {
             return;
         }
-        if (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id) {
+        if (this.selfOrder.hasPresets()) {
             this.router.navigate("location");
         } else {
             this.router.navigate("product_list");

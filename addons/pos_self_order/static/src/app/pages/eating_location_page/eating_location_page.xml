@@ -11,14 +11,20 @@
                             t-as="preset" t-key="preset.id"
                             t-on-click="() => this.selectPreset(preset)"
                             role="button"
-                            class="preset_btn fs-2 fw-medium g-col-12 g-col-sm-6 d-flex flex-row-inverse flex-sm-column  align-items-center w-100 border border-light shadow-sm overflow-hidden bg-white rounded cursor-pointer rounded-4"
+                            class="preset_btn fs-2 fw-medium g-col-12 g-col-sm-6 d-flex flex-row-inverse flex-sm-column  align-items-center w-100 border border-light shadow-sm overflow-hidden bg-white rounded cursor-pointer rounded-4 position-relative"
                             t-att-class="{'justify-content-center': !preset.has_image, 'g-col-md-6': presets.length &lt; 3, 'g-col-md-4': presets.length &gt; 2 }">
                             <t t-if="preset.has_image">
                                 <div class="img_container flex-shrink-0 w-25 w-sm-100 ratio ratio-1x1">
                                     <img class="object-fit-cover" t-attf-src="/web/image/pos.preset/#{preset.id}/image_512?unique=#{preset.write_date} "/>
                                 </div>
                             </t>
-                           <span class="px-3 py-3 fw-bold"  t-esc="preset.name"/>
+                            <span class="px-3 py-3 fw-bold"  t-esc="preset.name"/>
+                            <t t-if="showBadges">
+                                <t t-set="closedBadge" t-value="preset.getClosedBadge()"/>
+                                <span class="badge rounded-pill position-absolute top-0 end-0 m-2" t-attf-class="text-bg-{{closedBadge.color}}" t-esc="closedBadge.label">
+                                    <t t-esc="closedBadge.label"/>
+                                </span>
+                            </t>
                        </article>
                    </div>
                 </div>
