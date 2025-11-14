@@ -421,7 +421,9 @@ class Website(Home):
             dynamic_filter_sudo = dynamic_filter_sudo.search(
                 Domain('id', '=', filter_id) & request.website.website_domain()
             )
-        return dynamic_filter_sudo._render(**kwargs) or []
+        single_record_filter = kwargs.get('limit') == 1 and kwargs.get('res_model') and kwargs.get('res_id')
+        dynamic_filter_found = single_record_filter or dynamic_filter_sudo
+        return dynamic_filter_sudo._render(**kwargs) if dynamic_filter_found else []
 
     @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
