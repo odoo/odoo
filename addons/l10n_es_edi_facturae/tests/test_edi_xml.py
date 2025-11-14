@@ -256,6 +256,37 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
+    def test_out_invoice_withhold(self):
+        """
+        The Tax Withhold must be positive in the generated xml
+        """
+        with freeze_time(self.frozen_today):
+            withhold_tax = self.env['account.tax'].create({
+                'name': "15% WHI (Test)",
+                'company_id': self.company_data['company'].id,
+                'amount': -15.0,
+                'price_include_override': 'tax_excluded',
+                'l10n_es_edi_facturae_tax_type': '04',
+            })
+
+            invoice = self._create_invoice_es(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 100, 'quantity': 1.0, 'tax_ids': [withhold_tax.id]},
+                ],
+            )
+            invoice.action_post()
+
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_withhold.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
     def test_refund_invoice(self):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
