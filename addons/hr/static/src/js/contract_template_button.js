@@ -12,11 +12,12 @@ class TemplateSelectionPopover extends Component {
         close: Function,
         onSelect: Function,
         record: Object,
+        fieldProps: Object,
     };
 
     setup() {
         this.state = useState({ 
-            selectedTemplate: null,
+            selectedTemplate: false,
         });
     }
 
