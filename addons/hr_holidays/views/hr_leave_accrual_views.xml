@@ -179,6 +179,7 @@
                                         <template id="is_based_on_worked_time_no">No, always consider the entire accrual period (whole calendar days).
                                         </template>
                                     </span>
+                                    <field name="is_anniversary_plan"/>
                                     <label class="fw-bold" for="can_be_carryover"
                                            string="Do you need a carry-over of the accrued days from one year to another?"/>
                                     <span>
@@ -189,8 +190,9 @@
                                     <span name="carryover" invisible="not can_be_carryover">
                                         <field class="ms-1" name="carryover_date"
                                                widget="radio_followed_by_element"
+                                               readonly="is_anniversary_plan"
                                                options="{'links': {'other': 'carryover_custom_date'}, 'observe': 'carryover'}"/>
-                                        <span id="carryover_custom_date">
+                                        <span id="carryover_custom_date" invisible="is_anniversary_plan">
                                             : the
                                             <field name="carryover_day" widget="day_selection" month_field="carryover_month" placeholder="select a day"
                                                    required="carryover_date == 'other'"/>

@@ -36,13 +36,15 @@ class HrLeaveAccrualPlan(models.Model):
         ("end", "At the end of the accrual period")],
         export_string_translation=False,
         default="end", required=True)
+    is_anniversary_plan = fields.Boolean("Is Based on first contract anniversary")
     can_be_carryover = fields.Boolean(export_string_translation=False)
     carryover_date = fields.Selection([
         ("year_start", "At the start of the year"),
         ("allocation", "At the allocation date"),
         ("other", "Custom date")],
         export_string_translation=False,
-        default="year_start", required=True, string="Carry-Over Time")
+        default="year_start", required=True, string="Carry-Over Time",
+        compute="_compute_carryover_date", store=True, readonly=False)
     carryover_day = fields.Selection(
         _get_selection_days, compute='_compute_carryover_day',
         export_string_translation=False, store=True, readonly=False, default='1')
@@ -105,6 +107,12 @@ class HrLeaveAccrualPlan(models.Model):
         for plan in self:
             if plan.accrued_gain_time == "start":
                 plan.is_based_on_worked_time = False
+
+    @api.depends('is_anniversary_plan')
+    def _compute_carryover_date(self):
+        for plan in self:
+            if plan.is_anniversary_plan:
+                plan.carryover_date = 'allocation'
 
     @api.depends("carryover_month")
     def _compute_carryover_day(self):
