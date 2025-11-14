@@ -133,7 +133,7 @@ paymentForm.include({
                     // charging.
                     if (processingValues['should_tokenize']) {
                         Xendit.card.createAuthentication({
-                            amount: processingValues.amount,
+                            amount: processingValues['rounded_amount'],
                             token_id: token.id
                         }, (err, result) => {
                             this._xenditHandleResponse(err, result, processingValues, 'auth')
