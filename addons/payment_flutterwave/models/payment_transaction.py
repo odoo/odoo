@@ -5,7 +5,7 @@ import pprint
 
 from werkzeug import urls
 
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -18,6 +18,37 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    @api.model
+    def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
+        """Override of `payment` to satisfy Flutterwave requirements for references.
+
+        Flutterwave requirements for references are as follows:
+        - References must be unique at provider level for a given merchant account. This is
+          satisfied by singularizing the prefix with the current datetime. If two transactions are
+          created simultaneously, `_compute_reference` ensures the uniqueness of references by
+          suffixing a sequence number.
+
+        :param str provider_code: The code of the provider handling the transaction
+        :param str prefix: The custom prefix used to compute the full reference
+        :param str separator: The custom separator used to separate the prefix from the suffix
+        :return: The unique reference for the transaction
+        :rtype: str
+        """
+        if provider_code == 'flutterwave':
+            if not prefix:
+                # If no prefix is provided, it could mean that a module has passed a kwarg intended
+                # for the `_compute_reference_prefix` method, as it is only called if the prefix is
+                # empty. We call it manually here because singularizing the prefix would generate a
+                # default value if it was empty, hence preventing the method from ever being called
+                # and the transaction from received a reference named after the related document.
+                prefix = self.sudo()._compute_reference_prefix(
+                    provider_code, separator, **kwargs
+                ) or None
+            prefix = payment_utils.singularize_reference_prefix(prefix=prefix, separator=separator)
+        return super()._compute_reference(
+            provider_code, prefix=prefix, separator=separator, **kwargs
+        )
 
     def _get_specific_processing_values(self, processing_values):
         """ Override of payment to redirect pending token-flow transactions.
