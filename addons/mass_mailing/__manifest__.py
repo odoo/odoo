@@ -122,6 +122,9 @@
         # during html conversion, specific to the builder
         'mass_mailing.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
+            # TODO ABD: fix bundles usages so that html_editor files don't
+            # have to be cherry picked individually.
+            'html_editor/static/src/main/selection_placeholder_plugin.scss',
             'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
         'mass_mailing.iframe_add_dialog': [

@@ -5,7 +5,10 @@
 
 *[data-selection-placeholder] {
     height: 0;
-    margin: 0 0 -1px; // Compensate for the border.
+    // margin-bottom is set to -1px to compensate for the border, important
+    // is necessary to prevent other more specific selector from overriding
+    // the margin.
+    margin: 0 0 -1px !important;
     border-top: solid transparent 1px;
     caret-color: transparent;
     position: relative;
