@@ -65,11 +65,6 @@ class ResCompany(models.Model):
 
             company.write({'internal_transit_location_id': location.id})
 
-            company.partner_id.with_company(company).write({
-                'property_stock_customer': location.id,
-                'property_stock_supplier': location.id,
-            })
-
     def _create_inventory_loss_location(self):
         for company in self:
             inventory_loss_location = self.env['stock.location'].create({
