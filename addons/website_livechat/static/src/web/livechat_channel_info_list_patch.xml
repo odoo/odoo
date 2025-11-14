@@ -23,7 +23,7 @@
                 <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">
                     <a
                         t-foreach="recentConversations" t-as="thread" t-key="thread.localId"
-                        class="btn btn-sm btn-secondary btn-group-item d-flex align-items-center justify-content-start gap-1 w-100 m-0 px-3 py-1"
+                        class="o-livechat-LivechatChannelInfoList-recentConversation btn btn-sm btn-secondary btn-group-item d-flex align-items-center justify-content-start gap-1 w-100 m-0 px-3 py-1"
                         t-attf-href="/odoo/discuss?active_id={{thread.model}}_{{thread.id}}"
                         target="_blank"
                         t-att-class="{
