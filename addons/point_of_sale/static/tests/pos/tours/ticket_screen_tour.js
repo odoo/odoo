@@ -259,6 +259,32 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("refund_multiple_products_amounts_compliance", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            inLeftSide([
+                ...["2"].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Test Product", "2", "20"),
+            ]),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("2"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("LotTour", {
     steps: () =>
         [
