@@ -502,7 +502,7 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(sale_order.analytic_account_id.plan_id, project_plan, "The plan of the account created should be the default analytic plan of the setting")
         self.assertEqual(sale_order.analytic_account_id, sale_order.project_ids.analytic_account_id, "The project created for the SO and the SO should have the same account.")
 
-    def test_include_archived_projects_in_stat_btn_related_view(self):
+    def test_exclude_archived_projects_in_stat_btn_related_view(self):
         """Checks if the project stat-button action includes both archived and active projects."""
         # Setup
         project_A = self.env['project.project'].create({'name': 'Project_A'})
@@ -557,11 +557,15 @@ class TestSaleProject(TestSaleProjectCommon):
         # Check if button action includes both projects BEFORE archivization
         action = sale_order.action_view_project_ids()
         self.assertEqual(len(get_project_ids_from_action_domain(action)), 2, "Domain should contain 2 projects.")
+        self.assertEqual(sale_order.project_count, 2, "Expected 2 projects linked to the sale order.")
 
         # Check if button action includes both projects AFTER archivization
         project_B.write({'active': False})
+        sale_order._compute_project_ids()
+        self.assertEqual(sale_order.project_count, 1, "Expected 1 project linked to the sale order.")
+
         action = sale_order.action_view_project_ids()
-        self.assertEqual(len(get_project_ids_from_action_domain(action)), 2, "Domain should contain 2 projects. (one archived, one not)")
+        self.assertEqual(len(get_project_ids_from_action_domain(action)), 1, "Domain should contain 1 active project.")
 
     def test_sale_order_line_view_form_editable(self):
         """ Check the behavior of the form view editable of `sale.order.line` introduced in that module

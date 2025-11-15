@@ -514,4 +514,49 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         // so we treat it as single company mode
         assert.verifySteps([toCIDS(2)]);
     });
+
+    QUnit.test("disallowed companies in between allowed companies are not enabled", async (assert) => {
+        assert.expect(8);
+
+        patchWithCleanup(session.user_companies, {
+            allowed_companies: {
+                1: { id: 1, name: "Parent", sequence: 1, parent_id: false, child_ids: [2] },
+                2: { id: 2, name: "Child A", sequence: 2, parent_id: 1, child_ids: [3] },
+                3: { id: 3, name: "Child B", sequence: 2, parent_id: 2, child_ids: [] },
+            },
+            disallowed_ancestor_companies: {
+                2: { id: 2, name: "Child A", sequence: 2, parent_id: 1, child_ids: [3] },
+            },
+            current_company: 3,
+        });
+
+        function onPushState(url) {
+            assert.step(url.split("#")[1]);
+        }
+        const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
+
+        /**
+         *   [ ] Parent
+         *   [ ]    Child A
+         *   [x]        Child B
+         */
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
+        assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
+        await click(target.querySelector(".dropdown-toggle"));
+        assert.containsN(target, "[data-company-id]", 3);
+        assert.containsN(target, "[data-company-id] .fa-check-square", 1);
+        assert.containsN(target, "[data-company-id] .fa-square-o", 2);
+
+        /**
+         *   [x] Parent -> toggle
+         *   [ ]    Child A
+         *   [x]        Child B
+         */
+        await click(target.querySelectorAll(".log_into")[0]);
+        assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
+
+        // When "Herman's" is logged into, only one company is currently selected
+        // so we treat it as single company mode
+        assert.verifySteps([toCIDS(1, 3)]);
+    });
 });

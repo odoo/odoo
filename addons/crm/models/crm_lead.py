@@ -926,9 +926,9 @@ class Lead(models.Model):
         context = dict(self._context)
         context.setdefault('default_type', self.type)
         context.setdefault('default_team_id', self.team_id.id)
-        # Set date_open to today if it is an opp
+        # Set date_open to today if it is an opp and has an active user
         default = default or {}
-        default['date_open'] = self.env.cr.now() if self.type == 'opportunity' else False
+        default['date_open'] = self.env.cr.now() if self.type == 'opportunity' and self.user_id.active else False
         # Do not assign to an archived user
         if not self.user_id.active:
             default['user_id'] = False

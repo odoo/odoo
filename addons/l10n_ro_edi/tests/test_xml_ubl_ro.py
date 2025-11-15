@@ -4,9 +4,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLRO(TestUBLCommon):
-
+class TestUBLROCommon(TestUBLCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref="ro"):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -51,10 +49,6 @@ class TestUBLRO(TestUBLCommon):
             'country_id': cls.env.ref('base.ro').id,
         })
 
-    ####################################################
-    # Test export - import
-    ####################################################
-
     def create_move(self, move_type, send=True):
         return self._generate_move(
             self.env.company.partner_id,
@@ -74,6 +68,14 @@ class TestUBLRO(TestUBLCommon):
                 },
             ],
         )
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestUBLRO(TestUBLROCommon):
+
+    ####################################################
+    # Test export - import
+    ####################################################
 
     def get_attachment(self, move):
         self.assertTrue(move.ubl_cii_xml_id)

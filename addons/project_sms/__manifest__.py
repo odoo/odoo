@@ -6,7 +6,7 @@
     'summary': 'Send text messages when project/task stage move',
     'description': "Send text messages when project/task stage move",
     'category': 'Hidden',
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['project', 'sms'],
     'data': [
         'views/project_stage_views.xml',

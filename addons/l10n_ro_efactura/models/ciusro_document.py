@@ -30,7 +30,7 @@ def make_efactura_request(session, company, endpoint, method, params, data=None)
 
     try:
         response = session.request(method=method, url=url, params=params, data=data, headers=headers, timeout=60)
-    except requests.HTTPError as e:
+    except (requests.ConnectionError, requests.TooManyRedirects) as e:
         return {'error': str(e)}
     if response.status_code == 204:
         return {'error': _('You reached the limit of requests. Please try again later.')}

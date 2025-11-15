@@ -169,7 +169,7 @@ export class TicketScreen extends Component {
                 }
             }
         }
-        if (this.pos.isOpenOrderShareable()) {
+        if (this.pos.isOpenOrderShareable() || order.server_id) {
             await this.pos._removeOrdersFromServer();
         }
         return true;

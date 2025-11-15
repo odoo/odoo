@@ -3254,6 +3254,11 @@ var SnippetsMenu = Widget.extend({
             iframeEl.dataset.oSrcOnDrop = iframeEl.getAttribute("src");
             iframeEl.removeAttribute("src");
         }
+
+        const filterSelectEl = $html.find("we-select").has("we-button[data-gl-filter]")[0];
+        if (filterSelectEl) {
+            filterSelectEl.dataset.name = "glfilter_select_opt";
+        }
     },
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
@@ -4423,11 +4428,24 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetClick() {
         const $els = this.getEditableArea().find('.oe_structure.oe_empty').addBack('.oe_structure.oe_empty');
-        for (const el of $els) {
-            if (!el.children.length) {
-                $(el).odooBounce('o_we_snippet_area_animation');
-            }
+        const snippetEls = [...$els].filter((el) => !el.children.length);
+        if (!snippetEls.length) {
+            return;
         }
+
+        this.options.wysiwyg.odooEditor.observerUnactive();
+        for (const el of snippetEls) {
+            el.classList.add("o_catch_attention", "o_we_snippet_area_animation");
+        }
+        this.options.wysiwyg.odooEditor.observerActive();
+
+        setTimeout(() => {
+            this.options.wysiwyg.odooEditor.observerUnactive();
+            for (const el of snippetEls) {
+                el.classList.remove("o_catch_attention", "o_we_snippet_area_animation");
+            }
+            this.options.wysiwyg.odooEditor.observerActive();
+        }, 400);
     },
     /**
      * @private

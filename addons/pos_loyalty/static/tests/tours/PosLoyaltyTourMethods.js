@@ -156,6 +156,14 @@ export function pointsAwardedAre(points_str) {
         },
     ];
 }
+export function pointsTotalIs(points_str) {
+    return [
+        {
+            content: 'loyalty points awarded ' + points_str,
+            trigger: '.loyalty-points-total .value:contains("' + points_str + '")',
+        },
+    ];
+}
 export function notificationMessageContains(str) {
     return [
         {

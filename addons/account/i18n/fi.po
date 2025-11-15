@@ -49,13 +49,14 @@
 # Jessica Jakara, 2025
 # Wil Odoo, 2025
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 02:56+0000\n"
-"PO-Revision-Date: 2025-08-29 01:40+0000\n"
-"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"POT-Creation-Date: 2025-11-06 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/account/"
 "fi/>\n"
 "Language: fi\n"
@@ -2209,12 +2210,9 @@ msgstr "Jaksotusviennit"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
-"its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
+"reverse entry: %(reverse_entry)s."
 msgstr ""
-"Suoriteperusteinen kirjaus luotu %(date)s: "
-"%(accrual_entry)s.                    Ja sen käänteinen kirjaus: "
-"%(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -7392,6 +7390,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Ryhmittely-ominaisuutta ei tueta '%(engine)s'-moduulissa. Poista "
+"ryhmittelyarvo kohdasta '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
@@ -14598,6 +14598,13 @@ msgstr "Laskun luoneet dokumentit."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is using accounts from a different company."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "The entry %s (id %s) must be in draft."
 msgstr "Merkinnän %s (id %s) on oltava luonnos."
 
@@ -18304,6 +18311,15 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Maksukuitti (viite {{ object.name or 'n/a' }})"
+
+#, python-format
+#~ msgid ""
+#~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
+#~ "And its reverse entry: %(reverse_entry)s."
+#~ msgstr ""
+#~ "Suoriteperusteinen kirjaus luotu %(date)s: "
+#~ "%(accrual_entry)s.                    Ja sen käänteinen kirjaus: "
+#~ "%(reverse_entry)s."
 
 #, python-format
 #~ msgid ""

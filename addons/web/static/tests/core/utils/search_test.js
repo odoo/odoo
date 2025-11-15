@@ -12,6 +12,7 @@ QUnit.module("utils", () => {
             { name: "Jane Yellow" },
             { name: "Brandon Green" },
             { name: "Jérémy Red" },
+            { name: "สมศรี จู่โจม" },
         ];
         assert.deepEqual(
             fuzzyLookup("ba", data, (d) => d.name),
@@ -40,6 +41,10 @@ QUnit.module("utils", () => {
         assert.deepEqual(
             fuzzyLookup("", data, (d) => d.name),
             []
+        );
+        assert.deepEqual(
+            fuzzyLookup("สมศ", data, (d) => d.name),
+            [{ name: "สมศรี จู่โจม" }]
         );
     });
 

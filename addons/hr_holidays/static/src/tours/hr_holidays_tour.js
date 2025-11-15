@@ -8,6 +8,10 @@ const leaveType = "NotLimitedHR";
 const leaveDateFrom = "01/17/2022";
 const leaveDateTo = "01/17/2022";
 const description = 'Days off';
+const todayDate = () => {
+    return new Date().toISOString().slice(0, 10);
+};
+
 
 registry.category("web_tour.tours").add('hr_holidays_tour', {
     url: '/web',
@@ -105,4 +109,27 @@ registry.category("web_tour.tours").add('hr_holidays_launch', {
             run: ()=>{},
         },
     ]
+});
+
+registry.category("web_tour.tours").add("hr_leave_mandatory_days_hebrew_tour", {
+    url: "/web",
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
+            run: "click",
+        },
+        {
+            trigger: '.o_calendar_renderer',
+            content: "Verify that the today has the hr_mandatory_day class.",
+            run: () => {
+                const td = document.querySelector(`td[data-date="${todayDate()}"]`);
+                if (!td?.classList.contains("hr_mandatory_day")) {
+                    console.error(
+                        `Today ${todayDate()} does not have the hr_mandatory_day class.`
+                    );
+                }
+            },
+        },
+    ],
 });

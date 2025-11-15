@@ -373,7 +373,9 @@ class AccountAccount(models.Model):
     @api.model
     def _search_new_account_code(self, company, digits, prefix, cache=None):
         for num in range(1, 10000):
-            new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
+            num_str = str(num)
+            num_digits = min(len(num_str), digits - len(prefix))
+            new_code = str(prefix.ljust(digits - num_digits, '0')) + num_str
             if new_code in (cache or []):
                 continue
             rec = self.search([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)

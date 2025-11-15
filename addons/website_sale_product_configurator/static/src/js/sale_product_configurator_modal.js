@@ -508,7 +508,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * we need to refresh the total price row
      */
     _computePriceTotal: function () {
-        if (this.$modal.find('.js_price_total').length) {
+        const $priceTotal = this.$modal.find('.js_price_total');
+        if ($priceTotal.length) {
             var price = 0;
             this.$modal.find('.js_product.in_cart').each(function () {
                 var quantity = parseFloat($(this).find('input[name="add_qty"]').first().val().replace(',', '.') || 1);
@@ -516,7 +517,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
             });
 
             this.$modal.find('.js_price_total .oe_currency_value').text(
-                this._priceToStr(parseFloat(price))
+                this._priceToStr(parseFloat(price), $priceTotal.data('precision'))
             );
         }
     },

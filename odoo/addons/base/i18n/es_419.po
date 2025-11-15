@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-03 11:38+0000\n"
-"PO-Revision-Date: 2025-09-11 01:41+0000\n"
+"PO-Revision-Date: 2025-11-08 08:10+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-17/base/es_419/>\n"
@@ -5249,69 +5249,93 @@ msgstr ""
 "Funcional\n"
 "----------\n"
 "\n"
-"Crear diarios en Odoo para crear facturas electrónicas de los clientes y después reportarlas a la AFIP (a través de los servicios web).\n"
+"Crea diarios en Odoo para generar facturas electrónicas de clientes y "
+"repórtalas a la ARCA (a través de los servicios web).\n"
 "Las opciones disponibles son:\n"
 "\n"
 "    * Factura electrónica - Web Service\n"
-"    * Voucher para exportar - Web Service\n"
+"    * Comprobante de exportación - Web Service\n"
 "    * Bono fiscal electrónico - Web Service\n"
 "\n"
-"Si valida una factura en los diarios electrónicos, entonces se validará tanto en Odoo como en la AFIP. Esta validación\n"
-"se hace de forma instantánea y recibimos un estado de la AFIP que puede ser \"aprobado/aprobado con observaciones/rechazado\". Si la AFIP\n"
-"rechazó la factura, esta no se publicará en el sistema y aparecerá una notificación con los motivos del error (por qué la rechazaron)\n"
-"y una PISTA de cuál es el problema.\n"
+"Si validas una factura en los diarios electrónicos, entonces se validará "
+"tanto en Odoo como en la ARCA. Esta validación\n"
+"se hace de forma instantánea y recibimos un estado que puede ser "
+"\"aprobado/aprobado con observaciones/rechazado\" de la ARCA. Si la ARCA\n"
+"rechazó la factura, esta no se registrará en el sistema y aparecerá una "
+"notificación con los detalles del error (motivo por el que la rechazaron)\n"
+"y una PISTA sobre cuál podría ser el problema.\n"
 "\n"
-"Para auditorías y solución de problemas también agregamos el menú \"Consulta de facturas de AFIP\". Con este menú podrá consultar las facturas\n"
-"que se enviaron con anterioridad a la AFIP y el último número que se usó como soporte para posibles errores en las secuencias de sincronización entre Odoo y la AFIP.\n"
+"Para auditorías y solución de problemas, también agregamos el menú "
+"\"Consulta de facturas de ARCA\" con el que podrás consultar las facturas\n"
+"enviadas con anterioridad a la ARCA y el último número utilizado como "
+"soporte para posibles problemas de sincronización de secuencias entre Odoo y "
+"ARCA.\n"
 "\n"
-"    NOTA: Desde la vista del diario podemos forzar una sincronización entre las secuencias de Odoo y cada uno de los tipos de documentos en\n"
-"    los últimos números que se registraron en la AFIP.\n"
+"    NOTA: Desde la vista de formulario del diario podemos forzar una "
+"sincronización entre las secuencias de Odoo y cada uno de los tipos de "
+"documentos en\n"
+"    los últimos números registrados en la ARCA.\n"
 "\n"
-"Agregamos una funcionalidad a las facturas de proveedores que se puede configurar en los ajustes de contabilidad para poder verificar\n"
-"facturas de proveedores en la AFIP para revisar si estas facturas son reales (para más información revise la descripción de los ajustes).\n"
+"Agregamos una funcionalidad a las facturas de proveedores que se puede "
+"configurar en los ajustes de contabilidad para poder verificar\n"
+"las facturas de proveedores en la ARCA para revisar si estas facturas son "
+"reales (revisa la descripción de los ajustes para obtener más información).\n"
 "\n"
 "Configuración:\n"
 "\n"
-"1. Vaya a los ajustes de Contabilidad > sección de localización argentina. \n"
+"1. Ve a los ajustes de Contabilidad > sección de localización argentina. \n"
 "\n"
-"    1.1. Configure el modo Web Service de AFIP:\n"
+"    1.1. Configura el modo Web Service de ARCA:\n"
 "\n"
-"    * Entorno de prueba para usar certificados de demostración que se utilizarán para probar el caso y para NO\n"
-"      crear facturas reales en la AFIP. Este entorno solo es para prueba. Para casos de demostración ya está predeterminado, no necesitará configurarlo\n"
-"      (por lo general, en la AFIP se llama entorno de homologación).\n"
-"    * Entorno de producción para generar certificados reales y facturas legales en la AFIP.\n"
+"    * Entorno de prueba para usar certificados de demostración que permiten "
+"probar la instancia y para NO\n"
+"      emitir facturas reales en la ARCA. Este entorno solo es para prueba. "
+"Es el entorno predeterminado en las instancias de demostración, no "
+"necesitarás configurarlo\n"
+"      (por lo general, en la ARCA se llama entorno de homologación).\n"
+"    * Entorno de producción para generar certificados reales y facturas "
+"legales en la ARCA.\n"
 "\n"
-"    1.2. Configure su certificado AFIP: si está en un entorno demo se programará en automático. Si está\n"
-"         en un entorno de producción, solo necesita subir su certificado de AFIP.\n"
+"    1.2. Configura tu certificado de ARCA: Si estás en una instancia de "
+"demostración ya estará configurado de forma predeterminada. Si estás\n"
+"         en un entorno de producción, solo necesitas subir tu certificado de "
+"ARCA.\n"
 "\n"
-"    1.3. De forma opcional puede definir si le gustaría poder verificar facturas de proveedor en la AFIP.\n"
+"    1.3. De forma opcional, puedes definir si quieres habilitar la "
+"verificación de facturas de proveedor en la ARCA.\n"
 "\n"
-"2. Cree diarios de ventas que representarán cada uno de sus PdV de AFIP (disponible en el portal de la AFIP) que quiera usar en Odoo.\n"
+"2. Crea diarios de ventas que representarán cada uno de tus PdV de ARCA ("
+"disponible en el portal de la ARCA) que quieras usar en Odoo.\n"
 "\n"
-"    2.1. El campo de usar Documentos está configurado en automático, no lo cambie.\n"
-"    2.2. Configure el sistema de AFIP POS para uno de los electrónicos.\n"
+"    2.1. El campo \"Usar Documentos\" está configurado de forma "
+"predeterminada, no lo cambies.\n"
+"    2.2. Configura el sistema ARCA POS para uno de los electrónicos.\n"
 "\n"
 "        * Factura electrónica - Web Service\n"
 "        * Bono fiscal electrónico - Web Service\n"
-"        * Exportar voucher - Web Service\n"
+"        * Comprobante de exportación - Web Service\n"
 "\n"
-"    2.3. Establezca el número POS de la AFIP y la dirección POS de la AFIP tomando en cuenta lo que configuró en su portal AFIP.\n"
+"    2.3. Configura el número PdV de la ARCA y la dirección PdV de la ARCA "
+"según lo que tengas configurado en tu portal ARCA.\n"
 "\n"
-"    NOTA: puede revisar el botón de \"revisar POS AFIP disponible\" en el formulario del diario para corroborar el uso para crear diarios.\n"
+"    NOTA: Puedes usar el botón \"Verificar PdV ARCA disponible\" en el "
+"formulario del diario para corroborar cuál usar al crear los diarios..\n"
 "\n"
-"Vaya a http://www.afip.gob.ar/fe/ayuda.asp para obtener más información sobre la facturación electrónica de Argentina\n"
+"Ve a http://www.afip.gob.ar/fe/ayuda.asp para obtener más información sobre "
+"la facturación electrónica en Argentina\n"
 "\n"
 "Técnico\n"
 "---------\n"
 "\n"
-"Los servicios web que se implementan son los más comunes:\n"
+"Los servicios web implementados son los más comunes:\n"
 "\n"
-"* wsfev1 - \"Factura Electrónica\" \n"
-"* wsbfev1 - \"Bono Fiscal Electrónico\" \n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\" \n"
-"* wscdc - \"Constatación de Comprobantes\" \n"
+"* wsfev1 - \"Factura electrónica\" \n"
+"* wsbfev1 - \"Bono fiscal electrónico\" \n"
+"* wsfexv1 - \"Factura de exportación electrónica\" \n"
+"* wscdc - \"Constatación de comprobantes\" \n"
 "\n"
-"Para consultar la información de desarrollo, vaya a http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"Para consultar la información de desarrollo, ve a http://www.afip.gob.ar/fe/"
+"documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 
 #. module: base
@@ -8176,33 +8200,48 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 msgstr ""
 "\n"
-"Propósito del modulo:\n"
+"Propósito del módulo:\n"
 "======================\n"
 "\n"
 "Como parte de los requisitos del SII (requisitos legales en Chile), \n"
-"a partir de marzo 2021 las transacciones de boletas se deben enviar al SII como \n"
-"flujo de trabajo electrónico mediante un servicio web distinto al que se usa para las facturas electrónicas. \n"
+"a partir de marzo de 2021, las transacciones de boletas se deben enviar al "
+"SII mediante el \n"
+"flujo de trabajo electrónico a través de un servicio web distinto al de las "
+"facturas electrónicas. \n"
 "Antes no era necesario enviar las boletas al SII, solo un reporte diario.\n"
 "\n"
-"El requisito de enviar el \"Libro de ventas diarias\"\n"
-"(antes \"reporte de consumo de folios\" o RCOF) se eliminó desde el \n"
-"1 de agosto 2022. Por eso se eliminó de esta versión de Odoo.\n"
+"El requisito de enviar el \"libro de ventas diarias\"\n"
+"(antes \"reporte de consumo de folios\" o RCOF) fue eliminado por las "
+"autoridades desde el \n"
+"1 de agosto de 2022. Por ese motivo, se eliminó de esta versión de Odoo.\n"
 "\n"
-"Diferencias entre el flujo de trabajo de las boletas electrónicas y el de la facturación electrónica:\n"
+"Diferencias entre el flujo de trabajo de las boletas electrónicas y la "
+"facturación electrónica:\n"
 "=========================================================================\n"
 "\n"
-"Estos flujos de trabajo tienen diferencias importantes que nos llevaron a incorporar varios cambios.\n"
+"Estos flujos de trabajo tienen varias diferencias que justifica estos "
+"cambios.\n"
 "Estas son las diferencias:\n"
 "\n"
-"* El mecanismo para enviar información de las boletas electrónicas necesita de servidores específicos que son distintos a los que se usan para recibir facturas electrónicas (\"Palena\" para un entorno de producción - palena.sii.cl y \"Maullin\" para un entorno de prueba - maullin.sii.cl).\n"
-"* Los servicios de autenticación que solicitan el estado de una entrega y el estado de un documento serán diferentes.\n"
+"* El mecanismo para enviar la información de las boletas electrónicas "
+"necesita de servidores específicos distintos a los que se usan para la "
+"recepción de facturas electrónicas (\"Palena\" para un entorno de producción "
+"- palena.sii.cl y \"Maullin\" para un entorno de prueba - maullin.sii.cl).\n"
+"* Los servicios de autenticación, la consulta del estado de un envío y del "
+"estado de un documento serán diferentes..\n"
 "* El token de autenticación obtenido\n"
-"* El esquema XML para enviar boletas electrónicas se actualizó con la incorporación de nuevas etiquetas\n"
-"* El diagnóstico de validación de boletas electrónicas se entregará a a través de un servicio web \"REST\" que tiene como entrada el identificador de envío de la entrega. Las facturas electrónicas continuarán recibiendo los diagnósticos a través de correo electrónico.\n"
-"* El identificador de envío asociado a las boletas electrónicas será de 15 dígitos (las facturas electrónicas tienen 10)\n"
+"* El esquema XML para enviar boletas electrónicas se actualizó con la "
+"incorporación de nuevas etiquetas\n"
+"* El diagnóstico de validación de las boletas electrónicas se entregará a a "
+"través de un servicio web \"REST\" que recibe como entrada el identificador "
+"de envío de la entrega. Las facturas electrónicas continuarán recibiendo los "
+"diagnósticos a través de correo electrónico.\n"
+"* El identificador de envío asociado a las boletas electrónicas tendrá 15 "
+"dígitos (las facturas electrónicas tienen 10)\n"
 "\n"
 "Información importante sobre la guía del SII:\n"
-"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/"
+"Instructivo_Emision_Boleta_Elect.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -16680,7 +16719,7 @@ msgstr "Base"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_install_request
 msgid "Base - Module Install Request"
-msgstr "Base - Solicitud de instalación de modulo"
+msgstr "Base - Solicitud de instalación del módulo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_base_automation
@@ -17284,7 +17323,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_enterprise
 msgid "Bridge module for MRP subcontracting and enterprise"
-msgstr "Modulo de enlace para subcontratación MRP y Enterprise"
+msgstr "Módulo de enlace para subcontratación, MRP y Enterprise"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_subcontracting_enterprise
@@ -18566,7 +18605,7 @@ msgstr "Config.: ejecutar las acciones pendientes"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Configuration"
-msgstr "Configuration"
+msgstr "Configuración"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -19492,7 +19531,7 @@ msgstr "El campo de la divisa debe tener una relación res.currency"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr "Símbolo de la divisa, se utiliza cuando se imprimen importes."
+msgstr "Símbolo de la moneda, se utiliza al imprimir importes."
 
 #. module: base
 #. odoo-python
@@ -19994,7 +20033,7 @@ msgstr "Tema del sitio web predeterminado"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
 msgid "Define Taxes as Python Code"
-msgstr "Defina impuestos como código Python"
+msgstr "Definir impuestos como código Python"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -22627,7 +22666,7 @@ msgstr "Uso prohibido de   `__comp__` en la arquitectura. "
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "Forgot password?"
-msgstr "¿Olvidó su contraseña?"
+msgstr "¿Olvidaste tu contraseña?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -22960,7 +22999,7 @@ msgstr "Ajustes generales"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
 msgid "Generate Electronic Invoice with custom numbers"
-msgstr "Genere facturas electrónicas con números personalizados"
+msgstr "Genera facturas electrónicas con números personalizados"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_mine
@@ -26382,12 +26421,12 @@ msgstr "Módulo de enlace entre point_of_sale y sale_product_configurator"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_restaurant
 msgid "Link module between pos_hr and pos_restaurant"
-msgstr "Modulo de enlace entre pos_hr y pos_restaurant"
+msgstr "Módulo de enlace entre pos_hr y pos_restaurant"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_loyalty
 msgid "Link module between pos_restaurant and pos_loyalty"
-msgstr "Modulo de enlace entre pos_restaurant y pos_loyalty"
+msgstr "Módulo de enlace entre pos_restaurant y pos_loyalty"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
@@ -26397,7 +26436,7 @@ msgstr "Módulo de enlace entre pos_sale y l10n_be"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_loyalty
 msgid "Link module between pos_sale and pos_loyalty"
-msgstr "Modulo de enlace entre pos_sale y pos_loyalty"
+msgstr "Módulo de enlace entre pos_sale y pos_loyalty"
 
 #. module: base
 #. odoo-python
@@ -27984,9 +28023,9 @@ msgid ""
 "Module %r not loaded or inexistent (try to inherit %r), or templates of "
 "addon being loaded %r are misordered (template %r)"
 msgstr ""
-"El modulo %r no se ha cargado o no existe (intente heredar %r), o las "
-"plantillas de complemento que se están cargando %r están desordenadas "
-"(plantilla %r)"
+"El módulo %r no está cargado o no existe (intenta heredar de %r), o las "
+"plantillas del complemento que se están cargando %r están desordenadas ("
+"plantilla %r)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_category_form
@@ -29761,7 +29800,7 @@ msgstr "Exportación en XML de pólizas mexicanas de Odoo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr "Localización mexicana de Odoo para las existencias y el embarque"
+msgstr "Localización mexicana de Odoo para existencias y pedimentos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -35195,8 +35234,8 @@ msgid ""
 "one as soon as possible."
 msgstr ""
 "Esta es una integración de DHL Express obsoleta y ya no es compatible. "
-"Instale el nuevo modulo \"Envíos por DHL Express\" y desinstale este tan "
-"pronto como le sea posible."
+"Instala el nuevo módulo \"Envíos por DHL Express\" y desinstala este lo "
+"antes posible."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -35729,7 +35768,7 @@ msgstr "Social"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_demo
 msgid "Social Demo Module"
-msgstr "Modulo Social de demostración "
+msgstr "Módulo de demostración para Redes sociales"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_facebook
@@ -38250,9 +38289,9 @@ msgid ""
 "         Please install the new \"UPS Shipping\" module and uninstall this "
 "one as soon as possible. This integration will stop working in 2024."
 msgstr ""
-"Esta es la integración heredada con UPS y ya no es compatible.         "
-"Instale el nuevo modulo \"Envíos por UPS\" y desinstale este tan pronto como"
-" le sea posible. Esta integración dejará de funcionar en el 2024. "
+"Esta es una integración de UPS obsoleta y ya no es compatible.         "
+"Instala el nuevo módulo \"Envíos por UPS\" y desinstala este lo antes "
+"posible. Esta integración dejará de funcionar en 2024."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
@@ -38792,7 +38831,7 @@ msgstr "Hojas de horas durante tiempo personal"
 #: model:ir.module.category,name:base.module_category_services_timesheets
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets"
-msgstr "Hojas de trabajo"
+msgstr "Hojas de horas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_holidays
@@ -39182,15 +39221,20 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
-"Tipo de acción de servidor. Los valores disponibles son:\n"
-"- 'Actualizar un registro': actualiza los valores de un registro\n"
-"- 'Crear actividad': crea una actividad (Conversaciones)\n"
-"- 'Enviar correo electrónico': publica un mensaje, una nota o envia un correo electrónico (Conversaciones)\n"
-"- 'Enviar SMS': envía SMS y los registra en los documentos (SMS)- 'Agregar o eliminar seguidores': agrega o elimina seguidores de un registro (Conversaciones)\n"
-"- 'Crear registro': crea un nuevo registro con nuevos valores\n"
-"- 'Ejecutar código': se ejecuta un bloque de código Python\n"
-"- 'Enviar notificación webhook': envía una solicitud POST a un sistema externo, también conocido como Webhook\n"
-"- 'Ejecutar acciones existentes': define una acción que activa otras acciones de servidor\n"
+"Tipo de acción del servidor. Los valores disponibles son:\n"
+"- \"Actualizar un registro\": actualiza los valores de un registro \n"
+"- \"Crear actividad\": crea una actividad (Conversaciones) \n"
+"- \"Enviar correo electrónico\"': registra un mensaje, una nota o envía un "
+"correo electrónico (Conversaciones) \n"
+"- \"Enviar SMS\": envía SMS y los registra en los documentos (SMS) - "
+"\"Agregar o eliminar seguidores\": agrega o elimina seguidores de un "
+"registro (Conversaciones) \n"
+"- \"Crear registro\": crea un nuevo registro con nuevos valores \n"
+"- \"Ejecutar código\": ejecuta un bloque de código Python \n"
+"- \"Enviar notificación webhook\": envía una solicitud POST a un sistema "
+"externo, también conocido como webhook \n"
+"- \"Ejecutar acciones existentes\": define una acción que activa otras "
+"acciones del servidor\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -39434,8 +39478,8 @@ msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: "
 "%s"
 msgstr ""
-"No es posible procesar el modulo \"%s\". Hay una dependencia externa sin "
-"resolver: %s"
+"No es posible procesar el módulo \"%s\" porque hay una dependencia externa "
+"sin resolver: %s"
 
 #. module: base
 #. odoo-python
@@ -40451,7 +40495,7 @@ msgstr "VoIP para CRM"
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
 msgid "VoIP integration with CRM module."
-msgstr "Integración VoIP con el modulo CRM."
+msgstr "Integración VoIP con el módulo CRM."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account

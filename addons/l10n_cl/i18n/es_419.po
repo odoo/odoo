@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_cl
+# * l10n_cl
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-07 07:43+0000\n"
-"PO-Revision-Date: 2023-09-07 07:43+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2025-10-28 10:11+0000\n"
+"PO-Revision-Date: 2025-11-07 14:28+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-17-l10n/l10n_cl/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: l10n_cl
 #: model:ir.model.fields,help:l10n_cl.field_res_partner__l10n_cl_sii_taxpayer_type
@@ -46,21 +50,11 @@ msgstr ""
 "                <strong>Cliente:</strong>"
 
 #. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
-msgid ""
-"<br/>\n"
-"\n"
-"                <strong>Payment Terms:</strong>"
-msgstr ""
-"<br/>\n"
-"\n"
-"                <strong>Condiciones de pago:</strong>"
-
-#. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
 msgid ""
 "<br/>\n"
-"                                            <span style=\"line-height: 180%;\">RUT:</span>"
+"                                            <span style=\"font-family:arial; "
+"line-height: 180%;\">RUT:</span>"
 msgstr ""
 
 #. module: l10n_cl
@@ -95,8 +89,8 @@ msgstr ""
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document
-msgid "<span>Amount</span>"
-msgstr "<span>Monto</span>"
+msgid "<span>Disc.</span>"
+msgstr ""
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.informations
@@ -167,6 +161,12 @@ msgid "Additional data address and city"
 msgstr "Datos adic. dirección y Ciudad"
 
 #. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"All our contractual relations will be governed exclusively by Chile law."
+msgstr ""
+
+#. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Amount Due"
 msgstr "Monto adeudado"
@@ -188,8 +188,8 @@ msgid ""
 msgstr ""
 "Análogo a account.move.type de Odoo pero con más opciones, permitiendo "
 "identificar el tipo de documento sobre el que estamos trabajando. (no "
-"solamente relativo a account.move, podría ser relativo a otros modelos, como"
-" por ejemplo stock.picking)"
+"solamente relativo a account.move, podría ser relativo a otros modelos, como "
+"por ejemplo stock.picking)"
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_bl_cemb
@@ -252,6 +252,13 @@ msgid "Bank"
 msgstr "Banco"
 
 #. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+
+#. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_cpor
 msgid "Bill of Lading"
 msgstr "Carta de Porte"
@@ -282,6 +289,17 @@ msgid "CHQ"
 msgstr ""
 
 #. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"CL Company undertakes to do its best to supply performant services in due "
+"time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. CL "
+"Company cannot under any circumstances, be required by the client to appear "
+"as a third party in the context of any claim for damages filed against the "
+"client by an end consumer."
+msgstr ""
+
+#. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_cont
 msgid "CONT"
 msgstr ""
@@ -300,6 +318,18 @@ msgstr "NOTA DE CREDITO"
 #. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_cd_bol
 msgid "CRTD"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can CL "
+"Company become involved in costs related to a country's legislation. The "
+"amount of the invoice will therefore be due to CL Company in its entirety "
+"and does not include any costs relating to the legislation of the country in "
+"which the client is located."
 msgstr ""
 
 #. module: l10n_cl
@@ -331,7 +361,7 @@ msgstr "Proceso ChileCompra"
 #: model:ir.model.fields,help:l10n_cl.field_res_company__l10n_cl_activity_description
 #: model:ir.model.fields,help:l10n_cl.field_res_partner__l10n_cl_activity_description
 #: model:ir.model.fields,help:l10n_cl.field_res_users__l10n_cl_activity_description
-msgid "Chile: Economic activity"
+msgid "Chile: Economic activity."
 msgstr ""
 
 #. module: l10n_cl
@@ -470,9 +500,9 @@ msgstr ""
 "consumidor final y utilizar recibos  (códigos 39 o 41)"
 
 #. module: l10n_cl
-#: model:l10n_latam.document.type,name:l10n_cl.dc_b_f_dte
-msgid "Electronic Receipt"
-msgstr "Boleta Electrónica"
+#: model:ir.model,name:l10n_cl.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_nc_f_dte
@@ -488,6 +518,11 @@ msgstr "Nota de Débito Electrónica"
 #: model:l10n_latam.document.type,name:l10n_cl.dc_gd_dte
 msgid "Electronic Dispatch Guide"
 msgstr "Guía de Despacho Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_b_e_dte
+msgid "Electronic Exempt Receipt"
+msgstr "Boleta Exenta Electrónica"
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_ncex_dte
@@ -525,9 +560,9 @@ msgid "Electronic Purchase Invoice"
 msgstr "Factura de Compra Electrónica"
 
 #. module: l10n_cl
-#: model:l10n_latam.document.type,name:l10n_cl.dc_b_e_dte
-msgid "Electronic Exempt Receipt"
-msgstr "Boleta Exenta Electrónica"
+#: model:l10n_latam.document.type,name:l10n_cl.dc_b_f_dte
+msgid "Electronic Receipt"
+msgstr "Boleta Electrónica"
 
 #. module: l10n_cl
 #. odoo-python
@@ -553,14 +588,14 @@ msgid "Exchange Rate Increase Adjustment (code 500)"
 msgstr "Ajuste aumento Tipo de Cambio (código 500)"
 
 #. module: l10n_cl
-#: model:account.report.line,name:l10n_cl.tax_report_ventas_exentas
-msgid "Exempt Sales"
-msgstr "Ventas Exentas"
-
-#. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_b_e_dtn
 msgid "Exempt Receipt"
 msgstr "Boleta exenta"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_ventas_exentas
+msgid "Exempt Sales"
+msgstr "Ventas Exentas"
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_y_f_dte
@@ -709,6 +744,22 @@ msgstr "FACTURA ZF"
 #: model:ir.model.fields,help:l10n_cl.field_account_payment__partner_id_vat
 msgid "Identification Number for selected type"
 msgstr "Número de identificación para el tipo seleccionado"
+
+#. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, CL Company reserves the right to call on the services of a "
+"debt recovery company. All legal expenses will be payable by the client."
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"In order for it to be admissible, CL Company must be notified of any claim "
+"by means of a letter sent by recorded delivery to its registered office "
+"within 8 days of the delivery of the goods or the provision of the services."
+msgstr ""
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_din_f_dtn
@@ -912,6 +963,17 @@ msgid "Others"
 msgstr "Otros"
 
 #. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, CL Company reserves the right to request a "
+"fixed interest payment amounting to 10% of the sum remaining due. CL Company "
+"will be authorized to suspend any provision of services without prior "
+"warning in the event of late payment."
+msgstr ""
+
+#. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_pag
 msgid "PAG"
 msgstr ""
@@ -993,10 +1055,14 @@ msgid "Purchases - Amount VAT Commun Use"
 msgstr "Compras - Monto IVA Uso Comun"
 
 #. module: l10n_cl
-#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_actf_no_recup
 #: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_actf_uso_comun
 msgid "Purchases - Amount of Active Fixed VAT (Common Use)"
 msgstr "Compras - Monto IVA Activo Fijo (Uso Común)"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_actf_no_recup
+msgid "Purchases - Amount of Active Fixed VAT (Non Deductible)"
+msgstr ""
 
 #. module: l10n_cl
 #: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva
@@ -1022,6 +1088,11 @@ msgstr "Compras - Impuesto a Vehículos Automotores"
 #: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_no_rec
 msgid "Purchases - Non Recoverable VAT Amount"
 msgstr "Compras - Monto IVA No Recuperable"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iec
+msgid "Purchases - Specific Fuel Tax"
+msgstr ""
 
 #. module: l10n_cl
 #: model:account.account.tag,name:l10n_cl.tag_cl_purchase_imp_sin_cred
@@ -1213,6 +1284,11 @@ msgid "SRF Invoice Registration Request"
 msgstr "SRF Solicitud de Registro de Factura"
 
 #. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr ""
+
+#. module: l10n_cl
 #: model:ir.actions.act_window,name:l10n_cl.sale_invoices_credit_notes
 msgid "Sale Invoices and Credit Notes"
 msgstr "Facturas de Venta y Notas de Crédito"
@@ -1353,6 +1429,11 @@ msgid "Source Document"
 msgstr "Documento origen"
 
 #. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_specific_fuel_tax
+msgid "Specific Fuel Tax"
+msgstr ""
+
+#. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__stock_picking
 msgid "Stock Delivery"
 msgstr "Entrega de existencias"
@@ -1388,7 +1469,6 @@ msgid "TMN"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model,name:l10n_cl.model_account_tax
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Tax"
 msgstr "Impuesto"
@@ -1406,8 +1486,8 @@ msgid ""
 "Tax payer type and vat number are mandatory for this type of document. "
 "Please set the current tax payer type of this customer"
 msgstr ""
-"El tipo de contribuyente y el número de RUT son requeridos para este tipo de"
-" documento. Por favor establezca un valor para el tipo de contribuyente de "
+"El tipo de contribuyente y el número de RUT son requeridos para este tipo de "
+"documento. Por favor establezca un valor para el tipo de contribuyente de "
 "este Cliente"
 
 #. module: l10n_cl
@@ -1418,8 +1498,8 @@ msgid ""
 "Tax payer type and vat number are mandatory for this type of document. "
 "Please set the current tax payer type of this supplier"
 msgstr ""
-"El tipo de contribuyente y el número de RUT son requeridos para este tipo de"
-" documento. Por favor establezca un valor para el tipo de contribuyente de "
+"El tipo de contribuyente y el número de RUT son requeridos para este tipo de "
+"documento. Por favor establezca un valor para el tipo de contribuyente de "
 "este Proveedor"
 
 #. module: l10n_cl
@@ -1450,6 +1530,20 @@ msgstr ""
 "“Tesorería General de La República” (RUT 60805000-0)"
 
 #. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document
+msgid "The VAT tax of this boleta is:"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+
+#. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
@@ -1465,8 +1559,7 @@ msgstr ""
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
-"The tax payer type of this supplier is not entitled to deliver fees "
-"documents"
+"The tax payer type of this supplier is not entitled to deliver fees documents"
 msgstr ""
 "El tipo de contribuyente para este proveedor no puede emitir boletas de "
 "honorarios"
@@ -1605,6 +1698,11 @@ msgid "You need a journal without the use of documents for foreign suppliers"
 msgstr ""
 "Ud. necesita un diario que no use documentos para registrar facturas de "
 "proveedores extranjeros"
+
+#. module: l10n_cl
+#: model_terms:res.company,invoice_terms_html:l10n_cl.demo_company_cl
+msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_bzf_f_dtn

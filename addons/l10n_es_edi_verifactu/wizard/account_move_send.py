@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import RedirectWarning
 
 
 class AccountMoveSend(models.TransientModel):
@@ -79,9 +80,35 @@ class AccountMoveSend(models.TransientModel):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
+        for invoice, invoice_data in invoices_data.items():
+            if not invoice_data.get('l10n_es_edi_verifactu_send'):
+                continue
+            vals = invoice._l10n_es_edi_verifactu_get_record_values()
+            action = msg = None
+
+            if vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document']:
+                substituted_move = invoice.l10n_es_edi_verifactu_substituted_entry_id
+                msg = _("There is no Veri*Factu document for the substituted record.")
+                action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(substituted_move)
+            elif vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document_reversal_document']:
+                substituted_move = invoice.l10n_es_edi_verifactu_substituted_entry_id
+                msg = _("There is no Veri*Factu document for the reversal of the substituted record.")
+                action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(substituted_move.reversal_move_id)
+            elif vals['verifactu_move_type'] in ('correction_incremental', 'reversal_for_substitution') and not vals['refunded_document']:
+                reversed_move = invoice.reversed_entry_id
+                msg = _("There is no Veri*Factu document for the refunded record.")
+                action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(reversed_move)
+
+            if action and msg:
+                invoice_data['error'] = {
+                    'verifactu_redirect_action': action,
+                    'error_title': _("Go to the journal entry"),
+                    'errors': [msg],
+                }
+
         invoices_to_send = self.env['account.move'].browse([
             invoice.id for invoice, invoice_data in invoices_data.items()
-            if invoice_data.get('l10n_es_edi_verifactu_send')
+            if invoice_data.get('l10n_es_edi_verifactu_send') and not invoice_data.get('error', {}).get('verifactu_redirect_action')
         ]).filtered(lambda move: move.l10n_es_edi_verifactu_required)
 
         created_document = invoices_to_send._l10n_es_edi_verifactu_mark_for_next_batch()
@@ -95,3 +122,13 @@ class AccountMoveSend(models.TransientModel):
 
         if created_document and self._can_commit():
             self._cr.commit()
+
+    def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
+        # EXTENDS 'account'
+        allow_raising = not from_cron and not allow_fallback_pdf
+        if allow_raising:
+            for move, move_data in moves_data.items():
+                error = move_data.get('error', {})
+                if isinstance(error, dict) and error.get('verifactu_redirect_action'):
+                    raise RedirectWarning('\n'.join(error['errors']), error['verifactu_redirect_action'], error['error_title'])
+        super()._hook_if_errors(moves_data, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)

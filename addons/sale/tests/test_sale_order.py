@@ -1103,3 +1103,23 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(so.amount_total, 18.22)
         self.assertEqual(so.order_line.price_tax, 2.91)
         self.assertEqual(so.order_line.price_total, 18.22)
+
+    def test_default_sales_teams_with_multi_company(self):
+        """
+        Check that the default sales team value on a sale order created for
+        a customer shared between multiple companies, is properly set according
+        to the current user company.
+        """
+        company_1 = self.env.company
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+
+        self.sale_team_2.company_id = company_2.id
+
+        self.partner.company_id = False
+        self.partner.team_id = self.sale_team_2
+
+        user = self.user_not_in_team
+        user.company_id = company_1
+
+        sale_order = self.env['sale.order'].with_user(user).create({'partner_id': self.partner.id})
+        self.assertEqual(sale_order.team_id, self.sale_team)

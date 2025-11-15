@@ -339,7 +339,7 @@ class HolidaysAllocation(models.Model):
                     or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
                     or HOURS_PER_DAY
                 allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
-            if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
+            if (allocation.allocation_type == 'regular' and allocation.accrual_plan_id) or allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
@@ -468,6 +468,8 @@ class HolidaysAllocation(models.Model):
         already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
+            if allocation.allocation_type != 'accrual':
+                continue
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
                 continue
@@ -700,7 +702,7 @@ class HolidaysAllocation(models.Model):
 
         if 'number_of_days_display' in values\
                 or 'number_of_hours_display' in values\
-                or 'number_of_days' in values:
+                or 'number_of_days' in values or 'state' in values:
             previous_consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
             result = super().write(values)
             if 'allocation_type' in values:
@@ -825,12 +827,6 @@ class HolidaysAllocation(models.Model):
         if any(allocation.state not in ['confirm', 'validate'] for allocation in self):
             raise UserError(_('Allocation request must be confirmed or validated in order to refuse it.'))
 
-        days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id)[0]
-
-        for allocation in self:
-            days_taken = days_per_allocation[allocation.employee_id][allocation.holiday_status_id][allocation]['virtual_leaves_taken']
-            if days_taken > 0:
-                raise UserError(_('You cannot refuse this allocation request since the employee has already taken leaves for it. Please refuse or delete those leaves first.'))
         self.write({'state': 'refuse', 'approver_id': current_employee.id})
         # If a category that created several holidays, cancel all related
         linked_requests = self.mapped('linked_request_ids')

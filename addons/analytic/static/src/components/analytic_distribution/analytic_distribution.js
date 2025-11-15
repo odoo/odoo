@@ -284,7 +284,9 @@ export class AnalyticDistribution extends Component {
                 // company domain might be required here
                 domain: [["root_plan_id", "=", account.planId]],
             };
-            values[fieldName] =  account?.accountId || false;
+            values[fieldName] = account?.accountId
+                ? [account.accountId, account.accountDisplayName]
+                : false;
         });
         // Percentage field
         recordFields['percentage'] = {
@@ -301,10 +303,9 @@ export class AnalyticDistribution extends Component {
             values[name] = this.props.record.data[name] * values['percentage'];
             // Currency field
             if (currency_field) {
-                // TODO: check web_read network request
                 const { string, name, type, relation } = this.props.record.fields[currency_field];
                 recordFields[currency_field] = { name, string, type, relation, invisible: true };
-                values[currency_field] = this.props.record.data[currency_field][0];
+                values[currency_field] = [this.props.record.data[currency_field][0], ""];
             }
         }
         return {
@@ -465,7 +466,7 @@ export class AnalyticDistribution extends Component {
             'default_analytic_distribution': this.dataToJson(),
             'default_partner_id': record.data['partner_id'] ? record.data['partner_id'][0] : undefined,
             'default_product_id': product_field ? record.data[product_field][0] : undefined,
-            'default_account_prefix': account_field ? record.data[account_field][1].substr(0, 3) : undefined,
+            'default_account_prefix': account_field ? record.data[account_field][1]?.substr(0, 3) : undefined,
         }});
     }
 

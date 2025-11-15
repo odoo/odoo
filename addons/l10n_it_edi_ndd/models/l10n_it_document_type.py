@@ -8,12 +8,12 @@ class L10nItDocumentType(models.Model):
 
     name = fields.Char(required=True, help='The document type name', translate=True)
     code = fields.Char(required=True)
+    # not used, to be removed in master
     type = fields.Selection(
         selection=[
             ('sale', "Sale"),
             ('purchase', "Purchase"),
         ],
-        required=True,
     )
 
     def _compute_display_name(self):

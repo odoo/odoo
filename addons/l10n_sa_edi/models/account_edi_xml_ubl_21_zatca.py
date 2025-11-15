@@ -259,7 +259,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         if downpayment_vals:
             # - BR-KSA-80: To calculate payable amount, we deduct prepaid amount from total tax inclusive amount
             prepaid_amount = downpayment_vals['total_amount']
-            payable_amount = tax_inclusive_amount - prepaid_amount
+            payable_amount = invoice.currency_id.round(tax_inclusive_amount - prepaid_amount)
         return {
             'line_extension_amount': line_extension_amount - allowance_total_amount,
             'tax_inclusive_amount': tax_inclusive_amount,
@@ -446,7 +446,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'tax_subtotal_vals': [{
                 'currency': invoice.currency_id,
                 'currency_dp': invoice.currency_id.decimal_places,
-                'taxable_amount': abs(vals['base_amount_currency']),
+                'taxable_amount': vals['base_amount_currency'] if vals['tax_amount'] == 0 else abs(vals['base_amount_currency']),
                 'tax_amount': abs(vals['tax_amount_currency']),
                 'percent': vals['_tax_category_vals_']['percent'],
                 'tax_category_vals': vals['_tax_category_vals_'],

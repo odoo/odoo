@@ -32,4 +32,5 @@ class MembershipInvoice(models.TransientModel):
             'type': 'ir.actions.act_window',
             'views': [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')],
             'search_view_id': search_view_ref and [search_view_ref.id],
+            'context': {'default_move_type': 'out_invoice'},
         }

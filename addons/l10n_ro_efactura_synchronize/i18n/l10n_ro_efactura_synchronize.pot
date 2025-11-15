@@ -1,0 +1,110 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_ro_efactura_synchronize
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-05 12:55+0000\n"
+"PO-Revision-Date: 2025-08-05 12:55+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.model,name:l10n_ro_efactura_synchronize.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.model,name:l10n_ro_efactura_synchronize.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.model,name:l10n_ro_efactura_synchronize.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.model,name:l10n_ro_efactura_synchronize.model_l10n_ro_edi_document
+msgid "Document object for tracking CIUS-RO XML sent to E-Factura"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_account_bank_statement_line__l10n_ro_edi_index
+#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_account_move__l10n_ro_edi_index
+#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_account_payment__l10n_ro_edi_index
+msgid "E-Factura Index"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.actions.server,name:l10n_ro_efactura_synchronize.ir_cron_l10n_ro_edi_synchronize_invoices_ir_actions_server
+msgid "E-Factura: Synchronize with ANAF"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#. odoo-python
+#: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
+#: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
+#, python-format
+msgid "Error when trying to download the E-Factura data from the SPV: %s"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model_terms:ir.ui.view,arch_db:l10n_ro_efactura_synchronize.res_config_settings_form_inherit_l10n_ro_synchronize
+msgid "Import Vendor Bills in :"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.model,name:l10n_ro_efactura_synchronize.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_res_company__l10n_ro_edi_anaf_imported_inv_journal_id
+#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_res_config_settings__l10n_ro_edi_anaf_imported_inv_journal_id
+msgid "Select journal for SPV imported bills"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#. odoo-javascript
+#: code:addons/l10n_ro_efactura_synchronize/static/src/components/fetch_invoice.xml:0
+#, python-format
+msgid "Synchronize with ANAF"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#. odoo-python
+#: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
+#, python-format
+msgid "Synchronized with SPV from message %s"
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#. odoo-python
+#: code:addons/l10n_ro_efactura_synchronize/models/ciusro_document.py:0
+#, python-format
+msgid "The SPV data could not be parsed."
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#. odoo-python
+#: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice has probably been refused by the SPV. We were unable to recover "
+"the reason of the refusal because the invoice had not received its index. "
+"Duplicate the invoice and attempt to send it again."
+msgstr ""
+
+#. module: l10n_ro_efactura_synchronize
+#. odoo-python
+#: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
+#, python-format
+msgid "This invoice has been accepted by the SPV."
+msgstr ""

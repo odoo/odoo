@@ -28,6 +28,7 @@ odoo.livechatReady = new Deferred();
     await mount(MainComponentsContainer, target, {
         env,
         templates,
+        translatableAttributes: ["data-tooltip"],
         translateFn: _t,
         dev: env.debug,
     });

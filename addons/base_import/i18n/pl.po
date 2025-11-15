@@ -1,33 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_import
-# 
+# * base_import
+#
 # Translators:
 # Wil Odoo, 2023
 # Damian Ratus, 2024
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2024
 # Piotr Strebski <strebski@gmail.com>, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:34+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Piotr Strebski <strebski@gmail.com>, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"PO-Revision-Date: 2025-11-08 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
+"base_import/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
+"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s w wielu rzędach"
 
 #. module: base_import
 #. odoo-javascript
@@ -44,6 +48,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
+"Znaleziono pojedynczą kolumnę w pliku, to często znaczy, że separator pliku "
+"jest nieprawidłowy."
 
 #. module: base_import
 #. odoo-javascript
@@ -129,7 +135,7 @@ msgstr "Anuluj"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
-msgstr ""
+msgstr "Kliknij \"Wznów\", aby kontynuować import, wznawiając w wierszu %s."
 
 #. module: base_import
 #. odoo-python
@@ -222,7 +228,7 @@ msgstr "Format Datetime:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Separator liczb dziesiętnych:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -276,6 +282,8 @@ msgstr ""
 msgid ""
 "Error while importing records: Text Delimiter should be a single character."
 msgstr ""
+"Błąd podczas importu rekordów: Separator tekstu powinien być pojedynczym "
+"znakiem."
 
 #. module: base_import
 #. odoo-python
@@ -486,7 +494,7 @@ msgstr "Plik importowy nie ma zawartości lub jest uszkodzony"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Podgląd importu nie powiódł się z powodu: \""
 
 #. module: base_import
 #. odoo-javascript
@@ -517,6 +525,9 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
+"Nieprawidłowy format komórki w rzędzie %(row)s, kolumna %(col)s: "
+"%(cell_value)s, z formatem: %(cell_format)s, ponieważ format "
+"(%(format_type)s) nie jest obsługiwany."
 
 #. module: base_import
 #. odoo-python
@@ -592,7 +603,7 @@ msgstr "Brak separatora"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Nie znaleziono pasujących rekordów dla następującej nazwy"
 
 #. module: base_import
 #. odoo-javascript
@@ -627,7 +638,7 @@ msgstr "Pasek postępu"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Reimport"
-msgstr ""
+msgstr "Zaimportuj znowu"
 
 #. module: base_import
 #. odoo-javascript
@@ -688,7 +699,7 @@ msgstr "Separator:"
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: %s"
-msgstr ""
+msgstr "Ustaw na: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -823,7 +834,7 @@ msgstr "Separator tysięcy:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Aby zaimportować wiele wartości, oddziel je przecinkiem."
 
 #. module: base_import
 #. odoo-javascript
@@ -888,6 +899,10 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Użyj HH do oznaczania godzin w 24-godzinnym systemie, użyj II w połączeniu z "
+"\"p\" dla 12-godzinnego systemu. Oprócz podanych sugestii możesz użyć "
+"własnego formatu. Zostaw to pole puste, aby pozwolić Odoo odgadnąć format "
+"(zalecane)"
 
 #. module: base_import
 #. odoo-javascript
@@ -899,6 +914,9 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
+"Użyj YYYY do oznaczania roku, MM do miesięcy i DD do dni. Załącz separatory, "
+"takie jak kropka, ukośnik lub myślnik. Możesz użyć własnego formatu oprócz "
+"podanych sugestii. Zostaw puste, aby pozwolić Odoo zgadnąć format (zalecane)"
 
 #. module: base_import
 #. odoo-javascript

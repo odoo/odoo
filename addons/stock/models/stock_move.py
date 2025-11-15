@@ -1781,7 +1781,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
                         move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, None, lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
-                        taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
+                        if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
+                            taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
                     if all_move_line_vals:
                         self.env['stock.move.line'].create(all_move_line_vals)
 

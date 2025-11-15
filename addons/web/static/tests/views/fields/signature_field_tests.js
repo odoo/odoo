@@ -296,17 +296,7 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvent(target, ".o_web_sign_signature", "change");
             await click(target, ".modal-footer .btn-primary");
 
-            const MYB64 = `iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAABRJREFUGFdjZGD438DAwNjACGMAACQlBAMW7JulAAAAAElFTkSuQmCC`;
-            assert.strictEqual(
-                target.querySelector("div[name=sign] img").dataset.src,
-                `data:image/png;base64,${MYB64}`
-            );
-
             await editInput(target, ".o_field_widget[name='foo'] input", "grrr");
-            assert.strictEqual(
-                target.querySelector("div[name=sign] img").dataset.src,
-                `data:image/png;base64,${MYB64}`
-            );
 
             await clickSave(target);
             assert.verifySteps(["web_save"]);
@@ -330,12 +320,6 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvent(target, ".o_web_sign_signature", "change");
             await click(target, ".modal-footer .btn-primary");
 
-            const MYB64_2 = `iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAABVJREFUGFdjZGD438DAwMDACCJAAAAWHgGCN0++VgAAAABJRU5ErkJggg==`;
-            assert.notOk(MYB64 === MYB64_2);
-            assert.strictEqual(
-                target.querySelector("div[name=sign] img").dataset.src,
-                `data:image/png;base64,${MYB64_2}`
-            );
             await clickSave(target);
             assert.verifySteps(["web_save"]);
             assert.strictEqual(

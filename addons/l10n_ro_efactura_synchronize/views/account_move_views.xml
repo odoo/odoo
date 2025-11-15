@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_form_inherit_l10n_ro_synchronize" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_ro_edi</field>
+        <field name="model">account.move</field>
+        <field name="priority">31</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="l10n_ro_edi_index"
+                       invisible="not l10n_ro_edi_index or move_type in ('in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_l10n_ro_edi_fetch_status']" position="attributes">
+                <attribute name="invisible">state != 'invoice_sending' or not key_loading</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

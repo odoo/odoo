@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitForChannels } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
@@ -8,7 +9,6 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { config as transitionConfig } from "@web/core/transition";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
-    assertSteps,
     click,
     contains,
     createFile,
@@ -16,10 +16,8 @@ import {
     focus,
     insertText,
     scroll,
-    step,
     triggerEvents,
 } from "@web/../tests/utils";
-import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 
 QUnit.module("thread");
 
@@ -450,21 +448,12 @@ QUnit.test("can join public channel from channel mention link", async () => {
         author_id: partnerId,
         res_id: partnerId,
     });
-    patchWebsocketWorkerWithCleanup({
-        _sendToServer({ event_name, data }) {
-            if (event_name === "subscribe") {
-                const channels = data.channels.filter((subscription) =>
-                    subscription.startsWith("discuss.channel_")
-                );
-                step(`subscribe - [${channels.join(",")}]`);
-            }
-        },
-    });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
+    const channelSub = waitForChannels([`discuss.channel_${channelId}`]);
     await click(".o-mail-Message-body a", { text: "#Channel" });
     await contains(".o-mail-ChatWindow-header", { text: "Channel" });
-    await assertSteps([`subscribe - [discuss.channel_${channelId}]`]);
+    await channelSub;
 });
 
 QUnit.test("show empty placeholder when thread contains no message", async () => {

@@ -446,7 +446,13 @@ class SaleOrder(models.Model):
     def _compute_team_id(self):
         cached_teams = {}
         for order in self:
-            default_team_id = self.env.context.get('default_team_id', False) or order.partner_id.team_id.id or order.team_id.id
+            domain = order.team_id._check_company_domain(order.company_id or order.env.company)
+            default_team_id = (
+                self.env.context.get('default_team_id')
+                or order.partner_id.team_id.filtered_domain(domain).id
+                or order.team_id.id
+            )
+
             user_id = order.user_id.id
             company_id = order.company_id.id
             key = (default_team_id, user_id, company_id)
@@ -1135,7 +1141,7 @@ class SaleOrder(models.Model):
     def action_update_prices(self):
         self.ensure_one()
 
-        self._recompute_prices()
+        self.with_context(pricelist_update=True)._recompute_prices()
 
         if self.pricelist_id:
             message = _("Product prices have been recomputed according to pricelist %s.",
@@ -1235,7 +1241,7 @@ class SaleOrder(models.Model):
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'currency_id']
+        return ['company_id', 'partner_id', 'currency_id', 'fiscal_position_id']
 
     def _nothing_to_invoice_error_message(self):
         return _(

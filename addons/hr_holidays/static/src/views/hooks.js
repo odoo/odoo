@@ -19,10 +19,10 @@ export function useMandatoryDays(props) {
         const mandatoryDay = props.model.mandatoryDays[date];
         if (mandatoryDay) {
             const dayNumberElTop = info.view.el.querySelector(
-                `.fc-day-top[data-date="${info.el.dataset.date}"]`
+                `.fc-day-top[data-date="${date}"]`
             );
             const dayNumberEl = info.view.el.querySelector(
-                `.fc-day[data-date="${info.el.dataset.date}"]`
+                `.fc-day[data-date="${date}"]`
             );
             if (dayNumberElTop) {
                 dayNumberElTop.classList.add('hr_mandatory_day', `hr_mandatory_day_top_${mandatoryDay}`);

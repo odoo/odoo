@@ -182,23 +182,23 @@ class AccruedExpenseRevenue(models.TransientModel):
                         if any(tax.price_include for tax in order_line.taxes_id):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
                             price_subtotal = order_line.taxes_id.compute_all(
-                                order_line.price_unit,
+                                order_line.price_unit_discounted,
                                 currency=order_line.order_id.currency_id,
                                 quantity=order_line.qty_to_invoice,
                                 product=order_line.product_id,
                                 partner=order_line.order_id.partner_id)['total_excluded']
                         else:
-                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit
+                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit_discounted
                         amount_currency = order_line.currency_id.round(price_subtotal)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
-                        label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
+                        label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id))
                     else:
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount_currency = order_line.untaxed_amount_to_invoice
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
-                        label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
+                        label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id))
                     distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                     if not is_purchase and order.analytic_account_id:
                         analytic_account_id = str(order.analytic_account_id.id)
@@ -236,6 +236,16 @@ class AccruedExpenseRevenue(models.TransientModel):
         }
         return move_vals, orders_with_entries
 
+    def _get_accrual_message_body(self, move, reverse_move):
+        self.ensure_one()
+        return _(
+            'Accrual entry created on %(date)s: %(accrual_entry)s.\
+                And its reverse entry: %(reverse_entry)s.',
+            date=self.date,
+            accrual_entry=move._get_html_link(),
+            reverse_entry=reverse_move._get_html_link(),
+        )
+
     def create_entries(self):
         self.ensure_one()
 
@@ -251,18 +261,11 @@ class AccruedExpenseRevenue(models.TransientModel):
         }])
         reverse_move._post()
         for order in orders_with_entries:
-            body = _(
-                'Accrual entry created on %(date)s: %(accrual_entry)s.\
-                    And its reverse entry: %(reverse_entry)s.',
-                date=self.date,
-                accrual_entry=move._get_html_link(),
-                reverse_entry=reverse_move._get_html_link(),
-            )
-            order.message_post(body=body)
+            order.message_post(body=self._get_accrual_message_body(move, reverse_move))
         return {
             'name': _('Accrual Moves'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'view_mode': 'tree,form',
-            'domain': [('id', 'in', (move.id, reverse_move.id))],
+            'domain': [('id', 'in', (move | reverse_move).ids)],
         }

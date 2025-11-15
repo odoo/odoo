@@ -3,7 +3,9 @@
 
 import time
 
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo import fields
 
 class TestEquipment(TransactionCase):
     """ Test used to check that when doing equipment/maintenance_request/equipment_category creation."""
@@ -119,3 +121,36 @@ class TestEquipment(TransactionCase):
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
         ])
+
+    def test_done_maintenance_no_close_or_request_date(self):
+        """
+        Ensure equipment with done maintenance requests that have
+        `close_date` or `request_date` set to False can still be opened.
+        In theory this should never happen, but we should fail gracefully
+        in case these dates are forced set to False.
+        """
+
+        form = Form(self.env['maintenance.equipment'].with_user(self.manager))
+        form.name = "brain"
+        equipment = form.save()
+        form = Form(self.env['maintenance.request'].with_user(self.manager))
+        form.name = "improve efficiency"
+        form.equipment_id = equipment
+        form.maintenance_type = 'corrective'
+        maintenance = form.save()
+        self.assertTrue(maintenance.request_date)
+        self.assertFalse(maintenance.close_date)
+
+        maintenance.stage_id = self.ref('maintenance.stage_3')
+        self.assertTrue(maintenance.request_date)
+        self.assertTrue(maintenance.close_date)
+        form = Form(equipment)
+
+        # this shouldn't happen unless it's forced
+        maintenance.close_date = False
+        form = Form(equipment)
+        maintenance.close_date = fields.Date.today()
+        maintenance.request_date = False
+        form = Form(equipment)
+        maintenance.close_date = False
+        form = Form(equipment)

@@ -8,7 +8,7 @@ import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
 
-import { Component, onMounted, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, status, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeDialog extends Component {
@@ -59,8 +59,14 @@ export class BarcodeDialog extends Component {
                 this.onError(new Error(errorMessage));
                 return;
             }
+            if (status(this) === "destroyed") {
+                return;
+            }
             this.videoPreviewRef.el.srcObject = this.stream;
-            await this.isVideoReady();
+            const ready = await this.isVideoReady();
+            if (!ready) {
+                return;
+            }
             const { height, width } = getComputedStyle(this.videoPreviewRef.el);
             const divWidth = width.slice(0, -2);
             const divHeight = height.slice(0, -2);
@@ -96,8 +102,12 @@ export class BarcodeDialog extends Component {
         // FIXME: even if it shouldn't happened, a timeout could be useful here.
         while (!isVideoElementReady(this.videoPreviewRef.el)) {
             await delay(10);
+            if (status(this) === "destroyed"){
+                return false;
+            }
         }
         this.state.isReady = true;
+        return true;
     }
 
     onResize(overlayInfo) {

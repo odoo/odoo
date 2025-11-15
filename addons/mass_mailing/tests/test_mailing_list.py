@@ -34,8 +34,12 @@ class TestMailingContactToList(MassMailCommon):
         # set mailing list and add contacts
         wizard_form.mailing_list_id = mailing
         wizard = wizard_form.save()
-        action = wizard.action_add_contacts()
-        self.assertEqual(contacts.list_ids, mailing)
+        frozen_time = datetime(2025, 1, 1, 0, 0)
+        with self.mock_datetime_and_now(frozen_time):
+            action = wizard.action_add_contacts()
+            self.assertEqual(contacts.list_ids, mailing)
+            create_dates = contacts.subscription_ids.mapped('create_date')
+            self.assertTrue(all(date == frozen_time for date in create_dates), "All create dates should be equal to frozen datetime")
         self.assertEqual(action["type"], "ir.actions.client")
         self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
         subaction = action["params"]["next"]

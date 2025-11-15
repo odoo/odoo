@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-02 06:59+0000\n"
-"PO-Revision-Date: 2025-05-02 06:59+0000\n"
+"POT-Creation-Date: 2025-10-28 10:14+0000\n"
+"PO-Revision-Date: 2025-10-28 10:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,16 +17,16 @@ msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/ewaybill_type.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 #, python-format
-msgid " (Sub-Type: %s)"
+msgid " invalid ship to from gstin "
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/ewaybill_type.py:0
 #, python-format
-msgid " invalid ship to from gstin "
+msgid "%s (Sub-Type: %s)"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -79,13 +79,6 @@ msgstr ""
 #, python-format
 msgid ""
 "- Vehicle Number and Type is required when Transportation Mode is By Road"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid ""
-"<span class=\"o_form_label\">Setup E-Waybill</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -237,7 +230,7 @@ msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid "Check the"
+msgid "Check the documentation to get credentials."
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -1056,11 +1049,6 @@ msgid "Indian EDI Stock username"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid "Indian Electronic WayBill"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
 #. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 #, python-format
@@ -1697,11 +1685,6 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_l10n_in_ewaybill_type____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_l10n_in_ewaybill_type__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -1961,6 +1944,11 @@ msgstr ""
 #. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill
 msgid "Send E-waybill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
+msgid "Setup Electronic Waybill"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -2871,11 +2859,6 @@ msgid "dispatch from gstin is mandatary "
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid "documentation"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill
 msgid "eWayBill"
 msgstr ""
@@ -2941,11 +2924,6 @@ msgstr ""
 #: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 #, python-format
 msgid "ship to from gstin is mandatary"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid "to get credentials"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill

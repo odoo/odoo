@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
-import { click, editSelect, getFixture } from "@web/../tests/helpers/utils";
+import { click, editSelect, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { TimezoneMismatchField } from "@web/views/fields/timezone_mismatch/timezone_mismatch_field";
 
 let target;
 let serverData;
@@ -162,4 +163,38 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("timezone_mismatch_field mismatch property", function (assert) {
+        const testCases = [
+            { userOffset: "-1030", browserOffset: 630, expectedMismatch: false },
+            { userOffset: "+0000", browserOffset: 0, expectedMismatch: false },
+            { userOffset: "+0345", browserOffset: -225, expectedMismatch: false },
+            { userOffset: "+0500", browserOffset: -300, expectedMismatch: false },
+            { userOffset: "+0200", browserOffset: 120, expectedMismatch: true },
+            { userOffset: "+1200", browserOffset: 0, expectedMismatch: true },
+        ];
+
+        for (const testCase of testCases) {
+            patchWithCleanup(Date.prototype, {
+                getTimezoneOffset: () => testCase.browserOffset,
+            });
+
+            patchWithCleanup(TimezoneMismatchField.prototype, {
+                props: {
+                    name: "tz",
+                    tzOffsetField: "tz_offset",
+                    record: {
+                        data: {
+                            tz: "Test/Test",
+                            tz_offset: testCase.userOffset,
+                        },
+                    },
+                },
+            });
+
+            const mockField = Object.create(TimezoneMismatchField.prototype);
+
+            assert.strictEqual(mockField.mismatch, testCase.expectedMismatch);
+        }
+    });
 });

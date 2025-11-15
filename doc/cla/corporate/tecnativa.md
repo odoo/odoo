@@ -28,3 +28,4 @@ Pilar Vargas pilar.vargas@tecnativa.com https://github.com/pilarvargas-tecnativa
 Carolina Fernández carolina.fernandez@tecnativa.com https://github.com/carolinafernandez-tecnativa
 Josep Guardiola josep.guardiola@tecnativa.com https://github.com/josep-tecnativa
 Carlos Lopez carlos.lopez@tecnativa.com https://github.com/carlos-lopez-tecnativa
+Eduardo Ezerouali eduardo.ezerouali@tecnativa.com https://github.com/eduezerouali-tecnativa

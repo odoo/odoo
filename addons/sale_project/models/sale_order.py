@@ -115,7 +115,7 @@ class SaleOrder(models.Model):
             if not is_project_manager:
                 projects = projects._filter_access_rules('read')
             order.project_ids = projects
-            order.project_count = len(projects)
+            order.project_count = len(projects.filtered('active'))
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
@@ -204,7 +204,7 @@ class SaleOrder(models.Model):
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
-            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
+            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.project_ids.ids)],
             'res_model': 'project.project',
             'views': [(False, 'kanban'), (False, 'tree'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
@@ -215,7 +215,7 @@ class SaleOrder(models.Model):
                 'default_allow_billable': 1,
             }
         }
-        if len(self.with_context(active_test=False).project_ids) == 1:
+        if len(self.project_ids) == 1:
             action.update({'views': [(False, 'form')], 'res_id': self.project_ids.id})
         return action
 

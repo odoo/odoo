@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* uom
-# 
+# * uom
+#
 # Translators:
 # Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# 
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"PO-Revision-Date: 2025-10-09 01:41+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-17/uom/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -94,8 +97,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Las unidades de medida solo se pueden convertir si ambas unidades pertenecen"
-" a la misma categoría. La conversión se basará en las proporciones "
+"La conversión entre unidades de medida solo puede ocurrir si pertenecen a la "
+"misma categoría. La conversión se realizará según las proporciones "
 "establecidas."
 
 #. module: uom
@@ -142,8 +145,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"Cuántas veces esta unidad de medida es más grande que la unidad de medida de"
-" referencia en esta categoría: 1 * (esta unidad) = proporción * (unidad de "
+"Cuántas veces esta unidad de medida es mayor que la unidad de medida de "
+"referencia en esta categoría: 1 * (esta unidad) = proporción * (unidad de "
 "referencia)"
 
 #. module: uom
@@ -191,7 +194,7 @@ msgstr "Unidad de medida del producto"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Categoría de UdM de producto"
+msgstr "Categorías de UdM del producto"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -222,12 +225,12 @@ msgstr "Buscar unidad de medida"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr "Buscar categoría UdM"
+msgstr "Buscar categoría de UdM"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Más pequeña que la unidad de medida de referencia"
+msgstr "Menor que la unidad de medida de referencia"
 
 #. module: uom
 #. odoo-python
@@ -242,13 +245,16 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
-"Se modificaron algunos campos críticos en %s.\n"
-"Tome en cuenta que este cambio no modificará la información existente.\n"
+"Algunos campos críticos en %s cambiaron.\n"
+"Ten en cuenta que los datos existentes NO se actualizarán con este cambio.\n"
 "\n"
-"Como las unidades de medida impactan a todo el sistema, esto puede causar problemas críticos.\n"
-"Por ejemplo, modificar el redondeo podría alterar el balance de su inventario.\n"
+"Como las unidades de medida impactan a todo el sistema, esto puede causar "
+"problemas graves.\n"
+"Por ejemplo, modificar el redondeo podría alterar el balance del inventario."
 "\n"
-"No es recomendable cambiar las unidades de medida neutrales en una base de datos funcional."
+"\n"
+"No te recomendamos cambiar las unidades de medida básicas en una base de "
+"datos en uso."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -338,7 +344,7 @@ msgstr "Unidad de medida"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr "Categoría de unidades de medida"
+msgstr "Categoría de la unidad de medida"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -362,7 +368,7 @@ msgstr "Categorías de las unidades de medida"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "Categorías de unidades de medida"
+msgstr "Categorías de las unidades de medida"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -373,9 +379,9 @@ msgid ""
 "            Hours, Days."
 msgstr ""
 "Las unidades de medida pertenecientes a la misma categoría se pueden\n"
-"convertir entre sí. Por ejemplo, la categoría\n"
-"<i>'Tiempo'</i>, tendrá las siguientes unidades de medida: \n"
-"horas, días."
+"            convertir entre sí. Por ejemplo, la categoría\n"
+"            <i>\"Tiempo\"</i> tendrá las unidades de medida\n"
+"            Horas y Días."
 
 #. module: uom
 #. odoo-python
@@ -383,8 +389,8 @@ msgstr ""
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
-"La categoría %s de unidades de medida debería tener al menos una unidad de "
-"medida de referencia."
+"La categoría de la unidad de medida %s debe tener al menos una unidad de "
+"referencia."
 
 #. module: uom
 #. odoo-python
@@ -392,8 +398,7 @@ msgstr ""
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr ""
-"La categoría de unidades de medida %s debería tener una unidad de medida de "
-"referencia."
+"La categoría de la unidad de medida %s debe tener una unidad de referencia."
 
 #. module: uom
 #. odoo-python
@@ -401,7 +406,7 @@ msgstr ""
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
-"La categoría de unidad de medida %s solo debe tener una unidad de medida de "
+"La categoría de la unidad de medida %s solo debe tener una unidad de "
 "referencia."
 
 #. module: uom
@@ -437,8 +442,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Debe definir una proporción de conversión entre varias unidades de\n"
-"medida dentro de la misma categoría."
+"Debes definir una proporción de conversión entre varias unidades de \n"
+"            medida dentro de la misma categoría."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm

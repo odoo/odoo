@@ -338,6 +338,7 @@ class AccountMove(models.Model):
         total_exec_am_in_currency = abs(self.amount_total_in_currency_signed)
         total_exec_am = abs(self.amount_total_signed)
         items, taxes, taxes_withheld, totals = self._l10n_es_edi_facturae_inv_lines_to_items(conversion_rate)
+        tax_lines = self.line_ids.filtered('tax_line_id')
         template_values = {
             'self_party': company.partner_id,
             'self_party_country_code': COUNTRY_CODE_MAP[company.country_id.code],
@@ -391,8 +392,8 @@ class AccountMove(models.Model):
                 'TotalGeneralDiscounts': totals['total_general_discounts'],
                 'TotalGeneralSurcharges': totals['total_general_surcharges'],
                 'TotalGrossAmountBeforeTaxes': totals['total_gross_amount'] - totals['total_general_discounts'] + totals['total_general_surcharges'],
-                'TotalTaxOutputs': totals['total_tax_outputs'],
-                'TotalTaxesWithheld': totals['total_taxes_withheld'],
+                'TotalTaxOutputs': sum(tax_lines.filtered(lambda tax_line: tax_line.tax_line_id.amount > 0.0).mapped('balance')) * self.direction_sign,
+                'TotalTaxesWithheld': sum(tax_lines.filtered(lambda tax_line: tax_line.tax_line_id.amount < 0.0).mapped('balance')) * self.direction_sign,
                 'PaymentsOnAccount': [],
                 'TotalOutstandingAmount': total_outst_am_in_currency,
                 'InvoiceTotal': abs(self.amount_total_in_currency_signed),

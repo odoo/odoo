@@ -19,6 +19,7 @@ from odoo.api import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
+from odoo.tools.mimetypes import magic
 from odoo.tests.common import users
 
 
@@ -1310,10 +1311,11 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         # notification email attachments
         self.assertEqual(len(self._mails), 1)
+        expected_mimetype = 'text/plain' if magic else 'application/octet-stream'
         self.assertSentEmail(
             self.user_employee.partner_id, [self.partner_1],
-            attachments=[('List1', b'My first attachment', 'application/octet-stream'),
-                         ('List2', b'My second attachment', 'application/octet-stream'),
+            attachments=[('List1', b'My first attachment', expected_mimetype),
+                         ('List2', b'My second attachment', expected_mimetype),
                          ('AttFileName_00.txt', b'AttContent_00', 'text/plain'),
                          ('AttFileName_01.txt', b'AttContent_01', 'image/png'),
                          ('AttFileName_02.txt', b'AttContent_02', 'text/plain'),

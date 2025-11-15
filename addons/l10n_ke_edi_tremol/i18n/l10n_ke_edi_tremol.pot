@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-08 23:34+0000\n"
-"PO-Revision-Date: 2023-01-08 23:34+0000\n"
+"POT-Creation-Date: 2025-10-28 16:36+0000\n"
+"PO-Revision-Date: 2025-10-28 16:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,15 +36,22 @@ msgid "<b>Serial Number: </b><br/>"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Tremol Device Settings</span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+#: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.l10n_ke_invoice
+msgid "<strong class=\"text-center\">TIMS URL</strong><br/><br/>"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.l10n_ke_invoice
-msgid "<strong class=\"text-center\">TIMS URL</strong><br/><br/>"
+#: model:ir.model,name:l10n_ke_edi_tremol.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#. odoo-python
+#: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
+#, python-format
+msgid ""
+"An OSCU has been initialized for this company. Please send the e-invoice via"
+" Send and Print -> Send to eTIMS instead."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -86,22 +93,33 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_hook.js:0
+#, python-format
+msgid "Connection lost, please try again later."
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
 #: model:ir.model,name:l10n_ke_edi_tremol.model_res_partner
 msgid "Contact"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#. openerp-web
-#: code:addons/l10n_ke_edi_tremol/static/src/js/send_invoice.js:0
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_hook.js:0
 #, python-format
-msgid "Error trying to connect to Odoo. Check your internet connection"
+msgid ""
+"Error trying to connect to Odoo. Check your internet connection. Error "
+"message: %s"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#. openerp-web
-#: code:addons/l10n_ke_edi_tremol/static/src/js/send_invoice.js:0
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_hook.js:0
 #, python-format
-msgid "Error trying to connect to the middleware. Is the middleware running?"
+msgid ""
+"Error trying to connect to the middleware. Is the middleware running? \n"
+" Error message: %s"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -117,11 +135,7 @@ msgid "Fiscal Device Proxy Address"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.l10n_ke_inherit_product_template_form_view
-msgid "HS Code"
-msgstr ""
-
-#. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
 msgid ""
@@ -133,19 +147,6 @@ msgstr ""
 #. module: l10n_ke_edi_tremol
 #: model:ir.model,name:l10n_ke_edi_tremol.model_account_move
 msgid "Journal Entry"
-msgstr ""
-
-#. module: l10n_ke_edi_tremol
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_product_product__l10n_ke_hsn_code
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_product_template__l10n_ke_hsn_code
-#: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.l10n_ke_inherit_product_product_form_view
-msgid "KRA Item Code"
-msgstr ""
-
-#. module: l10n_ke_edi_tremol
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_product_product__l10n_ke_hsn_name
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_product_template__l10n_ke_hsn_name
-msgid "KRA Item Description"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -164,41 +165,47 @@ msgid "Kenya TIMS Integration"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move_send__l10n_ke_edi_warning_message
+msgid "L10N Ke Edi Warning Message"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_dialog.xml:0
+#, python-format
+msgid "OK"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
 msgid ""
-"On line %s, a product with a HS Code and HS Name must be selected, since the"
-" tax is 0%% or exempt."
+"On line %s, a tax with a KRA item code must be selected, since the tax is "
+"0%% or exempt."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
-msgid "On line %s, you must select one and only one tax."
+msgid "On line %s, you must select one and only one VAT tax."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#. openerp-web
-#: code:addons/l10n_ke_edi_tremol/static/src/js/send_invoice.js:0
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_hook.js:0
 #, python-format
-msgid "Posting an invoice has failed, with the message: \n"
+msgid "Posting invoice: %s"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#: model:ir.model,name:l10n_ke_edi_tremol.model_product_template
-msgid "Product Template"
-msgstr ""
-
-#. module: l10n_ke_edi_tremol
-#: model:ir.model.fields,help:l10n_ke_edi_tremol.field_product_product__l10n_ke_hsn_name
-#: model:ir.model.fields,help:l10n_ke_edi_tremol.field_product_template__l10n_ke_hsn_name
-msgid "Product code description needed when not 16% VAT rated. "
-msgstr ""
-
-#. module: l10n_ke_edi_tremol
-#: model:ir.model.fields,help:l10n_ke_edi_tremol.field_product_product__l10n_ke_hsn_code
-#: model:ir.model.fields,help:l10n_ke_edi_tremol.field_product_template__l10n_ke_hsn_code
-msgid "Product code needed when not 16% VAT rated. "
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_hook.js:0
+#, python-format
+msgid ""
+"Posting the invoice %s has failed with the message: \n"
+" %s"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -217,18 +224,17 @@ msgid "Send to fiscal device"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_dialog.xml:0
 #, python-format
-msgid ""
-"Tax '%s' is used, but only taxes of 16%%, 8%%, 0%% or Exempt can be sent. "
-"Please reconfigure or change the tax."
+msgid "Sending Invoices to Fiscal Device"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
-#: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
-#, python-format
-msgid ""
-"Tax exempt report line cannot be found, please update the l10n_ke module."
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_bank_statement_line__l10n_ke_cu_show_send_button
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_show_send_button
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_payment__l10n_ke_cu_show_send_button
+msgid "Show Send to Tremol button"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -238,6 +244,7 @@ msgid "The address of the proxy server for the fiscal device."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
 msgid ""
@@ -246,6 +253,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
 msgid "The document being sent should be an invoice or credit note."
@@ -262,18 +270,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ke_edi_tremol/wizard/account_move_send.py:0
 #, python-format
-msgid ""
-"The following documents have no details related to the fiscal device."
+msgid "The following documents have no details related to the fiscal device."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.res_config_settings_view_form
 msgid ""
-"The tremol device makes use of a proxy server, which can be running locally on your computer or on an IoT Box.\n"
-"                                    The proxy server must be on the same network as the fiscal device."
+"The tremol device makes use of a proxy server, which can be running locally "
+"on your computer or on an IoT Box. The proxy server must be on the same "
+"network as the fiscal device."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
 msgid ""
@@ -300,6 +309,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
 msgid ""
@@ -308,6 +318,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 #, python-format
 msgid ""
@@ -320,6 +331,20 @@ msgid "To Send to TIMS"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.res_config_settings_view_form
+msgid "Tremol Device Settings"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
 #: model_terms:ir.ui.view,arch_db:l10n_ke_edi_tremol.l10n_ke_inherit_account_move_form
 msgid "Tremol GO3 Fiscal Device"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#. odoo-javascript
+#: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_hook.js:0
+#, python-format
+msgid ""
+"Unexpected Error:\n"
+" %s"
 msgstr ""

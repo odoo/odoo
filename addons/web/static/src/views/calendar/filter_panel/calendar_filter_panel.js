@@ -182,7 +182,7 @@ export class CalendarFilterPanel extends Component {
         this.props.model.createFilter(fieldName, filterValue);
     }
 }
-
+CalendarFilterPanel.props = ["*"];
 CalendarFilterPanel.components = {
     AutoComplete,
     Transition,
