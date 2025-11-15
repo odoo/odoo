@@ -6,6 +6,7 @@ import { listView } from "@web/views/list/list_view";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { DeletePageDialog, DuplicatePageDialog } from "@website/components/dialog/page_properties";
 import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 
 export class PageListController extends listView.Controller {
     static components = {
@@ -81,9 +82,9 @@ export class PageListController extends listView.Controller {
 
     async onDeleteSelectedRecords() {
         const pageIds = this.model.root.selection.map((record) => record.resId);
-        const newPageTemplateRecords = await this.orm.read("website.page", pageIds, [
-            "is_new_page_template",
-        ]);
+        const newPageTemplateRecords = await rpc("/website/get_new_pages", {
+            page_ids: pageIds,
+        });
         this.dialogService.add(DeletePageDialog, {
             resIds: pageIds,
             resModel: this.props.resModel,
