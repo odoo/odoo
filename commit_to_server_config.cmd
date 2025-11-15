@@ -1,7 +1,6 @@
 cd C:\Users\felix\Documents\Projet\odoo\odoo17
 
-robocopy .\odoo ..\..\server_config\images\odoo\17\data /mir /XD ".git" /NP /MT:16
-robocopy .\ ..\..\server_config\images\odoo\17 requirements.txt
+robocopy .\ ..\..\server_config\images\odoo\17\data /mir /XD ".git" /NP /MT:16
 
 cd ..\..\server_config\images\odoo\17\data
 git add .\*
