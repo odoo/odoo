@@ -16,13 +16,15 @@
 # Martin Trigaux, 2022
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 04:41+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 14:58+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/pos_sale/"
 "tr/>\n"
 "Language: tr\n"
@@ -35,14 +37,16 @@ msgstr ""
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (İptal edildi)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
+#, fuzzy
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (İptal edildi)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -64,12 +68,14 @@ msgstr "Yeni bir sipariş oluşturuldu."
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "POS'ta ödenecek tutar"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Çifte ödemeyi veya çifte faturalandırmayı önlemek için POS'ta ödenecek kalan "
+"tutar."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -91,12 +97,13 @@ msgstr "Yapılandırma Ayarları"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontak"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturma"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -111,7 +118,7 @@ msgstr "Şuradan teslim edildi"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Teslim Miktarı"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -128,7 +135,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -166,6 +173,8 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Peşinat (referns: %(order_reference)s şu tarihte: \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -193,7 +202,7 @@ msgstr "Başlama"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -207,11 +216,13 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Görünüşe göre satış noktanızda bir peşinat ürünü yapılandırmamışsınız. Bir "
+"tane seçmek için satış noktası yapılandırmanıza gidebilirsiniz."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Yevmiye Kaydı"
 
 #. module: pos_sale
 #. odoo-python
@@ -255,7 +266,7 @@ msgstr "Satış Noktasına Aktarılan Sipariş Satırları"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr ""
+msgstr "POS Siparişi"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -300,7 +311,7 @@ msgstr "Onaylanmış"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -414,7 +425,7 @@ msgstr "Bu ürün bir satış siparişinde peşinat olarak kullanılacaktır."
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Aktarım"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -422,19 +433,24 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Satış uygulamsından<br/>\n"
+"                                transfer edildi"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
+#, fuzzy
 msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"Transfer edildi<br/>\n"
+"                            Satış Noktası'na"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Warning for %s"
-msgstr ""
+msgstr "%s için uyarı"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -447,7 +463,7 @@ msgstr "Ne yapmak istiyorsunuz?"
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "id"
-msgstr ""
+msgstr "kimlik"
 
 #~ msgid "(left:"
 #~ msgstr "(sol:"

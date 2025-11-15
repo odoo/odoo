@@ -13,13 +13,15 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Mohammad Abdulmoneim <abdu@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 16:28+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 21:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/project/"
 "ar/>\n"
 "Language: ar\n"
@@ -33,7 +35,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid " All internal users and invited portal users"
-msgstr ""
+msgstr " كل المستخدمين الداخليين ومستخدمو البوابة المدعوون"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -291,8 +293,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
@@ -308,45 +310,45 @@ msgstr ""
 "            هلّا تفضلت ببضع دقائق من وقتك لتقييم خدماتنا المتعلقة بالمهمة "
 "<strong t-out=\"object.name or ''\">التخطيط والميزانية</strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                المسندة إلى <strong t-out="
-"\"object._rating_get_operator().name or ''\">ميتشل آدمن</strong>.<br/>\n"
+"                المسندة إلى <strong t-"
+"out=\"object._rating_get_operator().name or ''\">ميتشل آدمن</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style="
-"\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
 "                    <strong>أخبرنا عن رأيك عن خدمتنا</strong><br/>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: "
 "#454748;\">(اضغط على إحدى تلك الوجوه المبتسمة)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style="
-"\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Happy\" src="
-"\"/rating/static/src/img/rating_5.png\" title=\"Happy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Neutral\" src="
-"\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/"
+"static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Unhappy\" src="
-"\"/rating/static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -357,17 +359,16 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            نحن نقدّر ملاحظاتك، حيث إنها تساعدنا على التحسن باستمرار.\n"
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">لقد تم إرسال "
-"استطلاع العميل لأنه قد تم نقل مهمتك إلى مرحلة <b t-out="
-"\"object.stage_id.name or ''\">قيد التنفيذ</b> </span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">لقد تم إرسال استطلاع العميل لأنه قد تم نقل مهمتك إلى مرحلة "
+"<b t-out=\"object.stage_id.name or ''\">قيد التنفيذ</b> </span>\n"
 "            </t>\n"
 "            <b t-out=\"object.stage_id.name or ''\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">يتم إرسال "
-"استطلاع الرضا هذه <b t-out=\"object.stage_id.rating_status_period or ''\""
-">أسبوعياً</b> طالما أن المهمة في مرحلة <b t-out=\"object.stage_id.name or ''\""
-">قيد التنفيذ</b>.</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">يتم إرسال استطلاع الرضا هذه <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">أسبوعياً</b> طالما أن "
+"المهمة في مرحلة <b t-out=\"object.stage_id.name or ''\">قيد التنفيذ</b>.</"
+"span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>مع أطيب التحيات،</td></tr>\n"
@@ -378,16 +379,16 @@ msgstr ""
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href="
-"\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-"
-"decoration:none; color: #454748;\" t-out=\""
-"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href="
-"\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\""
-">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -650,7 +651,7 @@ msgstr "<u>مؤشرات التقدم</u>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>الربحية</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -1726,7 +1727,7 @@ msgstr "رابط بوابة العميل"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Customer Rating"
-msgstr ""
+msgstr "تقييم العميل"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -2040,6 +2041,7 @@ msgstr "إهمال"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
 msgstr "اسم العرض"
@@ -2255,7 +2257,7 @@ msgstr "المالية"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
-msgstr ""
+msgstr "مطوي"
 
 #. module: project
 #. odoo-javascript
@@ -2477,6 +2479,7 @@ msgstr "ما هي أحوال مشروعك؟"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr "المُعرف"
@@ -2630,7 +2633,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "اسم العرض غير صالح"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -3557,7 +3560,7 @@ msgstr "رابط الوصول لبوابة العملاء"
 #. module: project
 #: model:ir.model,name:project.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "مشاركة البوابة"
 
 #. module: project
 #. odoo-python
@@ -3820,8 +3823,8 @@ msgstr ""
 "المشاريع أو المهام التي يتابعونها.\n"
 "\n"
 "مستويات الوصول إلى البوابة:\n"
-"- للقراءة فقط: يرى مستخدمو البوابة المهام عبر بوابتهم ولكن لا يمكنهم تعديلها."
-"\n"
+"- للقراءة فقط: يرى مستخدمو البوابة المهام عبر بوابتهم ولكن لا يمكنهم "
+"تعديلها.\n"
 "- تعديل (محدود): يصل مستخدمو البوابة إلى نوافذ عرض كانبان/القائمة ويمكنهم "
 "تعديل حقول محدودة في المهام التي يتابعونها.\n"
 "- تعديل: كما هو مذكور أعلاه، مع الوصول إلى جميع المهام.\n"
@@ -3829,8 +3832,8 @@ msgstr ""
 "القواعد الأخرى:\n"
 "- يمكن للمستخدمين الداخليين فتح مهمة من رابط مباشر، حتى بدون الوصول إلى "
 "المشروع.\n"
-"- يتمتع مسؤولو المشروع بالوصول إلى المشاريع الخاصة، حتى لو لم يكونوا متابعين."
-"\n"
+"- يتمتع مسؤولو المشروع بالوصول إلى المشاريع الخاصة، حتى لو لم يكونوا "
+"متابعين.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4994,7 +4997,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Templates"
-msgstr ""
+msgstr "القوالب"
 
 #. module: project
 #. odoo-javascript
@@ -5642,6 +5645,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "المستخدم"
+
+#. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr "إعدادات المستخدم"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user

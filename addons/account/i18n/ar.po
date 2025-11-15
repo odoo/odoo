@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-18 14:56+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-11-04 13:41+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/account/"
@@ -155,8 +155,8 @@ msgstr ""
 msgid ""
 "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
-"تم تفعيل خاصية الترحيل التلقائي لـ %(auto_post_name)s. تاريخ المحاسبة التالي:"
-" %(move_date)s."
+"تم تفعيل خاصية الترحيل التلقائي لـ %(auto_post_name)s. تاريخ المحاسبة "
+"التالي: %(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -305,6 +305,18 @@ msgstr "'%(filename)s' (تم استخلاصها من '%(root_filename)s'، ال�
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (النوع=%(type)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -850,12 +862,12 @@ msgstr ""
 "                عزيزنا\n"
 "                <t t-if=\"object.partner_id.parent_id\">\n"
 "                    <t t-out=\"object.partner_id.name or ''\">براندن فريمان</"
-"t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),"
-"\n"
+"t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</"
+"t>),\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <t t-out=\"object.partner_id.name or ''\">براندن "
-"فريمان</t>,\n"
+"                    <t t-out=\"object.partner_id.name or ''\">براندن فريمان</"
+"t>,\n"
 "                </t>\n"
 "                <br/><br/>\n"
 "                إليك\n"
@@ -867,24 +879,23 @@ msgstr ""
 "                    الإشعار الدائن ذاتي الفوترة\n"
 "                </t>\n"
 "                <t t-if=\"object.invoice_origin\">\n"
-"                    (مع المرجع: <t t-out=\"object.invoice_origin or ''\""
-">SUB003</t>)\n"
+"                    (مع المرجع: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "                </t>\n"
-"                والذي تبلغ قيمته <span style=\"font-weight:bold;\" t-out=\""
-"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"                والذي تبلغ قيمته <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "143,750.00</span>\n"
-"                من <t t-out=\"object.company_id.name or ''\">YourCompany</t>."
-"\n"
+"                من <t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>.\n"
 "                <br/><br/>\n"
-"                لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات."
-"\n"
-"                <t t-if="
-"\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-"
-"container=\"1\">\n"
+"                لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو "
+"استفسارات.\n"
+"                <t t-if=\"not is_html_empty(object.invoice_user_id.signature)"
+"\" data-o-mail-quote-container=\"1\">\n"
 "                    <br/><br/>\n"
-"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-quote="
-"\"1\"/><t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote="
-"\"1\">ميتشل آدمن</t></div>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">ميتشل آدمن</t></div>\n"
 "                </t>\n"
 "            </p>\n"
 "        </div>\n"
@@ -967,8 +978,8 @@ msgstr ""
 "        عزيزنا\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-if=\"object.partner_id.name\">\n"
-"                <t t-out=\"object.partner_id.name\">براندن فريمان</t> (<t "
-"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"                <t t-out=\"object.partner_id.name\">براندن فريمان</t> (<t t-"
+"out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
@@ -988,11 +999,11 @@ msgstr ""
 "            الفاتورة\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
-"\n"
+"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
 "        </t>\n"
-"        والتي تبلغ قيمتها <span style=\"font-weight:bold;\" t-out=\""
-"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"        والتي تبلغ قيمتها <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "143,750.00</span>\n"
 "        من <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
@@ -1002,30 +1013,30 @@ msgstr ""
 "            يرجى تسديد المبلغ في أقرب وقت ممكن.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
-"                يرجى استخدام طريقة الاتصال التالية لإجراء الدفع: <strong "
-"t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                يرجى استخدام طريقة الاتصال التالية لإجراء الدفع: <strong t-"
+"out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
-"                    في الحساب <strong t-out="
-"\"object.partner_bank_id.acc_number\"/>\n"
+"                    في الحساب <strong t-"
+"out=\"object.partner_bank_id.acc_number\"/>\n"
 "                </t>\n"
 "                .\n"
 "            </t>\n"
 "        </t>\n"
-"        <t t-if="
-"\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            ملاحظة: يمكنك مراجعة جداولك الزمنية <a t-att-href="
-"\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">من خلال "
-"البوابة الإلكترونية.</a>\n"
+"            ملاحظة: يمكنك مراجعة جداولك الزمنية <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">من خلال البوابة "
+"الإلكترونية.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
-"data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
-">ميتشل آدمن</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">ميتشل "
+"آدمن</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1095,8 +1106,8 @@ msgstr ""
 "        عزيزنا\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-if=\"object.partner_id.name\">\n"
-"                <t t-out=\"object.partner_id.name\">براندن فريمان</t> (<t "
-"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"                <t t-out=\"object.partner_id.name\">براندن فريمان</t> (<t t-"
+"out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
@@ -1109,38 +1120,38 @@ msgstr ""
 "        <br/><br/>\n"
 "        تفضل\n"
 "        <t t-if=\"object.name\">\n"
-"            الفاتورة الذاتية <span style=\"font-weight:bold;\" t-out=\""
-"object.name or ''\">INV/2021/05/0005</span>\n"
+"            الفاتورة الذاتية <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            الفاتورة الذاتية\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
-"\n"
+"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
 "        </t>\n"
-"        والتي تبلغ قيمتها <span style=\"font-weight:bold;\" t-out=\""
-"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"        والتي تبلغ قيمتها <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "143,750.00</span>\n"
 "        من <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            لقد تم دفع قيمة هذه الفاتورة الذاتية بالفعل.\n"
 "        </t>\n"
-"        <t t-if="
-"\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            ملاحظة: يمكنك مراجعة جداولك الزمنية <a t-att-href="
-"\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">من خلال "
-"البوابة الإلكترونية.</a>\n"
+"            ملاحظة: يمكنك مراجعة جداولك الزمنية <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">من خلال البوابة "
+"الإلكترونية.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
-"data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
-">ميتشل آدمن</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">ميتشل "
+"آدمن</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1397,8 +1408,8 @@ msgid ""
 "                    </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                        يمكنك اختيار الطريقة التي تريدنا أن نرسل بها فواتيرك،"
-" وبأي صيغة إلكترونية.\n"
+"                        يمكنك اختيار الطريقة التي تريدنا أن نرسل بها "
+"فواتيرك، وبأي صيغة إلكترونية.\n"
 "                    </small>"
 
 #. module: account
@@ -1741,8 +1752,8 @@ msgid ""
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
 "<span>1.00</span>\n"
-"                                                        <span groups="
-"\"uom.group_uom\">وحدات</span>"
+"                                                        <span "
+"groups=\"uom.group_uom\">وحدات</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3063,11 +3074,9 @@ msgstr "حركات الاستحقاق"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
-"its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
+"reverse entry: %(reverse_entry)s."
 msgstr ""
-"تم إشاء قيد الاستحقاق في %(date)s: %(accrual_entry)s.                    "
-"وقيده العكسي: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3477,7 +3486,8 @@ msgstr "كافة دفاتر اليومية البنكية والنقدية"
 #: model:account.account,description:account.2_account_account_us_office_services
 msgid ""
 "All expenses made for your office or workplace that are not material goods"
-msgstr "جميع النفقات المتكبدة لمكتبك أو مكان عملك والتي لا تتعلق بممتلكات مادية"
+msgstr ""
+"جميع النفقات المتكبدة لمكتبك أو مكان عملك والتي لا تتعلق بممتلكات مادية"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_insurance
@@ -4217,11 +4227,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "اليومية الافتراضية للقيد التلقائي"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "التخطيط التلقائي للضرائب (AvaTax)"
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "تسلسل تلقائي"
@@ -4660,6 +4665,11 @@ msgid "Based on Payment"
 msgstr "بناءً على السداد"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "الأساسي"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
 msgstr "تسلسل الدفعات المجمعة"
@@ -4668,6 +4678,22 @@ msgstr "تسلسل الدفعات المجمعة"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "الدفعات المجمعة"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, activate the cron to enable "
+"batch sending of invoices."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, contact your system "
+"administrator to activate the cron to enable batch sending of invoices."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -4800,11 +4826,6 @@ msgstr "محجوب"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "محتوى المتن هو نفس القالب"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "محاسب"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5080,6 +5101,7 @@ msgstr "الترحيل لـ"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_160
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5090,6 +5112,16 @@ msgstr "نقدي"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "حساب نقدي"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_157
+msgid "Cash Bakery"
+msgstr "الدفع النقدي في المخبز"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_159
+msgid "Cash Bar"
+msgstr "حانة الدفع النقدي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -5127,6 +5159,11 @@ msgstr "ضرائب بأساس نقدي"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "الحساب الانتقالي للأساس النقدي"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_156
+msgid "Cash Clothes Shop"
+msgstr "متجر ملابس (الدفع النقدي)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -5186,10 +5223,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "حساب خسائر شطب الخصم النقدي"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_155
+msgid "Cash Furn. Shop"
+msgstr "متجر أثاث (الدفع النقدي)"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "آلات تسجيل النقد"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_158
+msgid "Cash Restaurant"
+msgstr "مطعم يتعامل بالنقد"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -5988,6 +6035,11 @@ msgstr "إنشاء عملية الدفع"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Create Payments"
 msgstr "إنشاء المدفوعات"
+
+#. module: account
+#: model:ir.model,website_form_label:account.model_res_partner
+msgid "Create a Customer"
+msgstr "Create a Customer"
 
 #. module: account
 #. odoo-python
@@ -8376,7 +8428,8 @@ msgstr "Expenses incurred when eating or drinking at bars or restaurants"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_vehicles_expense
 msgid "Expenses made for the repair and maintenance of company cars and trucks"
-msgstr "Expenses made for the repair and maintenance of company cars and trucks"
+msgstr ""
+"Expenses made for the repair and maintenance of company cars and trucks"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_computers
@@ -8391,6 +8444,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__expired
 msgid "Expired"
 msgstr "منتهي الصلاحية"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Export ZIP"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -9142,6 +9201,12 @@ msgstr "تاريخ الإقفال العام"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Go to cron configuration"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
 msgid "Go to the configuration panel"
@@ -9745,8 +9810,8 @@ msgid ""
 "If you check this box, you will be able to register your payment using "
 "SEPA / ISO20022."
 msgstr ""
-"If you check this box, you will be able to register your payment using SEPA /"
-" ISO20022."
+"If you check this box, you will be able to register your payment using "
+"SEPA / ISO20022."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -10263,19 +10328,21 @@ msgstr "كشوفات غير صالحة"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
-msgid ""
-"Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr "النطاق غير صالح للتعبير '%(label)s' للبند '%(line)s': %(formula)s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "آخر أيام السنة المالية غير صحيح"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+msgid ""
+"Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_inventory_valuation
+#: model:account.journal,name:account.1_inventory_valuation
+#: model:account.journal,name:account.2_inventory_valuation
 msgid "Inventory Valuation"
 msgstr "تقييم المخزون"
 
@@ -10554,6 +10621,7 @@ msgstr "مفوتر"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/controllers/download_docs.py:0
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.actions.act_window,name:account.action_move_out_invoice
 #: model:ir.actions.act_window,name:account.action_move_out_invoice_type
@@ -10659,11 +10727,6 @@ msgstr "فواتير العملاء / فواتير المورّدين / التف
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "الفوترة"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "‫‫الفواتير والبنوك"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -12341,6 +12404,17 @@ msgid "Next Activity"
 msgstr "النشاط التالي"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "الفعالية التالية في تقويم الأنشطة"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
@@ -13062,8 +13136,8 @@ msgid ""
 msgstr ""
 "لغة الترجمة الاختيارية (رمز ISO) التي يتم تحديدها عند إرسال بريد إلكتروني. "
 "إذا لم يتم تعيينها، فسيتم استخدام لغة الشريك الرئيسي. يجب أن يكون هذا عادةً "
-"تعبيرًا بديلًا يوفر اللغة المناسبة، على سبيل المثال {{ object.partner_id.lang "
-"}}."
+"تعبيرًا بديلًا يوفر اللغة المناسبة، على سبيل المثال "
+"{{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -13978,6 +14052,7 @@ msgstr "رابط الوصول لبوابة العملاء"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Post"
 msgstr "منشور"
 
@@ -14514,6 +14589,20 @@ msgid "RD Expenses"
 msgstr "نفقات البحث والتطوير"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "التقييمات"
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_raw_materials
 msgid "Raw Materials"
 msgstr "المواد الخام"
@@ -14522,11 +14611,6 @@ msgstr "المواد الخام"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "إعادة تسلسل"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "للقراءة فقط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
@@ -15119,6 +15203,7 @@ msgstr "تم عكسه بتاريخ"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_audit_menu
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Review"
 msgstr "مراجعة"
 
@@ -16000,6 +16085,11 @@ msgid "Show Aba Routing"
 msgstr "إظهار مسار Aba"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "إظهار الخصائص المحاسبية - للقراءة فقط"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -16026,6 +16116,11 @@ msgstr "إظهار أزرار الفواتير الإلكترونية"
 #: model:ir.model.fields,field_description:account.field_account_journal__show_refresh_out_einvoices_status_button
 msgid "Show E-Invoice Status Buttons"
 msgstr "إظهار أزرار حالات الفواتير الإلكترونية"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "عرض كافة الخصائص المحاسبية"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -20781,8 +20876,8 @@ msgid ""
 "database.\n"
 "This change cannot be undone without technical support."
 msgstr ""
-"أنت على وشك تغيير الأرقام العشرية لجميع الأسعار في قاعدة البيانات بشكل دائم."
-"\n"
+"أنت على وشك تغيير الأرقام العشرية لجميع الأسعار في قاعدة البيانات بشكل "
+"دائم.\n"
 "لا يمكن التراجع عن هذا التغيير دون دعم فني."
 
 #. module: account
@@ -20844,23 +20939,6 @@ msgid "[Partner id]"
 msgstr "[Partner id]"
 
 #. module: account
-#: model:res.groups,comment:account.group_account_user
-msgid ""
-"access to all Accounting features, including reporting, asset management, "
-"analytic accounting, without configuration rights."
-msgstr ""
-"الوصول إلى كافة الخصائص المحاسبية، بما في ذلك إعداد التقارير وإدارة الأصول "
-"والمحاسبة التحليلية، دون الحاجة إلى أن تتمتع بصلاحيات التهيئة."
-
-#. module: account
-#: model:res.groups,comment:account.group_account_readonly
-msgid ""
-"access to all the accounting data but in readonly mode, no actions allowed."
-msgstr ""
-"الوصول إلى جميع البيانات المحاسبية ولكن في وضع القراءة فقط، ولا يُسمح بأي "
-"إجراءات."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "account.move.line"
@@ -20875,11 +20953,6 @@ msgstr "قم بتفعيل عملة الفاتورة"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the invoice"
 msgstr "قم بتفعيل عملة فاتورة العميل"
-
-#. module: account
-#: model:res.groups,comment:account.group_account_basic
-msgid "adds the accounting dashboard, bank management and follow-up reports."
-msgstr "يضيف لوحة التحكم المحاسبية وإدارة البنوك وتقارير المتابعة."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -21431,6 +21504,47 @@ msgstr ""
 "a' }})"
 
 #~ msgid ""
+#~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
+#~ "And its reverse entry: %(reverse_entry)s."
+#~ msgstr ""
+#~ "تم إشاء قيد الاستحقاق في %(date)s: %(accrual_entry)s.                    "
+#~ "وقيده العكسي: %(reverse_entry)s."
+
+#~ msgid "Automatic Tax Mapping (AvaTax)"
+#~ msgstr "التخطيط التلقائي للضرائب (AvaTax)"
+
+#~ msgid "Bookkeeper"
+#~ msgstr "محاسب"
+
+#~ msgid ""
+#~ "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
+#~ msgstr "النطاق غير صالح للتعبير '%(label)s' للبند '%(line)s': %(formula)s"
+
+#~ msgid "Invoicing & Banks"
+#~ msgstr "‫‫الفواتير والبنوك"
+
+#~ msgid "Read-only"
+#~ msgstr "للقراءة فقط"
+
+#~ msgid ""
+#~ "access to all Accounting features, including reporting, asset management, "
+#~ "analytic accounting, without configuration rights."
+#~ msgstr ""
+#~ "الوصول إلى كافة الخصائص المحاسبية، بما في ذلك إعداد التقارير وإدارة "
+#~ "الأصول والمحاسبة التحليلية، دون الحاجة إلى أن تتمتع بصلاحيات التهيئة."
+
+#~ msgid ""
+#~ "access to all the accounting data but in readonly mode, no actions "
+#~ "allowed."
+#~ msgstr ""
+#~ "الوصول إلى جميع البيانات المحاسبية ولكن في وضع القراءة فقط، ولا يُسمح بأي "
+#~ "إجراءات."
+
+#~ msgid ""
+#~ "adds the accounting dashboard, bank management and follow-up reports."
+#~ msgstr "يضيف لوحة التحكم المحاسبية وإدارة البنوك وتقارير المتابعة."
+
+#~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"
 #~ "                    You can choose how you want us to send your invoices, "
 #~ "and with which electronic format.\n"
@@ -21440,39 +21554,6 @@ msgstr ""
 #~ "                    يمكنك اختيار الطريقة التي تريدنا أن نرسل بها فواتيرك، "
 #~ "وبأي صيغة إلكترونية.\n"
 #~ "                </small>"
-
-#~ msgid "Basic"
-#~ msgstr "الأساسي"
-
-#~ msgid "Cash Bakery"
-#~ msgstr "الدفع النقدي في المخبز"
-
-#~ msgid "Cash Bar"
-#~ msgstr "حانة الدفع النقدي"
-
-#~ msgid "Cash Clothes Shop"
-#~ msgstr "متجر ملابس (الدفع النقدي)"
-
-#~ msgid "Cash Furn. Shop"
-#~ msgstr "متجر أثاث (الدفع النقدي)"
-
-#~ msgid "Cash Restaurant"
-#~ msgstr "مطعم يتعامل بالنقد"
-
-#~ msgid "Create a Customer"
-#~ msgstr "Create a Customer"
-
-#~ msgid "Next Activity Calendar Event"
-#~ msgstr "الفعالية التالية في تقويم الأنشطة"
-
-#~ msgid "Ratings"
-#~ msgstr "التقييمات"
-
-#~ msgid "Show Accounting Features - Readonly"
-#~ msgstr "إظهار الخصائص المحاسبية - للقراءة فقط"
-
-#~ msgid "Show Full Accounting Features"
-#~ msgstr "عرض كافة الخصائص المحاسبية"
 
 #~ msgid "Warning"
 #~ msgstr "تحذير"

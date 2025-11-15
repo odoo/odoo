@@ -3,13 +3,15 @@
 # * google_gmail
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-17 17:24+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-12 15:05+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "google_gmail/tr/>\n"
 "Language: tr\n"
@@ -28,28 +30,42 @@ msgstr "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+#, fuzzy
 msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Gmail account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        Gmail hesabınızı bağlayın"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
+#, fuzzy
 msgid ""
 "<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
 "class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
+"                        Gmail Belirteci Geçerli\n"
+"                   </span>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
+#, fuzzy
 msgid ""
 "<span invisible=\"smtp_authentication != 'gmail' or not "
 "google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible="
+"\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class="
+"\"badge text-bg-success\">\n"
+"                        Gmail Belirteci Geçerli\n"
+"                   </span>"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_access_token
@@ -70,25 +86,20 @@ msgstr "Erişim Simgesi Süre Sonu Zaman Damgası"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__active
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__active
 msgid "Active"
-msgstr ""
+msgstr "Etkin"
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
+#, fuzzy
 msgid "An error occurred during the authentication process."
-msgstr ""
+msgstr "Kimlik doğrulama işlemi sırasında bir hata oluştu."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "An error occurred when fetching the access token."
 msgstr "Erişim belirteci alınırken bir hata oluştu."
-
-#. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "An error occurred: %s."
-msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -132,12 +143,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:google_gmail.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__res_users__outgoing_mail_server_type__gmail
+#, fuzzy
 msgid "Gmail"
-msgstr ""
+msgstr "Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -156,15 +168,9 @@ msgid "Gmail OAuth Authentication"
 msgstr "Gmail OAuth Kimlik Doğrulaması"
 
 #. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "Gmail is not configured on IAP."
-msgstr ""
-
-#. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.google_gmail_oauth_error
 msgid "Go back"
-msgstr ""
+msgstr "Geri dön"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
@@ -194,10 +200,13 @@ msgstr "Gelen Posta Sunucusu"
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Incorrect Connection Security for Gmail mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Gmail posta sunucusu \"%s\" için Bağlantı Güvenliği Hatalı. Lütfen "
+"\"TLS (STARTTLS)\" olarak ayarlayın."
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
@@ -213,21 +222,27 @@ msgstr "Gmail posta sunucusunu yalnızca yönetici bağlayabilirsiniz."
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, fuzzy
 msgid "Oops, we could not authenticate you. Please try again later."
-msgstr ""
+msgstr "Oops, kimliğinizi doğrulayamadık. Lütfen daha sonra tekrar deneyin."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
+#, fuzzy
 msgid ""
 "Oops, you're creating an authorization to send from %(email_login)s but your "
 "address is %(email_server)s. Make sure your addresses match!"
 msgstr ""
+"Oops, %(email_login)s adresinden göndermek için bir yetkilendirme "
+"oluşturuyorsunuz ancak adresiniz %(email_server)s. Adreslerinizin "
+"eşleştiğinden emin olun!"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_users__outgoing_mail_server_type
+#, fuzzy
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "Giden Posta Sunucusu Türü"
 
 #. module: google_gmail
 #. odoo-python
@@ -238,25 +253,33 @@ msgstr "Lütfen Gmail kimlik bilgilerinizi yapılandırın."
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
+#, fuzzy
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Lütfen geçerli bir e-posta adresi girin."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Please fill the \"Username\" field with your Gmail username (your email "
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"Lütfen \"Kullanıcı Adı\" alanını Gmail kullanıcı adınızla (e-posta adresiniz)"
+" doldurun. Bu, Gmail OAuthentication Token için kullanılan hesapla aynı "
+"olmalıdır."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Please leave the password field empty for Gmail mail server “%s”. The OAuth "
 "process does not require it"
 msgstr ""
+"Lütfen Gmail posta sunucusu \"%s\" için şifre alanını boş bırakın. OAuth "
+"süreci bunu gerektirmez"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -273,8 +296,9 @@ msgstr "Token Yenile"
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
+#, fuzzy
 msgid "SSL is required for server “%s”."
-msgstr ""
+msgstr "\"%s\" sunucusu için SSL gereklidir."
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -290,6 +314,13 @@ msgstr "Google uygulamanızın sırrı"
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
 msgid "Server Type"
 msgstr "Sunucu Türü"
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/tools.py:0
+#, fuzzy
+msgid "Something went wrong. Try again later"
+msgstr "Bir şeyler yanlış gitti. Daha sonra tekrar deneyin"
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -308,13 +339,14 @@ msgstr "URI"
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: google_gmail
 #. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "You don't have an active subscription."
-msgstr ""
+#: code:addons/google_gmail/tools.py:0
+#, fuzzy
+msgid "You don't have an active subscription"
+msgstr "Aktif bir aboneliğiniz yok"
 
 #~ msgid "An error occur during the authentication process."
 #~ msgstr "Kimlik doğrulama işlemi sırasında bir hata oluşur."

@@ -3,13 +3,14 @@
 # * website_slides_survey
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 04:49+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-08 19:18+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
 "website_slides_survey/ca/>\n"
 "Language: ca\n"
@@ -65,6 +66,28 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Estimat/da <t t-out=\"object.partner_id.name or 'participant' or ''\""
+">participant:</t><br/><br/>\n"
+"        Lamentem informar-lo que no ha superat la certificació i ja no forma "
+"part del curs: <t t-out=\"object.slide_partner_id.channel_id.name or ''\""
+">Fonaments de la jardineria</t>.<br/><br/>\n"
+"        No dubti a tornar a inscriure's!\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href="
+"\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-style"
+"=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-"
+"size:13px;\">\n"
+"                Inscriure's ara\n"
+"            </a>\n"
+"        </div>\n"
+"        Gràcies per la seva participació.\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -382,7 +405,7 @@ msgstr "Escriptori"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__display_name
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom mostrat"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -425,7 +448,7 @@ msgstr "Com pujar una certificació al vostre curs?"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__id
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_slides_survey
 #: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_6_0

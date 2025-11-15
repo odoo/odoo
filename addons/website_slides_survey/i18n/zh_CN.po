@@ -10,13 +10,14 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-27 08:03+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2025-11-08 19:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_slides_survey/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -72,11 +73,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的 <t t-out=\"object.partner_id.name or 'participant' or ''\""
+">参与者</t><br/><br/>\n"
+"        很抱歉，您未通过认证，并且不再是该课程的成员: <t t-out="
+"\"object.slide_partner_id.channel_id.name or ''\">园艺基础</t>.<br/><br/>\n"
+"        不要犹豫，再次报名！\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href="
+"\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-style"
+"=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-"
+"size:13px;\">\n"
+"                现在报名\n"
+"            </a>\n"
+"        </div>\n"
+"        感谢您的参与。\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> 获得认证"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -140,7 +162,7 @@ msgstr "<span class=\"ms-1\">认证</span>"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
 msgid "<span class=\"o_stat_text\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">已认证</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -316,7 +338,7 @@ msgstr "认证"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Certifications are exams that you successfully passed. <br/>"
-msgstr ""
+msgstr "认证是您成功通过的考试。<br/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -328,7 +350,7 @@ msgstr "您已通过的认证不能被标记为未完成"
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__survey_certification_success
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_partner_view_search
 msgid "Certified"
-msgstr ""
+msgstr "已认证"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
@@ -338,7 +360,7 @@ msgstr "椅子"
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
-msgstr ""
+msgstr "频道/合作伙伴（会员）"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -387,7 +409,7 @@ msgstr "桌子"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__display_name
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -430,7 +452,7 @@ msgstr "如何上传课程认证？"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__id
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_slides_survey
 #: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
@@ -451,7 +473,7 @@ msgstr "标记为待办事项"
 #. odoo-python
 #: code:addons/website_slides_survey/models/slide_channel.py:0
 msgid "No Attendee passed this course certification yet!"
-msgstr ""
+msgstr "尚未有学员通过此课程认证！"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
@@ -511,7 +533,7 @@ msgstr "搜索尝试……"
 #. odoo-javascript
 #: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Select a certification"
-msgstr ""
+msgstr "选择一项认证"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
@@ -524,7 +546,7 @@ msgstr "选择视频中显示的所有家具"
 msgid ""
 "Select an existing certification from the list. Creating or editing a "
 "certification can be done from the backend."
-msgstr ""
+msgstr "从列表中选择一个现有证书。创建或编辑认证可在后台完成。"
 
 #. module: website_slides_survey
 #: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
@@ -647,6 +669,10 @@ msgid ""
 "The courses that need them are:\n"
 "%s"
 msgstr ""
+"哎呀！您不能删除用作课程认证的调查！否则，学生们可能会认为文凭是大风刮来的。"
+"\n"
+"需要这些调查的课程是：\n"
+"%s"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3

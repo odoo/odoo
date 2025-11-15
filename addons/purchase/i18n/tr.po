@@ -23,13 +23,15 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Ediz Duman <neps1192@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 04:43+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-12 14:59+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/purchase/"
 "tr/>\n"
 "Language: tr\n"
@@ -113,6 +115,7 @@ msgstr "3'lü eşleştirme: alım siparişleri, malzeme kabul ve faturalar"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -154,9 +157,50 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sayın <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"       </t>\n"
+"        <br/><br/>\n"
+"        Burada, <span style=\"font-weight:bold;\" t-out=\"object.name or ''\""
+">P00015 numaralı satın alma siparişinin teslimatına ilişkin bir hatırlatma "
+"yer almaktadır.</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"           <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        için bekleniyor \n"
+"       <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\""
+"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"       </t>\n"
+"         <t t-else=\"\">\n"
+"           <span style=\"font-weight:bold;\">tanımlanmamış</span>.\n"
+"       </t>\n"
+"        Lütfen zamanında teslim edileceğini teyit eder misiniz?\n"
+"       <br/><br/>\n"
+"       <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Onaylamak</a>\n"
+"        <br/><br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"           <br/><br/>\n"
+"           <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"       </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -199,9 +243,50 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sayın <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"       </t>\n"
+"        <br/><br/>\n"
+"        İşte ekte bir satın alma siparişi <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            referans ile: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        tutarında <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount_total, object.currency_id) or ''\"> 10.00 $</span>\n"
+"        <t t-out=\"object.company_id.name or ''\"> YourCompany</t> "
+"adresinden. \n"
+"       <br/><br/>\n"
+"       <t t-if=\"object.date_planned\">\n"
+"            Makbuzun <span style=\"font-weight:bold;\" t-out=\""
+"format_date(object.date_planned) or ''\">05/05/2021</span> adresine "
+"gönderilmesi beklenmektedir.\n"
+"           <br/><br/>\n"
+"            Lütfen bu siparişin alındığını bildirir misiniz?\n"
+"           <br/><br/>\n"
+"           <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Onaylamak</a>\n"
+"        </t>\n"
+"       <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"       </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -232,6 +317,35 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sayın <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"       </t>\n"
+"        <br/><br/>\n"
+"        İşte ekte bir teklif talebi <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            referans ile: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        <t t-out=\"object.company_id.name or ''\"> YourCompany</t> "
+"adresinden.\n"
+"       <br/><br/>\n"
+"        Herhangi bir sorunuz varsa, lütfen bizimle iletişime geçmekten "
+"çekinmeyin.\n"
+"       <br/><br/>\n"
+"        Saygılarımla,\n"
+"       <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"       </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -270,10 +384,13 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                        Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        Kilitli"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -328,8 +445,9 @@ msgstr "<span class=\"o_stat_text\">Fatura Eşleştirme</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Fiyat Karşılaştırması</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -372,7 +490,7 @@ msgstr "<span>Vergiler</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Uyarı: Bu sipariş şunun yineleneni olabilir:</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -466,8 +584,9 @@ msgstr "<strong>Teklif Talebi Tarihi:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>Talep Edilen Sevkiyat Tarihi:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -546,13 +665,14 @@ msgstr "Tahakkuk Eden Gider Girişi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Acknowledge"
-msgstr ""
+msgstr "Onaylamak"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__acknowledged
 msgid "Acknowledged"
-msgstr ""
+msgstr "Onaylandı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -566,8 +686,9 @@ msgstr "Aktiviteler"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Faaliyetleri"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
@@ -587,7 +708,7 @@ msgstr "Aktivite Türü İmgesi"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Activity type"
-msgstr ""
+msgstr "Aktivite  Türü"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -639,8 +760,9 @@ msgstr "Satın Alma Siparişine Ekleyin"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.mail_followers_edit_action_from_purchase
+#, fuzzy
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Takipçi Ekle/Kaldır"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -658,8 +780,9 @@ msgstr "Tümü"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "All Days to Order"
-msgstr ""
+msgstr "Sipariş için Tüm Günler"
 
 #. module: purchase
 #. odoo-javascript
@@ -676,20 +799,23 @@ msgstr "Tüm Geciken Teklif Talepleri"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "All Late Receipt POs"
-msgstr ""
+msgstr "Tüm Geç Teslim Alınan PO'lar"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "All Not Acknowledged POs"
-msgstr ""
+msgstr "Tüm Onaylanmamış Satış Noktası"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "All Sent RFQs"
-msgstr ""
+msgstr "Gönderilen Tüm RFQ'lar"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -705,8 +831,9 @@ msgstr "Satınalma siparişlerini düzenlemeye izin ver"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "İzin Verilen Uom"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -715,6 +842,7 @@ msgstr "Aml"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Amount"
 msgstr "Tutar"
@@ -767,11 +895,15 @@ msgstr "Teklif Talebini/Siparişini iptal etmek istediğinize emin misiniz?"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
+#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Bu ürün için %(uom)s dışında başka bir ölçü birimi (örn: %(problem_uom)s) "
+"kullanıldığından, ölçü birimi değişikliği yapılamaz, değiştirmek isterseniz "
+"lütfen ürünü arşivleyin ve yeni bir tane oluşturun."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -809,8 +941,11 @@ msgstr "Geçmiş bir satın alma siparişinden otomatik tamamlama."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
+#, fuzzy
 msgid "Auto-complete from a previous bill, refund, or purchase order."
 msgstr ""
+"Önceki bir fatura, para iadesi veya satın alma siparişinden otomatik "
+"tamamlama."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -861,6 +996,7 @@ msgid "Bill to Purchase Order"
 msgstr "Satın Alma Siparişiyle Faturalandırın"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed"
@@ -952,7 +1088,7 @@ msgstr "Katalog"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Categories"
-msgstr ""
+msgstr "Kategoriler"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1084,8 +1220,9 @@ msgstr "Fatura Oluşturun"
 
 #. module: purchase
 #: model:ir.model,website_form_label:purchase.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturma"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -1096,7 +1233,7 @@ msgstr "Yeni bir ürün varyantı oluştur"
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "Bir ürün oluşturun"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__create_uid
@@ -1167,8 +1304,9 @@ msgstr "Onaylanacak Günler"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "Days to Order"
-msgstr ""
+msgstr "Sipariş Verme Günleri"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1324,12 +1462,12 @@ msgstr "Transit Satış Adresi"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Çoklanmış Dökümanlar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Çoğaltılmış Sipariş"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1406,7 +1544,7 @@ msgstr "Sonraki Aktiviteler"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Oluşturulan Siparişler"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
@@ -1513,8 +1651,9 @@ msgstr "Ürünler İçe Aktarma Şablonu"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "Import Template for Requests for Quotation"
-msgstr ""
+msgstr "Teklif Talepleri için Şablonu İçe Aktarın"
 
 #. module: purchase
 #. odoo-python
@@ -1552,8 +1691,9 @@ msgstr "Sipariş vermek istediğiniz ürün miktarını belirtiniz."
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
+#, fuzzy
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
+msgstr "Kullanıcı tarafından belirlenen ortak veya ürünler için dahili uyarı."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1593,7 +1733,7 @@ msgstr "Satın Alma Siparişinde Yer Alıyor"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__is_late
 msgid "Is Late"
-msgstr ""
+msgstr "Geciken"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
@@ -1603,10 +1743,11 @@ msgstr "Satın Alma Eşleşti"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__acknowledged
+#, fuzzy
 msgid ""
 "It indicates that the vendor has acknowledged the receipt of the purchase "
 "order."
-msgstr ""
+msgstr "Satıcının satın alma siparişinin alındığını kabul ettiğini gösterir."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1646,19 +1787,22 @@ msgstr "Geciken Aktiviteler"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "Late RFQ"
-msgstr ""
+msgstr "Geç RFQ"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "Late Receipt"
-msgstr ""
+msgstr "Geç Makbuz"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
 msgid "Late Receipts"
-msgstr ""
+msgstr "Geç Makbuzlar"
 
 #. module: purchase
 #. odoo-javascript
@@ -1718,8 +1862,9 @@ msgstr "Kilitli"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__locked
+#, fuzzy
 msgid "Locked Purchase Orders cannot be modified."
-msgstr ""
+msgstr "Kilitli Satınalma Emirleri değiştirilemez."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1756,14 +1901,16 @@ msgstr "Eşleştir"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
+#, fuzzy
 msgid "Merge RFQs"
-msgstr ""
+msgstr "RFQ'ları Birleştirme"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "Merged RFQs"
-msgstr ""
+msgstr "Birleştirilmiş RFQ'lar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1808,14 +1955,15 @@ msgstr "Sorumlu satınalma siparişi satırında zorunlu alanlar eksik."
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "My"
-msgstr ""
+msgstr "Benim"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Aktivitelerim"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1825,8 +1973,9 @@ msgstr "Aktivite Son Tarihim"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "My Days to Order"
-msgstr ""
+msgstr "Sipariş Verilecek Günlerim"
 
 #. module: purchase
 #. odoo-javascript
@@ -1843,14 +1992,16 @@ msgstr "Geciken Teklif Taleblerim"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "My Late Receipt POs"
-msgstr ""
+msgstr "Geç Teslim Alınan Satış Noktası'larım"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "My Not Acknowledged POs"
-msgstr ""
+msgstr "Kabul Edilmeyen Satış Noktası'larım"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1884,7 +2035,7 @@ msgstr "Adı, VKN, E-posta veya Referans"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "New"
-msgstr ""
+msgstr "Yeni"
 
 #. module: purchase
 #. odoo-python
@@ -1895,7 +2046,7 @@ msgstr "En Yeni"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Next Activity"
-msgstr ""
+msgstr "Sonraki Aktivite"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
@@ -1920,8 +2071,9 @@ msgstr "Sonraki Aktivitie Türü"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
 msgid "No Products for the selected Vendor."
-msgstr ""
+msgstr "Seçilen Satıcı için Ürün Yok."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1932,7 +2084,7 @@ msgstr "Satın Alma Analizi Yok"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Hiçbir ek sağlanmadı"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -2131,8 +2283,9 @@ msgstr "Siparişlerimiz"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
+#, fuzzy
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Ana Bölüm Hattı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2169,8 +2322,9 @@ msgstr ""
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
+#, fuzzy
 msgid "Please select bill lines with the same vendor."
-msgstr ""
+msgstr "Lütfen aynı satıcıyla olan fatura satırlarını seçin."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
@@ -2318,8 +2472,9 @@ msgstr "Satın Alma Fatura Satırları"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "Purchase Comparison for %s"
-msgstr ""
+msgstr "için Satın Alma Karşılaştırması %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2459,8 +2614,9 @@ msgstr "Satınalma Raporu"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__purchase_warning_text
+#, fuzzy
 msgid "Purchase Warning"
-msgstr ""
+msgstr "Satın Alma Uyarısı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2564,8 +2720,9 @@ msgstr "Faturalanacak Miktar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
+#, fuzzy
 msgid "Qty to invoice"
-msgstr ""
+msgstr "Fatura edilecek miktar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -2646,6 +2803,7 @@ msgid "Receipt Reminder Email"
 msgstr "Alım Hatırlatma E-postası"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Received"
 msgstr "Alınan"
@@ -2837,28 +2995,33 @@ msgstr "Bir ürün seçin veya anında yeni bir ürün oluşturun."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+#, fuzzy
 msgid "Select a purchase document"
-msgstr ""
+msgstr "Bir satın alma belgesi seçin"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
+#, fuzzy
 msgid "Selected Seller"
-msgstr ""
+msgstr "Seçilmiş Satıcı"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "Farklı ölçü birimlerinde veya ambalajlarda ürün satma ve satın alma"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Send PO"
-msgstr ""
+msgstr "PO Gönder"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Send RFQ"
-msgstr ""
+msgstr "Teklif Talebi Gönder"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -2879,7 +3042,7 @@ msgstr "Fiyat teklifi talebini tedarikçinize gönderin."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Sent"
-msgstr ""
+msgstr "Gönderildi"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase
@@ -2922,22 +3085,27 @@ msgstr "Paylaş"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_comparison
+#, fuzzy
 msgid "Show Comparison"
-msgstr ""
+msgstr "Karşılaştırma Göster"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
 msgstr ""
+"Bazı sipariş satırlarında bir ürün eksik, daha ileri gitmeden önce bunları "
+"düzeltmeniz gerekiyor."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -2985,13 +3153,15 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_subsection
+#, fuzzy
 msgid "Subsection"
-msgstr ""
+msgstr "Alt bölüm"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Subsection Name"
-msgstr ""
+msgstr "Alt Bölüm Adı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -3075,7 +3245,7 @@ msgstr "Vergiler"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Teknik Fiyat Birimi"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
@@ -3084,8 +3254,9 @@ msgstr "UX için teknik alan."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__technical_price_unit
+#, fuzzy
 msgid "Technical field for price computation"
-msgstr ""
+msgstr "Fiyat hesaplaması için teknik alan"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -3098,8 +3269,11 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__selected_seller_id
+#, fuzzy
 msgid "Technical field to get the vendor pricelist used to generate this line"
 msgstr ""
+"Bu satırı oluşturmak için kullanılan satıcı fiyat listesini almak için "
+"teknik alan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3165,8 +3339,10 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
+#, fuzzy
 msgid "This currency will be used for purchases from the current partner"
 msgstr ""
+"Bu para birimi mevcut ortaktan yapılacak satın alımlar için kullanılacaktır"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3271,8 +3447,9 @@ msgstr "Toplam tutar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total_cc
+#, fuzzy
 msgid "Total in currency"
-msgstr ""
+msgstr "Döviz cinsinden toplam"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
@@ -3282,8 +3459,9 @@ msgstr "Toplam Satın Alma Tutarı"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "Aramanızı genişletmek için üstteki filtreyi kaldırmayı deneyin"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3325,8 +3503,9 @@ msgstr "Birim Fiyat:"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Birimler & Ambalajlar"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3353,8 +3532,9 @@ msgstr "Vergi Hariç Toplam"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
+#, fuzzy
 msgid "Upload Bill"
-msgstr ""
+msgstr "Fatura Yükle"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3379,7 +3559,7 @@ msgstr "Kullanıcı"
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
 msgid "Validation Error"
-msgstr ""
+msgstr "Doğrulama hatası"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -3494,13 +3674,15 @@ msgstr "Bu belgeyi Odoo'ya mı aktarmak istiyorsunuz?"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+#, fuzzy
 msgid "Warning on Purchase Orders"
-msgstr ""
+msgstr "Satın Alma Siparişleri Hakkında Uyarı"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#, fuzzy
 msgid "Warning on Purchase Orders and Bills"
-msgstr ""
+msgstr "Satınalma Siparişleri ve Faturalar Hakkında Uyarı"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3562,8 +3744,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
+#, fuzzy
 msgid "You can only upload a bill for a single vendor at a time."
-msgstr ""
+msgstr "Bir seferde yalnızca tek bir satıcı için fatura yükleyebilirsiniz."
 
 #. module: purchase
 #. odoo-python
@@ -3632,13 +3815,15 @@ msgstr "günler önce"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+#, fuzzy
 msgid "e.g. There is a newer version of this product."
-msgstr ""
+msgstr "Örn. Bu ürünün daha yeni bir sürümü var."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#, fuzzy
 msgid "e.g. This vendor is on vacation until the end of August."
-msgstr ""
+msgstr "Örn. Bu satıcı Ağustos sonuna kadar tatilde."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -3649,26 +3834,30 @@ msgstr "veya yeni oluşturun"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "partner_id"
-msgstr ""
+msgstr "partner_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "res_id"
-msgstr ""
+msgstr "res_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "res_model_id"
-msgstr ""
+msgstr "res_model_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
+#, fuzzy
 msgid "state"
-msgstr ""
+msgstr "devlet"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document

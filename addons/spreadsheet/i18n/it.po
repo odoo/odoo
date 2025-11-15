@@ -5,12 +5,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-04 09:39+0000\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-10 14:29+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/it/>\n"
@@ -3369,6 +3370,7 @@ msgstr "Tasso di sconto di un titolo basato sul prezzo."
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_ir_http__display_name
+#: model:ir.model.fields,field_description:spreadsheet.field_ir_model__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency_rate__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_lang__display_name
@@ -3633,6 +3635,12 @@ msgstr "Duplica"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Duration"
 msgstr "Durata"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "E.g. 1234567 -> %(value)s"
+msgstr "Ad es. 1234567 -> %(value)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4289,10 +4297,30 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
-"La funzione [[FUNCTION_NAME]] prevede un valore numerico compreso pari a %s "
-"ma ha %s."
+"La funzione [[FUNCTION_NAME]] richiede valori numerici per %s, ma ha "
+"ricevuto un valore booleano."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
+msgstr ""
+"La funzione [[FUNCTION_NAME]] richiede valori numerici per %s, ma ha "
+"ricevuto una stringa."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
+"value."
+msgstr ""
+"La funzione [[FUNCTION_NAME]] richiede valori numerici per %s, ma ha "
+"ricevuto un valore vuoto."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4754,6 +4782,7 @@ msgstr "Tangente iperbolica di qualsiasi numero reale."
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_ir_http__id
+#: model:ir.model.fields,field_description:spreadsheet.field_ir_model__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency_rate__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_lang__id
@@ -5215,9 +5244,9 @@ msgid ""
 "(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
 msgstr ""
 "Numero di argomenti non valido per la funzione %(functionName)s. I numeri di "
-"argomenti replicabili dovrebbero essere forniti in gruppi di "
-"%(nbrArgRepeating)s, con massimo %(nbrArgOptional)s opzionali. "
-"%(nbrValueRemaining)s sono troppi."
+"argomenti replicabili dovrebbero essere forniti in gruppi di %"
+"(nbrArgRepeating)s, con massimo %(nbrArgOptional)s opzionali. %"
+"(nbrValueRemaining)s sono troppi."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5702,12 +5731,6 @@ msgstr "Magnetismo"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Make numbers human-readable"
-msgstr "Rendi i numeri leggibili dall'uomo"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "March"
 msgstr "Marzo"
@@ -6009,6 +6032,11 @@ msgstr "Parentesi di chiusura mancante"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Missing opening parenthesis"
 msgstr "Parentesi di apertura mancante"
+
+#. module: spreadsheet
+#: model:ir.model,name:spreadsheet.model_ir_model
+msgid "Models"
+msgstr "Modelli"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9684,8 +9712,8 @@ msgid ""
 "The first_period (%(first)s) must be smaller or equal to the last_period (%"
 "(last)s)."
 msgstr ""
-"Il first_period (%(first)s) deve essere inferiore o uguale al last_period "
-"(%(last)s)."
+"Il first_period (%(first)s) deve essere inferiore o uguale al last_period (%"
+"(last)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10713,7 +10741,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The period (%(period)s) must be less than or equal to %(lifeLimit)s."
-msgstr "Il periodo (%(period)s) deve essere inferiore o uguale a %(lifeLimit)s."
+msgstr ""
+"Il periodo (%(period)s) deve essere inferiore o uguale a %(lifeLimit)s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10834,8 +10863,8 @@ msgid ""
 "The purchase_date (%(purchaseDate)s) must be before the first_period_end (%"
 "(firstPeriodEnd)s)."
 msgstr ""
-"La purchase_date (%(purchaseDate)s) deve precedere il first_period_end "
-"(%(firstPeriodEnd)s)."
+"La purchase_date (%(purchaseDate)s) deve precedere il first_period_end (%"
+"(firstPeriodEnd)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11444,8 +11473,8 @@ msgid ""
 "The start_period (%(start)s) must be smaller or equal to the end_period (%"
 "(end)s)."
 msgstr ""
-"Il start_period (%(start)s) deve essere inferiore o uguale al end_period "
-"(%(end)s)."
+"Il start_period (%(start)s) deve essere inferiore o uguale al end_period (%"
+"(end)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12916,6 +12945,12 @@ msgstr "Usa la colonna o le colonne %(column_name)s come intestazioni"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Use compact format"
+msgstr "Usa formato compatto"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Use first value as subtotal"
 msgstr "Usa il primo valore come totale parziale"
 
@@ -14030,6 +14065,15 @@ msgstr "ieri"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "zero"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+#~ msgstr ""
+#~ "La funzione [[FUNCTION_NAME]] prevede un valore numerico compreso pari a "
+#~ "%s ma ha %s."
+
+#~ msgid "Make numbers human-readable"
+#~ msgstr "Rendi i numeri leggibili dall'uomo"
 
 #~ msgid ""
 #~ "(0) Exact match. \n"

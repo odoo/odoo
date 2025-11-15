@@ -16,13 +16,14 @@
 # Anto Nilsson <anton.nilsson@vertel.se>, 2022
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 21:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-11 10:52+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "event_sale/sv/>\n"
 "Language: sv\n"
@@ -76,7 +77,7 @@ msgstr "Alla evenemang"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
 msgid "All sale order lines pointing to this event"
-msgstr "Alla orderrader pekar på detta event"
+msgstr "Alla orderrader pekar på detta evenemang"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_configurator__is_multi_slots
@@ -86,6 +87,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Tillåt flera tidsluckor. Kommunikationen, det maximala antalet deltagare och "
+"det maximala antalet biljettregistreringar definieras för varje tidslucka "
+"istället för hela evenemanget."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -133,7 +137,9 @@ msgstr "Avbruten"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Välj ett event så skapas det automatiskt en registrering för eventet."
+msgstr ""
+"Välj ett evenemang så skapas det automatiskt en registrering för det "
+"evenemanget."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_slot_id
@@ -141,6 +147,8 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Välj en evenemangslucka så skapas automatiskt en registrering för denna "
+"evenemangsluckan."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -148,8 +156,8 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
-"Välj en eventbiljett och det skapas automatiskt en registrering för "
-"biljetten."
+"Välj en evenemangsbiljett och det skapas automatiskt en registrering för "
+"evenemangsbiljetten."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -167,7 +175,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__company_id
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
@@ -258,7 +266,7 @@ msgstr "Evenemang"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_configurator
 msgid "Event Configurator"
-msgstr "Eventkonfigurator"
+msgstr "Evenemangskonfigurator"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
@@ -291,7 +299,7 @@ msgstr "Försäljningsrapport för evenemang"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Evenemangslucka"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -304,7 +312,7 @@ msgstr "Evenemangsstartdatum"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
 msgid "Event Ticket"
-msgstr "Biljett"
+msgstr "Evenemangsbiljett"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
@@ -315,7 +323,7 @@ msgstr "Evenemangstyp"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Events that have ended"
-msgstr "Händelser som har avslutats"
+msgstr "Evenemang som har avslutats"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
@@ -352,6 +360,7 @@ msgstr "ID"
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
 msgstr ""
+"Ogiltigt val av lucka \"%(slot_name)s\" för evenemagnet \"%(event_name)s\"."
 
 #. module: event_sale
 #. odoo-python
@@ -369,7 +378,7 @@ msgstr "Fakturaadress"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Är flervalslucka"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -547,7 +556,7 @@ msgstr "Försäljning"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
 msgid "Sales (Tax Included)"
-msgstr ""
+msgstr "Försäljning (inkl. moms)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -581,7 +590,7 @@ msgstr "Välj ett Evenemang"
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_slot_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Slot"
-msgstr ""
+msgstr "Tidslucka"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
@@ -606,6 +615,8 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"Försäljningsorderraden med produkten %(product_name)s behöver ett evenemang, "
+"en biljett och en tidslucka om evenemanget har flera tidsluckor."
 
 #. module: event_sale
 #. odoo-python
@@ -658,7 +669,7 @@ msgstr "Oskattade intäkter"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming events from today"
-msgstr "Kommande evenemang från idag"
+msgstr "Kommande evenemang från och med idag"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -668,12 +679,14 @@ msgstr "Kommande/Pågående"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "We could not find a matching event ticket for this product. <br/>"
-msgstr "Försäljningsorderraden med produkten. <br/>"
+msgstr ""
+"Vi kunde inte hitta en matchande evenemangsbiljett för den här produkten. <"
+"br/>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "ändrad från"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

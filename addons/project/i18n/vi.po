@@ -11,12 +11,13 @@
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-04 11:18+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-14 02:13+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "project/vi/>\n"
@@ -284,25 +285,25 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Xin chào <t t-out=\"partner.name or ''\">Brandon "
-"Freeman</t>,<br/><br/>\n"
+"                Xin chào <t t-out=\"partner.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Xin chào,<br/><br/>\n"
 "            </t>\n"
-"            Vui lòng dành chút thời gian để đánh giá dịch vụ <strong t-out="
-"\"object.name or ''\">Lập kế hoạch và ngân sách</strong>  \n"
+"            Vui lòng dành chút thời gian để đánh giá dịch vụ <strong t-"
+"out=\"object.name or ''\">Lập kế hoạch và ngân sách</strong>  \n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                đã được giao cho <strong t-out="
-"\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> của "
+"                đã được giao cho <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> của "
 "chúng tôi.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
@@ -310,9 +311,9 @@ msgstr ""
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style="
-"\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
 "                    <strong>Vui lòng cho biết cảm nghĩ của bạn về dịch vụ "
 "của chúng tôi</strong><br/>\n"
@@ -320,28 +321,28 @@ msgstr ""
 "#454748;\">(nhấp vào một trong những biểu tượng cảm xúc này)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style="
-"\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Happy\" src="
-"\"/rating/static/src/img/rating_5.png\" title=\"Happy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Neutral\" src="
-"\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/"
+"static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Unhappy\" src="
-"\"/rating/static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -353,39 +354,38 @@ msgstr ""
 "            Chúng tôi rất trân trọng phản hồi từ bạn, vì nhờ đó chúng tôi có "
 "thể liên tục cải thiện dịch vụ của mình.\n"
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bản khảo sát "
-"mức độ hài lòng này được gửi tới bạn vì nhiệm vụ của bạn đã được chuyển sang "
-"giai đoạn <b t-out=\"object.stage_id.name or ''\">Đang thực hiện</b></span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">Bản khảo sát mức độ hài lòng này được gửi tới bạn vì nhiệm "
+"vụ của bạn đã được chuyển sang giai đoạn <b t-out=\"object.stage_id.name or "
+"''\">Đang thực hiện</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bản khảo sát "
-"mức độ hài lòng này sẽ được gửi <b t-out="
-"\"object.stage_id.rating_status_period or ''\">hàng tuần</b> nếu nhiệm vụ "
-"vẫn còn trong giai đoạn <b t-out=\"object.stage_id.name or ''\">Đang thực "
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">Bản khảo sát mức độ hài lòng này sẽ được gửi <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">hàng tuần</b> nếu nhiệm "
+"vụ vẫn còn trong giai đoạn <b t-out=\"object.stage_id.name or ''\">Đang thực "
 "hiện</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Trân trọng,</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\""
-">YourCompany</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</"
+"t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href="
-"\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-"
-"decoration:none; color: #454748;\" t-out=\""
-"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href="
-"\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\""
-">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -652,7 +652,7 @@ msgstr "<u>Mốc thời gian</u>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>Lợi nhuận</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -1416,6 +1416,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Thu thập phản hồi từ khách hàng bằng cách gửi yêu cầu đánh giá khi nhiệm vụ "
+"chuyển sang một giai đoạn cụ thể. Để thực hiện điều này, hãy xác định mẫu "
+"email đánh giá trên giai đoạn đó.\n"
+"Đánh giá khi thay đổi giai đoạn: email sẽ được gửi tự động khi nhiệm vụ đạt "
+"đến giai đoạn đó.\n"
+"Đánh giá định kỳ: email sẽ được gửi tự động theo các khoảng thời gian cố "
+"định miễn là nhiệm vụ vẫn ở trong giai đoạn đó."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1736,7 +1743,7 @@ msgstr "URL cổng thông tin khách hàng"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Customer Rating"
-msgstr ""
+msgstr "Đánh giá của Khách hàng"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -2059,6 +2066,7 @@ msgstr "Huỷ bỏ"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
@@ -2279,7 +2287,7 @@ msgstr "Tài chính"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
-msgstr ""
+msgstr "Thu gọn"
 
 #. module: project
 #. odoo-javascript
@@ -2505,6 +2513,7 @@ msgstr "Dự án đang diễn ra như thế nào?"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -3590,7 +3599,7 @@ msgstr "URL truy cập cổng thông tin"
 #. module: project
 #: model:ir.model,name:project.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Chia sẻ cổng thông tin"
 
 #. module: project
 #. odoo-python
@@ -3846,6 +3855,30 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Quyền truy cập dự án và nhiệm vụ:\n"
+"- Người dùng nội bộ được mời: Chỉ có thể truy cập dự án hoặc các nhiệm vụ mà "
+"họ đang theo dõi. Người được giao nhiệm vụ sẽ tự động có quyền truy cập.\n"
+"- Người dùng nội bộ và người dùng cổng thông tin được mời: Giống như trên, "
+"nhưng mở rộng thêm cho người dùng cổng thông tin.\n"
+"- Tất cả người dùng nội bộ: Có toàn quyền truy cập vào dự án và tất cả các "
+"nhiệm vụ trong đó.\n"
+"- Tất cả người dùng nội bộ và người dùng cổng thông tin được mời: Người dùng "
+"nội bộ có toàn quyền truy cập, còn người dùng cổng thông tin chỉ có thể truy "
+"cập dự án hoặc nhiệm vụ mà họ theo dõi.\n"
+"\n"
+"Cấp độ truy cập của người dùng cổng thông tin:\n"
+"- Chỉ đọc: Người dùng cổng thông tin có thể xem các nhiệm vụ qua cổng của họ "
+"nhưng không thể chỉnh sửa.\n"
+"- Chỉnh sửa (giới hạn): Người dùng cổng thông tin có thể truy cập giao diện "
+"kanban/danh sách và chỉnh sửa một số trường giới hạn trên các nhiệm vụ họ "
+"theo dõi.\n"
+"- Chỉnh sửa: Giống như trên, nhưng có quyền truy cập tất cả các nhiệm vụ.\n"
+"\n"
+"Các quy tắc khác:\n"
+"- Người dùng nội bộ có thể mở một nhiệm vụ thông qua liên kết trực tiếp, "
+"ngay cả khi họ không có quyền truy cập dự án.\n"
+"- Quản trị viên dự án có quyền truy cập vào các dự án riêng tư, ngay cả khi "
+"họ không phải là người theo dõi.\n"
 
 #. module: project
 #. odoo-javascript
@@ -5016,7 +5049,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Templates"
-msgstr ""
+msgstr "Mẫu"
 
 #. module: project
 #. odoo-javascript
@@ -5441,7 +5474,7 @@ msgstr "Hoạt động hôm nay"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Top Menu"
-msgstr ""
+msgstr "Top Menu"
 
 #. module: project
 #. odoo-javascript
@@ -5664,6 +5697,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
+#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -5677,6 +5711,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Sử dụng các từ khóa sau trong tiêu đề để tạo nhiệm vụ mới:\n"
+"\n"
+"        30h Phân bổ 30 giờ cho nhiệm vụ\n"
+"        #tags Gắn thẻ cho nhiệm vụ\n"
+"        @user Giao nhiệm vụ cho người dùng\n"
+"        ! Đặt mức ưu tiên trung bình cho nhiệm vụ\n"
+"        !! Đặt mức ưu tiên cao cho nhiệm vụ\n"
+"        !!! Đặt mức ưu tiên khẩn cấp cho nhiệm vụ\n"
+"\n"
+"        Đảm bảo sử dụng đúng định dạng và thứ tự. Ví dụ: Cải thiện màn hình "
+"cấu hình 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -5684,6 +5729,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "Người dùng"
+
+#. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr "Cài đặt của người dùng"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user

@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 07:52+0000\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
+"PO-Revision-Date: 2025-11-10 15:47+0000\n"
 "Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/stock/"
 "et/>\n"
@@ -51,8 +51,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Siirded %(transfer_list)s: vaja määrata partii/seerianumber toodetele "
-"%(product_list)s."
+"Siirded %(transfer_list)s: vaja määrata partii/seerianumber toodetele %"
+"(product_list)s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
@@ -434,8 +434,8 @@ msgstr ""
 "* Klient: Virtuaalne asukoht, mis tähistab teie klientidele saadetud toodete "
 "sihtkoha asukohta\n"
 "* Inventuuri kadu: inventuuride taseme korrigeerimiseks kasutatavate "
-"inventuuri toimingute vastena kasutatav virtuaalne asukoht (füüsilised varud)"
-"\n"
+"inventuuri toimingute vastena kasutatav virtuaalne asukoht (füüsilised "
+"varud)\n"
 "* Tootmine: tootmistoimingute virtuaalne asukoht: see asukoht kasutab "
 "komponente ja toodab valmistooteid\n"
 "* Transiit: vastaspoole asukoht, mida tuleks kasutada ettevõttevahelistes "
@@ -610,8 +610,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>Tooted liiguvad <b>%(destination)s</b> suunas, <br/> täpsustatult "
-"<b>%(operation)s</b> asukohast."
+"<br>Tooted liiguvad <b>%(destination)s</b> suunas, <br/> täpsustatult <b>%"
+"(operation)s</b> asukohast."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -661,22 +661,21 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<"
-"br/><br/>\n"
+"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "        Meil on hea meel teavitada teid, et teie tellimus on teele pandud.\n"
-"        <t t-if="
-"\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">"
-"\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Teie jälgimisviide on:\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value="
-"\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" "
-"t-out=\"line[0] or ''\"/>\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
@@ -694,9 +693,9 @@ msgstr ""
 "        Aitäh,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -856,10 +855,9 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span class=\"o_stat_value text-muted\">\n"
-"                                                                                      "
-"Prognoositud\n"
-"                                                                          "
-"</span>"
+"                                                                                      Prognoositud\n"
+"                                                                          </"
+"span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
@@ -2213,8 +2211,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada DHL'ga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2239,8 +2237,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada FedExiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2270,8 +2268,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada UPSiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2286,8 +2284,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada USPSiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4975,6 +4973,11 @@ msgid "Inventory at Date"
 msgstr "Laoseis kuupäeval"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr "Kuupäev on muudetav"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "On tühi"
@@ -5002,6 +5005,11 @@ msgstr "Kas kasutatakse mitut asukohta"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "On osaline pakend"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr "Planeeritud kuupäev on muudetav"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -8014,7 +8022,8 @@ msgstr "Võta kaup vastu ja talleta (2 sammu)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr "Võta kaup vastu, tee kvaliteedi kontroll ja siis talleta laos (3 sammu)"
+msgstr ""
+"Võta kaup vastu, tee kvaliteedi kontroll ja siis talleta laos (3 sammu)"
 
 #. module: stock
 #. odoo-python
@@ -8047,8 +8056,8 @@ msgid ""
 "                        locations management traceability, quality control, "
 "etc."
 msgstr ""
-"Vähenda kaubapuudust teavituste, triipkoodirakenduse, täiendamissoovituste, "
-"\n"
+"Vähenda kaubapuudust teavituste, triipkoodirakenduse, "
+"täiendamissoovituste, \n"
 "                                                    asukohtade halduse, "
 "jälgitavuse ja kvaliteedikontrolli abil jne."
 
@@ -8899,8 +8908,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): %"
 "(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Seerianumber (%(serial_number)s) on juba asukohas (kohtades): "
-"%(location_list)s olemas. Parandage kodeeritud seerianumber."
+"Seerianumber (%(serial_number)s) on juba asukohas (kohtades): %"
+"(location_list)s olemas. Parandage kodeeritud seerianumber."
 
 #. module: stock
 #. odoo-python
@@ -9761,8 +9770,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Seerianumber (%(serial_number)s) on juba kasutusel järgmistes asukohtades: "
-"%(location_list)s.\n"
+"Seerianumber (%(serial_number)s) on juba kasutusel järgmistes asukohtades: %"
+"(location_list)s.\n"
 "\n"
 "Kas see on oodatav? Näiteks võib see juhtuda, kui tarnetoiming on kinnitatud "
 "enne selle vastava vastuvõtutoimingu kinnitamist. Sel juhul lahendatakse "
@@ -10049,16 +10058,6 @@ msgstr "Sellele laosiirdele loodud laoreegel"
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
 msgstr "Taastamiseks pole varude korrigeerimisi vaja."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-"Pakendisse pole midagi sobivat panna. Kas pakendisse pole koguseid panna või "
-"on kõik tooted juba pakendis."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10753,8 +10752,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: %"
 "(serial_numbers_to_locations)s"
 msgstr ""
-"Seerianumbrid pole saadaval. Palun parandage kodeeritud seerianumbrid: "
-"%(serial_numbers_to_locations)s"
+"Seerianumbrid pole saadaval. Palun parandage kodeeritud seerianumbrid: %"
+"(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -11550,8 +11549,8 @@ msgid ""
 "You cannot archive location %(location)s because it is used by warehouse %"
 "(warehouse)s"
 msgstr ""
-"Te ei saa arhiveerida asukohta %(location)s kuna see on kasutusel teie laos "
-"%(warehouse)s"
+"Te ei saa arhiveerida asukohta %(location)s kuna see on kasutusel teie laos %"
+"(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -12199,6 +12198,13 @@ msgid ""
 msgstr ""
 "{{object.company_id.name}} kohaletoimetamise järjekord (ref {{object.name or "
 "'n/a'}})"
+
+#~ msgid ""
+#~ "There is nothing eligible to put in a pack. Either there are no "
+#~ "quantities to put in a pack or moves are already done."
+#~ msgstr ""
+#~ "Pakendisse pole midagi sobivat panna. Kas pakendisse pole koguseid panna "
+#~ "või on kõik tooted juba pakendis."
 
 #~ msgid ""
 #~ "\n"

@@ -14,13 +14,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-29 13:33+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-12 08:01+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/account/"
 "it/>\n"
 "Language: it\n"
@@ -310,6 +311,18 @@ msgstr "'%(filename)s' (estratto da '%(root_filename)s', tipo=%(type)s)"
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (tipo=%(type)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
+msgstr "(*) Merci consegnate non fatturate (valutazione perpetua)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
+msgstr "(*) Merci fatturate non consegnate (valutazione perpetua)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -1752,8 +1765,8 @@ msgid ""
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
 "<span>1,00</span>\n"
-"                                                        <span groups="
-"\"uom.group_uom\">Unità</span>"
+"                                                        <span "
+"groups=\"uom.group_uom\">Unità</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3106,11 +3119,11 @@ msgstr "Ratei e risconti"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
-"its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
+"reverse entry: %(reverse_entry)s."
 msgstr ""
-"Registrazione di competenza creata il %(date)s: %"
-"(accrual_entry)s.                    Storno: %(reverse_entry)s."
+"Registrazione per competenza creata il %(date)s: %(accrual_entry)"
+"s.                Storno: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -4285,11 +4298,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "Registro predefinito per registrazioni automatiche"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "Mappatura automatica imposta (AvaTax)"
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "Sequenza automatica"
@@ -4732,6 +4740,11 @@ msgid "Based on Payment"
 msgstr "Basato su pagamento"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "Base"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
 msgstr "Sequenza pagamento raggruppato"
@@ -4740,6 +4753,26 @@ msgstr "Sequenza pagamento raggruppato"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "Pagamenti raggruppati"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, activate the cron to enable "
+"batch sending of invoices."
+msgstr ""
+"L'invio batch delle fatture non è disponibile. Attiva il cron per abilitare "
+"l'invio batch delle fatture."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, contact your system "
+"administrator to activate the cron to enable batch sending of invoices."
+msgstr ""
+"L'invio batch delle fatture non è disponibile. Contatta l'amministratore di "
+"sistema per attivare il cron e abilitare l'invio batch delle fatture."
 
 #. module: account
 #. odoo-javascript
@@ -4872,11 +4905,6 @@ msgstr "Bloccato"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "Il contenuto del corpo è lo stesso del modello"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Contabile"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5175,6 +5203,7 @@ msgstr "Da comunicare a"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_160
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5185,6 +5214,16 @@ msgstr "Cassa"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "Conto cassa"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_157
+msgid "Cash Bakery"
+msgstr "Contanti panetteria"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_159
+msgid "Cash Bar"
+msgstr "Monete bar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -5222,6 +5261,11 @@ msgstr "Imposte per cassa"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "Conto di transizione per cassa"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_156
+msgid "Cash Clothes Shop"
+msgstr "Contanti Negozio di abbigliamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -5281,10 +5325,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Conto perdite da cancellazione degli sconti"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_155
+msgid "Cash Furn. Shop"
+msgstr "Contanti Negozio di arr."
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Registri di cassa"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_158
+msgid "Cash Restaurant"
+msgstr "Contanti ristorante"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -6099,6 +6153,11 @@ msgstr "Crea pagamento"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Create Payments"
 msgstr "Crea pagamenti"
+
+#. module: account
+#: model:ir.model,website_form_label:account.model_res_partner
+msgid "Create a Customer"
+msgstr "Crea cliente"
 
 #. module: account
 #. odoo-python
@@ -8528,6 +8587,12 @@ msgid "Expired"
 msgstr "Scaduto"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Export ZIP"
+msgstr "Esporta ZIP"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "Etichetta espressione"
@@ -9283,6 +9348,12 @@ msgstr "Acquisizione risultato integrità hash come PDF."
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "Data di chiusura globale"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Go to cron configuration"
+msgstr "Vai alla configurazione del cron"
 
 #. module: account
 #. odoo-python
@@ -10072,8 +10143,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Nel resoconto '%(report_name)s', riga '%(line_name)s', con etichetta "
-"'%(label)s',\n"
+"Nel resoconto '%(report_name)s', riga '%(line_name)s', con etichetta '%"
+"(label)s',\n"
 "Impossibile analizzare l'ID del resoconto incrociato o xml_id.\n"
 
 #. module: account
@@ -10086,8 +10157,8 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"Nel resoconto '%(report_name)s', riga '%(line_name)s', con l'etichetta "
-"'%(label)s',\n"
+"Nel resoconto '%(report_name)s', riga '%(line_name)s', con l'etichetta '%"
+"(label)s',\n"
 "Il formato dell'espressione del resoconto incrociato non è valido. \n"
 "Previsto: cross_report(<report_id>|<xml_id>)Esempio:  "
 "cross_report(my_module.my_report) o cross_report(123)"
@@ -10435,21 +10506,23 @@ msgstr "Estratto(i) conto non valido(i)"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
-msgid ""
-"Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr ""
-"Dominio non valido per l'espressione '%(label)s' della riga '%(line)s': %"
-"(formula)s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "Ultimo giorno dell'anno fiscale non valido"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+msgid ""
+"Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s"
+msgstr ""
+"Formula non valida per l'espressione '%(label)s' della riga '%(line)s': "
+"%(formula)s"
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_inventory_valuation
+#: model:account.journal,name:account.1_inventory_valuation
+#: model:account.journal,name:account.2_inventory_valuation
 msgid "Inventory Valuation"
 msgstr "Valutazione del magazzino"
 
@@ -10733,6 +10806,7 @@ msgstr "Fatturate"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/controllers/download_docs.py:0
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.actions.act_window,name:account.action_move_out_invoice
 #: model:ir.actions.act_window,name:account.action_move_out_invoice_type
@@ -10840,11 +10914,6 @@ msgstr "Fatture/fatture fornitore/mandati"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "Fatturazione"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "Fatturazione e banche"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -11942,8 +12011,8 @@ msgstr ""
 "Bonifico SEPA: effettua pagamenti nella zona SEPA inviando un file di "
 "bonifico SEPA alla tua banca. È necessario il modulo account_iso20022.\n"
 "Addebito diretto SEPA: ricevi pagamenti nella zona SEPA grazie a un mandato "
-"che il tuo partner ti avrà concesso. È necessario il modulo account_iso20022."
-"\n"
+"che il tuo partner ti avrà concesso. È necessario il modulo "
+"account_iso20022.\n"
 "U.S. ISO20022: paga negli Stati Uniti inviando un file ISO20022 alla tua "
 "banca. È necessario il modulo account_iso20022.\n"
 
@@ -12546,6 +12615,17 @@ msgstr "Notifica nuove fatture elettroniche"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
 msgid "Next Activity"
 msgstr "Prossima attività"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Prossimo evento del calendario delle attività"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_date_deadline
@@ -14216,6 +14296,7 @@ msgstr "URL di accesso al portale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Post"
 msgstr "Conferma"
 
@@ -14576,13 +14657,13 @@ msgstr "Nota di credito fornitore proforma"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr "Proprietà riga metodo di pagamento in uscita"
+msgstr "Proprietà riga metodo di pagamento in entrata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr "Proprietà riga metodo di pagamento in uscita"
+msgstr "Proprietà riga metodo di pagamento in entrata"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_property_tax
@@ -14758,6 +14839,20 @@ msgid "RD Expenses"
 msgstr "Spese RD"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Valutazioni"
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_raw_materials
 msgid "Raw Materials"
 msgstr "Materie prime"
@@ -14766,11 +14861,6 @@ msgstr "Materie prime"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Riordina sequenza"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Sola lettura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
@@ -15367,6 +15457,7 @@ msgstr "Stornato il"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_audit_menu
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Review"
 msgstr "Esamina"
 
@@ -16267,6 +16358,11 @@ msgid "Show Aba Routing"
 msgstr "Mostra percorso ABA"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "Mostrare funzionalità contabili - Sola lettura"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -16293,6 +16389,11 @@ msgstr "Mostra pulsanti fattura elettronica"
 #: model:ir.model.fields,field_description:account.field_account_journal__show_refresh_out_einvoices_status_button
 msgid "Show E-Invoice Status Buttons"
 msgstr "Mostra pulsanti stato fattura elettronica"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "Mostrare funzionalità contabili complete"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -21293,23 +21394,6 @@ msgid "[Partner id]"
 msgstr "[ID partner]"
 
 #. module: account
-#: model:res.groups,comment:account.group_account_user
-msgid ""
-"access to all Accounting features, including reporting, asset management, "
-"analytic accounting, without configuration rights."
-msgstr ""
-"accesso a tutte le funzioni di contabilità, inclusi reportistica, gestione "
-"delle risorse e contabilità analitica, senza diritti di configurazione."
-
-#. module: account
-#: model:res.groups,comment:account.group_account_readonly
-msgid ""
-"access to all the accounting data but in readonly mode, no actions allowed."
-msgstr ""
-"accesso a tutti i dati contabili ma in modalità di sola lettura, nessuna "
-"azione consentita."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "account.move.line"
@@ -21324,13 +21408,6 @@ msgstr "Attiva la valuta della banconota"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the invoice"
 msgstr "attiva la valuta sulla fattura"
-
-#. module: account
-#: model:res.groups,comment:account.group_account_basic
-msgid "adds the accounting dashboard, bank management and follow-up reports."
-msgstr ""
-"aggiunge la dashboard della contabilità, la gestione bancaria e i resoconti "
-"di follow-up."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -21878,8 +21955,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Nota di credito in autofatturazione (Rif {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} Nota di credito in autofatturazione (Rif "
+"{{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
@@ -21891,6 +21968,52 @@ msgstr ""
 "or 'n/a' }})"
 
 #~ msgid ""
+#~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
+#~ "And its reverse entry: %(reverse_entry)s."
+#~ msgstr ""
+#~ "Registrazione di competenza creata il %(date)s: %"
+#~ "(accrual_entry)s.                    Storno: %(reverse_entry)s."
+
+#~ msgid "Automatic Tax Mapping (AvaTax)"
+#~ msgstr "Mappatura automatica imposta (AvaTax)"
+
+#~ msgid "Bookkeeper"
+#~ msgstr "Contabile"
+
+#~ msgid ""
+#~ "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
+#~ msgstr ""
+#~ "Dominio non valido per l'espressione '%(label)s' della riga '%(line)s': %"
+#~ "(formula)s"
+
+#~ msgid "Invoicing & Banks"
+#~ msgstr "Fatturazione e banche"
+
+#~ msgid "Read-only"
+#~ msgstr "Sola lettura"
+
+#~ msgid ""
+#~ "access to all Accounting features, including reporting, asset management, "
+#~ "analytic accounting, without configuration rights."
+#~ msgstr ""
+#~ "accesso a tutte le funzioni di contabilità, inclusi reportistica, "
+#~ "gestione delle risorse e contabilità analitica, senza diritti di "
+#~ "configurazione."
+
+#~ msgid ""
+#~ "access to all the accounting data but in readonly mode, no actions "
+#~ "allowed."
+#~ msgstr ""
+#~ "accesso a tutti i dati contabili ma in modalità di sola lettura, nessuna "
+#~ "azione consentita."
+
+#~ msgid ""
+#~ "adds the accounting dashboard, bank management and follow-up reports."
+#~ msgstr ""
+#~ "aggiunge la dashboard della contabilità, la gestione bancaria e i "
+#~ "resoconti di follow-up."
+
+#~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"
 #~ "                    You can choose how you want us to send your invoices, "
 #~ "and with which electronic format.\n"
@@ -21900,39 +22023,6 @@ msgstr ""
 #~ "                    Puoi scegliere come inviare le fatture e quale "
 #~ "formato elettronico utilizzare.\n"
 #~ "                </small>"
-
-#~ msgid "Basic"
-#~ msgstr "Base"
-
-#~ msgid "Cash Bakery"
-#~ msgstr "Contanti panetteria"
-
-#~ msgid "Cash Bar"
-#~ msgstr "Monete bar"
-
-#~ msgid "Cash Clothes Shop"
-#~ msgstr "Contanti Negozio di abbigliamento"
-
-#~ msgid "Cash Furn. Shop"
-#~ msgstr "Contanti Negozio di arr."
-
-#~ msgid "Cash Restaurant"
-#~ msgstr "Contanti ristorante"
-
-#~ msgid "Create a Customer"
-#~ msgstr "Crea cliente"
-
-#~ msgid "Next Activity Calendar Event"
-#~ msgstr "Prossimo evento del calendario delle attività"
-
-#~ msgid "Ratings"
-#~ msgstr "Valutazioni"
-
-#~ msgid "Show Accounting Features - Readonly"
-#~ msgstr "Mostrare funzionalità contabili - Sola lettura"
-
-#~ msgid "Show Full Accounting Features"
-#~ msgstr "Mostrare funzionalità contabili complete"
 
 #~ msgid "Warning"
 #~ msgstr "Attenzione"

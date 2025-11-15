@@ -9,12 +9,13 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-21 08:01+0000\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-14 06:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "website_blog/ja/>\n"
@@ -40,6 +41,11 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "」。 次の結果を表示しています「"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "-- All dates"
+msgstr "-- 全日付"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -194,7 +200,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 msgid "<i class=\"fa fa-twitter text-twitter\" aria-label=\"X\" title=\"X\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-twitter text-twitter\" aria-label=\"X\" title=\"X\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
@@ -204,11 +210,13 @@ msgid ""
 "<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
 "Demo</span> • <span>Mar 13, 2025</span> •"
 msgstr ""
+"<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
+"Demo</span> • <span>2025年3月13日</span> •"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 msgid "<small class=\"text-muted\">Mar 13, 2025</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">2025年3月13日</small>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -254,11 +262,19 @@ msgid ""
 "long-arrow-right\" role=\"presentation\"/></span>\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
+"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
+"                    <span class=\"badge text-bg-primary\">新着</span>\n"
+"                    <strong>Sierra Tarahumara</strong>\n"
+"                    <span class=\"text-muted\">Marc Demo(旅行)</span>\n"
+"                    <span class=\"text-primary\">今すぐ読む<i class="
+"\"fa fa-long-arrow-right\" role=\"presentation\"/></span>\n"
+"                </span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
 msgid "<span class=\"text-muted\">Mar 13, 2025</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">2025年3月13日</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_badge
@@ -266,11 +282,13 @@ msgid ""
 "<span class=\"text-primary text-nowrap\">Read Now <i class=\"fa fa-long-"
 "arrow-right\"/></span>"
 msgstr ""
+"<span class=\"text-primary text-nowrap\">今すぐ読む<i class="
+"\"fa fa-long-arrow-right\"/></span>"
 
 #. module: website_blog
 #: model_terms:web_tour.tour,rainbow_man_message:website_blog.blog
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
-msgstr ""
+msgstr "<span><b>Good job!</b> このツアーの全ステップを終了しました。</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
@@ -384,7 +402,7 @@ msgstr "すべてのブログ"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "All dates"
-msgstr ""
+msgstr "全ての日付"
 
 #. module: website_blog
 #. odoo-python
@@ -401,7 +419,7 @@ msgstr "それに関連して、設定と故障の難易度は？"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/interactions/website_blog.js:0
 msgid "Amazing blog article: %(title)s! Check it live: %(url)s"
-msgstr ""
+msgstr "素晴らしいブログ記事: %(title)s! ライブでチェック: %(url)s"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
@@ -816,7 +834,7 @@ msgstr "閉じる"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__color
 msgid "Color"
-msgstr ""
+msgstr "色"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
@@ -897,7 +915,7 @@ msgstr "作成日"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Date"
-msgstr ""
+msgstr "日付"
 
 #. module: website_blog
 #. odoo-javascript
@@ -970,7 +988,7 @@ msgstr "'結果をフィルタ'ページヘッダーを編集"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the '{{0}}' page header."
-msgstr ""
+msgstr "'{{0}}' ページヘッダーを編集する"
 
 #. module: website_blog
 #. odoo-javascript
@@ -1033,7 +1051,7 @@ msgstr "フォロワー (取引先)"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__footer_visible
 msgid "Footer Visible"
-msgstr ""
+msgstr "フッタ表示"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -1116,7 +1134,7 @@ msgstr "メッセージあり"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__header_visible
 msgid "Header Visible"
-msgstr ""
+msgstr "ヘッダ表示"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1132,7 +1150,7 @@ msgstr "休暇のヒント"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Hover Effect"
-msgstr ""
+msgstr "ホバー効果"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_4
@@ -1570,7 +1588,7 @@ msgstr "最も閲覧されたブログポスト"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_badge
 msgid "NEW"
-msgstr ""
+msgstr "NEW"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__name
@@ -1587,7 +1605,7 @@ msgstr "新しいブログ投稿"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "New Tag"
-msgstr ""
+msgstr "新規タグ"
 
 #. module: website_blog
 #. odoo-javascript
@@ -1651,13 +1669,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Normal"
-msgstr ""
+msgstr "通常"
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Normal picture"
-msgstr ""
+msgstr "通常写真"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
@@ -1691,7 +1709,7 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "対応が必要なメッセージ数"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error_counter
@@ -1734,7 +1752,7 @@ msgstr "その他"
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "Our Latest Posts"
-msgstr ""
+msgstr "最新のポスト"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_blogs_display
@@ -1802,7 +1820,7 @@ msgstr "写真: Teddy Kelley, @teddykelley"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Picture Size"
-msgstr ""
+msgstr "写真サイズ"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_count
@@ -1892,7 +1910,7 @@ msgstr "レストラン、カフェ、バー"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_id
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "特定のウェブサイトに制限する。"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -1981,7 +1999,7 @@ msgstr "コンマでキーワードごとに区切ります。"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "シーケンス"
 
 #. module: website_blog
 #. odoo-javascript
@@ -2019,7 +2037,7 @@ msgstr "LinkedInで共有"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 msgid "Share on X"
-msgstr ""
+msgstr "Xで共有"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -2092,13 +2110,13 @@ msgstr "スキー"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Smaller"
-msgstr ""
+msgstr "より小さい"
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Smaller picture"
-msgstr ""
+msgstr "より小さい写真"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -2378,12 +2396,12 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "ウェブサイト経由でこのドキュメントにアクセスするための完全な絶対URLです。"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "ウェブサイト経由でこのドキュメントにアクセスするための完全な相対URLです。"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -2667,7 +2685,7 @@ msgstr "現在のサイトに表示"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
 msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
-msgstr ""
+msgstr "ここに書き込むか、ブロックをドラッグ"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
@@ -2679,7 +2697,7 @@ msgstr "ウェブサイト"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "ウェブサイト絶対URL"
 
 #. module: website_blog
 #: model:ir.actions.act_url,name:website_blog.action_open_website
@@ -2872,6 +2890,8 @@ msgid ""
 "|\n"
 "            <i class=\"fa fa-comment ms-1 text-muted\"/>"
 msgstr ""
+"|\n"
+"            <i class=\"fa fa-comment ms-1 text-muted\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info

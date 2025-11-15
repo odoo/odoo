@@ -3,13 +3,15 @@
 # * pos_self_order
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 02:30+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-08 22:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "pos_self_order/vi/>\n"
 "Language: vi\n"
@@ -28,7 +30,7 @@ msgstr "\"mã QR\""
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
-msgstr ""
+msgstr "(yêu cầu Odoo Enterprise)"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -88,6 +90,46 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\""
+"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value="
+"\"client.country_id.name or ''\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
+"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value="
+"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Xin chào <t t-out="
+"\"client_name\">Tên khách hàng</t>,</t>\n"
+"                        <t t-else=\"\">Xin chào,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Đơn hàng của bạn <t t-out=\"object.tracking_number\""
+">...</t> trị giá <t t-out=\"object.amount_total\">$xx.xx</t> đã được xác "
+"nhận. <span t-if=\"object.preset_time or client.street\">Đơn hàng sẽ sẵn "
+"sàng</span> <span t-if=\"object.preset_time\">vào lúc <t t-out=\"format_time("
+"time=object.preset_time, tz=tz, time_format='short', lang_code=lg)"
+"\">12:00 CH</t></span> <span t-if=\"client.street\">tại <t t-out=\"street\""
+">đường</t>, <t t-out=\"state\">tỉnh thành</t>, <t t-out=\"client.zip or ''\""
+">mã zip</t>, <t t-out=\"city\">thành phố</t>, <t t-out=\"country\">quốc "
+"gia</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Cảm ơn bạn!</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Bạn có thể xem biên lai trong tệp đính "
+"kèm.</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Tên cửa hàng</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -120,6 +162,34 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
+"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value="
+"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Xin chào <t t-out="
+"\"client_name\">Tên khách hàng</t>,</t>\n"
+"                        <t t-else=\"\">Xin chào,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Đơn hàng của bạn <t t-out=\"object.tracking_number\""
+">...</t> trị giá <t t-out=\"object.amount_total\">$xx.xx</t> đã được xác "
+"nhận. <span t-if=\"object.preset_time\">Đơn hàng sẽ sẵn sàng vào lúc <t "
+"t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 CH</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Cảm ơn bạn!</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Bạn có thể xem biên lai trong tệp đính "
+"kèm.</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Tên cửa hàng</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -140,7 +210,7 @@ msgstr "Đang hoạt động"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Thêm"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -164,7 +234,7 @@ msgstr "Thêm vào giỏ hàng"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "All"
-msgstr ""
+msgstr "Tất cả"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -205,7 +275,7 @@ msgstr "Có sẵn trong Tự phục vụ"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
 msgid "Available in self"
-msgstr ""
+msgstr "Có sẵn trong tự phục vụ"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -226,7 +296,7 @@ msgstr "Quay lại"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Background"
-msgstr ""
+msgstr "Nền"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -252,19 +322,19 @@ msgstr "Huỷ đơn hàng"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Đã hủy"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
 msgid "Categories"
-msgstr ""
+msgstr "Danh mục"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Checkout"
-msgstr ""
+msgstr "Thanh toán"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
@@ -294,13 +364,13 @@ msgstr "Chọn"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Choose your time"
-msgstr ""
+msgstr "Chọn thời gian của bạn"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "City"
-msgstr ""
+msgstr "Thành phố"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -342,7 +412,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Liên hệ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -368,12 +438,12 @@ msgstr "Bạn có thể xác nhận số bàn của bạn được không?"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Quốc gia"
 
 #. module: pos_self_order
 #: model:ir.model,website_form_label:pos_self_order.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Tạo một khách hàng"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
@@ -526,23 +596,23 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr ""
+msgstr "Dễ dàng tải nhiều tùy chọn cấu hình"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
-msgstr ""
+msgstr "Email xác nhận"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_mail_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Mẫu email"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -726,7 +796,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Đã xuất hóa đơn"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -788,7 +858,7 @@ msgstr "Sáng"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__pos_config_ids
 msgid "Linked PoS Configurations"
-msgstr ""
+msgstr "Cấu hình PoS liên kết"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -866,7 +936,7 @@ msgstr "GHI CHÚ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Name"
-msgstr ""
+msgstr "Tên"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
@@ -895,7 +965,7 @@ msgstr "Không tìm thấy đơn hàng"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "No, thanks"
-msgstr ""
+msgstr "Không, cảm ơn"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -912,7 +982,7 @@ msgstr "Không có sẵn trong tự phục vụ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -924,13 +994,13 @@ msgstr "Ok"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
-msgstr ""
+msgstr "Đang diễn ra"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #. module: pos_self_order
 #. odoo-python
@@ -942,7 +1012,7 @@ msgstr "Chỉ thanh toán sau khi có sẵn với chế độ ki-ốt."
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "Oops..."
-msgstr ""
+msgstr "Rất tiếc!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -971,7 +1041,7 @@ msgstr "Đơn hàng không tìm thấy trên máy chủ"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__source
 msgid "Origin"
-msgstr ""
+msgstr "Gốc"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -984,7 +1054,7 @@ msgstr "Hết hàng"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Paid"
-msgstr ""
+msgstr "Đã thanh toán"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1023,7 +1093,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Phone"
-msgstr ""
+msgstr "Điện thoại"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1106,7 +1176,7 @@ msgstr "In mã QR"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/printing_failure_popup/printing_failure_popup.js:0
 msgid "Printing failed"
-msgstr ""
+msgstr "In không thành công"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_template
@@ -1116,7 +1186,7 @@ msgstr "Sản phẩm"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_tag
 msgid "Product Tag"
-msgstr ""
+msgstr "Thẻ sản phẩm"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_product
@@ -1226,25 +1296,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select"
-msgstr ""
+msgstr "Chọn"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a country"
-msgstr ""
+msgstr "Chọn một quốc gia"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "Select a hour"
-msgstr ""
+msgstr "Chọn một giờ"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a state"
-msgstr ""
+msgstr "Chọn một tỉnh/TP"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1266,13 +1336,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select your address"
-msgstr ""
+msgstr "Chọn địa chỉ của bạn"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Selection"
-msgstr ""
+msgstr "Lựa chọn"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1296,7 +1366,7 @@ msgstr "Tên thương hiệu hình ảnh ki-ốt tự phục vụ"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
 msgid "Self Order Visible"
-msgstr ""
+msgstr "Đơn tự phục vụ hiển thị"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1352,7 +1422,7 @@ msgstr "Tự phục vụ:"
 #: model:mail.template,description:pos_self_order.delivery_email_template
 #: model:mail.template,description:pos_self_order.takeout_email_template
 msgid "Sent to customers with the receipt in attachment"
-msgstr ""
+msgstr "Được gửi cho khách hàng cùng biên lai trong phần tệp đính kèm"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1402,7 +1472,7 @@ msgstr "Trạng thái"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Street and Number"
-msgstr ""
+msgstr "Đường và số"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
@@ -1440,7 +1510,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Table selection"
-msgstr ""
+msgstr "Chọn bàn"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1481,7 +1551,7 @@ msgstr "Người dùng mặc định cho Tự phục vụ phải là người d�
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
-msgstr ""
+msgstr "Mẫu email có xmlid %s đã bị xóa."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1500,7 +1570,7 @@ msgstr "Kết hợp này không tồn tại."
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.xml:0
 msgid "Total"
-msgstr ""
+msgstr "Tổng"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1554,13 +1624,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "We need more info"
-msgstr ""
+msgstr "Chúng tôi cần thêm thông tin"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "We'll do everything to be on time!"
-msgstr ""
+msgstr "Chúng tôi sẽ cố gắng để đảm bảo đúng giờ!"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1584,7 +1654,7 @@ msgstr "Chúng tôi đang chuẩn bị đơn hàng của bạn!"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "When would you like to receive your orders ?"
-msgstr ""
+msgstr "Bạn muốn nhận đơn hàng khi nào?"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1656,19 +1726,19 @@ msgstr "Số đơn hàng của bạn"
 #: model:mail.template,subject:pos_self_order.delivery_email_template
 #: model:mail.template,subject:pos_self_order.takeout_email_template
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "Biên lai {{ object.config_id.name }} của bạn"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Zip"
-msgstr ""
+msgstr "Mã bưu chính"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
-msgstr ""
+msgstr "là"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1680,13 +1750,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "close"
-msgstr ""
+msgstr "đóng"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "each"
-msgstr ""
+msgstr "mỗi"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -1702,13 +1772,13 @@ msgstr "https://odoo.com"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "included"
-msgstr ""
+msgstr "đã bao gồm"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "is"
-msgstr ""
+msgstr "là"
 
 #. module: pos_self_order
 #. odoo-javascript

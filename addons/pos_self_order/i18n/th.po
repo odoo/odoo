@@ -3,13 +3,14 @@
 # * pos_self_order
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 21:36+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-08 18:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
 "pos_self_order/th/>\n"
 "Language: th\n"
@@ -88,6 +89,45 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\""
+"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value="
+"\"client.country_id.name or ''\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
+"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value="
+"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">สวัสดีค่ะ <t t-out="
+"\"client_name\">ชื่อลูกค้า</t></t>\n"
+"                        <t t-else=\"\">สวัสดีค่ะ</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>คำสั่งซื้อ<t t-out=\"object.tracking_number\""
+">...</t>ของคุณ เป็นจำนวน <t t-out=\"object.amount_total\">$xx.xx</t> "
+"ได้รับการยืนยันแล้ว <span t-if=\"object.preset_time or client.street\""
+">คำสั่งซื้อของคุณจะพร้อม</span> <span t-if=\"object.preset_time\">เมื่อ <t t-out="
+"\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 น.</t></span> <span t-if=\"client.street\">ที่อยู่ <t "
+"t-out=\"street\">ถนน</t> <t t-out=\"state\">รัฐ</t> <t t-out="
+"\"client.zip or ''\">ไปรษณีย์</t> <t t-out=\"city\">เมือง</t> <t t-out="
+"\"country\">ประเทศ</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>ขอขอบคุณ</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>กรุณาแนบใบเสร็จรับเงินของคุณด้วย</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">ชื่อร้านค้า</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -120,6 +160,33 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
+"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value="
+"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">สวัสดีค่ะ<t t-out="
+"\"client_name\">ชื่อลูกค้า</t>,</t>\n"
+"                        <t t-else=\"\">สวัสดีค่ะ</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>คำสั่งซื้อ <t t-out=\"object.tracking_number\">ของคุณ</"
+"t> เป็นจำนวน <t t-out=\"object.amount_total\">$xx.xx</t> ได้รับการยืนยันแล้ว <span "
+"t-if=\"object.preset_time\">คำสั่งซื้อจะถูกจัดส่งเมื่อ <t t-out=\"format_time("
+"time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
+"pm</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>ขอบคุณค่ะ</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>แนบใบเสร็จรับเงินของคุณมาด้วย</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">ชื่อร้านค้า</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -138,7 +205,7 @@ msgstr "เปิดใช้งาน"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Add"
-msgstr ""
+msgstr "เพิ่ม"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -162,7 +229,7 @@ msgstr "เพิ่มในรถเข็น"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "All"
-msgstr ""
+msgstr "ทั้งหมด"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -224,7 +291,7 @@ msgstr "กลับ"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Background"
-msgstr ""
+msgstr "พื้นหลัง"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -250,19 +317,19 @@ msgstr "ยกเลิกคำสั่งซื้อ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ยกเลิก"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
 msgid "Categories"
-msgstr ""
+msgstr "หมวดหมู่"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Checkout"
-msgstr ""
+msgstr "คิดราคาสินค้า"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
@@ -298,7 +365,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "City"
-msgstr ""
+msgstr "เมือง"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -340,7 +407,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "ติดต่อ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -366,12 +433,12 @@ msgstr "คุณช่วยยืนยันหมายเลขโต๊ะ
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "ประเทศ"
 
 #. module: pos_self_order
 #: model:ir.model,website_form_label:pos_self_order.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "สร้างลูกค้า"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
@@ -522,23 +589,23 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr ""
+msgstr "โหลดชุดตัวเลือกการกำหนดค่าได้อย่างง่ายดาย"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Email"
-msgstr ""
+msgstr "อีเมล"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
-msgstr ""
+msgstr "ยืนยันทางอีเมล"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_mail_template
 msgid "Email Templates"
-msgstr ""
+msgstr "เทมเพลตอีเมล"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -720,7 +787,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Invoiced"
-msgstr ""
+msgstr "ออกใบแจ้งหนี้แล้ว"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -860,7 +927,7 @@ msgstr "โน้ต"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Name"
-msgstr ""
+msgstr "ชื่อ"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
@@ -906,7 +973,7 @@ msgstr "ไม่สามารถใช้ได้ในการสั่ง
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "OK"
-msgstr ""
+msgstr "โอเค"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -918,13 +985,13 @@ msgstr "ตกลง"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
-msgstr ""
+msgstr "กำลังดำเนินการ"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Online"
-msgstr ""
+msgstr "ออนไลน์"
 
 #. module: pos_self_order
 #. odoo-python
@@ -965,7 +1032,7 @@ msgstr "ไม่พบคำสั่งซื้อบนเซิร์ฟเ
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__source
 msgid "Origin"
-msgstr ""
+msgstr "จุดเริ่ม"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -978,7 +1045,7 @@ msgstr "สินค้าหมด"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Paid"
-msgstr ""
+msgstr "ชำระแล้ว"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1015,7 +1082,7 @@ msgstr "ปรับแต่งหน้าจอสแปลชของคุ
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Phone"
-msgstr ""
+msgstr "โทรศัพท์"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1098,7 +1165,7 @@ msgstr "พิมพ์รหัส QR โค้ด"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/printing_failure_popup/printing_failure_popup.js:0
 msgid "Printing failed"
-msgstr ""
+msgstr "การพิมพ์ล้มเหลว"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_template
@@ -1108,7 +1175,7 @@ msgstr "สินค้า"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_tag
 msgid "Product Tag"
-msgstr ""
+msgstr "แท็กสินค้า"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_product
@@ -1218,13 +1285,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select"
-msgstr ""
+msgstr "เลือก"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a country"
-msgstr ""
+msgstr "เลือกประเทศ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1264,7 +1331,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Selection"
-msgstr ""
+msgstr "การเลือก"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1344,7 +1411,7 @@ msgstr ""
 #: model:mail.template,description:pos_self_order.delivery_email_template
 #: model:mail.template,description:pos_self_order.takeout_email_template
 msgid "Sent to customers with the receipt in attachment"
-msgstr ""
+msgstr "ส่งให้ลูกค้าพร้อมใบเสร็จแนบมาด้วย"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1394,7 +1461,7 @@ msgstr "สถานะ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Street and Number"
-msgstr ""
+msgstr "ถนนและหมายเลข"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
@@ -1473,7 +1540,7 @@ msgstr "ผู้ใช้เริ่มต้นการสั่งซื้
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
-msgstr ""
+msgstr "เทมเพลตเมลที่มี xmlid %s ได้ถูกลบแล้ว"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1492,7 +1559,7 @@ msgstr "ไม่มีการรวมนี้"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.xml:0
 msgid "Total"
-msgstr ""
+msgstr "รวม"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1648,13 +1715,13 @@ msgstr "หมายเลขคำสั่งซื้อของคุณ"
 #: model:mail.template,subject:pos_self_order.delivery_email_template
 #: model:mail.template,subject:pos_self_order.takeout_email_template
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "ใบเสร็จรับเงิน {{ object.config_id.name }} ของคุณ"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Zip"
-msgstr ""
+msgstr "รหัสไปรษณีย์"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1672,7 +1739,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "close"
-msgstr ""
+msgstr "ปิด"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1700,7 +1767,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "is"
-msgstr ""
+msgstr "เป็น"
 
 #. module: pos_self_order
 #. odoo-javascript

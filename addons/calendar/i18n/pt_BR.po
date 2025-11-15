@@ -10,13 +10,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-29 13:34+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-14 00:26+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/calendar/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1588,7 +1589,6 @@ msgstr "<i class=\"fa fa-remove\" title=\"Remove\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-sticky-note mt-2 text-600\" title=\"Notes\"/>"
 msgstr "<i class=\"fa fa-sticky-note mt-2 text-600\" title=\"Notes\"/>"
 
@@ -1599,7 +1599,6 @@ msgstr "<i class=\"fa fa-tag text-600\" title=\"Booking Name\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-user mt-1 text-600\" title=\"Participants\"/>"
 msgstr "<i class=\"fa fa-user mt-1 text-600\" title=\"Participants\"/>"
 
@@ -1657,7 +1656,6 @@ msgstr "<span title=\"Clear meeting\" class=\"fa fa-times\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "<span title=\"Join video call\" class=\"fa fa-sign-in\"/>"
 msgstr "<span title=\"Join video call\" class=\"fa fa-sign-in\"/>"
 
@@ -2084,7 +2082,7 @@ msgstr "Contatar participantes"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Contact Details"
-msgstr ""
+msgstr "Informações de contato"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
@@ -2157,7 +2155,7 @@ msgstr "Dia do mês"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Dates"
-msgstr ""
+msgstr "Datas"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__day
@@ -2520,8 +2518,8 @@ msgstr "A cada %(interval)s anos até %(until)s"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
-msgid "Feedback: %(feedback)s"
-msgstr "Feedback: %(feedback)s"
+msgid "Feedback: %s"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -2815,7 +2813,7 @@ msgstr "Deixar que o evento repita automaticamente nesse intervalo"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Linked to"
-msgstr ""
+msgstr "Vinculado a"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
@@ -3019,7 +3017,7 @@ msgstr "Não, manter"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Notes"
-msgstr ""
+msgstr "Anotações"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -3184,7 +3182,7 @@ msgstr "Participante"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Participants"
-msgstr ""
+msgstr "Participantes"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
@@ -3417,7 +3415,7 @@ msgstr "Enviar e excluir"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send email"
-msgstr ""
+msgstr "Enviar e-mail"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
@@ -3763,7 +3761,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Video Link"
-msgstr ""
+msgstr "Link de vídeo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
@@ -3773,7 +3771,7 @@ msgstr "Origem da chamada de vídeo"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Visibility"
-msgstr ""
+msgstr "Visibilidade"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -3942,6 +3940,9 @@ msgstr "{{ object.event_id.name }}: data de atualização"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: atualização de evento"
+
+#~ msgid "Feedback: %(feedback)s"
+#~ msgstr "Feedback: %(feedback)s"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "

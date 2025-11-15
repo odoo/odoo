@@ -11,13 +11,15 @@
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 14:55+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment_survey/tr/>\n"
 "Language: tr\n"
@@ -29,6 +31,7 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -61,6 +64,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sayın <t t-out=\"object.partner_id.name or 'applicant'\">"
+"[başvuru sahibinin adı]</t><br/><br/>\n"
+"        <t>\n"
+"            İşe alım sürecinde ilerlediniz ve bazı soruları yanıtlamanızı "
+"istiyoruz.\n"
+"       </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-style"
+"=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-"
+"size:13px;\">{{user.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px; font-size:13px;\">\n"
+"               <t>\n"
+"                    Yazılı mülakata başlayın\n"
+"               </t>\n"
+"            </a>\n"
+"       </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Lütfen <t t-out=\"format_date(object.deadline)\">"
+"[son başvuru tarihi]</t> için mülakatı yanıtlayın.<br/><br/>\n"
+"       </t>\n"
+"        <t>\n"
+"            Size iyi şanslar dileriz! Katılımınız için şimdiden teşekkür "
+"ederiz.\n"
+"       </t>\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
@@ -106,7 +140,7 @@ msgstr "Başvuru Sahibi: Mülakat"
 #. module: hr_recruitment_survey
 #: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
 msgid "Apply for a Job"
-msgstr ""
+msgstr "İş Başvurusu Yapın"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -130,7 +164,7 @@ msgstr "Görüşme Formunu Göster"
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__display_name
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -174,7 +208,7 @@ msgstr "Çay, kahve ve kırtasiye gibi ücretsiz eşyaların olması"
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2

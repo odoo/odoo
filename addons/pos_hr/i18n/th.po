@@ -3,15 +3,16 @@
 # * pos_hr
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 21:33+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_hr/th/"
-">\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 17:50+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_hr/th/>"
+"\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,7 +133,7 @@ msgstr "ละทิ้ง"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "แสดงชื่อ"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -158,6 +159,14 @@ msgstr "พนักงาน:"
 #: code:addons/pos_hr/models/hr_employee.py:0
 msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
 msgstr "พนักงาน: %(employee)s - กำหนดค่า PoS: %(config_list)s \n"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid ""
+"Employees linked to users with the PoS Manager role are automatically added "
+"to this list"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
@@ -196,7 +205,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
 msgid "ID"
-msgstr ""
+msgstr "ไอดี"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -205,12 +214,6 @@ msgstr ""
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "หากเว้นว่างไว้ พนักงานทุกคนสามารถเข้าสู่ระบบ PoS ได้"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "If left empty, only Odoo users have extended rights in PoS"
-msgstr "หากเว้นว่างไว้ มีเพียงผู้ใช้ Odoo เท่านั้นที่สามารถขยายสิทธิ์ใน PoS ได้"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -253,7 +256,7 @@ msgstr "เปิด"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Others"
-msgstr ""
+msgstr "อื่น ๆ"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -312,7 +315,7 @@ msgstr "ตัวแปรสินค้า"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 msgid "Select Cashier"
-msgstr ""
+msgstr "เลือกแคชเชียร์"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -372,6 +375,9 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr "คุณไม่สามารถลบพนักงานที่อาจใช้ในเซสชั่น PoS ที่ใช้งานอยู่ ปิดเซสชั่นก่อน: \n"
+
+#~ msgid "If left empty, only Odoo users have extended rights in PoS"
+#~ msgstr "หากเว้นว่างไว้ มีเพียงผู้ใช้ Odoo เท่านั้นที่สามารถขยายสิทธิ์ใน PoS ได้"
 
 #~ msgid "Change Cashier"
 #~ msgstr "เปลี่ยนแคชเชียร์"

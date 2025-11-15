@@ -5,12 +5,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-31 12:58+0000\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-10 14:29+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/de/>\n"
@@ -3395,6 +3396,7 @@ msgstr "Diskontsatz eines Wertpapiers auf Grundlage eines Preises."
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_ir_http__display_name
+#: model:ir.model.fields,field_description:spreadsheet.field_ir_model__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency_rate__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_lang__display_name
@@ -3656,6 +3658,12 @@ msgstr "Duplizieren"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Duration"
 msgstr "Dauer"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "E.g. 1234567 -> %(value)s"
+msgstr "Beispiel: 1234567 -> %(value)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4314,9 +4322,30 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
-"Funktion [[FUNCTION_NAME]] erwartet Zahlenwerte für %s, aber hat %s erhalten."
+"Funktion [[FUNCTION_NAME]] erwartet Zahlenwerte für %s, aber es wurde ein "
+"boolescher Wert zurückgegeben."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
+msgstr ""
+"Funktion [[FUNCTION_NAME]] erwartet Zahlenwerte für %s, aber es wurde eine "
+"Zeichenkette zurückgegeben."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
+"value."
+msgstr ""
+"Funktion [[FUNCTION_NAME]] erwartet Zahlenwerte für %s, aber es wurde ein "
+"leerer Wert zurückgegeben."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4778,6 +4807,7 @@ msgstr "Hyperbolischer Tangens einer beliebigen reellen Zahl."
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_ir_http__id
+#: model:ir.model.fields,field_description:spreadsheet.field_ir_model__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency_rate__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_lang__id
@@ -5723,12 +5753,6 @@ msgstr "Magnetismus"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Make numbers human-readable"
-msgstr "Zahlen lesbar machen"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "March"
 msgstr "März"
@@ -6031,6 +6055,11 @@ msgstr "Schließende Klammer fehlt"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Missing opening parenthesis"
 msgstr "Öffnende Klammer fehlt"
+
+#. module: spreadsheet
+#: model:ir.model,name:spreadsheet.model_ir_model
+msgid "Models"
+msgstr "Modelle"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9724,8 +9753,8 @@ msgid ""
 "The first_period (%(first)s) must be smaller or equal to the last_period (%"
 "(last)s)."
 msgstr ""
-"Die first_period (%(first)s) muss kleiner oder gleich der last_period "
-"(%(last)s) sein."
+"Die first_period (%(first)s) muss kleiner oder gleich der last_period (%"
+"(last)s) sein."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10020,8 +10049,8 @@ msgid ""
 "The last_period (%(last)s) must be smaller or equal to the number_of_periods "
 "(%(nPeriods)s)."
 msgstr ""
-"Die last_period (%(last)s) muss kleiner oder gleich der last_period "
-"(%(nPeriods)s) sein."
+"Die last_period (%(last)s) muss kleiner oder gleich der last_period (%"
+"(nPeriods)s) sein."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10078,8 +10107,8 @@ msgid ""
 "The maturity (%(maturity)s) must be strictly greater than the settlement (%"
 "(settlement)s)."
 msgstr ""
-"Die Fälligkeit (%(maturity)s) muss unbedingt größer als die Abrechnung "
-"(%(settlement)s) sein."
+"Die Fälligkeit (%(maturity)s) muss unbedingt größer als die Abrechnung (%"
+"(settlement)s) sein."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10888,8 +10917,8 @@ msgid ""
 "The purchase_date (%(purchaseDate)s) must be before the first_period_end (%"
 "(firstPeriodEnd)s)."
 msgstr ""
-"Das purchase_date (%(purchaseDate)s) muss vor dem first_period_end "
-"(%(firstPeriodEnd)s) liegen."
+"Das purchase_date (%(purchaseDate)s) muss vor dem first_period_end (%"
+"(firstPeriodEnd)s) liegen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11205,7 +11234,8 @@ msgstr "Der Verweis auf die Zelle."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The regular expression pattern to match against the text."
-msgstr "Das reguläre Ausdrucksmuster, das mit dem Text abgeglichen werden soll."
+msgstr ""
+"Das reguläre Ausdrucksmuster, das mit dem Text abgeglichen werden soll."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11300,8 +11330,8 @@ msgstr "Die Regel ist aus einem unbekannten Grund ungültig."
 msgid ""
 "The salvage (%(salvage)s) must be smaller or equal than the cost (%(cost)s)."
 msgstr ""
-"Der Veräußerungswert (%(salvage)s) muss kleiner oder gleich den Kosten "
-"(%(cost)s) sein."
+"Der Veräußerungswert (%(salvage)s) muss kleiner oder gleich den Kosten (%"
+"(cost)s) sein."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11513,8 +11543,8 @@ msgid ""
 "The start_period (%(start)s) must be smaller or equal to the end_period (%"
 "(end)s)."
 msgstr ""
-"Der start_period (%(start)s) muss kleiner oder gleich dem end_period "
-"(%(end)s) sein."
+"Der start_period (%(start)s) muss kleiner oder gleich dem end_period (%"
+"(end)s) sein."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13000,6 +13030,12 @@ msgstr "Spalte %(column_name)s als Kopfzeilen verwenden"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Use compact format"
+msgstr "Kompaktes Format verwenden"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Use first value as subtotal"
 msgstr "Ersten Wert als Zwischensumme verwenden"
 
@@ -13771,8 +13807,8 @@ msgid ""
 "[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
 "empty matrix."
 msgstr ""
-"Die Funktion [[FUNCTION_NAME]] erwartet, dass die übergebenen Werte von "
-"%(argName)s eine Matriz ist, die nicht leer ist, sind."
+"Die Funktion [[FUNCTION_NAME]] erwartet, dass die übergebenen Werte von %"
+"(argName)s eine Matriz ist, die nicht leer ist, sind."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14132,6 +14168,15 @@ msgstr "gestern"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "null"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+#~ msgstr ""
+#~ "Funktion [[FUNCTION_NAME]] erwartet Zahlenwerte für %s, aber hat %s "
+#~ "erhalten."
+
+#~ msgid "Make numbers human-readable"
+#~ msgstr "Zahlen lesbar machen"
 
 #~ msgid "%s %s and %s"
 #~ msgstr "%s %s und %s"

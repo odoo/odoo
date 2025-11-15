@@ -19,15 +19,17 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 02:31+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/sms/tr/"
-">\n"
+"PO-Revision-Date: 2025-11-12 15:00+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/sms/tr/>"
+"\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,36 +71,48 @@ msgstr "%s geçersiz alıcı"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+#, fuzzy
 msgid "+1 555-555-555"
-msgstr ""
+msgstr "+1 555-555-555"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Hesabınızla ilgili bir hata oluştu. Daha fazla "
+"bilgi için lütfen destek ekibiyle iletişime geçin..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Hesabınız kayıtlı değilken SMS gönderemezsiniz."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+#, fuzzy
 msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Register"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Kayıt Olun"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+#, fuzzy
 msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Gönderen Adını Ayarla"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -113,8 +127,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Önizleme</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -129,12 +144,15 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+#, fuzzy
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">Kayıt yok</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+#, fuzzy
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
 "                                    The message will be sent as an SMS to "
@@ -156,6 +174,25 @@ msgid ""
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                    Mesaj, şablonun alıcılarına SMS olarak "
+"gönderilecektir\n"
+"                                    ve mesajlaşma geçmişinde görünmeyecektir."
+"\n"
+"                               </span>\n"
+"                                <span invisible=\"sms_method != 'note'\">\n"
+"                                    SMS gönderilmeyecek, sadece bir mesaj "
+"olarak gönderilecektir.\n"
+"                                    mesajlaşma geçmişinde dahili not.\n"
+"                               </span>\n"
+"                                <span invisible=\"sms_method != 'comment'\">"
+"\n"
+"                                    SMS, aşağıdaki alıcılara bir SMS olarak "
+"gönderilecektir\n"
+"                                    şablonu ile birlikte dahili bir not "
+"olarak da yayınlanacaktır.\n"
+"                                    mesajlaşma geçmişinde.\n"
+"                               </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -174,8 +211,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
+#, fuzzy
 msgid "A record for this UUID already exists"
-msgstr ""
+msgstr "Bu UUID için bir kayıt zaten mevcut"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -195,28 +233,36 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
+#, fuzzy
 msgid "Alternate way to identify a SMS record, used for delivery reports"
 msgstr ""
+"Bir SMS kaydını tanımlamanın alternatif yolu, teslimat raporları için "
+"kullanılır"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
+#, fuzzy
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "SMS gönderirken bir hata oluştu"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
+#, fuzzy
 msgid "An error occurred when sending an SMS on “%(record_name)s”"
-msgstr ""
+msgstr "\"%(record_name)s\" adresinden SMS gönderilirken bir hata oluştu"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
 msgstr ""
+"Bilinmeyen bir hata oluştu. Bu hata devam ederse lütfen Odoo destek ile "
+"iletişime geçin."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -236,8 +282,9 @@ msgstr ""
 #. module: sms
 #. odoo-python
 #: code:addons/sms/controllers/main.py:0
+#, fuzzy
 msgid "Bad parameters"
-msgstr ""
+msgstr "Kötü parametreler"
 
 #. module: sms
 #: model:ir.model,name:sms.model_base
@@ -284,7 +331,7 @@ msgstr "Bir dil seçin:"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Choose a template..."
-msgstr ""
+msgstr "Bir şablon seçin..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -296,13 +343,14 @@ msgstr "Bir örnek seçin"
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_code.py:0
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+#, fuzzy
 msgid "Choose your sender name"
-msgstr ""
+msgstr "Gönderen adınızı seçin"
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Şirketler"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -324,22 +372,25 @@ msgstr "İçerik"
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
+#, fuzzy
 msgid "Country Not Supported"
-msgstr ""
+msgstr "Ülke Desteklenmiyor"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
+#, fuzzy
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "Ülkeye Özel Kayıt Gerekli"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "Country-specific registration required."
-msgstr ""
+msgstr "Ülkeye özel kayıt gereklidir."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -369,8 +420,9 @@ msgstr "Oluşturuldu"
 
 #. module: sms
 #: model:iap.service,unit_name:sms.iap_service_sms
+#, fuzzy
 msgid "Credits"
-msgstr ""
+msgstr "Alacak"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
@@ -462,8 +514,9 @@ msgstr "SMS'i Etkinleştir"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+#, fuzzy
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
+msgstr "Doğrulama kodu içeren bir SMS almak için bir telefon numarası girin."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -584,7 +637,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "Insert Field"
-msgstr ""
+msgstr "Alan Ekle"
 
 #. module: sms
 #. odoo-javascript
@@ -598,17 +651,22 @@ msgstr "Yetersiz Kredi"
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
+#, fuzzy
 msgid "Invalid Destination"
-msgstr ""
+msgstr "Geçersiz Hedef"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid ""
 "Invalid phone number. Please make sure to follow the international format, "
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"Geçersiz telefon numarası. Lütfen uluslararası formatı takip ettiğinizden "
+"emin olun, yani bir artı işareti (+), ardından ülke kodu, şehir kodu ve "
+"yerel telefon numarası. Örneğin: +1 555-555-555"
 
 #. module: sms
 #. odoo-python
@@ -659,8 +717,9 @@ msgstr "Son Güncelleme"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
+#, fuzzy
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "SMS'i postalama/sms izleme modellerine bağlayın"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -669,8 +728,9 @@ msgstr "Posta Mesajı"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
+#, fuzzy
 msgid "Mail Notification"
-msgstr ""
+msgstr "Posta Bildirimi"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
@@ -679,8 +739,9 @@ msgstr "Posta Konusu SMS'i"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__to_delete
+#, fuzzy
 msgid "Marked for deletion"
-msgstr ""
+msgstr "Silinmek üzere işaretlendi"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -733,15 +794,19 @@ msgstr "Teslim Edilmedi"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
+#, fuzzy
 msgid "Note only"
-msgstr ""
+msgstr "Sadece not edin"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+#, fuzzy
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
+"Bunun gerekli olmadığını unutmayın, bir gönderen adı ayarlamazsanız, "
+"SMS'iniz bir kısa koddan gönderilecektir."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
@@ -774,12 +839,17 @@ msgstr "Devre Dışı Bırakıldı"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
+#, fuzzy
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
+"Ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yer tutucu ifade olmalıdır, örneğin {{ object.partner_id.lang "
+"}}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -806,10 +876,13 @@ msgstr "Bir dokümanda yayınla"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__use_exclusion_list
+#, fuzzy
 msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Kara listedeki kişilere mesaj göndermeyi önleyin. Yalnızca kesinlikle "
+"gerekli olduğunda devre dışı bırakın."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -860,20 +933,23 @@ msgstr "Kayıt Ol"
 #. odoo-python
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_phone.py:0
+#, fuzzy
 msgid "Register Account"
-msgstr ""
+msgstr "Hesap Açın"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "Register now."
-msgstr ""
+msgstr "Şimdi kayıt olun."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+#, fuzzy
 msgid "Register your SMS account"
-msgstr ""
+msgstr "SMS hesabınızı kaydedin"
 
 #. module: sms
 #. odoo-javascript
@@ -939,34 +1015,40 @@ msgstr "SMS ("
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
+#, fuzzy
 msgid "SMS (with note)"
-msgstr ""
+msgstr "SMS (not ile)"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
+#, fuzzy
 msgid "SMS (without note)"
-msgstr ""
+msgstr "SMS (notsuz)"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/thread/message_patch.js:0
+#, fuzzy
 msgid "SMS Account"
-msgstr ""
+msgstr "SMS Hesabı"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
+#, fuzzy
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "SMS Hesap Kayıt Telefon Numarası Sihirbazı"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
+#, fuzzy
 msgid "SMS Account Sender Name Wizard"
-msgstr ""
+msgstr "SMS Hesabı Gönderen Adı Sihirbazı"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
+#, fuzzy
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "SMS Hesap Doğrulama Kodu Sihirbazı"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1009,8 +1091,9 @@ msgstr "SMS İleti hatası"
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
+#, fuzzy
 msgid "SMS Failure: %(modelName)s"
-msgstr ""
+msgstr "SMS Arızası: %(modelName)s"
 
 #. module: sms
 #. odoo-javascript
@@ -1078,8 +1161,9 @@ msgstr "SMS Şablonları sıfırlandı"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
+#, fuzzy
 msgid "SMS Trackers"
-msgstr ""
+msgstr "SMS Takip Cihazları"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1089,18 +1173,21 @@ msgstr "SMS içeriği"
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
+#, fuzzy
 msgid "SMS template model of %(action_name)s does not match action model."
-msgstr ""
+msgstr "%(action_name)s adresinin SMS şablon modeli eylem modeliyle eşleşmiyor."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
+#, fuzzy
 msgid "SMS trackers"
-msgstr ""
+msgstr "SMS takip cihazları"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__sms_uuid
+#, fuzzy
 msgid "SMS uuid"
-msgstr ""
+msgstr "SMS uuid"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
@@ -1121,13 +1208,14 @@ msgstr "SMS Şablonlarında Ara"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send"
-msgstr ""
+msgstr "Gönder"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
+#, fuzzy
 msgid "Send %(template_name)s"
-msgstr ""
+msgstr "Gönder %(template_name)s"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1154,8 +1242,9 @@ msgstr "SMS gönder (%s)"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
+#, fuzzy
 msgid "Send SMS As"
-msgstr ""
+msgstr "SMS Olarak Gönder"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1169,8 +1258,9 @@ msgstr "SMS'i toplu olarak gönder"
 
 #. module: sms
 #: model:iap.service,description:sms.iap_service_sms
+#, fuzzy
 msgid "Send SMS to your contacts directly from your database."
-msgstr ""
+msgstr "Kişilerinize doğrudan veritabanınızdan SMS gönderin."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1185,7 +1275,7 @@ msgstr "Doğrudan gönder"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send now"
-msgstr ""
+msgstr "Şimdi Gönder"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
@@ -1194,20 +1284,24 @@ msgstr "Numaralara gönder"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
+#, fuzzy
 msgid "Send verification code"
-msgstr ""
+msgstr "Doğrulama kodu gönder"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
+#, fuzzy
 msgid "Sender Name"
-msgstr ""
+msgstr "Gönderen Adı"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
+#, fuzzy
 msgid "Sending SMS can only be done on a not transient mail.thread model"
 msgstr ""
+"SMS gönderimi yalnızca geçici olmayan bir mail.thread modelinde yapılabilir"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
@@ -1229,8 +1323,9 @@ msgstr "Sunucu Hatası"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+#, fuzzy
 msgid "Set sender name"
-msgstr ""
+msgstr "Gönderen adını ayarla"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1252,8 +1347,9 @@ msgstr "Tek Mod"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+#, fuzzy
 msgid "Skip for now"
-msgstr ""
+msgstr "Şimdilik atla"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
@@ -1299,10 +1395,13 @@ msgstr "Şablonlar"
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
+"SMS Hizmeti şu anda yeni kullanıcılar için kullanılamamaktadır ve yeni hesap "
+"kayıtları askıya alınmıştır."
 
 #. module: sms
 #. odoo-python
@@ -1313,14 +1412,17 @@ msgstr "SMS Metin Mesajları yeniden gönderilemedi."
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "The content of the message violates rules applied by our providers."
 msgstr ""
+"Mesajın içeriği sağlayıcılarımız tarafından uygulanan kuralları ihlal ediyor."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "The destination country is not supported."
-msgstr ""
+msgstr "Hedef ülke desteklenmiyor."
 
 #. module: sms
 #. odoo-python
@@ -1337,8 +1439,9 @@ msgstr "Bu şablon ile birlikte kullanılabilen belge türünü"
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "Doğrulama kodu yanlış."
 
 #. module: sms
 #. odoo-python
@@ -1349,20 +1452,23 @@ msgstr "Yeniden gönderilecek SMS Metin Mesajları yoktur."
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "This SMS has been removed as the number was already used."
-msgstr ""
+msgstr "Bu SMS, numara zaten kullanıldığı için kaldırılmıştır."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "Bu hesabın zaten mevcut bir gönderen adı vardır ve değiştirilemez."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
+#, fuzzy
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "Bu, SMS'in göndericisi olarak görüntülenecek isimdir."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1375,13 +1481,14 @@ msgstr ""
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "Bu telefon numarası/hesap hizmetimizden yasaklanmıştır."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "To"
-msgstr ""
+msgstr "Bitiş"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -1394,6 +1501,7 @@ msgstr "Tip"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_actions_server__state
 #: model:ir.model.fields,help:sms.field_ir_cron__state
+#, fuzzy
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Update a Record': update the values of a record\n"
@@ -1408,6 +1516,19 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
+"Sunucu eyleminin türü. Aşağıdaki değerler kullanılabilir:\n"
+"- 'Kaydı Güncelle': bir kaydın değerlerini güncelleyin\n"
+"- 'Etkinlik Oluştur': bir etkinlik oluşturun (Tartışın)\n"
+"- 'E-posta Gönder': bir mesaj, bir not gönderin veya bir e-posta gönderin "
+"(Tartışın)\n"
+"- 'SMS Gönder': SMS gönderin, belgelere kaydedin (SMS)- 'Takipçi Ekle/"
+"Kaldır': bir kayda takipçi ekleyin veya kaldırın (Tartışın)\n"
+"- 'Kayıt Oluştur': yeni değerlerle yeni bir kayıt oluşturun\n"
+"- 'Execute Code': yürütülecek bir Python kodu bloğu\n"
+"- 'Webhook Bildirimi Gönder': Webhook olarak da bilinen harici bir sisteme "
+"POST isteği gönderme\n"
+"- 'Çoklu Eylemler': diğer birkaç sunucu eylemini tetikleyen bir eylem "
+"tanımlayın\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1416,8 +1537,9 @@ msgstr "UUID"
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_sms_uuid_unique
+#, fuzzy
 msgid "UUID must be unique"
-msgstr ""
+msgstr "UUID benzersiz olmalıdır"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown
@@ -1434,8 +1556,9 @@ msgstr "Unregistered Account"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_exclusion_list
+#, fuzzy
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "Hariç Tutma Listesini Kullanın"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1455,6 +1578,15 @@ msgid ""
 "acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"Mesaj üreteci sınıflandırmak için kullanılır\n"
+"'email': gelen bir e-posta tarafından üretilir, örn. posta geçidi\n"
+"'comment': kullanıcı girişiyle üretilir, örn. mesajlaşma veya yazıcı "
+"üzerinden\n"
+"'email_outgoing': bir toplu e-posta tarafından üretilir\n"
+"'notification': sistem tarafından üretilir, örn. izleme mesajları\n"
+"'auto_comment': otomatik bildirim mekanizması tarafından üretilir, örn. "
+"onaylama\n"
+"'user_notification': belirli bir alıcı için üretilir"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__verification_code
@@ -1475,16 +1607,20 @@ msgstr "Uyarı"
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "Hesabınızı veritabanımızda bulamadık."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
 msgstr ""
+"Telefon numaranız üzerinden size ulaşamadık. Yakın zamanda birden fazla kod "
+"talep ettiyseniz, lütfen daha sonra tekrar deneyin."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
@@ -1494,15 +1630,17 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__to_delete
+#, fuzzy
 msgid ""
 "Will automatically be deleted, while notifications will not be deleted in "
 "any case."
 msgstr ""
+"Otomatik olarak silinecek, bildirimler ise hiçbir durumda silinmeyecektir."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Write a message..."
-msgstr ""
+msgstr "Bir mesaj yaz..."
 
 #. module: sms
 #. odoo-javascript
@@ -1527,8 +1665,9 @@ msgstr "IAP hesabınızda yeterli krediniz yok."
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "Çok fazla denediniz. Lütfen daha sonra tekrar deneyin."
 
 #. module: sms
 #. odoo-javascript
@@ -1540,32 +1679,42 @@ msgstr "SMS Metin Mesajınız boşluk bırakmayan en az bir karakter içermelidi
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
+#, fuzzy
 msgid "Your SMS account has been successfully registered."
-msgstr ""
+msgstr "SMS hesabınız başarıyla kaydedildi."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 #: code:addons/sms/wizard/sms_account_sender.py:0
+#, fuzzy
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
 msgstr ""
+"Gönderen adınız 3 ila 11 karakter uzunluğunda olmalı ve yalnızca alfanümerik "
+"karakterler içermelidir."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
+#, fuzzy
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters.\n"
 "                        It must fit your company name, and you aren't "
 "allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"Gönderen adınız 3 ila 11 karakter uzunluğunda olmalı ve yalnızca alfanümerik "
+"karakterler içermelidir.\n"
+"                        Şirket adınıza uygun olmalıdır ve bir kez "
+"kaydettikten sonra değiştirmenize izin verilmez, dikkatli seçin."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#, fuzzy
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "Sms hesabınız henüz etkinleştirilmedi."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

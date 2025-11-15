@@ -8,13 +8,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-16 02:30+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 19:06+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/ja/>\n"
 "Language: ja\n"
@@ -256,6 +257,21 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"手動: Odoo 以外の任意の方法で支払いや受取を行います。\n"
+"決済プロバイダー: "
+"各支払プロバイダーは独自の支払方法を持ちます。取引先が購入またはオンラインで"
+"のサブスクリプション時に保存した支払トークンを使用して、カードとの取引を要求"
+"します。\n"
+"小切手: 小切手で請求書を支払い、Odoo から小切手を印刷します。\n"
+"一括預入: 複数の顧客小切手を一括で回収し、まとめて銀行に一括預入を行います。"
+"account_batch_payment モジュールが必要です。\n"
+"SEPAクレジット移転: SEPA 圏内で支払うために、SEPA "
+"クレジット移転ファイルを銀行に提出します。account_iso20022 "
+"モジュールが必要です。\n"
+"SEPA口座振替: 取引先があなたに付与した口座振替の承認(マンデート)により、SEPA "
+"圏内で支払いを受け取ります。account_iso20022 モジュールが必要です。\n"
+"U.S. ISO20022: 米国で支払うために、ISO20022 ファイルを銀行に提出します。"
+"account_iso20022 モジュールが必要です。\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -388,6 +404,14 @@ msgid ""
 msgstr ""
 "チェックレイアウトにて何か問題が起きました、請求書発行/会計設定で別のレイアウ"
 "トを選択して、もう一度お試しください。"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
 
 #. module: account_check_printing
 #. odoo-python

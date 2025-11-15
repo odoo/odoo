@@ -16,12 +16,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-31 12:59+0000\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-10 08:20+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/web/de/>\n"
 "Language: de\n"
@@ -487,18 +488,18 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
 "                                        <option value=\"tabs\">Getrennt (1 "
 "pro Reiter)</option>\n"
 "                                        <option value=\"temporal\">Temporär "
 "(experimentell)</option>\n"
 "                                    </select>\n"
-"                                    <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Warnung:</b> Im temporären "
-"Modus werden alle Proben zusammengeführt.<br/>Bei gleichzeitigen Profilen "
-"kann dies zu teilweise ungültigen Ergebnissen führen.<br/>Mit Vorsicht "
-"verwenden! </span>"
+"                                    <span id=\"temporal_warning\" "
+"class=\"alert alert-warning\" style=\"display:none\"><b>Warnung:</b> Im "
+"temporären Modus werden alle Proben zusammengeführt.<br/>Bei gleichzeitigen "
+"Profilen kann dies zu teilweise ungültigen Ergebnissen führen.<br/>Mit "
+"Vorsicht verwenden! </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2645,8 +2646,8 @@ msgstr "Zeigt die Zeit im Datum/Zeit-Wert an oder blendet in aus."
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s"
 msgstr ""
-"Zeigt das Datum entweder im Format 31/01/%(year)s oder als 31. Januar %(year)"
-"s an"
+"Zeigt das Datum entweder im Format 31/01/%(year)s oder als 31. Januar %"
+"(year)s an"
 
 #. module: web
 #. odoo-javascript
@@ -3418,9 +3419,9 @@ msgid ""
 "exit this tab."
 msgstr ""
 "Achtung! Ihre letzten Änderungen sind zu umfangreich, um automatisch "
-"gespeichert zu werden. Klicken Sie jetzt auf die Schaltfläche %(upload_icon)"
-"s, um sicherzustellen, dass Ihre Arbeit gespeichert wird, bevor Sie diesen "
-"Reiter schließen."
+"gespeichert zu werden. Klicken Sie jetzt auf die Schaltfläche %"
+"(upload_icon)s, um sicherzustellen, dass Ihre Arbeit gespeichert wird, bevor "
+"Sie diesen Reiter schließen."
 
 #. module: web
 #. odoo-javascript
@@ -3594,6 +3595,16 @@ msgstr ""
 "dass bei gleichzeitiger Festlegung eines Farbfelds die Stichwortbearbeitung "
 "Vorrang hat. Die Farbauswahl wird also nicht angezeigt, wenn Sie auf das "
 "Stichwort klicken."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
+msgid ""
+"If checked, the checkboxes will be displayed in a column. Otherwise, they "
+"will be inlined."
+msgstr ""
+"Wenn angekreuzt, werden die Kontrollkästchen in einer Spalte angezeigt. "
+"Andernfalls zwischen den Zeilen."
 
 #. module: web
 #. odoo-javascript
@@ -5264,7 +5275,6 @@ msgstr "Huch!"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
-#: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -6722,6 +6732,7 @@ msgstr "Speedscope"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 msgid "Stacked"
 msgstr "Gestapelt"
@@ -7039,10 +7050,17 @@ msgid "The domain should not involve non-literals"
 msgstr "Die Domain sollte keine Nicht-Buchstabensymbole enthalten."
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr "Die Datei ist kein Bild, die Größe kann nicht geändert werden."
+
+#. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
-msgstr "Die ID in %(field_name)s dürfen nicht dupliziert sein: „%(action_ids)s“"
+msgstr ""
+"Die ID in %(field_name)s dürfen nicht dupliziert sein: „%(action_ids)s“"
 
 #. module: web
 #. odoo-python
@@ -7051,8 +7069,8 @@ msgid ""
 "The ids in %(field_name)s must only be integers or \"false\": “%"
 "(action_ids)s”"
 msgstr ""
-"Die ID in %(field_name)s dürfen nur Ganzzahlen oder „false“ sein: "
-"„%(action_ids)s“"
+"Die ID in %(field_name)s dürfen nur Ganzzahlen oder „false“ sein: „%"
+"(action_ids)s“"
 
 #. module: web
 #. odoo-javascript
@@ -7064,6 +7082,12 @@ msgid ""
 msgstr ""
 "Der Vorgang wurde unterbrochen. Dies bedeutet in der Regel, dass der "
 "aktuelle Vorgang zu viel Zeit in Anspruch nimmt."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr "Die Größenänderung des Bildes ist nicht möglich"
 
 #. module: web
 #. odoo-javascript
@@ -7898,6 +7922,7 @@ msgstr "WC"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.xml:0
 msgid "Warning"
 msgstr "Warnung"
 

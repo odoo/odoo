@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2025-11-04 11:46+0000\n"
 "Last-Translator: Cuciureanu Larisa <larisa.cuciureanu@nexterp.ro>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -184,14 +184,14 @@ msgstr ""
 "color: #454748; width: 100%; border-collapse:separate;\">\n"
 "<tr>\n"
 "<td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 16px; background-color: white; color: #454748; border-"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
 "collapse:separate;\">\n"
 "<!-- HEADER -->\n"
 "<tr>\n"
 "<td align=\"center\" style=\"min-width: 590px;\">\n"
-"<table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"<table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: "
+"0px 8px; background-color: white; border-collapse:separate;\">\n"
 "<tr>\n"
 "<td valign=\"middle\">\n"
 "<span style=\"font-size: 10px;\">Notificare</span>\n"
@@ -200,27 +200,27 @@ msgstr ""
 "Bun venit la Peppol\n"
 "</span>\n"
 "<div style=\"margin-bottom: 5px; margin-top: 18px;\">\n"
-"<a t-attf-href=\"/odoo/accounting/\" target=\"_blank\" t-attf-style=\"padding"
-": 8px 12px; font-size: 12px; color: {{ object.email_primary_color or '#"
-"FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-"
-"color: {{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">"
-"\n"
+"<a t-attf-href=\"/odoo/accounting/\" target=\"_blank\" t-attf-"
+"style=\"padding: 8px 12px; font-size: 12px; color: "
+"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "Trimiteți facturi\n"
 "</a>\n"
 "</div>\n"
 "</td>\n"
 "<td valign=\"mijloc\" align=\"dreapta\">\n"
 "<t t-if=\"not object.uses_default_logo\">\n"
-"<img t-att-src=\"'/logo.png?company=%s' % object.id\" style="
-"\"înălțime: auto; lățime: 80px; margin-right: 10px;\" t-att-alt="
-"\"'%s' % object.name\"/>\n"
+"<img t-att-src=\"'/logo.png?company=%s' % object.id\" style=\"înălțime: "
+"auto; lățime: 80px; margin-right: 10px;\" t-att-alt=\"'%s' % object.name\"/"
+">\n"
 "</t>\n"
 "</td>\n"
 "</tr>\n"
 "<tr>\n"
 "<td colspan=\"2\" style=\"text-align:center;\">\n"
-"<hr style=\"background-color:#CCCCCC; border:none; height:1px; margin:16px 0;"
-"\"/>\n"
+"<hr style=\"background-color:#CCCCCC; border:none; height:1px; margin:16px "
+"0;\"/>\n"
 "</td>\n"
 "</tr>\n"
 "</table>\n"
@@ -229,18 +229,18 @@ msgstr ""
 "<!-- BODY -->\n"
 "<tr>\n"
 "<td align=\"center\">\n"
-"<table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"<table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: "
+"0px 8px; background-color: white; border-collapse:separate;\">\n"
 "<tr>\n"
 "<td style=\"font-size: 14px;\">\n"
 "<p>Stimată <t t-out=\"object.name or ''\">CompaniaDvs.</t>,</p>\n"
 "\n"
-"<p>Am adăugat cu succes compania dumneavoastră la <strong>Rețeaua "
-"Peppol</strong>.</p>\n"
+"<p>Am adăugat cu succes compania dumneavoastră la <strong>Rețeaua Peppol</"
+"strong>.</p>\n"
 "\n"
-"<p>Acum puteți <strong>trimite<t t-if="
-"\"object.account_peppol_proxy_state == 'receiver'\"> și primi</t></strong> "
-"facturi electronice prin Odoo — complet gratuit.</p>\n"
+"<p>Acum puteți <strong>trimite<t t-if=\"object.account_peppol_proxy_state == "
+"'receiver'\"> și primi</t></strong> facturi electronice prin Odoo — complet "
+"gratuit.</p>\n"
 "\n"
 "<p>Cu cele mai bune urări,</p>\n"
 "\n"
@@ -342,7 +342,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "A purchase journal must be used to receive Peppol documents."
-msgstr "Trebuie folosit un jurnal de achiziții pentru a primi documente Peppol."
+msgstr ""
+"Trebuie folosit un jurnal de achiziții pentru a primi documente Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -1072,7 +1073,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr "Niciun document UBL nu a fost furnizat Serviciului de expediere Peppol."
+msgstr ""
+"Niciun document UBL nu a fost furnizat Serviciului de expediere Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -1401,13 +1403,6 @@ msgstr ""
 "primi documentele."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr ""
-"Te rugăm să verifici configurația partenerului în setările partenerului."
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
@@ -1704,7 +1699,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The UBL document provided to the Peppol Outbound Service is malformed."
-msgstr "Documentul UBL furnizat către serviciul Peppol Outbound este malformat."
+msgstr ""
+"Documentul UBL furnizat către serviciul Peppol Outbound este malformat."
 
 #. module: account_peppol
 #. odoo-python
@@ -1843,24 +1839,6 @@ msgstr "Mesajul nu respectă politica AS4."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid ""
-"The partner has indicated it does not accept this document type, so you "
-"cannot send this invoice via Peppol."
-msgstr ""
-"Partenerul a indicat că nu acceptă acest tip de document, deci nu poți "
-"trimite această factură prin Peppol."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr ""
-"Partenerului îi lipsește identificatorul Peppol EAS și/sau identificatorul "
-"Endpoint."
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The processor determined that the message's security methods, parameters, "
@@ -1870,15 +1848,6 @@ msgstr ""
 "Procesorul a determinat că metodele de securitate, parametrii, domeniul sau "
 "alte cerințe sau acorduri la nivel de politică de securitate ale mesajului "
 "nu au fost îndeplinite."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr ""
-"Metoda recomandată de identificare pentru Belgia este numărul de "
-"înregistrare al companiei."
 
 #. module: account_peppol
 #. odoo-python
@@ -1917,7 +1886,8 @@ msgstr "ID-ul unic care identifică acest utilizator, de obicei codul de TVA"
 msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
-msgstr "Utilizarea MIME nu este conformă cu cerințele din această specificație."
+msgstr ""
+"Utilizarea MIME nu este conformă cu cerințele din această specificație."
 
 #. module: account_peppol
 #. odoo-python
@@ -2348,3 +2318,26 @@ msgstr "pentru a trimite facturi, dar aceasta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "utilizări"
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr ""
+#~ "Te rugăm să verifici configurația partenerului în setările partenerului."
+
+#~ msgid ""
+#~ "The partner has indicated it does not accept this document type, so you "
+#~ "cannot send this invoice via Peppol."
+#~ msgstr ""
+#~ "Partenerul a indicat că nu acceptă acest tip de document, deci nu poți "
+#~ "trimite această factură prin Peppol."
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr ""
+#~ "Partenerului îi lipsește identificatorul Peppol EAS și/sau "
+#~ "identificatorul Endpoint."
+
+#~ msgid ""
+#~ "The recommended identification method for Belgium is your Company "
+#~ "Registry Number."
+#~ msgstr ""
+#~ "Metoda recomandată de identificare pentru Belgia este numărul de "
+#~ "înregistrare al companiei."

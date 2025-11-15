@@ -5,12 +5,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# Camille Dantinne <cmd@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-13 17:53+0000\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-12 23:02+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/web/es_419/>\n"
@@ -477,16 +479,16 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
 "                                        <option value=\"tabs\">Separado (uno "
 "por pestaña)</option>\n"
 "                                        <option value=\"temporal\">Temporal "
 "(experimental)</option>\n"
 "                                    </select>\n"
-"                                     <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Advertencia:</b> El modo "
-"temporal fusionará todos los ejemplos.<br/>Puede causar un resultado "
+"                                     <span id=\"temporal_warning\" "
+"class=\"alert alert-warning\" style=\"display:none\"><b>Advertencia:</b> El "
+"modo temporal fusionará todos los ejemplos.<br/>Puede causar un resultado "
 "parcialmente inválido en caso de perfiles concurrentes<br/>Utilízalo con "
 "precaución </span>"
 
@@ -983,7 +985,7 @@ msgstr "Dirección"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "Adjust your filters or create a new record."
-msgstr "Ajuste los filtros o cree un nuevo registro."
+msgstr "Ajusta tus filtros o crea un nuevo registro."
 
 #. module: web
 #. odoo-javascript
@@ -1203,7 +1205,7 @@ msgstr "¿Estás seguro de que quieres borrar este campo de propiedad?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid "Are you sure you want to update %(count)s records?"
-msgstr "¿De verdad quieres eliminar estos %(count)s registros?"
+msgstr "¿De verdad quieres actualizar estos %(count)s registros?"
 
 #. module: web
 #. odoo-javascript
@@ -2900,7 +2902,7 @@ msgstr "Proporcione un valor predeterminado"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 msgid "Enter an email"
-msgstr "Introduzca un correo electrónico"
+msgstr "Escribe un correo electrónico"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -3578,6 +3580,16 @@ msgstr ""
 "permite editarla. Tenga en cuenta que si hay un color configurado, la "
 "edición de la etiqueta será la que se conserve y el selector de color no "
 "aparecerá al hacer clic en ella."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
+msgid ""
+"If checked, the checkboxes will be displayed in a column. Otherwise, they "
+"will be inlined."
+msgstr ""
+"Si está seleccionada, las casillas aparecerán en una columna. De lo "
+"contrario, aparecerán en una línea."
 
 #. module: web
 #. odoo-javascript
@@ -5249,7 +5261,6 @@ msgstr "¡Ups!"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
-#: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -6677,7 +6688,7 @@ msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
 msgstr ""
-"Ocurrió un error... Comuníquese con el equipo de soporte si necesita ayuda."
+"Ocurrió un error... Comunícate con el equipo de soporte si necesitas ayuda."
 
 #. module: web
 #. odoo-javascript
@@ -6698,6 +6709,7 @@ msgstr "Speedscope"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 msgid "Stacked"
 msgstr "Apilado"
@@ -7013,6 +7025,12 @@ msgid "The domain should not involve non-literals"
 msgstr "El dominio no debe incluir no literales"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr "El archivo no es una imagen, así que no puedes cambiar su tamaño"
+
+#. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
@@ -7039,6 +7057,12 @@ msgid ""
 msgstr ""
 "Se interrumpió la operación. Esto usualmente significa que la operación "
 "actual está tardando mucho."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr "Ocurrió un error al cambiar el tamaño de la imagen"
 
 #. module: web
 #. odoo-javascript
@@ -7269,7 +7293,7 @@ msgstr "Alternar"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Toggle Search Panel"
-msgstr "Alternar panel de búsqueda"
+msgstr "Mostrar u ocultar panel de búsqueda"
 
 #. module: web
 #. odoo-javascript
@@ -7414,7 +7438,7 @@ msgstr "Tipo:"
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Typeahead search"
-msgstr "Búsqueda typeahead"
+msgstr "Búsqueda predictiva"
 
 #. module: web
 #. odoo-javascript
@@ -7868,6 +7892,7 @@ msgstr "WC"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.xml:0
 msgid "Warning"
 msgstr "Advertencia"
 

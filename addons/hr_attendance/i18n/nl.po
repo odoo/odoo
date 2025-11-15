@@ -8,13 +8,14 @@
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-24 09:52+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-13 09:24+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "hr_attendance/nl/>\n"
 "Language: nl\n"
@@ -92,11 +93,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid ""
 "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
-"in ['work_days', 'non_work_days']\">Beetween</span>"
+"in ['work_days', 'non_work_days']\">Between</span>"
 msgstr ""
-"<span class=\"fw-bold\" invisible="
-"\"base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']\""
-">Tussen</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -491,8 +489,6 @@ msgid "Badge with Barcode on Tablet"
 msgstr "Badge met barcode op tablet"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 msgid "Balance"
 msgstr "Saldo"
@@ -623,7 +619,7 @@ msgstr "Inchecken"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Check out"
-msgstr "Uitchecken"
+msgstr "Uitklokken"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -728,8 +724,8 @@ msgstr ""
 "  Max: gebruik het hoogste percentage. (bv.: combinatie van 150% en 120% = "
 "150%)\n"
 "  Som: tel het *extra* loon op (d.w.z. boven 100%).\n"
-"    bv.: gecombineerd tarief voor 150% & 120% = 100% (basislijn) + (150-100)"
-"% + (120-100)% = 170%\n"
+"    bv.: gecombineerd tarief voor 150% & 120% = 100% (basislijn) + "
+"(150-100)% + (120-100)% = 170%\n"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__country_id
@@ -805,12 +801,8 @@ msgid "Definition"
 msgstr "Definitie"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Departement"
-msgstr "Afdeling"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
 msgstr "Afdeling"
 
@@ -1042,12 +1034,12 @@ msgstr "Volgers (Partners)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
 msgid "For"
-msgstr ""
+msgstr "Voor"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__timing_start
 msgid "From"
-msgstr ""
+msgstr "Van"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1798,12 +1790,6 @@ msgid "Regenerate overtimes for this ruleset"
 msgstr "Overturen opnieuw genereren voor deze regelset"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
-msgid "Remaining Extra Hours:"
-msgstr "Resterende extra uren:"
-
-#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
 msgid "Reporting"
 msgstr "Rapportages"
@@ -2085,12 +2071,6 @@ msgstr ""
 "op die dag te dekken."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
-msgid "Time Off Taken from Extra Hours:"
-msgstr "Verlof opgenomen uit extra uren:"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__base_off__timing
 msgid "Timing"
 msgstr "Timing"
@@ -2147,12 +2127,6 @@ msgstr "Tolerantietijd in het voordeel van de werknemer"
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Total"
 msgstr "Totaal"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
-msgid "Total Extra Hours Worked:"
-msgstr "Totaal aantal extra gewerkte uren:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
@@ -2400,6 +2374,25 @@ msgstr "met een tarief van"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "met optionele pincode"
+
+#~ msgid ""
+#~ "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type "
+#~ "not in ['work_days', 'non_work_days']\">Beetween</span>"
+#~ msgstr ""
+#~ "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type "
+#~ "not in ['work_days', 'non_work_days']\">Tussen</span>"
+
+#~ msgid "Departement"
+#~ msgstr "Afdeling"
+
+#~ msgid "Remaining Extra Hours:"
+#~ msgstr "Resterende extra uren:"
+
+#~ msgid "Time Off Taken from Extra Hours:"
+#~ msgstr "Verlof opgenomen uit extra uren:"
+
+#~ msgid "Total Extra Hours Worked:"
+#~ msgstr "Totaal aantal extra gewerkte uren:"
 
 #~ msgid "Warning"
 #~ msgstr "Waarschuwing"

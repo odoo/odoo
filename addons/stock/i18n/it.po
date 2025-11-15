@@ -16,17 +16,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-29 13:36+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
+"PO-Revision-Date: 2025-11-10 14:27+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/stock/it/"
 ">\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: stock
@@ -437,8 +437,8 @@ msgstr ""
 "* Cliente: ubicazione virtuale che rappresenta la destinazione dei prodotti "
 "inviati ai clienti\n"
 "* Perdita di inventario: ubicazione virtuale che funge da controparte per le "
-"operazioni di magazzino eseguite per correggere i livelli delle scorte ("
-"Magazzini fisici)\n"
+"operazioni di magazzino eseguite per correggere i livelli delle scorte "
+"(Magazzini fisici)\n"
 "* Produzione: ubicazione virtuale di contropartita per le operazioni di "
 "produzione. Cioè questa ubicazione consuma componenti e produce prodotti "
 "finiti\n"
@@ -1967,8 +1967,8 @@ msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
-"Impossibile spostare un contenitore che ha colli in un'altra ubicazione "
-"(%(old_location)s) in un'ubicazione diversa (%(new_location)s)."
+"Impossibile spostare un contenitore che ha colli in un'altra ubicazione (%"
+"(old_location)s) in un'ubicazione diversa (%(new_location)s)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -5038,6 +5038,11 @@ msgid "Inventory at Date"
 msgstr "Inventario alla data"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr "La data è modificabile"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "È vuoto"
@@ -5065,6 +5070,11 @@ msgstr "È più ubicazioni"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "È collo parziale"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr "La data prevista è modificabile"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -10179,16 +10189,6 @@ msgid "There are no inventory adjustments to revert."
 msgstr "Non ci sono rettifiche di inventario da annullare."
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-"Non c'è nulla che possa essere inserito in un collo. Non ci sono quantità da "
-"inserire in un collo oppure i movimenti sono già stati effettuati."
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Ancora nessun movimento di prodotto"
@@ -10358,8 +10358,8 @@ msgstr ""
 #: code:addons/stock/models/stock_package.py:0
 msgid "This package is currently set to be sent in %(location_names_list)s."
 msgstr ""
-"Questo collo è stato configurato per essere inviato in "
-"%(location_names_list)s."
+"Questo collo è stato configurato per essere inviato in %"
+"(location_names_list)s."
 
 #. module: stock
 #. odoo-python
@@ -11467,7 +11467,8 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "When the stock level at the forecasted date is below the minimum ("
-msgstr "Quando i livelli delle scorte sono sotto il minimo alla data prevista ("
+msgstr ""
+"Quando i livelli delle scorte sono sotto il minimo alla data prevista ("
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -12375,6 +12376,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Buono di consegna (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "There is nothing eligible to put in a pack. Either there are no "
+#~ "quantities to put in a pack or moves are already done."
+#~ msgstr ""
+#~ "Non c'è nulla che possa essere inserito in un collo. Non ci sono quantità "
+#~ "da inserire in un collo oppure i movimenti sono già stati effettuati."
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr ""

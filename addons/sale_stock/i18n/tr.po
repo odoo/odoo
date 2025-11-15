@@ -19,13 +19,15 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 04:43+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-12 15:00+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "sale_stock/tr/>\n"
 "Language: tr\n"
@@ -47,13 +49,15 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "1 Quotation"
-msgstr ""
+msgstr "1 Alıntı"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Varış bekleniyor"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -123,6 +127,19 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Ürün yapılandırmasına göre teslim edilen miktar şu yöntemlerle otomatik "
+"olarak hesaplanabilir:\n"
+"  - Manuel: miktar satırda elle belirlenir\n"
+"  - Giderlerden Analitik: miktar, muhasebeleştirilmiş giderlerin toplamından "
+"alınır\n"
+"  - Çalışma Çizelgesi: miktar, bu satış satırına bağlı görevlerde kaydedilen "
+"saatlerin toplamıdır\n"
+"  - Stok Hareketleri: miktar, onaylanmış sevkiyatlardan alınır\n"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr "Tahakkuk Eden Siparişler Sihirbazı"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -160,11 +177,15 @@ msgstr "Stokta mevcut"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
+#, fuzzy
 msgid ""
 "Blue: Not Delivered/Started\n"
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Mavi: Teslim Edilmedi/Başlatıldı\n"
+"            Turuncu: Kısmen Teslim Edildi\n"
+"            Yeşil: Tamamen Teslim Edildi"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -204,7 +225,7 @@ msgstr "Varsayılan Depo"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Delivered"
-msgstr ""
+msgstr "Teslim Edilen"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -235,6 +256,7 @@ msgstr ""
 "gönderim politikası dikkate alınacaktır."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -257,7 +279,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -333,8 +355,9 @@ msgstr "Tam Teslim"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
+#, fuzzy
 msgid "Goods Delivered Not Invoiced"
-msgstr ""
+msgstr "Faturalanmadan Teslim Edilen Mallar"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -342,6 +365,7 @@ msgid "Has late picking"
 msgstr "Teslimat geç kaldı"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -364,7 +388,7 @@ msgstr "Teslimat geç kaldı"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -393,13 +417,15 @@ msgstr "Incoterm Konumu"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#, fuzzy
 msgid "Incoterm details"
-msgstr ""
+msgstr "Incoterm ayrıntıları"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+#, fuzzy
 msgid "Incoterm:"
-msgstr ""
+msgstr "Incoterm:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -444,7 +470,7 @@ msgstr "Son Teslimat Siparişleri"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_sale_order_view_search_inherit
 msgid "Late Availability"
-msgstr ""
+msgstr "Geç Kullanılabilirlik"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -509,7 +535,7 @@ msgstr "Gelecekte kullanılabilirlik yok"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Available"
-msgstr ""
+msgstr "Mevcut Değil"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
@@ -580,21 +606,26 @@ msgstr "DÖNÜŞ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+#, fuzzy
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
 "                replenishment propositions, shipping connectors, barcode "
 "scanner, etc."
 msgstr ""
+"Rezervasyonlar, lokasyon yönetimi, akıllı sistemler ile geri siparişleri "
+"azaltın\n"
+"                ikmal teklifleri, nakliye konektörleri, barkod tarayıcı vb."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_reference
+#, fuzzy
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Stok belgeleri arasında referans"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
 msgid "References"
-msgstr ""
+msgstr "Referanslar"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -627,7 +658,7 @@ msgstr "İadeler"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_ids
 msgid "Routes"
-msgstr ""
+msgstr "Rotalar"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
@@ -649,7 +680,7 @@ msgstr "Satış siparişi sayısı"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_reference__sale_ids
 msgid "Sales"
-msgstr ""
+msgstr "Satış"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -725,14 +756,16 @@ msgstr "Ürün Teslimat Politikası"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+#, fuzzy
 msgid "Shipping Status"
-msgstr ""
+msgstr "Nakliye Durumu"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+#, fuzzy
 msgid "Started"
-msgstr ""
+msgstr "Başladı"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -763,7 +796,7 @@ msgstr "Stok Kuralları raporu"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_account_stock_valuation_report
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Stok Değerleme"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -779,6 +812,7 @@ msgstr "Teslimat"
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
 "                        From <strong>\"%(old_address)s\"</strong> to "
@@ -786,6 +820,10 @@ msgid ""
 "                        You should probably update the partner on this "
 "document."
 msgstr ""
+"Satış Siparişinde teslimat adresi değiştirildi<br/>\n"
+"                        <strong> \"%(old_address)s\"</strong> adresinden "
+"<strong>\"%(new_address)s\"</strong> adresine kadar,\n"
+"                        Muhtemelen bu belgedeki ortağı güncellemelisiniz."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -800,10 +838,13 @@ msgstr ""
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
+#, fuzzy
 msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
+"Bir satış siparişi satırı, halihazırda teslim edilen miktarın altına "
+"düşürülemez. Bunun yerine, envanterinizde bir iade oluşturun."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -828,8 +869,9 @@ msgstr "Transferler"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__late_availability
+#, fuzzy
 msgid "True if any related picking has late availability"
-msgstr ""
+msgstr "İlgili herhangi bir toplamanın geç kullanılabilirliği varsa doğru"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -873,15 +915,17 @@ msgstr "Sevkıyatın ne zaman başlatılacağı"
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
-msgstr ""
+msgstr "Farklı bir şirkette teslimat kullanarak hat için bir deponuz olmalıdır."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
+#, fuzzy
 msgid "You must set a warehouse on your sale order to proceed."
-msgstr ""
+msgstr "Devam etmek için satış siparişinizde bir depo ayarlamanız gerekir."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

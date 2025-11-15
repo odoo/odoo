@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-11 02:30+0000\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
+"PO-Revision-Date: 2025-11-12 23:02+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/stock/es_419/>\n"
@@ -427,8 +427,8 @@ msgstr ""
 "* Cliente: Ubicación virtual que representa la ubicación de destino de los "
 "productos enviados a tus clientes.\n"
 "* Pérdida de inventario: Ubicación virtual que sirve como contraparte para "
-"las operaciones de inventario para corregir los niveles de inventario ("
-"inventarios físicos).\n"
+"las operaciones de inventario para corregir los niveles de inventario "
+"(inventarios físicos).\n"
 "* Producción: Ubicación virtual de contraparte para las operaciones de "
 "producción. Esta ubicación consume componentes y produce productos "
 "terminados.\n"
@@ -1390,9 +1390,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
-"Permitir fabricación bajo pedido, o automatizar las órdenes de compra, "
-"cuando un producto se venda. Tendrás acceso directo a los documentos que se "
-"creen."
+"Permite la fabricación bajo pedido o automatiza las órdenes de compra cuando "
+"se venda un producto. Crea enlaces directos entre los documentos."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1953,8 +1952,8 @@ msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
-"No es posible mover un contenedor que tiene paquetes en otra ubicación "
-"(%(old_location)s) a una ubicación diferente (%(new_location)s)."
+"No es posible mover un contenedor que tiene paquetes en otra ubicación (%"
+"(old_location)s) a una ubicación diferente (%(new_location)s)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -3047,9 +3046,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Defina una regla de existencias mínimas para que Odoo cree solicitudes de "
-"cotización u órdenes de fabricación confirmadas de forma automática para "
-"reabastecer sus existencias."
+"Define una regla de existencias mínimas. Con ella, Odoo creará solicitudes "
+"de cotización u órdenes de fabricación confirmadas de forma automática para "
+"reabastecer tus existencias."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -5019,6 +5018,11 @@ msgid "Inventory at Date"
 msgstr "Inventario a la fecha"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr "La fecha se puede editar"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "Está vacío"
@@ -5046,6 +5050,11 @@ msgstr "Es multi ubicación"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "Es un empaque parcial"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr "La fecha programada se puede editar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -6261,7 +6270,7 @@ msgstr "Todavía no hay recepciones. Creemos una."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid "No reordering rule found"
-msgstr "No se encontró ninguna regla de reordenamiento"
+msgstr "No hay ninguna regla de reordenamiento"
 
 #. module: stock
 #. odoo-python
@@ -10158,16 +10167,6 @@ msgid "There are no inventory adjustments to revert."
 msgstr "No hay ajustes de inventario por revertir."
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-"No hay nada elegible por poner en un paquete. No hay cantidades que poner en "
-"el paquete o ya se hicieron los movimientos."
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Todavía no hay movimientos de productos"
@@ -10794,7 +10793,7 @@ msgstr "Ubicaciones de tránsito"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Transport management: organize packs in your fleet, or carriers."
 msgstr ""
-"Gestión del transporte: organice paquetes en su flota o con sus "
+"Gestión de transporte: Organiza los paquetes en tu flotilla o con los "
 "transportistas."
 
 #. module: stock
@@ -12351,6 +12350,13 @@ msgid ""
 msgstr ""
 "Orden de entrega de {{ object.company_id.name }} (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "There is nothing eligible to put in a pack. Either there are no "
+#~ "quantities to put in a pack or moves are already done."
+#~ msgstr ""
+#~ "No hay nada elegible por poner en un paquete. No hay cantidades que poner "
+#~ "en el paquete o ya se hicieron los movimientos."
 
 #~ msgid ""
 #~ "* Vendor Location: Virtual location representing the source location for "

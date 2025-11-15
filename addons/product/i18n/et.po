@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-28 07:51+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-10 14:30+0000\n"
 "Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/product/"
 "et/>\n"
@@ -84,8 +84,8 @@ msgid ""
 msgstr ""
 "%(base)s millega %(discount)s %% %(discount_type)s ja %(surcharge)s "
 "lisatasu\n"
-"Näide: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Näide: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -94,8 +94,8 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
-"%(item_name)s: lõppkuupäev (%(end_date)s) peaks olema pärast alguskuupäeva "
-"(%(start_date)s)"
+"%(item_name)s: lõppkuupäev (%(end_date)s) peaks olema pärast alguskuupäeva (%"
+"(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -327,8 +327,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
-">Võtke meiega ühendust</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
+"o_translate_inline\">Võtke meiega ühendust</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -460,6 +460,16 @@ msgstr ""
 "põhjal.\n"
 "             See on hea tööriist erinevate hindade, hooajaliste "
 "allahindluste jms käsitlemiseks."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
+"Kui hinnakirja kirje alus on „Muu hinnakiri“, peab tal olema määratud "
+"base_pricelist_id."
 
 #. module: product
 #. odoo-python
@@ -972,8 +982,8 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"Muutes toote mõõtühikut, konverteeritakse kõik ühikud järgnevalt: 1 "
-"%(old_uom_name)s = 1%(new_uom_name)s.\n"
+"Muutes toote mõõtühikut, konverteeritakse kõik ühikud järgnevalt: 1 %"
+"(old_uom_name)s = 1%(new_uom_name)s.\n"
 "Kõik seda toodet sisaldavad olemasolevad kanded (Müügitellimused, "
 "ostutellimused jne) uuendatakse, asendades mõõtühiku nime."
 
@@ -1820,8 +1830,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Kaupade all mõistetakse käegakatsutavaid materjale ja kaupu, mida te pakute. "
-"\n"
+"Kaupade all mõistetakse käegakatsutavaid materjale ja kaupu, mida te "
+"pakute. \n"
 "Teenus on mittefüüsiline toode, mida te pakute."
 
 #. module: product
@@ -2677,8 +2687,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the "
 "attribute %(attribute)s because they do not match."
 msgstr ""
-"Toote %(product)s väärtust %(value)s ei saa siduda atribuudiga %(attribute)"
-"s, sest need ei kattu."
+"Toote %(product)s väärtust %(value)s ei saa siduda atribuudiga %"
+"(attribute)s, sest need ei kattu."
 
 #. module: product
 #. odoo-python
@@ -2687,8 +2697,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"Toote %(product)s atribuuti %(attribute_src)s ei saa muuta atrbuudiks "
-"%(attribute_dest)s."
+"Toote %(product)s atribuuti %(attribute_src)s ei saa muuta atrbuudiks %"
+"(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
@@ -3915,8 +3925,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Väärtus %(value)s ei ole defineeritud toote %(product)s atribuudile "
-"%(attribute)s."
+"Väärtus %(value)s ei ole defineeritud toote %(product)s atribuudile %"
+"(attribute)s."
 
 #. module: product
 #. odoo-python
@@ -4642,8 +4652,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
-"Atribuuti%(attribute)s ei saa liigutada tootelt%(product_src)s "
-"tootele%(product_dest)s."
+"Atribuuti%(attribute)s ei saa liigutada tootelt%(product_src)s tootele%"
+"(product_dest)s."
 
 #. module: product
 #. odoo-python

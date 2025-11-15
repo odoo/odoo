@@ -12,13 +12,15 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 04:41+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-12 14:58+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/pos_hr/"
 "tr/>\n"
 "Language: tr\n"
@@ -69,10 +71,13 @@ msgstr "Temel yetkiler"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
+#, fuzzy
 msgid ""
 "Cannot generate report per employee: only one employee logged in during this "
 "session."
 msgstr ""
+"Çalışan başına rapor oluşturulamıyor: bu oturum sırasında yalnızca bir "
+"çalışan oturum açtı."
 
 #. module: pos_hr
 #. odoo-javascript
@@ -141,7 +146,7 @@ msgstr "Sil"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -169,6 +174,17 @@ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
 msgstr "Çalışan: %(employee)s - PoS Yapılandırmaları: %(config_list)s \n"
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+#, fuzzy
+msgid ""
+"Employees linked to users with the PoS Manager role are automatically added "
+"to this list"
+msgstr ""
+"Satış Noktası Yöneticisi rolüne sahip kullanıcılara bağlı çalışanlar "
+"otomatik olarak bu listeye eklenir"
+
+#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
@@ -183,8 +199,9 @@ msgstr "Yönetici erişimine sahip çalışanlar"
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
+#, fuzzy
 msgid "Employees with minimal access"
-msgstr ""
+msgstr "Minimum erişime sahip çalışanlar"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -205,7 +222,7 @@ msgstr "PIN Kodunuzu Girin"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -214,14 +231,6 @@ msgstr ""
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "Boş bırakılırsa tüm çalışanlar POS'a giriş yapabilir."
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "If left empty, only Odoo users have extended rights in PoS"
-msgstr ""
-"Boş bırakılırsa, yalnızca Odoo kullanıcıları POS'ta genişletilmiş yetkilere "
-"sahip olur"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -233,8 +242,9 @@ msgstr "Kilitle"
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+#, fuzzy
 msgid "Minimal rights"
-msgstr ""
+msgstr "Asgari haklar"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -385,6 +395,11 @@ msgid ""
 msgstr ""
 "Aktif bir PoS oturumunda kullanılabilecek bir çalışanı silemezsiniz; önce "
 "oturumu/oturumları kapatın: \n"
+
+#~ msgid "If left empty, only Odoo users have extended rights in PoS"
+#~ msgstr ""
+#~ "Boş bırakılırsa, yalnızca Odoo kullanıcıları POS'ta genişletilmiş "
+#~ "yetkilere sahip olur"
 
 #~ msgid "Allowed Employees"
 #~ msgstr "İzin Verilen Çalışanlar"

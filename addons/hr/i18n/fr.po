@@ -11,13 +11,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Rémi CAZENAVE <remi@le-filament.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-04 13:40+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/hr/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -160,8 +161,14 @@ msgstr ""
 "title=\"Société\"/>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\" "
+"invisible=\"login == work_email\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
@@ -169,6 +176,15 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"E-mail "
 "professionnel\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
+"invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"Login\" invisible=\"login == work_email\"/>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -331,10 +347,11 @@ msgid ""
 "                                                </span>"
 msgstr ""
 "<span class=\"d-flex w-50\">\n"
-"                                                    <span invisible="
-"\"is_trusted_bank_account\" class=\"text-muted\">Non vérifié</span>\n"
-"                                                    <span invisible="
-"\"not is_trusted_bank_account\" class=\"text-success\">Vérifié</span>\n"
+"                                                    <span "
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Non vérifié</"
+"span>\n"
+"                                                    <span invisible=\"not "
+"is_trusted_bank_account\" class=\"text-success\">Vérifié</span>\n"
 "                                                </span>"
 
 #. module: hr
@@ -488,7 +505,8 @@ msgstr "<strong class=\"s_rating_title\">Collaboration</strong>"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Compliance and Regulations</strong>"
-msgstr "<strong class=\"s_rating_title\">Conformité et réglementations</strong>"
+msgstr ""
+"<strong class=\"s_rating_title\">Conformité et réglementations</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -550,7 +568,8 @@ msgstr "<strong class=\"s_rating_title\">Résolution de problèmes</strong>"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Skill Development</strong>"
-msgstr "<strong class=\"s_rating_title\">Développement des compétences</strong>"
+msgstr ""
+"<strong class=\"s_rating_title\">Développement des compétences</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -1647,6 +1666,8 @@ msgid "Contacts"
 msgstr "Contacts"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2462,6 +2483,12 @@ msgid "Employees Tags"
 msgstr "Étiquettes d'employés"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
@@ -3080,6 +3107,8 @@ msgid "In-depth knowledge of labor laws"
 msgstr "Connaissance approfondie de la réglementation du travail"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Indefinite"
 msgstr "Indéfini"
@@ -3217,6 +3246,7 @@ msgstr "Publication d'offre d’emploi"
 #: model:ir.model.fields,field_description:hr.field_hr_version__job_title
 #: model:ir.model.fields,field_description:hr.field_res_users__job_title
 #: model:ir.model.fields,field_description:hr.field_resource_resource__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Job Title"
 msgstr "Titre du poste"
 
@@ -3388,6 +3418,11 @@ msgid "Location Number"
 msgstr "Numéro du lieu"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Login"
+msgstr "Se connecter"
+
+#. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
 msgstr "Projets à long terme"
@@ -3521,6 +3556,12 @@ msgid "Mobile Phone"
 msgstr "Téléphone mobile"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
+msgid "More..."
+msgstr "Plus..."
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3651,6 +3692,12 @@ msgstr "Aucune étiquette trouvée ! Créons-en une"
 #: model_terms:ir.actions.act_window,help:hr.action_hr_contract_templates
 msgid "No Template found"
 msgstr "Aucun modèle trouvé"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
+msgid "No contract"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -5508,6 +5555,14 @@ msgstr "OUI"
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid ""
 "You are not allowed to create an employee because the user does not have "
@@ -5522,7 +5577,8 @@ msgstr ""
 msgid ""
 "You are receiving this message because you are the HR Responsible of this "
 "employee."
-msgstr "Vous recevez ce message car vous êtes le responsable RH de cet employé."
+msgstr ""
+"Vous recevez ce message car vous êtes le responsable RH de cet employé."
 
 #. module: hr
 #. odoo-javascript

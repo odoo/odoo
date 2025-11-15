@@ -4,12 +4,13 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-31 03:21+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-14 06:34+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays_attendance/id/>\n"
@@ -54,7 +55,7 @@ msgstr "Karyawan yang Diarsip"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_line
 msgid "Attendance Overtime Line"
-msgstr ""
+msgstr "Baris Absensi Lembur"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
@@ -69,13 +70,19 @@ msgstr ""
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__attendance_ids
 msgid "Attendances"
-msgstr ""
+msgstr "Absensi"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 msgid "Available"
 msgstr "Tersedia"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
+msgid "Balance"
+msgstr "Saldo"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__compensable_as_leave
@@ -86,7 +93,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__date
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Date"
-msgstr ""
+msgstr "Tanggal"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -104,12 +111,12 @@ msgstr "Kurangi Jam Ekstra"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__department_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Department"
-msgstr ""
+msgstr "Departemen"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
 msgid "Difference"
-msgstr ""
+msgstr "Selisih"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
@@ -132,14 +139,14 @@ msgstr "Nama Tampilan"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
 msgid "Duration"
-msgstr ""
+msgstr "Durasi"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Employee"
-msgstr ""
+msgstr "Karyawan"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
@@ -149,12 +156,12 @@ msgstr ""
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Employees"
-msgstr ""
+msgstr "Karyawan"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__expected_hours
 msgid "Expected Hours"
-msgstr ""
+msgstr "Jam yang Diharapkan"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
@@ -165,7 +172,7 @@ msgstr "Jam Ekstra Tersisa"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency
 msgid "Frequency"
-msgstr ""
+msgstr "Frekuensi"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__compensable_as_leave
@@ -197,12 +204,14 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Jika kolom aktif diatur ke Salah, itu akan memungkinkan Anda untuk "
+"menyembunyikan data sumber daya tanpa menghapusnya."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__job_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Job Position"
-msgstr ""
+msgstr "Jabatan Kerja"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
@@ -212,7 +221,7 @@ msgstr ""
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
@@ -252,12 +261,18 @@ msgstr "Overtime Deductible"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_rule
 msgid "Overtime Rule"
-msgstr ""
+msgstr "Peraturan Lembur"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
 msgid "Per Hour Worked"
-msgstr ""
+msgstr "Per Jam Kerja"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
+msgid "Remaining Extra Hours:"
+msgstr "Jam-Jam Ekstra Tersisa:"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
@@ -294,6 +309,12 @@ msgid "Time Off Ledger"
 msgstr ""
 
 #. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
+msgid "Time Off Taken from Extra Hours:"
+msgstr "Cuti Diambil dari Jam-Jam Ekstra:"
+
+#. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Tipe Cuti"
@@ -301,12 +322,24 @@ msgstr "Tipe Cuti"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_type_names
 msgid "Time Off Types"
-msgstr ""
+msgstr "Jenis Waktu Cuti"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_ids
 msgid "Time Offs"
-msgstr ""
+msgstr "Cuti"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
+msgid "Total Compensable Extra Hours:"
+msgstr "Total Jam Ekstra yang Dapat Dikompensansi:"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/views/extra_hours_list_view.xml:0
+msgid "Total Extra Hours Worked:"
+msgstr "Total Jam-Jam Ekstra Kerja:"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
@@ -316,12 +349,12 @@ msgstr "Jam Lembur Total"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
 msgid "Worked Extra Hours"
-msgstr ""
+msgstr "Jam Ekstra yang Dipenuhi"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__worked_hours
 msgid "Worked Hours"
-msgstr ""
+msgstr "Jumlah Jam Kerja"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
@@ -332,7 +365,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__schedule_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Working Schedule"
-msgstr ""
+msgstr "Jadwal Kerja"
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -341,6 +374,8 @@ msgid ""
 "You can't base accrued time on hours worked, because time is accrued at the "
 "start of the period."
 msgstr ""
+"Anda tidak dapat mendasarkan waktu yang dikumpulkan pada total jam kerja, "
+"karena waktu mulai dikumpulkan di awal periode."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -352,7 +387,7 @@ msgstr "Anda tidak memiliki jam tambahan yang mencukupi untuk meminta cuti ini"
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
 msgid "every worked hour."
-msgstr ""
+msgstr "setiap jam kerja."
 
 #~ msgid "Attendance"
 #~ msgstr "Absensi"

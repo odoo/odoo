@@ -17,13 +17,15 @@
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 02:34+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 14:56+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/tr/>\n"
 "Language: tr\n"
@@ -78,20 +80,23 @@ msgstr "%(name)s' Zaman Çizelgeleri"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, fuzzy
 msgid "%(project_name)s (%(days)sd)"
-msgstr ""
+msgstr "%(project_name)s (%(days)sd)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, fuzzy
 msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)sh%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, fuzzy
 msgid "%(project_name)s (%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(hours)sh)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -170,6 +175,7 @@ msgstr "<span class=\"text-nowrap\">Alt görevlere harcanan süre:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+#, fuzzy
 msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        Uh-oh! The employee you’re trying to delete still "
@@ -187,6 +193,21 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        Uh-oh! Silmeye çalıştığınız çalışan hala bazı "
+"çalışma çizelgeleri var ve silinemiyor.\n"
+"                       <span invisible=\"not has_active_employee\">\n"
+"                            İşte size iki seçenek: ya bu çalışma "
+"çizelgelerini silin ya da bunun yerine çalışanı arşivlemeyi düşünün.\n"
+"                       </span>\n"
+"                        <span invisible=\"has_active_employee\" groups="
+"\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Lütfen önce tüm çalışma çizelgelerini silin.\n"
+"                       </span>\n"
+"                    </span>\n"
+"                   <span invisible=\"has_timesheet\">\n"
+"                        Bu çalışanları silmek istediğinizden emin misiniz?\n"
+"                   </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -354,8 +375,9 @@ msgstr "Müşteriyi arayıp projeyi görüşün"
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#, fuzzy
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "Çalışma çizelgelerini oluşturmak için bir çalışan seçin."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -391,7 +413,7 @@ msgstr "Doğrulama"
 #. module: hr_timesheet
 #: model:ir.model,website_form_label:hr_timesheet.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Bir Görev Oluştur"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_calendar_employee__create_uid
@@ -593,8 +615,9 @@ msgstr "Departman Yöneticisi Erişimine Sahip"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__has_timesheet
+#, fuzzy
 msgid "Has Timesheet"
-msgstr ""
+msgstr "Çalışma Çizelgeleri Var"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
@@ -625,8 +648,9 @@ msgstr "ID"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, fuzzy
 msgid "Import Template for Timesheets"
-msgstr ""
+msgstr "Çalışma Çizelgeleri için İçe Aktarma Şablonu"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -799,8 +823,9 @@ msgstr "İş Ortağı"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
+#, fuzzy
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "Takvim görünümü için Çalışanlar üzerinde Kişisel Filtreler"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -853,7 +878,7 @@ msgstr "Projenin Çalışma Çizelgeleri"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Herkese Açık Personel"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -873,8 +898,9 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_kanban_inherit_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
+#, fuzzy
 msgid "Remaining days"
-msgstr ""
+msgstr "Kalan günler"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -964,10 +990,13 @@ msgstr "Ayarlar"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
+#, fuzzy
 msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
 msgstr ""
+"Bazı çalışma çizelgesi girişleri bu görevleri ağırlaştırıyor! Önce bunları "
+"kaldırın, sonra görevleri silebileceksiniz!"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1080,11 +1109,15 @@ msgstr "Bu görev özel yapılamaz çünkü ona bağlı çalışma çizelgeleri 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
+#, fuzzy
 msgid ""
 "This task can’t be deleted because it’s linked to timesheets. Please contact "
 "someone with higher access to remove the timesheets first, and then you’ll "
 "be able to delete the task."
 msgstr ""
+"Bu görev, çalışma çizelgelerine bağlı olduğu için silinemez. Lütfen önce "
+"çalışma çizelgelerini kaldırmak için daha yüksek erişime sahip biriyle "
+"iletişime geçin, ardından görevi silebilirsiniz."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
@@ -1324,8 +1357,9 @@ msgstr "Özel görevde çalışma çizelgesi oluşturulamaz."
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#, fuzzy
 msgid "Timesheets could not be created for any of the selected days"
-msgstr ""
+msgstr "Seçilen günlerin hiçbiri için Çalışma Çizelgeleri oluşturulamadı"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1355,8 +1389,9 @@ msgstr "%(name)s çalışma çizelgesi"
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#, fuzzy
 msgid "Timesheets successfully created"
-msgstr ""
+msgstr "Çalışma Çizelgeleri başarıyla oluşturuldu"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1433,6 +1468,7 @@ msgstr "Eğitim"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
+#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -1446,6 +1482,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Yeni görevler belirlemek için başlıkta bu anahtar kelimeleri kullanın:\n"
+"\n"
+"        30h Göreve 30 saat ayırın\n"
+"        #tags Görevdeki etiketleri ayarlayın\n"
+"        kullanıcı Görevi bir kullanıcıya atayın\n"
+"        ! Görevi orta öncelikli olarak ayarlayın\n"
+"        !! Görevi yüksek öncelikli olarak ayarlayın\n"
+"        !!! Görevi acil bir öncelik olarak belirleyin\n"
+"\n"
+"        Doğru formatı ve sırayı kullandığınızdan emin olun, örneğin "
+"Yapılandırma ekranını iyileştirin 5h #özellik #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1527,12 +1574,13 @@ msgstr "Mevcut çalışma çizelgelerine arşivlenmiş bir çalışan atanamaz."
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "date"
-msgstr ""
+msgstr "tarih"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
+#, fuzzy
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "Örn. E-posta Gönderme"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

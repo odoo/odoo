@@ -15,13 +15,14 @@
 # Umur Akın <umura@projetgrup.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 02:31+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-12 14:54+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/tr/>\n"
 "Language: tr\n"
@@ -40,8 +41,9 @@ msgstr "%(journal)s: Çek Numarası Sırası"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "%(number)s in journal %(journal)s"
-msgstr ""
+msgstr "%(number)s dergide %(journal)s"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -202,8 +204,9 @@ msgstr "Yapılandırma ekranına git"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
+#, fuzzy
 msgid "Has Check Layout"
-msgstr ""
+msgstr "Çek Düzeni Var"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -248,6 +251,7 @@ msgstr "Elle Numaralandırma"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+#, fuzzy
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
 "Payment Providers: Each payment provider has its own Payment Method. Request "
@@ -264,6 +268,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Manuel: Odoo dışında herhangi bir yöntemle ödeme yapın veya ödeme alın.\n"
+"Ödeme Sağlayıcıları: Her ödeme sağlayıcısının kendi Ödeme Yöntemi vardır. "
+"Çevrimiçi satın alırken veya abone olurken iş ortağı tarafından kaydedilen "
+"bir ödeme belirteci sayesinde bir kart üzerinde / karta işlem talep edin.\n"
+"Çek: Faturaları çek ile ödeyin ve Odoo'dan yazdırın.\n"
+"Toplu Para Yatırma: Aynı anda birkaç müşteri çeki toplayın ve bankanıza bir "
+"toplu para yatırma işlemi oluşturun ve gönderin. account_batch_payment "
+"modülü gereklidir.\n"
+"SEPA Alacak Transferi: Bankanıza bir SEPA Alacak Transferi dosyası "
+"göndererek SEPA bölgesinde ödeme yapın. account_iso20022 modülü gereklidir.\n"
+"SEPA Doğrudan Borç: Ortağınızın size vereceği bir yetki sayesinde SEPA "
+"bölgesinde ödeme alın. Modül account_iso20022 gereklidir.\n"
+"ABD ISO20022: Bankanıza bir ISO20022 dosyası göndererek ABD'de ödeme yapın. "
+"account_iso20022 modülü gereklidir.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -401,6 +419,17 @@ msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+#, fuzzy
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
+"Girdiğiniz çek numarası (%(num)s) izin verilen maksimum %(max)d değerini "
+"aşıyor. Lütfen daha küçük bir sayı girin."
+
+#. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
 "The following numbers are already used:\n"
@@ -482,20 +511,23 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "check_number"
-msgstr ""
+msgstr "check_number"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "out_refund"
-msgstr ""
+msgstr "out_refund"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "sep"
-msgstr ""
+msgstr "sep"
 
 #~ msgid "Contact"
 #~ msgstr "Kontak"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2025-10-14 12:22+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
@@ -1412,12 +1412,6 @@ msgstr ""
 "documenti."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr "Verifica la configurazione del partner nelle impostazioni."
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
@@ -1854,22 +1848,6 @@ msgstr "Il messaggio non rispetta la normativa AS4."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid ""
-"The partner has indicated it does not accept this document type, so you "
-"cannot send this invoice via Peppol."
-msgstr ""
-"Il partner ha indicato che non accetta questo tipo di documento, quindi non "
-"è possibile inviare questa fattura tramite Peppol."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr "Codice EAS Peppol e/o endpoint mancante per il partner."
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The processor determined that the message's security methods, parameters, "
@@ -1879,15 +1857,6 @@ msgstr ""
 "L'elaboratore ha stabilito che i metodi, i parametri, l'ambito o altri "
 "requisiti o accordi a livello di politica di sicurezza del messaggio non "
 "sono stati soddisfatti."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr ""
-"Il metodo di identificazione consigliato per il Belgio è il numero di "
-"registro dell'azienda."
 
 #. module: account_peppol
 #. odoo-python
@@ -2363,6 +2332,26 @@ msgstr "per inviare fatture, ma questa"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr "Verifica la configurazione del partner nelle impostazioni."
+
+#~ msgid ""
+#~ "The partner has indicated it does not accept this document type, so you "
+#~ "cannot send this invoice via Peppol."
+#~ msgstr ""
+#~ "Il partner ha indicato che non accetta questo tipo di documento, quindi "
+#~ "non è possibile inviare questa fattura tramite Peppol."
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr "Codice EAS Peppol e/o endpoint mancante per il partner."
+
+#~ msgid ""
+#~ "The recommended identification method for Belgium is your Company "
+#~ "Registry Number."
+#~ msgstr ""
+#~ "Il metodo di identificazione consigliato per il Belgio è il numero di "
+#~ "registro dell'azienda."
 
 #~ msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
 #~ msgstr "Il documento Peppol (UUID: %(uuid)s) è stato ricevuto correttamente"

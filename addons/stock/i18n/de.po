@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 16:28+0000\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
+"PO-Revision-Date: 2025-11-10 14:27+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-19/stock/de/>"
-"\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19/stock/de/"
+">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5042,6 +5042,11 @@ msgid "Inventory at Date"
 msgstr "Lagerbestand zum Zeitpunkt"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr "Ist das Datum bearbeitbar"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "Ist leer"
@@ -5069,6 +5074,11 @@ msgstr "Ist Mehrfachstandort"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "Ist Teillieferung"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr "Ist das geplante Datum bearbeitbar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -10196,17 +10206,6 @@ msgid "There are no inventory adjustments to revert."
 msgstr "Es sind keine Bestandsaufnahmen rückgängig zu machen."
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-"Es gibt nichts, was in ein Paket gepackt werden könnte. Entweder gibt es "
-"keine Mengen, die in ein Paket gepackt werden könnten, oder die Schritte "
-"sind bereits abgeschlossen."
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Es gibt noch keine Produktbewegung"
@@ -12410,6 +12409,14 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Lieferauftrag (Ref {{ object.name or 'k. A.' }})"
+
+#~ msgid ""
+#~ "There is nothing eligible to put in a pack. Either there are no "
+#~ "quantities to put in a pack or moves are already done."
+#~ msgstr ""
+#~ "Es gibt nichts, was in ein Paket gepackt werden könnte. Entweder gibt es "
+#~ "keine Mengen, die in ein Paket gepackt werden könnten, oder die Schritte "
+#~ "sind bereits abgeschlossen."
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr ""

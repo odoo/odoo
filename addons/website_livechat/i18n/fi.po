@@ -14,13 +14,14 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 15:33+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-13 13:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "website_livechat/fi/>\n"
 "Language: fi\n"
@@ -42,12 +43,14 @@ msgid ""
 "%(visitor)s started a conversation with %(operator)s.\n"
 "The chat request has been cancelled"
 msgstr ""
+"%(visitor)saloitti keskustelu %(operator)s:n kanssa.\n"
+"Keskustelupyyntö on peruttu"
 
 #. module: website_livechat
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
 msgid "(closed on: %(date)s)"
-msgstr ""
+msgstr "(suljettu: %(date)s)"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -68,7 +71,7 @@ msgstr "Kanavan nimi"
 #. odoo-python
 #: code:addons/website_livechat/models/im_livechat_channel.py:0
 msgid "Channel created: %(name)s"
-msgstr ""
+msgstr "Kanava luotu: %(name)s"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -101,7 +104,7 @@ msgstr "Asetukset"
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 msgid "Country"
-msgstr ""
+msgstr "Maa"
 
 #. module: website_livechat
 #. odoo-javascript
@@ -125,7 +128,7 @@ msgstr "Keskustelukanava"
 #: model:ir.model.fields,field_description:website_livechat.field_website_page__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näyttönimi"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_ir_http
@@ -143,7 +146,7 @@ msgstr "HTTP-reititys"
 #: model:ir.model.fields,field_description:website_livechat.field_website_page__id
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__id
 msgid "ID"
-msgstr ""
+msgstr "Tunnus"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -154,7 +157,7 @@ msgstr "Keskustelussa"
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 msgid "Language"
-msgstr ""
+msgstr "Kieli"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -186,19 +189,19 @@ msgstr "Operaattorin nimi"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website_page
 msgid "Page"
-msgstr ""
+msgstr "Sivu"
 
 #. module: website_livechat
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent conversations"
-msgstr ""
+msgstr "Viimeaikaiset keskustelut"
 
 #. module: website_livechat
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent page views"
-msgstr ""
+msgstr "Viimeaikaiset sivun katselukerrat"
 
 #. module: website_livechat
 #. odoo-python
@@ -250,7 +253,7 @@ msgstr "Vierailija"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "Visitor #%(id)d left the conversation."
-msgstr ""
+msgstr "Vierailija #%(id)d poistui keskustelusta."
 
 #. module: website_livechat
 #. odoo-python
@@ -263,7 +266,7 @@ msgstr "Vierailija #%d"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "Visitor left the conversation."
-msgstr ""
+msgstr "Vierailija poistui keskustelusta."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
@@ -310,6 +313,8 @@ msgid ""
 "When created from an operator, whether the channel is yet to be opened on "
 "the visitor side."
 msgstr ""
+"Kun operaattori on luonut kanavan, tieto siitä, onko kanavaa vielä avattu "
+"vierailijan puolella."
 
 #. module: website_livechat
 #. odoo-python

@@ -11,13 +11,15 @@
 # Niyas Raphy, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 13:43+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 21:56+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/web/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -483,6 +485,17 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">مفصول (واحد "
+"لكل علامة تبويب)</option>\n"
+"                                        <option value=\"temporal\">مؤقَّت "
+"(تجريبي)</option>\n"
+"                                    </select>\n"
+"                                    <span id=\"temporal_warning\" "
+"class=\"alert alert-warning\" style=\"display:none\"><b>تحذير:</b> سيؤدي "
+"الوضع التجريبي إلى دمج كافة العينات.<br/>يمكن أن يؤدي إلى نتيجة غير صالحة "
+"جزئياً في حالة الملفات الشخصية المتزامنة.<br/>كن حذراً عند استخدامه </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2172,7 +2185,7 @@ msgstr "العملة"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
-msgstr ""
+msgstr "حقل العملة"
 
 #. module: web
 #. odoo-javascript
@@ -2295,7 +2308,7 @@ msgstr "التاريخ والوقت"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Date Format"
-msgstr ""
+msgstr "تنسيق التاريخ"
 
 #. module: web
 #. odoo-javascript
@@ -3452,7 +3465,7 @@ msgstr "القائمة الرئيسية"
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
-msgstr ""
+msgstr "ساعة"
 
 #. module: web
 #. odoo-python
@@ -3551,6 +3564,14 @@ msgstr ""
 "في حالة تحديده، سيؤدي الضغط على العلامة إلى فتح الاستمارة التي تتيح لك "
 "تحريرها مباشرةً. لاحظ أنه إذا تم تعيين حقل ألوان أيضاً، فسوف يسود إصدار "
 "العلامة. لذا، لن يتم عرض محدد الألوان عند الضغط على علامة التصنيف."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
+msgid ""
+"If checked, the checkboxes will be displayed in a column. Otherwise, they "
+"will be inlined."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3704,7 +3725,7 @@ msgstr "الفترة"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "اسم العرض غير صالح"
 
 #. module: web
 #. odoo-javascript
@@ -4126,19 +4147,19 @@ msgstr "كبير"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "آخر 12 شهراً"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "آخر 30 يوم"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "آخر 7 أيام"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__write_uid
@@ -4156,7 +4177,7 @@ msgstr "آخر تحديث في"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last month"
-msgstr ""
+msgstr "الشهر الماضي"
 
 #. module: web
 #. odoo-javascript
@@ -4299,7 +4320,7 @@ msgstr "تسجيل الخروج"
 #. odoo-python
 #: code:addons/web/controllers/home.py:0
 msgid "Login"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -4983,7 +5004,7 @@ msgstr "لم يتم العثور على نتائج"
 #. odoo-javascript
 #: code:addons/web/static/src/core/select_menu/select_menu.xml:0
 msgid "No results"
-msgstr ""
+msgstr "لا توجد نتائج"
 
 #. module: web
 #. odoo-javascript
@@ -5209,7 +5230,6 @@ msgstr "أوه لا!"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
-#: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -6652,10 +6672,11 @@ msgstr "خاص:"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Speedscope"
-msgstr ""
+msgstr "Speedscope"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 msgid "Stacked"
 msgstr "مكدسة"
@@ -6757,7 +6778,7 @@ msgstr "خطأ في الشكل"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Suffix"
-msgstr ""
+msgstr "اللاحقة"
 
 #. module: web
 #. odoo-javascript
@@ -6970,6 +6991,12 @@ msgid "The domain should not involve non-literals"
 msgstr "يجب ألا يتضمن النطاق قيماً غير حرفية"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
@@ -6993,6 +7020,12 @@ msgid ""
 msgstr ""
 "تمت مقاطعة العملية. عادةً ما يعني هذا أن العملية الحالية تستغرق وقتًا أطول من "
 "اللازم."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7643,7 +7676,7 @@ msgstr "واجهة المستخدم"
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "إعدادات المستخدم"
 
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings_embedded_action
@@ -7807,6 +7840,7 @@ msgstr "WC"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.xml:0
 msgid "Warning"
 msgstr "تحذير"
 
@@ -8211,7 +8245,7 @@ msgstr "اسكليتيوس"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "after"
-msgstr ""
+msgstr "بعد"
 
 #. module: web
 #. odoo-javascript
