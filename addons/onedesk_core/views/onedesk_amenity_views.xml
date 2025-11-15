@@ -48,8 +48,10 @@
             <search>
                 <field name="name"/>
                 <field name="category"/>
+                <separator/>
                 <filter string="Actifs" name="active" domain="[('active', '=', True)]"/>
                 <filter string="Inactifs" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
                 <group expand="0" string="Grouper par">
                     <filter string="Catégorie" name="group_category" context="{'group_by': 'category'}"/>
                 </group>
