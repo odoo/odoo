@@ -9,10 +9,7 @@
     'data': [
     'security/ir.model.access.csv',
 
-    # Données de base (amenities)
-    'data/onedesk_amenity_data.xml',
-
-    # Vues
+    # Vues (charger les vues avant les données pour éviter les erreurs)
     'views/onedesk_dashboard_views.xml',
     'views/onedesk_amenity_views.xml',
     'views/onedesk_property_views.xml',
@@ -25,11 +22,10 @@
     'views/oauth_templates.xml',
     'views/onedesk_menu_views.xml',
 
-    # Données intégrations
+    # Données (après les vues)
+    'data/onedesk_amenity_data.xml',
     'data/integration_providers.xml',
     'data/integration_cron.xml',
-
-    # Templates d'emails
     'data/email_templates.xml',
     ],
     
