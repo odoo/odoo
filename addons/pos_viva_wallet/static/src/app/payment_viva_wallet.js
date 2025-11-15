@@ -25,23 +25,19 @@ export class PaymentVivaWallet extends PaymentInterface {
     }
     send_payment_cancel(order, uuid) {
         super.send_payment_cancel(order, uuid);
-        return this._viva_wallet_cancel();
-    }
-    pending_viva_wallet_line() {
-        return this.pos.getPendingPaymentLine("viva_wallet");
+        return this._viva_wallet_cancel(order, uuid);
     }
 
-    _call_viva_wallet(data, action) {
+    _call_viva_wallet(data, action, paymentLine) {
         return this.env.services.orm.silent
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
-            .catch(this._handle_odoo_connection_failure.bind(this));
+            .catch(this._handle_odoo_connection_failure.bind(this, paymentLine));
     }
 
-    _handle_odoo_connection_failure(data = {}) {
+    _handle_odoo_connection_failure(paymentLine, data = {}) {
         // handle timeout
-        var line = this.pending_viva_wallet_line();
-        if (line) {
-            line.set_payment_status("retry");
+        if (!paymentLine.is_done()) {
+            paymentLine.set_payment_status("retry");
         }
         this._show_error(
             _t(
@@ -52,13 +48,12 @@ export class PaymentVivaWallet extends PaymentInterface {
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     }
 
-    _viva_wallet_handle_response(response) {
-        var line = this.pending_viva_wallet_line();
-        line.set_payment_status("waitingCard");
+    _viva_wallet_handle_response(response, paymentLine) {
+        paymentLine.set_payment_status("waitingCard");
         if (response.error) {
             this._show_error(response.error);
         }
-        return this.waitForPaymentConfirmation();
+        return this.waitForPaymentConfirmation(paymentLine);
     }
 
     _viva_wallet_pay() {
@@ -80,22 +75,24 @@ export class PaymentVivaWallet extends PaymentInterface {
             customerTrns = order.partner.name + " - " + order.partner.email;
         }
 
-        line.sessionId = order.uuid + " - " + uuidv4();
+        line.uiState.vivaSessionId = order.uuid + " - " + uuidv4();
         var data = {
-            sessionId: line.sessionId,
+            sessionId: line.uiState.vivaSessionId,
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
             cashRegisterId: this.pos.get_cashier().name,
             amount: roundPrecision(line.amount * 100),
             currencyCode: this.pos.currency.iso_numeric.toString(),
-            merchantReference: line.sessionId + "/" + this.pos.session.id,
+            merchantReference: line.uiState.vivaSessionId + "/" + this.pos.session.id,
             customerTrns: customerTrns,
             preauth: false,
             maxInstalments: 0,
             tipAmount: 0,
         };
-        return this._call_viva_wallet(data, "viva_wallet_send_payment_request").then((data) => {
-            return this._viva_wallet_handle_response(data);
-        });
+        return this._call_viva_wallet(data, "viva_wallet_send_payment_request", line).then(
+            (data) => {
+                return this._viva_wallet_handle_response(data, line);
+            }
+        );
     }
 
     async _viva_wallet_cancel(order, uuid) {
@@ -103,26 +100,27 @@ export class PaymentVivaWallet extends PaymentInterface {
          * Override
          */
         super.send_payment_cancel(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = order.get_paymentline_by_uuid(uuid);
 
         var data = {
-            sessionId: line.sessionId,
+            sessionId: line.uiState.vivaSessionId,
             cashRegisterId: this.pos.get_cashier().name,
         };
-        return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel").then((data) => {
-            if (data.error) {
-                this._show_error(data.error);
+        return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel", line).then(
+            (data) => {
+                if (data.error) {
+                    this._show_error(data.error);
+                }
+                return true;
             }
-            return true;
-        });
+        );
     }
 
     /**
      * This method is called from pos_bus when the payment
      * confirmation from Viva Wallet is received via the webhook and confirmed in the retrieve_session_id.
      */
-    async handleVivaWalletStatusResponse() {
-        var line = this.pending_viva_wallet_line();
+    async handleVivaWalletStatusResponse(paymentLine) {
         const notification = await this.env.services.orm.silent.call(
             "pos.payment.method",
             "get_latest_viva_wallet_status",
@@ -130,13 +128,13 @@ export class PaymentVivaWallet extends PaymentInterface {
         );
 
         if (!notification) {
-            this._handle_odoo_connection_failure();
+            this._handle_odoo_connection_failure(paymentLine);
             return;
         }
 
         const isPaymentSuccessful = this.isPaymentSuccessful(notification);
         if (isPaymentSuccessful) {
-            this.handleSuccessResponse(line, notification);
+            this.handleSuccessResponse(paymentLine, notification);
         } else {
             this._show_error(sprintf(_t("Message from Viva Wallet: %s"), notification.error));
         }
@@ -145,33 +143,28 @@ export class PaymentVivaWallet extends PaymentInterface {
         // that will be resolved when the payment response is received.
         // In case this resolver is lost ( for example on a refresh ) we
         // we use the handle_payment_response method on the payment line
-        const resolver = this.paymentLineResolvers?.[line.uuid];
+        const resolver = this.paymentLineResolvers?.[paymentLine.uuid];
         if (resolver) {
-            this.paymentLineResolvers[line.uuid] = null;
+            this.paymentLineResolvers[paymentLine.uuid] = null;
             resolver(isPaymentSuccessful);
         } else {
-            line.handle_payment_response(isPaymentSuccessful);
+            paymentLine.handle_payment_response(isPaymentSuccessful);
         }
     }
 
     isPaymentSuccessful(notification) {
-        return (
-            notification &&
-            notification.sessionId == this.pending_viva_wallet_line().sessionId &&
-            notification.success
-        );
+        return notification && notification.success;
     }
 
-    waitForPaymentConfirmation() {
+    waitForPaymentConfirmation(paymentLine) {
         return new Promise((resolve) => {
-            const paymentLine = this.pending_viva_wallet_line();
-            const sessionId = paymentLine.sessionId;
+            const sessionId = paymentLine.uiState.vivaSessionId;
             this.paymentLineResolvers[paymentLine.uuid] = resolve;
             const intervalId = setInterval(async () => {
                 const isPaymentStillValid = () =>
                     this.paymentLineResolvers[paymentLine.uuid] &&
-                    this.pending_viva_wallet_line()?.sessionId === sessionId &&
-                    paymentLine.payment_status === "waitingCard";
+                    paymentLine.payment_status === "waitingCard" &&
+                    sessionId === paymentLine.uiState.vivaSessionId;
                 if (!isPaymentStillValid()) {
                     clearInterval(intervalId);
                     return;
@@ -179,7 +172,8 @@ export class PaymentVivaWallet extends PaymentInterface {
 
                 const result = await this._call_viva_wallet(
                     sessionId,
-                    "viva_wallet_get_payment_status"
+                    "viva_wallet_get_payment_status",
+                    paymentLine
                 );
                 if ("success" in result && isPaymentStillValid()) {
                     clearInterval(intervalId);
@@ -187,6 +181,7 @@ export class PaymentVivaWallet extends PaymentInterface {
                         this.handleSuccessResponse(paymentLine, result);
                         resolve(true);
                     } else {
+                        this._show_error(_t("Message from Viva Wallet: %s", result.message));
                         resolve(false);
                     }
                     this.paymentLineResolvers[paymentLine.uuid] = null;

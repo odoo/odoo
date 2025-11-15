@@ -432,6 +432,7 @@ class Partner(models.Model):
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
             partner.same_company_registry_partner_id = bool(partner.company_registry) and not partner.parent_id and Partner.search(domain, limit=1)
 
+    @api.depends('vat')
     @api.depends_context('company')
     def _compute_vat_label(self):
         self.vat_label = self.env.company.country_id.vat_label or _("Tax ID")

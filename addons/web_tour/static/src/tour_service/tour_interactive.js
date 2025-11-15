@@ -54,7 +54,7 @@ export class TourInteractive {
         while (!tempAnchors.length && tempIndex >= 0) {
             tempIndex--;
             tempAction = this.actions.at(tempIndex);
-            if (!tempAction.step.active) {
+            if (!tempAction.step.active || tempAction.event === "warn") {
                 continue;
             }
             tempAnchors = tempAction && this.findTriggers(tempAction.anchor);

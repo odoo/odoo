@@ -112,6 +112,48 @@ class TestItEdiImport(TestItEdi):
             }],
         }])
 
+    def test_import_refund_with_linked_po(self):
+        if self.env['ir.module.module']._get('purchase').state != 'installed':
+            self.skipTest("purchase module is not installed")
+        po = self.env['purchase.order'].with_company(self.company).with_context(tracking_disable=True).create(
+            {
+                'partner_id': self.italian_partner_a.id,
+                'partner_ref': 'PO-001',
+                'order_line': [
+                    Command.create({
+                        'product_qty': 10.0,
+                        'price_unit': 1.0,
+                        'name': 'DESCRIZIONE DELLA FORNITURA',
+                        'taxes_id': [Command.set(self.default_tax.ids)],
+                    })
+                ]
+            })
+        po.button_confirm()
+        self._assert_import_invoice('IT01234567890_FPR03.xml', [{
+            'move_type': 'in_refund',
+            'invoice_origin': po.name,
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 5.0,
+            'amount_tax': 1.1,
+            'is_purchase_matched': True,
+            'invoice_line_ids': [{
+                'display_type': 'line_section',
+                'quantity': 0.0,
+                'price_unit': 0.0,
+                'credit': 0.0,
+            }, {
+                'display_type': 'product',
+                'quantity': 5.0,
+                'price_unit': 1.0,
+                'credit': 5.0,
+            }, {
+                'display_type': 'line_section',
+                'quantity': 0.0,
+                'price_unit': 0.0,
+                'credit': 0.0,
+            }],
+        }])
+
     def test_receive_signed_vendor_bill(self):
         """ Test a signed (P7M) sample e-invoice file from
         https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml

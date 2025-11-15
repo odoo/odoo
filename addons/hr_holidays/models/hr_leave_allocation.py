@@ -271,7 +271,7 @@ class HolidaysAllocation(models.Model):
         )
         accruals_dict = {time_off_type.id: ids for time_off_type, ids in accruals_read_group}
         for allocation in self:
-            if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
+            if (allocation.allocation_type == 'regular' and allocation.accrual_plan_id) or allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
@@ -414,6 +414,8 @@ class HolidaysAllocation(models.Model):
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
             expiration_date = False
+            if allocation.allocation_type != 'accrual':
+                continue
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
                 continue
@@ -722,7 +724,7 @@ class HolidaysAllocation(models.Model):
 
         self.add_follower(employee_id)
 
-        if 'number_of_days_display' not in values and 'number_of_hours_display' not in values:
+        if 'number_of_days_display' not in values and 'number_of_hours_display' not in values and 'state' not in values:
             res = super().write(values)
             if 'allocation_type' in values:
                 self._add_lastcalls()
@@ -818,13 +820,6 @@ class HolidaysAllocation(models.Model):
         current_employee = self.env.user.employee_id
         if any(allocation.state not in ['confirm', 'validate', 'validate1'] for allocation in self):
             raise UserError(_('Allocation request must be confirmed, second approval or validated in order to refuse it.'))
-
-        days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id)[0]
-
-        for allocation in self:
-            days_taken = days_per_allocation[allocation.employee_id][allocation.holiday_status_id][allocation]['virtual_leaves_taken']
-            if days_taken > 0:
-                raise UserError(_('You cannot refuse this allocation request since the employee has already taken leaves for it. Please refuse or delete those leaves first.'))
 
         self.write({'state': 'refuse', 'approver_id': current_employee.id})
         self.activity_update()

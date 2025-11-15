@@ -356,3 +356,29 @@ class TestManual(common.TestAr):
                 partner_form.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
                 partner_form.vat = "test"
         self.assertIn('Only numbers allowed for "DNI"', str(e.exception))
+
+    def test_create_debit_note_for_credit_note(self):
+        """
+        Test that it is possible to create a debit note from a credit note
+        """
+
+        invoice = self.init_invoice('out_invoice', partner=self.partner_afip, products=[self.product_a], post=True)
+
+        credit_note_wizard = self.env['account.move.reversal'].with_context({
+            'active_ids': invoice.ids,
+            'active_model': 'account.move',
+        }).create({
+            'reason': 'credit note',
+            'journal_id': invoice.journal_id.id,
+        })
+        credit_note_wizard.refund_moves()
+        invoice.reversal_move_ids.action_post()
+
+        debit_note_wizard = self.env['account.debit.note'].with_context({
+            'active_ids': invoice.reversal_move_ids.ids,
+            'active_model': 'account.move',
+        }).create({
+            'reason': 'debit_note',
+        })
+        debit_note_wizard.create_debit()
+        self.assertTrue(invoice.reversal_move_ids.debit_note_ids)
