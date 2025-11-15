@@ -218,23 +218,32 @@ export class ImageSavePlugin extends Plugin {
                 }
             }
         }
-        const newAttachmentUrls = await rpc(
-            `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
-            {
-                res_model: resModel,
-                res_id: parseInt(resId),
-                data: this.getImageBase64Payload(el),
-                alt_data: altData,
-                alt_images: Object.keys(altImages).length ? altImages : null,
-                mimetype: isBackground
-                    ? el.dataset.mimetype
-                    : el.getAttribute("src").split(":")[1].split(";")[0],
-                name: el.dataset.fileName ? el.dataset.fileName : null,
-            }
-        );
-
+        let attachmentNotFound = false;
+        let newAttachmentUrls;
+        try {
+            newAttachmentUrls = await rpc(
+                `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
+                {
+                    res_model: resModel,
+                    res_id: parseInt(resId),
+                    data: this.getImageBase64Payload(el),
+                    alt_data: altData,
+                    alt_images: Object.keys(altImages).length ? altImages : null,
+                    mimetype: isBackground
+                        ? el.dataset.mimetype
+                        : el.getAttribute("src").split(":")[1].split(";")[0],
+                    name: el.dataset.fileName ? el.dataset.fileName : null,
+                }
+            );
+        } catch {
+            // On RPC failure, set a placeholder image source with a flag.
+            newAttachmentUrls = {
+                original: "/html_editor/static/src/img/placeholder_thumbnail.png",
+            };
+            attachmentNotFound = true;
+        }
         const srcset = [];
-        if (Object.keys(altImages).length) {
+        if (!attachmentNotFound && Object.keys(altImages).length) {
             for (const size in altImages) {
                 if (newAttachmentUrls[size]) {
                     srcset.push(`${newAttachmentUrls[size]} ${size}w`);
@@ -244,18 +253,25 @@ export class ImageSavePlugin extends Plugin {
         }
 
         el.classList.remove("o_modified_image_to_save");
+        let targetEl = el;
         if (isBackground) {
             const parts = backgroundImageCssToParts(el.style["background-image"]);
             parts.url = `url('${newAttachmentUrls["original"]}')`;
             const combined = backgroundImagePartsToCss(parts);
             el.style["background-image"] = combined;
         } else {
-            el.setAttribute("src", newAttachmentUrls["original"]);
+            if (attachmentNotFound) {
+                // Reset image to a clean state if a placeholder is returned.
+                targetEl = document.createElement("img");
+                el.insertAdjacentElement("afterend", targetEl);
+                el.remove();
+            }
+            targetEl.setAttribute("src", newAttachmentUrls["original"]);
             if (srcset.length) {
-                el.setAttribute("srcset", srcset.join(", "));
+                targetEl.setAttribute("srcset", srcset.join(", "));
             }
         }
-        this.trigger("on_image_saved_handlers", { imageEl: el });
+        this.trigger("on_image_saved_handlers", { imageEl: targetEl });
     }
 
     getImageBase64Payload(el) {
