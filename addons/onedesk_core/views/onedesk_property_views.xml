@@ -182,25 +182,10 @@
         <field name="name">onedesk.property.search</field>
         <field name="model">onedesk.property</field>
         <field name="arch" type="xml">
-            <search>
-                <field name="name" string="Propriété" filter_domain="['|', ('name', 'ilike', self), ('address', 'ilike', self)]"/>
+            <search string="Recherche Propriétés">
+                <field name="name"/>
                 <field name="city"/>
                 <field name="user_id"/>
-                <field name="property_type"/>
-                <separator/>
-                <filter string="Disponibles" name="available" domain="[('status', '=', 'available')]"/>
-                <filter string="Occupées" name="occupied" domain="[('status', '=', 'occupied')]"/>
-                <filter string="Maintenance" name="maintenance" domain="[('status', '=', 'maintenance')]"/>
-                <separator/>
-                <filter string="Actives" name="active" domain="[('active', '=', True)]"/>
-                <filter string="Archivées" name="inactive" domain="[('active', '=', False)]"/>
-                <separator/>
-                <group expand="0" string="Grouper par">
-                    <filter string="Type" name="group_property_type" context="{'group_by': 'property_type'}"/>
-                    <filter string="Ville" name="group_city" context="{'group_by': 'city'}"/>
-                    <filter string="Gestionnaire" name="group_user" context="{'group_by': 'user_id'}"/>
-                    <filter string="Statut" name="group_status" context="{'group_by': 'status'}"/>
-                </group>
             </search>
         </field>
     </record>

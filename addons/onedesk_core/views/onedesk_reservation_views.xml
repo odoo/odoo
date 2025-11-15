@@ -211,36 +211,11 @@
         <field name="name">onedesk.reservation.search</field>
         <field name="model">onedesk.reservation</field>
         <field name="arch" type="xml">
-            <search>
-                <field name="name" string="Réservation" filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('confirmation_code', 'ilike', self)]"/>
+            <search string="Recherche Réservations">
+                <field name="name"/>
                 <field name="unit_id"/>
                 <field name="property_id"/>
                 <field name="partner_id"/>
-                <separator/>
-                <filter string="Brouillon" name="draft" domain="[('state', '=', 'draft')]"/>
-                <filter string="Confirmées" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
-                <filter string="En cours" name="checked_in" domain="[('state', '=', 'checked_in')]"/>
-                <filter string="Terminées" name="checked_out" domain="[('state', '=', 'checked_out')]"/>
-                <filter string="Annulées" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
-                <separator/>
-                <filter string="Aujourd'hui" name="today" domain="[('start_date', '&lt;=', context_today().strftime('%Y-%m-%d')), ('end_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Cette semaine" name="this_week" domain="[('start_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('start_date', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
-                <filter string="Ce mois" name="this_month" domain="[('start_date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
-                <separator/>
-                <filter string="Non payées" name="unpaid" domain="[('payment_status', '!=', 'paid')]"/>
-                <filter string="Payées" name="paid" domain="[('payment_status', '=', 'paid')]"/>
-                <separator/>
-                <filter string="Airbnb" name="airbnb" domain="[('source_platform', '=', 'airbnb')]"/>
-                <filter string="Booking.com" name="booking" domain="[('source_platform', '=', 'booking')]"/>
-                <filter string="Direct" name="direct" domain="[('source_platform', '=', 'direct')]"/>
-                <separator/>
-                <group expand="0" string="Grouper par">
-                    <filter string="Unité" name="group_unit" context="{'group_by': 'unit_id'}"/>
-                    <filter string="Propriété" name="group_property" context="{'group_by': 'property_id'}"/>
-                    <filter string="Statut" name="group_state" context="{'group_by': 'state'}"/>
-                    <filter string="Plateforme" name="group_platform" context="{'group_by': 'source_platform'}"/>
-                    <filter string="Date début" name="group_start_date" context="{'group_by': 'start_date'}"/>
-                </group>
             </search>
         </field>
     </record>
