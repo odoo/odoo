@@ -8,8 +8,13 @@
     'depends': ['base', 'contacts', 'mail', 'account', 'calendar'],  # ← Ajouté 'calendar'
     'data': [
     'security/ir.model.access.csv',
-    
-    # Vues d'abord (ça charge les models)
+
+    # Données de base (amenities)
+    'data/onedesk_amenity_data.xml',
+
+    # Vues
+    'views/onedesk_dashboard_views.xml',
+    'views/onedesk_amenity_views.xml',
     'views/onedesk_property_views.xml',
     'views/onedesk_unit_views.xml',
     'views/onedesk_reservation_views.xml',
@@ -19,10 +24,13 @@
     'views/onedesk_integration_menu.xml',
     'views/oauth_templates.xml',
     'views/onedesk_menu_views.xml',
-    
-    # Données après (quand les models sont chargés)
+
+    # Données intégrations
     'data/integration_providers.xml',
     'data/integration_cron.xml',
+
+    # Templates d'emails
+    'data/email_templates.xml',
     ],
     
     # ← NOUVEAU : Dépendances Python

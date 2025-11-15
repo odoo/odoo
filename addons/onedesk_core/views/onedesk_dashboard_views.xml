@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue formulaire Dashboard -->
+    <record id="view_onedesk_dashboard_form" model="ir.ui.view">
+        <field name="name">onedesk.dashboard.form</field>
+        <field name="model">onedesk.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard OneDesk" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_reservations" type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="total_reservations" widget="statinfo" string="Réservations"/>
+                        </button>
+                        <button name="action_view_properties" type="object" class="oe_stat_button" icon="fa-building">
+                            <field name="total_properties" widget="statinfo" string="Propriétés"/>
+                        </button>
+                        <button name="action_view_tasks" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <field name="tasks_pending" widget="statinfo" string="Tâches en attente"/>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group string="📊 Statistiques Générales">
+                            <field name="total_properties" readonly="1"/>
+                            <field name="total_units" readonly="1"/>
+                            <field name="active_reservations" readonly="1"/>
+                        </group>
+
+                        <group string="💰 Revenus">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="revenue_today" readonly="1" widget="monetary"/>
+                            <field name="revenue_week" readonly="1" widget="monetary"/>
+                            <field name="revenue_month" readonly="1" widget="monetary"/>
+                            <field name="revenue_year" readonly="1" widget="monetary"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="📈 Taux d'Occupation">
+                            <field name="occupancy_rate_today" readonly="1" widget="percentage"/>
+                            <field name="occupancy_rate_week" readonly="1" widget="percentage"/>
+                            <field name="occupancy_rate_month" readonly="1" widget="percentage"/>
+                        </group>
+
+                        <group string="📅 Aujourd'hui">
+                            <field name="checkins_today" readonly="1"/>
+                            <field name="checkouts_today" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="✅ Tâches">
+                            <field name="tasks_pending" readonly="1"/>
+                            <field name="tasks_in_progress" readonly="1"/>
+                            <field name="tasks_overdue" readonly="1"
+                                   decoration-danger="tasks_overdue > 0"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Dashboard -->
+    <record id="action_onedesk_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">onedesk.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+</odoo>

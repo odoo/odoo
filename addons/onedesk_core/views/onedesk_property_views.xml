@@ -1,58 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Liste des propriétés -->
+
+    <!-- Vue list (tree → list pour Odoo 19) -->
     <record id="view_property_list" model="ir.ui.view">
         <field name="name">onedesk.property.list</field>
         <field name="model">onedesk.property</field>
         <field name="arch" type="xml">
-            <list string="Properties">
+            <list string="Propriétés" multi_edit="1">
+                <field name="image_128" widget="image" optional="show"/>
                 <field name="name"/>
-                <field name="address"/>
-                <field name="price"/>
+                <field name="property_type"/>
+                <field name="city"/>
+                <field name="bedrooms"/>
+                <field name="max_guests"/>
+                <field name="price" widget="monetary" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="status" widget="badge" decoration-success="status=='available'" decoration-warning="status=='occupied'" decoration-danger="status=='maintenance'"/>
+                <field name="unit_count"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="active" optional="hide"/>
             </list>
         </field>
     </record>
 
-    <!-- Formulaire -->
+    <!-- Vue Kanban -->
+    <record id="view_property_kanban" model="ir.ui.view">
+        <field name="name">onedesk.property.kanban</field>
+        <field name="model">onedesk.property</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="property_type"/>
+                <field name="city"/>
+                <field name="price"/>
+                <field name="currency_id"/>
+                <field name="status"/>
+                <field name="image_128"/>
+                <field name="unit_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('onedesk.property', 'image_128', record.id.raw_value)" alt="Property"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div class="o_kanban_tags_section"/>
+                                <ul>
+                                    <li><i class="fa fa-map-marker"/> <field name="city"/></li>
+                                    <li><i class="fa fa-home"/> <field name="property_type"/></li>
+                                    <li><i class="fa fa-key"/> <field name="unit_count"/> unité(s)</li>
+                                    <li><strong><field name="price" widget="monetary"/> / nuit</strong></li>
+                                </ul>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="status" widget="label" options="{'classes': {'available': 'success', 'occupied': 'warning', 'maintenance': 'danger'}}"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vue formulaire enrichie -->
     <record id="view_property_form" model="ir.ui.view">
         <field name="name">onedesk.property.form</field>
         <field name="model">onedesk.property</field>
         <field name="arch" type="xml">
-            <form string="Property">
+            <form string="Propriété">
+                <header>
+                    <field name="status" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Archivé" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Nom de la propriété"/></h1>
+                        <field name="property_type"/>
+                    </div>
+
+                    <!-- Smart Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_onedesk_unit)d" type="action" class="oe_stat_button" icon="fa-key"
+                                context="{'default_property_id': id}">
+                            <field name="unit_count" widget="statinfo" string="Unités"/>
+                        </button>
+                    </div>
+
                     <group>
-                        <field name="name"/>
-                        <field name="address"/>
-                        <field name="price"/>
+                        <group string="Informations générales">
+                            <field name="active" invisible="1"/>
+                            <field name="description" widget="html"/>
+                            <field name="bedrooms"/>
+                            <field name="bathrooms"/>
+                            <field name="max_guests"/>
+                            <field name="square_feet"/>
+                        </group>
+                        <group string="Gestion">
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="owner_id"/>
+                        </group>
                     </group>
+
+                    <notebook>
+                        <page string="Localisation" name="location">
+                            <group>
+                                <group>
+                                    <field name="address" placeholder="Adresse complète"/>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="city"/>
+                                    <field name="zip"/>
+                                </group>
+                                <group>
+                                    <field name="state_id" options="{'no_create': True}"/>
+                                    <field name="country_id"/>
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Équipements" name="amenities">
+                            <field name="amenity_ids" widget="many2many_tags" options="{'color_field': 'category'}"/>
+                        </page>
+
+                        <page string="Tarification" name="pricing">
+                            <group>
+                                <group>
+                                    <field name="currency_id"/>
+                                    <field name="price"/>
+                                    <field name="cleaning_fee"/>
+                                    <field name="extra_guest_fee"/>
+                                </group>
+                                <group>
+                                    <field name="check_in_time" widget="float_time"/>
+                                    <field name="check_out_time" widget="float_time"/>
+                                    <field name="minimum_stay"/>
+                                    <field name="maximum_stay"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Règlement" name="house_rules">
+                            <group>
+                                <field name="pets_allowed"/>
+                                <field name="smoking_allowed"/>
+                                <field name="events_allowed"/>
+                            </group>
+                            <field name="house_rules" placeholder="Règlement intérieur..."/>
+                        </page>
+
+                        <page string="Galerie photos" name="images">
+                            <field name="image_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+                        </page>
+
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Notes internes..."/>
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
 
-    <!-- Action pour ouvrir la vue -->
-    <record id="action_onedesk_property" model="ir.actions.act_window">
-        <field name="name">Properties</field>
-        <field name="res_model">onedesk.property</field>
-        <field name="view_mode">list,form</field>
+    <!-- Vue recherche -->
+    <record id="view_property_search" model="ir.ui.view">
+        <field name="name">onedesk.property.search</field>
+        <field name="model">onedesk.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Propriété" filter_domain="['|', ('name', 'ilike', self), ('address', 'ilike', self)]"/>
+                <field name="city"/>
+                <field name="user_id"/>
+                <field name="property_type"/>
+                <separator/>
+                <filter string="Disponibles" name="available" domain="[('status', '=', 'available')]"/>
+                <filter string="Occupées" name="occupied" domain="[('status', '=', 'occupied')]"/>
+                <filter string="Maintenance" name="maintenance" domain="[('status', '=', 'maintenance')]"/>
+                <separator/>
+                <filter string="Actives" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archivées" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Type" name="group_property_type" context="{'group_by': 'property_type'}"/>
+                    <filter string="Ville" name="group_city" context="{'group_by': 'city'}"/>
+                    <filter string="Gestionnaire" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Statut" name="group_status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
     </record>
 
-    <!-- Menu principal -->
-    <menuitem id="menu_onedesk_root" name="OneDesk" sequence="10"
-              web_icon="onedesk_core/static/description/icon.png"/>
-
-    <!-- Sous-menu -->
-    <menuitem id="menu_onedesk_property" name="Properties"
-              parent="menu_onedesk_root"
-              action="action_onedesk_property"/>
-
+    <!-- Vue Calendrier -->
     <record id="view_property_calendar" model="ir.ui.view">
-    <field name="name">property.calendar</field>
-    <field name="model">onedesk.property</field>
-    <field name="arch" type="xml">
-        <calendar string="Calendrier des propriétés" date_start="date_start" date_stop="date_stop" color="user_id">
-            <field name="name"/>
-        </calendar>
-    </field>
-</record>
+        <field name="name">onedesk.property.calendar</field>
+        <field name="model">onedesk.property</field>
+        <field name="arch" type="xml">
+            <calendar string="Calendrier des propriétés" date_start="date_start" date_stop="date_stop" color="user_id">
+                <field name="name"/>
+                <field name="city"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_onedesk_property" model="ir.actions.act_window">
+        <field name="name">Propriétés</field>
+        <field name="res_model">onedesk.property</field>
+        <field name="view_mode">kanban,list,form,calendar</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre première propriété !
+            </p>
+            <p>
+                Gérez vos propriétés, unités et réservations depuis OneDesk.
+            </p>
+        </field>
+    </record>
 
 </odoo>

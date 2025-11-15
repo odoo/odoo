@@ -3,25 +3,105 @@ from odoo import models, fields, api
 class OnedeskTask(models.Model):
     _name = 'onedesk.task'
     _description = 'Tâches du personnel'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
+    _order = 'priority desc, date_start'
 
-    name = fields.Char(string='Nom de la tâche', required=True)
+    # Informations de base
+    name = fields.Char(string='Nom de la tâche', required=True, tracking=True)
+    active = fields.Boolean(string='Actif', default=True)
+
     task_type = fields.Selection([
         ('checkin', 'Check-in'),
         ('checkout', 'Check-out'),
         ('menage', 'Ménage'),
-        ('maintenance', 'Maintenance')],
-        string='Type de tâche', required=True)
-    assigned_to = fields.Many2one('res.users', string='Assigné à')
-    date_start = fields.Datetime(string='Date début', required=True)
-    date_end = fields.Datetime(string='Date fin')
+        ('maintenance', 'Maintenance'),
+        ('inspection', 'Inspection'),
+        ('laundry', 'Linge'),
+        ('supplies', 'Approvisionnement'),
+        ('other', 'Autre')],
+        string='Type de tâche', required=True, tracking=True)
+
+    priority = fields.Selection([
+        ('0', 'Basse'),
+        ('1', 'Normale'),
+        ('2', 'Haute'),
+        ('3', 'Urgente')],
+        string='Priorité', default='1', tracking=True)
+
+    # Assignation
+    assigned_to = fields.Many2one('res.users', string='Assigné à', tracking=True)
+    team_id = fields.Many2one('res.partner', string='Équipe/Département')
+
+    # Dates et durées
+    date_start = fields.Datetime(string='Date début', required=True, tracking=True)
+    date_end = fields.Datetime(string='Date fin estimée')
+    date_completed = fields.Datetime(string='Date de complétion réelle')
+
+    estimated_duration = fields.Float(string='Durée estimée (heures)', default=1.0)
+    actual_duration = fields.Float(string='Durée réelle (heures)', compute='_compute_actual_duration', store=True)
+
+    # Statut
     status = fields.Selection([
         ('todo', 'À faire'),
         ('in_progress', 'En cours'),
-        ('done', 'Terminée')],
-        string='Statut', default='todo')
+        ('done', 'Terminée'),
+        ('cancelled', 'Annulée')],
+        string='Statut', default='todo', tracking=True)
+
+    # Relations
     reservation_id = fields.Many2one('onedesk.reservation', string='Réservation associée', ondelete='cascade')
+    unit_id = fields.Many2one('onedesk.unit', string='Unité', related='reservation_id.unit_id', store=True)
+    property_id = fields.Many2one('onedesk.property', string='Propriété', related='unit_id.property_id', store=True)
+
+    # Instructions et notes
+    description = fields.Html(string='Description')
+    instructions = fields.Text(string='Instructions')
+    notes = fields.Text(string='Notes internes')
+
+    # Suivi
+    checklist_items = fields.Text(string='Liste de contrôle')
+    completion_notes = fields.Text(string='Notes de complétion')
+
+    require_photo = fields.Boolean(string='Photo requise', default=False)
+    completion_photo_ids = fields.Many2many('ir.attachment', 'task_photo_rel', 'task_id', 'attachment_id',
+                                             string='Photos de complétion')
+
+    # Récurrence
+    is_recurring = fields.Boolean(string='Tâche récurrente', default=False)
+    recurrence_interval = fields.Integer(string='Intervalle (jours)')
+
+    # Coûts
+    estimated_cost = fields.Float(string='Coût estimé')
+    actual_cost = fields.Float(string='Coût réel')
+    currency_id = fields.Many2one('res.currency', string='Devise',
+                                   default=lambda self: self.env.company.currency_id)
+
+    # Calendrier
     calendar_event_id = fields.Many2one('calendar.event', string="Événement calendrier")
+
+    # Computed fields
+    @api.depends('date_start', 'date_completed')
+    def _compute_actual_duration(self):
+        for record in self:
+            if record.date_start and record.date_completed:
+                delta = record.date_completed - record.date_start
+                record.actual_duration = delta.total_seconds() / 3600.0  # Conversion en heures
+            else:
+                record.actual_duration = 0.0
+
+    # Actions
+    def action_start(self):
+        self.write({'status': 'in_progress'})
+
+    def action_complete(self):
+        self.write({
+            'status': 'done',
+            'date_completed': fields.Datetime.now()
+        })
+
+    def action_cancel(self):
+        self.write({'status': 'cancelled'})
 
     @api.model
     def create_task_from_reservation(self, reservation):

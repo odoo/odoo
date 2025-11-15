@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Template: Email de bienvenue (J-3) -->
+        <record id="email_template_welcome" model="mail.template">
+            <field name="name">OneDesk: Email de bienvenue</field>
+            <field name="model_id" ref="model_onedesk_reservation"/>
+            <field name="subject">Votre séjour chez {{ object.property_id.name }} approche ! 🏠</field>
+            <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+<![CDATA[
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #555; width: 100%; border-collapse:separate;">
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #555; border-collapse:separate;">
+                <tbody>
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <h2 style="color: #4CAF50;">Bonjour {{ object.guest_name or object.partner_id.name }} ! 👋</h2>
+                            <p style="font-size: 16px;">
+                                Nous sommes ravis de vous accueillir bientôt chez <strong>{{ object.property_id.name }}</strong> !
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 20px;">
+                            <h3 style="color: #333;">📅 Détails de votre réservation</h3>
+                            <p>
+                                <strong>Référence:</strong> {{ object.name }}<br/>
+                                <strong>Check-in:</strong> {{ format_datetime(object.start_date, dt_format='d MMMM yyyy à HH:mm', tz=object.property_id.user_id.tz or 'UTC', locale=object.partner_id.lang or 'fr_FR') }}<br/>
+                                <strong>Check-out:</strong> {{ format_datetime(object.end_date, dt_format='d MMMM yyyy à HH:mm', tz=object.property_id.user_id.tz or 'UTC', locale=object.partner_id.lang or 'fr_FR') }}<br/>
+                                <strong>Durée:</strong> {{ object.nights }} nuit(s)<br/>
+                                <strong>Nombre de personnes:</strong> {{ object.guest_count }}<br/>
+                            </p>
+
+                            <h3 style="color: #333;">🏡 Votre logement</h3>
+                            <p>
+                                <strong>{{ object.unit_id.name }}</strong><br/>
+                                <strong>Adresse:</strong> {{ object.property_id.address or object.property_id.city }}<br/>
+                                <strong>Capacité:</strong> {{ object.unit_id.max_guests }} personnes<br/>
+                            </p>
+
+                            % if object.property_id.amenity_ids:
+                            <h3 style="color: #333;">✨ Équipements</h3>
+                            <p>
+                                % for amenity in object.property_id.amenity_ids[:6]:
+                                <span style="display: inline-block; margin: 5px; padding: 5px 10px; background-color: #f0f0f0; border-radius: 5px;">
+                                    {{ amenity.name }}
+                                </span>
+                                % endfor
+                            </p>
+                            % endif
+
+                            <div style="margin-top: 30px; padding: 15px; background-color: #E8F5E9; border-left: 4px solid #4CAF50;">
+                                <p style="margin: 0;"><strong>💡 Conseil:</strong> Consultez votre email de check-in que vous recevrez 24h avant votre arrivée pour les instructions d'accès détaillées.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 20px;">
+                            <p style="font-size: 14px; color: #888;">
+                                Des questions ? Contactez-nous !<br/>
+                                <strong>{{ object.property_id.user_id.name }}</strong><br/>
+                                {{ object.property_id.user_id.email }}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+]]>
+            </field>
+        </record>
+
+        <!-- Template: Instructions Check-in (J-1) -->
+        <record id="email_template_checkin_instructions" model="mail.template">
+            <field name="name">OneDesk: Instructions Check-in</field>
+            <field name="model_id" ref="model_onedesk_reservation"/>
+            <field name="subject">Instructions d'arrivée - {{ object.property_id.name }} - Demain ! 🔑</field>
+            <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+<![CDATA[
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #555; width: 100%; border-collapse:separate;">
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #555; border-collapse:separate;">
+                <tbody>
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <h2 style="color: #2196F3;">Votre check-in est demain ! 🎉</h2>
+                            <p style="font-size: 16px;">
+                                Tout est prêt pour votre arrivée chez <strong>{{ object.property_id.name }}</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 20px;">
+                            <h3 style="color: #333;">🔑 Informations d'accès</h3>
+                            <div style="padding: 15px; background-color: #FFF3E0; border-left: 4px solid #FF9800; margin-bottom: 20px;">
+                                <p style="margin: 0;">
+                                    <strong>Heure d'arrivée:</strong> {{ format_datetime(object.start_date, dt_format='HH:mm', tz=object.property_id.user_id.tz or 'UTC') }} (Check-in à partir de {{ '%02d' % int(object.property_id.check_in_time) }}:{{ '%02d' % int((object.property_id.check_in_time % 1) * 60) }})<br/>
+                                    <strong>Adresse complète:</strong> {{ object.property_id.address }}<br/>
+                                    <strong>Unité:</strong> {{ object.unit_id.name }}<br/>
+                                </p>
+                            </div>
+
+                            % if object.check_in_instructions:
+                            <h3 style="color: #333;">📝 Instructions spécifiques</h3>
+                            <div style="padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
+                                {{ object.check_in_instructions }}
+                            </div>
+                            % else:
+                            <div style="padding: 15px; background-color: #E3F2FD; border-left: 4px solid #2196F3;">
+                                <p style="margin: 0;">
+                                    <strong>Code d'accès:</strong> Vous recevrez le code par SMS 2h avant votre arrivée<br/>
+                                    <strong>Localisation clés:</strong> Boîte à clés à gauche de la porte d'entrée
+                                </p>
+                            </div>
+                            % endif
+
+                            <h3 style="color: #333;">ℹ️ Informations pratiques</h3>
+                            <p>
+                                <strong>WiFi:</strong> Nom du réseau et mot de passe disponibles dans le logement<br/>
+                                <strong>Parking:</strong> {{ 'Parking disponible' if object.property_id.amenity_ids.filtered(lambda a: a.name == 'Parking') else 'Parking public à proximité' }}<br/>
+                                <strong>Check-out:</strong> {{ format_datetime(object.end_date, dt_format='d MMMM yyyy à HH:mm', tz=object.property_id.user_id.tz or 'UTC', locale=object.partner_id.lang or 'fr_FR') }}<br/>
+                            </p>
+
+                            % if object.property_id.house_rules:
+                            <h3 style="color: #333;">📋 Règlement intérieur</h3>
+                            <div style="padding: 15px; background-color: #f9f9f9; border-radius: 5px; font-size: 14px;">
+                                {{ object.property_id.house_rules }}
+                            </div>
+                            % endif
+
+                            <div style="margin-top: 30px; padding: 15px; background-color: #E8F5E9; border-left: 4px solid #4CAF50;">
+                                <p style="margin: 0;"><strong>🚗 Itinéraire:</strong> Utilisez ces coordonnées GPS: {{ object.property_id.latitude }}, {{ object.property_id.longitude if object.property_id.latitude else 'Adresse: ' + object.property_id.address }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 20px;">
+                            <p style="font-size: 14px; color: #888;">
+                                Urgence ou question ? Appelez-nous !<br/>
+                                <strong>{{ object.property_id.user_id.name }}</strong><br/>
+                                {{ object.property_id.user_id.email }}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+]]>
+            </field>
+        </record>
+
+        <!-- Template: Demande d'avis (après check-out) -->
+        <record id="email_template_review_request" model="mail.template">
+            <field name="name">OneDesk: Demande d'avis</field>
+            <field name="model_id" ref="model_onedesk_reservation"/>
+            <field name="subject">Comment s'est passé votre séjour chez {{ object.property_id.name }} ? ⭐</field>
+            <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+<![CDATA[
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #555; width: 100%; border-collapse:separate;">
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #555; border-collapse:separate;">
+                <tbody>
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <h2 style="color: #FFA726;">Merci pour votre séjour ! 🙏</h2>
+                            <p style="font-size: 16px;">
+                                Nous espérons que vous avez passé un excellent moment chez <strong>{{ object.property_id.name }}</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 20px;">
+                            <p>Bonjour {{ object.guest_name or object.partner_id.name }},</p>
+
+                            <p style="font-size: 16px;">
+                                Votre avis est très important pour nous ! Pourriez-vous prendre 2 minutes pour partager votre expérience ?
+                            </p>
+
+                            <div style="text-align: center; margin: 30px 0;">
+                                <table border="0" cellspacing="0" cellpadding="0" align="center">
+                                    <tr>
+                                        <td align="center" style="border-radius: 5px; background-color: #4CAF50;">
+                                            <a href="#" target="_blank" style="font-size: 16px; font-weight: bold; color: #ffffff; text-decoration: none; border-radius: 5px; padding: 12px 30px; border: 1px solid #4CAF50; display: inline-block;">
+                                                ⭐ Laisser un avis
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <h3 style="color: #333;">📊 Votre séjour en bref</h3>
+                            <p>
+                                <strong>Dates:</strong> Du {{ format_datetime(object.start_date, dt_format='d MMM', tz=object.property_id.user_id.tz or 'UTC', locale=object.partner_id.lang or 'fr_FR') }} au {{ format_datetime(object.end_date, dt_format='d MMM yyyy', tz=object.property_id.user_id.tz or 'UTC', locale=object.partner_id.lang or 'fr_FR') }}<br/>
+                                <strong>Logement:</strong> {{ object.unit_id.name }}<br/>
+                                <strong>Référence:</strong> {{ object.name }}<br/>
+                            </p>
+
+                            <div style="margin-top: 30px; padding: 15px; background-color: #E3F2FD; border-left: 4px solid #2196F3;">
+                                <p style="margin: 0;"><strong>💙 Vous avez aimé ?</strong> Nous serions ravis de vous revoir ! Profitez de 10% de réduction sur votre prochain séjour en utilisant le code: <strong>RETOUR10</strong></p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 20px;">
+                            <p style="font-size: 14px; color: #888;">
+                                À très bientôt !<br/>
+                                <strong>{{ object.property_id.user_id.name }}</strong><br/>
+                                {{ object.property_id.user_id.email }}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+]]>
+            </field>
+        </record>
+
+    </data>
+</odoo>
