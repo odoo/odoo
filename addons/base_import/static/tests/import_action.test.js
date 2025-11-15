@@ -1,7 +1,8 @@
 import { before, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, drag, queryOne, setInputFiles, waitFor } from "@odoo/hoot-dom";
-import { useEffect } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useState, xml } from "@odoo/owl";
 import {
+    clearRegistry,
     contains,
     defineActions,
     defineModels,
@@ -15,12 +16,17 @@ import {
     patchWithCleanup,
     serverState,
     toggleActionMenu,
+    toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { redirect } from "@web/core/utils/urls";
 import { ImportAction } from "../src/import_action/import_action";
+import { ImportRecords } from "../src/import_records/import_records";
 import { ImportBlockUI } from "../src/import_block_ui";
 import { ImportDataProgress } from "../src/import_data_progress/import_data_progress";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { View } from "@web/views/view";
 
 const FAKE_PREVIEW_HEADERS = ["Foo", "Bar", "Display name"];
 const FAKE_PREVIEW_DATA = [
@@ -1528,6 +1534,55 @@ test("field selection has a clear button", async () => {
 
     await contains(".o_select_menu_toggler_clear").click();
     expect("tr:nth-child(2) .o_select_menu").toHaveText("To import, select a field...");
+});
+
+test("Import Records in search bar dropdown for client actions", async () => {
+    const actionRegistry = registry.category("actions");
+    before(() => {
+        const favoriteMenuRegistry = registry.category("favoriteMenu");
+        clearRegistry(favoriteMenuRegistry);
+        const clientActionImportRecordsItem = {
+            Component: ImportRecords,
+            groupNumber: 4,
+        };
+        favoriteMenuRegistry.add(
+            "client-action-import-records-menu",
+            clientActionImportRecordsItem
+        );
+    });
+    class TestClientAction extends Component {
+        static template = xml`<View t-props="state"/>`;
+        static components = { View };
+        static props = ["*"];
+        setup() {
+            this.state = useState({
+                arch: `<list><field name="name"/></list>`,
+                resModel: "partner",
+                type: "list",
+                views: [
+                    [false, "list"],
+                    [false, "search"],
+                ],
+            });
+            this.field = useService("field");
+            onWillStart(async () => {
+                this.state.fields = await this.field.loadFields("partner");
+            });
+        }
+    }
+    actionRegistry.add("__test__client__action__", TestClientAction);
+
+    await mountWebClient();
+    await getService("action").doAction({
+        tag: "__test__client__action__",
+        res_model: "partner",
+        type: "ir.actions.client",
+    });
+    await toggleSearchBarMenu();
+    expect(`.o_import_menu`).toHaveCount(1);
+    await contains(`.o_import_menu`).click();
+    await waitFor(".o_import_action");
+    expect(".o_view_nocontent").toHaveCount(1);
 });
 
 describe("Import a CSV", () => {

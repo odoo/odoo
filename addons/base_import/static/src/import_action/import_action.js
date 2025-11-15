@@ -96,7 +96,7 @@ export class ImportAction extends Component {
         if (!this.action) {
             return this.env.config.historyBack();
         }
-        if (this.action.type !== "ir.actions.act_window") {
+        if (!["ir.actions.act_window", "ir.actions.client"].includes(this.action.type)) {
             return this.actionService.restore(this.actionService.currentController.jsId);
         }
 
