@@ -11,13 +11,15 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 02:36+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 14:58+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "payment_paypal/tr/>\n"
 "Language: tr\n"
@@ -45,14 +47,15 @@ msgstr "Kod"
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
+#, fuzzy
 msgid "Could not generate a new access token."
-msgstr ""
+msgstr "Yeni bir erişim belirteci oluşturulamadı."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
@@ -73,13 +76,14 @@ msgstr "Paypal hesabınız nasıl ayarlanır?"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/controllers/main.py:0
+#, fuzzy
 msgid "Invalid response format, can't normalize."
-msgstr ""
+msgstr "Geçersiz yanıt biçimi, normalleştirilemiyor."
 
 #. module: payment_paypal
 #. odoo-python
@@ -94,23 +98,27 @@ msgstr "PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token
+#, fuzzy
 msgid "PayPal Access Token"
-msgstr ""
+msgstr "PayPal Erişim Simgesi"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token_expiry
+#, fuzzy
 msgid "PayPal Access Token Expiry"
-msgstr ""
+msgstr "PayPal Erişim Jetonu Sona Erme"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_id
+#, fuzzy
 msgid "PayPal Client ID"
-msgstr ""
+msgstr "PayPal Müşteri Kimliği"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_secret
+#, fuzzy
 msgid "PayPal Client Secret"
-msgstr ""
+msgstr "PayPal Müşteri Sırrı"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
@@ -119,8 +127,9 @@ msgstr "PayPal İşlem Türü"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
+#, fuzzy
 msgid "PayPal Webhook ID"
-msgstr ""
+msgstr "PayPal Webhook Kimliği"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
@@ -152,8 +161,9 @@ msgstr "Müşteri ödeme sayfasını terketmiş."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
+#, fuzzy
 msgid "The moment at which the access token becomes invalid."
-msgstr ""
+msgstr "Erişim belirtecinin geçersiz hale geldiği an."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
@@ -163,8 +173,9 @@ msgstr "Herkese açık iş e-postası yalnızca hesabı PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
+#, fuzzy
 msgid "The short-lived token used to access Paypal APIs"
-msgstr ""
+msgstr "Paypal API'lerine erişmek için kullanılan kısa ömürlü token"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
@@ -174,19 +185,22 @@ msgstr "Bu ödeme sağlayıcısının teknik kodu."
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/controllers/main.py:0
+#, fuzzy
 msgid "Unable to verify the payment data"
-msgstr ""
+msgstr "Ödeme verileri doğrulanamıyor"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+#, fuzzy
 msgid "Webhook ID"
-msgstr ""
+msgstr "Web kancası kimliği"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
+#, fuzzy
 msgid "You must have an HTTPS connection to generate a webhook."
-msgstr ""
+msgstr "Bir web kancası oluşturmak için HTTPS bağlantınız olmalıdır."
 
 #~ msgid "Paypal"
 #~ msgstr "Paypal"

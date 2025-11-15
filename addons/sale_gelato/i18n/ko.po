@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 11:54+0000\n"
-"PO-Revision-Date: 2025-10-27 02:31+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 18:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "sale_gelato/ko/>\n"
 "Language: ko\n"
@@ -69,25 +70,25 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                    안녕하세요 <t t-out=\"object.partner_id.name or ''\""
-">Brandon Freeman</t>님,<br/><br/>\n"
+"                    안녕하세요 <t t-out=\"object.partner_id.name or "
+"''\">Brandon Freeman</t>님,<br/><br/>\n"
 "                    <!-- Order in transit body -->\n"
 "                    <t t-if=\"ctx.get('tracking_data')\">\n"
 "                        고객님이 주문하신 상품이 배송 중입니다.\n"
 "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
-"                            <t t-set=\"tracking_url\" t-value="
-"\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            배송 조회 번호: <a t-att-href=\"tracking_url\" "
-"t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <t t-set=\"tracking_url\" t-"
+"value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            배송 조회 번호: <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
 "                            <br/><br/>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            배송 조회 번호:\n"
 "                            <ul>\n"
-"                                <li t-foreach=\"ctx['tracking_data']\" t-as="
-"\"tracking_url\">\n"
-"                                    <a t-att-href=\"tracking_url\" t-out="
-"\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                    <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
 "                                </li>\n"
 "                            </ul>\n"
 "                        </t>\n"
@@ -101,9 +102,9 @@ msgstr ""
 "                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
 "container=\"1\">\n"
 "                        <br/>\n"
-"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote="
-"\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\""
-">Mitchell Admin</t></div>\n"
+"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "                    </t>\n"
 "                </p>\n"
 "            </div>\n"
@@ -159,7 +160,7 @@ msgstr "젤라또와 동기화할 수 없습니다"
 #. module: sale_gelato
 #: model:ir.model,website_form_label:sale_gelato.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "고객 만들기"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__display_name
@@ -172,7 +173,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_gelato.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_gelato.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "표시명"
 
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.express_delivery
@@ -275,7 +276,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "Invalid source document type"
-msgstr ""
+msgstr "잘못된 원본 문서 유형"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
@@ -398,7 +399,7 @@ msgstr "이 주문에는 배송 방법을 사용할 수 없습니다."
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/models/delivery_carrier.py:0
+#: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The following required address fields are missing: %s"
 msgstr "다음 필수 주소 필드가 누락되었습니다: %s"
 
@@ -417,6 +418,18 @@ msgid ""
 msgstr ""
 "참조 번호 %(order_reference)s 관련 주문이 Gelato로 전송되지 않았습니다.\n"
 "사유: %(error_message)s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to confirm the order %s on Gelato."
+msgstr "Gelato에서 %s 주문서를 확정할 수 없습니다."
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to delete the order %s on Gelato."
+msgstr "Gelato에서 %s 주문서를 삭제할 수 없습니다."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form

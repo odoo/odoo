@@ -4,12 +4,13 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-11-04 05:21+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-11 17:17+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "microsoft_outlook/ja/>\n"
@@ -76,12 +77,6 @@ msgid "An error occurred when fetching the access token. %s"
 msgstr "アクセストークンを取得する際にエラーが発生しました。 %s"
 
 #. module: microsoft_outlook
-#. odoo-python
-#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
-msgid "An error occurred: %s."
-msgstr "エラーが発生しました: %s"
-
-#. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
 msgstr "認証対象"
@@ -134,7 +129,7 @@ msgstr "表示名"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back"
-msgstr ""
+msgstr "戻る"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__id
@@ -186,7 +181,7 @@ msgstr "Outlookメールサーバにリンクできるのは管理者のみで�
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "Oops, we could not authenticate you. Please try again later."
-msgstr ""
+msgstr "おっと、認証に失敗しました。時間をおいてもう一度お試しください。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -195,16 +190,18 @@ msgid ""
 "Oops, you're creating an authorization to send from %(email_login)s but your "
 "address is %(email_server)s. Make sure your addresses match!"
 msgstr ""
+"おっと! 送信元として %(email_login)s を認証しようとしていますが、現在のアドレ"
+"スは %(email_server)s です。アドレスが一致していることをご確認ください。"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__outgoing_mail_server_type
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "送信メールサーバの種類"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__res_users__outgoing_mail_server_type__outlook
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
@@ -246,14 +243,8 @@ msgstr "Outlookリフレッシュトークン"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
-msgid "Outlook is not configured on IAP."
-msgstr ""
-
-#. module: microsoft_outlook
-#. odoo-python
-#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
-msgid "Please configure your outlook credentials."
-msgstr ""
+msgid "Please configure your Outlook credentials."
+msgstr "Outlookの認証情報を設定して下さい。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -265,7 +256,7 @@ msgstr "使用前にOutlookアカウントと接続して下さい。"
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "有効なEメールアドレスを入力してください。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -331,22 +322,16 @@ msgstr "不明なエラー"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_users
 msgid "User"
-msgstr ""
+msgstr "ユーザー"
 
-#. module: microsoft_outlook
-#. odoo-python
-#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
-msgid "You don't have an active subscription."
-msgstr ""
+#~ msgid "An error occurred: %s."
+#~ msgstr "エラーが発生しました: %s"
 
 #~ msgid "Go back to your mail server"
 #~ msgstr "メールサーバに戻る"
 
 #~ msgid "Is Outlook Credential Configured"
 #~ msgstr "Outlookのクレデンシャルが設定されているか"
-
-#~ msgid "Please configure your Outlook credentials."
-#~ msgstr "Outlookの認証情報を設定して下さい。"
 
 #~ msgid ""
 #~ "Setup your Outlook API credentials in the general settings to link a "

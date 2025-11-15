@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_gmail
+# * google_gmail
 #
 # Translators:
 # Wil Odoo, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 21:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/google_gmail/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -81,7 +83,7 @@ msgstr "訪問代碼到期時間戳"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__active
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__active
 msgid "Active"
-msgstr ""
+msgstr "啟用"
 
 #. module: google_gmail
 #. odoo-python
@@ -94,12 +96,6 @@ msgstr ""
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "An error occurred when fetching the access token."
 msgstr "獲取訪問代碼時發生錯誤。"
-
-#. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "An error occurred: %s."
-msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -166,15 +162,9 @@ msgid "Gmail OAuth Authentication"
 msgstr "Gmail OAuth 身份驗證"
 
 #. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "Gmail is not configured on IAP."
-msgstr ""
-
-#. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.google_gmail_oauth_error
 msgid "Go back"
-msgstr ""
+msgstr "返回"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
@@ -286,7 +276,7 @@ msgstr "更新 Token"
 #. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 msgid "SSL is required for server “%s”."
-msgstr ""
+msgstr "以下伺服器需要 SSL：%s"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -302,6 +292,12 @@ msgstr "你的 Google 應用程式秘密"
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
 msgid "Server Type"
 msgstr "伺服器類型"
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/tools.py:0
+msgid "Something went wrong. Try again later"
+msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -320,12 +316,12 @@ msgstr "URI"
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_users
 msgid "User"
-msgstr ""
+msgstr "使用者"
 
 #. module: google_gmail
 #. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "You don't have an active subscription."
+#: code:addons/google_gmail/tools.py:0
+msgid "You don't have an active subscription"
 msgstr ""
 
 #~ msgid "An error occur during the authentication process."

@@ -26,13 +26,14 @@
 # Piia Paurson <piia@avalah.ee>, 2023
 # Tairi Tiimann <tairi@avalah.ee>, 2025.
 # Kristina Pešehodko <kristina@avalah.ee>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-28 07:52+0000\n"
-"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/sale/et/"
 ">\n"
 "Language: et\n"
@@ -708,6 +709,9 @@ msgid ""
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title="
+"\"This product is archived\" invisible="
+"\"state not in ['draft', 'sent'] or not is_product_archived\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -715,6 +719,9 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o p-2\" title="
+"\"Values set here are company-specific.\" groups=\"base.group_multi_company\""
+"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -724,7 +731,7 @@ msgstr "<span class=\"flex-grow-1\">/ Kuu</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\"></span>-st"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -743,6 +750,8 @@ msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" class="
+"\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -757,8 +766,8 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
-"<span><b>Õnnitleme</b>, sinu esimene pakkumine on "
-"saadetud!<br>Hinnapakkumise kinnitamiseks kontrolli oma meili.\n"
+"<span><b>Õnnitleme</b>, sinu esimene pakkumine on saadetud!"
+"<br>Hinnapakkumise kinnitamiseks kontrolli oma meili.\n"
 "        </span>"
 
 #. module: sale
@@ -870,7 +879,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
-msgstr "Toode müügitellimuse real peab olema sama selle kombinatsiooni tootega."
+msgstr ""
+"Toode müügitellimuse real peab olema sama selle kombinatsiooni tootega."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -937,8 +947,8 @@ msgstr ""
 "- Käsitsi: kogus määratakse reale käsitsi\n"
 "- Analüütiliste kulude alusel: kogus on postitatud kuludest tulenevate "
 "koguste summa\n"
-"- Ajaarvestus: kogus on müügireaga seotud ülesannetele logitud tundide summa."
-"\n"
+"- Ajaarvestus: kogus on müügireaga seotud ülesannetele logitud tundide "
+"summa.\n"
 "- Laoliikumised: kogus tuleb kinnitatud korjetest\n"
 
 #. module: sale
@@ -948,6 +958,7 @@ msgstr "Konto tabeli mall"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
+#: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry_sale_order_line
 msgid "Accrued Revenue Entry"
 msgstr "Kogunenud tulu kanne"
 
@@ -1141,6 +1152,7 @@ msgstr "Amazon Sync"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Amount"
@@ -1245,8 +1257,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
-"Näiteks, kui müüte ettemakstud tundidega teenuseid, soovitab Odoo teil müüa "
-"\n"
+"Näiteks, kui müüte ettemakstud tundidega teenuseid, soovitab Odoo teil "
+"müüa \n"
 "                           lisatunde kuni kõik tellitud tunnid on kasutatud."
 
 #. module: sale
@@ -1428,10 +1440,10 @@ msgstr ""
 "\n"
 "Kui soovid arveldada tellitud koguste alusel:\n"
 "• Tarbitava või ladustavate toodete puhul ava toode, mine \"Üldine info\" "
-"vahelehele ja muuda arvelduse meetod \"Tarnitud kogused\" pealt "
-"\"Tellitud kogused\" peale.\n"
-"• Teenuste (ja teiste toodete) puhul muuda arvelduse meetod "
-"\"Ettemakstud/fikseeritud hind\" peale.\n"
+"vahelehele ja muuda arvelduse meetod \"Tarnitud kogused\" pealt \"Tellitud "
+"kogused\" peale.\n"
+"• Teenuste (ja teiste toodete) puhul muuda arvelduse meetod \"Ettemakstud/"
+"fikseeritud hind\" peale.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1565,8 +1577,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta transpordihind ja saada DHL'ga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1586,8 +1598,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta transpordihind ja saada FedEx'ga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1612,8 +1624,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta transpordihind ja saada UPS'ga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1623,8 +1635,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta transpordihind ja saada USPSga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1979,6 +1991,7 @@ msgid "Deliver Content by Email"
 msgstr "Saada sisu e-kirja teel"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
 msgstr "Tarnitud"
@@ -2511,8 +2524,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Kaupade all mõistetakse käegakatsutavaid materjale ja kaupu, mida te pakute. "
-"\n"
+"Kaupade all mõistetakse käegakatsutavaid materjale ja kaupu, mida te "
+"pakute. \n"
 "Teenus on mittefüüsiline toode, mida te pakute."
 
 #. module: sale
@@ -2687,8 +2700,8 @@ msgid ""
 "                                discount column."
 msgstr ""
 "Müügitellimusrea originaalhind on ühikuhind ning allahindlus on\n"
-"                                                                     "
-"allahindlus tulbas."
+"                                                                     allahindlus "
+"tulbas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2809,6 +2822,7 @@ msgid "Invoice what is ordered"
 msgstr "Lisa arvele tellitud kogused"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
 msgstr "Arveldatud"
@@ -3422,8 +3436,8 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
-"Valikulisi tooteid soovitatakse alati, kui klient vajutab *Lisa ostukorvi* ("
-"ristmüügistrateegia, nt arvutite jaoks: garantii, tarkvara jne)."
+"Valikulisi tooteid soovitatakse alati, kui klient vajutab *Lisa ostukorvi* "
+"(ristmüügistrateegia, nt arvutite jaoks: garantii, tarkvara jne)."
 
 #. module: sale
 #. odoo-python
@@ -3790,6 +3804,7 @@ msgid "Product Catalog Product Is In Sale Order"
 msgstr "Müügitellimusel on tootekataloogi toode"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
@@ -5514,8 +5529,8 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
-"Kinnitatud kulud, ostuarved või lao korjed (seadistatakse kulude jälgimiseks)"
-" saab arveldada kliendile kas kuluhinna või müügihinnaga."
+"Kinnitatud kulud, ostuarved või lao korjed (seadistatakse kulude "
+"jälgimiseks) saab arveldada kliendile kas kuluhinna või müügihinnaga."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form

@@ -9,13 +9,15 @@
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 14:57+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "payment_adyen/tr/>\n"
 "Language: tr\n"
@@ -27,18 +29,23 @@ msgstr ""
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
+#, fuzzy
 msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to "
 "set\n"
 "                    the Capture Delay to manual on your Adyen account "
 "settings."
 msgstr ""
+"<strong>Uyarı:</strong> Tutarı manuel olarak yakalamak için ayrıca\n"
+"                    Adyen hesap ayarlarınızda Yakalama Gecikmesini manuel "
+"olarak ayarlayın."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
+#, fuzzy
 msgid "A request was sent to void the transaction %(reference)s."
-msgstr ""
+msgstr "İşlemin geçersiz kılınması için bir talep gönderildi %(reference)s."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -47,8 +54,9 @@ msgstr "API Anahtarı"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
+#, fuzzy
 msgid "API URL Prefix"
-msgstr ""
+msgstr "API URL Öneki"
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
@@ -65,8 +73,9 @@ msgstr "Ödemenizin işlenmesi sırasında bir hata oluştu. Lütfen tekrar dene
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "Ödeme formu görüntülenemiyor"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
@@ -84,7 +93,7 @@ msgstr "Kod"
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
@@ -93,8 +102,9 @@ msgstr "HMAC Anahtarı"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
+#, fuzzy
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Has Adyen Tx"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__id
@@ -102,13 +112,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Yanlış ödeme bilgileri"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
@@ -122,8 +133,9 @@ msgstr "Ticari Kimliği (Merchant ID)"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_capture_wizard
+#, fuzzy
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Ödeme Yakalama Sihirbazı"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
@@ -182,35 +194,44 @@ msgstr "Web kancasının HMAC tuşu"
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Adyen tarafından %s işlemi için işlenen tutar talep edilenden farklıdır. "
+"Doğru tutar ile başka bir işlem oluşturulur."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
+#, fuzzy
 msgid "The base URL for the API endpoints"
-msgstr ""
+msgstr "API uç noktaları için temel URL"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
+#, fuzzy
 msgid "The capture of the transaction %s failed."
-msgstr ""
+msgstr "%s işleminin yakalanması başarısız oldu."
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
+#, fuzzy
 msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"İşlemin yakalanması veya geçersiz kılınması birkaç dakika sürebilir\n"
+"                    Adyen tarafından işlenir ve Odoo'ya yansıtılır."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "The capture request of %(amount)s for transaction %(ref)s has been sent."
-msgstr ""
+msgstr "%(ref)s işlemi için %(amount)s adresinin yakalama talebi gönderildi."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
@@ -219,8 +240,9 @@ msgstr "Web hizmeti kullanıcısının istemci anahtarı"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
+#, fuzzy
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "Bu sağlayıcı ile kullanılacak satıcı hesabının kodu"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
@@ -235,8 +257,9 @@ msgstr "Bu belirtecin sahibi olan iş ortağının benzersiz referansı"
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
+#, fuzzy
 msgid "The void of the transaction %s failed."
-msgstr ""
+msgstr "%s işleminin geçersiz kılınması başarısız oldu."
 
 #. module: payment_adyen
 #. odoo-python

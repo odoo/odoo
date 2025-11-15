@@ -3,13 +3,14 @@
 # * cloud_storage
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-07 12:10+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "cloud_storage/sv/>\n"
 "Language: sv\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "<span>MB</span>"
-msgstr ""
+msgstr "<span>MB</span>"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -38,7 +39,7 @@ msgstr "Cloud Storage"
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr ""
+msgstr "Cloud Storage Provider för nya bilagor"
 
 #. module: cloud_storage
 #. odoo-python
@@ -50,7 +51,7 @@ msgstr "Cloud Storage är inte aktiverat"
 #. odoo-python
 #: code:addons/cloud_storage/controllers/attachment.py:0
 msgid "Cloud storage configuration has been changed. Please refresh the page."
-msgstr ""
+msgstr "Konfigurationen för molnlagring har ändrats. Vänligen uppdatera sidan."
 
 #. module: cloud_storage
 #. odoo-javascript
@@ -68,7 +69,7 @@ msgstr "Inställningar"
 #: model:ir.model.fields,field_description:cloud_storage.field_ir_http__display_name
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Visa namn"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
@@ -80,38 +81,38 @@ msgstr "HTTP-routing"
 #: model:ir.model.fields,field_description:cloud_storage.field_ir_http__id
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Minimum File Size"
-msgstr ""
+msgstr "Minsta filstorlek"
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size_mb
 msgid "Minimum File Size (MB)"
-msgstr ""
+msgstr "Minsta filstorlek (MB)"
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid "Minimum File Size (bytes)"
-msgstr ""
+msgstr "Minsta filstorlek (bytes)"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Minimum size for attachments to be stored in the cloud storage"
-msgstr ""
+msgstr "Minsta storlek för bilagor som ska lagras i molnlagringen"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/models/res_config_settings.py:0
 msgid "Please configure the Cloud Storage before enabling it"
-msgstr ""
+msgstr "Konfigurera molnlagringen innan du aktiverar den"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Select the cloud storage provider to store new attachments."
-msgstr ""
+msgstr "Välj molnlagringsleverantör för att lagra nya bilagor."
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__type
@@ -141,6 +142,10 @@ msgid ""
 "to\n"
 "        the cloud storage."
 msgstr ""
+"webclient kan ladda upp filer som är större än den minsta filstorleken\n"
+"        (i byte) som url-bilagor till servern och sedan ladda upp filen "
+"till\n"
+"        molnlagringen."
 
 #~ msgid "Cloud Storage Settings"
 #~ msgstr "Cloud Storage inställningar"

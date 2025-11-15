@@ -6,15 +6,16 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-22 11:08+0000\n"
+"PO-Revision-Date: 2025-11-13 10:00+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/event/nl/>"
 "\n"
@@ -287,11 +288,15 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Als je een presentatie wil geven, zend dan je voorstel zo snel mogelijk "
+"naar Mr. Famke Jenssens via ngh@jouwbedrijf.com. De presentaties moeten gaan "
+"over bijvoorbeeld een communitymodule, casestudy, methodologie feedback, "
+"technisch onderwerp enz. Elke presentatie moet in het Engels zijn.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mx-2\" title=\"tot\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -361,6 +366,9 @@ msgid ""
 "                                    Attendee answers\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Antwoorden van deelnemers\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2761,7 +2769,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_question_check_default_question_is_reusable
 msgid "A default question must be reusable."
-msgstr ""
+msgstr "Een standaardvraag moet herbruikbaar zijn."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -2868,6 +2876,7 @@ msgstr "Soort activiteit"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description that will appear as a tooltip for this stage"
 msgstr ""
+"Voeg een beschrijving toe die zal verschijnen als tooltip voor deze fase"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -2960,6 +2969,8 @@ msgid ""
 "Allow this question to be selected and reused for any future event. Always "
 "true for default questions."
 msgstr ""
+"Sta toe dat deze vraag wordt geselecteerd en hergebruikt voor elk toekomstig "
+"evenement. Altijd waar voor standaard vragen."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -3317,6 +3328,8 @@ msgid ""
 "Check this for order-level questions (e.g., 'Company Name') where the answer "
 "is the same for everyone."
 msgstr ""
+"Controleer dit voor vragen op orderniveau (bijv. 'Bedrijfsnaam') waarop het "
+"antwoord voor iedereen hetzelfde is."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_type_id
@@ -3538,12 +3551,12 @@ msgstr "Dagen"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Default Questions"
-msgstr ""
+msgstr "Standaardvragen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_default
 msgid "Default question"
-msgstr ""
+msgstr "Standaardvraag"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
@@ -3800,7 +3813,7 @@ msgstr "Antwoord van de evenementvraag"
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
 msgid "Event Questions"
-msgstr ""
+msgstr "Evenement vragen"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -3923,7 +3936,7 @@ msgstr "Soort evenement"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_ids
 msgid "Event Types"
-msgstr ""
+msgstr "Evenementtypes"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -4121,7 +4134,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "For each attendee"
-msgstr ""
+msgstr "Voor elke deelnemer"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -4287,7 +4300,7 @@ msgstr "Startpagina"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "Hour range"
-msgstr ""
+msgstr "Uurbereik"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -4416,7 +4429,7 @@ msgstr "In behandeling"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "Standaard opnemen in nieuwe evenementen."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -4522,7 +4535,7 @@ msgstr "Is lopend"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_reusable
 msgid "Is Reusable"
-msgstr ""
+msgstr "Is herbruikbaar"
 
 #. module: event
 #. odoo-python
@@ -4550,7 +4563,7 @@ msgstr "John Doe"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "Avatar van John Doe"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4668,7 +4681,7 @@ msgstr "Beperk registraties"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "Limiet per bestelling"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -4801,6 +4814,8 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"Maximum van dit product per bestelling.\n"
+"Stel in op 0 om deze regel te negeren"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -4878,7 +4893,7 @@ msgstr "Nieuw"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot_calendar/event_slot_calendar_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "Nieuw tijdslot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -4925,7 +4940,7 @@ msgstr "Nog geen deelnemers!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "Er zijn nog geen vragen! Maak er een aan."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -4935,12 +4950,12 @@ msgstr "Nomenclature"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "Niet herbruikbaar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "Niet verplicht"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -5037,12 +5052,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Once per Order"
-msgstr "Één keer per order"
+msgstr "Eenmaal per bestelling"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "Eenmaal per bestelling"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -5351,6 +5366,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Registraties zijn open als:\n"
+"- het evenement niet is beëindigd of geannuleerd\n"
+"- er plaatsen beschikbaar zijn op het evenement\n"
+"- de tickets verkoopbaar zijn (als er ticketverkoop plaatsvindt)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -5394,7 +5413,7 @@ msgstr "Responsief HTML-ticket voor volledige pagina"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "Herbruikbaar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -5456,7 +5475,7 @@ msgstr "E-mail planners"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "Zoek Evenement vraag"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -5594,7 +5613,7 @@ msgstr "Slotkeuze is verplicht bij evenementen met meerdere slots."
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "Tijdslot(en)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
@@ -5866,6 +5885,8 @@ msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
 msgstr ""
+"De limiet per bestelling kan niet groter zijn dan %(limit_orderable)s. "
+"Controleer ticket %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5874,6 +5895,8 @@ msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
 msgstr ""
+"De limiet per bestelling kan niet hoger zijn dan het maximale aantal "
+"zitplaatsen. Controleer ticket %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5881,6 +5904,8 @@ msgstr ""
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
 msgstr ""
+"De limiet per bestelling moet positief zijn. Controleer ticket "
+"%(ticket_name)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -6012,7 +6037,7 @@ msgstr "Dit kan gekoppeld zijn aan sjabloon %(template_link)s."
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "Deze vraag wordt gebruikt door"
 
 #. module: event
 #. odoo-javascript
@@ -6413,7 +6438,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "Je kan een standaardvraag niet verwijderen."
 
 #. module: event
 #. odoo-python
@@ -6422,6 +6447,8 @@ msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
 msgstr ""
+"Je kan een vraag die al werd beantwoord door deelnemers niet verwijderen. Je "
+"kan ze wel archiveren."
 
 #. module: event
 #. odoo-python
@@ -6497,13 +6524,14 @@ msgstr "bijv. VIP-ticket"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "events"
-msgstr ""
+msgstr "evenementen"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout

@@ -7,23 +7,24 @@
 # Martin Trigaux, 2022
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 22:56+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 21:58+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "website_blog/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_blog
@@ -41,6 +42,11 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "'. Показ результату для '"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "-- All dates"
+msgstr "-- Усі дати"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -183,6 +189,8 @@ msgid ""
 "<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Post date\" "
 "title=\"Post date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o me-1\" role=\"img\" aria-label=\"Post date\" title="
+"\"Post date\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
@@ -223,6 +231,8 @@ msgid ""
 "<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">Read "
 "Next</span>"
 msgstr ""
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">Читати "
+"далі</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -232,16 +242,21 @@ msgid ""
 "white\" aria-label=\"Read next\" title=\"Read Next\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"h4 d-inline-block py-1 px-2 rounded-1 text-white\">\n"
+"                                    <i class="
+"\"fa fa-angle-right fa-3x text-white\" aria-label=\"Read next\" title="
+"\"Read Next\"/>\n"
+"                                </span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "<span class=\"me-1\">Show:</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">Показати:</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 msgid "<span class=\"nav-link disabled ps-0\">Blogs:</span>"
-msgstr ""
+msgstr "<span class=\"nav-link disabled ps-0\">Блоги:</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_badge_preview_data
@@ -271,7 +286,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:web_tour.tour,rainbow_man_message:website_blog.blog
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
-msgstr ""
+msgstr "<span><b>Гарна робота!</b> Ви пройшли всі кроки цього туру.</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
@@ -405,7 +420,7 @@ msgstr "Як складно встановити та розбити?"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/interactions/website_blog.js:0
 msgid "Amazing blog article: %(title)s! Check it live: %(url)s"
-msgstr ""
+msgstr "Чудова стаття блогу: %(title)s! Перевірте її онлайн: %(url)s"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
@@ -618,7 +633,7 @@ msgstr "Назва блогу"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
 msgid "Blog Page"
-msgstr ""
+msgstr "Сторінка блогу"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_post
@@ -636,7 +651,7 @@ msgstr "Фонове зображення блогу"
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 msgid "Blog Post Pages"
-msgstr ""
+msgstr "Сторінки публікацій блогу"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -704,13 +719,13 @@ msgstr "Блоги"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Blogs List"
-msgstr ""
+msgstr "Список блогів"
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option_plugin.js:0
 msgid "Blogs Page"
-msgstr ""
+msgstr "Сторінка блогів"
 
 #. module: website_blog
 #. odoo-javascript
@@ -827,7 +842,7 @@ msgstr "Закрити"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__color
 msgid "Color"
-msgstr ""
+msgstr "Колір"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
@@ -846,7 +861,7 @@ msgstr "Коментарі"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Comments/Views Stats"
-msgstr ""
+msgstr "Коментарі/Статуси переглядів"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__content
@@ -909,7 +924,7 @@ msgstr "Створено"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #. module: website_blog
 #. odoo-javascript
@@ -989,13 +1004,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Edit your title, the subtitle is optional."
-msgstr ""
+msgstr "Редагуйте ваш заголовок, підзаголовок необов'язково."
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Enter your post's title"
-msgstr ""
+msgstr "Введіть заголовок вашої публікації"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -1045,7 +1060,7 @@ msgstr "Підписники (Партнери)"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__footer_visible
 msgid "Footer Visible"
-msgstr ""
+msgstr "Видимий футер"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -1131,7 +1146,7 @@ msgstr "Є повідомлення"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__header_visible
 msgid "Header Visible"
-msgstr ""
+msgstr "Видимість хедера"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1267,7 +1282,7 @@ msgstr ""
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Increase Readability"
-msgstr ""
+msgstr "Підвищіть читабельність"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_is_follower
@@ -1599,7 +1614,7 @@ msgstr "Найпопулярніші дописи в блозі"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_badge
 msgid "NEW"
-msgstr ""
+msgstr "НОВЕ"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__name
@@ -1616,13 +1631,13 @@ msgstr "Новий допис"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "New Tag"
-msgstr ""
+msgstr "Новий тег"
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Next Article"
-msgstr ""
+msgstr "Наступна стаття"
 
 #. module: website_blog
 #. odoo-javascript
@@ -1681,7 +1696,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Normal"
-msgstr ""
+msgstr "Звичайний"
 
 #. module: website_blog
 #. odoo-javascript
@@ -1721,7 +1736,7 @@ msgstr "Кількість помилок"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Кількість повідомлень, які вимагають дії"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error_counter
@@ -1753,6 +1768,8 @@ msgid ""
 "Once you have reviewed the content on mobile, you can switch back to the "
 "normal view by clicking here again"
 msgstr ""
+"Переглянувши вміст на мобільному пристрої, ви можете повернутися до "
+"звичайного перегляду, натиснувши тут ще раз"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
@@ -1841,7 +1858,7 @@ msgstr "Публікації"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Posts List"
-msgstr ""
+msgstr "Список публікацій"
 
 #. module: website_blog
 #. odoo-javascript
@@ -1889,7 +1906,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__rating_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Оцінювання"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
@@ -1908,7 +1925,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Read more <i class=\"oi oi-chevron-right ms-2\"/>"
-msgstr ""
+msgstr "Читати більше <i class=\"oi oi-chevron-right ms-2\"/>"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -2008,7 +2025,7 @@ msgstr "Розділяйте ключові слова комами"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Послідовність"
 
 #. module: website_blog
 #. odoo-javascript
@@ -2276,12 +2293,12 @@ msgstr "Список міток"
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_category_name_uniq
 msgid "Tag category already exists!"
-msgstr ""
+msgstr "Тег категорії вже існує!"
 
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Такий тег уже існує!"
 
 #. module: website_blog
 #. odoo-javascript
@@ -2299,7 +2316,7 @@ msgstr "Мітки"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Tags List"
-msgstr ""
+msgstr "Список тегів"
 
 #. module: website_blog
 #. odoo-python
@@ -2318,7 +2335,7 @@ msgstr "Тизер"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Teaser & Tags"
-msgstr ""
+msgstr "Тизер і теги"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser_manual
@@ -2563,13 +2580,13 @@ msgstr "Заголовок"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Title Above Cover"
-msgstr ""
+msgstr "Заголовок над обкладинкою"
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Title Inside Cover"
-msgstr ""
+msgstr "Заголовок всередині обкладинки"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -2654,7 +2671,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Top Banner"
-msgstr ""
+msgstr "Топ банер"
 
 #. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
@@ -2718,7 +2735,7 @@ msgstr "Видимий на поточному веб-сайті"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
 msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
-msgstr ""
+msgstr "WRITE HERE OR DRAG BUILDING BLOCKS"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
@@ -2937,9 +2954,6 @@ msgstr "| Ще немає жодних коментарів"
 
 #~ msgid "' page header."
 #~ msgstr "' заголовок сторінки."
-
-#~ msgid "-- All dates"
-#~ msgstr "-- Усі дати"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-github text-github\" aria-label=\"Github\" "

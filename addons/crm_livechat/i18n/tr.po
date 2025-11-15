@@ -9,13 +9,15 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # İlknur Gözütok, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 14:54+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "crm_livechat/tr/>\n"
 "Language: tr\n"
@@ -33,8 +35,9 @@ msgstr "%s'in Yeni Adayı"
 
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.crm_lead_view_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">View chat</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sohbeti görüntüle</span>"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
@@ -55,8 +58,9 @@ msgstr "Müşteri Adayı Oluştur"
 
 #. module: crm_livechat
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead_and_forward
+#, fuzzy
 msgid "Create Lead & Forward"
-msgstr ""
+msgstr "Lead & Forward Oluşturun"
 
 #. module: crm_livechat
 #. odoo-javascript
@@ -67,15 +71,18 @@ msgstr "Bir yeni aday oluştur (/aday başlığı)"
 #. module: crm_livechat
 #. odoo-python
 #: code:addons/crm_livechat/models/discuss_channel.py:0
+#, fuzzy
 msgid ""
 "Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead title%"
 "(i_end)s%(pre_end)s"
 msgstr ""
+"Şununla yeni bir müşteri adayı oluşturun: %(pre_start)s%(lead_command)s "
+"%(i_start)s müşteri adayı başlığı%(i_end)s%(pre_end)s"
 
 #. module: crm_livechat
 #: model:ir.model,website_form_label:crm_livechat.model_crm_lead
 msgid "Create an Opportunity"
-msgstr ""
+msgstr "Fırsat Oluştur"
 
 #. module: crm_livechat
 #. odoo-python
@@ -97,7 +104,7 @@ msgstr "Mesajlaşma Kanalı"
 #: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__display_name
 #: model:ir.model.fields,field_description:crm_livechat.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
@@ -106,8 +113,9 @@ msgstr "Oluşturulan Müşteri Adayı Sayısı"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__has_crm_lead
+#, fuzzy
 msgid "Has Crm Lead"
-msgstr ""
+msgstr "Crm Lideri Var"
 
 #. module: crm_livechat
 #: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
@@ -127,12 +135,12 @@ msgstr "Hu-ho, operatörlerimizin hiçbiri müsait değil gibi görünüyor 🙁
 #: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__id
 #: model:ir.model.fields,field_description:crm_livechat.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_crm_lead
 msgid "Lead"
-msgstr ""
+msgstr "Aday"
 
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
@@ -147,24 +155,27 @@ msgstr "Adaylar"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__leads_created
+#, fuzzy
 msgid "Leads created"
-msgstr ""
+msgstr "Oluşturulan müşteri adayları"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__origin_channel_id
+#, fuzzy
 msgid "Live chat from which the lead was created"
-msgstr ""
+msgstr "Müşteri adayının oluşturulduğu canlı sohbet"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_im_livechat_report_channel
 msgid "Livechat Support Channel Report"
-msgstr ""
+msgstr "Canlı Yardım Destek Kanalı Raporu"
 
 #. module: crm_livechat
 #. odoo-javascript
 #: code:addons/crm_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
+#, fuzzy
 msgid "Open leads"
-msgstr ""
+msgstr "Açık uçlar"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -183,8 +194,11 @@ msgstr "Teşekkür ederim, çok yakında bizden haber almalısınız!"
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_discuss_channel__lead_ids
+#, fuzzy
 msgid "The channel becomes accessible to sales users when leads are set."
 msgstr ""
+"Potansiyel müşteriler belirlendiğinde kanal satış kullanıcıları için "
+"erişilebilir hale gelir."
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -198,7 +212,7 @@ msgstr ""
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: crm_livechat
 #: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
@@ -210,24 +224,30 @@ msgstr ""
 #. module: crm_livechat
 #. odoo-python
 #: code:addons/crm_livechat/models/crm_lead.py:0
+#, fuzzy
 msgid "You cannot create leads linked to channels you don't have access to."
-msgstr ""
+msgstr "Erişiminiz olmayan kanallara bağlı müşteri adayları oluşturamazsınız."
 
 #. module: crm_livechat
 #. odoo-python
 #: code:addons/crm_livechat/models/crm_lead.py:0
+#, fuzzy
 msgid ""
 "You cannot update a lead and link it to a channel you don't have access to."
 msgstr ""
+"Bir müşteri adayını güncelleyemez ve erişiminiz olmayan bir kanala "
+"bağlayamazsınız."
 
 #. module: crm_livechat
 #. odoo-javascript
 #: code:addons/crm_livechat/static/src/core/thread_actions.js:0
+#, fuzzy
 msgid "e.g. Product pricing"
-msgstr ""
+msgstr "örn. ürün fiyatlandırması"
 
 #. module: crm_livechat
 #. odoo-python
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
+#, fuzzy
 msgid "livechat discussion"
-msgstr ""
+msgstr "canlı sohbet tartışması"

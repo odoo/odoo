@@ -22,13 +22,14 @@
 # JanaAvalah, 2023
 # Leaanika Randmets, 2023
 # Kristina Pešehodko <kristina@avalah.ee>, 2025.
+# Tairi Tiimann <tairi@avalah.ee>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 07:51+0000\n"
-"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-10 11:13+0000\n"
+"Last-Translator: Tairi Tiimann <tairi@avalah.ee>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/mrp/et/>"
 "\n"
 "Language: et\n"
@@ -228,6 +229,12 @@ msgid "+ %d day(s)"
 msgstr "+ %d päev(a)"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "- Overview"
 msgstr "- Ülevaade"
@@ -364,21 +371,18 @@ msgid ""
 "                                        <span class=\"o_annotation "
 "o_annotation_5 o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
-"<span class="
-"\"o_annotation o_annotation_1 o_annotation_end position-absolute\""
-">Ajakell</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_2 o_annotation_end position-absolute\""
-">Kvaliteedikontroll</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_3 o_annotation_start position-absolute\""
-">Tagasiside</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
-">Registreeri materjale</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_5 o_annotation_start position-absolute\">Vali "
-"operaator</span>"
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Ajakell</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_2 o_annotation_end position-absolute\">Kvaliteedikontroll</"
+"span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_3 o_annotation_start position-absolute\">Tagasiside</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_4 o_annotation_start position-absolute\">Registreeri materjale</"
+"span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_5 o_annotation_start position-absolute\">Vali operaator</span>"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -394,21 +398,16 @@ msgid ""
 "                    <span class=\"o_annotation o_annotation_5 "
 "o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
-"<span class="
-"\"o_annotation o_annotation_1 o_annotation_end position-absolute\""
-">Ajakell</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_2 o_annotation_end position-absolute\""
-">Kvaliteedikontroll</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_3 o_annotation_start position-absolute\""
-">Tagasiside</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
-">Registreeri materjalid</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_5 o_annotation_start position-absolute\">Vali "
-"operaator</span>"
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Ajakell</span>\n"
+"                    <span class=\"o_annotation o_annotation_2 "
+"o_annotation_end position-absolute\">Kvaliteedikontroll</span>\n"
+"                    <span class=\"o_annotation o_annotation_3 "
+"o_annotation_start position-absolute\">Tagasiside</span>\n"
+"                    <span class=\"o_annotation o_annotation_4 "
+"o_annotation_start position-absolute\">Registreeri materjalid</span>\n"
+"                    <span class=\"o_annotation o_annotation_5 "
+"o_annotation_start position-absolute\">Vali operaator</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -526,10 +525,10 @@ msgid ""
 "                                    <span invisible=\"time_mode == "
 "'manual'\"> / last </span>"
 msgstr ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\""
-">minutid</span>\n"
-"                                                                               "
-"<span invisible=\"time_mode == 'manual'\"> / viimane </span>"
+"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutid</"
+"span>\n"
+"                                                                               <span "
+"invisible=\"time_mode == 'manual'\"> / viimane </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -713,8 +712,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Komplekti tüüpi materjalide loetelu (BoM) ei toodeta tootmistellimusega.<br/>"
-"\n"
+"Komplekti tüüpi materjalide loetelu (BoM) ei toodeta tootmistellimusega.<br/"
+">\n"
 "                                Selle asemel kasutatakse seda materjalide "
 "loetelu (BoM) komponentideks lahtivõtmiseks, kui:"
 
@@ -1086,8 +1085,8 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
-"Trüki partii-/seerianumbri etikett automaatselt, kui kasutatakse nuppu "
-"\"Loo uus seeria-/partii number\"."
+"Trüki partii-/seerianumbri etikett automaatselt, kui kasutatakse nuppu \"Loo "
+"uus seeria-/partii number\"."
 
 #. module: mrp
 #. odoo-javascript
@@ -3912,6 +3911,12 @@ msgid "No Backorder"
 msgstr "Järelsaatelehte pole"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "No BoM Found"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "No Operations Yet !"
@@ -4156,7 +4161,8 @@ msgstr "Laos"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
-msgstr "Tootmistellimused peavad olema \"Mustand\" või \"Kinnitatud\" olekus%s."
+msgstr ""
+"Tootmistellimused peavad olema \"Mustand\" või \"Kinnitatud\" olekus%s."
 
 #. module: mrp
 #. odoo-python
@@ -4756,7 +4762,7 @@ msgstr "Toote variatsioonid"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr "Toode ehitamiseks..."
+msgstr "Toode tootmiseks..."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_workcenter_product_product_uom_unique
@@ -6505,8 +6511,8 @@ msgid ""
 "%(products)s"
 msgstr ""
 "Väärtusi ei saa seadistada ja valideerida, kuna jälgitava toote puhul, mille "
-"tarbitud kogust suurendatakse, tuleb täpsustada partii-/"
-"seerianumber:%(products)s"
+"tarbitud kogust suurendatakse, tuleb täpsustada partii-/seerianumber:%"
+"(products)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6994,6 +7000,12 @@ msgstr "Tootmise saate ühendada ainult sama olekuga."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot cancel a manufacturing order that is already done."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
@@ -7020,6 +7032,12 @@ msgstr "Te ei saa siit luua uut retsepti."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot create cyclic dependency."
 msgstr "Te ei saa luua tsüklilist sõltuvust."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot delete a manufacturing order that is already done."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7115,10 +7133,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Palun vaadake üle koostisosade tarbimine või "
 "paluge juhil kinnitada\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">see tootmistellimus</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">need tootmistellimused</span>.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">see tootmistellimus</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">need tootmistellimused</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7177,8 +7195,8 @@ msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: %"
 "(missing_products)s"
 msgstr ""
-"Peate pakkuma partii/seriaalinumbrit toodetele ja need \"tarbima\": "
-"%(missing_products)s"
+"Peate pakkuma partii/seriaalinumbrit toodetele ja need \"tarbima\": %"
+"(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

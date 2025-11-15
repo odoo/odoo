@@ -4,13 +4,14 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 02:37+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 19:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "google_gmail/ru/>\n"
 "Language: ru\n"
@@ -18,8 +19,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: google_gmail
@@ -83,7 +84,7 @@ msgstr "Временная метка истечения срока действ
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__active
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__active
 msgid "Active"
-msgstr ""
+msgstr "Активный"
 
 #. module: google_gmail
 #. odoo-python
@@ -96,12 +97,6 @@ msgstr ""
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "An error occurred when fetching the access token."
 msgstr "При получении маркера доступа произошла ошибка."
-
-#. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "An error occurred: %s."
-msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -146,7 +141,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:google_gmail.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Display Name"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__res_users__outgoing_mail_server_type__gmail
@@ -170,15 +165,9 @@ msgid "Gmail OAuth Authentication"
 msgstr "Аутентификация Gmail OAuth"
 
 #. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "Gmail is not configured on IAP."
-msgstr ""
-
-#. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.google_gmail_oauth_error
 msgid "Go back"
-msgstr ""
+msgstr "Назад"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
@@ -295,7 +284,7 @@ msgstr "Обновить токен"
 #. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 msgid "SSL is required for server “%s”."
-msgstr ""
+msgstr "Для сервера «%s» требуется SSL."
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -311,6 +300,12 @@ msgstr "Секрет вашего приложения Google"
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
 msgid "Server Type"
 msgstr "Тип сервера"
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/tools.py:0
+msgid "Something went wrong. Try again later"
+msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -329,12 +324,12 @@ msgstr "URI"
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #. module: google_gmail
 #. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "You don't have an active subscription."
+#: code:addons/google_gmail/tools.py:0
+msgid "You don't have an active subscription"
 msgstr ""
 
 #~ msgid "An error occur during the authentication process."
