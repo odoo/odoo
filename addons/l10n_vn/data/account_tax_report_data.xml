@@ -23,13 +23,13 @@
             <record id="account_tax_report_line_01_vn" model="account.report.line">
                 <field name="name">Purchase of Goods and Services</field>
                 <field name="name@vi_VN">HHDV Mua vào</field>
-                <field name="aggregation_formula">VAT_PURCHASE.balance + VAT_PURCHASE_IMPORTED.balance + VAT_PURCHASE_IMPORT_TAX.balance</field>
+                <field name="aggregation_formula">VAT_PURCHASE.balance + VAT_PURCHASE_IMPORTED.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_01_vn_tag_base" model="account.report.expression">
                         <field name="label">amount_untaxed</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">VAT_PURCHASE.amount_untaxed + VAT_PURCHASE_IMPORTED.amount_untaxed + VAT_PURCHASE_IMPORT_TAX.amount_untaxed</field>
+                        <field name="formula">VAT_PURCHASE.amount_untaxed + VAT_PURCHASE_IMPORTED.amount_untaxed</field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -132,12 +132,12 @@
                         <field name="name">VAT on purchase of imported goods</field>
                         <field name="name@vi_VN">Giá trị HHDV Mua vào</field>
                         <field name="code">VAT_PURCHASE_IMPORTED</field>
-                        <field name="aggregation_formula">VAT_PURCHASE_IMPORTED_0.balance + VAT_PURCHASE_IMPORTED_5.balance + VAT_PURCHASE_IMPORTED_8.balance + VAT_PURCHASE_IMPORTED_10.balance</field>
+                        <field name="aggregation_formula">VAT_PURCHASE_IMPORTED_0.balance + VAT_PURCHASE_IMPORTED_5.balance + VAT_PURCHASE_IMPORTED_8.balance + VAT_PURCHASE_IMPORTED_10.balance + VAT_PURCHASE_IMPORTED_EXEMPTION.balance</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_02_01_vn_tag_base" model="account.report.expression">
                                 <field name="label">amount_untaxed</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">VAT_PURCHASE_IMPORTED_0.amount_untaxed + VAT_PURCHASE_IMPORTED_5.amount_untaxed + VAT_PURCHASE_IMPORTED_8.amount_untaxed + VAT_PURCHASE_IMPORTED_10.amount_untaxed</field>
+                                <field name="formula">VAT_PURCHASE_IMPORTED_0.amount_untaxed + VAT_PURCHASE_IMPORTED_5.amount_untaxed + VAT_PURCHASE_IMPORTED_8.amount_untaxed + VAT_PURCHASE_IMPORTED_10.amount_untaxed + VAT_PURCHASE_IMPORTED_EXEMPTION.amount_untaxed</field>
                             </record>
                         </field>
                         <field name="children_ids">
@@ -209,22 +209,22 @@
                                     </record>
                                 </field>
                             </record>
-                        </field>
-                    </record>
-                    <record id="account_tax_report_line_03_01_vn" model="account.report.line">
-                        <field name="name">Import Tax</field>
-                        <field name="name@vi_VN">Thuế nhập khẩu</field>
-                        <field name="code">VAT_PURCHASE_IMPORT_TAX</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_line_03_01_vn_tag_base" model="account.report.expression">
-                                <field name="label">amount_untaxed</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">tax_import_base</field>
-                            </record>
-                            <record id="account_tax_report_line_03_01_vn_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">tax_import</field>
+                            <record id="account_tax_report_line_05_02_01_vn" model="account.report.line">
+                                <field name="name">VAT Exemption on purchase of imported goods</field>
+                                <field name="name@vi_VN">Miễn thuế VAT cho hàng hoá nhập khẩu</field>
+                                <field name="code">VAT_PURCHASE_IMPORTED_EXEMPTION</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_05_02_01_vn_tag_base" model="account.report.expression">
+                                        <field name="label">amount_untaxed</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_purchase_import_exemption_base</field>
+                                    </record>
+                                    <record id="account_tax_report_line_05_02_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_purchase_import_exemption</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
