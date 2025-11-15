@@ -48,7 +48,7 @@ export class PageSearchModel extends SearchModel {
             const websiteDomain =
                 this.resModel === "website.page"
                     ? [["id", "in", websitePageIds[website.id] || []]]
-                    : [["website_id", "in", [false, website.id]]];
+                    : ["|", ["website_id", "=", false], ["website_id", "=", website.id]];
 
             return {
                 name: `website_${website.id}`,
