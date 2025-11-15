@@ -10,6 +10,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.html_editor.controllers.main import HTML_Editor
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.fields import Command
+from odoo.tools import mute_logger
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -906,3 +907,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             "website.test_website_seo_with_duplicate_images_across_html_fields",
             login="admin",
         )
+
+    @mute_logger("odoo.http")
+    def test_website_replace_remove_image(self):
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "website_replace_remove_image", login="admin")
