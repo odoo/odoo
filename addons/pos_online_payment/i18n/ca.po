@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
-"PO-Revision-Date: 2025-08-26 11:17+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2025-11-15 10:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s18-2/"
 "pos_online_payment/ca/>\n"
 "Language: ca\n"
@@ -59,7 +60,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "All available providers"
-msgstr ""
+msgstr "Tots els proveïdors disponibles"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -69,11 +70,14 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
+"Tots els proveïdors configurats per a un mètode de pagament en línia han de "
+"fer servir la mateixa moneda que el diari de vendes o la moneda de "
+"l'empresa, si aquesta no està definida, segons la configuració del TPV."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
 msgid "Allowed Providers"
-msgstr ""
+msgstr "Proveïdors permesos"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -89,13 +93,15 @@ msgstr "Import:"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr ""
+msgstr "Cancel·lar el pagament"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot create a POS online payment without an accounting payment."
 msgstr ""
+"No és possible efectuar un pagament en línia al TPV sense un pagament "
+"comptable previ."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -110,6 +116,8 @@ msgstr ""
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot edit a POS online payment essential data."
 msgstr ""
+"No és possible modificar la informació principal d'un pagament en línia de "
+"TPV."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -118,6 +126,8 @@ msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 msgstr ""
+"No ha estat possible crear un mètode de pagament en línia "
+"(company_id=%(company_id)d, pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
@@ -133,7 +143,7 @@ msgstr "Nom mostrat"
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
-msgstr ""
+msgstr "Té un proveïdor de pagament en línia"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__id
@@ -150,24 +160,24 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payment"
-msgstr ""
+msgstr "Pagament en línia no vàlid"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payments"
-msgstr ""
+msgstr "Pagaments en línia no vàlids"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invoice could not be generated"
-msgstr ""
+msgstr "No s'ha pogut generar la factura"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
 msgid "Next online payment amount to pay"
-msgstr ""
+msgstr "Import del pròxim pagament en línia"
 
 #. module: pos_online_payment
 #: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
@@ -184,34 +194,34 @@ msgstr "Pagament online"
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
-msgstr ""
+msgstr "Mètode de pagament en línia"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
 msgid "Online accounting payment"
-msgstr ""
+msgstr "Pagament comptable en línia"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payment unavailable"
-msgstr ""
+msgstr "Pagament en línia no disponible"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payments cannot have a negative amount (%s: %s)."
-msgstr ""
+msgstr "Els pagaments en línia no poden tindre un import negatiu (%s: %s)."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order ID"
-msgstr ""
+msgstr "ID de la comanda"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Order ID:"
-msgstr ""
+msgstr "ID de la comanda:"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -222,13 +232,13 @@ msgstr "Referència de comanda"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
-msgstr ""
+msgstr "Referència de la comanda:"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Order saving issue"
-msgstr ""
+msgstr "Problema en desar la comanda"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -290,19 +300,19 @@ msgstr "Processat per"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
-msgstr ""
+msgstr "Codi QR per efectuar el pagament"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Escaneja el codi QR per efectuar el pagament"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan to pay"
-msgstr ""
+msgstr "Escanejar per efectuar el pagament"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -315,6 +325,7 @@ msgstr "Error del servidor"
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr ""
+"El pagament en línia del TPV (tx.id=%d) no s'ha pogut desar correctament"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -323,46 +334,48 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
+"El pagament en línia del TPV (tx.id=%d) no s'ha pogut desar correctament "
+"perquè no ha estat possible trobar el mètode de pagament en línia"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The POS session is not opened."
-msgstr ""
+msgstr "La sessió del TPV no està oberta."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr ""
+msgstr "La comanda del punt de venda vinculada a la transacció de pagament"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
 msgid "The Point of Sale order linked to this payment"
-msgstr ""
+msgstr "La comanda del punt de venda vinculada a aquest pagament"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The QR Code for paying could not be generated."
-msgstr ""
+msgstr "No ha estat possible generar el codi QR per al pagament."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The amount to pay has changed. Please refresh the page."
-msgstr ""
+msgstr "L'import a pagar ha canviat. Si us plau, actualitza la pàgina."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The currency is invalid."
-msgstr ""
+msgstr "La moneda no és vàlida."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The invoice could not be generated."
-msgstr ""
+msgstr "No s'ha pogut generar la factura."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -374,19 +387,19 @@ msgstr "La comanda ha estat cancel·lada"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The order has not been saved correctly on the server."
-msgstr ""
+msgstr "La comanda no s'ha desat correctament en el servidor."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_session.py:0
 msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr ""
+msgstr "No s'ha pogut trobar el contacte del pagament en línia del TPV (id=%d)"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment provider is invalid."
-msgstr ""
+msgstr "El proveïdor de pagament no és vàlid."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -400,19 +413,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment token is invalid."
-msgstr ""
+msgstr "El token de pagament no és vàlid."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The payment transaction (%d) has a negative amount."
-msgstr ""
+msgstr "La transacció del pagament (%d) conté un import negatiu."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The provided order or access token is invalid."
-msgstr ""
+msgstr "La comanda o el token d'accés proporcionat no és vàlid."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -424,7 +437,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The saved order could not be retrieved."
-msgstr ""
+msgstr "No s'ha pogut recuperar la comanda guardada."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -433,12 +446,14 @@ msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
 msgstr ""
+"L'import total dels pagaments en línia pendents d'executar (%s) no "
+"coincideix amb l'import pendent de la comanda (%s)."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "There are online payments that were missing in your view."
-msgstr ""
+msgstr "Hi ha pagaments en línia que no es mostraven en la teva vista."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -447,6 +462,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
 msgstr ""
+"Hi ha un problema amb el servidor. No és possible recuperar l'estat de "
+"pagament de la comanda."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -455,6 +472,9 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
+"Hi ha un problema amb el servidor. No és possible recuperar l'estat de "
+"pagament de la comanda. Està segur que no hi ha un pagament en línia per a "
+"aquesta comanda?"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -462,12 +482,14 @@ msgstr ""
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
 msgstr ""
+"No hi ha cap mètode de pagament en línia configurat per a aquesta comanda "
+"del TPV."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "There is nothing to pay for this order."
-msgstr ""
+msgstr "Aquesta comanda no té cap import pendent."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -486,17 +508,21 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
+"Per fer servir un mètode de pagament en línia al TPV, cal que almenys hi "
+"hagi un proveïdor de pagament actiu que sigui compatible amb la moneda "
+"configurada."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "Tokenization is not available for logged out customers."
 msgstr ""
+"La tokenització no està disponible per a clients que no han iniciat sessió."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Transaction Reference"
-msgstr ""
+msgstr "Referència de la transacció"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -512,7 +538,7 @@ msgstr "Tipus"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Updated online payments"
-msgstr ""
+msgstr "Pagaments en línia actualitzats"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
@@ -520,6 +546,8 @@ msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
 msgstr ""
+"Utilitza aquest mètode de pagament per a pagaments en línia (pagaments "
+"efectuats en una pàgina web amb proveïdors de pagament en línia)"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -530,14 +558,14 @@ msgstr "Sí"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "You have not activated any"
-msgstr ""
+msgstr "No has activat cap"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "payment provider"
-msgstr ""
+msgstr "proveïdor de pagament"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
-msgstr ""
+msgstr "per permetre els pagaments en línia."
