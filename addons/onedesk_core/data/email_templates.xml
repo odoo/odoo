@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-        <!-- Template: Email de bienvenue (J-3) -->
-        <record id="email_template_welcome" model="mail.template">
-            <field name="name">OneDesk: Email de bienvenue</field>
-            <field name="model_id" ref="model_onedesk_reservation"/>
-            <field name="subject">Votre séjour chez {{ object.property_id.name }} approche ! 🏠</field>
-            <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
-            <field name="email_to">{{ object.partner_id.email }}</field>
-            <field name="body_html" type="html">
+    <!-- Template: Email de bienvenue (J-3) -->
+    <record id="email_template_welcome" model="mail.template">
+        <field name="name">OneDesk: Email de bienvenue</field>
+        <field name="model_id" ref="model_onedesk_reservation"/>
+        <field name="subject">Votre séjour chez {{ object.property_id.name }} approche ! 🏠</field>
+        <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="body_html" type="html">
 <![CDATA[
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #555; width: 100%; border-collapse:separate;">
     <tr>
@@ -72,17 +72,17 @@
     </tr>
 </table>
 ]]>
-            </field>
-        </record>
+        </field>
+    </record>
 
-        <!-- Template: Instructions Check-in (J-1) -->
-        <record id="email_template_checkin_instructions" model="mail.template">
-            <field name="name">OneDesk: Instructions Check-in</field>
-            <field name="model_id" ref="model_onedesk_reservation"/>
-            <field name="subject">Instructions d'arrivée - {{ object.property_id.name }} - Demain ! 🔑</field>
-            <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
-            <field name="email_to">{{ object.partner_id.email }}</field>
-            <field name="body_html" type="html">
+    <!-- Template: Instructions Check-in (J-1) -->
+    <record id="email_template_checkin_instructions" model="mail.template">
+        <field name="name">OneDesk: Instructions Check-in</field>
+        <field name="model_id" ref="model_onedesk_reservation"/>
+        <field name="subject">Instructions d'arrivée - {{ object.property_id.name }} - Demain ! 🔑</field>
+        <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="body_html" type="html">
 <![CDATA[
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #555; width: 100%; border-collapse:separate;">
     <tr>
@@ -156,17 +156,17 @@
     </tr>
 </table>
 ]]>
-            </field>
-        </record>
+        </field>
+    </record>
 
-        <!-- Template: Demande d'avis (après check-out) -->
-        <record id="email_template_review_request" model="mail.template">
-            <field name="name">OneDesk: Demande d'avis</field>
-            <field name="model_id" ref="model_onedesk_reservation"/>
-            <field name="subject">Comment s'est passé votre séjour chez {{ object.property_id.name }} ? ⭐</field>
-            <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
-            <field name="email_to">{{ object.partner_id.email }}</field>
-            <field name="body_html" type="html">
+    <!-- Template: Demande d'avis (après check-out) -->
+    <record id="email_template_review_request" model="mail.template">
+        <field name="name">OneDesk: Demande d'avis</field>
+        <field name="model_id" ref="model_onedesk_reservation"/>
+        <field name="subject">Comment s'est passé votre séjour chez {{ object.property_id.name }} ? ⭐</field>
+        <field name="email_from">{{ (object.property_id.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="body_html" type="html">
 <![CDATA[
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #555; width: 100%; border-collapse:separate;">
     <tr>
@@ -228,7 +228,7 @@
     </tr>
 </table>
 ]]>
-            </field>
-        </record>
+        </field>
+    </record>
 
 </odoo>
