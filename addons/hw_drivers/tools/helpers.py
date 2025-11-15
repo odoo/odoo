@@ -24,6 +24,7 @@ from threading import Thread, Lock
 import time
 import zipfile
 from werkzeug.exceptions import Locked
+from odoo.addons.hw_drivers.iot_handlers.blackbox.blackbox import Blackbox
 
 from odoo import http, release, service
 from odoo.tools.func import lazy_property
@@ -344,6 +345,28 @@ def delete_iot_handlers():
         _logger.exception('Failed to delete old IoT handlers')
 
 
+@require_db
+def init_blackbox_drivers(server_url=None):
+    """Initialize blackbox drivers by scanning connected devices
+    and setting up communication protocols.
+    """
+    try:
+        response = requests.post(
+            server_url + '/iot/modules_installed',
+            json={'params': {'mac': get_mac_address()}},
+        )
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        _logger.exception('Could not reach configured server to initialize blackbox drivers')
+        return False
+
+    data = response.json()
+    result = data.get('result', {})
+    if 'l10n_be_pos_res_cert_iot_enhancement' not in result.get('modules', {}):
+        return False
+
+    return Blackbox()
+
 @toggleable
 @require_db
 def download_iot_handlers(auto=True, server_url=None):
@@ -393,7 +416,8 @@ def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
         format(handler_kind=handler_kind, handler_name=handler_file_name.removesuffix('.py'))
 
-def load_iot_handlers():
+
+def load_iot_handlers(load_blackbox=True):
     """
     This method loads local files: 'odoo/addons/hw_drivers/iot_handlers/drivers' and
     'odoo/addons/hw_drivers/iot_handlers/interfaces'
@@ -403,6 +427,9 @@ def load_iot_handlers():
         path = file_path(f'hw_drivers/iot_handlers/{directory}')
         filesList = list_file_by_os(path)
         for file in filesList:
+            if ('blackbox' in file.lower() or 'serial' in file.lower()) and not load_blackbox:
+                continue
+
             spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), str(Path(path).joinpath(file)))
             if spec:
                 module = util.module_from_spec(spec)

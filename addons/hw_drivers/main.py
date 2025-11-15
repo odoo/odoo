@@ -20,6 +20,7 @@ drivers = []
 interfaces = {}
 iot_devices = {}
 unsupported_devices = {}
+blackbox_device = {}
 
 
 class Manager(Thread):
@@ -137,11 +138,15 @@ class Manager(Thread):
 
         certificate.ensure_validity()
 
+        # Blackbox
+        blackbox_instance = helpers.init_blackbox_drivers()
+        blackbox_device['blackbox'] = blackbox_instance
+
         # We first add the IoT Box to the connected DB because IoT handlers cannot be downloaded if
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
         self.send_all_devices()
         helpers.download_iot_handlers()
-        helpers.load_iot_handlers()
+        helpers.load_iot_handlers(load_blackbox=not blackbox_instance)  # Check if old blackbox driver is needed
 
         for interface in interfaces.values():
             interface().start()
