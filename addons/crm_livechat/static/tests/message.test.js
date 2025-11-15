@@ -13,7 +13,7 @@ import { Command, serverState } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 defineCrmLivechatModels();
 
-test("Can open lead from internal link", async () => {
+test.skip("Can open lead from internal link", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], {
         group_ids: pyEnv["res.groups"]

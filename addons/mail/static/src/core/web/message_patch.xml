@@ -2,26 +2,12 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//t[@name='bodyAsNotification']" position="replace">
-            <t t-if="message.message_type === 'notification' or message.is_transient or message.trackingValues.length > 0" name="hasTrackingValue">
-                <div>
+            <t t-if="['notification', 'tracking'].includes(message.message_type) or message.is_transient or message.trackingValues.length > 0" name="hasTrackingValue">
+                <div t-att-class="{'o_track': message.message_type == 'tracking'}">
                     <t t-if="message.subtype_id?.description">
                         <p class="mb-0">
                             <t t-out="props.messageSearch?.highlight(message.subtype_id.description) ?? message.subtype_id.description"/>
                         </p>
-                    </t>
-                    <t t-if="message.trackingValues.length">
-                        <ul class="mb-0 list-unstyled d-flex flex-column gap-1">
-                            <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
-                                <li class="o-mail-Message-tracking" role="group">
-                                    <span class="o-mail-Message-trackingOld text-muted fw-bold" t-out="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.oldValue)"/>
-                                    <t t-if="!trackingValue.fieldInfo.isPropertyField">
-                                        <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-2 text-600"/>
-                                        <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-out="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.newValue)"/>
-                                    </t>
-                                    <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(<t t-out="props.messageSearch?.highlight(trackingValue.fieldInfo.changedField) ?? trackingValue.fieldInfo.changedField"/>)</span>
-                                </li>
-                            </t>
-                        </ul>
                     </t>
                     <div t-if="!message.isEmpty and message.richBody" t-call="mail.Message.bodyAsNotification" t-ref="body"/>
                 </div>

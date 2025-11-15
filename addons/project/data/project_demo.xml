@@ -727,6 +727,12 @@
             <field name="color">7</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="milestone_id" ref="project.project_1_milestone_1" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=5),
+                    's': ref('project.project_stage_2'),
+                }"
+            />
         </record>
 
         <record id="project_1_task_2" model="project.task">
@@ -738,38 +744,34 @@
             <field name="stage_id" ref="project_stage_2"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="milestone_id" ref="project.project_1_milestone_1" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=1),
+                    's': ref('project.project_stage_2'),
+                    ref('project.project_stage_0'): 3 * 30 * 24 * 3600,
+                    ref('project.project_stage_1'): 1 * 30 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_1_task_2_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_2"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=2)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=2)"/>
             <field name="author_id" ref="base.partner_admin"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_1_task_2_mail_message_2" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_2"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=1)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=1)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_1_task_2_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_1_task_2_mail_message_1"/>
-        </record>
-        <record id="project_1_task_2_mail_message_2_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">In Progress</field>
-            <field name="new_value_char">Done</field>
-            <field name="old_value_integer">2</field>
-            <field name="new_value_integer">3</field>
-            <field name="mail_message_id" ref="project_1_task_2_mail_message_2"/>
+            <field name="body"><![CDATA[In Progress<b>Done</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_1_task_3" model="project.task">
@@ -784,38 +786,34 @@
             <field name="color">4</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="milestone_id" ref="project.project_1_milestone_2" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=1, days=1),
+                    's': ref('project.project_stage_2'),
+                    ref('project.project_stage_0'): 1 * 30 * 24 * 3600,
+                    ref('project.project_stage_1'): 1 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_1_task_3_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_3"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=4)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=4)"/>
             <field name="author_id" ref="base.partner_admin"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_1_task_3_mail_message_2" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_3"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=4)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=4)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_1_task_3_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_1_task_3_mail_message_1"/>
-        </record>
-        <record id="project_1_task_3_mail_message_2_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">In Progress</field>
-            <field name="new_value_char">Done</field>
-            <field name="old_value_integer">2</field>
-            <field name="new_value_integer">3</field>
-            <field name="mail_message_id" ref="project_1_task_3_mail_message_2"/>
+            <field name="body"><![CDATA[In Progress<b>Done</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_1_task_4" model="project.task">
@@ -830,38 +828,34 @@
             <field name="tag_ids" eval="[Command.set([ref('project_tags_00')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="milestone_id" ref="project.project_1_milestone_2" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=3),
+                    's': ref('project.project_stage_2'),
+                    ref('project.project_stage_0'): 1 * 30 * 24 * 3600,
+                    ref('project.project_stage_1'): 1 * 30 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_1_task_4_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_4"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=4)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=4)"/>
             <field name="author_id" ref="base.partner_admin"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_1_task_4_mail_message_2" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_4"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=3)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=3)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_1_task_4_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_1_task_4_mail_message_1"/>
-        </record>
-        <record id="project_1_task_4_mail_message_2_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">In Progress</field>
-            <field name="new_value_char">Done</field>
-            <field name="old_value_integer">2</field>
-            <field name="new_value_integer">3</field>
-            <field name="mail_message_id" ref="project_1_task_4_mail_message_2"/>
+            <field name="body"><![CDATA[In Progress<b>Done</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_1_task_5" model="project.task">
@@ -876,22 +870,23 @@
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=2)"/>
             <field name="color">1</field>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=4),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 1 * 30 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_1_task_5_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_5"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=4)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=4)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_1_task_5_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_1_task_5_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_1_task_5_activity_1" model="mail.activity">
             <field name="res_id" ref="project_1_task_5"/>
@@ -917,22 +912,23 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="color">11</field>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=2),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 2 * 30 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_1_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_6"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=2)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=2)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_1_task_6_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_1_task_6_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_1_task_6_activity_1" model="mail.activity">
             <field name="res_id" ref="project_1_task_6"/>
@@ -955,22 +951,23 @@
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=6)"/>
             <field name="color">9</field>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=3),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 2 * 30 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_1_task_7_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_7"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=3)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=3)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_1_task_7_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_1_task_7_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_1_task_8" model="project.task">
@@ -987,22 +984,23 @@
             <field name="tag_ids" eval="[Command.set([ref('project_tags_01')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(months=1),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 4 * 30 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_1_task_8_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_1_task_8"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(months=1)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=1)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_1_task_8_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_1_task_8_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_1_task_8_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -1013,6 +1011,7 @@
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.now() - relativedelta(days=3)).strftime('%Y-%m-%d 09:43:27')"/>
+            <field name="create_date" eval="(DateTime.now() - relativedelta(days=3)).strftime('%Y-%m-%d 09:43:27')"/>
         </record>
         <record id="project_1_task_8_message_2" model="mail.message">
             <field name="model">project.task</field>
@@ -1022,6 +1021,7 @@
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="date" eval="(DateTime.now() - relativedelta(days=3)).strftime('%Y-%m-%d 11:52:03')"/>
+            <field name="create_date" eval="(DateTime.now() - relativedelta(days=3)).strftime('%Y-%m-%d 11:52:03')"/>
         </record>
 
         <record id="project_1_task_9" model="project.task">
@@ -1221,38 +1221,35 @@
             <field name="state">1_done</field>
             <field name="color">7</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() + relativedelta(weeks=-16, days=4),
+                    's': ref('project.project_stage_2'),
+                    ref('project.project_stage_0'): 38 * 24 *3600,
+                    ref('project.project_stage_1'): 4 * 24 * 3600,
+                }"
+            />
         </record>
+
         <record id="project_2_task_1_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_1"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(weeks=16)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(weeks=16)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_1_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_1_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_2_task_1_mail_message_2" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_1"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() + relativedelta(weeks=-16, days=4)"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-16, days=4)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_1_mail_message_2_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">In Progress</field>
-            <field name="new_value_char">Done</field>
-            <field name="old_value_integer">2</field>
-            <field name="new_value_integer">3</field>
-            <field name="mail_message_id" ref="project_2_task_1_mail_message_2"/>
+            <field name="body"><![CDATA[In Progress<b>Done</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_2_task_2" model="project.task">
@@ -1265,38 +1262,33 @@
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_1'))]"/>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_02')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() - relativedelta(weeks=14),
+                    's': ref('project.project_stage_2'),
+                    ref('project.project_stage_0'): 48 * 24 * 3600,
+                    ref('project.project_stage_1'): 7 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_2_task_2_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_2"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(weeks=15)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(weeks=15)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_2_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_2_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_2_task_2_mail_message_2" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_2"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
-            <field name="date" eval="DateTime.now() - relativedelta(weeks=14)"/>
+            <field name="date" eval="DateTime.now() - relativedelta(weeks=14, days=-2)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_2_mail_message_2_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">In Progress</field>
-            <field name="new_value_char">Done</field>
-            <field name="old_value_integer">2</field>
-            <field name="new_value_integer">3</field>
-            <field name="mail_message_id" ref="project_2_task_2_mail_message_2"/>
+            <field name="body"><![CDATA[In Progress<b>Done</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_2_task_3" model="project.task">
@@ -1305,27 +1297,28 @@
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Planning and budget</field>
-            <field name="state">1_done</field>
-            <field name="stage_id" ref="project_stage_2"/>
+            <field name="state">03_approved</field>
+            <field name="stage_id" ref="project_stage_1"/>
             <field name="color">6</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="date_deadline" eval="DateTime.now() - relativedelta(days=4)"/>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() + relativedelta(weeks=-14, days=1),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 56 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_2_task_3_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_3"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
-            <field name="date" eval="DateTime.now() + relativedelta(weeks=-14, days=1)"/>
+            <field name="date" eval="DateTime.now() + relativedelta(weeks=-14, days=2)"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-14, days=2)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_3_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_3_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_2_task_3_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -1337,6 +1330,7 @@ Thanks,</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weeks=-9, days=2)).strftime('%Y-%m-%d 11:23:17')"/>
+            <field name="create_date" eval="(DateTime.now() + relativedelta(weeks=-9, days=2)).strftime('%Y-%m-%d 11:23:17')"/>
         </record>
         <record id="project_2_task_3_message_2" model="mail.message">
             <field name="model">project.task</field>
@@ -1347,6 +1341,7 @@ I will update the document and let you know.</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weeks=-9, days=2)).strftime('%Y-%m-%d 12:04:58')"/>
+            <field name="create_date" eval="(DateTime.now() + relativedelta(weeks=-9, days=2)).strftime('%Y-%m-%d 12:04:58')"/>
         </record>
         <record id="project_2_task_3_message_3" model="mail.message">
             <field name="model">project.task</field>
@@ -1357,6 +1352,7 @@ Send it ASAP, its urgent.</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weeks=-9, days=2)).strftime('%Y-%m-%d 12:15:26')"/>
+            <field name="create_date" eval="(DateTime.now() + relativedelta(weeks=-9, days=2)).strftime('%Y-%m-%d 12:15:26')"/>
         </record>
 
         <record id="project_2_task_4" model="project.task">
@@ -1374,22 +1370,23 @@ Send it ASAP, its urgent.</field>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_3'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=1)"/>
             <field name="color">2</field>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() + relativedelta(weeks=-11),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 76 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_2_task_4_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_4"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() + relativedelta(weeks=-11)"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-11)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_4_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_4_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_2_task_5" model="project.task">
@@ -1404,22 +1401,23 @@ Send it ASAP, its urgent.</field>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_3'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=5)"/>
             <field name="color">2</field>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() + relativedelta(weeks=-12, days=6),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 75 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_2_task_5_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_5"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() + relativedelta(weeks=-12, days=6)"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-12, days=6)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_5_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_5_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_2_task_6" model="project.task">
@@ -1432,22 +1430,23 @@ Send it ASAP, its urgent.</field>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_3'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=4)"/>
             <field name="color">11</field>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() + relativedelta(weeks=-11, days=3),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 79 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_2_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_6"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() + relativedelta(weeks=-11, days=3)"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-11, days=3)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_6_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_6_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_2_task_7" model="project.task">
@@ -1462,44 +1461,41 @@ Send it ASAP, its urgent.</field>
             <field name="tag_ids" eval="[Command.set([ref('project.project_tags_02')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_3')), Command.link(ref('project_2_task_2'))]"/>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() + relativedelta(weeks=-9, days=3),
+                    's': ref('project.project_stage_2'),
+                    ref('project.project_stage_0'): 74 * 24 * 3600,
+                    ref('project.project_stage_1'): 19 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_2_task_7_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_7"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() + relativedelta(weeks=-12, days=5)"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-12, days=5)"/>
+             <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-9, days=3)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_7_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_7_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
         <record id="project_2_task_7_mail_message_2" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_7"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-9, days=3)"/>
             <field name="date" eval="DateTime.now() + relativedelta(weeks=-9, days=3)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_7_mail_message_2_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">In Progress</field>
-            <field name="new_value_char">Done</field>
-            <field name="old_value_integer">2</field>
-            <field name="new_value_integer">3</field>
-            <field name="mail_message_id" ref="project_2_task_7_mail_message_2"/>
+            <field name="body"><![CDATA[In Progress<b>Done</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_2_task_8" model="project.task">
             <field name="allocated_hours">14.0</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
-            <field name="stage_id" ref="project_stage_0"/>
+            <field name="stage_id" ref="project_stage_1"/>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Usability review</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_03')])]"/>
@@ -1508,22 +1504,23 @@ Send it ASAP, its urgent.</field>
                    eval="[Command.link(ref('project.project_2_task_7')), Command.link(ref('project.project_2_task_5')), Command.link(ref('project.project_2_task_4')), Command.link(ref('project.project_2_task_6'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=9)"/>
             <field name="color">7</field>
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.now() + relativedelta(weeks=-12, days=6),
+                    's': ref('project.project_stage_1'),
+                    ref('project.project_stage_0'): 75 * 24 * 3600,
+                }"
+            />
         </record>
         <record id="project_2_task_8_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_2_task_8"/>
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="subtype_id" ref="mt_task_stage"/>
             <field name="date" eval="DateTime.now() - relativedelta(weeks=10)"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(weeks=10)"/>
             <field name="author_id" ref="base.partner_admin"/>
-        </record>
-        <record id="project_2_task_8_mail_message_1_track_1" model="mail.tracking.value">
-            <field name="field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'project.task'), ('name', '=', 'stage_id')])"/>
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">In Progress</field>
-            <field name="old_value_integer">1</field>
-            <field name="new_value_integer">2</field>
-            <field name="mail_message_id" ref="project_2_task_8_mail_message_1"/>
+            <field name="body"><![CDATA[New<b>In Progress</b><i>Stage</i>]]></field>
         </record>
 
         <record id="project_2_task_9" model="project.task">
@@ -1594,6 +1591,7 @@ Send it ASAP, its urgent.</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="date" eval="(DateTime.now() - relativedelta(weeks=3)).strftime('%Y-%m-%d 09:42:13')"/>
+            <field name="create_date" eval="(DateTime.now() - relativedelta(weeks=3)).strftime('%Y-%m-%d 09:42:13')"/>
         </record>
         <record id="project_3_task_2_message_2" model="mail.message">
             <field name="model">project.task</field>
@@ -1603,6 +1601,7 @@ Send it ASAP, its urgent.</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.now() - relativedelta(weeks=3)).strftime('%Y-%m-%d 10:23:48')"/>
+            <field name="create_date" eval="(DateTime.now() - relativedelta(weeks=3)).strftime('%Y-%m-%d 10:23:48')"/>
         </record>
         <record id="project_3_task_2_message_3" model="mail.message">
             <field name="model">project.task</field>
@@ -1612,6 +1611,7 @@ Send it ASAP, its urgent.</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="date" eval="(DateTime.now() - relativedelta(weeks=3)).strftime('%Y-%m-%d 10:57:04')"/>
+            <field name="create_date" eval="(DateTime.now() - relativedelta(weeks=3)).strftime('%Y-%m-%d 10:57:04')"/>
         </record>
 
         <record id="project_3_task_3" model="project.task">

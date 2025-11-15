@@ -539,21 +539,13 @@ export class MailThread extends models.ServerModel {
         initial_values_dict = kwargs.initial_values_dict;
 
         /** @type {import("mock_models").Base} */
-        const Base = this.env["base"];
+        // const Base = this.env["base"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
 
-        const trackFieldNamesToField = this.env[this._name].fields_get(fields_iter);
+        // const trackFieldNamesToField = this.env[this._name].fields_get(fields_iter);
         const tracking = {};
         const model = this.env[this._name];
-        for (const record of model) {
-            tracking[record.id] = Base._mail_track.call(
-                this,
-                trackFieldNamesToField,
-                initial_values_dict[record.id],
-                record
-            );
-        }
         for (const record of model) {
             const { trackingValueIds, changedFieldNames } = tracking[record.id] || {};
             if (!changedFieldNames || !changedFieldNames.length) {

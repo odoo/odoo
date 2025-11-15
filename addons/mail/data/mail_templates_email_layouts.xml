@@ -65,11 +65,6 @@
 </div>
 <!-- CONTENT -->
 <div t-out="message.body" style="font-size: 13px;"/>
-<ul t-if="tracking_values">
-    <t t-foreach="tracking_values" t-as="tracking">
-        <li><t t-out="tracking[0]"/>: <t t-if="tracking[1]" t-out="tracking[1]"/><em t-else="">None</em> &#8594; <t t-if="tracking[2]" t-out="tracking[2]"/><em t-else="">None</em></li>
-    </t>
-</ul>
 <t name="o_signature">
     <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" class="o_signature" style="font-size: 13px;"/>
 </t>

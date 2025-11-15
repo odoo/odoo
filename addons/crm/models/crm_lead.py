@@ -1184,7 +1184,7 @@ class CrmLead(models.Model):
         # use duration tracking field to determine if the task jumped from first to last stage
         # only takes into accounts stages on which the lead has spent at least a minute,
         # to only account for valid stage movements
-        elif len(stage_ids := [int(stage_id) for stage_id, duration in self.duration_tracking.items() if duration >= 60]) == 1:
+        elif len(stage_ids := [int(stage_id) for stage_id, duration in self.duration_tracking.items() if stage_id.isdigit() and duration >= 60]) == 1:
             first_stage = self.env['crm.stage'].search([
                 '|', ('team_ids', 'in', False), ('team_ids', 'in', self.team_id.id),
             ], order='sequence ASC', limit=1)

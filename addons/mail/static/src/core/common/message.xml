@@ -66,11 +66,11 @@
                             <t t-if="!isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': isAlignedRight }">
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote, 'o-mail-Message-pollContent flex-grow-1': message.poll }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote, 'o-mail-Message-pollContent flex-grow-1': message.poll, 'o_track': message.message_type == 'tracking'}">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
                                     <t t-set="showTextVisually" t-value="!message.linkPreviewSquash and (message.hasTextContent or message.subtype_id?.description or message.isEmpty)"/>
-                                    <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.parent_id))">
+                                    <t t-if="['notification', 'tracking'].includes(message.message_type) and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
+                                    <t t-if="message.isEmpty or (!['notification', 'tracking'].includes(message.message_type) and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.parent_id))">
                                         <MessageLinkPreviewList t-if="!isEditing and message.linkPreviewSquash and !message.parent_id" messageLinkPreviews="message.message_link_preview_ids"/>
                                         <t t-else="">
                                             <div t-if="message.bubbleColor and !props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{

@@ -151,6 +151,7 @@ class MrpProduction(models.Model):
         'Start', copy=False, default=_get_default_date_start,
         help="Date you plan to start production or date you actually started production.",
         index=True, required=True, tracking=True)
+    last_date_start = fields.Datetime()
     date_finished = fields.Datetime(
         'End', copy=False, default=_get_default_date_finished,
         compute='_compute_date_finished', store=True,
@@ -1678,6 +1679,7 @@ class MrpProduction(models.Model):
         orders_to_confirm = orders_to_plan.filtered(lambda mo: mo.state == 'draft')
         orders_to_confirm.action_confirm()
         for order in orders_to_plan:
+            order.last_date_start = order.date_start
             if as_soon_as_possible:
                 order.date_start = fields.Datetime.now()
             order._plan_workorders()
@@ -1707,8 +1709,8 @@ class MrpProduction(models.Model):
         for order in self:
             previous_date_start = None
             for message in order.message_ids:
-                if message.tracking_value_ids.field_id.mapped('name') == ['date_start']:
-                    previous_date_start = message.tracking_value_ids.old_value_datetime
+                if order.last_date_start:
+                    previous_date_start = order.last_date_start
                     break
                 if message.subtype_id.id == self.env.ref('mrp.mrp_mo_planned').id:
                     break

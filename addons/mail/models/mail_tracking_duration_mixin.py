@@ -1,7 +1,6 @@
-from collections import defaultdict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -14,6 +13,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
 
     duration_tracking = fields.Json(
         string="Status time", compute="_compute_duration_tracking",
+        store=True,
         help="JSON that maps ids from a many2one field to seconds spent")
 
     # The rotting feature enables resources to mark themselves as stale if enough time has passed
@@ -23,103 +23,37 @@ class MailTrackingDurationMixin(models.AbstractModel):
         compute='_compute_rotting')
     is_rotting = fields.Boolean('Rotting', compute='_compute_rotting', search='_search_is_rotting')
 
+    @api.depends(lambda self: [self._track_duration_field])
     def _compute_duration_tracking(self):
         """
-        Computes duration_tracking, a Json field stored as { <many2one_id (str)>: <duration_spent_in_seconds (int)> }
+        Tracks how long a record stays in different stages.
 
-            e.g. {"1": 1230, "2": 2220, "5": 14}
+        This method calculates elapsed time since the last stage change and stores the
+        information in the `duration_tracking` dictionary.
 
-        `_track_duration_field` must be present in the model that uses the mixin to specify on what
-        field to compute time spent. Besides, tracking must be activated for that field.
+        The dictionary keys are:
+        *   d (datetime):
+                The exact UTC datetime the record added the current state.
+        *   s (stage id):
+                The unique ID of the *current* stage the record is in.
+        <stage_id> (int):
+                A running total of accumulated time (in seconds) spent in previous states, mapping
+            stage IDs to seconds.
 
-            e.g.
-            class MyModel(models.Model):
-                _name = 'my.model'
-                _track_duration_field = "tracked_field"
-
-                tracked_field = fields.Many2one('tracked.model', tracking=True)
+        Example:
+            {"d":"2025-11-21 15:34:28","s":3, "1":172814,"2":86401 }
         """
-
-        field = self.env['ir.model.fields'].sudo().search_fetch([
-            ('model', '=', self._name),
-            ('name', '=', self._track_duration_field),
-        ], ['id'], limit=1)
-
-        if (
-            self._track_duration_field not in self._track_get_fields()
-            or self._fields[self._track_duration_field].type != 'many2one'
-        ):
-            self.duration_tracking = False
-            raise ValueError(_(
-                'Field “%(field)s” on model “%(model)s” must be of type Many2one and have tracking=True for the computation of duration.',
-                field=self._track_duration_field, model=self._name
-            ))
-
-        if self.ids:
-            self.env['mail.tracking.value'].flush_model()
-            self.env['mail.message'].flush_model()
-            trackings = self.env.execute_query_dict(SQL("""
-                   SELECT m.res_id,
-                          v.create_date,
-                          v.old_value_integer
-                     FROM mail_tracking_value v
-                LEFT JOIN mail_message m
-                       ON m.id = v.mail_message_id
-                      AND v.field_id = %(field_id)s
-                    WHERE m.model = %(model_name)s
-                      AND m.res_id IN %(record_ids)s
-                 ORDER BY v.id
-                """,
-                field_id=field.id, model_name=self._name, record_ids=tuple(self.ids),
-            ))
-        else:
-            trackings = []
-
+        now = self.env.cr.now()
         for record in self:
-            record_trackings = [tracking for tracking in trackings if tracking['res_id'] == record._origin.id]
-            record.duration_tracking = record._get_duration_from_tracking(record_trackings)
-
-    def _get_duration_from_tracking(self, trackings):
-        """
-        Calculates the duration spent in each value based on the provided list of trackings.
-        It adds a "fake" tracking at the end of the trackings list to account for the time spent in the current value.
-
-        Args:
-            trackings (list): A list of dictionaries representing the trackings with:
-                - 'create_date': The date and time of the tracking.
-                - 'old_value_integer': The ID of the previous value.
-
-        Returns:
-            dict: A dictionary where the keys are the IDs of the values, and the values are the durations in seconds
-        """
-        self.ensure_one()
-        json = defaultdict(lambda: 0)
-        previous_date = self.create_date or self.env.cr.now()
-
-        # If there is a tracking value to be created, but still in the
-        # precommit values, create a fake one to take it into account.
-        # Otherwise, the duration_tracking value will add time spent on
-        # previous tracked field value to the time spent in the new value
-        # (after writing the stage on the record)
-        if f'mail.tracking.{self._name}' in self.env.cr.precommit.data:
-            if data := self.env.cr.precommit.data.get(f'mail.tracking.{self._name}', {}).get(self._origin.id):
-                new_id = data.get(self._track_duration_field, self.env[self._name]).id
-                if new_id and new_id != self[self._track_duration_field].id:
-                    trackings.append({
-                        'create_date': self.env.cr.now(),
-                        'old_value_integer': data[self._track_duration_field].id,
-                    })
-
-        # add "fake" tracking for time spent in the current value
-        trackings.append({
-            'create_date': self.env.cr.now(),
-            'old_value_integer': self[self._track_duration_field].id or 0,
-        })
-        for tracking in trackings:
-            json[tracking['old_value_integer']] += int((tracking['create_date'] - previous_date).total_seconds())
-            previous_date = tracking['create_date']
-
-        return json
+            tracking = record.duration_tracking or {}
+            if record[record._track_duration_field]:
+                if tracking.get('s') and tracking.get('d'):
+                    prev_dt = fields.Datetime.from_string(tracking['d'])
+                    key = str(tracking['s'])
+                    tracking[key] = tracking.get(key, 0) + int((now - prev_dt).total_seconds())
+                tracking['s'] = record[record._track_duration_field].id
+                tracking['d'] = fields.Datetime.to_string(now)
+                record.duration_tracking = tracking
 
     def _is_rotting_feature_enabled(self):
         """

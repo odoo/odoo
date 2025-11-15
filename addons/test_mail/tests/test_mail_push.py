@@ -133,7 +133,7 @@ class TestWebPushNotification(SMSCommon):
                         else f'/web/image/res.partner/{self.user_email.partner_id.id}/avatar_128'
                     )
                     self.assertEqual(payload_value['options']['icon'], icon)
-                    self.assertEqual(payload_value['options']['body'], 'Test Push')
+                    self.assertHtmlEqual(payload_value['options']['body'], 'Test Push')
                     self.assertEqual(payload_value['options']['data']['res_id'], channel.id)
                     self.assertEqual(payload_value['options']['data']['model'], channel._name)
                     self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
@@ -421,11 +421,8 @@ class TestWebPushNotification(SMSCommon):
         self._assert_notification_count_for_cron(0)
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-        self.assertIn(
-            f'{container_update_subtype.description}\nContainer: {container.name} → {container2.name}',
-            payload_value['options']['body'],
-            'Tracking changes should be included in push notif payload'
-        )
+        self.assertEqual('Container*Container Two* Container', payload_value['options']['body'],
+            'Tracking changes should be included in push notif payload')
 
     @patch.object(odoo.addons.mail.models.mail_push, 'push_to_end_point')
     def test_push_notifications_cron(self, push_to_end_point):

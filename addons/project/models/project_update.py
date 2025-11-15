@@ -129,65 +129,19 @@ class ProjectUpdate(models.Model):
             return {
                 'show_section': False,
                 'list': [],
-                'updated': [],
                 'last_update_date': None,
                 'created': []
             }
         list_milestones = Milestone.search(
             [('project_id', '=', project.id),
              '|', ('deadline', '<', fields.Date.context_today(self) + relativedelta(years=1)), ('deadline', '=', False)])._get_data_list()
-        updated_milestones = self._get_last_updated_milestone(project)
         domain = Domain('project_id', '=', project.id)
         if project.last_update_id.create_date:
             domain &= Domain('create_date', '>', project.last_update_id.create_date)
         created_milestones = Milestone.search(domain)._get_data_list()
         return {
-            'show_section': (list_milestones or updated_milestones or created_milestones) and True or False,
+            'show_section': (list_milestones or created_milestones) and True or False,
             'list': list_milestones,
-            'updated': updated_milestones,
             'last_update_date': project.last_update_id.create_date or None,
             'created': created_milestones,
         }
-
-    @api.model
-    def _get_last_updated_milestone(self, project):
-        query = """
-            SELECT DISTINCT pm.id as milestone_id,
-                            pm.deadline as deadline,
-                            FIRST_VALUE(old_value_datetime::date) OVER w_partition as old_value,
-                            pm.deadline as new_value
-                       FROM mail_message mm
-                 INNER JOIN mail_tracking_value mtv
-                         ON mm.id = mtv.mail_message_id
-                 INNER JOIN ir_model_fields imf
-                         ON mtv.field_id = imf.id
-                        AND imf.model = 'project.milestone'
-                        AND imf.name = 'deadline'
-                 INNER JOIN project_milestone pm
-                         ON mm.res_id = pm.id
-                      WHERE mm.model = 'project.milestone'
-                        AND mm.message_type = 'notification'
-                        AND pm.project_id = %(project_id)s
-         """
-        if project.last_update_id.create_date:
-            query = query + "AND mm.date > %(last_update_date)s"
-        query = query + """
-                     WINDOW w_partition AS (
-                             PARTITION BY pm.id
-                             ORDER BY mm.date ASC
-                            )
-                   ORDER BY pm.deadline ASC
-                   LIMIT 1;
-        """
-        query_params = {'project_id': project.id}
-        if project.last_update_id.create_date:
-            query_params['last_update_date'] = project.last_update_id.create_date
-        self.env.cr.execute(query, query_params)
-        results = self.env.cr.dictfetchall()
-        mapped_result = {res['milestone_id']: {'new_value': res['new_value'], 'old_value': res['old_value']} for res in results}
-        milestones = self.env['project.milestone'].search([('id', 'in', list(mapped_result.keys()))])
-        return [{
-            **milestone._get_data(),
-            'new_value': mapped_result[milestone.id]['new_value'],
-            'old_value': mapped_result[milestone.id]['old_value'],
-        } for milestone in milestones]

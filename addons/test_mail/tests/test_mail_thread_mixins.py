@@ -20,31 +20,6 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
     def test_mail_tracking_duration(self):
         self._test_record_duration_tracking()
 
-    def test_mail_tracking_duration_create(self):
-        now = datetime(2025, 11, 27, 8, 46, 0)
-        for create_stage, exp_key in zip(
-            (self.env['mail.test.track.duration.mixin.stage'], self.stage_1),
-            ('0', str(self.stage_1.id)),
-        ):
-            with self.subTest(create_stage=create_stage):
-                with self.mock_datetime_and_now(now):
-                    new = self.env['mail.test.track.duration.mixin'].create({
-                        'name': 'Test Duration',
-                        'stage_id': create_stage.id,
-                    })
-                    self.flush_tracking()
-                with self.mock_datetime_and_now(now):
-                    new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 0})
-                with self.mock_datetime_and_now(now + timedelta(minutes=10)):
-                    new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 600})
-                with self.mock_datetime_and_now(now + timedelta(minutes=20)):
-                    new.write({'stage_id': self.stage_2.id})
-                    self.flush_tracking()
-                    new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 1200, str(self.stage_2.id): 0})
-
     def test_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()
 

@@ -1424,7 +1424,7 @@ class TestMailgateway(MailGatewayCommon):
         some_notification_message = self._create_gateway_message(
             self.test_record,
             'some_notif_message',
-            message_type='notification',
+            message_type='tracking',
             is_internal=True,
             subtype_id=self.env.ref('mail.mt_note').id,
         )

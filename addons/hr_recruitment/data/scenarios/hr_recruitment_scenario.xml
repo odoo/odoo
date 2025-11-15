@@ -89,6 +89,16 @@
 
             <field name="create_date" eval="DateTime.today() - relativedelta(days=20)" />
             <field name="write_date" eval="DateTime.today() - relativedelta(days=20)" />
+            <field name="duration_tracking"
+                eval="{
+                    'd': DateTime.today() - relativedelta(days=2),
+                    's': ref('hr_recruitment.stage_job5'),
+                    ref('hr_recruitment.stage_job0'): 3 * 24 * 3600,
+                    ref('hr_recruitment.stage_job1'): 2 * 24 * 3600,
+                    ref('hr_recruitment.stage_job2'): 5 * 24 * 3600,
+                    ref('hr_recruitment.stage_job3'): 3 * 24 * 3600,
+                    ref('hr_recruitment.stage_job4'): 5 * 24 * 3600,
+                }"/>
         </record>
 
         <record id="scenario_applicant_macm_enrique" model="hr.applicant">
@@ -111,6 +121,14 @@
             <field name="create_date" eval="DateTime.today() - relativedelta(months=2)" />
             <field name="date_last_stage_update"
                 eval="DateTime.today() - relativedelta(days=1)" />
+            <field name="duration_tracking"
+                eval="{
+                   'd': DateTime.today() - relativedelta(days=20),
+                   's': ref('hr_recruitment.stage_job3'),
+                   ref('hr_recruitment.stage_job0'): 13 * 24 * 3600,
+                   ref('hr_recruitment.stage_job1'): 7 * 24 * 3600,
+                   ref('hr_recruitment.stage_job2'): 20 * 24 * 3600,
+                }"/>
         </record>
 
         <record id="scenario_applicant_fsd_hannah" model="hr.applicant">
@@ -134,6 +152,12 @@
             <field name="create_date" eval="DateTime.today() - relativedelta(days=5)" />
             <field name="date_last_stage_update"
                 eval="DateTime.today() - relativedelta(days=5)" />
+            <field name="duration_tracking"
+               eval="{
+                   'd': DateTime.today() - relativedelta(days=20),
+                   's': ref('hr_recruitment.stage_job1'),
+                   ref('hr_recruitment.stage_job0'): 5 * 24 * 3600,
+               }"/>
         </record>
 
         <record id="scenario_applicant_fsd_simon" model="hr.applicant">
@@ -160,6 +184,12 @@
                 eval="DateTime.today() - relativedelta(days=1)" />
             <field name="date_last_stage_update"
                 eval="DateTime.today() - relativedelta(days=3)" />
+            <field name="duration_tracking"
+                eval="{
+                   'd': DateTime.today() - relativedelta(days=17),
+                   's': ref('hr_recruitment.stage_job1'),
+                   ref('hr_recruitment.stage_job0'): 3 * 24 * 3600,
+                }"/>
         </record>
 
         <record id="scenario_applicant_fsd_maria" model="hr.applicant">
@@ -250,18 +280,11 @@
         <record id="scenario_applicant_macm_helen_mm_1" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=17)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_helen_mtv_1" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">Qualification</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_1" />
+            <field name="body"><![CDATA[New<b>Qualification</b><i>Stage</i>]]></field>
         </record>
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_1" model="mail.message">
@@ -283,18 +306,11 @@
         <record id="scenario_applicant_macm_helen_mm_2" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=15)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_helen_mtv_2" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">Qualification</field>
-            <field name="new_value_char">First Interview</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_2" />
+            <field name="body"><![CDATA[Qualification<b>First Interview</b><i>Stage</i>]]></field>
         </record>
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_2" model="mail.message">
@@ -316,18 +332,11 @@
         <record id="scenario_applicant_macm_helen_mm_3" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=10)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_helen_mtv_3" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">First Interview</field>
-            <field name="new_value_char">Second Interview</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_3" />
+            <field name="body"><![CDATA[First Interview<b>Second Interview</b><i>Stage</i>]]></field>
         </record>
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_3" model="mail.message">
@@ -351,18 +360,11 @@
         <record id="scenario_applicant_macm_helen_mm_4" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=7)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_helen_mtv_4" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">Second Interview</field>
-            <field name="new_value_char">Contract Proposal</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job3')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job4')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_4" />
+            <field name="body"><![CDATA[Second Interview<b>Contract Proposal</b><i>Stage</i>]]></field>
         </record>
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_4" model="mail.message">
@@ -384,18 +386,11 @@
         <record id="scenario_applicant_macm_helen_mm_5" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=2)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_helen_mtv_5" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">Contract Proposal</field>
-            <field name="new_value_char">Contract Signed</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job4')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job5')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_5" />
+            <field name="body"><![CDATA[Contract Proposal<b>Contract Signed</b><i>Stage</i>]]></field>
         </record>
 
         <!-- APPLICANT ENRIQUE -->
@@ -404,18 +399,11 @@
         <record id="scenario_applicant_macm_enrique_mm_1" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(months=1, days=17)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_enrique_mtv_1" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">Qualification</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_enrique_mm_1" />
+            <field name="body"><![CDATA[New<b>Qualification</b><i>Stage</i>]]></field>
         </record>
 
         <record id="msg_scenario_applicant_macm_enrique_mm_c_1" model="mail.message">
@@ -440,18 +428,11 @@
         <record id="scenario_applicant_macm_enrique_mm_2" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(months=1, days=10)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_enrique_mtv_2" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">Qualification</field>
-            <field name="new_value_char">First Interview</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_enrique_mm_2" />
+            <field name="body"><![CDATA[Qualification<b>First Interview</b><i>Stage</i>]]></field>
         </record>
 
         <record id="msg_scenario_applicant_macm_enrique_mm_c_2" model="mail.message">
@@ -477,18 +458,11 @@
         <record id="scenario_applicant_macm_enrique_mm_3" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=20)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_macm_enrique_mtv_3" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">First Interview</field>
-            <field name="new_value_char">Second Interview</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')" />
-            <field name="mail_message_id" ref="scenario_applicant_macm_enrique_mm_3" />
+            <field name="body"><![CDATA[First Interview<b>Second Interview</b><i>Stage</i>]]></field>
         </record>
 
         <record id="msg_scenario_applicant_macm_enrique_mm_c_3" model="mail.message">
@@ -518,18 +492,11 @@
         <record id="scenario_applicant_fsd_hannah_mm_1" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_hannah" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=17)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_fsd_hannah_mtv_1" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">Qualification</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
-            <field name="mail_message_id" ref="scenario_applicant_fsd_hannah_mm_1" />
+            <field name="body"><![CDATA[New<b>Qualification</b><i>Stage</i>]]></field>
         </record>
 
         <record id="scenario_applicant_fsd_hannah_mm_c_1" model="mail.message">
@@ -561,18 +528,11 @@
         <record id="scenario_applicant_fsd_simon_mm_1" model="mail.message">
             <field name="model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_simon" />
-            <field name="message_type">notification</field>
+            <field name="message_type">tracking</field>
             <field name="date" eval="DateTime.today() - relativedelta(days=17)" />
             <field name="author_id" ref="base.partner_admin" />
             <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
-        </record>
-        <record id="scenario_applicant_fsd_simon_mtv_1" model="mail.tracking.value">
-            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
-            <field name="old_value_char">New</field>
-            <field name="new_value_char">Qualification</field>
-            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
-            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
-            <field name="mail_message_id" ref="scenario_applicant_fsd_simon_mm_1" />
+            <field name="body"><![CDATA[New<b>Qualification</b><i>Stage</i>]]></field>
         </record>
 
         <record id="scenario_applicant_fsd_simon_mm_c_1" model="mail.message">

@@ -59,12 +59,23 @@ class MailTrackingDurationMixinCase(MailCommon):
         on the provided minutes. If new_stage is given, the stage of the
         records is updated as well. """
         self.assertEqual(len(records), len(records_trackings))
-        for record, tracking_dict in records_trackings.items():
-            tracking_dict[str(record[self.track_duration_field].id) if record[self.track_duration_field].id else '0'] += minutes * 60
-            if new_stage is not False:
-                tracking_dict[str(new_stage.id) if new_stage.id else '0'] += 0
+
+        for record in records:
+            tracking_dict = records_trackings[record]
+            if new_stage:
+                duration_id = tracking_dict.get('s') or record[self.track_duration_field].id
+                if duration_id:
+                    key = str(duration_id)
+                    # accumulate all pending minutes
+                    old_false_minutes = 'False' in tracking_dict and tracking_dict.pop('False') or 0
+                    tracking_dict[key] += old_false_minutes + minutes * 60
                 record[self.track_duration_field] = new_stage
+                tracking_dict['d'] = str(self.env.cr.now())
+                tracking_dict['s'] = new_stage.id
                 self.flush_tracking()
+            else:
+                tracking_dict.setdefault('False', 0)
+                tracking_dict['False'] += minutes * 60
 
         # check computed value matches mock stored values
         self.assertTrackingDuration(records, records_trackings)
@@ -73,18 +84,19 @@ class MailTrackingDurationMixinCase(MailCommon):
         """ Assert content of records's duration_tracking value. """
         records.invalidate_recordset(fnames=['duration_tracking'])
         for record in records:
-            tracking_dict = records_trackings[record]
+            # clean False key that we use for add that value in next stage
+            tracking_dict = {key: vals for key, vals in records_trackings[record].items() if key != 'False'}
             self.assertDictEqual(record.duration_tracking, dict(tracking_dict))
 
     def _test_record_duration_tracking(self):
         """ Moves a record's many2one field through several values and asserts
         the duration spent in that value each time.
 
-        Total time: 1: 5+ // 2: 10+50+55+ // 3: 50+20+ // 4: 20+200 // No: 30"""
+        Total time: 1: 5 // 2: 10+50+55 // 3: 50 // 4: 20+30+200"""
         with patch.object(self.env.cr, 'now', return_value=self.mock_start_time) as now:
             records = (self.rec_1 + self.rec_2).with_env(self.env)
             records_trackings = {record: defaultdict(lambda: 0) for record in records}
-
+            last_udpate_stage_time = False
             for additional_time, stage in [
                 (5, self.stage_2),
                 (10, False),
@@ -98,15 +110,18 @@ class MailTrackingDurationMixinCase(MailCommon):
             ]:
                 with self.subTest(additional_time=additional_time, stage=stage):
                     now.return_value += timedelta(minutes=additional_time)
+                    if stage:
+                        last_udpate_stage_time = str(now.return_value)
                     self._update_mock_timing(records, records_trackings, additional_time, new_stage=stage)
             for record in records:
                 self.assertDictEqual(
                     record.duration_tracking, {
-                        '0': 30 * 60,  # no stage tracking
                         str(self.stage_1.id): 5 * 60,
                         str(self.stage_2.id): 115 * 60,
-                        str(self.stage_3.id): 70 * 60,
-                        str(self.stage_4.id): 220 * 60,
+                        str(self.stage_3.id): 50 * 60,
+                        str(self.stage_4.id): 250 * 60,
+                        'd': last_udpate_stage_time,
+                        's': self.stage_3.id
                     }
                 )
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="mail_tracking_template">
+            <t t-foreach="trackingValues" t-as="val">
+                <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_name']"/><br/>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.models import TableSQL
 from odoo.tools import SQL
+
 from odoo.addons.resource.models.utils import filter_map_domain
 
 
@@ -27,7 +26,9 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         ('1_canceled', 'Cancelled'),
         ('02_changes_requested', 'Changes Requested'),
     ], string='State', readonly=True)
-    is_closed = fields.Selection([('closed', 'Closed tasks'), ('open', 'Open tasks')], string="Closing Stage", readonly=True)
+    is_open = fields.Boolean(string='Open', readonly=True)
+    is_done = fields.Boolean(string='Done', readonly=True)
+    is_canceled = fields.Boolean(string='Cancelled', readonly=True)
     milestone_id = fields.Many2one('project.milestone', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     project_id = fields.Many2one('project.project', readonly=True)
@@ -68,134 +69,54 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         # the ids that are returned from this sub query.
         project_task_query = self.env['project.task']._search(task_specific_domain, **kwargs)
 
-        # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join
-        # on `ir_model_fields` table.
-        field_id = self.sudo().env['ir.model.fields'].search([('name', '=', 'stage_id'), ('model', '=', 'project.task')]).id
-
-        groupby = self.env.context.get('project_task_burndown_chart_report_groupby', ['date:month', 'stage_id'])
-        date_groupby = [g for g in groupby if g.startswith('date')][0]
-
-        # Computes the interval which needs to be used in the `SQL` depending on the date group by interval.
-        interval = date_groupby.split(':')[1]
-        sql_interval = '1 %s' % interval if interval != 'quarter' else '3 month'
-
-        simple_date_groupby_sql = self._read_group_groupby(TableSQL('project_task_burndown_chart_report', self, main_query), f"date:{interval}")
-        # Removing unexistant table name from the expression
-        simple_date_groupby_sql = self.env.cr.mogrify(simple_date_groupby_sql).decode()
-        simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
-
         burndown_chart_sql = SQL("""
-            (
-              WITH task_ids AS %(task_query_subselect)s,
-              all_stage_task_moves AS (
-                 SELECT count(*) as __count,
-                        sum(allocated_hours) as allocated_hours,
-                        project_id,
-                        %(date_begin)s as date_begin,
-                        %(date_end)s as date_end,
-                        stage_id,
-                        is_closed
-                   FROM (
-                            -- Gathers the stage_ids history per task_id. This query gets:
-                            -- * All changes except the last one for those for which we have at least a mail
-                            --   message and a mail tracking value on project.task stage_id.
-                            -- * The stage at creation for those for which we do not have any mail message and a
-                            --   mail tracking value on project.task stage_id.
-                            SELECT DISTINCT task_id,
-                                   allocated_hours,
-                                   project_id,
-                                   %(date_begin)s as date_begin,
-                                   %(date_end)s as date_end,
-                                   first_value(stage_id) OVER task_date_begin_window AS stage_id,
-                                   is_closed
-                              FROM (
-                                     SELECT pt.id as task_id,
-                                            pt.allocated_hours,
-                                            pt.project_id,
-                                            COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
-                                            CASE WHEN mtv.id IS NOT NULL THEN mm.date
-                                                ELSE (now() at time zone 'utc')::date + INTERVAL '%(interval)s'
-                                            END as date_end,
-                                            CASE WHEN mtv.id IS NOT NULL THEN mtv.old_value_integer
-                                               ELSE pt.stage_id
-                                            END as stage_id,
-                                            CASE
-                                                WHEN mtv.id IS NOT NULL AND mtv.old_value_char IN ('1_done', '1_canceled') THEN 'closed'
-                                                WHEN mtv.id IS NOT NULL AND mtv.old_value_char NOT IN ('1_done', '1_canceled') THEN 'open'
-                                                WHEN mtv.id IS NULL AND pt.state IN ('1_done', '1_canceled') THEN 'closed'
-                                                ELSE 'open'
-                                            END as is_closed
-                                       FROM project_task pt
-                                                LEFT JOIN (
-                                                    mail_message mm
-                                                        JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
-                                                                                     AND mtv.field_id = %(field_id)s
-                                                                                     AND mm.model='project.task'
-                                                                                     AND mm.message_type = 'notification'
-                                                        JOIN project_task_type ptt ON ptt.id = mtv.old_value_integer
-                                                ) ON mm.res_id = pt.id
-                                      WHERE pt.active=true AND pt.id IN (SELECT id from task_ids)
-                                   ) task_stage_id_history
-                          GROUP BY task_id,
-                                   allocated_hours,
-                                   project_id,
-                                   %(date_begin)s,
-                                   %(date_end)s,
-                                   stage_id,
-                                   is_closed
-                            WINDOW task_date_begin_window AS (PARTITION BY task_id, %(date_begin)s)
-                          UNION ALL
-                            -- Gathers the current stage_ids per task_id for those which values changed at least
-                            -- once (=those for which we have at least a mail message and a mail tracking value
-                            -- on project.task stage_id).
-                            SELECT pt.id as task_id,
-                                   pt.allocated_hours,
-                                   pt.project_id,
-                                   last_stage_id_change_mail_message.date as date_begin,
-                                   (now() at time zone 'utc')::date + INTERVAL '%(interval)s' as date_end,
-                                   pt.stage_id as old_value_integer,
-                                   CASE WHEN pt.state IN ('1_done', '1_canceled') THEN 'closed'
-                                       ELSE 'open'
-                                   END as is_closed
-                              FROM project_task pt
-                                   JOIN LATERAL (
-                                       SELECT mm.date
-                                       FROM mail_message mm
-                                       JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
-                                       AND mtv.field_id = %(field_id)s
-                                       AND mm.model='project.task'
-                                       AND mm.message_type = 'notification'
-                                       AND mm.res_id = pt.id
-                                       ORDER BY mm.id DESC
-                                       FETCH FIRST ROW ONLY
-                                   ) AS last_stage_id_change_mail_message ON TRUE
-                             WHERE pt.active=true AND pt.id IN (SELECT id from task_ids)
-                        ) AS project_task_burndown_chart
-               GROUP BY allocated_hours,
-                        project_id,
-                        %(date_begin)s,
-                        %(date_end)s,
-                        stage_id,
-                        is_closed
-              )
-              SELECT (project_id*10^13 + stage_id*10^7 + to_char(date, 'YYMMDD')::integer)::bigint as id,
-                     allocated_hours,
-                     project_id,
-                     stage_id,
-                     is_closed,
-                     date,
-                     __count
-                FROM all_stage_task_moves t
-                         JOIN LATERAL generate_series(t.date_begin, t.date_end-INTERVAL '1 day', '%(interval)s')
-                            AS date ON TRUE
-            )
-            """,
-            task_query_subselect=project_task_query.subselect(),
-            date_begin=SQL(simple_date_groupby_sql.replace('"date"', '"date_begin"')),
-            date_end=SQL(simple_date_groupby_sql.replace('"date"', '"date_end"')),
-            interval=SQL(sql_interval),
-            field_id=field_id,
+        (
+         WITH task_ids AS %(task_query_subselect)s,
+             project_task_tracking AS (
+                SELECT
+                       t.id,
+                       now() - (SUM(step.duration::int) OVER (PARTITION BY t.id ORDER BY s.sequence desc)) * interval '1 second' as date,
+                       s.id as stage_id,
+                       t.allocated_hours as hours,
+                       s.sequence
+                  FROM project_task t
+            CROSS JOIN lateral jsonb_each(
+                       (t.duration_tracking - 'd' - 's') || jsonb_build_object(t.duration_tracking->>'s',
+                        EXTRACT(EPOCH FROM (now() - (t.duration_tracking->>'d')::timestamptz))::int + coalesce(t.duration_tracking->>(t.duration_tracking->>'s'), '0')::int
+                       )) AS step(stage_id, duration)
+             LEFT JOIN project_task_type s ON s.id=step.stage_id::int
+                 WHERE t.active=true AND t.id IN (SELECT id from task_ids)
+        ), project_task_tracking_by_end AS (
+                SELECT
+                       id,
+                       date,
+                       stage_id,
+                       1 as count,
+                       hours
+                  FROM project_task_tracking
+            UNION
+                SELECT
+                       id,
+                       date,
+                       LAG(stage_id) OVER (PARTITION BY id ORDER BY sequence) AS stage_id,
+                       -1 as count,
+                       hours * -1
+                FROM project_task_tracking
         )
+        SELECT ptt.id,
+               ptt.date,
+               ptt.stage_id,
+               ptt.count as __count,
+               ptt.hours as allocated_hours,
+               CASE WHEN t.state = '1_done' THEN true ELSE false END as is_done,
+               CASE WHEN t.state = '1_canceled' THEN true ELSE false END as is_canceled,
+               CASE WHEN t.state NOT IN ('1_done', '1_canceled') THEN true ELSE false END as is_open,
+               t.project_id
+        FROM project_task_tracking_by_end ptt
+        JOIN project_task t ON t.id = ptt.id
+         WHERE ptt.stage_id IS NOT NULL
+      ORDER BY ptt.id, ptt.stage_id, ptt.date
+      )""", task_query_subselect=project_task_query.subselect())
 
         # hardcode 'project_task_burndown_chart_report' as the query above
         # (with its own parameters)
@@ -210,16 +131,16 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         :param groupby: List of group by fields.
         """
 
-        is_closed_or_stage_in_groupby = False
+        stage_in_groupby = False
         date_in_groupby = False
         for gb in groupby:
             if gb.startswith('date'):
                 date_in_groupby = True
-            elif gb in ['stage_id', 'is_closed']:
-                is_closed_or_stage_in_groupby = True
+            elif gb == 'stage_id':
+                stage_in_groupby = True
 
-        if not date_in_groupby or not is_closed_or_stage_in_groupby:
-            raise UserError(_('The view must be grouped by date and by Stage - Burndown chart or Is Closed - Burnup chart'))
+        if not date_in_groupby or not stage_in_groupby:
+            raise UserError(_('The view must be grouped by date and by Stage - Burndown chart'))
 
     @api.model
     def _determine_domains(self, domain):
@@ -258,7 +179,6 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
 
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         self._validate_group_by(groupby)
-        self = self.with_context(project_task_burndown_chart_report_groupby=groupby)
 
         return super()._read_group(
             domain=domain, groupby=groupby, aggregates=aggregates,

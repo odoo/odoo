@@ -39,19 +39,16 @@ class FullBaseMailPerformance(BaseMailPostPerformance):
             cls.customers.ids + cls.user_admin.partner_id.ids + cls.user_follower_portal.partner_id.ids
         )
 
-        cls.tracking_values_ids = [
-            (0, 0, {
-                'field_id': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'email_from').id,
-                'new_value_char': 'new_value',
-                'old_value_char': 'old_value',
-            }),
-            (0, 0, {
-                'field_id': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'customer_id').id,
-                'new_value_char': 'New Fake',
-                'new_value_integer': 2,
-                'old_value_char': 'Old Fake',
-                'old_value_integer': 1,
-            }),
+        cls.message_tracking_values = [
+            {
+                'field_name': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'email_from').field_description,
+                'old_value': 'new_value',
+                'new_value': 'old_value',
+            }, {
+                'field_name': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'customer_id').field_description,
+                'old_value': 'New Fake',
+                'new_value': 'Old Fake',
+            },
         ]
 
 
@@ -75,8 +72,8 @@ class TestMailPerformance(FullBaseMailPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=110):  # test_mail_full: 108
-            new_message = record_ticket.message_post(
+        with self.assertQueryCount(employee=106):  # test_mail_full: 106
+            new_message = record_ticket.sudo().message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
                 email_add_signature=True,
@@ -84,7 +81,7 @@ class TestMailPerformance(FullBaseMailPerformance):
                 message_type='comment',
                 subject='Test Subject',
                 subtype_xmlid='mail.mt_comment',
-                tracking_value_ids=self.tracking_values_ids,
+                message_tracking_values=self.message_tracking_values,
             )
 
         self.assertEqual(
@@ -127,7 +124,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             ])
 
         # messages and ratings
-        user_id_field = cls.env['ir.model.fields']._get(cls.record_ratings._name, 'user_id')
         comment_subtype_id = cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         cls.link_previews = cls.env["mail.link.preview"].create(
             [
@@ -189,15 +185,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                     (4, cls.customers[(msg_idx * 2)].id),
                     (4, cls.customers[(msg_idx * 2) + 1].id),
                 ],
-                'tracking_value_ids': [
-                    (0, 0, {
-                        'field_id': user_id_field.id,
-                        'new_value_char': 'new 1',
-                        'new_value_integer': record.user_id.id,
-                        'old_value_char': 'old 1',
-                        'old_value_integer': cls.user_admin.id,
-                    }),
-                ]
             }
             for msg_idx in range(2)
             for record_idx, record in enumerate(cls.record_ratings)

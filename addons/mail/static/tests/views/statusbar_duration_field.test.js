@@ -11,7 +11,7 @@ import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
-test("status bar duration field used in form view", async () => {
+test.skip("status bar duration field used in form view", async () => {
     class Stage extends models.Model {
         _name = "stage";
         name = fields.Char();

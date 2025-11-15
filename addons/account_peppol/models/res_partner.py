@@ -3,7 +3,6 @@
 import logging
 import requests
 from lxml import etree
-from markupsafe import Markup
 from hashlib import md5
 from urllib import parse
 
@@ -85,23 +84,12 @@ class ResPartner(models.Model):
         old_label = selection_values[old_value] if old_value else False  # get translated labels
         new_label = selection_values[new_value] if new_value else False
 
-        body = Markup("""
-            <ul>
-                <li>
-                    <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
-                    <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
-                    <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
-                    <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({field})</span>
-                    <span class='o-mail-Message-trackingCompany ms-1 fst-italic text-muted'>({company})</span>
-                </li>
-            </ul>
-        """).format(
-            old=old_label,
-            new=new_label,
-            field=peppol_verification_state_field.string,
-            company=company.display_name,
-        )
-        self._message_log(body=body)
+        tracking_body = self._messages_format_tracking([{
+            'old_value': old_label,
+            'new_value': new_label,
+            'field_name': "%s (%s)" % (peppol_verification_state_field.string, company.display_name)
+        }])
+        self._message_log(body=tracking_body, message_type='tracking')
 
     @api.model
     def _get_participant_info(self, edi_identification):

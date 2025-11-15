@@ -2,7 +2,6 @@
 import base64
 
 from collections import defaultdict
-from markupsafe import Markup
 
 from odoo import _, models
 from odoo.tools import float_compare
@@ -244,13 +243,7 @@ class PosOrder(models.Model):
         return updated_gift_cards
 
     def _add_log_for_gift_cards(self, gift_cards):
-        body = Markup(
-            """
-                <span class='o-mail-Message-trackingOld text-muted fw-bold'>{message}<span/>
-                <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
-                <span class='o-mail-Message-trackingNew text-info fw-bold'>{order_name}</span>
-            """
-        ).format(message=_('Loyalty coupon sold'), order_name=self._get_html_link())
+        body = '%s -> %s' % (self.env._('Loyalty coupon sold'), self._get_html_link())
         for gift_card in gift_cards:
             gift_card.message_post(body=body)
 
