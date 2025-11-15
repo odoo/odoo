@@ -80,8 +80,8 @@
                             ('contract_date_start', '>', 'today'),
                         ]"/>
                 <separator />
-                <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start"/>
-                <filter string="Contract End Date" name="contract_date_end" date="contract_date_end"/>
+                <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start" groups="hr.group_hr_manager"/>
+                <filter string="Contract End Date" name="contract_date_end" date="contract_date_end" groups="hr.group_hr_manager"/>
                 <separator />
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
