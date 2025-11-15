@@ -6790,7 +6790,7 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
-        if posted_moves := self.filtered(lambda m: m.state == 'posted'):
+        if posted_moves := self.filtered(lambda m: m.state == 'posted' and m.is_move_sent):
             return [
                 {
                     'key': 'download_all',
