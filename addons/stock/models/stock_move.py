@@ -8,7 +8,7 @@ from re import findall as regex_findall
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare, float_repr, float_round
 from odoo.tools.misc import clean_context, OrderedSet, groupby
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
@@ -926,6 +926,15 @@ Please change the quantity done or the rounding precision in your settings.""",
                 'picking_id': picking.id,
             },
         }
+
+    def action_print_reception_report(self):
+        # Quantities needs to be expressed as string to support python + js calls to report.
+        quantities = ','.join(float_repr(qty, 0) for qty in self.mapped('product_uom_qty'))
+        data = {
+            'docids': self.ids,
+            'quantity': quantities,
+        }
+        return self.env.ref('stock.label_picking').report_action(self, data=data, config=False)
 
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
