@@ -31,8 +31,8 @@ export function initElementForEdition(element, options = {}) {
 }
 
 /**
- * Properly close common XML-like self-closing elements to avoid HTML parsing
- * issues.
+ * Converts XML-style self-closing tags (e.g., <div/> <span/> <t/>) into proper
+ * HTML start/end tag pairs, except for true HTML void elements.
  *
  * @param {string} content
  * @returns {string}
@@ -41,9 +41,11 @@ export function fixInvalidHTML(content) {
     if (!content) {
         return content;
     }
-    // TODO: improve the regex to support nodes with data-attributes containing
-    // `/` and `>` characters.
-    const regex = /<\s*(a|strong|t|span)[^<]*?\/\s*>/g;
+    // Match self-closing tags EXCEPT HTML void elements.
+    // We do not use selfClosingElementTags because it includes XML-only tags
+    // such as <t>, which must not be treated as void in HTML.
+    const regex =
+        /<\s*(?!area\b|base\b|br\b|col\b|embed\b|hr\b|img\b|input\b|link\b|meta\b|param\b|source\b|track\b|wbr\b)([a-zA-Z0-9:-]+)\s*((?:(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*))\s*\/>/g;
     return content.replace(regex, (match, g0) => match.replace(/\/\s*>/, `></${g0}>`));
 }
 
