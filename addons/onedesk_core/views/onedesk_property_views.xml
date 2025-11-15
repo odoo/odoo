@@ -194,6 +194,7 @@
                 <separator/>
                 <filter string="Actives" name="active" domain="[('active', '=', True)]"/>
                 <filter string="Archivées" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
                 <group expand="0" string="Grouper par">
                     <filter string="Type" name="group_property_type" context="{'group_by': 'property_type'}"/>
                     <filter string="Ville" name="group_city" context="{'group_by': 'city'}"/>
