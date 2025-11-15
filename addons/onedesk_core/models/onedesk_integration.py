@@ -227,9 +227,14 @@ class OnedeskIntegration(models.Model):
             })
             
             self._log('success', f"✅ Connexion OAuth réussie")
-            
-            # Lance première sync
-            self.with_delay().action_sync_now()
+
+            # Lance première sync (si queue_job disponible, en différé, sinon direct)
+            try:
+                self.with_delay().action_sync_now()
+            except AttributeError:
+                # queue_job n'est pas installé, on lance directement
+                _logger.info("queue_job non disponible, synchronisation directe")
+                self.action_sync_now()
             
         except Exception as e:
             error_msg = f"Erreur OAuth: {str(e)}"

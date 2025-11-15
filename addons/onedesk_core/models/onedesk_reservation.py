@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class OneDeskReservation(models.Model):
     _name = 'onedesk.reservation'
@@ -61,3 +62,35 @@ class OneDeskReservation(models.Model):
             if reservation.calendar_event_id:
                 reservation.calendar_event_id.sudo().unlink()
         return super().unlink()
+
+    # Validation des conflits de réservation
+    @api.constrains('unit_id', 'start_date', 'end_date')
+    def _check_reservation_overlap(self):
+        """Vérifie qu'il n'y a pas de chevauchement de réservations pour la même unité"""
+        for reservation in self:
+            # Vérifier que start_date < end_date
+            if reservation.start_date >= reservation.end_date:
+                raise ValidationError(
+                    f"La date de début ({reservation.start_date}) doit être antérieure "
+                    f"à la date de fin ({reservation.end_date})."
+                )
+
+            # Chercher les réservations qui se chevauchent pour la même unité
+            overlapping = self.search([
+                ('unit_id', '=', reservation.unit_id.id),
+                ('id', '!=', reservation.id),  # Exclure la réservation actuelle
+                ('start_date', '<', reservation.end_date),
+                ('end_date', '>', reservation.start_date),
+            ])
+
+            if overlapping:
+                overlap_details = "\n".join([
+                    f"  - {r.name}: {r.start_date} à {r.end_date}"
+                    for r in overlapping
+                ])
+                raise ValidationError(
+                    f"⚠️ Conflit de réservation détecté!\n\n"
+                    f"L'unité '{reservation.unit_id.name}' est déjà réservée pendant cette période:\n"
+                    f"{overlap_details}\n\n"
+                    f"Votre réservation: {reservation.start_date} à {reservation.end_date}"
+                )
