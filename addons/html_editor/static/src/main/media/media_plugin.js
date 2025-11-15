@@ -381,29 +381,44 @@ export class MediaPlugin extends Plugin {
                 }
             }
         }
-        const newAttachmentSrc = await rpc(
-            `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
-            {
-                res_model: resModel,
-                res_id: parseInt(resId),
-                data: getImageSrc(el).split(",")[1],
-                alt_data: altData,
-                mimetype: isBackground
-                    ? el.dataset.mimetype
-                    : el.getAttribute("src").split(":")[1].split(";")[0],
-                name: el.dataset.fileName ? el.dataset.fileName : null,
-            }
-        );
+        let attachmentNotFound = false;
+        let newAttachmentSrc;
+        try {
+            newAttachmentSrc = await rpc(
+                `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
+                {
+                    res_model: resModel,
+                    res_id: parseInt(resId),
+                    data: getImageSrc(el).split(",")[1],
+                    alt_data: altData,
+                    mimetype: isBackground
+                        ? el.dataset.mimetype
+                        : el.getAttribute("src").split(":")[1].split(";")[0],
+                    name: el.dataset.fileName ? el.dataset.fileName : null,
+                }
+            );
+        } catch {
+            // On RPC failure, set a placeholder image source with a flag.
+            newAttachmentSrc = "/html_editor/static/src/img/placeholder_thumbnail.png";
+            attachmentNotFound = true;
+        }
         el.classList.remove("o_modified_image_to_save");
+        let targetEl = el;
         if (isBackground) {
             const parts = backgroundImageCssToParts(el.style["background-image"]);
             parts.url = `url('${newAttachmentSrc}')`;
             const combined = backgroundImagePartsToCss(parts);
             el.style["background-image"] = combined;
         } else {
-            el.setAttribute("src", newAttachmentSrc);
+            if (attachmentNotFound) {
+                // Reset image to a clean state if a placeholder is returned.
+                targetEl = document.createElement("img");
+                el.insertAdjacentElement("afterend", targetEl);
+                el.remove();
+            }
+            targetEl.src = newAttachmentSrc;
         }
-        this.dispatchTo("on_image_saved_handlers", { imageEl: el });
+        this.dispatchTo("on_image_saved_handlers", { imageEl: targetEl });
     }
 
     /**
