@@ -1373,22 +1373,61 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.ensure_one()
         return bool(not self.picking_id and self.picking_type_id)
 
+
     def _action_confirm(self, merge=True, merge_into=False):
-        """ Confirms stock move or put it in waiting if it's linked to another move.
-        :param: merge: According to this boolean, a newly confirmed move will be merged
-        in another move of the same picking sharing its characteristics.
+        """Confirms stock moves, handling multi-company recordsets safely.
+
+        This method overrides the standard confirmation logic to ensure that when moves from
+        multiple companies are confirmed in a single call, each move is processed within its
+        own company context. This guarantees correct behavior for company-specific logic such
+        as currency, accounting, procurement rules, and stock valuation.
+
+        The actual confirmation logic is delegated to `_action_confirm_single_company`,
+        which assumes all moves belong to a single company.
+
+        :param bool merge: Whether to merge newly confirmed moves with compatible existing ones.
+        :param stock.move merge_into: Optional target move to merge into.
+        :return: Recordset of confirmed moves.
+
         """
-        # Use OrderedSet of id (instead of recordset + |= ) for performance
-        move_create_proc, move_to_confirm, move_waiting = OrderedSet(), OrderedSet(), OrderedSet()
+
+        moves_by_company = defaultdict(self.env["stock.move"].browse)
+        for move in self:
+            moves_by_company[move.company_id] |= move
+
+        confirmed = self.env["stock.move"]
+        for company, moves in moves_by_company.items():
+            confirmed |= moves.with_company(company)._action_confirm_single_company(
+                merge=merge, merge_into=merge_into
+            )
+        return confirmed
+
+    def _action_confirm_single_company(self, merge=True, merge_into=False):
+        """Performs the complete stock move confirmation logic.
+        This method assumes all moves belong to the same company and executes
+        the core confirmation steps, including procurement creation, state
+        transition, merging, assignment, and processing push rules.
+
+        It should only be called from _action_confirm() after the company
+        context has been correctly set.
+
+        :param bool merge: Whether to merge newly confirmed moves with compatible existing ones.
+        :param stock.move merge_into: Optional target move to merge into.
+        :return: Recordset of confirmed moves.
+        """
+        move_create_proc, move_to_confirm, move_waiting = (
+            OrderedSet(),
+            OrderedSet(),
+            OrderedSet(),
+        )
         to_assign = defaultdict(OrderedSet)
         for move in self:
-            if move.state != 'draft':
+            if move.state != "draft":
                 continue
-            # if the move is preceded, then it's waiting (if preceding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
                 move_waiting.add(move.id)
             else:
-                if move.procure_method == 'make_to_order':
+                if move.procure_method == "make_to_order":
                     move_create_proc.add(move.id)
                 else:
                     move_to_confirm.add(move.id)
@@ -1396,66 +1435,106 @@ Please change the quantity done or the rounding precision of your unit of measur
                 key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
                 to_assign[key].add(move.id)
 
-        move_create_proc, move_to_confirm, move_waiting = self.browse(move_create_proc), self.browse(move_to_confirm), self.browse(move_waiting)
+        move_create_proc, move_to_confirm, move_waiting = (
+            self.browse(move_create_proc),
+            self.browse(move_to_confirm),
+            self.browse(move_waiting),
+        )
 
-        # create procurements for make to order moves
         procurement_requests = []
-        for move in move_create_proc if not self.env.context.get('bypass_procurement_creation') else self.env['stock.move']:
+        for move in (
+            move_create_proc
+            if not self.env.context.get("bypass_procurement_creation")
+            else self.env["stock.move"]
+        ):
             values = move._prepare_procurement_values()
             origin = move._prepare_procurement_origin()
-            procurement_requests.append(self.env['procurement.group'].Procurement(
-                move.product_id, move.product_uom_qty, move.product_uom,
-                move.location_id, move.rule_id and move.rule_id.name or "/",
-                origin, move.company_id, values))
-        self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
+            procurement_requests.append(
+                self.env["procurement.group"].Procurement(
+                    move.product_id,
+                    move.product_uom_qty,
+                    move.product_uom,
+                    move.location_id,
+                    move.rule_id and move.rule_id.name or "/",
+                    origin,
+                    move.company_id,
+                    values,
+                )
+            )
+        self.env["procurement.group"].run(
+            procurement_requests,
+            raise_user_error=not self.env.context.get("from_orderpoint"),
+        )
 
-        move_to_confirm.write({'state': 'confirmed'})
-        (move_waiting | move_create_proc).write({'state': 'waiting'})
-        # procure_method sometimes changes with certain workflows so just in case, apply to all moves
-        (move_to_confirm | move_waiting | move_create_proc).filtered(lambda m: m.picking_type_id.reservation_method == 'at_confirm')\
-            .write({'reservation_date': fields.Date.today()})
+        move_to_confirm.write({"state": "confirmed"})
+        (move_waiting | move_create_proc).write({"state": "waiting"})
+        (move_to_confirm | move_waiting | move_create_proc).filtered(
+            lambda m: m.picking_type_id.reservation_method == "at_confirm"
+        ).write({"reservation_date": fields.Date.today()})
 
-        # assign picking in batch for all confirmed move that share the same details
         for moves_ids in to_assign.values():
-            self.browse(moves_ids).with_context(clean_context(self.env.context))._assign_picking()
+            self.browse(moves_ids).with_context(
+                clean_context(self.env.context)
+            )._assign_picking()
         new_push_moves = self._push_apply()
         self._check_company()
         moves = self
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
 
-        # Transform remaining move in return in case of negative initial demand
-        neg_r_moves = moves.filtered(lambda move: float_compare(
-            move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) < 0)
+        neg_r_moves = moves.filtered(
+            lambda move: float_compare(
+                move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding
+            )
+            < 0
+        )
         for move in neg_r_moves:
-            move.location_id, move.location_dest_id = move.location_dest_id, move.location_id
+            move.location_id, move.location_dest_id = (
+                move.location_dest_id,
+                move.location_id,
+            )
             orig_move_ids, dest_move_ids = [], []
             for m in move.move_orig_ids | move.move_dest_ids:
                 from_loc, to_loc = m.location_id, m.location_dest_id
-                if float_compare(m.product_uom_qty, 0, precision_rounding=m.product_uom.rounding) < 0:
+                if (
+                    float_compare(
+                        m.product_uom_qty, 0, precision_rounding=m.product_uom.rounding
+                    )
+                    < 0
+                ):
                     from_loc, to_loc = to_loc, from_loc
                 if to_loc == move.location_id:
                     orig_move_ids += m.ids
                 elif move.location_dest_id == from_loc:
                     dest_move_ids += m.ids
-            move.move_orig_ids, move.move_dest_ids = [(6, 0, orig_move_ids)], [(6, 0, dest_move_ids)]
+            move.move_orig_ids, move.move_dest_ids = (
+                [(6, 0, orig_move_ids)],
+                [(6, 0, dest_move_ids)],
+            )
             move.product_uom_qty *= -1
             if move.picking_type_id.return_picking_type_id:
                 move.picking_type_id = move.picking_type_id.return_picking_type_id
-            # We are returning some products, we must take them in the source location
-            move.procure_method = 'make_to_stock'
+            move.procure_method = "make_to_stock"
         neg_r_moves._assign_picking()
 
-        # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
-        moves.filtered(lambda move: move.state in ('confirmed', 'partially_available')
-                       and move._should_assign_at_confirm())._action_assign()
+        moves.filtered(
+            lambda move: move.state in ("confirmed", "partially_available")
+            and move._should_assign_at_confirm()
+        )._action_assign()
         if new_push_moves:
-            neg_push_moves = new_push_moves.filtered(lambda sm: float_compare(sm.product_uom_qty, 0, precision_rounding=sm.product_uom.rounding) < 0)
+            neg_push_moves = new_push_moves.filtered(
+                lambda sm: float_compare(
+                    sm.product_uom_qty, 0, precision_rounding=sm.product_uom.rounding
+                )
+                < 0
+            )
             (new_push_moves - neg_push_moves).sudo()._action_confirm()
-            # Negative moves do not have any picking, so we should try to merge it with their siblings
-            neg_push_moves._action_confirm(merge_into=neg_push_moves.move_orig_ids.move_dest_ids)
+            neg_push_moves._action_confirm(
+                merge_into=neg_push_moves.move_orig_ids.move_dest_ids
+            )
 
         return moves
+
 
     def _prepare_procurement_origin(self):
         self.ensure_one()
