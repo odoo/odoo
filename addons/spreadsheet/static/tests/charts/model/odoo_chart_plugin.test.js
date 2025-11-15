@@ -1539,6 +1539,7 @@ test("available granularities without filter", async () => {
     const chartId = model.getters.getChartIds(sheetId)[0];
 
     expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
         "week",
         "month",
         "quarter",
@@ -1587,6 +1588,7 @@ test("available granularities with a date filter", async () => {
     );
     model.updateMode("dashboard");
     expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
         "week",
         "month",
         "quarter",
@@ -1635,6 +1637,7 @@ test("hour is an available granularity with a filtered datetime field", async ()
     );
     model.updateMode("dashboard");
     expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
         "week",
         "month",
         "quarter",
