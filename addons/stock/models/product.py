@@ -167,6 +167,7 @@ class Product(models.Model):
             domain_move_out += date_date_expected_domain_to
 
         Move = self.env['stock.move'].with_context(active_test=False)
+        MoveLine = self.env['stock.move.line'].with_context(active_test=False)
         Quant = self.env['stock.quant'].with_context(active_test=False)
         domain_move_in_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_in
         domain_move_out_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_out
@@ -178,13 +179,13 @@ class Product(models.Model):
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
 
-            groupby = ['product_id', 'product_uom']
+            groupby = ['product_id', 'product_uom_id']
             moves_in_res_past = defaultdict(float)
-            for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum']):
+            for product, uom, quantity in MoveLine._read_group(domain_move_in_done, groupby, ['quantity:sum']):
                 moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
             moves_out_res_past = defaultdict(float)
-            for product, uom, quantity in Move._read_group(domain_move_out_done, groupby, ['quantity:sum']):
+            for product, uom, quantity in MoveLine._read_group(domain_move_out_done, groupby, ['quantity:sum']):
                 moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
         res = dict()
