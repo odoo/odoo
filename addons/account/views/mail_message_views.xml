@@ -14,9 +14,9 @@
                 <field name="account_audit_log_company_id"/>
             </field>
             <filter name='res_partner' position="before">
-                <filter string="Journal Entry" name="account_move" domain="[('model', '=', 'account.move')]"/>
-                <filter string="Account" name="account_account" domain="[('model', '=', 'account.account')]"/>
-                <filter string="Taxes" name="account_tax" domain="[('model', '=', 'account.tax')]"/>
+                <filter string="Journal Entry" name="model_account_move" domain="[('model', '=', 'account.move')]"/>
+                <filter string="Account" name="model_account_account" domain="[('model', '=', 'account.account')]"/>
+                <filter string="Taxes" name="model_account_tax" domain="[('model', '=', 'account.tax')]"/>
             </filter>
             <filter name='create_only' position="after">
                 <filter string="Restricted" name="restricted_by_audit_trail" domain="[('account_audit_log_restricted', '=', True)]"/>
@@ -34,8 +34,12 @@
         </field>
         <field name="domain">[
             ('message_type', '=', 'notification'),
-            ('model', 'in', ('account.move', 'account.account', 'account.tax', 'res.partner', 'res.company')),
         ]</field>
+        <field name="context">{
+            'search_default_model_account_move': 1,
+            'search_default_model_account_account': 1,
+            'search_default_model_account_tax': 1,
+        }</field>
         <field name="search_view_id" ref="view_message_tree_audit_log_search"/>
     </record>
 
