@@ -1373,7 +1373,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.ensure_one()
         return bool(not self.picking_id and self.picking_type_id)
 
-
     def _action_confirm(self, merge=True, merge_into=False):
         """Confirms stock moves, handling multi-company recordsets safely.
 
@@ -1534,7 +1533,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             )
 
         return moves
-
 
     def _prepare_procurement_origin(self):
         self.ensure_one()
