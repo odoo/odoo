@@ -40,25 +40,6 @@
         </field>
     </record>
 
-    <!-- Vue search Amenity -->
-    <record id="view_onedesk_amenity_search" model="ir.ui.view">
-        <field name="name">onedesk.amenity.search</field>
-        <field name="model">onedesk.amenity</field>
-        <field name="arch" type="xml">
-            <search string="Recherche Équipements">
-                <field name="name"/>
-                <field name="category"/>
-                <separator/>
-                <filter string="Actifs" name="active" domain="[('active', '=', True)]"/>
-                <filter string="Inactifs" name="inactive" domain="[('active', '=', False)]"/>
-                <separator/>
-                <group expand="0" string="Grouper par">
-                    <filter string="Catégorie" name="group_category" context="{'group_by': 'category'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
     <!-- Action Amenity -->
     <record id="action_onedesk_amenity" model="ir.actions.act_window">
         <field name="name">Équipements</field>
