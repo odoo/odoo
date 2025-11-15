@@ -64,7 +64,7 @@ class AccountPayment(models.Model):
         column on the lines as we will default to that tax base account.
         """
         for payment in self:
-            payment.withholding_hide_tax_base_account = bool(payment.company_id.withholding_tax_base_account_id)
+            payment.withholding_hide_tax_base_account = bool(payment.company_id.withholding_tax_control_account_id)
 
     @api.depends('should_withhold_tax')
     def _compute_outstanding_account_id(self):
@@ -93,6 +93,81 @@ class AccountPayment(models.Model):
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
+
+    def _generate_journal_entry(self, write_off_line_vals=None, force_balance=None, line_ids=None):
+        res = super()._generate_journal_entry(
+            write_off_line_vals=write_off_line_vals,
+            force_balance=force_balance,
+            line_ids=line_ids,
+        )
+
+        if self.withholding_line_ids and not self.outstanding_account_id:
+            tax_amount = 0.0
+            total_amount = sum(self.withholding_line_ids.mapped('base_amount'))
+            header_vals = {
+                'move_type': 'entry',
+                'ref': self.memo,
+                'date': self.date,
+                'journal_id': self.company_id.withholding_journal_id.id,
+                'company_id': self.company_id.id,
+                'partner_id': self.partner_id.id,
+                'currency_id': self.currency_id.id,
+            }
+
+            line_vals = []
+
+            for line in self.withholding_line_ids:
+                tax_account = line.tax_id.invoice_repartition_line_ids.filtered(lambda r: r.repartition_type == 'tax').account_id
+                line_vals.append(Command.create({
+                    'quantity': 1.0,
+                    'price_unit': line.base_amount,
+                    'debit': line.base_amount,
+                    'credit': 0.0,
+                    'account_id': self.company_id.withholding_tax_control_account_id.id,
+                    'tax_ids': [Command.set([line.tax_id.id])],
+                }))
+                tax_amount += line.amount
+
+            # balancing line (credit)
+            line_vals.append(Command.create({
+                'quantity': 1.0,
+                'price_unit': total_amount,
+                'debit': 0.0,
+                'credit': total_amount,
+                'account_id': self.company_id.withholding_tax_control_account_id.id,
+                'tax_ids': False,
+            }))
+
+            # Balance line with partner account (debit)
+            line_vals.append(Command.create({
+                'quantity': 1.0,
+                'debit': tax_amount,
+                'price_unit': tax_amount,
+                'credit': 0.0,
+                'account_id': self.partner_id.property_account_payable_id.id,
+                'tax_ids': False,
+            }))
+
+            line_vals.append(Command.create({
+                'quantity': 1.0,
+                'debit': 0.0,
+                'price_unit': tax_amount,
+                'credit': tax_amount,
+                'account_id': tax_account.id,
+                'tax_ids': False,
+            }))
+            print(line_vals)
+
+            move_id = self.with_company(self.company_id).env['account.move'].create({
+                **header_vals,
+                'line_ids': line_vals,
+            })
+            # move_id.line_ids[0].tax_ids = [Command.set(self.withholding_line_ids.mapped('tax_id').ids)]
+            # move_container = {'records': move_id}
+
+            self.move_id = move_id
+
+        return res
 
     @api.model
     def _get_trigger_fields_to_synchronize(self):

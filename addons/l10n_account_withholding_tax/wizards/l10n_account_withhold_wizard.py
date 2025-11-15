@@ -21,6 +21,8 @@ class L10nAccountWithholdWizard(models.TransientModel):
             raise UserError(_("You can only create a withhold for only one record at a time."))
         move = self.env[active_model].browse(active_ids)
         result['reference'] = _("Tax Deduction for %s", move.name)
+        print(move)
+        print(move.move_type)
         if move.move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or move.state != 'posted':
             raise UserError(_("Withhold must be created from Posted Customer Invoices, Customer Credit Notes, Vendor Bills or Vendor Refunds."))
         result['related_move_id'] = move.id
@@ -51,6 +53,11 @@ class L10nAccountWithholdWizard(models.TransientModel):
         comodel_name='account.account',
         string="Withhold Account"
     )
+    withhold_account_ids = fields.One2many(
+        comodel_name='account.account',
+        compute='_compute_withhold_account_ids',
+        string="Withhold Accounts",
+    )
     tax_id = fields.Many2one(
         comodel_name='account.tax',
         string="Withhold Tax",
@@ -79,6 +86,11 @@ class L10nAccountWithholdWizard(models.TransientModel):
             wizard.journal_id = wizard.company_id.parent_ids.withholding_journal_id[-1:] or \
                                 wizard.env['account.journal'].search([*self.env['account.journal']._check_company_domain(wizard.company_id), ('type', '=', 'general')], limit=1)
 
+    @api.depends('related_move_id')
+    def _compute_withhold_account_ids(self):
+        for wizard in self:
+            accounts = wizard.related_move_id._get_withhold_account_by_sum().keys()
+            wizard.withhold_account_ids = list(acc._origin.id for acc in accounts)
 
     @api.depends('related_move_id')
     def _compute_tax_id(self):
@@ -87,27 +99,26 @@ class L10nAccountWithholdWizard(models.TransientModel):
             # Search for the last withhold move line that matches the account and partner
             withhold_move_line = self.env['account.move.line'].search([
                 ('move_id.l10n_withholding_ref_move_id.commercial_partner_id', '=', wizard.related_move_id.commercial_partner_id.id),
-                ('move_id.l10n_withholding_ref_move_id.line_ids.account_id', '=', wizard.withhold_account_id.id),
+                ('move_id.l10n_withholding_ref_move_id.line_ids.account_id', 'in', wizard.withhold_account_ids.ids),
                 ('move_id.state', '=', 'posted'),
                 ('tax_ids', '!=', False),
             ], limit=1, order='id desc')
             if withhold_move_line:
-                applied_withhold_taxes = withhold_move_line.tax_ids.filtered(lambda t: t in wizard.withhold_account_id.withhold_tax_ids)
+                applied_withhold_taxes = withhold_move_line.tax_ids.filtered(lambda t: t in wizard.withhold_account_ids._origin.withhold_tax_ids)
                 if applied_withhold_taxes:
                     tax = applied_withhold_taxes[0]
             wizard.tax_id = tax
 
 
-    @api.depends('tax_id')
+    @api.depends('tax_id', 'related_move_id')
     def _compute_base(self):
         for wizard in self:
             wizard.base = 0.0
-            withhold_account_by_sum = wizard.related_move_id._get_withhold_account_by_sum()
-            for key, value in withhold_account_by_sum.items():
-                wizard.withhold_account_id = key
-                wizard.base += withhold_account_by_sum[key]
-                break
-
+            if wizard.tax_id:
+                withhold_account_by_sum = wizard.related_move_id._get_withhold_account_by_sum()
+                for account, amount in withhold_account_by_sum.items():
+                    if wizard.tax_id in account.withhold_tax_ids:
+                        wizard.base = amount
 
     @api.depends('tax_id', 'base')
     def _compute_amount(self):
@@ -136,9 +147,9 @@ class L10nAccountWithholdWizard(models.TransientModel):
     def action_create_and_post_withhold(self):
         self.ensure_one()
         related_move_id = self.related_move_id
-        withholding_account_id = self.company_id.withholding_tax_base_account_id
+        withholding_account_id = self.company_id.withholding_tax_control_account_id
         if not withholding_account_id:
-            raise UserError(_("Please configure the withholding account from the settings"))
+            raise UserError(_("Please configure the withholding control account from the settings"))
 
         # Withhold creation and posting
         vals = self._prepare_withhold_header()

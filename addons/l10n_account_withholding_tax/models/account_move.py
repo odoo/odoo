@@ -69,15 +69,14 @@ class AccountMove(models.Model):
 
     def _get_withhold_account_by_sum(self):
         print("======= Withhold Data =======")
-        self.ensure_one()
         withhold_data = {}
         for line in self.invoice_line_ids:
             if line.account_id.withhold_tax_ids:
-                withhold_data[line.account_id.id] = line.price_subtotal
+                withhold_data[line.account_id] = line.price_subtotal
         for line in self.l10n_in_withhold_move_ids.line_ids:
             print(line.account_id)
-            if line.account_id.id in withhold_data:
-                withhold_data[line.account_id.id] -= line.price_subtotal
+            if line.account_id in withhold_data:
+                withhold_data[line.account_id] -= line.price_subtotal
         print(withhold_data)
         print("=============================")
         return withhold_data

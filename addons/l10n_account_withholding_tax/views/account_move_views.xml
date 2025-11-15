@@ -13,8 +13,35 @@
                 <group colspan="10"/>
                 <group colspan="2">
                     <button name="%(l10n_account_withholding_entry_form_action)d" type="action" string="Tax Deduction"
-                            class="oe_highlight"/>
+                            class="oe_highlight" invisible="amount_residual == 0.0 or state != 'posted'"/>
 <!--                    <button name="%(l10n_account_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"/>-->
+                </group>
+                <group colspan="10"/>
+                <group colspan="2">
+                <!-- Register Payment (only invoices / receipts) -->
+                        <button name="action_register_payment" id="account_invoice_payment_btn"
+                                type="object" class="oe_highlight"
+                                invisible="(
+                                    state != 'posted'
+                                    or payment_state not in ('not_paid', 'partial', 'in_payment')
+                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+                                    or invoice_has_outstanding
+                                )"
+                                context="{'dont_redirect_to_payments': True}"
+                                string="Pay" data-hotkey="g"
+                                groups="account.group_account_invoice"/>
+                        <!-- Register Payment (only invoices / receipts, with outstanding payments) -->
+                        <button name="action_register_payment" id="account_invoice_payment_secondary_btn"
+                                type="object"
+                                invisible="(
+                                    state != 'posted'
+                                    or payment_state not in ('not_paid', 'partial', 'in_payment')
+                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+                                    or not invoice_has_outstanding
+                                )"
+                                context="{'dont_redirect_to_payments': True}"
+                                string="Pay" data-hotkey="g"
+                                groups="account.group_account_invoice"/>
                 </group>
             </xpath>
         </field>

@@ -9,11 +9,6 @@ class ResCompany(models.Model):
     # Fields declaration
     # ------------------
 
-    withholding_tax_base_account_id = fields.Many2one(
-        comodel_name='account.account',
-        string="Withholding Tax Base",
-        help="This account will be set on withholding tax base lines.",
-    )
     withholding_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string="Withholding Journal",
