@@ -12,6 +12,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.html_editor.controllers.main import HTML_Editor
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.fields import Command
+from odoo.tools import mute_logger
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -761,3 +762,7 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_anchor_on_accordion_item(self):
         self.start_tour("/", "anchor_behaviour_on_accordion_same_tab", login="admin")
         self.start_tour("/#What-services-does-your-company-offer-%3F", "anchor_behaviour_on_accordion_new_tab", login="admin")
+
+    @mute_logger("odoo.http")
+    def test_website_replace_remove_image(self):
+        self.start_tour("/", "website_replace_remove_image", login="admin")
