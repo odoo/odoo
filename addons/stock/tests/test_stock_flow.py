@@ -2527,7 +2527,6 @@ class TestStockFlow(TestStockCommon):
     def test_multi_picking_validation(self):
         """ This test ensures that the validation of 2 pickings is successfull even if they have different operation types """
 
-        self.env.user.write({'group_ids': [Command.link(self.env.ref('stock.group_reception_report').id)]})
         picking_A, picking_B = self.PickingObj.create([{
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,

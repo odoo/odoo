@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
+import math
 from ast import literal_eval
 from collections import defaultdict
 from datetime import timedelta
@@ -893,6 +894,17 @@ Please change the quantity done or the rounding precision in your settings.""",
                 'picking_id': picking.id,
             },
         }
+
+    def action_open_allocation_report(self):
+        # Quantities needs to be expressed as string to support python + js calls to report.
+        quantities = ','.join(str(qty) for qty in self.mapped(
+            lambda m: math.ceil(m.product_uom_qty)
+        ))
+        data = {
+            'docids': self.ids,
+            'quantity': quantities,
+        }
+        return self.env.ref('stock.label_picking').report_action(self, data=data, config=False)
 
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
