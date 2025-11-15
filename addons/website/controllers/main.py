@@ -472,6 +472,16 @@ class Website(Home):
             'position': request.website.company_id.currency_id.position,
         }
 
+    @http.route("/website/get_new_pages", type="jsonrpc", auth="user")
+    def get_new_page_records(self, page_ids):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        page_records = request.env["website.page"].sudo().search_read(
+            [("id", "in", page_ids)],
+            ["is_new_page_template"]
+        )
+        return page_records
+
     # --------------------------------------------------------------------------
     # Search Bar
     # --------------------------------------------------------------------------
