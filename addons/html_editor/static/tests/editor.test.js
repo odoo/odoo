@@ -4,9 +4,10 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { setupEditor } from "./_helpers/editor";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import { insertText } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
+import { unformat } from "./_helpers/format";
 
 beforeEach(() => {
     patchWithCleanup(Editor.prototype, {
@@ -110,32 +111,37 @@ test("clean_for_save_listeners is done last", async () => {
     expect(getContent(el)).toBe(`<div><c-div>a</c-div><c-div>b</c-div></div>`);
 });
 
-test("Convert self closing a elements to opening/closing tags", async () => {
-    const { el, editor } = await setupEditor(`
-        <ul>
-            <li><a href="xyz" t-out="xyz"/></li>
-        </ul>
-    `);
-    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<ul> <li> <a href="xyz" t-out="xyz"> </a> </li> </ul>`
-    );
-    expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
-        '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
-    );
-});
-
-test("Convert self closing t elements to opening/closing tags", async () => {
-    const { el, editor } = await setupEditor(`
-        <div>
-            <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"/>
-        </div>
-    `);
-    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>`
-    );
-    expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
-        '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'
-    );
+test("Convert self closing elements to opening/closing tags", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <div>
+                <center t-if="ctx">
+                    <pre t-out="ctx"/>
+                </center>
+                <t t-else="">
+                    <b t-out="name"/>
+                    <span t-out="name"/>
+                    <a href="xyz" t-out="xyz"/>
+                    <t t-out="object.partner_id" data-oe-t-inline="true"/>
+                </t>
+                <i t-out="ctx"/>
+            </div>
+        `),
+        contentBeforeEdit: unformat(`
+            <div>
+                <center t-if="ctx">
+                    <pre t-out="ctx"></pre>
+                </center>
+                <t t-else="">
+                    <b t-out="name"></b>
+                    <span t-out="name"></span>\ufeff
+                    <a href="xyz" t-out="xyz">\ufeff</a>\ufeff
+                    <t t-out="object.partner_id" data-oe-t-inline="true"></t>
+                </t>
+                <i t-out="ctx"></i>
+            </div>
+        `),
+    });
 });
 
 test("Remove `width`, `height` attributes from image and apply them to style", async () => {
