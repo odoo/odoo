@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="menu_bookmark_action_my_bookmarks" model="ir.actions.act_window">
+        <field name="name">Bookmarks</field>
+        <field name="res_model">menu.bookmark</field>
+        <field name="view_mode">list,form</field>
+        <field name="path">bookmarks</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first bookmark.
+            </p>
+        </field>
+    </record>
+
+    <record id="menu_bookmark_view_list" model="ir.ui.view">
+        <field name="name">menu.bookmark.view.list</field>
+        <field name="model">menu.bookmark</field>
+        <field name="arch" type="xml">
+            <list string="Bookmarks" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="url"/>
+                <field name="target"/>
+            </list>
+        </field>
+    </record>
+</odoo>

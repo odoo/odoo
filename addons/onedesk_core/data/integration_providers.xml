@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Airbnb -->
+        <record id="provider_airbnb" model="onedesk.integration.provider">
+            <field name="name">Airbnb</field>
+            <field name="code">airbnb</field>
+            <field name="supports_oauth">True</field>
+            <field name="supports_ical">True</field>
+            <field name="oauth_authorize_url">https://www.airbnb.com/oauth2/auth</field>
+            <field name="oauth_token_url">https://api.airbnb.com/v2/oauth2/token</field>
+            <field name="oauth_scope">reservations:read listings:read</field>
+            <field name="api_base_url">https://api.airbnb.com/v2</field>
+            <field name="ical_help_url">https://www.airbnb.com/help/article/99</field>
+            <field name="setup_instructions"><![CDATA[
+                <h3>🏠 Comment connecter Airbnb</h3>
+                
+                <h4>Méthode 1 : OAuth (recommandé)</h4>
+                <ol>
+                    <li>Cliquez sur "Se connecter"</li>
+                    <li>Connectez-vous avec votre compte Airbnb</li>
+                    <li>Autorisez OneDesk à accéder à vos réservations</li>
+                    <li>✅ C'est terminé ! La synchronisation démarre automatiquement</li>
+                </ol>
+                
+                <div class="alert alert-warning">
+                    <strong>Note :</strong> L'accès OAuth nécessite que votre application soit approuvée 
+                    par Airbnb en tant que Technology Partner. Cela peut prendre 2-4 semaines.
+                </div>
+                
+                <h4>Méthode 2 : iCal (rapide)</h4>
+                <ol>
+                    <li>Allez dans Airbnb → Annonces → Votre annonce</li>
+                    <li>Disponibilité → Exporter le calendrier</li>
+                    <li>Copiez l'URL iCal</li>
+                    <li>Collez-la dans OneDesk</li>
+                    <li>✅ Synchronisez !</li>
+                </ol>
+            ]]></field>
+        </record>
+        
+        <!-- Booking.com -->
+        <record id="provider_booking" model="onedesk.integration.provider">
+            <field name="name">Booking.com</field>
+            <field name="code">booking</field>
+            <field name="supports_oauth">True</field>
+            <field name="supports_ical">True</field>
+            <field name="oauth_authorize_url">https://account.booking.com/oauth2/authorize</field>
+            <field name="oauth_token_url">https://account.booking.com/oauth2/token</field>
+            <field name="oauth_scope">reservations:read properties:read</field>
+            <field name="api_base_url">https://distribution-xml.booking.com/2.9</field>
+            <field name="ical_help_url">https://partner.booking.com/en-gb/help/availability/how-do-i-export-my-calendar</field>
+            <field name="setup_instructions"><![CDATA[
+                <h3>🏨 Comment connecter Booking.com</h3>
+                
+                <h4>Méthode iCal</h4>
+                <ol>
+                    <li>Connectez-vous à votre Extranet Booking.com</li>
+                    <li>Calendrier → Synchroniser calendriers</li>
+                    <li>Copiez l'URL d'exportation</li>
+                    <li>Collez dans OneDesk et synchronisez</li>
+                </ol>
+            ]]></field>
+        </record>
+        
+        <!-- VRBO / Abritel -->
+        <record id="provider_vrbo" model="onedesk.integration.provider">
+            <field name="name">VRBO / Abritel</field>
+            <field name="code">vrbo</field>
+            <field name="supports_oauth">False</field>
+            <field name="supports_ical">True</field>
+            <field name="ical_help_url">https://help.vrbo.com/articles/How-do-I-sync-my-calendar</field>
+            <field name="setup_instructions"><![CDATA[
+                <h3>🏖️ Comment connecter VRBO / Abritel</h3>
+                
+                <div class="alert alert-info">
+                    <strong>Info :</strong> VRBO/Abritel ne propose pas d'API publique. 
+                    Utilisez la méthode iCal.
+                </div>
+                
+                <h4>Méthode iCal</h4>
+                <ol>
+                    <li>Connectez-vous à votre compte VRBO/Abritel</li>
+                    <li>Calendrier → Importer/Exporter</li>
+                    <li>Copiez l'URL d'export iCal</li>
+                    <li>Collez dans OneDesk</li>
+                    <li>Synchronisez</li>
+                </ol>
+            ]]></field>
+        </record>
+        
+        <!-- Autres plateformes à ajouter selon besoin -->
+        
+    </data>
+</odoo>

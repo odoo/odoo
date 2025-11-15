@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="main_menu.Bookmark">
+        <Dropdown position="'bottom-end'" state="dropdown" beforeOpen.bind="onBeforeOpen">
+            <button>
+                <i class="fa fa-lg fa-bookmark"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="bookmarks" t-as="bookmark" t-key="bookmark.id">
+                    <DropdownItem onSelected="() => this.openBookmark(bookmark)">
+                        <div class="my-1">
+                            <i class="me-2 fa fa-fw fa-globe"/>
+                            <t t-esc="bookmark.name"/>
+                        </div>
+                    </DropdownItem>
+                </t>
+                <DropdownItem t-on-click="openMyBookmarks">
+                    <a href="#" class="text-primary text-center py-2">
+                        View all bookmarks
+                    </a>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

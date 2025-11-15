@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_unit_list" model="ir.ui.view">
+        <field name="name">onedesk.unit.list</field>
+        <field name="model">onedesk.unit</field>
+        <field name="arch" type="xml">
+            <list string="Units">
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="price"/>
+                <field name="available"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_unit_form" model="ir.ui.view">
+        <field name="name">onedesk.unit.form</field>
+        <field name="model">onedesk.unit</field>
+        <field name="arch" type="xml">
+            <form string="Unit">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="property_id"/>
+                        <field name="price"/>
+                        <field name="available"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_onedesk_unit" model="ir.actions.act_window">
+        <field name="name">Units</field>
+        <field name="res_model">onedesk.unit</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_onedesk_unit" name="Units"
+              parent="menu_onedesk_root"
+              action="action_onedesk_unit"/>
+</odoo>

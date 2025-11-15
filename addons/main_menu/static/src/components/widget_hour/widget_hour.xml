@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="main_menu.WidgetHour">
+        <div
+            class="widget-hour"
+            t-attf-class="#{props.userIsAdmin ? 'widget-hour-mobile' : props.announcement ? 'widget-hour-mobile' : 'w-100'}">
+            <p t-esc="state.currentDate" class="current_date"/>
+            <p t-esc="state.currentTime" class="current_time"/>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,93 @@
+.main-menu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 52px;
+    overflow-y: auto;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #71639e;
+}
+
+.widgets {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: calc(90%*0.833 + 70px);
+    max-width: calc(768px*0.8333 + 70px);
+    min-height: 70px;
+    margin-top: 40px;
+    background-color: whitesmoke;
+    border-radius: 6px;
+    border: 1px solid #333;
+    box-shadow: 2px 2px 12px 1px rgba(0, 0, 0, 0.2);
+
+    @media (max-width: 768px) {
+        width: calc(90%*0.75 + 70px);
+    }
+
+    @media (max-width: 576px) {
+        width: calc(100%*0.6666 + 70px);
+    }
+}
+
+.apps-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 768px;
+    width: 90%;
+    margin-top: 40px;
+
+    @media (max-width: 576px) {
+        width: 100%;
+    }
+
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-bottom: 12px;
+        cursor: pointer;
+        width: 16.66%;
+
+        @media (max-width: 768px) {
+            width: 25%;
+        }
+
+        @media (max-width: 576px) {
+            width: 33.33%;
+        }
+
+        p {
+            max-width: 100%;
+        }
+    }
+}
+
+.module-icon {
+    width: 70px;
+    height: 70px;
+    margin: 4px 0;
+    padding: 8px;
+    transition: all 350ms;
+    background: #9385C0;
+    background: conic-gradient(from 225deg, #A496D1, #9385C0);
+    border-radius: 6px;
+    border: 1px solid black;
+    box-shadow: 2px 2px 12px 1px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+        margin: 2px 0 6px 0;
+        box-shadow: 2px 6px 12px 1px rgba(0, 0, 0, 0.4);
+    }
+}

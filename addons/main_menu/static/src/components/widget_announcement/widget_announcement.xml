@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="main_menu.WidgetAnnouncement">
+        <div class="widget-announcement">
+            <textarea
+                t-if="props.userIsAdmin"
+                class="form-control"
+                t-att-value="state.announcement"
+                t-on-input="onInputAnnouncement"
+                maxlength="140"
+                placeholder="Post an announcement"/>
+            <button
+                t-if="props.userIsAdmin"
+                class="btn btn-primary"
+                t-on-click="onSaveAnnouncement">
+                Save</button>
+            <div t-if="!props.userIsAdmin" class="text-container">
+                <p t-out="state.announcement" class="text-black"/>
+            </div>
+        </div>
+    </t>
+</templates>

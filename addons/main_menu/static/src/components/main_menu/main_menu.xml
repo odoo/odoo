@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="main_menu.MainMenu">
+        <div class="background" t-att-style="'background: conic-gradient(from ' + cornerAngle + ', #71639e, #8274AF)'"/>
+        <div class="main-menu">
+            <div class="widgets" t-if="showWidgets">
+                <WidgetHour
+                    userIsAdmin="userIsAdmin"
+                    announcement="announcement"/>
+                <WidgetAnnouncement
+                    userIsAdmin="userIsAdmin"
+                    announcement="announcement"/>
+            </div>
+            <div class="apps-container">
+                <t t-foreach="apps" t-as="app" t-key="app.id">
+                    <a t-on-click="() => this.onClickModule(app)">
+                        <img t-if="app.webIcon" class="module-icon" t-attf-src="{{app.webIconData}}"/>
+                        <img t-if="!app.webIcon" class="module-icon" src="/main_menu/static/src/img/default_icon.png"/>
+                        <p t-esc="app.name" class="text-white fs-5 text-truncate"/>
+                     </a>
+                </t>
+             </div>
+        </div>
+    </t>
+</templates>

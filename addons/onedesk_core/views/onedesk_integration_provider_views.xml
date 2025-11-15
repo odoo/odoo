@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="view_integration_provider_tree" model="ir.ui.view">
+        <field name="name">onedesk.integration.provider.tree</field>
+        <field name="model">onedesk.integration.provider</field>
+        <field name="arch" type="xml">
+            <list string="Plateformes">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="supports_oauth"/>
+                <field name="supports_ical"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="view_integration_provider_form" model="ir.ui.view">
+        <field name="name">onedesk.integration.provider.form</field>
+        <field name="model">onedesk.integration.provider</field>
+        <field name="arch" type="xml">
+            <form string="Plateforme">
+                <sheet>
+                    <field name="logo" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="supports_oauth"/>
+                            <field name="supports_ical"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="🔐 Configuration OAuth" invisible="supports_oauth == False">
+                            <group>
+                                <group>
+                                    <field name="client_id" password="True"/>
+                                    <field name="client_secret" password="True"/>
+                                </group>
+                                <group>
+                                    <field name="oauth_authorize_url"/>
+                                    <field name="oauth_token_url"/>
+                                    <field name="oauth_scope"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-warning" role="alert">
+                                <strong>⚠️ Attention :</strong> Ces informations sont sensibles. 
+                                Ne les partagez jamais !
+                            </div>
+                        </page>
+                        
+                        <page string="🔌 Configuration API">
+                            <group>
+                                <field name="api_base_url"/>
+                                <field name="api_version"/>
+                            </group>
+                        </page>
+                        
+                        <page string="📘 Documentation">
+                            <group>
+                                <field name="ical_help_url" widget="url"/>
+                            </group>
+                            <field name="setup_instructions" widget="html"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_integration_provider" model="ir.actions.act_window">
+        <field name="name">Configuration Plateformes</field>
+        <field name="res_model">onedesk.integration.provider</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

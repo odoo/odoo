@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- List View -->
+    <record id="view_onedesk_integration_tree" model="ir.ui.view">
+        <field name="name">onedesk.integration.tree</field>
+        <field name="model">onedesk.integration</field>
+        <field name="arch" type="xml">
+            <list string="Intégrations" create="false">
+                <field name="name"/>
+                <field name="provider_id"/>
+                <field name="connection_method"/>
+                <field name="state" 
+                       decoration-success="state=='connected'" 
+                       decoration-danger="state=='error'" 
+                       decoration-warning="state=='expired'"/>
+                <field name="last_sync_date"/>
+                <field name="total_synced"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Form View -->
+    <record id="view_onedesk_integration_form" model="ir.ui.view">
+        <field name="name">onedesk.integration.form</field>
+        <field name="model">onedesk.integration</field>
+        <field name="arch" type="xml">
+            <form string="Intégration">
+                <header>
+                    <button name="action_start_oauth_connection" 
+                            string="🔗 Se connecter" 
+                            type="object" 
+                            class="oe_highlight" 
+                            invisible="state not in ['draft', 'error', 'expired'] or connection_method != 'oauth'"/>
+                    
+                    <button name="action_sync_now" 
+                            string="🔄 Synchroniser" 
+                            type="object" 
+                            class="oe_highlight" 
+                            invisible="connection_method == 'csv'"/>
+                            
+                    
+                    <button name="action_reconnect" 
+                            string="🔄 Reconnecter" 
+                            type="object" 
+                            invisible="state not in ['error', 'expired']"/>
+                    
+                    <button name="action_disconnect" 
+                            string="❌ Déconnecter" 
+                            type="object" 
+                            confirm="Êtes-vous sûr ?"
+                            invisible="state != 'connected'"/>
+                    
+                    <field name="state" widget="statusbar"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-list">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="total_synced"/>
+                                </span>
+                                <span class="o_stat_text">Synchronisés</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <widget name="web_ribbon" title="✅ Connecté" bg_color="bg-success" invisible="state != 'connected'"/>
+                    <widget name="web_ribbon" title="❌ Erreur" bg_color="bg-danger" invisible="state != 'error'"/>
+                    <widget name="web_ribbon" title="⏰ Expiré" bg_color="bg-warning" invisible="state != 'expired'"/>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ex: Mon compte Airbnb"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="provider_id"/>
+                            <field name="connection_method" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="last_sync_date" readonly="1"/>
+                            <field name="total_synced" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Configuration" name="config">
+                            
+                            <group invisible="connection_method != 'oauth'">
+                                <group>
+                                    <field name="token_expiry" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <group invisible="connection_method != 'ical'">
+                                <group>
+                                    <field name="ical_url" placeholder="https://airbnb.com/calendar/ical/xxxxx" widget="url"/>
+                                </group>
+                            </group>
+                            
+                        </page>
+                        
+                        <page string="Synchronisation" name="sync">
+                            <group>
+                                <group>
+                                    <field name="auto_sync"/>
+                                    <field name="sync_frequency" invisible="auto_sync == False"/>
+                                    <field name="last_sync_count" readonly="1"/>
+                                    <field name="next_sync_date" readonly="1" invisible="auto_sync == False"/>
+                                </group>
+                                <group>
+                                    <field name="auto_create_units"/>
+                                    <field name="auto_create_contacts"/>
+                                    <field name="default_unit_id"/>
+                                    <field name="default_property_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Erreurs" name="errors" invisible="error_count == 0">
+                            <group>
+                                <group>
+                                    <field name="error_count" readonly="1"/>
+                                    <field name="last_error_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="last_error" readonly="1" widget="text"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Historique" name="logs">
+                            <field name="log_ids" readonly="1">
+                                <list string="Logs" create="false" edit="false" delete="false">
+                                    <field name="create_date" string="Date"/>
+                                    <field name="log_type" string="Type"/>
+                                    <field name="message" string="Message"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Kanban View -->
+    <record id="view_onedesk_integration_kanban" model="ir.ui.view">
+        <field name="name">onedesk.integration.kanban</field>
+        <field name="model">onedesk.integration</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="provider_id"/>
+                <field name="state"/>
+                <field name="last_sync_date"/>
+                <field name="total_synced"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                            </div>
+                            <div class="row mt8">
+                                <div class="col-6">
+                                    <field name="provider_id"/>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span t-attf-class="badge badge-pill badge-#{record.state.raw_value == 'connected' ? 'success' : record.state.raw_value == 'error' ? 'danger' : 'warning'}">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row mt8">
+                                <div class="col-12 text-muted">
+                                    <small>
+                                        Dernière sync: <field name="last_sync_date"/><br/>
+                                        Total: <field name="total_synced"/> réservations
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <!-- Vue list des logs -->
+    <record id="view_onedesk_integration_log_tree" model="ir.ui.view">
+        <field name="name">onedesk.integration.log.tree</field>
+        <field name="model">onedesk.integration.log</field>
+        <field name="arch" type="xml">
+            <list string="Logs" create="false" edit="false" delete="false">
+                <field name="create_date" string="Date"/>
+                <field name="log_type" string="Type"/>
+                <field name="message" string="Message"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Action principale -->
+    <record id="action_onedesk_integration" model="ir.actions.act_window">
+        <field name="name">Intégrations Plateformes</field>
+        <field name="res_model">onedesk.integration</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                🔗 Connectez vos plateformes de réservation
+            </p>
+            <p>
+                Synchronisez automatiquement vos réservations depuis Airbnb, Booking.com, Abritel et plus encore.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action pour créer une nouvelle intégration (plein écran) -->
+    <record id="action_onedesk_integration_create" model="ir.actions.act_window">
+        <field name="name">Nouvelle Intégration</field>
+        <field name="res_model">onedesk.integration</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="view_onedesk_integration_form"/>
+    </record>
+
+</odoo>

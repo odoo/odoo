@@ -1,0 +1,25 @@
+.widget-hour {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2px 4px 0 4px;
+
+    p {
+        margin: 0;
+        padding: 0;
+        color: black;
+    }
+
+    .current_time {
+        font-size: 20px;
+        font-weight: bold;
+    }
+}
+
+.widget-hour-mobile {
+    display: flex;
+
+    @media (max-width: 576px) {
+        display: none;
+    }
+}

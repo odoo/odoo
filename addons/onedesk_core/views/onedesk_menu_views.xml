@@ -1,0 +1,17 @@
+<odoo>
+    <menuitem id="menu_onedesk_root"
+              name="OneDesk"
+              sequence="10"
+              web_icon="base/static/img/icons/stock_icon.svg"/>
+
+    <menuitem id="menu_onedesk_property"
+              name="Properties"
+              parent="menu_onedesk_root"
+              action="action_onedesk_property"/>
+
+    <record id="action_onedesk_property" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">onedesk.property</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

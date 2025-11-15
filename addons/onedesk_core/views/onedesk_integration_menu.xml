@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Menu racine Intégrations (sous le menu principal OneDesk) -->
+    <menuitem id="menu_onedesk_integrations_root"
+              name="🔗 Intégrations"
+              parent="menu_onedesk_root"
+              sequence="50"/>
+    
+    <!-- Mes intégrations -->
+    <menuitem id="menu_onedesk_integrations"
+              name="Mes intégrations"
+              parent="menu_onedesk_integrations_root"
+              action="action_onedesk_integration"
+              sequence="10"/>
+    
+    <!-- Configuration (admin) -->
+    <menuitem id="menu_onedesk_integration_config"
+              name="⚙️ Configuration"
+              parent="menu_onedesk_integrations_root"
+              sequence="90"/>
+    
+    <menuitem id="menu_integration_providers"
+              name="Plateformes disponibles"
+              parent="menu_onedesk_integration_config"
+              action="action_integration_provider"
+              groups="base.group_system"
+              sequence="10"/>
+
+    
+
+</odoo>

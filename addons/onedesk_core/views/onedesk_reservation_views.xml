@@ -1,0 +1,128 @@
+<odoo>
+    <!-- ========================= -->
+    <!-- VUES POUR LES RESERVATIONS -->
+    <!-- ========================= -->
+
+    <!-- Vue liste -->
+    <record id="view_reservation_list" model="ir.ui.view">
+        <field name="name">onedesk.reservation.list</field>
+        <field name="model">onedesk.reservation</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="partner_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="view_reservation_form" model="ir.ui.view">
+        <field name="name">onedesk.reservation.form</field>
+        <field name="model">onedesk.reservation</field>
+        <field name="arch" type="xml">
+            <form string="Reservation">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="unit_id"/>
+                        <field name="partner_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Calendar Event">
+                            <field name="calendar_event_id" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue calendrier -->
+    <record id="view_reservation_calendar" model="ir.ui.view">
+        <field name="name">onedesk.reservation.calendar</field>
+        <field name="model">onedesk.reservation</field>
+        <field name="arch" type="xml">
+            <calendar string="Reservations" date_start="start_date" date_stop="end_date">
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="partner_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir les réservations -->
+    <record id="action_reservations" model="ir.actions.act_window">
+        <field name="name">Reservations</field>
+        <field name="res_model">onedesk.reservation</field>
+        <field name="view_mode">list,form,calendar</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Créez une nouvelle réservation.
+            </p>
+        </field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- VUES POUR LES PROPRIÉTÉS -->
+    <!-- ========================= -->
+
+    <!-- Vue liste -->
+    <record id="view_property_list" model="ir.ui.view">
+        <field name="name">onedesk.property.list</field>
+        <field name="model">onedesk.property</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="price"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="view_property_form" model="ir.ui.view">
+        <field name="name">onedesk.property.form</field>
+        <field name="model">onedesk.property</field>
+        <field name="arch" type="xml">
+            <form string="Property">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="address"/>
+                        <field name="price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir les propriétés -->
+    <record id="action_onedesk_property" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">onedesk.property</field>
+        <field name="view_mode">list,form,kanban,calendar</field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- MENU PRINCIPAL ONE DESK -->
+    <!-- ========================= -->
+
+    <menuitem id="menu_onedesk_root" name="OneDesk"/>
+
+    <!-- Sous-menu propriétés -->
+    <menuitem id="menu_onedesk_property"
+              name="Properties"
+              parent="menu_onedesk_root"
+              action="action_onedesk_property"/>
+
+    <!-- Sous-menu réservations -->
+    <menuitem id="menu_onedesk_reservations"
+              name="Reservations"
+              parent="menu_onedesk_root"
+              action="action_reservations"/>
+</odoo>

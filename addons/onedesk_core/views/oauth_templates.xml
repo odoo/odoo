@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Template succès OAuth -->
+    <template id="oauth_success" name="OAuth Success">
+        <t t-call="web.layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white text-center">
+                                <h3>✅ Connexion réussie !</h3>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i class="fa fa-check-circle text-success" style="font-size: 64px;"></i>
+                                </div>
+                                
+                                <h4>Votre compte <strong><t t-esc="integration.provider_id.name"/></strong> est connecté</h4>
+                                
+                                <p class="text-muted mt-3">
+                                    La synchronisation de vos réservations a démarré automatiquement.
+                                </p>
+                                
+                                <hr class="my-4"/>
+                                
+                                <p class="text-muted small">
+                                    Vous pouvez fermer cette fenêtre et retourner à OneDesk.
+                                </p>
+                                
+                                <a href="/web#action=onedesk_core.action_onedesk_integration" 
+                                   class="btn btn-primary btn-lg mt-3">
+                                    <i class="fa fa-arrow-left"></i> Retour à OneDesk
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Template erreur OAuth -->
+    <template id="oauth_error" name="OAuth Error">
+        <t t-call="web.layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card border-danger">
+                            <div class="card-header bg-danger text-white text-center">
+                                <h3>❌ Erreur de connexion</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <i class="fa fa-exclamation-triangle text-danger" style="font-size: 64px;"></i>
+                                </div>
+                                
+                                <h5 class="text-center">Une erreur s'est produite</h5>
+                                
+                                <div class="alert alert-danger mt-4">
+                                    <strong>Erreur :</strong> <t t-esc="error"/><br/>
+                                    <t t-if="error_description">
+                                        <strong>Détails :</strong> <t t-esc="error_description"/>
+                                    </t>
+                                </div>
+                                
+                                <hr class="my-4"/>
+                                
+                                <p class="text-center">
+                                    Veuillez réessayer ou contacter le support si le problème persiste.
+                                </p>
+                                
+                                <div class="text-center">
+                                    <a href="/web#action=onedesk_core.action_onedesk_integration" 
+                                       class="btn btn-primary">
+                                        <i class="fa fa-arrow-left"></i> Retour aux intégrations
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>
