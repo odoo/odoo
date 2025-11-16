@@ -7,13 +7,14 @@
 # Noemi Pla, 2025
 #
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
-"PO-Revision-Date: 2025-08-30 01:01+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2025-11-16 08:48+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s18-2/"
 "base_vat/ca/>\n"
 "Language: ca\n"
@@ -95,6 +96,8 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
+"La connexió amb el servidor VIES ha fallat. No ha estat possible validar el "
+"número d'IVA %s."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -110,13 +113,13 @@ msgstr "Crear un client"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DE123456788 or 12/345/67890"
-msgstr ""
+msgstr "DE123456788 o 12/345/67890"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DO1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "DO1-01-85004-3 o 101850043"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_account_fiscal_position__display_name
@@ -140,6 +143,8 @@ msgstr ""
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
+"Exemple: '219999830019' (format: 12 dígits, tots els números, dígit de "
+"control vàlid)"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -150,13 +155,13 @@ msgstr "Posició fiscal"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "GB123456782 or XI123456782"
-msgstr ""
+msgstr "GB123456782 o XI123456782"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
-msgstr ""
+msgstr "HU12345676 o 12345678-1-11 o 8071592153"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_account_fiscal_position__id
@@ -172,24 +177,26 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Si aquesta casella està marcada, la posició fiscal predeterminada s'aplicarà "
+"en funció del resultat de la verificació realitzada pel Servei Europeu VIES."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "Validesa intracomunitària"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
-msgstr ""
+msgstr "MXGODE561231GR8 o GODE561231GR8"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Efectuar validació VIES"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -220,7 +227,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "El servidor VIES no ha pogut processar el número d'IVA %s."
 
 #. module: base_vat
 #. odoo-python
@@ -229,6 +236,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
+"El país detectat per a aquest NIF estranger no coincideix amb cap dels "
+"països definits en aquesta posició fiscal."
 
 #. module: base_vat
 #. odoo-python
@@ -237,6 +246,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
+"No s'ha pogut detectar el país del NIF estranger. Assigna un país a la "
+"posició fiscal o estableix un grup de països"
 
 #. module: base_vat
 #. odoo-python
@@ -245,6 +256,8 @@ msgid ""
 "The request for VAT validation was not processed. VIES service has responded"
 " with the following error: %s"
 msgstr ""
+"La sol·licitud de validació de l'IVA no ha estat processada. El servei VIES "
+"ha informat del següent error: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -267,19 +280,21 @@ msgstr "Verifica els números de l'IVA utilitzant el servei European VIES"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "Comprovar un número d'IVA en VIES"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
+"XXXXXXXXX [9 dígits] i ha de complir alb el càlcul de la suma de verificació "
+"de l'algoritme Luhn"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr ""
+msgstr "sigui 11 dígits per CPF o 14 dígits per CNPJ"
 
 #. module: base_vat
 #. odoo-python
