@@ -1371,7 +1371,7 @@ export class RelationalModel extends Model {
         params.__syncParent = () => list.__syncData();
         const newRecord = this.createDataPoint("record", params);
         if (withParentId) {
-            newRecord.__bm_load_params__.parentID = list.__bm_handle__;
+            newRecord.__bm_load_params__.parentID = parentId;
         }
         await newRecord.load();
         return newRecord;
