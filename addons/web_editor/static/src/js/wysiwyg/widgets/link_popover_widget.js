@@ -303,10 +303,15 @@ const LinkPopoverWidget = Widget.extend({
      */
     _onEditLinkClick(ev) {
         ev.preventDefault();
-        this.options.wysiwyg.toggleLinkTools({
-            forceOpen: true,
-            link: this.$target[0],
-        });
+        if (this.$target[0].classList.contains('o_image')) {
+            this.options.wysiwyg.openMediaDialog({node: this.$target[0]});
+        }
+        else {
+            this.options.wysiwyg.toggleLinkTools({
+                forceOpen: true,
+                link: this.$target[0],
+            });
+        }
         ev.stopImmediatePropagation();
         this.popover.hide();
     },
