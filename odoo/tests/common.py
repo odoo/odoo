@@ -2844,7 +2844,7 @@ class O2MForm(Form):
         if index is None:
             self._init_from_defaults(m)
         else:
-            vals = proxy._records[index]
+            vals = proxy._records[proxy._indexes[index]]
             self._values.update(vals)
             if hasattr(vals, '_changed'):
                 self._changed.update(vals._changed)
@@ -2936,6 +2936,7 @@ class O2MProxy(X2MProxy):
         self._field = field
         # reify records to a list so they can be manipulated easily?
         self._records = []
+        self._indexes = []
         model = self._model
         fields = self._descr['edition_view']['fields']
         for (command, rid, values) in self._parent._values[self._field]:
@@ -2947,10 +2948,20 @@ class O2MProxy(X2MProxy):
                     r = model.browse(rid)
                     values = UpdateDict(record_to_values(fields, r))
                 self._records.append(values)
+                self._indexes.append(len(self._indexes))
             elif command == 2:
                 pass
             else:
                 raise AssertionError("O2M proxy only supports commands 0, 1 and 2, found %s" % command)
+
+        default_order = self._descr['edition_view']['tree'].attrib.get('default_order')
+        if default_order:
+            for key in reversed(default_order.split(',')):
+                field = key.strip().split(' ')[0]
+                # Passing an empty recordset works for most field types
+                convert = lambda val: self._model._fields[field].convert_to_cache(val, self._model)
+                sortkey = lambda index: convert(self._records[index].get(field))
+                self._indexes.sort(key=sortkey, reverse=' desc' in key.lower())
 
     def __len__(self):
         return len(self._records)
@@ -2968,7 +2979,7 @@ class O2MProxy(X2MProxy):
         return self._parent._view['fields'][self._field]
 
     def _command_index(self, for_record):
-        """ Takes a record index and finds the corresponding record index
+        """ Takes a record index and finds the corresponding command index
         (skips all 2s, basically)
 
         :param int for_record:
@@ -2980,7 +2991,7 @@ class O2MProxy(X2MProxy):
                 cidx for cidx, (c, _1, _2) in enumerate(commands)
                 if c in (0, 1)
             )
-            if ridx == for_record
+            if ridx == self._indexes[for_record]
         )
 
     def new(self):
@@ -3027,7 +3038,7 @@ class O2MProxy(X2MProxy):
         else:
             raise AssertionError("Expected command 0 or 1, got %s" % commands[cidx])
         # remove reified record
-        del self._records[index]
+        del self._records[self._indexes[index]]
         self._parent._perform_onchange([self._field])
 
 class M2MProxy(X2MProxy, collections.abc.Sequence):
