@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sql_shell.TableRow" owl="1">
+        <tr>
+            <t t-foreach="props.row" t-as="val" t-key="val_index">
+                <td><t t-esc="val"/></td>
+            <t/>
+        </tr>
+    </t>
+
+    <t t-name="sql_shell.Table" owl="1">
+        <table t-if="props.value" class="table table-sm table-striped table-bordered table-hover table-responsive">
+            <thead>
+                <tr>
+                    <t t-foreach="props.value.header" t-as="header" t-key="header_index">
+                        <th>
+                            <t t-esc="header"/>
+                            <button t-if="header == 'QUERY PLAN'" type="button" class="btn btn-sm btn-link" title="EXPLAIN Visualizer" t-on-click="showExplainVisualizer">
+                                <i class="fa fa-search-plus" aria-hidden="true"/>
+                            </button>
+                        </th>
+                    </t>
+                </tr>
+            </thead>
+            <tbody style="white-space: pre;font-family: monospace;">
+                <t t-foreach="props.value.rows" t-as="row" t-key="row_index">
+                    <TableRow row="row"/>
+                </t>
+            </tbody>
+        </table>
+    </t>
+</template>
