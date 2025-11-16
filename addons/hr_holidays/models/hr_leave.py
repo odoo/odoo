@@ -249,7 +249,7 @@ class HolidaysRequest(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id._is_time_off_manager():
                 leave.name = leave.sudo().private_name
             else:
                 leave.name = '*****'
@@ -258,7 +258,7 @@ class HolidaysRequest(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id._is_time_off_manager():
                 leave.sudo().private_name = leave.name
 
     def _search_description(self, operator, value):
@@ -744,7 +744,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         if state == 'validate1':
-            employees = employees.filtered(lambda employee: employee.leave_manager_id != self.env.user)
+            employees = employees.filtered(lambda employee: not employee._is_time_off_manager())
             if employees and not is_leave_user:
                 raise AccessError(_('You cannot first approve a time off for %s, because you are not his time off manager', employees[0].name))
         elif state == 'validate' and not is_leave_user:
@@ -793,7 +793,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def write(self, values):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
-            if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user
+            if any(hol.date_from.date() < fields.Date.today() and not hol.employee_id._is_time_off_manager()
                    and hol.state not in ('confirm', 'draft') for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
             if any(leave.state == 'cancel' for leave in self):
@@ -1261,16 +1261,16 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
                     # This handles states validate1 validate and refuse
                     if holiday.employee_id == current_employee\
-                            and self.env.user != holiday.employee_id.leave_manager_id\
+                            and not holiday.employee_id._is_time_off_manager()\
                             and not is_officer:
                         raise UserError(_('Only a Time Off Officer or Manager can approve/refuse its own requests.'))
 
                     if (state == 'validate1' and val_type == 'both'):
-                        if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
+                        if not is_officer and not holiday.employee_id._is_time_off_manager():
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
                     if (state == 'validate' and val_type == 'manager')\
-                            and self.env.user != holiday.employee_id.leave_manager_id\
+                            and not holiday.employee_id._is_time_off_manager()\
                             and not is_officer:
                         raise UserError(_("You must be %s's Manager to approve this leave", holiday.employee_id.name))
 

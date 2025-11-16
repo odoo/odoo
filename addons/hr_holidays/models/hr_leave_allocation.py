@@ -839,16 +839,16 @@ class HolidaysAllocation(models.Model):
             if state == 'confirm' or is_manager or val_type == 'no_validation':
                 continue
 
-            if not is_officer and self.env.user != allocation.employee_id.leave_manager_id:
+            if not is_officer and not allocation.employee_id._is_time_off_manager():
                 raise UserError(_('Only %s\'s Time Off Approver, a time off Officer/Responsible or Administrator can approve or refuse allocation requests.') % (allocation.employee_id.name))
 
             # both -> 1st approver and 2nd officer
-            if (val_type == 'manager' or state == 'validate1') and self.env.user != allocation.employee_id.leave_manager_id:
+            if (val_type == 'manager' or state == 'validate1') and not allocation.employee_id._is_time_off_manager():
                 raise UserError(_('You must be either %s\'s Time Off Approver or Time off Administrator to validate this allocation request.') % (allocation.employee_id.name))
             if (val_type == 'both' and state == 'validate' or val_type == 'hr') and not is_officer:
                 raise UserError(_('Only a time off Officer/Responsible or Administrator can approve or refuse allocation requests.'))
 
-            if is_officer or self.env.user == allocation.employee_id.leave_manager_id:
+            if is_officer or allocation.employee_id._is_time_off_manager():
                 # use ir.rule based first access check: department, members, ... (see security.xml)
                 allocation.check_access('write')
 
