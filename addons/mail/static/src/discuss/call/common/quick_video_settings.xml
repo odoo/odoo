@@ -3,7 +3,7 @@
 
     <t t-name="discuss.QuickVideoSettings">
         <div class="o-discuss-QuickVideoSettings d-flex flex-column gap-1">
-            <label class="btn border-transparent d-flex flex-column align-items-baseline">
+            <label class="btn border-transparent d-flex flex-column align-items-baseline cursor-default">
                 <span class="flex-shrink-0 pe-2">
                     Camera
                 </span>
@@ -12,7 +12,7 @@
             </label>
             <div t-if="!isBrowserSafari()" class="btn border-transparent d-flex gap-2" t-on-click="() => store.settings.useBlur = !store.settings.useBlur">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
-                    <i class="fa fa-fw fa-photo"/><span class="text-truncate text-wrap">Blur background</span>
+                    <i class="fa fa-fw fa-photo"/><span class="text-truncate text-wrap">Blur Background</span>
                 </label>
                 <div class="flex-grow-1"/>
                 <div class="form-check form-switch">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <button class="btn border-transparent d-flex align-items-center gap-2" t-on-click="onClickVideoSettings">
-                <i class="fa fa-fw fa-gear"/><span>Video Settings</span>
+                <i class="fa fa-fw fa-gear"/><span>Advanced Settings</span>
             </button>
         </div>
     </t>
