@@ -6,6 +6,7 @@ import {
     getPreValue,
     newlinesToLineBreaks,
 } from "../../core/syntax_highlighting/syntax_highlighting_utils";
+import { removeInvisibleWhitespace } from "@html_editor/utils/dom";
 
 const CODE_BLOCK_CLASS = "o_syntax_highlighting";
 const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
@@ -21,12 +22,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        mount_component_handlers: this.setupNewCodeBlock.bind(this),
-        normalize_handlers: (root) => this.addCodeBlocks(root, true),
-        post_undo_handlers: () => this.addCodeBlocks(this.editable, true),
-        post_redo_handlers: () => this.addCodeBlocks(this.editable, true),
-        clean_for_save_handlers: withSequence(0, ({ root }) => this.cleanForSave(root)),
-        clipboard_content_processors: (clonedContent) => this.cleanForSave(clonedContent),
         // Ensure focus can be preserved within the textarea:
         is_node_editable_predicates: (node) => {
             if (node?.classList?.contains("o_prism_source")) {
@@ -34,6 +29,22 @@ export class SyntaxHighlightingPlugin extends Plugin {
             }
         },
         system_attributes: "data-syntax-highlighting-autofocus",
+
+        /** Handlers */
+        mount_component_handlers: this.setupNewCodeBlock.bind(this),
+        normalize_handlers: (root) => this.addCodeBlocks(root, true),
+        post_undo_handlers: () => this.addCodeBlocks(this.editable, true),
+        post_redo_handlers: () => this.addCodeBlocks(this.editable, true),
+        clean_for_save_handlers: withSequence(0, ({ root }) => this.cleanForSave(root)),
+        before_set_tag_handlers: (el, newTagName, cursors) => {
+            if (newTagName.toLowerCase() === "pre") {
+                // Remove invisible whitespace that would become visible in a `<pre>` element.
+                removeInvisibleWhitespace(el, cursors);
+            }
+        },
+
+        /** Processors */
+        clipboard_content_processors: (clonedContent) => this.cleanForSave(clonedContent),
     };
 
     setup() {
