@@ -21,6 +21,7 @@ class ForumForum(models.Model):
         'image.mixin',
         'website.seo.metadata',
         'website.multi.mixin',
+        'website.located.mixin',
         'website.searchable.mixin',
     ]
     _order = "sequence, id"
@@ -139,6 +140,12 @@ class ForumForum(models.Model):
     tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_ids_usage')
     tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_ids_usage')
 
+    def _compute_website_url(self):
+        super()._compute_website_url()
+        for record in self:
+            if record.id:
+                record.website_url = '/forum/%s' % self.env['ir.http']._slug(record)
+
     @api.depends_context('uid')
     def _compute_has_pending_post(self):
         domain = [
@@ -231,13 +238,6 @@ class ForumForum(models.Model):
             domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
             forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
-    # EXTENDS WEBSITE.MULTI.MIXIN
-
-    def _compute_website_url(self):
-        if not self.id:
-            return False
-        return f'/forum/{self.env["ir.http"]._slug(self)}'
-
     # ----------------------------------------------------------------------
     # CRUD
     # ----------------------------------------------------------------------
@@ -313,10 +313,10 @@ class ForumForum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        website_url = self._compute_website_url()
+        website_url = self.website_url
         if not website_url:
             return False
-        return self.env['website'].get_client_action(self._compute_website_url())
+        return self.env['website'].get_client_action(self.website_url)
 
     @api.model
     def _search_get_detail(self, website, order, options):
@@ -344,5 +344,5 @@ class ForumForum(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for forum, data in zip(self, results_data):
-            data['website_url'] = forum._compute_website_url()
+            data['website_url'] = forum.website_url
         return results_data

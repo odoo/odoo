@@ -32,7 +32,7 @@ class TestForumPerformance(UtilPerf):
         })
 
     def test_perf_sql_forum_standard_data(self):
-        number_of_queries = self._get_url_hot_query(self.forum._compute_website_url())
+        number_of_queries = self._get_url_hot_query(self.forum.website_url)
         self.assertLessEqual(number_of_queries, 28)
         number_of_queries = self._get_url_hot_query(self.post.website_url)
         self.assertLessEqual(number_of_queries, 25)
@@ -79,5 +79,5 @@ class TestForumPerformance(UtilPerf):
             } for i in range(100)
         ])
         self.env.flush_all()
-        number_of_queries = self._get_url_hot_query(self.forum._compute_website_url())
+        number_of_queries = self._get_url_hot_query(self.forum.website_url)
         self.assertLessEqual(number_of_queries, 29)

@@ -20,6 +20,7 @@ class ForumPost(models.Model):
     _inherit = [
         'mail.thread',
         'website.seo.metadata',
+        'website.located.mixin',
         'website.searchable.mixin',
     ]
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
@@ -42,7 +43,6 @@ class ForumPost(models.Model):
     views = fields.Integer('Views', default=0, readonly=True, copy=False)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment', 'email_outgoing'])])
-    website_url = fields.Char('Website URL', compute='_compute_website_url')
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
 
     # history

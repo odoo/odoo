@@ -11,6 +11,7 @@ class ForumTag(models.Model):
     _inherit = [
         'mail.thread',
         'website.searchable.mixin',
+        'website.located.mixin',
         'website.seo.metadata',
     ]
 
@@ -21,7 +22,6 @@ class ForumTag(models.Model):
         'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_post_id',
         string='Posts', domain=[('state', '=', 'active')])
     posts_count = fields.Integer('Number of Posts', compute='_compute_posts_count', store=True)
-    website_url = fields.Char("Link to questions with the tag", compute='_compute_website_url')
     _name_uniq = models.Constraint(
         'unique (name, forum_id)',
         'Tag name already exists!',

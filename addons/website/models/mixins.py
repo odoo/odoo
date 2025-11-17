@@ -182,24 +182,15 @@ class WebsiteMultiMixin(models.AbstractModel):
         return can_access
 
 
-class WebsitePublishedMixin(models.AbstractModel):
-    _name = 'website.published.mixin'
+class WebsiteLocatedMixin(models.AbstractModel):
+    _name = 'website.located.mixin'
 
-    _description = 'Website Published Mixin'
+    _description = "Website Located Mixin"
 
-    website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
-    publish_on = fields.Datetime(
-        "Auto publish on",
-        copy=False,
-        help="Automatically publish the page on the chosen date and time.",
-    )
-    published_date = fields.Datetime("Published date", copy=False)
-    can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
-    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full relative URL to access the document through the website.')
+    website_url = fields.Char("Website URL", compute='_compute_website_url', help="The full relative URL to access the document through the website.")
     # The compute dependency (for get_base_url) must be added and get_base_url must be overridden if needed
-    website_absolute_url = fields.Char('Website Absolute URL', compute='_compute_website_absolute_url',
-                                       help='The full absolute URL to access the document through the website.')
+    website_absolute_url = fields.Char("Website Absolute URL", compute='_compute_website_absolute_url',
+                                       help="The full absolute URL to access the document through the website.")
 
     @api.depends_context('lang')
     def _compute_website_url(self):
@@ -212,6 +203,22 @@ class WebsitePublishedMixin(models.AbstractModel):
         for record in self:
             if record.website_url != '#':
                 record.website_absolute_url = url_join(record.get_base_url(), record.website_url)
+
+
+class WebsitePublishedMixin(models.AbstractModel):
+    _name = 'website.published.mixin'
+    _inherit = ['website.located.mixin']
+    _description = 'Website Published Mixin'
+
+    website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
+    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
+    publish_on = fields.Datetime(
+        "Auto publish on",
+        copy=False,
+        help="Automatically publish the page on the chosen date and time.",
+    )
+    published_date = fields.Datetime("Published date", copy=False)
+    can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
 
     def _default_is_published(self):
         return False
