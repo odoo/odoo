@@ -109,7 +109,7 @@ def split_etree_on_tag(tree, tag):
 
 
 def extract_pdf_embedded_files(filename, content):
-    with io.BytesIO(content or b'') as buffer:
+    with io.BytesIO(content) as buffer:
         try:
             pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:  # noqa: BLE001
@@ -436,7 +436,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         for attachment in attachments:
             file_data = {
                 'name': attachment.name,
-                'raw': attachment.raw,
+                'raw': attachment.raw or b'',
                 'mimetype': attachment.mimetype,
                 'origin_attachment': attachment,
                 'attachment': attachment,
@@ -506,7 +506,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
             for filename, content in extract_pdf_embedded_files(file_data['name'], file_data['raw']):
                 embedded_file_data = {
                     'name': filename,
-                    'raw': content,
+                    'raw': content or b'',
                     'mimetype': guess_mimetype(content),
                     'attachment': None,
                     'origin_attachment': file_data['origin_attachment'],
