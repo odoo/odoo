@@ -13,7 +13,7 @@ export class LinkPastePlugin extends Plugin {
     static dependencies = ["link", "clipboard", "selection", "dom", "history", "delete"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        before_paste_handlers: this.selectFullySelectedLink.bind(this),
+        on_will_paste_handlers: this.selectFullySelectedLink.bind(this),
         paste_text_overrides: this.handlePasteText.bind(this),
     };
 

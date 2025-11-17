@@ -134,7 +134,7 @@ export class RemovePlugin extends Plugin {
         const originPreviousEl = toRemoveEl.previousElementSibling;
         const originNextEl = toRemoveEl.nextElementSibling;
         const nextTargetEl = this.removeCurrentTarget(toRemoveEl, optionTargetEls);
-        this.dispatchTo("on_removed_handlers", {
+        this.trigger("on_removed_handlers", {
             removedEl: toRemoveEl,
             nextTargetEl,
             originPreviousEl,
@@ -156,7 +156,7 @@ export class RemovePlugin extends Plugin {
      * @returns {HTMLElement}
      */
     removeCurrentTarget(toRemoveEl, optionsTargetEls) {
-        this.dispatchTo("on_will_remove_handlers", toRemoveEl);
+        this.trigger("on_will_remove_handlers", toRemoveEl);
 
         // Get the parent and the previous and next visible siblings.
         let parentEl = toRemoveEl.parentElement;

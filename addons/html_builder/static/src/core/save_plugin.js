@@ -12,17 +12,17 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 
 /**
- * @typedef {(() => void)[]} after_save_handlers
- * @typedef {((el?: HTMLElement) => Promise<void>)[]} before_save_handlers
+ * @typedef {(() => void)[]} on_saved_handlers
+ * @typedef {((el?: HTMLElement) => Promise<void>)[]} on_will_save_handlers
  * Called at the very beginning of the save process.
  *
  * @typedef {((groupedEls: Object.<string, HTMLElement[]>) => Promise<void>)[]} pre_save_handlers
  * Called before the save process with the grouped dirty elements.
  *
- * @typedef {((el: HTMLElement) => Promise<void>)[]} save_element_handlers
+ * @typedef {((el: HTMLElement) => Promise<void>)[]} on_will_save_element_handlers
  * Called when saving an element (in parallel to saving the view).
  *
- * @typedef {(() => Promise<boolean>)[]} save_handlers
+ * @typedef {(() => Promise<boolean>)[]} on_will_reset_history_after_saving_handlers
  * Called at the very end of the save process.
  *
  * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
@@ -37,8 +37,8 @@ export class SavePlugin extends Plugin {
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        handleNewRecords: this.handleMutations.bind(this),
-        start_edition_handlers: this.startObserving.bind(this),
+        on_new_records_handled_handlers: this.handleMutations.bind(this),
+        on_editor_started_handlers: this.startObserving.bind(this),
         // Resource definitions:
         clean_for_save_processors: [
             // (root) => {
@@ -77,12 +77,12 @@ export class SavePlugin extends Plugin {
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
         let skipAfterSaveHandlers;
         try {
-            await Promise.all(this.getResource("before_save_handlers").map((handler) => handler()));
+            await Promise.all(this.trigger("on_will_save_handlers"));
             await this._save();
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
         } finally {
             if (!skipAfterSaveHandlers) {
-                this.getResource("after_save_handlers").forEach((handler) => handler());
+                this.trigger("on_saved_handlers");
             }
         }
     }
@@ -109,13 +109,11 @@ export class SavePlugin extends Plugin {
                 }
             }
             for (const cleanedEl of cleanedEls) {
-                for (const saveElementHandler of this.getResource("save_element_handlers")) {
-                    await saveElementHandler(cleanedEl);
-                }
+                await Promise.all(this.trigger("on_will_save_element_handlers", cleanedEl));
             }
         });
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
-        const willSaves = this.getResource("save_handlers").map((c) => c());
+        const willSaves = this.trigger("on_will_reset_history_after_saving_handlers");
         await Promise.all(saveProms.concat(willSaves));
         this.dependencies.history.reset();
     }

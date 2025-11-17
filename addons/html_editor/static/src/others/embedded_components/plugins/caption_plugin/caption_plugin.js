@@ -44,12 +44,12 @@ export class CaptionPlugin extends Plugin {
             },
         ],
         clean_for_save_processors: this.cleanForSave.bind(this),
-        mount_component_handlers: this.setupNewCaption.bind(this),
-        delete_handlers: this.afterDelete.bind(this),
-        before_cut_handlers: this.expandSelectionToCaption.bind(this),
-        before_drag_handlers: this.expandSelectionToCaption.bind(this),
+        on_will_mount_component_handlers: this.setupNewCaption.bind(this),
+        on_deleted_handlers: this.afterDelete.bind(this),
+        on_will_cut_handlers: this.expandSelectionToCaption.bind(this),
+        on_will_drag_handlers: this.expandSelectionToCaption.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
-        after_save_media_dialog_handlers: this.onImageReplaced.bind(this),
+        on_media_dialog_saved_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
         splittable_node_predicates: [
             (node) => {

@@ -162,8 +162,8 @@ function scrollToSelection(selection) {
  */
 
 /**
- * @typedef {((selectionData: SelectionData) => void)[]} selectionchange_handlers
- * @typedef {(() => void)[]} selection_leave_handlers
+ * @typedef {((selectionData: SelectionData) => void)[]} on_selectionchange_handlers
+ * @typedef {(() => void)[]} on_selection_leave_handlers
  *
  * @typedef {((ev: PointerEvent) => void | true)[]} double_click_overrides
  * @typedef {((ev: PointerEvent) => void | true)[]} triple_click_overrides
@@ -240,7 +240,7 @@ export class SelectionPlugin extends Plugin {
         if (this.document !== document) {
             const focusEditable = () => {
                 this.focusEditableDocument = true;
-                this.dispatchTo("selection_enter_handlers");
+                this.trigger("on_selection_enter_handlers");
             };
             const unFocusEditable = (ev) => {
                 if (this.focusEditableDocument) {
@@ -253,7 +253,7 @@ export class SelectionPlugin extends Plugin {
                         return;
                     }
                     this.focusEditableDocument = false;
-                    this.dispatchTo("selection_leave_handlers");
+                    this.trigger("on_selection_leave_handlers");
                 }
             };
             this.addDomListener(this.document, "focusin", focusEditable, { capture: true });
@@ -324,7 +324,7 @@ export class SelectionPlugin extends Plugin {
         if (this.fixSelectionOnEditableRoot(selectionData)) {
             return;
         }
-        this.dispatchTo("selectionchange_handlers", selectionData);
+        this.trigger("on_selectionchange_handlers", selectionData);
     }
 
     /**

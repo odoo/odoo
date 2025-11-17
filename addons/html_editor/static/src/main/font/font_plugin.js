@@ -291,15 +291,15 @@ export class FontPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: [
+        on_selectionchange_handlers: [
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
-        post_undo_handlers: [
+        on_undone_handlers: [
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
-        post_redo_handlers: [
+        on_redone_handlers: [
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],

@@ -865,7 +865,7 @@ describe("Mount processing", () => {
             static id = "simple";
             static dependencies = ["selection", "embeddedComponents", "dom", "history"];
             resources = {
-                mount_component_handlers: this.setupNewComponent.bind(this),
+                on_will_mount_component_handlers: this.setupNewComponent.bind(this),
             };
 
             setupNewComponent({ name, env }) {

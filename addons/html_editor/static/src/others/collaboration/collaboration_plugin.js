@@ -23,7 +23,7 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  */
 
 /**
- * @typedef {(() => void)[]} external_history_step_handlers
+ * @typedef {(() => void)[]} on_external_history_step_added_handlers
  */
 
 export class CollaborationPlugin extends Plugin {
@@ -32,9 +32,9 @@ export class CollaborationPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        history_cleaned_handlers: this.onHistoryClean.bind(this),
-        history_reset_handlers: this.onHistoryReset.bind(this),
-        step_added_handlers: ({ step }) => this.onStepAdded(step),
+        on_history_cleaned_handlers: this.onHistoryClean.bind(this),
+        on_history_reset_handlers: this.onHistoryReset.bind(this),
+        on_step_added_handlers: ({ step }) => this.onStepAdded(step),
 
         /** Overrides */
         set_attribute_overrides: this.setAttribute.bind(this),
@@ -131,7 +131,7 @@ export class CollaborationPlugin extends Plugin {
 
         const steps = this.dependencies.history.getHistorySteps();
         for (const newStep of newSteps) {
-            // todo: add a test that no 2 history_missing_parent_step_handlers
+            // todo: add a test that no 2 on_history_missing_parent_step_handlers
             // are called in same stack.
             const insertIndex = this.getInsertStepIndex(steps, newStep);
             if (typeof insertIndex === "undefined") {
@@ -144,7 +144,7 @@ export class CollaborationPlugin extends Plugin {
             this.dependencies.selection.rectifySelection(selectionData.editableSelection);
         }
 
-        this.dispatchTo("external_history_step_handlers");
+        this.trigger("on_external_history_step_added_handlers");
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
@@ -188,7 +188,7 @@ export class CollaborationPlugin extends Plugin {
                 index--;
             }
             const fromStepId = historySteps[index].id;
-            this.dispatchTo("history_missing_parent_step_handlers", {
+            this.trigger("on_history_missing_parent_step_handlers", {
                 step: newStep,
                 fromStepId: fromStepId,
             });
@@ -294,7 +294,7 @@ export class CollaborationPlugin extends Plugin {
      */
     onStepAdded(step) {
         step.peerId = this.peerId;
-        this.dispatchTo("collaboration_step_added_handlers", step);
+        this.trigger("on_collaboration_step_added_handlers", step);
     }
     /**
      * @param {HistoryStep} step

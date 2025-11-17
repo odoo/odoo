@@ -1,8 +1,8 @@
 import { Plugin } from "../plugin";
 
 /**
- * @typedef {((ev: InputEvent) => void)[]} beforeinput_handlers
- * @typedef {((ev: InputEvent) => void)[]} input_handlers
+ * @typedef {((ev: InputEvent) => void)[]} on_beforeinput_handlers
+ * @typedef {((ev: InputEvent) => void)[]} on_input_handlers
  */
 
 export class InputPlugin extends Plugin {
@@ -15,11 +15,11 @@ export class InputPlugin extends Plugin {
 
     onBeforeInput(ev) {
         this.dependencies.history.stageSelection();
-        this.dispatchTo("beforeinput_handlers", ev);
+        this.trigger("on_beforeinput_handlers", ev);
     }
 
     onInput(ev) {
         this.dependencies.history.addStep({ batchable: ev.inputType === "insertText" });
-        this.dispatchTo("input_handlers", ev);
+        this.trigger("on_input_handlers", ev);
     }
 }

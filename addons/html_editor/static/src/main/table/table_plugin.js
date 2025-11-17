@@ -119,9 +119,9 @@ export class TablePlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateSelectionTable.bind(this),
-        before_line_break_handlers: this.resetTableSelection.bind(this),
-        before_split_block_handlers: this.resetTableSelection.bind(this),
+        on_selectionchange_handlers: this.updateSelectionTable.bind(this),
+        on_will_break_line_handlers: this.resetTableSelection.bind(this),
+        on_will_split_block_handlers: this.resetTableSelection.bind(this),
 
         /** Processors */
         before_insert_processors: this.handleTableInsert.bind(this),

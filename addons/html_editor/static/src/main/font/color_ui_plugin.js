@@ -42,7 +42,7 @@ export class ColorUIPlugin extends Plugin {
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
         ],
-        selectionchange_handlers: this.updateSelectedColor.bind(this),
+        on_selectionchange_handlers: this.updateSelectedColor.bind(this),
         background_color_processors: this.getBackgroundColorProcessor.bind(this),
         apply_background_color_processors: this.applyBackgroundColorProcessor.bind(this),
     };

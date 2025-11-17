@@ -1,24 +1,24 @@
 declare module "plugins" {
-    import { clean_for_save_processors, normalize_processors, start_edition_handlers } from "@html_editor/editor";
+    import { clean_for_save_processors, normalize_processors, on_editor_started_handlers } from "@html_editor/editor";
     import { Plugin } from "@html_editor/plugin";
     import { ResourceWithSequence } from "@html_editor/utils/resource";
 
     import { BaseContainerShared, valid_for_base_container_predicates } from "@html_editor/core/base_container_plugin";
-    import { added_image_handlers, after_paste_handlers, before_paste_handlers, should_bypass_paste_image_files_predicates, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
+    import { on_image_added_handlers, on_pasted_handlers, on_will_paste_handlers, should_bypass_paste_image_files_predicates, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
-    import { before_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, delete_handlers, delete_range_overrides, DeleteShared, functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, removable_node_predicates } from "@html_editor/core/delete_plugin";
+    import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, removable_node_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
-    import { after_insert_handlers, before_insert_processors, before_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties } from "@html_editor/core/dom_plugin";
-    import { format_class_predicates, format_selection_handlers, FormatShared, has_format_predicates, remove_all_formats_handlers } from "@html_editor/core/format_plugin";
-    import { attribute_change_handlers, attribute_change_processors, before_add_step_handlers, before_filter_mutation_record_handlers, content_updated_handlers, external_step_added_handlers, handleNewRecords, history_cleaned_handlers, history_reset_from_steps_handlers, history_reset_handlers, history_step_processors, HistoryShared, post_redo_handlers, post_undo_handlers, restore_savepoint_handlers, savable_mutation_record_predicates, serializable_descendants_processors, set_attribute_overrides, step_added_handlers, reversible_step_predicates } from "@html_editor/core/history_plugin";
-    import { beforeinput_handlers, input_handlers } from "@html_editor/core/input_plugin";
-    import { before_line_break_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
+    import { on_inserted_handlers, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties } from "@html_editor/core/dom_plugin";
+    import { format_class_predicates, on_will_format_selection_handlers, FormatShared, has_format_predicates, on_all_formats_removed_handlers } from "@html_editor/core/format_plugin";
+    import { on_attribute_changed_handlers, attribute_change_processors, on_will_add_step_handlers, on_will_filter_mutation_record_handlers, on_content_updated_handlers, on_external_step_added_handlers, on_new_records_handled_handlers, on_history_cleaned_handlers, on_history_reset_from_steps_handlers, on_history_reset_handlers, history_step_processors, HistoryShared, on_redone_handlers, on_undone_handlers, on_savepoint_restored_handlers, savable_mutation_record_predicates, serializable_descendants_processors, set_attribute_overrides, on_step_added_handlers, reversible_step_predicates } from "@html_editor/core/history_plugin";
+    import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
+    import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
     import { ProtectedNodeShared } from "@html_editor/core/protected_node_plugin";
     import { SanitizeShared } from "@html_editor/core/sanitize_plugin";
-    import { double_click_overrides, fix_selection_on_editable_root_overrides, fully_selected_node_predicates, tangible_char_for_keyboard_navigation_predicates, is_node_editable_predicates, selection_leave_handlers, selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
+    import { double_click_overrides, fix_selection_on_editable_root_overrides, fully_selected_node_predicates, tangible_char_for_keyboard_navigation_predicates, is_node_editable_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
     import { shortcuts, shorthands } from "@html_editor/core/shortcut_plugin";
-    import { after_split_element_handlers, before_split_block_handlers, split_element_block_overrides, SplitShared, splittable_node_predicates } from "@html_editor/core/split_plugin";
+    import { on_element_split_handlers, on_will_split_block_handlers, split_element_block_overrides, SplitShared, splittable_node_predicates } from "@html_editor/core/split_plugin";
     import { StyleShared } from "@html_editor/core/style_plugin";
     import { user_commands, UserCommandShared } from "@html_editor/core/user_command_plugin";
 
@@ -31,7 +31,7 @@ declare module "plugins" {
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
     import { paste_url_overrides } from "@html_editor/main/link/link_paste_plugin";
-    import { create_link_handlers, immutable_link_selectors, is_link_editable_predicates, legit_empty_link_predicates, link_compatible_selection_predicates, link_popovers, LinkShared } from "@html_editor/main/link/link_plugin";
+    import { on_link_created_handlers, immutable_link_selectors, is_link_editable_predicates, legit_empty_link_predicates, link_compatible_selection_predicates, link_popovers, LinkShared } from "@html_editor/main/link/link_plugin";
     import { eligible_link_for_selection_indication_predicates, eligible_link_for_zwnbsp_predicates, LinkSelectionShared } from "@html_editor/main/link/link_selection_plugin";
     import { paste_media_url_command_providers } from "@html_editor/main/link/powerbox_url_paste_plugin";
     import { LocalOverlayShared } from "@html_editor/main/local_overlay_plugin";
@@ -39,9 +39,9 @@ declare module "plugins" {
     import { delete_image_overrides, image_name_providers, ImageShared } from "@html_editor/main/media/image_plugin";
     import { ImagePostProcessShared, on_image_updated_handlers, on_image_processed_handlers, on_will_process_image_handlers } from "@html_editor/main/media/image_post_process_plugin";
     import { closest_savable_providers, ImageSaveShared, on_image_saved_handlers } from "@html_editor/main/media/image_save_plugin";
-    import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_added_media_handlers, on_will_save_media_dialog_handlers, on_replaced_media_handlers } from "@html_editor/main/media/media_plugin";
-    import { move_node_blacklist_selectors, move_node_whitelist_selectors, set_movable_element_handlers, unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
-    import { layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
+    import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_media_added_handlers, on_will_save_media_dialog_handlers, on_media_replaced_handlers } from "@html_editor/main/media/media_plugin";
+    import { move_node_blacklist_selectors, move_node_whitelist_selectors, on_movable_element_set_handlers, on_will_unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
+    import { on_layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
     import { power_buttons, power_buttons_visibility_predicates } from "@html_editor/main/power_buttons_plugin";
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
     import { deselect_custom_selected_nodes_processors, TableShared } from "@html_editor/main/table/table_plugin";
@@ -49,9 +49,9 @@ declare module "plugins" {
     import { can_display_toolbar, collapsed_selection_toolbar_predicate, toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
 
     import { CollaborationOdooShared } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
-    import { CollaborationShared, external_history_step_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
+    import { CollaborationShared, on_external_history_step_added_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
     import { DynamicPlaceholderShared } from "@html_editor/others/dynamic_placeholder_plugin";
-    import { EmbeddedComponentShared, mount_component_handlers, post_mount_component_handlers } from "@html_editor/others/embedded_component_plugin";
+    import { EmbeddedComponentShared, on_will_mount_component_handlers, on_component_mounted_handlers } from "@html_editor/others/embedded_component_plugin";
 
     /* Misc */
     export interface CSSSelector extends String {}
@@ -124,51 +124,51 @@ declare module "plugins" {
 
     export interface EditorResourcesList {
         // Handlers
-        added_image_handlers: added_image_handlers;
-        after_insert_handlers: after_insert_handlers;
-        after_paste_handlers: after_paste_handlers;
-        after_save_media_dialog_handlers: after_save_media_dialog_handlers;
-        after_split_element_handlers: after_split_element_handlers;
-        attribute_change_handlers: attribute_change_handlers;
-        before_add_step_handlers: before_add_step_handlers;
-        before_delete_handlers: before_delete_handlers;
-        before_filter_mutation_record_handlers: before_filter_mutation_record_handlers;
-        beforeinput_handlers: beforeinput_handlers;
-        before_line_break_handlers: before_line_break_handlers;
-        before_paste_handlers: before_paste_handlers;
-        before_split_block_handlers: before_split_block_handlers;
-        before_set_tag_handlers: before_set_tag_handlers;
-        create_link_handlers: create_link_handlers;
-        content_updated_handlers: content_updated_handlers;
-        delete_handlers: delete_handlers;
-        external_history_step_handlers: external_history_step_handlers;
-        external_step_added_handlers: external_step_added_handlers;
-        format_selection_handlers: format_selection_handlers;
-        handleNewRecords: handleNewRecords;
-        history_cleaned_handlers: history_cleaned_handlers;
-        history_reset_handlers: history_reset_handlers;
-        history_reset_from_steps_handlers: history_reset_from_steps_handlers;
-        input_handlers: input_handlers;
-        layout_geometry_change_handlers: layout_geometry_change_handlers;
-        mount_component_handlers: mount_component_handlers;
-        on_added_media_handlers: on_added_media_handlers;
+        on_image_added_handlers: on_image_added_handlers;
+        on_inserted_handlers: on_inserted_handlers;
+        on_pasted_handlers: on_pasted_handlers;
+        on_media_dialog_saved_handlers: on_media_dialog_saved_handlers;
+        on_element_split_handlers: on_element_split_handlers;
+        on_attribute_changed_handlers: on_attribute_changed_handlers;
+        on_will_add_step_handlers: on_will_add_step_handlers;
+        on_will_delete_handlers: on_will_delete_handlers;
+        on_will_filter_mutation_record_handlers: on_will_filter_mutation_record_handlers;
+        on_beforeinput_handlers: on_beforeinput_handlers;
+        on_will_break_line_handlers: on_will_break_line_handlers;
+        on_will_paste_handlers: on_will_paste_handlers;
+        on_will_split_block_handlers: on_will_split_block_handlers;
+        on_will_set_tag_handlers: on_will_set_tag_handlers;
+        on_link_created_handlers: on_link_created_handlers;
+        on_content_updated_handlers: on_content_updated_handlers;
+        on_deleted_handlers: on_deleted_handlers;
+        on_external_history_step_added_handlers: on_external_history_step_added_handlers;
+        on_external_step_added_handlers: on_external_step_added_handlers;
+        on_will_format_selection_handlers: on_will_format_selection_handlers;
+        on_new_records_handled_handlers: on_new_records_handled_handlers;
+        on_history_cleaned_handlers: on_history_cleaned_handlers;
+        on_history_reset_handlers: on_history_reset_handlers;
+        on_history_reset_from_steps_handlers: on_history_reset_from_steps_handlers;
+        on_input_handlers: on_input_handlers;
+        on_layout_geometry_change_handlers: on_layout_geometry_change_handlers;
+        on_will_mount_component_handlers: on_will_mount_component_handlers;
+        on_media_added_handlers: on_media_added_handlers;
         on_image_processed_handlers: on_image_processed_handlers;
         on_image_saved_handlers: on_image_saved_handlers;
         on_image_updated_handlers: on_image_updated_handlers;
         on_will_save_media_dialog_handlers: on_will_save_media_dialog_handlers;
-        on_replaced_media_handlers: on_replaced_media_handlers;
+        on_media_replaced_handlers: on_media_replaced_handlers;
+        on_component_mounted_handlers: on_component_mounted_handlers;
+        on_redone_handlers: on_redone_handlers;
+        on_undone_handlers: on_undone_handlers;
+        on_all_formats_removed_handlers: on_all_formats_removed_handlers;
+        on_savepoint_restored_handlers: on_savepoint_restored_handlers;
+        on_selectionchange_handlers: on_selectionchange_handlers;
+        on_selection_leave_handlers: on_selection_leave_handlers;
+        on_movable_element_set_handlers: on_movable_element_set_handlers;
+        on_editor_started_handlers: on_editor_started_handlers;
+        on_step_added_handlers: on_step_added_handlers;
         on_will_process_image_handlers: on_will_process_image_handlers;
-        post_mount_component_handlers: post_mount_component_handlers;
-        post_redo_handlers: post_redo_handlers;
-        post_undo_handlers: post_undo_handlers;
-        remove_all_formats_handlers: remove_all_formats_handlers;
-        restore_savepoint_handlers: restore_savepoint_handlers;
-        selectionchange_handlers: selectionchange_handlers;
-        selection_leave_handlers: selection_leave_handlers;
-        set_movable_element_handlers: set_movable_element_handlers;
-        start_edition_handlers: start_edition_handlers;
-        step_added_handlers: step_added_handlers;
-        unset_movable_element_handlers: unset_movable_element_handlers;
+        on_will_unset_movable_element_handlers: on_will_unset_movable_element_handlers;
 
         // Overrides
         apply_color_style_overrides: apply_color_style_overrides;

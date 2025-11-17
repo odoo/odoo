@@ -10,7 +10,7 @@ import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {(() => void | true)[]} after_setup_editor_overrides
- * @typedef {(() => void)[]} before_setup_editor_handlers
+ * @typedef {(() => void)[]} on_will_setup_editor_handlers
  *
  * @typedef {CSSSelector[]} savable_selectors
  */
@@ -41,7 +41,7 @@ export class SetupEditorPlugin extends Plugin {
             "#wrap .o_homepage_editor_welcome_message"
         );
         welcomeMessageEl?.remove();
-        this.dispatchTo("before_setup_editor_handlers");
+        this.trigger("on_will_setup_editor_handlers");
         const savableSelectors = this.getResource("savable_selectors").join(", ");
         const savableEls = [...this.editable.querySelectorAll(savableSelectors)].filter((el) =>
             this.isSavableElement(el)

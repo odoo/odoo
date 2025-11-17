@@ -61,8 +61,8 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /**
- * @typedef {((containers: BuilderOptionContainer[]) => void)[]} change_current_options_containers_listeners
- * @typedef {((newTargetEl: HTMLElement) => void)[]} on_restore_containers_handlers
+ * @typedef {((containers: BuilderOptionContainer[]) => void)[]} on_current_options_containers_changed_handlers
+ * @typedef {((newTargetEl: HTMLElement) => void)[]} on_will_restore_containers_handlers
  *
  * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} options_container_top_buttons_providers
  *
@@ -142,12 +142,12 @@ export class BuilderOptionsPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        before_add_step_handlers: this.onWillAddStep.bind(this),
-        step_added_handlers: this.onStepAdded.bind(this),
-        post_undo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
-        post_redo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
+        on_will_add_step_handlers: this.onWillAddStep.bind(this),
+        on_step_added_handlers: this.onStepAdded.bind(this),
+        on_undone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
+        on_redone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
         clean_for_save_processors: this.cleanForSave.bind(this),
-        start_edition_handlers: () => {
+        on_editor_started_handlers: () => {
             if (this.config.initialTarget) {
                 const el = this.editable.querySelector(this.config.initialTarget);
                 this.updateContainers(el);
@@ -315,7 +315,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         this.lastContainers = newContainers;
-        this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+        this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
 
     getTarget() {
@@ -325,7 +325,7 @@ export class BuilderOptionsPlugin extends Plugin {
     deactivateContainers() {
         this.target = null;
         this.lastContainers = [];
-        this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+        this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
 
     closestWithOption(el) {
@@ -519,7 +519,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 targetEl = nextTarget;
             }
             if (targetEl) {
-                this.dispatchTo("on_restore_containers_handlers", targetEl);
+                this.trigger("on_will_restore_containers_handlers", targetEl);
                 this.updateContainers(targetEl, { forceUpdate: true });
                 // Scroll to the target if not visible.
                 if (!isElementInViewport(targetEl)) {

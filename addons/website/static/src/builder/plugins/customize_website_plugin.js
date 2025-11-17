@@ -81,7 +81,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
-        save_handlers: this.onSave.bind(this),
+        on_will_reset_history_after_saving_handlers: this.onSave.bind(this),
     };
 
     async onSave() {
@@ -325,7 +325,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 this.services.ui.block({ delay: 2500 });
                 return applyFn({ ...arg, value: v })
                     .then(() => {
-                        this.dispatchTo("trigger_dom_updated");
+                        this.trigger("on_dom_updated_handlers");
                     })
                     .finally(() => this.services.ui.unblock());
             };
@@ -506,7 +506,7 @@ export class ToggleBodyBgImageAction extends BuilderAction {
             variables["body-image-pattern-height"] = "";
         }
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables);
-        this.dispatchTo("trigger_dom_updated");
+        this.trigger("on_dom_updated_handlers");
     }
     getCurrentConfig() {
         return {

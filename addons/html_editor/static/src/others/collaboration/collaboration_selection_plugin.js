@@ -16,9 +16,9 @@ export class CollaborationSelectionPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
-        layout_geometry_change_handlers: this.refreshSelection.bind(this),
-        collaborative_selection_update_handlers: this.updateSelection.bind(this),
+        on_collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
+        on_layout_geometry_change_handlers: this.refreshSelection.bind(this),
+        on_collaborative_selection_updated_handlers: this.updateSelection.bind(this),
 
         collaboration_peer_metadata_providers: () => ({ selectionColor: this.selectionColor }),
     };

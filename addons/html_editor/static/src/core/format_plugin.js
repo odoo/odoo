@@ -52,8 +52,8 @@ function isFormatted(formatPlugin, format) {
  * @typedef {((formatName: string, options: {
  *      formatProps: object,
  *      applyStyle: boolean,
- * }) => void | boolean)[]} format_selection_handlers
- * @typedef {(() => void)[]} remove_all_formats_handlers
+ * }) => void | boolean)[]} on_will_format_selection_handlers
+ * @typedef {(() => void)[]} on_all_formats_removed_handlers
  *
  * @typedef {((className: string) => boolean | undefined)[]} format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
@@ -183,9 +183,9 @@ export class FormatPlugin extends Plugin {
             }),
         ],
         /** Handlers */
-        beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
-        selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
-        before_set_tag_handlers: this.removeFontSizeFormat.bind(this),
+        on_beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
+        on_selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
+        on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
         /** Processors */
@@ -239,7 +239,7 @@ export class FormatPlugin extends Plugin {
     removeAllFormats() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
-        this.dispatchTo("remove_all_formats_handlers");
+        this.trigger("on_all_formats_removed_handlers");
         this.dependencies.history.addStep();
     }
 
@@ -298,7 +298,7 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(formatName, options) {
-        this.dispatchTo("format_selection_handlers", formatName, options);
+        this.trigger("on_will_format_selection_handlers", formatName, options);
         if (this._formatSelection(formatName, options) && !options?.removeFormat) {
             this.dependencies.history.addStep();
         }

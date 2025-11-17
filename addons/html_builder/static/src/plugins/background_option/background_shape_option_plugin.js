@@ -721,7 +721,7 @@ class FlipShapeAction extends BaseAnimationAction {
             flip.add(axis);
             return { flip: [...flip] };
         });
-        this.dispatchTo("on_shape_flipped_handlers", { editingElement, axis });
+        this.trigger("on_shape_flipped_handlers", { editingElement, axis });
     }
     clean({ editingElement, params: { mainParam: axis } }) {
         this.applyShape(editingElement, () => {
@@ -729,7 +729,7 @@ class FlipShapeAction extends BaseAnimationAction {
             flip.delete(axis);
             return { flip: [...flip] };
         });
-        this.dispatchTo("on_shape_flipped_handlers", { editingElement, axis });
+        this.trigger("on_shape_flipped_handlers", { editingElement, axis });
     }
     isApplied({ editingElement, params: { mainParam: axis } }) {
         // Compat: flip classes are no longer used but may be

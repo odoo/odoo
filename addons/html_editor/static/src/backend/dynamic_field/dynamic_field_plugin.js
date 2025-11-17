@@ -54,8 +54,8 @@ export class DynamicFieldPlugin extends Plugin {
                 commandId: "insertField",
             }),
         ],
-        selectionchange_handlers: withSequence(9, this.onSelectionChanged.bind(this)),
-        dynamic_model_change_handlers: this.updateDynamicModel.bind(this),
+        on_selectionchange_handlers: withSequence(9, this.onSelectionChanged.bind(this)),
+        on_model_changed_handlers: this.updateDynamicModel.bind(this),
         normalize_processors: withSequence(11, this.normalizeQwebPlaceholders.bind(this)),
         clipboard_content_processors: withSequence(11, this.cleanQwebExpressionsForCopy.bind(this)),
         clean_for_save_processors: withSequence(11, this.cleanQwebExpressionsForSave.bind(this)),
@@ -169,7 +169,7 @@ export class DynamicFieldPlugin extends Plugin {
                             apply: () => {
                                 target.textContent = "";
                                 this.normalizeQwebPlaceholders(target);
-                                this.dispatchTo("dynamic_field_edit_apply_handlers", target);
+                                this.trigger("on_dynamic_field_edit_applied_handlers", target);
                             },
                             revert: () => {
                                 target.textContent = prevText;

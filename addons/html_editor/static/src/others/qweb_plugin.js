@@ -38,7 +38,7 @@ export class QWebPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
+        on_selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
 
         /** Processors */
         clean_for_save_processors: (root) => {

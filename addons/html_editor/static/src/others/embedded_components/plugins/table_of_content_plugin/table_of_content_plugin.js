@@ -30,13 +30,17 @@ export class TableOfContentPlugin extends Plugin {
         ],
 
         /** Handlers */
-        restore_savepoint_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        history_reset_from_steps_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        step_added_handlers: ({ stepCommonAncestor }) =>
+        on_savepoint_restored_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        on_history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        on_history_reset_from_steps_handlers: () =>
+            this.delayedUpdateTableOfContents(this.editable),
+        on_step_added_handlers: ({ stepCommonAncestor }) =>
             this.delayedUpdateTableOfContents(stepCommonAncestor),
-        external_step_added_handlers: this.delayedUpdateTableOfContents.bind(this, this.editable),
-        mount_component_handlers: this.setupNewToc.bind(this),
+        on_external_step_added_handlers: this.delayedUpdateTableOfContents.bind(
+            this,
+            this.editable
+        ),
+        on_will_mount_component_handlers: this.setupNewToc.bind(this),
 
         /** Processors */
         clean_for_save_processors: this.cleanForSave.bind(this),

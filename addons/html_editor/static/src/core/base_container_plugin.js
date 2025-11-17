@@ -44,7 +44,7 @@ export class BaseContainerPlugin extends Plugin {
         // because a `div` may only have the baseContainer identity if it does not
         // already have another incompatible identity given by another plugin.
         normalize_processors: withSequence(Infinity, this.normalizeDivBaseContainers.bind(this)),
-        delete_handlers: () => {
+        on_deleted_handlers: () => {
             if (this.config.cleanEmptyStructuralContainers === false) {
                 return;
             }

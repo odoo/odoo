@@ -24,10 +24,10 @@ import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
  */
 
 /**
- * @typedef {((mediaEl: HTMLElement) => void)[]} after_save_media_dialog_handlers
- * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_added_media_handlers
+ * @typedef {((mediaEl: HTMLElement) => void)[]} on_media_dialog_saved_handlers
+ * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_media_added_handlers
  * @typedef {((elements: HTMLElement[], params: { node: Node }) => Promise<void>)[]} on_will_save_media_dialog_handlers
- * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_replaced_media_handlers
+ * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_media_replaced_handlers
  *
  * @typedef {{
  *      id: "DOCUMENTS" | "ICONS" | "IMAGES" | "VIDEOS";
@@ -85,7 +85,7 @@ export class MediaPlugin extends Plugin {
         closest_savable_providers: withSequence(20, (el) => this.editable),
 
         /** Handlers */
-        selectionchange_handlers: this.selectAroundIcon.bind(this),
+        on_selectionchange_handlers: this.selectAroundIcon.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => this.cleanForSave(root),
@@ -207,15 +207,15 @@ export class MediaPlugin extends Plugin {
             } else {
                 node.replaceWith(element);
             }
-            this.dispatchTo("on_replaced_media_handlers", { newMediaEl: element });
+            this.trigger("on_media_replaced_handlers", { newMediaEl: element });
         } else {
             this.dependencies.dom.insert(element);
-            this.dispatchTo("on_added_media_handlers", { newMediaEl: element });
+            this.trigger("on_media_added_handlers", { newMediaEl: element });
         }
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
-        this.dispatchTo("after_save_media_dialog_handlers", element);
+        this.trigger("on_media_dialog_saved_handlers", element);
         this.dependencies.history.addStep();
     }
 
@@ -229,11 +229,11 @@ export class MediaPlugin extends Plugin {
                     ? selection
                     : [selection]
                 : [];
-            for (const onMediaDialogSaved of this.getResource(
-                "on_will_save_media_dialog_handlers"
-            )) {
-                await onMediaDialogSaved(elements, { node: params.node });
-            }
+            await Promise.all(
+                this.trigger("on_will_save_media_dialog_handlers", elements, {
+                    node: params.node,
+                })
+            );
             return oldSave(...args);
         };
         const { resModel, resId, field, type } = this.getRecordInfo(editableEl);

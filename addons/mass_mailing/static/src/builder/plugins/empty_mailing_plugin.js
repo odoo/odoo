@@ -13,7 +13,7 @@ export class EmptyMailingPlugin extends Plugin {
     ];
 
     resources = {
-        beforeinput_handlers: withSequence(1, this.ensureTextBlock.bind(this)),
+        on_beforeinput_handlers: withSequence(1, this.ensureTextBlock.bind(this)),
     };
 
     ensureTextBlock() {

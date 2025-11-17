@@ -65,7 +65,7 @@ export class ColorPlugin extends Plugin {
             },
         ],
         /** Handlers */
-        remove_all_formats_handlers: this.removeAllColor.bind(this),
+        on_all_formats_removed_handlers: this.removeAllColor.bind(this),
         color_combination_getters: getColorCombinationFromClass,
 
         /** Predicates */

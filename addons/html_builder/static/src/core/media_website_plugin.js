@@ -17,7 +17,7 @@ export class MediaWebsitePlugin extends Plugin {
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_replaced_media_handlers: ({ newMediaEl }) =>
+        on_media_replaced_handlers: ({ newMediaEl }) =>
             // Activate the new media options.
             this.dependencies.builderOptions.setNextTarget(newMediaEl),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),

@@ -647,15 +647,15 @@ describe("shortcut", () => {
         expect(getContent(el)).toBe("<p>b[]</p>");
     });
 
-    test("use handleNewRecords resource", async () => {
+    test("use on_new_records_handled_handlers resource", async () => {
         const onChange = () => {
             expect.step("onchange");
         };
         const resources = {
-            handleNewRecords: () => {
+            on_new_records_handled_handlers: () => {
                 expect.step("handleNewRecords");
             },
-            content_updated_handlers: () => {
+            on_content_updated_handlers: () => {
                 expect.step("contentUpdated");
             },
             normalize_processors: (root) => {

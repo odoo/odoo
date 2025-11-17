@@ -152,7 +152,7 @@ async function fetchAttachmentMetaData(url, ormService) {
  *      isAvailable: (linkEl: HTMLLinkElement) => boolean;
  *      getProps: (props) => props;
  *  }[]} link_popovers
- * @typedef {((linkEl: HTMLAnchorElement) => void)[]} create_link_handlers
+ * @typedef {((linkEl: HTMLAnchorElement) => void)[]} on_link_created_handlers
  */
 
 export class LinkPlugin extends Plugin {
@@ -298,14 +298,14 @@ export class LinkPlugin extends Plugin {
         },
 
         /** Handlers */
-        beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
-        input_handlers: this.onInputDeleteNormalizeLink.bind(this),
-        before_delete_handlers: this.updateCurrentLinkSyncState.bind(this),
-        delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
-        before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
-        after_paste_handlers: this.onPasteNormalizeLink.bind(this),
-        selectionchange_handlers: this.handleSelectionChange.bind(this),
-        after_insert_handlers: this.handleAfterInsert.bind(this),
+        on_beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
+        on_input_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        on_will_delete_handlers: this.updateCurrentLinkSyncState.bind(this),
+        on_deleted_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        on_will_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
+        on_pasted_handlers: this.onPasteNormalizeLink.bind(this),
+        on_selectionchange_handlers: this.handleSelectionChange.bind(this),
+        on_inserted_handlers: this.handleAfterInsert.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
@@ -414,7 +414,7 @@ export class LinkPlugin extends Plugin {
             link.setAttribute(param, `${value}`);
         }
         link.innerText = label;
-        this.dispatchTo("create_link_handlers", link);
+        this.trigger("on_link_created_handlers", link);
         return link;
     }
 
@@ -451,8 +451,8 @@ export class LinkPlugin extends Plugin {
             description: _t("Create an URL."),
             icon: "fa-link",
             run: () => {
-                this.dispatchTo(
-                    "before_paste_handlers",
+                this.trigger(
+                    "on_will_paste_handlers",
                     this.dependencies.selection.getEditableSelection()
                 );
                 this.dependencies.dom.insert(this.createLink(url, text));
