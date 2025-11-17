@@ -444,3 +444,17 @@ class TestRecruitment(TransactionCase):
 
         job._compute_activities()
         self.assertEqual(job.activities_today, 0)
+
+    def test_applicant_modify_email_number(self):
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Mary Applicant',
+            'email_from': 'applicant@example.com',
+            'partner_phone': '123456789',
+        })
+        self.assertEqual(applicant.partner_id.email, 'applicant@example.com', "Email should have been set on the partner.")
+        self.assertEqual(applicant.partner_id.phone, '123456789', "Phone should have been set on the partner.")
+
+        applicant.email_from = 'applicant_diff@example.com'
+        self.assertEqual(applicant.partner_id.email, 'applicant_diff@example.com', "Email should have been updated on the partner.")
+        applicant.partner_phone = '987654321'
+        self.assertEqual(applicant.partner_id.phone, '987654321', "Phone should have been updated on the partner.")
