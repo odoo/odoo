@@ -33,7 +33,7 @@ class AccountMoveLine(models.Model):
             ("sale_eco_9_5", "ECO 9(5)"),
             ("sale_out_of_scope", "Out of Scope"),
             ("purchase_b2b_regular", "B2B Regular"),
-            ("purchase_b2c_regular", "B2C Regular"),
+            ("purchase_b2c_regular", "B2C Regular"),  # will be removed in master
             ("purchase_b2b_rcm", "B2B RCM"),
             ("purchase_b2c_rcm", "B2C RCM"),
             ("purchase_imp_services", "IMP(service)"),
@@ -256,10 +256,8 @@ class AccountMoveLine(models.Model):
                     return 'purchase_b2b_regular'
 
                 # B2C Unregistered or Consumer sales with gst tags
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
-                    if is_reverse_charge_tax(line):
-                        return 'purchase_b2c_rcm'
-                    return 'purchase_b2c_regular'
+                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
+                    return 'purchase_b2c_rcm'
 
                 # export service type products purchases
                 if gst_treatment == 'overseas' and any(tax.tax_scope == 'service' for tax in line.tax_ids | line.tax_line_id) and tags_have_categ(line_tags, ['igst', 'cess']):
@@ -277,10 +275,8 @@ class AccountMoveLine(models.Model):
                     return 'purchase_cdnr_regular'
 
                 # credit notes for b2c purchases
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
-                    if is_reverse_charge_tax(line):
-                        return 'purchase_cdnur_rcm'
-                    return 'purchase_cdnur_regular'
+                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
+                    return 'purchase_cdnur_rcm'
 
                 if not is_reverse_charge_tax(line):
                     if gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'])\
