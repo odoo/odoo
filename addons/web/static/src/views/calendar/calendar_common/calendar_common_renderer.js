@@ -1,12 +1,13 @@
 import { getLocalWeekNumber, is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
+import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
 import { makeWeekColumn } from "./calendar_common_week_column";
 
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
 const SCALE_TO_FC_VIEW = {
@@ -61,10 +62,15 @@ export class CalendarCommonRenderer extends Component {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
+        this.onWindowResizeDebounced = useDebounced(this.onWindowResize, 200);
         this.timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
+
+        useEffect(() => {
+            this.updateSize();
+        });
     }
 
     get options() {
@@ -117,6 +123,7 @@ export class CalendarCommonRenderer extends Component {
             weekends: this.props.isWeekendVisible,
             weekNumberCalculation: (date) => getLocalWeekNumber(date),
             weekNumbers: true,
+            windowResize: this.onWindowResizeDebounced,
             dayHeaderContent: this.getHeaderHtml,
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
             viewDidMount: this.viewDidMount,
@@ -195,6 +202,16 @@ export class CalendarCommonRenderer extends Component {
             this.getPopoverProps(record),
             `o_cw_popover card o_calendar_color_${typeof color === "number" ? color : 0}`
         );
+    }
+    updateSize() {
+        let headerHeight = 0;
+        if (!this.env.isSmall) {
+            headerHeight =
+                document.querySelector(".o_calendar_header")?.getBoundingClientRect()?.height ?? 0;
+        }
+        const height = window.innerHeight - this.fc.el.getBoundingClientRect().top - headerHeight;
+        this.fc.el.style.height = `${height}px`;
+        this.fc.api.updateSize();
     }
 
     onClick(info) {
