@@ -10,7 +10,7 @@
                 <div class="flex-grow-1"/>
                 <DeviceSelect kind="'videoinput'"/>
             </label>
-            <div t-if="!isBrowserSafari()" class="btn d-flex gap-2" t-on-click="() => store.settings.useBlur = !store.settings.useBlur">
+            <div t-if="!isBrowserSafari()" class="btn border-transparent d-flex gap-2" t-on-click="() => store.settings.useBlur = !store.settings.useBlur">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
                     <i class="fa fa-fw fa-photo"/><span class="text-truncate text-wrap">Blur background</span>
                 </label>
