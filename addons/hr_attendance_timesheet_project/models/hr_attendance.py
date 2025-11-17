@@ -81,7 +81,13 @@ class HrAttendance(models.Model):
                     'check_out': attendance.check_out,
                 }
 
-        result = super().write(vals)
+        # If timesheet_ids are being modified via One2many commands, skip individual
+        # timesheet validation to avoid checking intermediate states during batch edits.
+        # The attendance-level validation will run after all changes are applied.
+        if 'timesheet_ids' in vals:
+            result = super(HrAttendance, self.with_context(skip_timesheet_attendance_constraint=True)).write(vals)
+        else:
+            result = super().write(vals)
 
         # If check_out is being set, close active timesheets and handle gaps
         if 'check_out' in vals and vals['check_out']:
@@ -308,7 +314,9 @@ class HrAttendance(models.Model):
         if not self.worked_hours:
             return
 
-        total_timesheet_hours = self.total_timesheet_hours
+        # Calculate from current timesheet_ids to include pending changes in transaction
+        # (e.g., deleted or modified timesheets in the form that haven't been committed yet)
+        total_timesheet_hours = sum(self.timesheet_ids.mapped('unit_amount'))
         max_allowed = self.worked_hours + TIMESHEET_TOLERANCE_HOURS
 
         # Check if timesheets exceed new attendance hours

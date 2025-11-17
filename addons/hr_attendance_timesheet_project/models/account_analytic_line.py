@@ -50,6 +50,8 @@ class AccountAnalyticLine(models.Model):
         """Provide immediate feedback when changing timesheet hours from attendance view"""
         if self.attendance_id and self.attendance_id.worked_hours and self.unit_amount:
             # Calculate what the total would be with this change
+            # Sum other timesheets (excluding current line being edited) + current line's new value
+            # This uses attendance.timesheet_ids which includes pending changes in the form
             other_timesheets_total = sum(
                 line.unit_amount
                 for line in self.attendance_id.timesheet_ids
@@ -94,11 +96,21 @@ class AccountAnalyticLine(models.Model):
         """Prevent timesheet hours from exceeding attendance hours (with tolerance)
 
         This validation applies to everyone, including administrators.
+
+        Note: This constraint is skipped when timesheets are edited via One2many
+        from the attendance form, as it would check intermediate states during
+        batch operations. The attendance-level validation handles those cases.
         """
+        # Skip validation during One2many batch edits from attendance form
+        if self.env.context.get('skip_timesheet_attendance_constraint'):
+            return
+
         for line in self:
             if line.attendance_id and line.attendance_id.worked_hours:
                 attendance = line.attendance_id
                 # Calculate total timesheet hours for this attendance
+                # Use attendance.timesheet_ids which includes pending changes in the current transaction
+                # (e.g., when editing an attendance form with multiple timesheet changes at once)
                 total_timesheet_hours = sum(attendance.timesheet_ids.mapped('unit_amount'))
                 max_allowed = attendance.worked_hours + TIMESHEET_TOLERANCE_HOURS
 
