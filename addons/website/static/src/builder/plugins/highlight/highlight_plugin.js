@@ -64,15 +64,15 @@ export class HighlightPlugin extends Plugin {
                 return true;
             }
         },
-        selectionchange_handlers: this.updateSelectedHighlight.bind(this),
-        remove_all_formats_handlers: () => {
+        on_selectionchange_handlers: this.updateSelectedHighlight.bind(this),
+        on_all_formats_removed_handlers: () => {
             // we rely on the normalize handler to start it again
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
-        format_selection_handlers: () => {
+        on_will_format_selection_handlers: () => {
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
-        before_save_handlers: () => {
+        on_will_save_handlers: () => {
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
     };

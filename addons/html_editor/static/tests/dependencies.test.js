@@ -24,8 +24,8 @@ describe("Implicit plugin dependencies", () => {
             SearchPowerboxPlugin,
             SplitPlugin,
         ]) {
-            // input dependency through the "beforeinput_handlers" and
-            // "input_handlers" resources. This dependency was added because the
+            // input dependency through the "on_beforeinput_handlers" and
+            // "on_input_handlers" resources. This dependency was added because the
             // plugin is heavily dependent on inputs handling and will appear
             // broken without the appropriate handlers.
             expect(P.dependencies).toInclude(InputPlugin.id);
@@ -33,7 +33,7 @@ describe("Implicit plugin dependencies", () => {
     });
     test("position as an implicit dependency", async () => {
         for (const P of [PowerButtonsPlugin, CollaborationSelectionPlugin]) {
-            // position dependency through the "layout_geometry_change_handlers"
+            // position dependency through the "on_layout_geometry_change_handlers"
             // resource. This dependency was added because the plugin is
             // heavily dependent on layout changes and will appear broken
             // without the appropriate handler.

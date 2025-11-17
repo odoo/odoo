@@ -13,7 +13,7 @@ export class WebsiteSavePlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        save_element_handlers: this.saveView.bind(this),
+        on_will_save_element_handlers: this.saveView.bind(this),
     };
 
     /**

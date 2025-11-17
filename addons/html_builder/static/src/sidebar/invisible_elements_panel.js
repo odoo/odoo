@@ -2,7 +2,7 @@ import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
 
 /**
- * @typedef {((snippetEl: HTMLElement) => void)[]} on_reveal_target_handlers
+ * @typedef {((snippetEl: HTMLElement) => void)[]} on_target_revealed_handlers
  */
 
 export class InvisibleElementsPanel extends Component {
@@ -94,7 +94,7 @@ export class InvisibleElementsPanel extends Component {
             // Toggle the entry visibility to "Show".
             invisibleEntry.isVisible = true;
             this.shared.visibility.toggleTargetVisibility(snippetEl, true);
-            this.env.editor.dispatchTo("on_reveal_target_handlers", snippetEl);
+            this.env.editor.trigger("on_target_revealed_handlers", snippetEl);
             this.shared.builderOptions.updateContainers(snippetEl);
             // Scroll to the target if not visible.
             if (!isElementInViewport(snippetEl) && !snippetEl.matches(".s_popup")) {

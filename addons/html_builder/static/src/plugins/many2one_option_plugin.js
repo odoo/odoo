@@ -12,7 +12,7 @@ export class Many2OneOptionPlugin extends Plugin {
             Many2OneAction,
         },
         content_not_editable_selectors: "[data-oe-field][data-oe-many2one-id]",
-        after_replication_handlers: ({ sourceEl, targetEl }) => {
+        on_replicated_handlers: ({ sourceEl, targetEl }) => {
             if (
                 sourceEl.hasAttribute("data-oe-many2one-model") &&
                 targetEl.hasAttribute("data-oe-many2one-model")

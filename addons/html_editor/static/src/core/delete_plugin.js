@@ -64,8 +64,8 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  */
 
 /**
- * @typedef {(() => void)[]} before_delete_handlers
- * @typedef {(() => void)[]} delete_handlers
+ * @typedef {(() => void)[]} on_will_delete_handlers
+ * @typedef {(() => void)[]} on_deleted_handlers
  *
  * @typedef {((range: RangeLike) => void | true)[]} delete_backward_overrides
  * @typedef {((range: RangeLike) => void | true)[]} delete_backward_word_overrides
@@ -128,12 +128,12 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
         ],
         /** Handlers */
-        beforeinput_handlers: [
+        on_beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
-        input_handlers: (ev) => this.onAndroidChromeInput?.(ev),
-        selectionchange_handlers: withSequence(5, () => this.onAndroidChromeSelectionChange?.()),
+        on_input_handlers: (ev) => this.onAndroidChromeInput?.(ev),
+        on_selectionchange_handlers: withSequence(5, () => this.onAndroidChromeSelectionChange?.()),
         /** Overrides */
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
@@ -251,7 +251,7 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
-        this.dispatchTo("before_delete_handlers");
+        this.trigger("on_will_delete_handlers");
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
@@ -262,7 +262,7 @@ export class DeletePlugin extends Plugin {
         } else {
             throw new Error("Invalid direction");
         }
-        this.dispatchTo("delete_handlers");
+        this.trigger("on_deleted_handlers");
         this.dependencies.history.addStep({ batchable: true });
     }
 
@@ -1325,9 +1325,9 @@ export class DeletePlugin extends Plugin {
         if (ev.inputType === "insertText") {
             const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
             if (!selection.isCollapsed) {
-                this.dispatchTo("before_delete_handlers");
+                this.trigger("on_will_delete_handlers");
                 this.deleteSelection(selection);
-                this.dispatchTo("delete_handlers");
+                this.trigger("on_deleted_handlers");
             }
             // Default behavior: insert text and trigger input event
         }

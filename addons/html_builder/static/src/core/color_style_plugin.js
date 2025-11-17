@@ -39,7 +39,7 @@ class ColorStylePlugin extends Plugin {
                 value = `bg-${match[1]}`;
             }
             this.dependencies.color.colorElement(editingElement, value, "backgroundColor", params);
-            this.dispatchTo("on_bg_color_updated_handlers", editingElement);
+            this.trigger("on_bg_color_updated_handlers", editingElement);
             return true;
         } else if (styleName === "color") {
             const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);

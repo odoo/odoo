@@ -1176,8 +1176,8 @@ export class BaseOptionComponent extends Component {
         this.dependencies = context.dependencies;
         /** @type { EditorContext['getResource'] } **/
         this.getResource = context.getResource;
-        /** @type { EditorContext['dispatchTo'] } **/
-        this.dispatchTo = context.dispatchTo;
+        /** @type { EditorContext['trigger'] } **/
+        this.trigger = context.trigger;
         /** @type { EditorContext['delegateTo'] } **/
         this.delegateTo = context.delegateTo;
 

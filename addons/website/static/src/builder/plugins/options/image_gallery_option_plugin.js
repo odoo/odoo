@@ -57,7 +57,7 @@ class ImageGalleryOption extends Plugin {
         reorder_items_processors: this.reorderGalleryItems.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
-        on_replaced_media_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
+        on_media_replaced_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
         on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_snippet_dropped_handlers: ({ snippetEl }) => {

@@ -12,8 +12,8 @@ export class InlineCodePlugin extends Plugin {
     static dependencies = ["selection", "history", "input", "split", "feff"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        input_handlers: this.onInput.bind(this),
-        selectionchange_handlers: this.handleSelectionChange.bind(this),
+        on_input_handlers: this.onInput.bind(this),
+        on_selectionchange_handlers: this.handleSelectionChange.bind(this),
         normalize_processors: this.normalize.bind(this),
         feff_providers: (root, cursors) =>
             selectElements(root, ".o_inline_code").flatMap((code) =>

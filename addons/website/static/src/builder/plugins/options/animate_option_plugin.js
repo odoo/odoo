@@ -20,8 +20,8 @@ import { EmphasizeAnimatedText } from "./emphasize_animated_text";
  */
 
 /**
- * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} remove_hover_effect_handlers
- * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} set_hover_effect_handlers
+ * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} on_hover_animation_mode_cleaned_handlers
+ * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} on_hover_animation_mode_applied_handlers
  */
 
 export class AnimateOptionPlugin extends Plugin {
@@ -395,7 +395,7 @@ export class SetAnimationModeAction extends BuilderAction {
             // Use getResource instead of this.dependencies as imageHover is not
             // included in translation. This implementation is a hack and could
             // be improved.
-            await this.getResource("remove_hover_effect_handlers")[0](editingElement);
+            await this.triggerAsync("on_hover_animation_mode_cleaned_handlers", editingElement);
         }
 
         const isNextAnimationFadein = this.animationWithFadein.includes(nextAction.value);
@@ -419,7 +419,7 @@ export class SetAnimationModeAction extends BuilderAction {
             // Use getResource instead of this.dependencies as imageHover is not
             // included in translation. This implementation is a hack and could
             // be improved.
-            await this.getResource("set_hover_effect_handlers")[0](editingElement);
+            await this.triggerAsync("on_hover_animation_mode_applied_handlers", editingElement);
         }
         if (forceAnimation) {
             this.dependencies.animateOption.forceAnimation(editingElement);

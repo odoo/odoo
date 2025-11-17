@@ -211,9 +211,9 @@ export class ImagePlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateImageParams.bind(this),
-        post_undo_handlers: this.updateImageParams.bind(this),
-        post_redo_handlers: this.updateImageParams.bind(this),
+        on_selectionchange_handlers: this.updateImageParams.bind(this),
+        on_undone_handlers: this.updateImageParams.bind(this),
+        on_redone_handlers: this.updateImageParams.bind(this),
         on_will_save_media_dialog_handlers: async (elements) => {
             for (const element of elements) {
                 if (element && element.tagName === "IMG") {
@@ -364,8 +364,8 @@ export class ImagePlugin extends Plugin {
                 description: _t("Embed the image in the document."),
                 icon: "fa-image",
                 run: () => {
-                    this.dispatchTo(
-                        "before_paste_handlers",
+                    this.trigger(
+                        "on_will_paste_handlers",
                         this.dependencies.selection.getEditableSelection()
                     );
                     const img = this.document.createElement("IMG");

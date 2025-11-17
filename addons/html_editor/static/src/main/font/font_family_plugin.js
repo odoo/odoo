@@ -58,9 +58,9 @@ export class FontFamilyPlugin extends Plugin {
             }),
         ],
         /** Handlers */
-        selectionchange_handlers: this.updateCurrentFontFamily.bind(this),
-        post_undo_handlers: this.updateCurrentFontFamily.bind(this),
-        post_redo_handlers: this.updateCurrentFontFamily.bind(this),
+        on_selectionchange_handlers: this.updateCurrentFontFamily.bind(this),
+        on_undone_handlers: this.updateCurrentFontFamily.bind(this),
+        on_redone_handlers: this.updateCurrentFontFamily.bind(this),
     };
 
     updateCurrentFontFamily(ev) {

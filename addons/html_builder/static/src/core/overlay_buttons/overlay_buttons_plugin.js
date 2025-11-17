@@ -31,10 +31,10 @@ export class OverlayButtonsPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        selectionchange_handlers: this.shouldShowToolbar.bind(this),
-        selection_leave_handlers: this.showOverlayButtonsUi.bind(this),
-        step_added_handlers: this.refreshButtons.bind(this),
-        change_current_options_containers_listeners: this.addOverlayButtons.bind(this),
+        on_selectionchange_handlers: this.shouldShowToolbar.bind(this),
+        on_selection_leave_handlers: this.showOverlayButtonsUi.bind(this),
+        on_step_added_handlers: this.refreshButtons.bind(this),
+        on_current_options_containers_changed_handlers: this.addOverlayButtons.bind(this),
         on_mobile_preview_clicked: withSequence(20, this.refreshButtons.bind(this)),
     };
 

@@ -164,7 +164,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
                 editingElement.dataset.mapGps = coordinates;
                 editingElement.dataset.pinAddress = place.formatted_address;
                 // Restart interactions to re-render the map.
-                this.dispatchTo("content_manually_updated_handlers", editingElement);
+                this.trigger("on_content_manually_updated_handlers", editingElement);
                 this.dependencies.history.addStep();
             }
         }

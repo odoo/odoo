@@ -69,7 +69,7 @@ class FacebookOptionPlugin extends Plugin {
 
             if (hasChanged) {
                 const commonAncestor = getCommonAncestor(nodes, this.editable);
-                this.dispatchTo("content_manually_updated_handlers", commonAncestor);
+                this.trigger("on_content_manually_updated_handlers", commonAncestor);
                 this.config.onChange({ isPreviewing: false });
             }
         }

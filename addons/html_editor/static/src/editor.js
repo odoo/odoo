@@ -48,7 +48,8 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
  * @property { import("./editor").EditorConfig } config
  * @property { import("services").ServiceFactories } services
  * @property { Editor['getResource'] } getResource
- * @property { Editor['dispatchTo'] } dispatchTo
+ * @property { Editor['trigger'] } trigger
+ * @property { Editor['triggerAsync'] } triggerAsync
  * @property { Editor['delegateTo'] } delegateTo
  * @property { Editor['processThrough'] } processThrough
  * @property { Editor['checkPredicates'] } checkPredicates
@@ -206,7 +207,7 @@ export class Editor {
             plugin.setup();
         }
         this.processThrough("normalize_processors", this.editable);
-        this.resources["start_edition_handlers"].forEach((cb) => cb());
+        this.trigger("on_editor_started_handlers");
     }
 
     getDependencies(dependencies) {
@@ -269,7 +270,8 @@ export class Editor {
             config: this.config,
             services: this.services,
             getResource: this.getResource.bind(this),
-            dispatchTo: this.dispatchTo.bind(this),
+            trigger: this.trigger.bind(this),
+            triggerAsync: this.triggerAsync.bind(this),
             delegateTo: this.delegateTo.bind(this),
             processThrough: this.processThrough.bind(this),
             checkPredicates: this.checkPredicates.bind(this),
@@ -286,27 +288,51 @@ export class Editor {
     }
 
     /**
-     * Execute the functions registered under resourceId with the given
-     * arguments.
+     * Execute the handler functions registered under resourceId with the given
+     * arguments, and return an array containing all their return values.
      *
      * This function is meant to enhance code readability by clearly expressing
      * its intent.
      *
-     * This function can be thought as an event dispatcher, calling the handlers
-     * with `args` as the payload.
-     *
-     * Example:
+     * Examples:
      * ```js
-     * this.dispatchTo("my_event_handlers", arg1, arg2);
+     * const values = this.trigger("on_my_event_handlers", arg1, arg2);
+     * await Promise.all(this.trigger("on_my_async_event_handlers", arg1, arg2));
      * ```
      *
      * @template {GlobalResourcesId} R
      * @param {R} resourceId
      * @param {Parameters<GlobalResources[R][0]>} args The arguments to pass to the handlers.
+     * @returns {Array<any>}
      */
-    dispatchTo(resourceId, ...args) {
-        this.getResource(resourceId).forEach((handler) => handler(...args));
+    trigger(resourceId, ...args) {
+        return this.getResource(resourceId).map((handler) => handler(...args));
     }
+
+    /**
+     * Execute the handler functions registered under resourceId with the given
+     * arguments sequentially, waiting for each call to resolve before calling
+     * the next.
+     *
+     * This function is meant to enhance code readability by clearly expressing
+     * its intent.
+     *
+     * Example:
+     * ```js
+     * await this.triggerAsync("on_my_sequential_async_event_handlers", arg1, arg2);
+     * ```
+     *
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @param {Parameters<GlobalResources[R][0]>} args The arguments to pass to the handlers.
+     * @returns {Promise<void>}
+     */
+    async triggerAsync(resourceId, ...args) {
+        for (const handler of this.getResource(resourceId)) {
+            await handler(...args);
+        }
+    }
+
     /**
      * Execute a series of functions until one of them returns a truthy value.
      *

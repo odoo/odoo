@@ -70,8 +70,8 @@ function getConnectedParents(nodes) {
  */
 
 /**
- * @typedef {((insertedNodes: Node[]) => void)[]} after_insert_handlers
- * @typedef {((el: HTMLElement) => void)[]} before_set_tag_handlers
+ * @typedef {((insertedNodes: Node[]) => void)[]} on_inserted_handlers
+ * @typedef {((el: HTMLElement) => void)[]} on_will_set_tag_handlers
  *
  * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
  * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
@@ -420,7 +420,7 @@ export class DomPlugin extends Plugin {
         // Remove the empty text node created earlier
         textNode.remove();
         allInsertedNodes.push(...lastInsertedNodes);
-        this.getResource("after_insert_handlers").forEach((handler) => handler(allInsertedNodes));
+        this.trigger("on_inserted_handlers", allInsertedNodes);
         let insertedNodesParents = getConnectedParents(allInsertedNodes);
         for (const parent of insertedNodesParents) {
             if (
@@ -651,7 +651,7 @@ export class DomPlugin extends Plugin {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
-                this.dispatchTo("before_set_tag_handlers", block, tagName, cursors);
+                this.trigger("on_will_set_tag_handlers", block, tagName, cursors);
                 const newEl = this.setTagName(block, tagName);
                 cursors.remapNode(block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
