@@ -172,7 +172,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 response_content = {
                     'accounting_supplier_party': '0198:dk16356706',
                     'filename': 'test_incoming',
-                    'enc_key': file_open(f'{cls.file_path}/encrypted_key', mode='rb').read(),
+                    'enc_key': file_open(f'{cls.file_path}/encrypted_order_key', mode='rb').read(),
                     'document': b64encode(file_open(f'{cls.file_path}/{cls.mocked_incoming_invoice_fname}', mode='rb').read()),
                     'state': 'done' if not cls.env.context.get('error') else 'error',
                     'direction': 'incoming',

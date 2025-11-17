@@ -30,7 +30,7 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
                 "default_code": "PROD-A-001",
                 "type": "consu",
                 "list_price": 50.0,
-            }
+            },
         )
 
         cls.laptop_product = cls.env["product.product"].create(
@@ -39,7 +39,7 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
                 "default_code": "LAPTOP-PRO-X1",
                 "type": "consu",
                 "list_price": 100.0,
-            }
+            },
         )
 
         cls.mouse_product = cls.env["product.product"].create(
@@ -48,7 +48,7 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
                 "default_code": "MOUSE-WIRELESS-PRO",
                 "type": "consu",
                 "list_price": 30.0,
-            }
+            },
         )
 
         cls.service_product = cls.env["product.product"].create(
@@ -57,7 +57,7 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
                 "default_code": "SERVICE-IT-CONSULTING",
                 "type": "service",
                 "list_price": 35.0,
-            }
+            },
         )
 
         cls.startup_product = cls.env["product.product"].create(
@@ -66,27 +66,13 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
                 "default_code": "STARTUP-PKG-PREMIUM",
                 "type": "consu",
                 "list_price": 100.0,
-            }
+            },
         )
-
-    # def _create_attachment_from_xml_file(self, filename):
-    #     """Create attachment from XML file"""
-    #     with file_open(f"{FILE_PATH}/{filename}", "rb") as f:
-    #         xml_content = f.read()
-
-    #     return self.env["ir.attachment"].create(
-    #         {
-    #             "name": filename,
-    #             "type": "binary",
-    #             "datas": b64encode(xml_content),
-    #             "mimetype": "application/xml",
-    #         }
-    #     )
 
     def test_end_to_end_basic_order_processing(self):
         """Test complete workflow from XML document to sale order creation - basic order"""
         cls = self.__class__
-        cls.mocked_incoming_invoice_fname = 'encrypted_file'
+        cls.mocked_incoming_invoice_fname = 'encrypted_order'
 
         def restore_mocked_incoming_invoice_fname():
             cls.mocked_incoming_invoice_fname = 'incoming_invoice'
@@ -99,6 +85,43 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
             'peppol_order_state': 'done',
         }])
 
+    def test_order_change(self):
+        """ Test complete workflow from XML document to sale order creation and follow up receipt
+            of order change request.
+        """
+        cls = self.__class__
+
+        def restore_mocked_incoming_invoice_fname():
+            cls.mocked_incoming_invoice_fname = 'incoming_invoice'
+        self.addCleanup(restore_mocked_incoming_invoice_fname)
+
+        cls.mocked_incoming_invoice_fname = 'encrypted_order'
+        self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
+        order = self.env['sale.order'].sudo().search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertEqual(order.amount_total, 7245.0)
+
+        cls.mocked_incoming_invoice_fname = 'encrypted_order_change'
+        self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
+        self.assertEqual(order.amount_total, 4855.0)
+
+    def test_order_cancel(self):
+        """ Test complete workflow from XML document to sale order creation and follow up receipt
+            of order cancellation request.
+        """
+        cls = self.__class__
+
+        def restore_mocked_incoming_invoice_fname():
+            cls.mocked_incoming_invoice_fname = 'incoming_invoice'
+        self.addCleanup(restore_mocked_incoming_invoice_fname)
+
+        cls.mocked_incoming_invoice_fname = 'encrypted_order'
+        self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
+
+        cls.mocked_incoming_invoice_fname = 'encrypted_order_cancel'
+        self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
+
+        order = self.env['sale.order'].sudo().search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertEqual(order.state, 'cancel')
 
     # def test_end_to_end_complex_order_processing(self):
     #     """Test complete workflow with complex multi-line order"""
