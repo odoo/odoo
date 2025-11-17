@@ -46,8 +46,8 @@ export class DiscussCoreCommon {
             message.thread.transientMessages.push(message);
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.thread) {
-                const { self_member_id } = message.thread;
+            const self_member_id = message.channel_id?.self_member_id;
+            if (self_member_id) {
                 if (
                     message.id > self_member_id?.seen_message_id.id &&
                     notifId > self_member_id.message_unread_counter_bus_id
