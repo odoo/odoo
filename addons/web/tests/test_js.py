@@ -91,14 +91,26 @@ class HootCommon(odoo.tests.HttpCase):
 
     def _get_hoot_param_filters(self):
         filters = _get_filters(self._test_params)
-        filter = ''
+        result = []
         for sign, f in filters:
             h = self._generate_hash(f)
             if sign == '-':
                 h = f'-{h}'
             # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash for a generic "job"
-            filter += f'&id={h}'
-        return filter
+            result.append(h)
+        return result
+
+    def _get_hoot_filters(self, addons_from_asset_bundle, available_modules):
+        module_filter = self._get_hoot_module_filters(addons_from_asset_bundle, available_modules)
+        if not module_filter:
+            return None
+        param_filter_elems = self._get_hoot_param_filters()
+        if any(not f.startswith('-') for f in param_filter_elems):
+            module_filter = ''
+            # disable module filter if one of the params selects a test
+            # note that this is not 100% correct since in reality we would like to have an AND between module filters and positive param filters, but the current behaviour is an OR by default
+        params_filter = ''.join([f'&id={h}' for h in param_filter_elems])
+        return module_filter + params_filter
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -123,16 +135,24 @@ class HootSuite(HootCommon):
 
     def test_get_hoot_param_filters(self):
         self._test_params = []
-        self.assertEqual(self._get_hoot_param_filters(), '')
-        expected = '&id=e39ce9ba&id=-69a6561d'
+        self.assertEqual(self._get_hoot_param_filters(), [])
+        expected = ['e39ce9ba', '-69a6561d']
         self._test_params = [('+', '@web/core,-@web/core/autocomplete')]
         self.assertEqual(self._get_hoot_param_filters(), expected)
         self._test_params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
         self.assertEqual(self._get_hoot_param_filters(), expected)
         self._test_params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
-        self.assertEqual(self._get_hoot_param_filters(), '&id=-69a6561d&id=-cb246db5')
+        self.assertEqual(self._get_hoot_param_filters(), ['-69a6561d', '-cb246db5'])
         self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
-        self.assertEqual(self._get_hoot_param_filters(), '&id=69a6561d&id=cb246db5')
+        self.assertEqual(self._get_hoot_param_filters(), ['69a6561d', 'cb246db5'])
+
+    def test_get_hoot_filters(self):
+        addons_from_asset_bundle = self._get_addons_from_asset_bundle('web.assets_unit_tests')
+        self.assertEqual(self._get_hoot_filters(addons_from_asset_bundle, ['web']), '&id=001ee314', 'Web module should be tested')
+        self._test_params = [('+', '@web/core')]
+        self.assertEqual(self._get_hoot_filters(addons_from_asset_bundle, ['web']), '&id=e39ce9ba', '@web/core eplicitly selected')
+        self._test_params = [('-', '@web/core')]
+        self.assertEqual(self._get_hoot_filters(addons_from_asset_bundle, ['web']), '&id=001ee314&id=-e39ce9ba', '@web/core explicitly excluded')
 
     @odoo.tests.no_retry
     def test_hoot(self):
@@ -146,10 +166,9 @@ class WebSuite(HootCommon, odoo.tests.CrossModule):
     def test_unit_desktop(self, modules):
         # Unit tests suite (desktop)
         addons_from_asset_bundle = self._get_addons_from_asset_bundle('web.assets_unit_tests')
-        filters = self._get_hoot_module_filters(addons_from_asset_bundle, modules)
+        filters = self._get_hoot_filters(addons_from_asset_bundle, modules)
         if not filters:
             return
-        filters += self._get_hoot_param_filters()
         self.browser_js(f'/web/tests?&headless&loglevel=2&preset=desktop&timeout=15000{filters}', "", "", login='admin', timeout=3000, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
 
 
@@ -162,10 +181,9 @@ class MobileWebSuite(HootCommon, odoo.tests.CrossModule):
     def test_unit_mobile(self, modules):
         # Unit tests suite (mobile)
         addons_from_asset_bundle = self._get_addons_from_asset_bundle('web.assets_unit_tests')
-        filters = self._get_hoot_module_filters(addons_from_asset_bundle, modules)
+        filters = self._get_hoot_filters(addons_from_asset_bundle, modules)
         if not filters:
             return
-        filters += self._get_hoot_param_filters()
         self.browser_js(f'/web/tests?&headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000{filters}', "", "", login='admin', timeout=2100, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
 
 
