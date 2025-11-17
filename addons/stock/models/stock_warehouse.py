@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple
+from typing import NamedTuple
 
 from odoo import api, fields, models, Command
 from odoo.exceptions import UserError, RedirectWarning
@@ -20,13 +20,21 @@ ROUTE_NAMES = {
 }
 
 
+class Routing(NamedTuple):
+    from_loc: fields.Many2one
+    dest_loc: fields.Many2one
+    picking_type: fields.Many2one
+    action: str
+    procure_method: str
+
+
 class StockWarehouse(models.Model):
     _name = 'stock.warehouse'
     _description = "Warehouse"
     _order = 'sequence,id'
     _check_company_auto = True
     # namedtuple used in helper methods generating values for routes
-    Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
+    Routing = Routing
 
     def _default_name(self):
         count = self.env['stock.warehouse'].with_context(active_test=False).search_count([('company_id', '=', self.env.company.id)])
@@ -70,6 +78,8 @@ class StockWarehouse(models.Model):
     wh_output_stock_loc_id = fields.Many2one('stock.location', 'Output Location', check_company=True)
     wh_pack_stock_loc_id = fields.Many2one('stock.location', 'Packing Location', check_company=True)
     mto_pull_id = fields.Many2one('stock.rule', 'MTO rule', copy=False)
+    mto_interco_pull_id = fields.Many2one('stock.rule', 'MTO Intercompany rule', copy=False)
+    mto_inter_wh_pull_id = fields.Many2one('stock.rule', 'MTO Interwarehouse rule', copy=False)
     pick_type_id = fields.Many2one('stock.picking.type', 'Pick Type', check_company=True, copy=False)
     pack_type_id = fields.Many2one('stock.picking.type', 'Pack Type', check_company=True, copy=False)
     out_type_id = fields.Many2one('stock.picking.type', 'Out Type', check_company=True, copy=False)
@@ -426,10 +436,11 @@ class StockWarehouse(models.Model):
         # order is modify, the mto rule will be wrong.
         rule = self.get_rules_dict()[self.id][self.delivery_steps]
         rule = [r for r in rule if r.from_loc == self.lot_stock_id][0]
+        __, __, intercompany_location = self._get_partner_locations()
         location_id = rule.from_loc
         location_dest_id = rule.dest_loc
         picking_type_id = rule.picking_type
-        return {
+        vals = {
             'mto_pull_id': {
                 'depends': ['delivery_steps'],
                 'create_values': {
@@ -447,8 +458,48 @@ class StockWarehouse(models.Model):
                     'location_src_id': location_id.id,
                     'picking_type_id': picking_type_id.id,
                 }
-            }
+            },
+            'mto_interco_pull_id': {
+                'depends': ['delivery_steps'],
+                'create_values': {
+                    'active': True,
+                    'procure_method': 'make_to_order',
+                    'company_id': self.company_id.id,
+                    'action': 'pull',
+                    'auto': 'manual',
+                    'propagate_carrier': True,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id
+                },
+                'update_values': {
+                    'name': self._format_rulename(location_id, intercompany_location, 'MTO'),
+                    'location_dest_id': intercompany_location.id,
+                    'location_src_id': location_id.id,
+                    'picking_type_id': picking_type_id.id,
+                },
+            },
         }
+        if self.company_id.internal_transit_location_id:
+            vals.update({
+                'mto_inter_wh_pull_id': {
+                    'depends': ['delivery_steps'],
+                    'create_values': {
+                        'active': True,
+                        'procure_method': 'make_to_order',
+                        'company_id': self.company_id.id,
+                        'action': 'pull',
+                        'auto': 'manual',
+                        'propagate_carrier': True,
+                        'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id
+                    },
+                    'update_values': {
+                        'name': self._format_rulename(location_id, self.company_id.internal_transit_location_id, 'MTO'),
+                        'location_dest_id': self.company_id.internal_transit_location_id.id,
+                        'location_src_id': location_id.id,
+                        'picking_type_id': picking_type_id.id,
+                    },
+                },
+            })
+        return vals
 
     def _create_or_update_route(self):
         """ Create or update the warehouse's routes.
@@ -692,23 +743,17 @@ class StockWarehouse(models.Model):
                 continue
             transit_location.active = True
             output_location = supplier_wh.lot_stock_id if supplier_wh.delivery_steps == 'ship_only' else supplier_wh.wh_output_stock_loc_id
-            # Create extra MTO rule (only for 'ship only' because in the other cases MTO rules already exists)
-            if supplier_wh.delivery_steps == 'ship_only':
-                routing = [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull')]
-                mto_vals = supplier_wh._get_global_route_rules_values().get('mto_pull_id')
-                values = mto_vals['create_values']
-                mto_rule_val = supplier_wh._get_rule_values(routing, values, name_suffix='MTO')
-                Rule.create(mto_rule_val[0])
 
             inter_wh_route = Route.create(self._get_inter_warehouse_route_values(supplier_wh))
 
+            StockWarehouse = self.env['stock.warehouse']
             pull_rules_list = supplier_wh._get_supply_pull_rules_values(
-                [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull')],
+                [StockWarehouse.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull', 'make_to_stock')],
                 values={'route_id': inter_wh_route.id, 'location_dest_from_rule': True, 'partner_address_id': self.partner_id.id})
             if supplier_wh.delivery_steps != 'ship_only':
                 # Replenish from Output location
                 pull_rules_list += supplier_wh._get_supply_pull_rules_values(
-                    [self.Routing(supplier_wh.lot_stock_id, output_location, supplier_wh.pick_type_id, 'pull')],
+                    [StockWarehouse.Routing(supplier_wh.lot_stock_id, output_location, supplier_wh.pick_type_id, 'pull', 'make_to_stock')],
                     values={'route_id': inter_wh_route.id})
             pull_rules_list += self._get_supply_pull_rules_values(
                 [StockWarehouse.Routing(transit_location, self.lot_stock_id, self.in_type_id, 'pull_push', 'make_to_stock')],
@@ -749,13 +794,16 @@ class StockWarehouse(models.Model):
         Location = self.env['stock.location']
         customer_loc = self.env.ref('stock.stock_location_customers', raise_if_not_found=False)
         supplier_loc = self.env.ref('stock.stock_location_suppliers', raise_if_not_found=False)
+        intercompany_loc = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
         if not customer_loc:
             customer_loc = Location.search([('usage', '=', 'customer')], limit=1)
         if not supplier_loc:
             supplier_loc = Location.search([('usage', '=', 'supplier')], limit=1)
+        if not intercompany_loc:
+            intercompany_loc = Location.search([('usage', '=', 'transit')], limit=1)
         if not customer_loc and not supplier_loc:
             raise UserError(_('Can\'t find any customer or supplier location.'))
-        return customer_loc, supplier_loc
+        return customer_loc, supplier_loc, intercompany_loc
 
     def _get_route_name(self, route_type):
         return self.env._(ROUTE_NAMES[route_type])  # pylint: disable=gettext-variable
@@ -764,25 +812,37 @@ class StockWarehouse(models.Model):
         """ Define the rules source/destination locations, picking_type and
         action needed for each warehouse route configuration.
         """
-        customer_loc, supplier_loc = self._get_partner_locations()
+        customer_loc, supplier_loc, intercompany_loc = self._get_partner_locations()
+        StockWarehouse = self.env['stock.warehouse']
         return {
             warehouse.id: {
-                'one_step': [self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull')],
+                'one_step': [StockWarehouse.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull', 'make_to_stock')],
                 'two_steps': [
-                    self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull'),
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push')],
+                    StockWarehouse.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push', 'make_to_order')],
                 'three_steps': [
-                    self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull'),
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.qc_type_id, 'push'),
-                    self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push')],
-                'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull')],
+                    StockWarehouse.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.qc_type_id, 'push', 'make_to_order'),
+                    StockWarehouse.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push', 'make_to_order')],
+                'ship_only': [
+                    StockWarehouse.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.lot_stock_id, intercompany_loc, warehouse.out_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.lot_stock_id, warehouse.company_id.internal_transit_location_id, warehouse.out_type_id, 'pull', 'make_to_stock')],
                 'pick_ship': [
-                    self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.pick_type_id, 'pull'),
-                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'push')],
+                    StockWarehouse.Routing(warehouse.lot_stock_id, customer_loc, warehouse.pick_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.lot_stock_id, intercompany_loc, warehouse.pick_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.lot_stock_id, warehouse.company_id.internal_transit_location_id, warehouse.pick_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'push', 'make_to_order'),
+                    StockWarehouse.Routing(warehouse.wh_output_stock_loc_id, intercompany_loc, warehouse.out_type_id, 'push', 'make_to_order'),
+                    StockWarehouse.Routing(warehouse.wh_output_stock_loc_id, warehouse.company_id.internal_transit_location_id, warehouse.out_type_id, 'push', 'make_to_order')],
                 'pick_pack_ship': [
-                    self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.pick_type_id, 'pull'),
-                    self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id, 'push'),
-                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'push')],
+                    StockWarehouse.Routing(warehouse.lot_stock_id, customer_loc, warehouse.pick_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.lot_stock_id, intercompany_loc, warehouse.pick_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.lot_stock_id, warehouse.company_id.internal_transit_location_id, warehouse.pick_type_id, 'pull', 'make_to_stock'),
+                    StockWarehouse.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id, 'push', 'make_to_order'),
+                    StockWarehouse.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'push', 'make_to_order'),
+                    StockWarehouse.Routing(warehouse.wh_output_stock_loc_id, intercompany_loc, warehouse.out_type_id, 'push', 'make_to_order'),
+                    StockWarehouse.Routing(warehouse.wh_output_stock_loc_id, warehouse.company_id.internal_transit_location_id, warehouse.out_type_id, 'push', 'make_to_order')],
                 'company_id': warehouse.company_id.id,
             } for warehouse in self
         }
@@ -797,10 +857,10 @@ class StockWarehouse(models.Model):
         """
         return {
             'one_step': [],
-            'two_steps': [self.Routing(self.wh_input_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push')],
+            'two_steps': [self.Routing(self.wh_input_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push', 'make_to_order')],
             'three_steps': [
-                self.Routing(self.wh_input_stock_loc_id, self.wh_qc_stock_loc_id, self.qc_type_id, 'push'),
-                self.Routing(self.wh_qc_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push')],
+                self.Routing(self.wh_input_stock_loc_id, self.wh_qc_stock_loc_id, self.qc_type_id, 'push', 'make_to_order'),
+                self.Routing(self.wh_qc_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push', 'make_to_order')],
         }
 
     def _get_inter_warehouse_route_values(self, supplier_warehouse):
@@ -818,7 +878,6 @@ class StockWarehouse(models.Model):
     # ------------------------------------------------------------
 
     def _get_rule_values(self, route_values, values=None, name_suffix=''):
-        first_rule = True
         rules_list = []
         for routing in route_values:
             route_rule_values = {
@@ -828,13 +887,12 @@ class StockWarehouse(models.Model):
                 'action': routing.action,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
-                'procure_method': first_rule and 'make_to_stock' or 'make_to_order',
+                'procure_method': routing.procure_method,
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,
             }
             route_rule_values.update(values or {})
             rules_list.append(route_rule_values)
-            first_rule = False
         if values and values.get('propagate_cancel') and rules_list:
             # In case of rules chain with cancel propagation set, we need to stop
             # the cancellation for the last step in order to avoid cancelling
@@ -882,7 +940,7 @@ class StockWarehouse(models.Model):
             rules_to_archive.active = False
 
             # If single delivery we should create the necessary MTO rules for the resupply
-            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.location_dest_id]
+            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull', 'make_to_order') for location in rules.location_dest_id]
             mto_vals = self._get_global_route_rules_values().get('mto_pull_id')
             values = mto_vals['create_values']
             mto_rule_vals = self._get_rule_values(routings, values, name_suffix='MTO')
@@ -901,7 +959,7 @@ class StockWarehouse(models.Model):
             missing_rule_vals = []
             for route in (routes - found_routes):
                 missing_rule_vals += self._get_supply_pull_rules_values(
-                    [self.Routing(self.lot_stock_id, new_location, self.pick_type_id, 'pull')],
+                    [self.Routing(self.lot_stock_id, new_location, self.pick_type_id, 'pull', 'make_to_stock')],
                     values={'route_id': route.id})
             Rule.create(missing_rule_vals)
 
@@ -925,6 +983,10 @@ class StockWarehouse(models.Model):
                         pull.write({'name': pull.name.replace(warehouse.name, new_name, 1)})
                 if warehouse.mto_pull_id:
                     warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
+                if warehouse.mto_interco_pull_id:
+                    warehouse.mto_interco_pull_id.write({'name': warehouse.mto_interco_pull_id.name.replace(warehouse.name, new_name, 1)})
+                if warehouse.mto_inter_wh_pull_id:
+                    warehouse.mto_inter_wh_pull_id.write({'name': warehouse.mto_inter_wh_pull_id.name.replace(warehouse.name, new_name, 1)})
         for warehouse in self:
             sequence_data = warehouse._get_sequence_values(name=new_name, code=new_code)
             # `ir.sequence` write access is limited to system user

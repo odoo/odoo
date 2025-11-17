@@ -74,13 +74,13 @@ class StockWarehouse(models.Model):
             result[warehouse.id].update({
                 'mrp_one_step': [],
                 'pbm': [
-                    self.Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull'),
-                    self.Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull'),
+                    self.env['stock.warehouse'].Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull', 'make_to_stock'),
+                    self.env['stock.warehouse'].Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull', 'make_to_order'),
                 ],
                 'pbm_sam': [
-                    self.Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull'),
-                    self.Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull'),
-                    self.Routing(warehouse.sam_loc_id, warehouse.lot_stock_id, warehouse.sam_type_id, 'push'),
+                    self.env['stock.warehouse'].Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull', 'make_to_stock'),
+                    self.env['stock.warehouse'].Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull', 'make_to_order'),
+                    self.env['stock.warehouse'].Routing(warehouse.sam_loc_id, warehouse.lot_stock_id, warehouse.sam_type_id, 'push', 'make_to_order'),
                 ],
             })
             result[warehouse.id].update(warehouse._get_receive_rules_dict())

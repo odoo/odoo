@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+# from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import Form, tagged
 
