@@ -1138,10 +1138,10 @@ export class HistoryPlugin extends Plugin {
             revertedStep = this.steps[pos];
             this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
-            this.setSerializedSelection(revertedStep.selection);
-            this.currentStep.selection = revertedStep.selectionAfter;
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
+            this.setSerializedSelection(revertedStep.selection);
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ type: "undo", extraStepInfos: revertedStep.extraStepInfos });
             // Consider the last position of the history as an undo.
         }
@@ -1164,10 +1164,10 @@ export class HistoryPlugin extends Plugin {
             revertedStep = this.steps[pos];
             this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
-            this.setSerializedSelection(revertedStep.selection);
-            this.currentStep.selection = revertedStep.selectionAfter;
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
+            this.setSerializedSelection(revertedStep.selection);
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ type: "redo", extraStepInfos: revertedStep.extraStepInfos });
         }
         this.dispatchTo("post_redo_handlers", revertedStep);
@@ -1203,10 +1203,10 @@ export class HistoryPlugin extends Plugin {
     setSerializedFocus(activeElementId) {
         const elementToFocus =
             activeElementId === "root"
-                ? this.document.body
+                ? this.editable
                 : activeElementId && this.nodeMap.getNode(activeElementId);
-        if (elementToFocus !== this.document.activeElement) {
-            elementToFocus?.focus();
+        if (elementToFocus?.isConnected && elementToFocus !== this.document.activeElement) {
+            elementToFocus.focus();
         }
     }
     /**
