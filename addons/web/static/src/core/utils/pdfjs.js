@@ -86,7 +86,7 @@ export async function generatePdfThumbnail(pdfUrl, options = { height: 256, widt
     }
     try {
         // Support for blob url
-        if (pdfUrl.startsWith("blob:")) {
+        if (pdfUrl.startsWith("blob:") && !pdfUrl.startsWith("blob:http")) {
             pdfUrl = URL.createObjectURL(pdfUrl);
             pdf = await globalThis.pdfjsLib.getDocument(pdfUrl).promise;
             URL.revokeObjectURL(pdfUrl);
