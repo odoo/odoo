@@ -412,7 +412,7 @@ export class FormOptionPlugin extends Plugin {
     }
     async fetchAuthorizedFields(formEl) {
         // Combine model and fields into cache key.
-        const model = formEl.dataset.model_name;
+        const model = getModelName(formEl);
         const propertyOrigins = {};
         const parts = [model];
         for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
