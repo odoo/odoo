@@ -1298,6 +1298,11 @@ class ProductTemplate(models.Model):
                 # reset current line, and then go to previous line
                 value_index_per_line[line_index] = - 1
                 line_index -= 1
+
+                # skip backwards over any empty lines
+                while line_index > 0 and len(product_template_attribute_values_per_line[line_index]) == 0:
+                    line_index -= 1
+
                 continue
             else:
                 # we're done if we must reset first line
