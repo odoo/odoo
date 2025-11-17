@@ -41,23 +41,23 @@ class TestDashboard(TestHrHolidaysCommon):
         public_holiday_vals = [
             {
                 'name': 'Public holiday (employee schedule)',
-                'date_from': "2021-06-15 06:00:00",
-                'date_to': "2021-06-15 15:00:00",
-                'calendar_id': employee.resource_calendar_id.id,
+                'date_start': "2021-06-15 06:00:00",
+                'date_end': "2021-06-15 15:00:00",
+                'condition_domain': f'[("resource_calendar_id", "in", [{employee.resource_calendar_id.id}])]',
             },
             {
                 'name': 'Public holiday (no schedule)',
-                'date_from': "2021-06-16 06:00:00",
-                'date_to': "2021-06-16 15:00:00",
+                'date_start': "2021-06-16 06:00:00",
+                'date_end': "2021-06-16 15:00:00",
             },
             {
                 'name': 'Public holiday (other schedule)',
-                'date_from': "2021-06-17 06:00:00",
-                'date_to': "2021-06-17 15:00:00",
-                'calendar_id': other_calendar.id,
+                'date_start': "2021-06-17 06:00:00",
+                'date_end': "2021-06-17 15:00:00",
+                'condition_domain': f'[("resource_calendar_id", "in", [{other_calendar.id}])]',
             },
         ]
-        self.env['resource.calendar.leaves'].create(public_holiday_vals)
+        self.env['hr.public.holiday.leave'].create(public_holiday_vals)
 
         dashboard_data = self.env['hr.employee'].get_special_days_data("2021-06-01", "2021-07-01")
 

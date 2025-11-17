@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_public_holiday_leave_view_search_inherit" model="ir.ui.view">
+        <field name="name">hr.public.holiday.leave.search.inherit</field>
+        <field name="model">hr.public.holiday.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_public_holiday_leave_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="company" position="after">
+                <filter string="Work Entry Type" name="work_entry_type" domain="[]" context="{'group_by':'work_entry_type_id'}" help="Group by Work Entry Type"/>
+            </filter>
+        </field>
+    </record>
+    <record id="hr_public_holiday_leave_view_list_inherit" model="ir.ui.view">
+        <field name="name">hr.public.holiday.leave.list.inherit</field>
+        <field name="model">hr.public.holiday.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_public_holiday_leave_view_list"/>
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="work_entry_type_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_public_holiday_leave_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.public.holiday.leave.form.inherit</field>
+        <field name="model">hr.public.holiday.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_public_holiday_leave_view_form"/>
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="work_entry_type_id" placeholder="All Work Entry Types"/>
+            </field>
+        </field>
+    </record>
+</odoo>

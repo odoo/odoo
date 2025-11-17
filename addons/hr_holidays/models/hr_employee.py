@@ -305,14 +305,14 @@ class HrEmployee(models.Model):
     def get_public_holidays_data(self, date_start, date_end):
         self = self._get_contextual_employee()
         employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz or 'utc')
-        public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
+        public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_end')
         return list(map(lambda bh: {
             'id': -bh.id,
             'colorIndex': 0,
-            'end': datetime.combine(bh.date_to.astimezone(employee_tz), datetime.max.time()).isoformat(),
+            'end': datetime.combine(bh.date_end.astimezone(employee_tz), datetime.max.time()).isoformat(),
             'endType': "datetime",
             'isAllDay': True,
-            'start': datetime.combine(bh.date_from.astimezone(employee_tz), datetime.min.time()).isoformat(),
+            'start': datetime.combine(bh.date_start.astimezone(employee_tz), datetime.min.time()).isoformat(),
             'startType': "datetime",
             'title': bh.name,
         }, public_holidays))
@@ -321,6 +321,7 @@ class HrEmployee(models.Model):
     def get_time_off_dashboard_data(self, target_date=None):
         dashboard_data = {}
         dashboard_data['has_accrual_allocation'] = self.env['hr.leave.type'].has_accrual_allocation()
+        # check with_user
         dashboard_data['allocation_data'] = self.env['hr.leave.type'].get_allocation_data_request(target_date, False)
         dashboard_data['allocation_request_amount'] = self.get_allocation_requests_amount()
         return dashboard_data
@@ -334,17 +335,12 @@ class HrEmployee(models.Model):
         ])
 
     def _get_public_holidays(self, date_start, date_end):
-        domain = [
-            ('resource_id', '=', False),
-            ('company_id', 'in', self.env.companies.ids),
-            ('date_from', '<=', date_end),
-            ('date_to', '>=', date_start),
-            '|',
-            ('calendar_id', '=', False),
-            ('calendar_id', '=', self.resource_calendar_id.id),
-        ]
-
-        return self.env['resource.calendar.leaves'].search(domain)
+        public_holidays = self.env["hr.public.holiday.leave"].search([
+            ("company_id", "=", self.company_id.id),
+            ("date_start", "<=", date_end),
+            ("date_end", ">=", date_start),
+        ])
+        return public_holidays.filtered(lambda p: self.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
 
     @api.model
     def get_mandatory_days_data(self, date_start, date_end):

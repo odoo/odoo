@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 from collections import defaultdict
 from datetime import datetime, time, timedelta
 from functools import partial
@@ -497,8 +498,9 @@ class ResourceCalendar(models.Model):
 
         # for the computation, express all datetimes in UTC
         # Public leave don't have a resource_id
+        # !! to be ignored
         domain = domain + [
-            ('resource_id', 'in', [False] + [r.id for r in resources_list]),
+            ('resource_id', 'in', [r.id for r in resources_list]),
             ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
             ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
         ]
@@ -513,7 +515,7 @@ class ResourceCalendar(models.Model):
             leave_date_from = leave.date_from
             leave_date_to = leave.date_to
             for resource in resources_list:
-                if leave_resource.id not in [False, resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
+                if leave_resource.id not in [resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
                     continue
                 tz = tz if tz else timezone((resource or self).tz)
                 if (tz, start_dt) in tz_dates:
@@ -532,6 +534,29 @@ class ResourceCalendar(models.Model):
                     dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
+        if 'hr.public.holiday.leave' in self.env:
+            public_holidays = self.env["hr.public.holiday.leave"].search([
+                ("company_id", "=", self.env.company.id),
+                ("date_start", "<=", end_dt.astimezone(utc).replace(tzinfo=None)),
+                ("date_end", ">=", start_dt.astimezone(utc).replace(tzinfo=None)),
+            ])
+            allowed_public_holidays = public_holidays.filtered(lambda p: self.env.user.employee_id.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
+            for public_holiday in allowed_public_holidays:
+                # Same timezone logic as above
+                tz = tz if tz else timezone((self).tz)
+                if (tz, start_dt) in tz_dates:
+                    start = tz_dates[tz, start_dt]
+                else:
+                    start = start_dt.astimezone(tz)
+                    tz_dates[tz, start_dt] = start
+                if (tz, end_dt) in tz_dates:
+                    end = tz_dates[tz, end_dt]
+                else:
+                    end = end_dt.astimezone(tz)
+                    tz_dates[tz, end_dt] = end
+                dt0 = public_holiday.date_start.astimezone(tz)
+                dt1 = public_holiday.date_end.astimezone(tz)
+                result[False].append((max(start, dt0), min(end, dt1), public_holiday))
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
     def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):

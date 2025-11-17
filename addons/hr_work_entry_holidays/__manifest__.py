@@ -17,6 +17,7 @@ This application allows you to integrate time off in payslips.
         'data/hr_leave_type_data.xml',
         'views/hr_leave_views.xml',
         'views/hr_leave_type_views.xml',
+        'views/hr_public_holiday_leave_views.xml',
     ],
     'demo': ['data/hr_payroll_holidays_demo.xml'],
     'auto_install': True,

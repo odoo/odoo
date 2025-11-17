@@ -1759,7 +1759,7 @@ We can redirect you to the public employee list."""
         if not employee_versions:
             # Checking the calendar directly allows to not grey out the leaves taken
             # by the employee or fallback to the company calendar
-            return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
+            return (self.resource_calendar_id or self.env.company.resource_calendar_id).with_user(self.user_id)._get_unusual_days(
                 datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC),
                 self.company_id,
@@ -1768,7 +1768,7 @@ We can redirect you to the public employee list."""
         for version in employee_versions:
             tmp_date_from = max(date_from_date, version.date_start)
             tmp_date_to = min(date_to_date, version.date_end) if version.date_end else date_to_date
-            unusual_days.update(version.resource_calendar_id.sudo(False)._get_unusual_days(
+            unusual_days.update(version.resource_calendar_id.sudo(False).with_user(self.user_id)._get_unusual_days(
                 datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC),
                 self.company_id,
@@ -1820,7 +1820,7 @@ We can redirect you to the public employee list."""
             version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
             calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
             start_date = version_start if version_prev < version_start else contract_start
-            version_intervals = calendar._work_intervals_batch(
+            version_intervals = calendar.with_user(self.user_id)._work_intervals_batch(
                                     max(date_from, start_date),
                                     min(date_to, version_end),
                                     tz=employee_tz,

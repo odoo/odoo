@@ -10,6 +10,7 @@ from . import hr_leave_type
 from . import hr_leave_accrual_plan_level
 from . import hr_leave_accrual_plan
 from . import hr_leave_mandatory_day
+from . import hr_public_holiday_leave
 from . import hr_version
 from . import mail_activity_type
 from . import mail_message_subtype
