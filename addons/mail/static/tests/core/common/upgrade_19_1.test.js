@@ -253,7 +253,10 @@ test("device input/output id", async () => {
     localStorage.setItem("mail_user_setting_audio_input_device_id", "audio_input_2_id");
     localStorage.setItem("mail_user_setting_audio_output_device_id", "audio_output_2_id");
     localStorage.setItem("mail_user_setting_camera_input_device_id", "video_input_2_id");
-    await start();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    rtc.microphonePermission = "granted";
+    rtc.cameraPermission = "granted";
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
