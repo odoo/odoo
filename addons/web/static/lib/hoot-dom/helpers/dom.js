@@ -1138,7 +1138,7 @@ customPseudoClasses
     .set("selected", () => isNodeSelected)
     .set("shadow", () => getNodeShadowRoot)
     .set("text", makePseudoClassMatcher(getInlineNodeText, true))
-    .set("value", makePseudoClassMatcher(getNodeValue, false))
+    .set("value", makePseudoClassMatcher(getNodeValue, true))
     .set("viewPort", () => isNodeInViewPort)
     .set("visible", () => isNodeVisible);
 
