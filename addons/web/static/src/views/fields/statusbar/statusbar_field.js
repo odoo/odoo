@@ -73,10 +73,11 @@ export class StatusBarField extends Component {
             this.render();
         };
 
-        useEffect(
-            () => status === "shouldAdjust" && adjust(),
-            () => [status]
-        );
+        useEffect(() => {
+            if (status === "shouldAdjust") {
+                adjust();
+            }
+        });
 
         let forceRecomputeItems = false;
         onWillRender(() => {
