@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
+from urllib.parse import urlencode, urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -70,12 +71,15 @@ class ProductProduct(models.Model):
     @api.depends_context('lang')
     @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
     def _compute_product_website_url(self):
+        slug = self.env['ir.http']._slug
         for product in self:
-            url = product.product_tmpl_id.website_url
+            url = urlparse(product.product_tmpl_id.website_url)
             if pavs := product.product_template_attribute_value_ids.product_attribute_value_id:
-                pav_ids = [str(pav.id) for pav in pavs]
-                url = f'{url}?attribute_values={",".join(pav_ids)}'
-            product.website_url = url
+                # There's no need to group the PAVs by attribute since a product variant can have
+                # only one PAV per attribute.
+                query_params = {slug(pav.attribute_id): slug(pav) for pav in pavs}
+                url = url._replace(query=urlencode(query_params))
+            product.website_url = url.geturl()
 
     #=== CONSTRAINT METHODS ===#
 

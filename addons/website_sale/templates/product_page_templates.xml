@@ -299,6 +299,7 @@
                                     t-att-data-value-name="ptav.name"
                                     t-att-data-attribute-name="attribute.name"
                                     t-att-data-is-custom="ptav.is_custom"
+                                    t-att-data-slug="'%s/%s' % (slug(attribute), slug(ptav.product_attribute_value_id))"
                                     t-att-selected="ptav in combination">
                                     <span t-field="ptav.name"/>
                                     <t t-call="website_sale.badge_extra_price"/>
@@ -326,7 +327,9 @@
                                                 t-att-data-value-id="ptav.id"
                                                 t-att-data-value-name="ptav.name"
                                                 t-att-data-attribute-name="attribute.name"
-                                                t-att-data-is-custom="ptav.is_custom"/>
+                                                t-att-data-is-custom="ptav.is_custom"
+                                                t-att-data-slug="'%s/%s' % (slug(attribute), slug(ptav.product_attribute_value_id))"
+                                            />
                                             <div class="radio_input_value form-check-label">
                                                 <span t-field="ptav.name"/>
                                                 <t t-call="website_sale.badge_extra_price"/>
@@ -357,6 +360,7 @@
                                         t-att-data-value-name="ptav.name"
                                         t-att-data-attribute-name="attribute.name"
                                         t-att-data-is-custom="ptav.is_custom"
+                                        t-att-data-slug="'%s/%s' % (slug(attribute), slug(ptav.product_attribute_value_id))"
                                         t-att-autocomplete="off"/>
                                     <label class="radio_input_value o_variant_pills_input_value cursor-pointer"
                                            t-att-for="ptav.id">
@@ -393,7 +397,9 @@
                                         t-att-data-value-id="ptav.id"
                                         t-att-data-value-name="ptav.name"
                                         t-att-data-attribute-name="attribute.name"
-                                        t-att-data-is-custom="ptav.is_custom"/>
+                                        t-att-data-is-custom="ptav.is_custom"
+                                        t-att-data-slug="'%s/%s' % (slug(attribute), slug(ptav.product_attribute_value_id))"
+                                      />
                                 </label>
                             </li>
                         </ul>
@@ -422,6 +428,7 @@
                                         t-att-data-value-name="ptav.name"
                                         t-att-data-attribute-name="attribute.name"
                                         t-att-data-is-custom="ptav.is_custom"
+                                        t-att-data-slug="'%s/%s' % (slug(attribute), slug(ptav.product_attribute_value_id))"
                                     />
                                 </label>
                             </li>

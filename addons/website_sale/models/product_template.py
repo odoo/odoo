@@ -346,6 +346,7 @@ class ProductTemplate(models.Model):
         """
         res = defaultdict(dict)
         show_count = 20
+        slug = self.env['ir.http']._slug
         for template in self:
             previewed_ptal = next((
                 p for p in template.attribute_line_ids
@@ -364,7 +365,7 @@ class ProductTemplate(models.Model):
                         matching_variant = min(ptav.ptav_product_variant_ids, key=lambda p: p.id)
                         variant_query_params = {
                             **(product_query_params or {}),
-                            'attribute_values': str(ptav.product_attribute_value_id.id)
+                            slug(ptav.attribute_id): slug(ptav.product_attribute_value_id),
                         }
                         previewed_ptavs_data.append({
                             'ptav': ptav,
@@ -874,9 +875,9 @@ class ProductTemplate(models.Model):
         if category:
             domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
         if tags:
-            if isinstance(tags, str):
-                tags = tags.split(',')
-            tags = list(map(int, tags))  # Convert list of strings to list of integers
+            tags = {
+                tag_id for tag in tags.split(',') if (tag_id := self.env['ir.http']._unslug(tag)[1])
+            }
             domains.append(Domain.OR([
                 Domain('product_tag_ids', 'in', tags),
                 Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
@@ -1125,15 +1126,14 @@ class ProductTemplate(models.Model):
         url = urlparse(self.website_url)
         query_params = query_params or {}
         if grouped_attributes_values:
-            product_grouped_values = self.attribute_line_ids.value_ids.grouped('attribute_id')
-            available_pav_ids = [
-                next(v.id for v in pavs if v in product_grouped_values[pa])
+            available_grouped_pavs = self.attribute_line_ids.value_ids.grouped('attribute_id')
+            pavs = [
+                next(pav for pav in pavs if pav in available_grouped_pavs[pa])
                 for pa, pavs in grouped_attributes_values.items()
-                if pa in product_grouped_values
+                if pa in available_grouped_pavs
             ]
-            available_pav_ids.sort()
-            query_params['attribute_values'] = ','.join(str(i) for i in available_pav_ids)
-
+            slug = self.env['ir.http']._slug
+            query_params.update({slug(pav.attribute_id): slug(pav) for pav in pavs})
         if query_params:
             url = url._replace(query=urlencode(query_params, doseq=True))
 

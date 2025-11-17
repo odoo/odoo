@@ -226,14 +226,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _shop_get_query_url_kwargs(
         self, search, min_price, max_price, order=None, tags=None, **kwargs
     ):
-        attribute_values = request.session.get('attribute_values', [])
         return {
             'search': search,
             'min_price': min_price,
             'max_price': max_price,
             'order': order,
             'tags': tags,
-            'attribute_values': attribute_values,
+            **request.session.get('attribute_value_params', {}),
         }
 
     def _get_additional_shop_values(self, values, **kwargs):
@@ -293,22 +292,39 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ppr = website.shop_ppr or 4
         gap = website.shop_gap or "16px"
 
-        request_args = request.httprequest.args
-        attribute_values = request_args.getlist('attribute_values')
-        attribute_value_dict = self._get_attribute_value_dict(attribute_values)
+        attribute_value_params = self._get_attribute_value_params(post)
+        if not attribute_value_params:
+            # TODO: remove support for `attribute_values` query param in version 20 (or later).
+            attribute_values = request.httprequest.args.getlist('attribute_values')
+            # Transform the attribute value query params list into a dict.
+            # Before:
+            #     `['1-2,3', '4-5,6']`
+            # After:
+            #     `{'1': '2,3', '4': '5,6'}`
+            attribute_value_params = dict([
+                pair.split('-') for pair in attribute_values if pair and pair.count('-') == 1
+            ])
+            if attribute_values:
+                # By default, `post` will only contain the first `attribute_values` query param, but
+                # there could be multiple.
+                post['attribute_values'] = attribute_values
+        attribute_value_dict = self._get_attribute_value_dict(attribute_value_params)
         attribute_ids = set(attribute_value_dict.keys())
         attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
-        if attribute_values:
-            request.session['attribute_values'] = attribute_values
-            post['attribute_values'] = attribute_values
+        if attribute_value_params:
+            request.session['attribute_value_params'] = attribute_value_params
         else:
-            request.session.pop('attribute_values', None)
+            request.session.pop('attribute_value_params', None)
 
         filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
         if filter_by_tags_enabled:
             if tags:
                 post['tags'] = tags
-                tags = {self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')}
+                tags = {
+                    tag_id
+                    for tag in tags.split(',')
+                    if (tag_id := self.env['ir.http']._unslug(tag)[1])
+                }
             else:
                 post['tags'] = None
                 tags = {}
@@ -460,14 +476,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attribute_ids = [attribute.id for attribute, in attributes_grouped]
             attributes = ProductAttribute.browse(attribute_ids)
         else:
-            attributes = ProductAttribute.browse(attribute_ids).sorted()
+            attributes = ProductAttribute.browse(attribute_ids).exists().sorted()
 
         products_prices = products._get_sales_prices(website)
         product_query_params = self._get_product_query_params(**post)
 
         grouped_attributes_values = request.env['product.attribute.value'].browse(
             attribute_value_ids
-        ).sorted().grouped('attribute_id')
+        ).exists().sorted().grouped('attribute_id')
 
         values = {
             'auto_assign_ribbons': self.env['product.ribbon'].sudo().search([('assign', '!=', 'manual')]),
@@ -759,17 +775,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
             markup_data.append(self._prepare_breadcrumb_markup_data(
                 website.get_base_url(), category
             ))
+        keep = QueryURL(self._get_shop_path(), **request.session.get('attribute_value_params', {}))
 
-        if (last_attributes_search := request.session.get('attribute_values', [])):
-            keep = QueryURL(
-                self._get_shop_path(),
-                attribute_values=last_attributes_search
-            )
-        else:
-            keep = QueryURL(self._get_shop_path())
-
-        if attribute_values := kwargs.get('attribute_values', ''):
-            attribute_value_ids = {int(i) for i in attribute_values.split(',')}
+        attribute_value_params = self._get_attribute_value_params(kwargs)
+        attribute_value_dict = self._get_attribute_value_dict(attribute_value_params)
+        attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
+        if not attribute_value_ids:
+            # TODO: remove support for `attribute_values` query param in version 20 (or later).
+            attribute_values = kwargs.get('attribute_values', '')
+            attribute_value_ids = {
+                int(value_id)
+                for value_id in attribute_values.split(',')
+                if value_id and value_id.isdigit()
+            }
+        if attribute_value_ids:
             combination = product.attribute_line_ids.mapped(
                 lambda ptal: (
                     ptal.product_template_value_ids.filtered(
@@ -1913,27 +1932,25 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @staticmethod
     def _validate_and_get_category(category):
-        """ Validate and return the `product.public.category` record corresponding to the provided
+        """Validate and return the `product.public.category` record corresponding to the provided
         category, which can be a record, a record id, or a slug.
 
-        - If no category is provided, return an empty recordset.
-        - If a category is provided, but it doesn't exist or can't be accessed, raise a 404.
-        - If a valid category is provided, return the corresponding record.
+        If the provided category is invalid, non-existing, or inaccessible, return an empty
+        recordset. Otherwise, return the corresponding record.
 
         :param str|product.public.category category: The category to validate and return.
-        :return: The validated category.
+        :return: The validated category, or an empty recordset.
         :rtype: product.public.category
         """
         ProductCategory = request.env['product.public.category']
-        if not isinstance(category, ProductCategory.__class__) and category and not str(category).isdigit():
-            raise ValidationError(_("Invalid category."))
+        if category and isinstance(category, str) and not category.isdigit():
+            return ProductCategory
         if (
             (category := ProductCategory.browse(category and int(category)).exists())
             and category.can_access_from_current_website()
         ):
             return category
-        else:
-            return ProductCategory
+        return ProductCategory
 
     @staticmethod
     def _get_shop_path(category=None, page=0):
@@ -1945,17 +1962,58 @@ class WebsiteSale(payment_portal.PaymentPortal):
             path += f'/page/{page}'
         return path
 
-    @staticmethod
-    def _get_attribute_value_dict(attribute_values):
-        """ Parses a list of attribute value query params, and returns a dict grouping attribute
-        value ids by attribute id.
+    def _get_attribute_value_params(self, query_params):
+        """Extract the attribute value query params from a dict of more general query params.
 
-        :param list(str) attribute_values: The list of attribute value query parameters to parse.
-        :return: A dict grouping attribute value ids by attribute id.
+        Attribute value query params are expected to have the following format:
+        `attribute-name-1=attribute-value-name-2,attribute-value-name-3`
+
+        :param dict(str, str) query_params: The more general query params from which to extract the
+            attribute value query params.
+        :return: A dict of attribute value query params.
+        :rtype: dict(str, str)
+        """
+        unslug = self.env['ir.http']._unslug
+        # Only keep the query params whose key can be unslugged (meaning that the key is an
+        # attribute slug).
+        return {
+            attr: attr_values
+            for attr, attr_values in query_params.items()
+            if unslug(attr)[1] and attr_values
+        }
+
+    def _get_attribute_value_dict(self, attribute_value_params):
+        """Return a dict mapping attribute IDs to lists of attribute value IDs, from a dict of
+        attribute value query params.
+
+        Attribute value query params are expected to have the following format:
+        `attribute-name-1=attribute-value-name-2,attribute-value-name-3`
+
+        This method will ignore any invalid attributes and attribute values (we don't want to raise
+        errors for invalid query params). Moreover, it will only consider the first occurrence of a
+        given attribute (other occurrences are ignored).
+
+        :param dict(str, str) attribute_value_params: The attribute value query params from which to
+            compute the mapping.
+        :return: A dict mapping attribute IDs to lists of attribute value IDs.
         :rtype: dict(int, list(int))
         """
-        attribute_value_pairs = [value.split('-') for value in attribute_values if value]
+        unslug = self.env['ir.http']._unslug
+        # For each attribute value query param, unslug its key (attribute) and value (attribute
+        # values).
+        attribute_value_dict = {
+            unslug(attr)[1]: [unslug(attr_value)[1] for attr_value in attr_values.split(',')]
+            for attr, attr_values in attribute_value_params.items()
+        }
+        # Only keep the attributes and attribute values that were correctly unslugged.
+        filtered_attribute_value_dict = {
+            attr_id: [attr_value_id for attr_value_id in attr_value_ids if attr_value_id]
+            for attr_id, attr_value_ids in attribute_value_dict.items()
+            if attr_id
+        }
+        # Only keep attributes that have at least one attribute value.
         return {
-            int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
-            for pair in attribute_value_pairs
+            attr_id: attr_value_ids
+            for attr_id, attr_value_ids in filtered_attribute_value_dict.items()
+            if attr_value_ids
         }

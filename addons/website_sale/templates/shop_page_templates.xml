@@ -216,6 +216,10 @@
                 t-set="wsale_has_filters_btn_lg"
                 t-value="opt_wsale_attributes_top"
             />
+            <t
+                t-set="reset_attribute_value_params"
+                t-value="{attr: 0 for attr in request.session.get('attribute_value_params', {}).keys()}"
+            />
 
             <div id="wrap" class="o_wsale_products_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_1"/>
@@ -262,7 +266,7 @@
                                     class="py-3 border-bottom"
                                 >
                                     <a
-                                        t-att-href="keep(attribute_values=0, tags=0, min_price=0, max_price=0)"
+                                        t-att-href="keep(**reset_attribute_value_params, tags=0, min_price=0, max_price=0)"
                                         t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
                                         title="Clear Filters"
                                     >
@@ -673,7 +677,7 @@
                 <input type="checkbox"
                        name="attribute_value"
                        class="cursor-pointer"
-                       t-att-value="'%s-%s' % (a.id, v.id)"
+                       t-att-value="'%s/%s' % (slug(a), slug(v))"
                        t-att-checked="'checked' if v.id in attrib_set else None"
                        t-att-title="v.name"
                 />
@@ -689,7 +693,7 @@
                 <input
                     type="checkbox"
                     name="attribute_value"
-                    t-att-value="'%s-%s' % (a.id, v.id)"
+                    t-att-value="'%s/%s' % (slug(a), slug(v))"
                     t-att-checked="'checked' if v.id in attrib_set else None"
                     t-att-title="v.name"
                     class="w-100 h-100 opacity-0 cursor-pointer"
@@ -707,7 +711,7 @@
             <option value="" selected="true">All <t t-out="a.name"/></option>
             <t t-foreach="a.value_ids" t-as="v">
                 <option
-                    t-att-value="'%s-%s' % (a.id,v.id)"
+                    t-att-value="'%s/%s' % (slug(a), slug(v))"
                     t-out="v.name"
                     t-att-selected="v.id in attrib_set"
                 />
@@ -735,7 +739,7 @@
                         name="attribute_value"
                         class="form-check-input"
                         t-att-id="'%s-%s' % (a.id,v.id)"
-                        t-att-value="'%s-%s' % (a.id,v.id)"
+                        t-att-value="'%s/%s' % (slug(a), slug(v))"
                         t-att-checked="v.id in attrib_set"
                     />
                     <label
@@ -762,7 +766,7 @@
                                 name="attribute_value"
                                 class="form-check-input"
                                 t-att-id="'%s-%s' % (a.id,v.id)"
-                                t-att-value="'%s-%s' % (a.id,v.id)"
+                                t-att-value="'%s/%s' % (slug(a), slug(v))"
                                 t-att-checked="v.id in attrib_set"
                             />
                             <label
@@ -813,7 +817,7 @@
                             name="attribute_value"
                             class="form-check-input"
                             t-att-id="'%s-%s' % (a.id,v.id)"
-                            t-att-value="'%s-%s' % (a.id,v.id)"
+                            t-att-value="'%s/%s' % (slug(a), slug(v))"
                             t-att-checked="v.id in attrib_set"
                         />
                         <label
@@ -834,7 +838,7 @@
                 name="attribute_value"
                 class="btn-check"
                 t-att-id="'%s-%s' % (a.id,v.id)"
-                t-att-value="'%s-%s' % (a.id,v.id)"
+                t-att-value="'%s/%s' % (slug(a), slug(v))"
                 t-att-checked="v.id in attrib_set"
                 autocomplete="off"
             />
@@ -853,7 +857,7 @@
         <form
             t-attf-class="js_attributes {{('accordion accordion-flush d-flex flex-column ' + ('border-bottom' if attributes else '')) if isMobile else 'position-relative mb-2'}}"
             method="get"
-            t-att-action="keep(attribute_values=0, tags=0)"
+            t-att-action="keep(**reset_attribute_value_params, tags=0)"
         >
             <t
                 t-set="visible_attributes"
@@ -1060,7 +1064,7 @@
             <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
                 <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice and not tags) and 'disabled' }}"
                    t-att-aria-disabled="(not attrib_values and not isFilteringByPrice and not tags) and 'true' or 'false'"
-                   t-att-href="keep(attribute_values=0, tags=0, min_price=0, max_price=0)"
+                   t-att-href="keep(**reset_attribute_value_params, tags=0, min_price=0, max_price=0)"
                    title="Clear Filters">
                     Clear Filters
                 </a>

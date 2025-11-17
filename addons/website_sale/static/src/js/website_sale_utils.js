@@ -118,9 +118,56 @@ function getSelectedAttributeValues(container) {
     )).map(el => parseInt(el.value));
 }
 
+/**
+ * Return a record ID from a slug.
+ *
+ * @param {string} slug - The slug to parse.
+ * @return {undefined|number} - The record ID extracted from the slug, if any.
+ */
+function unslug(slug) {
+    if (!slug) return undefined;
+    return parseInt(slug.split('-').at(-1)) || undefined;
+}
+
+/**
+ * Convert the provided attribute value slugs into search params.
+ *
+ * @param {string[]} attributeValueSlugs - The attribute value slugs to convert.
+ * @return {URLSearchParams} - The search params representing the attribute values.
+ */
+function getAttributeValueParams(attributeValueSlugs) {
+    const attributeValues = new Map();
+    for (const slug of attributeValueSlugs) {
+        // Group attribute values by attribute.
+        const [attribute, attributeValue] = slug.split('/');
+        const values = attributeValues.get(attribute) ?? new Set();
+        values.add(attributeValue);
+        attributeValues.set(attribute, values);
+    }
+    // Aggregate all attribute values belonging to the same attribute into a single search param.
+    return new URLSearchParams(Array.from(attributeValues.entries()).map(
+        ([attribute, attributeValue]) => [attribute, [...attributeValue].join(',')]
+    ));
+}
+
+/**
+ * Filter out any attribute value params from the provided search params.
+ *
+ * @param {URLSearchParams} searchParams - The search params to filter.
+ * @return {URLSearchParams} - The filtered search params.
+ */
+function clearAttributeValueParams(searchParams) {
+    return new URLSearchParams(Array.from(searchParams.entries()).filter(
+        ([attribute, _]) => !unslug(attribute)
+    ));
+}
+
 export default {
     updateCartNavBar: updateCartNavBar,
     showWarning: showWarning,
     getSelectedAttributeValues: getSelectedAttributeValues,
     updateQuickReorderSidebar: updateQuickReorderSidebar,
+    unslug: unslug,
+    getAttributeValueParams: getAttributeValueParams,
+    clearAttributeValueParams: clearAttributeValueParams,
 };
