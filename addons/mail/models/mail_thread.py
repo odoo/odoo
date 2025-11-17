@@ -3990,12 +3990,12 @@ class MailThread(models.AbstractModel):
             return devices_su, None, None
         return devices_su.search([("partner_id", "in", partner_ids)]), vapid_private_key, vapid_public_key
 
-    def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None):
+    def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None, force_direct_send=False):
         """
         :param payload: JSON serializable dict following the notification api specs https://notifications.spec.whatwg.org/#api
         :param payload_by_lang a dict mapping payload by lang, either this or payload must be provided
         """
-        if len(devices) < MAX_DIRECT_PUSH:
+        if len(devices) < MAX_DIRECT_PUSH or force_direct_send is True:
             session = Session()
             devices_to_unlink = set()
             for device in devices:
