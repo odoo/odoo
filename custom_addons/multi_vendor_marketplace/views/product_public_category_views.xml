@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action for 'product.public.category' model  -->
+    <record id="product_public_category_action"
+            model="ir.actions.act_window">
+        <field name="name">Category</field>
+        <field name="res_model">product.public.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Category
+            </p>
+        </field>
+    </record>
+    <!--    Website Categories menu-->
+    <menuitem id="website_categories" parent="configuration_root"
+              name="Website Categories" sequence="53"
+              action="product_public_category_action"/>
+</odoo>

@@ -1,0 +1,1135 @@
+<odoo>
+    <!-- Global styles for navigation icons -->
+    <template id="global_nav_icons_styles" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+            <style>
+                /* Navigation icons styling */
+                .nav-icon-btn {
+                    background: none !important;
+                    margin: 0 7px !important;
+                    position: relative !important;
+                    width: auto !important;
+                    height: auto !important;
+                    padding: 12px !important;
+                    border-radius: 0 !important;
+                    color: #333 !important;
+                    box-shadow: none !important;
+                    transition: color 0.2s ease !important;
+                }
+
+                .nav-icon-btn i {
+                    font-size: 22px !important;
+                }
+
+                .nav-icon-btn.active {
+                    color: #ff6600 !important;
+                    background: none !important;
+                    box-shadow: none !important;
+                }
+
+                .nav-icon-btn:hover {
+                    background-color: transparent !important;
+                    transform: none !important;
+                    box-shadow: none !important;
+                    color: #ff6600 !important;
+                }
+
+                .nav-icon-btn:focus,
+                .nav-icon-btn:active {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+
+                .desktop-nav-icons {
+                    border: none !important;
+                    background: #fff !important;
+                    overflow: visible !important;
+                    padding-bottom: 20px !important;
+                }
+
+                /* Tooltip styling enhancement */
+                .icon-tooltip {
+                    position: absolute !important;
+                    bottom: -32px !important;
+                    left: 50% !important;
+                    transform: translateX(-50%) !important;
+                    background: #333 !important;
+                    color: white !important;
+                    padding: 4px 8px !important;
+                    border-radius: 4px !important;
+                    font-size: 12px !important;
+                    white-space: nowrap !important;
+                    opacity: 0 !important;
+                    visibility: hidden !important;
+                    transition: all 0.2s ease !important;
+                    z-index: 9999 !important;
+                    display: none !important; /* Changed from block to none by default */
+                    pointer-events: none !important;
+                }
+
+                /* Show tooltip on hover - more specific selector */
+                .has-tooltip:hover .icon-tooltip {
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    display: block !important; /* Explicitly show on hover */
+                }
+
+                /* Add bottom margin to nav-icon-btn to make room for tooltip */
+                .nav-icon-btn {
+                    margin-bottom: 10px !important;
+                }
+
+                /* Making sure tooltips are not cut off */
+                .desktop-nav-icons {
+                    overflow: visible !important;
+                    padding-bottom: 20px !important;
+                }
+            </style>
+            
+            <script type="text/javascript">
+            //<![CDATA[
+                // Script to ensure tooltips work correctly
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Set specific tooltip text based on href - this ensures tooltips have the correct text
+                    const tooltipMap = {
+                        '/shop': 'Главная',
+                        '/shop/cart': 'Корзина',
+                        '/profile': 'Профиль',
+                        '/videos': 'Видео'
+                    };
+                    
+                    // Get all tooltips and set the correct text
+                    const allTooltips = document.querySelectorAll('.has-tooltip');
+                    allTooltips.forEach(function(btn) {
+                        const href = btn.getAttribute('href');
+                        if (href && tooltipMap[href]) {
+                            // Find the tooltip span
+                            const tooltip = btn.querySelector('.icon-tooltip');
+                            if (tooltip) {
+                                // Ensure the tooltip has text content
+                                tooltip.textContent = tooltipMap[href];
+                                
+                                // Force important inline styles to override any conflicting CSS
+                                tooltip.style.setProperty('display', 'none', 'important');
+                                tooltip.style.setProperty('position', 'absolute', 'important');
+                                tooltip.style.setProperty('bottom', '-32px', 'important');
+                                tooltip.style.setProperty('left', '50%', 'important');
+                                tooltip.style.setProperty('transform', 'translateX(-50%)', 'important');
+                                tooltip.style.setProperty('background', '#333', 'important');
+                                tooltip.style.setProperty('color', 'white', 'important');
+                                tooltip.style.setProperty('padding', '4px 8px', 'important');
+                                tooltip.style.setProperty('border-radius', '4px', 'important');
+                                tooltip.style.setProperty('font-size', '12px', 'important');
+                                tooltip.style.setProperty('white-space', 'nowrap', 'important');
+                                tooltip.style.setProperty('z-index', '9999', 'important');
+                            }
+                        }
+                    });
+                    
+                    // Force tooltips to be visible on hover with JavaScript
+                    allTooltips.forEach(function(btn) {
+                        btn.addEventListener('mouseenter', function() {
+                            const tooltip = this.querySelector('.icon-tooltip');
+                            if (tooltip) {
+                                tooltip.style.setProperty('opacity', '1', 'important');
+                                tooltip.style.setProperty('visibility', 'visible', 'important');
+                                tooltip.style.setProperty('display', 'block', 'important');
+                            }
+                        });
+                        
+                        btn.addEventListener('mouseleave', function() {
+                            const tooltip = this.querySelector('.icon-tooltip');
+                            if (tooltip) {
+                                tooltip.style.setProperty('opacity', '0', 'important');
+                                tooltip.style.setProperty('visibility', 'hidden', 'important');
+                                tooltip.style.setProperty('display', 'none', 'important');
+                            }
+                        });
+                    });
+                });
+            //]]>
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Каталог с выпадающими категориями -->
+    <template id="catalog_dropdown" name="Каталог с категориями">
+        <div id="catalog-toggle-container" style="margin-bottom: 20px;">
+            <!-- Кнопка Каталог -->
+            <button id="catalog-toggle-btn" class="btn btn-warning w-100 mb-3 d-lg-block d-none" style="z-index: 1001; position: relative;">Каталог</button>
+            <div id="catalog-categories" style="display: none;">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="/shop">All Products</a></li>
+                    <li class="list-group-item"><a href="/shop/category/dom">Для дома</a></li>
+                    <!-- Добавьте другие категории по аналогии или с помощью t-foreach -->
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript">
+        //<![CDATA[
+            document.addEventListener('DOMContentLoaded', function() {
+                var btn = document.getElementById('catalog-toggle-btn');
+                var cat = document.getElementById('catalog-categories');
+                btn.addEventListener('click', function() {
+                    cat.style.display = (cat.style.display === 'none' || cat.style.display === '') ? 'block' : 'none';
+                });
+            });
+        //]]>
+        </script>
+        <style>
+            #catalog-categories {
+                transition: all 0.3s;
+                margin-top: 10px;
+            }
+        </style>
+    </template>
+
+    <!-- Custom User Profile Template -->
+    <template id="custom_user_profile" name="Custom User Profile">
+        <t t-call="website.layout">
+            <div class="container mt-5 o_custom_profile_page">
+                <!-- Language Button - Moved to top, standalone position -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <t t-call="multi_vendor_marketplace.standalone_language_selector"/>
+                    </div>
+                </div>
+                
+                <!-- User Info -->
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <!-- Удалено: имя пользователя и кнопка 'Изменить инфо' -->
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="button-group-container mt-5">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <a href="/user/orders/status" class="btn btn-warning w-100">Статус заказа</a>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="/user/orders/history" class="btn btn-warning w-100">История заказов</a>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="/user/orders/returns" class="btn btn-warning w-100">Возвраты</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group-container mt-4">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button class="btn btn-warning w-100">Кошелек</button>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <a href="/shop/checkout" class="btn btn-warning w-100">Адрес доставки</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group-container mt-4">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <a href="/seller_reg" class="btn btn-warning w-100">Открыть магазин</a>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <button class="btn btn-warning w-100">Бухгалтерия и налоги</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Removed language selector from here -->
+            </div>
+        </t>
+    </template>
+
+    <!-- Standalone Language Selector Template -->
+    <template id="standalone_language_selector" name="Standalone Language Selector">
+        <div class="dropdown border-0 text-center w-100">
+            <button type="button" class="btn btn-warning dropdown-toggle border-0 mx-auto" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #ff7300 !important; color: white !important; border: none !important; outline: none !important; box-shadow: none !important; -webkit-box-shadow: none !important; text-shadow: none !important; border-radius: 20px !important; padding: 8px 15px !important; font-weight: bold !important; font-size: 12px !important; -webkit-appearance: none; appearance: none; margin: 0 auto; display: block; width: 170px !important; min-width: 170px !important;">
+                <i class="fa fa-globe me-1"/>ЯЗЫК
+            </button>
+            <div class="dropdown-menu" aria-labelledby="languageDropdown">
+                <t t-foreach="website.language_ids" t-as="lg">
+                    <a href="#" t-att-data-url_code="lg.code" class="dropdown-item js_change_lang" t-att-data-lang="lg.code">
+                        <t t-esc="lg.name"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+        <style>
+            /* Ultra-aggressive CSS to completely ensure no frames/borders */
+            .dropdown, .dropdown * {
+                border: none !important;
+                outline: none !important;
+            }
+            
+            .dropdown .btn, 
+            .dropdown button,
+            .dropdown .btn.btn-warning, 
+            .dropdown .btn.dropdown-toggle,
+            button#languageDropdown {
+                border: 0 !important;
+                border-width: 0 !important;
+                border-style: none !important;
+                border-color: transparent !important;
+                outline: 0 !important;
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                text-shadow: none !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                border-image: none !important;
+            }
+            
+            /* Specifically target frames that might be added by JavaScript */
+            .dropdown .btn:after,
+            .dropdown .btn:before,
+            .dropdown-toggle:after,
+            .dropdown-toggle:before {
+                display: none !important;
+                content: none !important;
+            }
+            
+            .dropdown .btn:hover,
+            .dropdown .btn:focus,
+            .dropdown .btn:active,
+            .dropdown .btn.active,
+            .dropdown .show>.btn,
+            .dropdown .btn.show,
+            #languageDropdown:hover,
+            #languageDropdown:focus,
+            #languageDropdown:active {
+                border: 0 !important;
+                outline: 0 !important;
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                border-color: transparent !important;
+            }
+            
+            /* Remove animations and transitions that could show frames */
+            #languageDropdown {
+                transition: none !important;
+                animation: none !important;
+            }
+            
+            /* Remove ALL ripple effects */
+            .o_ripple_container,
+            .o_ripple,
+            .o_ripple_item,
+            .ripple,
+            .rippleEffect,
+            .btn .o_ripple,
+            .btn span[style*="animation"],
+            .btn span.o_ripple_item {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+            
+            /* Dropdown menu styling to match button */
+            .dropdown-menu {
+                min-width: 170px !important;
+                width: 170px !important;
+                padding: 0 !important;
+                margin-top: 5px !important;
+                border-radius: 10px !important;
+                border: none !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+                overflow: hidden !important;
+            }
+            
+            .dropdown-item {
+                padding: 8px 15px !important;
+                font-size: 12px !important;
+                font-weight: 500 !important;
+                text-align: center !important;
+                color: #333 !important;
+                transition: background-color 0.2s ease !important;
+            }
+            
+            .dropdown-item:hover, 
+            .dropdown-item:focus, 
+            .dropdown-item:active {
+                background-color: #fff1e6 !important;
+                color: #ff7300 !important;
+                font-weight: bold !important;
+            }
+            
+            /* Override Bootstrap's focus styling */
+            .btn-warning:focus, .btn-warning.focus,
+            .dropdown-toggle:focus {
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+            }
+        </style>
+    </template>
+
+    <template id="edit_user_profile" name="Edit User Profile">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h2>Редактировать профиль</h2>
+                <form method="post" action="/profile/save">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+
+                    <div class="form-group">
+                        <label for="name">Имя</label>
+                        <input type="text" id="name" name="name" class="form-control" t-att-value="user.name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" t-att-value="user.email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="text" id="phone" name="phone" class="form-control" t-att-value="user.phone" />
+                    </div>
+
+                    <!-- Password Change Fields -->
+                    <div class="form-group">
+                        <label for="new_password">Новый пароль</label>
+                        <input type="password" id="new_password" name="new_password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Подтвердите новый пароль</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" />
+                    </div>
+
+                    <button type="submit" class="btn btn-save mt-3">Сохранить</button>
+                    <a href="/profile" class="btn btn-cancel mt-3">Отмена</a>
+                </form>
+            </div>
+        </t>
+    </template>
+    <template id="user_order_status" name="Order Status">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h3 class="mb-4">Order Status</h3>
+                <div class="row" t-foreach="orders" t-as="order">
+                    <div class="col-md-12 mb-3">
+                        <div class="card p-3 d-flex flex-row align-items-center">
+                            <img t-att-src="order.image_url" class="img-thumbnail me-3" style="width: 100px; height: 100px;" />
+                            <div class="flex-grow-1">
+                                <h5 t-esc="order.name">Product Name</h5>
+                                <p>Quantity: <t t-esc="order.quantity" /></p>
+                                <p>Status: <span class="badge bg-info" t-esc="order.status">Pending Shipment</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="user_order_history" name="Order History">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h3 class="mb-4">Order History</h3>
+                <div class="row" t-foreach="orders" t-as="order">
+                    <div class="col-md-12 mb-3">
+                        <div class="card p-3 d-flex flex-row align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img t-att-src="order.image_url" class="img-thumbnail me-3" style="width: 100px; height: 100px;" />
+                                <div>
+                                    <h5 t-esc="order.name">Product Name</h5>
+                                    <p>Quantity: <t t-esc="order.quantity" /></p>
+                                    <p>Status: <span class="badge bg-success" t-esc="order.status">Delivered</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Date: <t t-esc="order.date_order" /></p>
+                                <p>Time: <t t-esc="order.time_order" /></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="user_order_returns" name="Returns">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h3 class="mb-4">Returns</h3>
+                <div class="row" t-foreach="returns" t-as="ret">
+                    <div class="col-md-12 mb-3">
+                        <div class="card p-3 d-flex flex-row align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img t-att-src="ret.image_url" class="img-thumbnail me-3" style="width: 100px; height: 100px;" />
+                                <div>
+                                    <h5 t-esc="ret.name">Product Name</h5>
+                                    <p>Quantity: <t t-esc="ret.quantity" /></p>
+                                    <p>Status: <span class="badge bg-warning" t-esc="ret.status">Return Requested</span></p>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Return Date: <t t-esc="ret.date_return" /></p>
+                                <p>Return Time: <t t-esc="ret.time_return" /></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Упрощаем шаблон, сохраняя функционал кнопки каталога -->
+    <template id="desktop_search_nav" inherit_id="website.layout">
+        <!-- Пустой для удаления -->
+    </template>
+
+    <!-- Добавляем специальный шаблон для размещения иконок в products_header -->
+    <template id="header_icons_placement" inherit_id="website_sale.products">
+        <!-- Пустой для удаления -->
+    </template>
+
+    <!-- Add a new template that directly injects icons into the products_header -->
+    <template id="product_header_with_icons" inherit_id="website_sale.products">
+        <xpath expr="//div[hasclass('products_header')]" position="attributes">
+            <attribute name="class" add="position-relative d-flex align-items-center" separator=" "/>
+        </xpath>
+        
+        <xpath expr="//div[hasclass('products_header')]" position="inside">
+            <div class="desktop-nav-icons ms-3 d-none d-md-flex mobile-hidden-force" style="align-items: center; margin-left: auto; border: none; border-radius: 8px; padding: 4px 8px; background: #fff; overflow: visible;">
+                <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-home" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Главная</span>
+                </a>
+                <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-play" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Видео</span>
+                </a>
+                <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Корзина</span>
+                </a>
+                <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-user" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Профиль</span>
+                </a>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="mobile_bottom_nav" inherit_id="website.layout">
+        <xpath expr="//body" position="inside">
+            <div class="mobile-bottom-nav d-md-none">
+                <div class="nav-btns">
+                    <a href="/shop" class="nav-btn" t-attf-class="nav-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}"><i class="fa fa-home"></i></a>
+                    <a href="/videos" class="nav-btn" style="display: flex; align-items: center; justify-content: center;"><i class="fa fa-play"></i></a>
+                    <a href="/shop/cart" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="/profile" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}"><i class="fa fa-user"></i></a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Aside с категориями, скрыт по умолчанию -->
+    <template id="catalog_aside" name="Каталог Aside">
+        <div style="display: flex; justify-content: flex-end;">
+            <button id="catalog-toggle-btn" class="btn btn-warning mb-3 catalog-anim-btn" style="width: 110px; font-weight: bold; font-size: 13px; padding: 10px 0; border-radius: 24px; outline: none; box-shadow: none; border: none; margin-right: 0; transition: background 0.2s, filter 0.2s, transform 0.1s; background: #ff9800; color: #fff;">КАТАЛОГ</button>
+        </div>
+        <div id="catalog-categories-block" style="display: none; background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 24px 20px 20px 20px; margin-top: 10px;">
+            <t t-call="website_sale.products_categories_list"/>
+        </div>
+        <style>
+            #catalog-toggle-btn:focus, #catalog-toggle-btn:active {
+                outline: none !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            #catalog-toggle-btn:active {
+                filter: brightness(0.85);
+                transform: scale(0.97);
+            }
+            #catalog-toggle-btn {
+                border-radius: 24px !important;
+                transition: background 0.2s, filter 0.2s, transform 0.1s;
+                background: #ff9800 !important;
+                color: #fff !important;
+            }
+            #catalog-toggle-btn:hover {
+                background: #ff9800 !important;
+                color: #fff !important;
+                filter: none !important;
+            }
+            #catalog-categories-block {
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+                padding: 24px 20px 20px 20px;
+                margin-top: 10px;
+            }
+            #catalog-categories-block .o_categories_collapse_title {
+                display: none !important;
+            }
+        </style>
+        <script type="text/javascript">
+        //<![CDATA[
+            document.addEventListener('DOMContentLoaded', function() {
+                var btn = document.getElementById('catalog-toggle-btn');
+                var block = document.getElementById('catalog-categories-block');
+                btn.addEventListener('click', function() {
+                    if (block.style.display === 'none' || block.style.display === '') {
+                        block.style.display = 'block';
+                    } else {
+                        block.style.display = 'none';
+                    }
+                    setTimeout(function() {
+                        btn.blur();
+                    }, 200);
+                });
+            });
+        //]]>
+        </script>
+    </template>
+
+    <template id="custom_shop_with_catalog" inherit_id="website_sale.products">
+        <!-- Кнопка Каталог слева от поиска -->
+        <xpath expr="//t[@t-call='website_sale.search']" position="before">
+            <div class="catalog-button-container">
+                <button class="catalog-button" type="button">Каталог</button>
+            </div>
+            <div class="catalog-sidebar" style="display:none;">
+                <div class="catalog-sidebar__content">
+                    <div class="catalog-sidebar__header">
+                        <button class="catalog-sidebar__close" type="button">×</button>
+                    </div>
+                    <div class="catalog-sidebar__categories">
+                        <t t-call="website_sale.products_categories_list"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <style>
+                .catalog-sidebar {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    height: 100dvh;
+                    width: 280px; /* Increased from 220px to 280px */
+                    background: #fff;
+                    box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+                    z-index: 2000;
+                    display: flex;
+                    flex-direction: column;
+                    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+                    transform: translateX(-100%);
+                    overflow-y: auto;
+                }
+                .catalog-sidebar.open {
+                    display: flex !important;
+                    transform: translateX(0);
+                }
+                .catalog-sidebar__content {
+                    flex: 1 1 auto;
+                    display: flex;
+                    flex-direction: column;
+                    height: 100dvh;
+                    padding: 24px 16px 20px 16px; /* Increased horizontal padding from 12px to 16px */
+                }
+                .catalog-sidebar__header {
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    margin-bottom: 16px;
+                }
+                .catalog-sidebar__close {
+                    background: none;
+                    border: none;
+                    font-size: 2rem;
+                    color: #888;
+                    cursor: pointer;
+                }
+                .catalog-sidebar__categories .o_categories_collapse_title {
+                    display: none !important;
+                }
+                .catalog-sidebar__categories a {
+                    font-size: 15px; /* Added to make text slightly smaller but still readable */
+                    padding: 8px 6px; /* Added padding to improve readability */
+                }
+                .catalog-sidebar__categories .list-group-item {
+                    padding-left: 6px; /* Reduce left padding to maximize text space */
+                    padding-right: 6px; /* Reduce right padding to maximize text space */
+                }
+                @media (max-width: 600px) {
+                    .catalog-sidebar {
+                        width: 65vw; /* Increased from 45vw to 65vw for mobile */
+                        min-width: 260px; /* Added to ensure minimum width even on small screens */
+                    }
+                }
+                body.sidebar-open {
+                    overflow: hidden !important;
+                    position: fixed;
+                    width: 100vw;
+                }
+            </style>
+            <script type="text/javascript">
+            //<![CDATA[
+                document.addEventListener('DOMContentLoaded', function() {
+                    var btn = document.querySelector('.catalog-button');
+                    var sidebar = document.querySelector('.catalog-sidebar');
+                    var closeBtn = sidebar ? sidebar.querySelector('.catalog-sidebar__close') : null;
+
+                    function openSidebar() {
+                        if(sidebar) {
+                            sidebar.style.display = 'flex';
+                            setTimeout(function(){ sidebar.classList.add('open'); }, 10);
+                            document.body.classList.add('sidebar-open');
+                        }
+                    }
+                    function closeSidebar() {
+                        if(sidebar) {
+                            sidebar.classList.remove('open');
+                            setTimeout(function(){ sidebar.style.display = 'none'; }, 250);
+                            document.body.classList.remove('sidebar-open');
+                        }
+                    }
+
+                    if(btn) {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            if(sidebar && sidebar.classList.contains('open')) {
+                                closeSidebar();
+                            } else {
+                                openSidebar();
+                            }
+                        });
+                    }
+                    if(closeBtn) {
+                        closeBtn.addEventListener('click', function() {
+                            closeSidebar();
+                        });
+                    }
+                    // Закрытие по клику вне сайдбара
+                    document.addEventListener('click', function(e) {
+                        if(sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== btn) {
+                            closeSidebar();
+                        }
+                    });
+                });
+            //]]>
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Добавляем навигационные иконки на страницу videos -->
+    <template id="videos_nav_icons" inherit_id="website.layout">
+        <xpath expr="//main" position="before">
+            <t t-if="request.httprequest.path == '/videos'">
+                <div class="container py-3">
+                    <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; display: flex; align-items: center; border: none; border-radius: 8px; padding: 4px 8px; background: #fff; justify-content: center; overflow: visible;">
+                        <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-home" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Главная</span>
+                        </a>
+                        <a href="/videos" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/videos' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-play" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Видео</span>
+                        </a>
+                        <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Корзина</span>
+                        </a>
+                        <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-user" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Профиль</span>
+                        </a>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Добавляем навигационные иконки также на страницы корзины и оформления заказа -->
+    <template id="cart_nav_icons" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px; border: none; background: #fff; overflow: visible;">
+                    <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-home" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Главная</span>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-play" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Видео</span>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Корзина</span>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-user" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Профиль</span>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Добавляем навигационные иконки на страницу оформления заказа -->
+    <template id="checkout_nav_icons" inherit_id="website_sale.checkout">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px; border: none; background: #fff; overflow: visible;">
+                    <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-home" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Главная</span>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-play" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Видео</span>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Корзина</span>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-user" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Профиль</span>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Добавляем навигационные иконки на страницу профиля пользователя -->
+    <template id="profile_nav_icons" inherit_id="multi_vendor_marketplace.custom_user_profile">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px; border: none; background: #fff; overflow: visible;">
+                    <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-home" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Главная</span>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-play" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Видео</span>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Корзина</span>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-user" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Профиль</span>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Add a new template that injects CSS directly in the products page -->
+    <template id="product_grid_5_direct" inherit_id="website_sale.products">
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="inside">
+            <style>
+                /* Target the product grid items directly with more specific selectors */
+                @media (min-width: 1200px) {
+                    /* Show 5 products per row on large screens */
+                    #products_grid .oe_product.oe_grid,
+                    .oe_website_sale .products_pager + .row .oe_product,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product {
+                        width: 20% !important;
+                        max-width: 20% !important;
+                        min-width: unset !important;
+                        flex: 0 0 20% !important;
+                    }
+                    
+                    /* Override Bootstrap column classes that might be applied */
+                    .oe_website_sale .col-lg-2,
+                    .oe_website_sale .col-lg-3,
+                    .oe_website_sale .col-lg-4,
+                    #products_grid .col-lg-2,
+                    #products_grid .col-lg-3,
+                    #products_grid .col-lg-4 {
+                        width: 20% !important;
+                        flex: 0 0 20% !important;
+                        max-width: 20% !important;
+                    }
+                }
+                
+                /* Responsive adjustments */
+                @media (max-width: 1199px) and (min-width: 992px) {
+                    /* 4 products per row on medium-large screens */
+                    #products_grid .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid {
+                        width: 25% !important;
+                        max-width: 25% !important;
+                        flex: 0 0 25% !important;
+                    }
+                }
+                
+                @media (max-width: 991px) and (min-width: 768px) {
+                    /* 3 products per row on medium screens */
+                    #products_grid .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid {
+                        width: 33.333% !important;
+                        max-width: 33.333% !important;
+                        flex: 0 0 33.333% !important;
+                    }
+                }
+                
+                @media (max-width: 767px) and (min-width: 576px) {
+                    /* 2 products per row on small screens */
+                    #products_grid .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid {
+                        width: 50% !important;
+                        max-width: 50% !important;
+                        flex: 0 0 50% !important;
+                    }
+                }
+                
+                /* Make sure product card style looks good */
+                .oe_product.oe_grid {
+                    padding: 10px !important;
+                    margin-bottom: 20px !important;
+                    border: none !important;
+                }
+            </style>
+        </xpath>
+    </template>
+    
+    <!-- Simplified Seller Registration Form -->
+    <template id="simplified_seller_registration" name="Simplified Seller Registration">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <div class="card" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                            <div class="card-body p-4">
+                                <h3 class="text-center mb-4">Открыть магазин</h3>
+                                
+                                <form method="post" t-att-action="'/seller_reg'">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                                    
+                                    <div t-if="error" class="alert alert-danger" role="alert">
+                                        <t t-esc="error"/>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label for="name">ФИО</label>
+                                        <input type="text" name="name" id="name" class="form-control" placeholder="Введите ФИО" required="required"/>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label for="phone">Телефон</label>
+                                        <input type="tel" name="phone" id="phone" class="form-control" placeholder="Введите номер телефона" required="required"/>
+                                        <small class="form-text text-muted">Будет использоваться для входа в систему</small>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label for="password">Пароль</label>
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Введите пароль" required="required"/>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label for="confirm_password">Подтвердите пароль</label>
+                                        <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Введите пароль повторно" required="required"/>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label for="country_id">Страна</label>
+                                        <select name="country_id" id="country_id" class="form-control" required="required">
+                                            <option value="">Выберите страну</option>
+                                            <t t-foreach="countries" t-as="country">
+                                                <option t-att-value="country.id"><t t-esc="country.name"/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-warning btn-lg w-100" style="border-radius: 8px;">
+                                            ОТКРЫТЬ МАГАЗИН
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Hide empty cart message - More aggressive approach -->
+    <template id="hide_empty_cart_message" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('oe_cart')]" position="before">
+            <style>
+                /* Super aggressive CSS to hide the cart empty message */
+                .js_cart_lines.alert,
+                .js_cart_lines.alert-info,
+                div.js_cart_lines,
+                div[class*="js_cart_lines"],
+                div[class*="alert-info"],
+                div:contains("Your cart is empty"),
+                div:contains("Ваша корзина пуста"),
+                .js_cart_lines {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    border: none !important;
+                    overflow: hidden !important;
+                }
+            </style>
+            <script type="text/javascript">
+            //<![CDATA[
+                // JavaScript to aggressively hide the cart empty message
+                document.addEventListener('DOMContentLoaded', function() {
+                    function hideEmptyCartMessage() {
+                        // Find all possible empty cart messages
+                        var messages = document.querySelectorAll('.js_cart_lines, .alert-info, .oe_cart > div.alert');
+                        if (messages) {
+                            messages.forEach(function(msg) {
+                                var text = msg.textContent.toLowerCase();
+                                if (text.includes('empty') || text.includes('пуст')) {
+                                    msg.style.display = 'none';
+                                    msg.style.visibility = 'hidden';
+                                    msg.style.height = '0';
+                                    msg.style.padding = '0';
+                                    msg.style.margin = '0';
+                                    msg.style.border = 'none';
+                                }
+                            });
+                        }
+                    }
+                    
+                    // Run immediately and after a short delay
+                    hideEmptyCartMessage();
+                    setTimeout(hideEmptyCartMessage, 100);
+                    setTimeout(hideEmptyCartMessage, 500);
+                });
+            //]]>
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Hide footer elements using CSS injection -->
+    <template id="hide_footer_elements" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+            <style>
+                /* Hide "Powered by Odoo" section */
+                .o_brand_promotion {
+                    display: none !important;
+                }
+                
+                /* Hide language selector dropdown */
+                .js_language_selector {
+                    display: none !important;
+                }
+                
+                /* Fix for language switching issues */
+                html[lang="ru_RU"] .d-none {
+                    display: initial;
+                }
+            </style>
+            <script type="text/javascript">
+            //<![CDATA[
+                // Fix for language switching issues
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get all language switching links
+                    var langLinks = document.querySelectorAll('.js_change_lang');
+                    if (langLinks) {
+                        langLinks.forEach(function(link) {
+                            link.addEventListener('click', function(e) {
+                                // Force a full page reload
+                                window.location.href = this.href;
+                                return false;
+                            });
+                        });
+                    }
+                });
+            //]]>
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Fix product detail mobile template by targeting a more reliable element -->
+    <template id="product_detail_mobile_fixes" inherit_id="website_sale.product">
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <style>
+                /* Mobile fixes for product details page */
+                @media (max-width: 767.98px) {
+                    /* Constrain all product page elements to viewport */
+                    .oe_website_sale, #product_detail, .o_wsale_product_page {
+                        max-width: 100vw !important;
+                        overflow-x: hidden !important;
+                    }
+                    
+                    /* Ensure images are responsive */
+                    .product_detail_img img,
+                    .o_wsale_product_images img,
+                    .carousel img,
+                    img.img-fluid {
+                        max-width: 100% !important;
+                        height: auto !important;
+                        object-fit: contain !important;
+                    }
+                    
+                    /* Make all columns take full width on mobile */
+                    .col-lg-6,
+                    .col-md-6,
+                    .col-sm-6,
+                    [class*="col-"] {
+                        flex: 0 0 100% !important;
+                        max-width: 100% !important;
+                        padding-left: 10px !important;
+                        padding-right: 10px !important;
+                    }
+                    
+                    /* Remove horizontal padding */
+                    .container {
+                        padding-left: 10px !important;
+                        padding-right: 10px !important;
+                        width: 100% !important;
+                        max-width: 100% !important;
+                    }
+                    
+                    /* Fix buttons on mobile to be full width */
+                    .js_add_cart_variants + .btn,
+                    #add_to_cart,
+                    .product-add-to-cart .btn {
+                        width: 100% !important;
+                        margin-bottom: 10px !important;
+                    }
+                    
+                    /* Make sure horizontal margins are controlled */
+                    .row {
+                        margin-left: -10px !important;
+                        margin-right: -10px !important;
+                    }
+                    
+                    /* Ensure content doesn't overflow horizontally */
+                    body {
+                        overflow-x: hidden !important;
+                        width: 100% !important;
+                    }
+
+                    /* Product variant selection area */
+                    .js_add_cart_variants {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                    }
+
+                    /* Fix action buttons and quantity area */
+                    .css_quantity, 
+                    .product-add-to-cart {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                    }
+
+                    /* Fix product images carousel/gallery */
+                    .carousel-inner, 
+                    .carousel-item {
+                        max-width: 100vw !important;
+                        width: 100% !important;
+                    }
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>

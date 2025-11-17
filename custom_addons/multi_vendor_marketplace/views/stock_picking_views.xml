@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Views for stock picking     -->
+    <record id="action_stock_picking" model="ir.actions.act_window">
+        <field name="name">Product</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Stock Picking</p>
+        </field>
+    </record>
+    <record id="stock_picking_action"
+            model="ir.actions.act_window">
+        <field name="name">Delivery Orders</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('picking_type_id', '=', 2)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Stock Picking
+                Delivery
+            </p>
+        </field>
+    </record>
+    <!--    Menu for Inventory-->
+    <menuitem id="inventory_root" parent="seller_root"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              name="Inventory" sequence="41"
+              action="vendor_dashboard_action"/>
+    <!--    Menu for delivery order-->
+    <menuitem id="delivery_order" parent="inventory_root"
+              name="Delivery Order" sequence="45"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="stock_picking_action"/>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!--Creating  journal for seller-->
+    <record id="seller_payment_journal_creation"
+            model="account.journal">
+        <field name='name'>Seller Payment</field>
+        <field name='type'>purchase</field>
+        <field name='code'>SLP</field>
+    </record>
+</odoo>

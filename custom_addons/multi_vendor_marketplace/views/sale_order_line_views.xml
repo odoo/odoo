@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Views for 'sale.order.line' model-->
+    <record id="sale_order_line_view_form"
+            model="ir.ui.view">
+        <field name="name">sale.order.line.view.form
+        </field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <form string="Sales Order Item">
+                <header>
+                    <button name="approve_order" type="object"
+                            class="oe_highlight"
+                            string="Approve" states="pending"/>
+                    <button name="shipped" type="object"
+                            class="oe_highlight"
+                            string="Ship Now" states="approved"/>
+                    <button name="cancel_order" type="object"
+                            class="oe_highlight"
+                            string="Cancel" states="pending"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="pending,approved,shipped"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="order_id" readonly="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="product_uom_qty" readonly="1"/>
+                            <field name="qty_delivered" readonly="1"/>
+                            <field name="product_uom" readonly="1"/>
+                            <field name="order_partner_id" invisible="1"/>
+                            <field name="display_type" invisible="1"/>
+                            <field name="product_updatable" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="price_unit" readonly="1"/>
+                            <field name="discount"
+                                   groups="product.group_discount_per_so_line"
+                                   readonly="1"/>
+                            <field name="price_subtotal"
+                                   widget="monetary"/>
+                            <field name="tax_id" widget="many2many_tags"
+                                   readonly="1"/>
+                            <field name="price_tax" widget="monetary"/>
+                            <field name="price_total" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Adding more search fields for sale order line-->
+    <record id="sale_order_line_view_search" model="ir.ui.view">
+        <field name="name">sale.order.line.view.search</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <search string="Search State">
+                <filter name="state_pending" string="Pending"
+                        domain="[('state', '=', 'pending')]"/>
+                <filter name="state_approved" string="Approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter name="state_shipped" string="Shipped"
+                        domain="[('state', '=', 'shipped')]"/>
+                <filter name="state_cancelled" string="Cancelled"
+                        domain="[('state', '=', 'cancel')]"/>
+            </search>
+        </field>
+    </record>
+    <!--    Kanban view -->
+    <record id="sale_order_line_view_kanban"
+            model="ir.ui.view">
+        <field name="name">multi.vendor.sale.order.line.kanban</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <kanban create="false">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image me-1">
+                                <field name="partner_id"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div name="product_lst_price" class="mt-1">
+                                    <div class="o_kanban_record_top mb-0">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="display_name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                State:
+                                <field style="background-color: #71639e; color: white;"
+                                       name="state"/>
+                                <div>
+                                    Seller:
+                                    <b>
+                                        <field name="seller_id"/>
+                                    </b>
+                                </div>
+                                <div>
+                                    Total price:
+                                    <b>
+                                        <field name="price_total"/>
+                                    </b>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--    Action for sale order line -->
+    <record id="sale_order_line_action" model="ir.actions.act_window">
+        <field name="name">Sale Order</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{'search_default_state_pending': 1}</field>
+        <field name="domain">[('order_id.website_id','!=',False)]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'kanban', 'view_id': ref('sale_order_line_view_kanban')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('sale_order_line_view_form')})]"/>
+    </record>
+    <!--    Orders menu-->
+    <menuitem id="orders" parent="sales"
+              name="Orders" sequence="23"
+              action="sale_order_line_action"/>
+
+</odoo>

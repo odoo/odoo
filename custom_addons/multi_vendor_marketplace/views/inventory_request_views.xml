@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Action and menus for 'inventory.request' model-->
+    <record id="inventory_request_action" model="ir.actions.act_window">
+        <field name="name">Update Marketplace Product Quantity
+        </field>
+        <field name="res_model">inventory.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Update Marketplace
+                Product Quantity
+            </p>
+        </field>
+    </record>
+    <!--    Form view for 'inventory.request' model-->
+    <record id="inventory_request_view_form" model="ir.ui.view">
+        <field name="name">inventory.request.view.form</field>
+        <field name="model">inventory.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="approve_request" class="oe_highlight"
+                            type="object"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                            string="Approve" states="Requested"/>
+                    <button name="reject_request" class="oe_highlight"
+                            type="object"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                            string="Reject" states="Requested"/>
+                    <button name="request" class="oe_highlight"
+                            type="object"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_seller,
+                                multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                            string="Request" states="Draft"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="Draft,Approved,Requested,Rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="product_id"/>
+                        <field name="seller_id"/>
+                        <field name="qty_new"/>
+                        <field name="location_id"/>
+                        <field name="date"/>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Kanban view for 'inventory.request' model-->
+    <record id="inventory_request_view_kanban" model="ir.ui.view">
+        <field name="name">inventory.request.view.kanban</field>
+        <field name="model">inventory.request</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban"
+                    default_group_by="state">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click"
+                             style="position:relative;">
+                            <div name="state"
+                                 style="position:absolute;right:5px;top;-2px;">
+                                <field name="state" widget="badge"
+                                       decoration-success="state == 'Approved'"
+                                       decoration-info="state == 'Draft'"
+                                       decoration-danger="state == 'Rejected'"
+                                       decoration-muted="state == 'Requested'"/>
+                            </div>
+                            <strong class="o_kanban_record_title">
+                                <field name="product_id"/>
+                                <br/>
+                            </strong>
+                            <div class="oe_kanban_details">
+                                <div name="seller_id" class="mt-1">
+                                    <b>Location:</b>
+                                    <field name="location_id"/>
+                                    <div name="qty_new">
+                                        <b>quantity:</b>
+                                        <field name="qty_new"/>
+                                    </div>
+                                    <div name="date">
+                                        <b>Create Date:</b>
+                                        <field name="date"/>
+                                    </div>
+                                </div>
+                                <div name="seller_id">
+                                    <b>Seller:</b>
+                                    <field name="seller_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--    Menu for Inventory request-->
+    <menuitem id="inventory_request" parent="inventory_root"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              name="Inventory Request" sequence="43"
+              action="inventory_request_action"/>
+</odoo>

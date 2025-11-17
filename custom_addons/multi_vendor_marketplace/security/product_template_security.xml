@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    Seller record rule-->
+    <record id="product_template_rule_seller" model="ir.rule">
+        <field name="name">Record Rule for seller product</field>
+        <field ref="model_product_template" name="model_id"/>
+        <field name="groups"
+               eval="[(4, ref('multi_vendor_marketplace.multi_vendor_marketplace_seller'))]"/>
+        <field name="domain_force">[('seller_id.id', '=',
+            user.partner_id.id)]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>
