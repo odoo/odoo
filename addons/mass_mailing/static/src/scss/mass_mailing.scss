@@ -11,6 +11,18 @@
     .o_notebook .o_notebook_headers .nav-link[name="mail_debug"] {
         display: none;
     }
+
+    .o_notebook .o_notebook_content .o_field_mass_mailing_html {
+        margin: 0 var(--Notebook-margin-x, 0);
+    }
+
+    .o_notebook > .tab-content > .tab-pane {
+        &:has(.o_field_mass_mailing_html) {
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-bottom: calc(var(--formView-sheet-padding-y, 16px) * -1);
+        }
+    }
 }
 
 @include media-breakpoint-up(lg) {
