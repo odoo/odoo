@@ -168,7 +168,8 @@ class Im_LivechatChannel(models.Model):
 
         def is_available(user, channel):
             return (
-                ("online" in user.im_status or "busy" in user.im_status)
+                #  sudo - res.users: can access agent presence to determine if they are available.
+                user.sudo().presence_ids.status == "online"
                 and (
                     channel.max_sessions_mode == "unlimited"
                     or counts.get((user.partner_id, channel), 0) < channel.max_sessions
@@ -200,7 +201,8 @@ class Im_LivechatChannel(models.Model):
         for channel in self:
             active_users = users if users is not None else channel.user_ids
             if filter_online:
-                active_users = active_users.filtered(lambda u: "online" in u.im_status or "busy" in u.im_status)
+                # sudo - res.users: can access agent presence to determine if they are available.
+                active_users = active_users.filtered(lambda u: u.sudo().presence_ids.status == "online")
             user_domain |= Domain(
                 [
                     ("partner_id", "in", active_users.partner_id.ids),
