@@ -811,8 +811,8 @@ export class TablePlugin extends Plugin {
             // Do not prevent default when there is a text in cell.
             if (focusNode.nodeType === Node.TEXT_NODE) {
                 const textNodes = descendants(startTd).filter(isTextNode);
-                const lastTextChild = textNodes.pop();
-                const firstTextChild = textNodes.shift();
+                const lastTextChild = textNodes[textNodes.length - 1];
+                const firstTextChild = textNodes[0];
                 const isAtTextBoundary = {
                     ArrowRight: nodeSize(focusNode) === focusOffset && focusNode === lastTextChild,
                     ArrowLeft: focusOffset === 0 && focusNode === firstTextChild,
