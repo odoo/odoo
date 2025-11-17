@@ -38,15 +38,6 @@ patch(Thread.prototype, {
             super.autoOpenChatWindowOnNewMessage
         );
     },
-    get showCorrespondentCountry() {
-        if (this.channel?.channel_type === "livechat") {
-            return (
-                this.correspondent?.livechat_member_type === "visitor" &&
-                Boolean(this.correspondentCountry)
-            );
-        }
-        return super.showCorrespondentCountry;
-    },
 
     get composerHidden() {
         return this.channel?.channel_type === "livechat" && this.livechat_end_dt;
