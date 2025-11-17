@@ -2186,6 +2186,19 @@ class TestOrmModifiedLine(models.Model):
             rec.total_price_quantity = rec.total_price * rec.quantity
 
 
+class TestOrmModifiedLinePositive(models.Model):
+    _name = 'test_orm.modified.line.positive'
+    _description = 'Check perf when m2m without inverse + compute depeding on m2m'
+
+    line_ids = fields.Many2many('test_orm.modified.line')
+    is_positive = fields.Boolean(compute='_compute_have_positive_line')
+
+    @api.depends('line_ids.quantity')
+    def _compute_have_positive_line(self):
+        for rec in self:
+            rec.is_positive = sum(rec.line_ids.mapped('quantity')) > 0
+
+
 class TestOrmRelated_Translation_1(models.Model):
     _name = 'test_orm.related_translation_1'
     _description = 'A model to test translation for related fields'
