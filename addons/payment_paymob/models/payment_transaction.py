@@ -26,7 +26,14 @@ class PaymentTransaction(models.Model):
         :rtype: str
         """
         if provider_code == 'paymob':
-            prefix = payment_utils.singularize_reference_prefix()
+            if not prefix:
+                # If no prefix is provided, it could mean that a module has passed a kwarg intended
+                # for the `_compute_reference_prefix` method, as it is only called if the prefix is
+                # empty. We call it manually here because singularizing the prefix would generate a
+                # default value if it was empty, hence preventing the method from ever being called
+                # and the transaction from receiving a reference named after the related document.
+                prefix = self.sudo()._compute_reference_prefix(separator, **kwargs) or None
+            prefix = payment_utils.singularize_reference_prefix(prefix=prefix, separator=separator)
 
         return super()._compute_reference(
             provider_code, prefix=prefix, separator=separator, **kwargs
