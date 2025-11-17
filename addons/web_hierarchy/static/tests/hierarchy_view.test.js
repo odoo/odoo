@@ -1271,8 +1271,8 @@ test("cannot create cyclic", async () => {
         "Josephine\nAlbert",
         "Louis\nJosephine",
     ]);
-    expect(".o_notification").toHaveCount(2);
-    expect(".o_notification_bar.bg-danger").toHaveCount(2);
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_notification_bar.bg-danger").toHaveCount(1);
 
     await contains(".o_hierarchy_node:eq(0)").dragAndDrop(".o_hierarchy_row:eq(2)");
     expect(".o_hierarchy_row").toHaveCount(3);
@@ -1283,8 +1283,8 @@ test("cannot create cyclic", async () => {
         "Josephine\nAlbert",
         "Louis\nJosephine",
     ]);
-    expect(".o_notification").toHaveCount(3);
-    expect(".o_notification_bar.bg-danger").toHaveCount(3);
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_notification_bar.bg-danger").toHaveCount(1);
 
     expect.verifySteps([]);
 });

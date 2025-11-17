@@ -313,3 +313,37 @@ test("notification autocloses after a specified delay", async () => {
     await animationFrame();
     expect(".o_notification").toHaveCount(0);
 });
+
+test("no spam notifications", async () => {
+    await makeMockEnv();
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+
+    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
+    getService("notification").add("my notification");
+    getService("notification").add("my notification");
+    getService("notification").add("my notification");
+    getService("notification").add("my notification");
+    getService("notification").add("my notification");
+    await waitFor(".o_notification");
+
+    expect(".o_notification").toHaveCount(1);
+});
+
+test("no spam markup'd notifications", async () => {
+    await makeMockEnv();
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+
+    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
+    getService("notification").add(markup("<i>my notification</i>"));
+    getService("notification").add(markup("<i>my notification</i>"));
+    getService("notification").add(markup("<i>my notification</i>"));
+    getService("notification").add(markup("<i>my notification</i>"));
+    getService("notification").add(markup("<i>my notification</i>"));
+    await waitFor(".o_notification");
+
+    expect(".o_notification").toHaveCount(1);
+});
