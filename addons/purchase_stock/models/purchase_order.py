@@ -440,12 +440,12 @@ class PurchaseOrder(models.Model):
         res["suggested_qty"] = product.suggested_qty
         return res
 
-    def _add_reference(self, reference):
-        """ link the given reference to the list of references. """
+    def _add_reference(self, references):
+        """ link the given references to the list of references. """
         self.ensure_one()
-        self.reference_ids = [Command.link(reference.id)]
+        self.reference_ids = [Command.link(reference.id) for reference in references]
 
-    def _remove_reference(self, reference):
-        """ remove the given reference to the list of references. """
+    def _remove_reference(self, references):
+        """ remove the given references from the list of references. """
         self.ensure_one()
-        self.reference_ids = [Command.unlink(reference.id)]
+        self.reference_ids = [Command.unlink(reference.id) for reference in references]
