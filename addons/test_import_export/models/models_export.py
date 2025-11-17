@@ -31,3 +31,12 @@ class ExportAggregatorOne2many(models.Model):
     parent_id = fields.Many2one('export.aggregator')
     value = fields.Integer()
     active = fields.Boolean(default=True)
+    admin_property_def = fields.Many2one('export.aggregator.admin')
+    admin_property = fields.Properties('Properties', definition='admin_property_def.definition_properties')
+
+
+class ExportAggregatorAdminOnly(models.Model):
+    _name = 'export.aggregator.admin'
+    _description = 'Export Aggregator only for admin'
+
+    definition_properties = fields.PropertiesDefinition('Definitions')
