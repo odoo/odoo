@@ -24,6 +24,7 @@ Activates:
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
+        'data/account_tax_report_stamp_tax.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
