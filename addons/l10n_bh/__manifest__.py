@@ -19,6 +19,7 @@ Activates:
         'account',
         'l10n_gcc_invoice',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/tax_report_full.xml',
         'data/tax_report_simplified.xml',
