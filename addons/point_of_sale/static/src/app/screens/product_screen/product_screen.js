@@ -56,8 +56,6 @@ export class ProductScreen extends Component {
         this.notification = useService("notification");
         this.numberBuffer = useService("number_buffer");
         this.state = useState({
-            previousSearchWord: "",
-            currentOffset: 0,
             quantityByProductTmplId: {},
         });
 
@@ -90,6 +88,7 @@ export class ProductScreen extends Component {
                     await this.pos.syncAllOrders();
                 }
             }
+            this.pos.searchProductDBState = null;
         });
 
         this.barcodeReader = useService("barcode_reader");
@@ -327,63 +326,6 @@ export class ProductScreen extends Component {
 
     get searchWord() {
         return this.pos.searchProductWord.trim();
-    }
-
-    async onPressEnterKey() {
-        const { searchProductWord } = this.pos;
-        if (!searchProductWord) {
-            return;
-        }
-        if (this.state.previousSearchWord !== searchProductWord) {
-            this.state.currentOffset = 0;
-        }
-        const result = await this.loadProductFromDB();
-        if (result.length === 0) {
-            this.notification.add(_t('No other products found for "%s".', searchProductWord), 3000);
-        }
-        if (this.state.previousSearchWord === searchProductWord) {
-            this.state.currentOffset += result.length;
-        } else {
-            this.state.previousSearchWord = searchProductWord;
-            this.state.currentOffset = result.length;
-        }
-    }
-
-    loadProductFromDBDomain(searchProductWord) {
-        return [
-            "|",
-            "|",
-            "|",
-            ["name", "ilike", searchProductWord],
-            ["product_variant_ids.name", "ilike", searchProductWord],
-            "|",
-            ["default_code", "ilike", searchProductWord],
-            ["product_variant_ids.default_code", "ilike", searchProductWord],
-            "|",
-            ["barcode", "ilike", searchProductWord],
-            ["product_variant_ids.barcode", "ilike", searchProductWord],
-            ["available_in_pos", "=", true],
-            ["sale_ok", "=", true],
-        ];
-    }
-
-    async loadProductFromDB() {
-        const { searchProductWord } = this.pos;
-        if (!searchProductWord) {
-            return;
-        }
-
-        this.pos.setSelectedCategory(0);
-        const domain = this.loadProductFromDBDomain(searchProductWord);
-
-        const { limit_categories, iface_available_categ_ids } = this.pos.config;
-        if (limit_categories && iface_available_categ_ids.length > 0) {
-            const categIds = iface_available_categ_ids.map((categ) => categ.id);
-            domain.push(["pos_categ_ids", "in", categIds]);
-        }
-
-        const results = await this.pos.loadNewProducts(domain, this.state.currentOffset, 30);
-        return results["product.product"];
     }
 
     async addProductToOrder(product) {

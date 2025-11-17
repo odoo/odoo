@@ -108,6 +108,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.kitchenPrinters = [];
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
+        this.searchProductDBState = null;
 
         // Object mapping the order's name (which contains the uuid) to it's server_id after
         // validation (order paid then sent to the backend).
@@ -181,6 +182,58 @@ export class PosStore extends WithLazyGetterTrap {
             }
         });
     }
+
+    async searchProductsFromDB() {
+        const { searchProductWord } = this;
+        if (!searchProductWord?.length) {
+            return;
+        }
+        this.searchProductDBState = this.searchProductDBState || {};
+        if (searchProductWord !== this.searchProductDBState.query) {
+            this.searchProductDBState = {
+                query: searchProductWord,
+            };
+        }
+        const { query = "", previousQuery = "" } = this.searchProductDBState;
+        const { offset = 0 } = this.searchProductDBState;
+        this.setSelectedCategory(0);
+        const domain = this.searchProductsFromDBDomain(query);
+        const { limit_categories, iface_available_categ_ids } = this.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const categIds = iface_available_categ_ids.map((categ) => categ.id);
+            domain.push(["pos_categ_ids", "in", categIds]);
+        }
+        const loadResult = await this.loadNewProducts(domain, offset, 30);
+        const result = loadResult["product.product"];
+        if (result.length === 0) {
+            this.notification.add(_t('No other products found for "%s".', query), 3000);
+        }
+        if (previousQuery === query) {
+            this.searchProductDBState.offset += result.length;
+        } else {
+            this.searchProductDBState.previousQuery = query;
+            this.searchProductDBState.offset = result.length;
+        }
+    }
+
+    searchProductsFromDBDomain(searchProductWord) {
+        return [
+            "|",
+            "|",
+            "|",
+            ["name", "ilike", searchProductWord],
+            ["product_variant_ids.name", "ilike", searchProductWord],
+            "|",
+            ["default_code", "ilike", searchProductWord],
+            ["product_variant_ids.default_code", "ilike", searchProductWord],
+            "|",
+            ["barcode", "ilike", searchProductWord],
+            ["product_variant_ids.barcode", "ilike", searchProductWord],
+            ["available_in_pos", "=", true],
+            ["sale_ok", "=", true],
+        ];
+    }
+
     navigate(routeName, routeParams = {}) {
         const pageParams = registry.category("pos_pages").get(routeName);
         const component = pageParams.component;

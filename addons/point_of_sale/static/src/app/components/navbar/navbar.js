@@ -53,13 +53,17 @@ export class Navbar extends Component {
     }
 
     handleKeydown(event) {
-        const isEndCharacter = event.key?.match(/(Enter|Tab)/);
         const isSpecialKey =
             !["Control", "Alt"].includes(event.key) && (event.key?.length > 1 || event.metaKey);
 
         clearTimeout(this.timeout);
-        if (isEndCharacter) {
+        if (event.key === "Tab") {
             this.checkInput(event);
+        } else if (event.key === "Enter") {
+            this.checkInput(event);
+            if (event.target === this.inputRef?.el) {
+                this.pos.searchProductsFromDB();
+            }
         } else {
             if (!isSpecialKey) {
                 this.bufferedInput += event.key;
