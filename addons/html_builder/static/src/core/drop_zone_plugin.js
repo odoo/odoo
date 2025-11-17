@@ -25,6 +25,7 @@ import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {DropzoneSelector[]} dropzone_selector
+ * @typedef {((el: HTMLElement) => boolean)[]} filter_for_sibling_dropzone_predicates
  */
 
 export class DropZonePlugin extends Plugin {
