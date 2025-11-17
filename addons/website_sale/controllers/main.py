@@ -2125,7 +2125,12 @@ class CustomerPortal(sale_portal.CustomerPortal):
         :return: The payment-specific values.
         :rtype: dict
         """
-        website_id = website_id or order_sudo.website_id.id
+        if not website_id:
+            if order_sudo.website_id:
+                website_id = order_sudo.website_id.id
+            elif request.website:
+                website_id = request.website.id
+
         return super()._get_payment_values(order_sudo, website_id=website_id, **kwargs)
 
     def _sale_reorder_get_line_context(self):
