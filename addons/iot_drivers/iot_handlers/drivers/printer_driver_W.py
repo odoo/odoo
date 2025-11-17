@@ -81,7 +81,7 @@ class PrinterDriver(PrinterDriverBase):
             printer = self.device_name
 
             args = [
-                "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT", "-dPDFFitPage",
+                "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT",
                 "-q",
                 "-sDEVICE#mswinpr2",
                 f'-sOutputFile#%printer%{printer}',
