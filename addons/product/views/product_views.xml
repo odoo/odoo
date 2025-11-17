@@ -72,6 +72,14 @@
                                         string=""
                                         invisible="not product_tooltip"
                                     />
+                                    <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
+                                    <div class="o_row w-100 o_is_storable" invisible="type != 'consu'">
+                                        <field name="is_storable"/>
+                                        <field name="qty_available" style="max-width: fit-content;" invisible="not is_storable"/>
+                                        <span invisible="not is_storable">
+                                            <field name="uom_name" class="oe_inline"/>
+                                        </span>
+                                    </div>
                                 </group>
                                 <group name="group_standard_price">
                                     <label for="list_price"/>
