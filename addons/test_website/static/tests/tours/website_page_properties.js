@@ -57,11 +57,11 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
     return [
         ...openCreatePageDialog,
         {
-            trigger: 'a[data-id="custom"]',
+            trigger: 'button[data-id="custom"]',
         },
         {
             content: "Go to custom section",
-            trigger: 'a[data-id="custom"]',
+            trigger: 'button[data-id="custom"]',
             run: "click",
         },
         ...(isTemplate
