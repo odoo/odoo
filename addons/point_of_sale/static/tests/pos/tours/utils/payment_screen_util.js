@@ -267,10 +267,15 @@ export function isInvoiceOptionSelected() {
  * @param {String} amount
  */
 export function remainingIs(amount) {
+    const step = `.payment-status-amount .amount:contains("${amount}")`;
+    // If amount is 0 we do NOT show the payment status on the PaymentScreen
+    if (!parseFloat(amount)) {
+        return [{ trigger: negate(step) }];
+    }
     return [
         {
             content: `remaining amount is ${amount}`,
-            trigger: `.payment-status-amount .amount:contains("${amount}")`,
+            trigger: step,
         },
     ];
 }
