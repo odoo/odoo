@@ -21,6 +21,7 @@ test("uiState", async () => {
             inputTipAmount: "",
         },
         requiredPartnerDetails: {},
+        tip: { type: false, value: false },
     });
 });
 

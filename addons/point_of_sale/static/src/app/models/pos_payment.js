@@ -76,6 +76,23 @@ export class PosPayment extends Base {
      * Override in dependent modules to update the refund payment line with the refunded payment line
      */
     updateRefundPaymentLine(refundedPaymentLine) {}
+
+    canBeAdjusted() {
+        if (this.payment_method_id.payment_terminal) {
+            return this.payment_method_id.payment_terminal.canBeAdjusted(this.uuid);
+        }
+        return (
+            !this.payment_method_id.is_cash_count &&
+            this.payment_method_id.payment_method_type != "qr_code"
+        );
+    }
+
+    async adjustAmount(amount) {
+        if (this.payment_method_id.payment_terminal) {
+            this.amount += amount;
+            await this.payment_method_id.payment_terminal.sendPaymentAdjust(this.uuid);
+        }
+    }
 }
 
 registry.category("pos_available_models").add(PosPayment.pythonModel, PosPayment);

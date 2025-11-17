@@ -110,14 +110,17 @@ export class SplitBillScreen extends Component {
         this.pos.startTransferOrder();
     }
     getGlobalDiscountPc(order = this.currentOrder) {
-        return order.getDiscountLine()?.extra_tax_data?.discount_percentage;
+        return {
+            value: order.getDiscountLine()?.extra_tax_data?.discount_value,
+            type: order.getDiscountLine()?.extra_tax_data?.discount_type,
+        };
     }
     async handleDiscountLines(originalOrder, newOrder) {
-        const discountPercentage = this.getGlobalDiscountPc(originalOrder);
-        if (discountPercentage) {
-            await this.pos.applyDiscount(discountPercentage, originalOrder);
+        const { value, type } = this.getGlobalDiscountPc(originalOrder);
+        if (value) {
+            await this.pos.applyDiscount(value, type, originalOrder);
             if (!this.isTransferred) {
-                await this.pos.applyDiscount(discountPercentage, newOrder);
+                await this.pos.applyDiscount(value, type, newOrder);
             }
         }
     }

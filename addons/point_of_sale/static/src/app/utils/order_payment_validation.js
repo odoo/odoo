@@ -38,6 +38,15 @@ export default class OrderPaymentValidation {
     }
 
     get nextPage() {
+        if (this.pos.config.set_tip_after_payment && !this.order.is_tipped) {
+            if (this.order.adjustableTipLine) {
+                return {
+                    page: "TipScreen",
+                    params: { orderUuid: this.order.uuid },
+                };
+            }
+        }
+
         return {
             page: "FeedbackScreen",
             params: {

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.tools import convert
 
 
@@ -11,12 +10,11 @@ class PosConfig(models.Model):
     iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
     iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.', copy=False)
-    set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     default_screen = fields.Selection([('tables', 'Tables'), ('register', 'Register')], string='Default Screen', default='tables')
     use_course_allocation = fields.Boolean(string="Enable Course Allocation")
 
     def _get_forbidden_change_fields(self):
-        forbidden_keys = super(PosConfig, self)._get_forbidden_change_fields()
+        forbidden_keys = super()._get_forbidden_change_fields()
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
@@ -31,8 +29,6 @@ class PosConfig(models.Model):
                     vals['show_product_images'] = False
                 if 'show_category_images' not in vals:
                     vals['show_category_images'] = False
-            if not is_restaurant or not vals.get('iface_tipproduct', False):
-                vals['set_tip_after_payment'] = False
         pos_configs = super().create(vals_list)
         for config in pos_configs:
             if config.module_pos_restaurant:
@@ -43,10 +39,7 @@ class PosConfig(models.Model):
         if ('module_pos_restaurant' in vals and vals['module_pos_restaurant'] is False):
             vals['floor_ids'] = [(5, 0, 0)]
 
-        if ('module_pos_restaurant' in vals and not vals['module_pos_restaurant']) or ('iface_tipproduct' in vals and not vals['iface_tipproduct']):
-            vals['set_tip_after_payment'] = False
-
-        if ('module_pos_restaurant' in vals and vals['module_pos_restaurant']):
+        if vals.get('module_pos_restaurant'):
             self._setup_default_floor(self)
 
         return super().write(vals)
@@ -148,10 +141,6 @@ class PosConfig(models.Model):
         if with_demo_data and self.env.company.id == self.env.ref('base.main_company').id and not existing_session:
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_session.xml', idref=None, mode='init', noupdate=True)
         return {'config_id': config.id}
-
-    @api.depends('set_tip_after_payment')
-    def _compute_local_data_integrity(self):
-       super()._compute_local_data_integrity()
 
     def _load_restaurant_demo_data(self, with_demo_data=True):
         self.ensure_one()

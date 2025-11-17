@@ -8,17 +8,34 @@ patch(ControlButtons.prototype, {
         this.dialog.add(NumberPopup, {
             title: _t("Discount Percentage"),
             startingValue: this.pos.config.discount_pc,
-            getPayload: (num) => {
-                const percent = Math.max(
-                    0,
-                    Math.min(100, this.env.utils.parseValidFloat(num.toString()))
-                );
-                this.applyDiscount(percent);
+            startingType: "percent",
+            types: [
+                { name: "fixed", symbol: this.pos.currency.symbol },
+                { name: "percent", symbol: "%" },
+            ],
+            getPayload: (num, type) => {
+                let value = num;
+                if (type === "percent") {
+                    value = Math.max(
+                        0,
+                        Math.min(100, this.env.utils.parseValidFloat(num.toString()))
+                    );
+                }
+                this.applyDiscount(value, type);
+            },
+            formatDisplayedValue: (value, type) => {
+                if (type === "fixed") {
+                    return this.env.utils.formatCurrency(value);
+                }
+                if (type === "percent") {
+                    return `${value} %`;
+                }
+                return value;
             },
         });
     },
     // FIXME business method in a compoenent, maybe to move in pos_store
-    async applyDiscount(percent) {
-        return this.pos.applyDiscount(percent);
+    async applyDiscount(percent, type) {
+        return this.pos.applyDiscount(percent, type);
     },
 });

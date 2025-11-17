@@ -114,4 +114,21 @@ export class PaymentInterface {
     async callPaymentMethod(method, params) {
         return await this.env.services.orm.silent.call("pos.payment.method", method, params);
     }
+
+    /**
+     * Return true if the amount that was authorized can be modified,
+     * false otherwise
+     * @param {string} uuid - The id of the paymentline
+     */
+    canBeAdjusted(uuid) {
+        return false;
+    }
+
+    /**
+     * Called when the amount authorized by a payment request should
+     * be adjusted to account for a new order line, it can only be called if
+     * canBeAdjusted returns True
+     * @param {string} uuid - The id of the paymentline
+     */
+    sendPaymentAdjust(uuid) {}
 }

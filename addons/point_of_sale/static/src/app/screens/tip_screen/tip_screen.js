@@ -5,11 +5,11 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { TipReceipt } from "@pos_restaurant/app/components/tip_receipt/tip_receipt";
+import { TipReceipt } from "@point_of_sale/app/components/tip_receipt/tip_receipt";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class TipScreen extends Component {
-    static template = "pos_restaurant.TipScreen";
+    static template = "point_of_sale.TipScreen";
     static props = {
         orderUuid: { type: String },
     };
@@ -21,6 +21,12 @@ export class TipScreen extends Component {
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.priceIncl;
         useRouterParamsChecker();
+
+        this.adjustableTipLine = this.currentOrder.adjustableTipLine;
+        if (!this.adjustableTipLine) {
+            this.goNextScreen();
+            return;
+        }
 
         onMounted(async () => {
             await this.printTipReceipt();
@@ -67,7 +73,7 @@ export class TipScreen extends Component {
             return;
         }
 
-        if (amount > 0.25 * this.totalAmount) {
+        if (amount > this.pos.currency.round(0.25 * this.totalAmount)) {
             const confirmed = await ask(this.dialog, {
                 title: "Are you sure?",
                 body: `${this.env.utils.formatCurrency(
@@ -82,14 +88,7 @@ export class TipScreen extends Component {
         order.state = "draft";
         await this.pos.setTip(amount);
         order.state = "paid";
-
-        const paymentline = this.pos.getOrder().payment_ids[0];
-        if (paymentline.payment_method_id.payment_terminal) {
-            paymentline.amount += amount;
-            await paymentline.payment_method_id.payment_terminal.sendPaymentAdjust(
-                paymentline.uuid
-            );
-        }
+        await this.adjustableTipLine.adjustAmount(amount);
 
         const serializedTipLine = order.getSelectedOrderline().serializeForORM();
         order.getSelectedOrderline().delete();
@@ -98,15 +97,22 @@ export class TipScreen extends Component {
             is_tipped: true,
             tip_amount: serverTipLine[0].priceIncl,
         });
+
         this.goNextScreen();
     }
     goNextScreen() {
-        if (!this.pos.config.module_pos_restaurant) {
-            this.pos.addNewOrder();
-        }
         this.pos.navigate("FeedbackScreen", {
             orderUuid: this.pos.getOrder().uuid,
         });
+    }
+    goPreviousScreen() {
+        if (this.pos.config.module_pos_restaurant) {
+            this.pos.navigate("FloorScreen");
+        } else {
+            this.pos.navigate("PaymentScreen", {
+                orderUuid: this.pos.getOrder().uuid,
+            });
+        }
     }
     async printTipReceipt() {
         const order = this.currentOrder;
