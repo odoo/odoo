@@ -2518,6 +2518,19 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         tag.name = 'baz'
         self.assertIn(tag, record.tags)
 
+    def test_61_one2many_domain(self):
+        model = self.env['test_orm.inverse_m2o_ref']
+        field = model._fields['model_ids']
+        self.assertEqual(
+            field.get_comodel_domain(model),
+            Domain('const', '=', True) & Domain('res_model', '=', model._name),
+        )
+        self.assertEqual(
+            field.get_description(self.env, ['domain'])['domain'],
+            "([('const', '=', True)]) + ([('res_model', '=', 'test_orm.inverse_m2o_ref')])",
+            "res_model should appear in the descripton of the domain",
+        )
+
     def test_70_x2many_write(self):
         discussion = self.env.ref('test_orm.discussion_0')
         # See YTI FIXME
