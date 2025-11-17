@@ -31,6 +31,7 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @property { SerializedSelection } selection
  * @property { HistoryMutation[] } mutations
  * @property { string } previousStepId
+ * @property { Object } extraStepInfos
  *
  * @typedef { Object } HistoryMutationCharacterData
  * @property { "characterData" } type
@@ -150,9 +151,10 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @typedef {((revertedStep: HistoryStep) => void)[]} post_redo_handlers
  * @typedef {((revertedStep: HistoryStep) => void)[]} post_undo_handlers
  * @typedef {(() => void)[]} restore_savepoint_handlers
- * @typedef {((arg: { stepCommonAncestor: HTMLElement }) => void)[]} step_added_handlers
+ * @typedef {((arg: { step: HistoryStep, stepCommonAncestor: HTMLElement, isPreviewing: boolean }) => void)[]} step_added_handlers
  *
  * @typedef {((record: HistoryMutationRecord) => boolean)[]} savable_mutation_record_predicates
+ * @typedef {((step: HistoryStep) => boolean)[]} unreversible_step_predicates
  *
  * @typedef {((
  *    arg: {
@@ -164,7 +166,9 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  *    },
  *    options: { forNewStep: boolean }
  *  ) => void)[]} attribute_change_processors
+ * @typedef {((step: HistoryStep) => HistoryStep)[]} history_step_processors
  * @typedef {((node: Node, childTreesToSerialize: Tree[]) => Tree[])[]} serializable_descendants_processors
+ * @typedef {((node: Node, attributeName: string, attributeValue: string) => boolean)[]} set_attribute_overrides
  */
 
 export class HistoryPlugin extends Plugin {

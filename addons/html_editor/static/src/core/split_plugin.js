@@ -24,6 +24,7 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  */
 
 /**
+ * @typedef {(({element: HTMLElement, secondPart: HTMLElement}) => void)[]} after_split_element_handlers
  * @typedef {(() => void)[]} before_split_block_handlers
  *
  * @typedef {((params: { targetNode: Node, targetOffset: number, blockToSplit: HTMLElement | null }) => void | true)[]} split_element_block_overrides

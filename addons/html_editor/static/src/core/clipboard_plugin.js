@@ -13,6 +13,8 @@ import { isHtmlContentSupported } from "./selection_plugin";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
+ *
+ * @typedef {(() => boolean)[]} bypass_paste_image_files
  */
 
 const CLIPBOARD_BLACKLISTS = {

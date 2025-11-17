@@ -12,7 +12,14 @@ import { Snippet } from "./snippet";
 import { CustomInnerSnippet } from "./custom_inner_snippet";
 
 /**
+ * @typedef {import("@html_builder/core/drag_and_drop_plugin").DragState} DragState
  * @typedef {((arg: { snippetEl: HTMLElement }) => void)[]} on_snippet_dropped_handlers
+ * @typedef {((arg: { snippetEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_dragged_handlers
+ * @typedef {((arg: { droppedEl: HTMLElement, dropzoneEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_dropped_near_handlers
+ * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_dropped_over_handlers
+ * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState, x, y }) => void)[]} on_snippet_move_handlers
+ * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_out_dropzone_handlers
+ * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_over_dropzone_handlers
  */
 
 export class BlockTab extends Component {

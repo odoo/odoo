@@ -78,6 +78,7 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
  *      editableOnly?: boolean;
  * }[]} has_overlay_options
  * @typedef {CSSSelector[]} no_parent_containers
+ * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
  */
 /**
  * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_providers
