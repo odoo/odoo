@@ -7,6 +7,7 @@
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'description': """
     Tanzanian localisation containing:
     - COA
