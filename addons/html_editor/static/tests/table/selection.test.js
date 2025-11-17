@@ -1693,6 +1693,53 @@ describe("symmetrical selection", () => {
             </table>`
         );
     });
+
+    test("select single cell containing text when pressing shift + arrow key backward", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td>ab</td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const secondTd = el.querySelectorAll("td")[1];
+        setSelection({
+            anchorNode: secondTd,
+            anchorOffset: nodeSize(secondTd),
+            focusNode: secondTd,
+            focusOffset: 0,
+        }); // <td>]ab[</td>
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td><br></td><td class="o_selected_td">]ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">]<br></td><td class="o_selected_td">ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+    });
 });
 
 describe("single cell selection", () => {
