@@ -17,10 +17,12 @@ class SaleOrderLine(models.Model):
             elif line.product_id and line.product_id.categ_id and line.product_id.categ_id.property_cost_method != 'standard':
                 # don't overwrite any existing value unless non-standard cost method
                 qty_from_delivery = line.qty_delivered
-                price_unit_from_delivery = line.move_ids.filtered(lambda m: m.state == 'done')._get_price_unit() if qty_from_delivery else 0
-                qty_from_std_price = max(line.product_uom_qty - qty_from_delivery, 0)
-
-                purch_price = (qty_from_delivery * price_unit_from_delivery + qty_from_std_price * product.standard_price) / (qty_from_delivery + qty_from_std_price)
+                price_unit_from_delivery = line.move_ids.filtered(lambda m: m.state == 'done')._get_price_unit() if qty_from_delivery > 0 else 0
+                if qty_from_delivery <= 0:
+                    purch_price = product.standard_price
+                else:
+                    qty_from_std_price = max(line.product_uom_qty - qty_from_delivery, 0)
+                    purch_price = (qty_from_delivery * price_unit_from_delivery + qty_from_std_price * product.standard_price) / (qty_from_delivery + qty_from_std_price)
                 line.purchase_price = line._convert_to_sol_currency(
                     purch_price,
                     product.cost_currency_id,
