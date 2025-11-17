@@ -1,4 +1,4 @@
-import { test, expect, beforeEach } from "@odoo/hoot";
+import { test, expect, beforeEach, waitFor } from "@odoo/hoot";
 import { click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -198,8 +198,7 @@ test("dialog component crashes", async () => {
     }
 
     getService("dialog").add(FailingDialog);
-    await animationFrame();
-
+    await waitFor(".o_error_dialog");
     expect(".modal .o_error_dialog").toHaveCount(1);
     expect.verifyErrors(["Error: Some Error"]);
 });

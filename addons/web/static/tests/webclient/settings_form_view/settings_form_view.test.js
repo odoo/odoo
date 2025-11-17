@@ -13,6 +13,7 @@ import { animationFrame, Deferred, mockSendBeacon, mockTouch, runAllTimers } fro
 import {
     clickModalButton,
     clickSave,
+    contains,
     defineActions,
     defineModels,
     editSearch,
@@ -1267,10 +1268,8 @@ test("click on save button which throws an error", async () => {
     expect(".o_form_button_save").toHaveCount(1);
     expect(".o_form_button_save").toHaveProperty("disabled", false);
 
-    await click(".o_field_boolean input[type='checkbox']");
-    await animationFrame();
-    await click(".o_form_button_save");
-    await animationFrame();
+    await contains(".o_field_boolean input[type='checkbox']").click();
+    await contains(".o_form_button_save").click();
     // error are caught asynchronously, so we have to wait for an extra animationFrame, for the error dialog to be mounted
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);

@@ -1,6 +1,7 @@
 import { BaseAutomationErrorDialog } from "@base_automation/base_automation_error_dialog";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     makeServerError,
@@ -85,7 +86,7 @@ test("display automation rule id and name in Error dialog", async () => {
     });
     await mountWithCleanup(MainComponentsContainer);
     Promise.reject(error);
-    await animationFrame();
+    await waitFor(".modal");
     expect.verifyErrors(["Message"]);
     expect.verifySteps(["error setup"]);
     expect(".modal-body p.mt-2").toHaveText(
