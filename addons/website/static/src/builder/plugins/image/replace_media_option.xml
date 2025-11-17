@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="html_builder.ReplaceMediaOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderRow[@label.translate='Your URL']//BuilderUrlPicker" position="replace">
+        <WebsiteUrlPicker title.translate="Your URL"
+            action="'setUrl'"
+            inputClasses="'o_we_large'"
+            placeholder.translate="www.example.com"/>
+    </xpath>
+</t>
+
+</templates>
