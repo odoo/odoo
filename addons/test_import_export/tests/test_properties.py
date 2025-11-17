@@ -1,4 +1,5 @@
 import json
+from odoo.tests import new_test_user
 from odoo.tests.common import RecordCapturer, HttpCase
 
 
@@ -221,6 +222,40 @@ class TestPropertiesExportImport(HttpCase):
                 ['Def', '', 'Name Partner 1', '', '', ''],
                 ['', '', '', True, 'AA,BB', ''],
                 ['', '', '', '', '', 'Name Partner 1,Name Partner 2,Name Partner 3'],
+            ],
+        )
+
+    def test_properties_type_field_accessible(self):
+        """Test get_fields works even property_defination model is not accessible."""
+
+        property_def = [{'name': 'date', 'type': 'date', 'string': 'Date', 'default': '2025-11-11'}]
+        record = self.env['export.aggregator.admin'].create({'definition_properties': property_def})
+        self.env['export.aggregator.one2many'].create([
+            {
+                'admin_property_def': record.id,
+                'admin_property': {'date': '2025-11-09'}
+            }
+        ])
+        new_test_user(self.env, login='demo')
+        self.authenticate('demo', 'demoxxxx')
+        res = self.url_open(
+            "/web/export/get_fields",
+            data=json.dumps({"params": {"model": 'export.aggregator.one2many',
+                                        'import_compat': True,
+                                        'domain': []}}),
+            headers={"Content-Type": "application/json"}
+        )
+        self.assertEqual(
+            [dict_field['id'] for dict_field in json.loads(res.content)['result']],
+            [
+                'active',
+                'admin_property_def',
+                'admin_property.date',
+                'id',
+                'name',
+                'parent_id',
+                'admin_property',
+                'value'
             ],
         )
 
