@@ -33,7 +33,7 @@ class StockMoveLine(models.Model):
         'uom.uom', 'Unit', required=True, domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_uom_id", store=True, readonly=False, precompute=True,
     )
-    product_category_name = fields.Char(related="product_id.categ_id.complete_name", string="Product Category")
+    product_category_id = fields.Many2one(related="product_id.categ_id", string="Product Category")
     quantity = fields.Float(
         'Quantity', digits='Product Unit', copy=False, store=True,
         compute='_compute_quantity', readonly=False)
