@@ -312,7 +312,8 @@ class Export(http.Controller):
             definition_record = field['definition_record']
             definition_record_field = field['definition_record_field']
 
-            target_model = Model.env[Model._fields[definition_record].comodel_name]
+            # sudo(): user may lack access to property definition model
+            target_model = Model.env[Model._fields[definition_record].comodel_name].sudo()
             domain_definition = [(definition_record_field, '!=', False)]
             # Depends of the records selected to avoid showing useless Properties
             if domain:
