@@ -62,7 +62,7 @@
                         <p t-else="">There are no products in this category.</p>
                     </div>
                     <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
-                        <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>
+                        <button class="btn btn-primary btn-lg lh-lg" t-on-click="() => this.pos.searchProductsFromDB()">Search more</button>
                     </div>
                 </div>
                 <t t-if="ui.isSmall">
