@@ -10,12 +10,19 @@
                     <div class="o_setting_right_pane border-0">
                         <!-- Info in case of sender. -->
                         <div invisible="account_peppol_proxy_state != 'sender'">
-                            You are sending your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.<br/>
+                            You are sending your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
+                            <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
+                                (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode"/>)
+                            </span>
+                            <br/>
                             But you are receiving your e-invoices via this Access Point: <field name="peppol_external_provider" class="oe_inline o_form_label" readonly="1"/>.
                         </div>
                         <!-- Info in case of receiver/smp_registration. -->
                         <div invisible="account_peppol_proxy_state not in ('receiver', 'smp_registration')">
                             You are sending and receiving your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
+                            <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
+                                (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode"/>)
+                            </span>
                             <div invisible="account_peppol_proxy_state != 'smp_registration'">
                                 Your registration should be activated within a day.
                             </div>
