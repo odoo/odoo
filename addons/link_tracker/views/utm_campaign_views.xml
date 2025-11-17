@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(link_tracker_action_campaign)d"
-                    type="action" class="oe_stat_button" icon="mouse">
+                    type="action" class="oe_stat_button" icon="arrow_selector_tool">
                     <field name="click_count" widget="statinfo" string="Clicks"/>
                 </button>
             </xpath>
@@ -20,11 +20,11 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//footer/div" position="inside">
-                <a t-if="record.click_count" href="#" title="Clicks" role="button"
+                <a t-if="record.click_count.raw_value !== 0" href="#" title="Clicks" role="button"
                     type="action" name="%(link_tracker_action_campaign)d"
                     class="btn-outline-primary rounded-pill me-1 order-4">
                     <span class="badge">
-                        <i class="oi oi-fw" data-icon="mouse"  aria-label="Clicks" role="img"/>
+                        <i class="oi oi-fw" data-icon="arrow_selector_tool"  aria-label="Clicks" role="img"/>
                         <field name="click_count"/>
                     </span>
                 </a>

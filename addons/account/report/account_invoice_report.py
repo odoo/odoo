@@ -43,7 +43,7 @@ class AccountInvoiceReport(models.Model):
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True)
-    price_subtotal_currency = fields.Float(string='Untaxed Amount in Currency', readonly=True)
+    price_subtotal_currency = fields.Monetary(string='Untaxed Amount in Currency', readonly=True, currency_field='currency_id')
     price_subtotal = fields.Monetary(
         string='Untaxed Amount',
         readonly=True,
@@ -56,7 +56,7 @@ class AccountInvoiceReport(models.Model):
         currency_field='company_currency_id',
         aggregator='sum_currency',
     )
-    price_total_currency = fields.Float(string='Total in Currency', readonly=True)
+    price_total_currency = fields.Monetary(string='Total in Currency', readonly=True, currency_field='currency_id')
     price_average = fields.Monetary(
         string='Average Price',
         readonly=True,
