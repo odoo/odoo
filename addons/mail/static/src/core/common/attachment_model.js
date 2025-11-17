@@ -1,6 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 import { assignDefined } from "@mail/utils/common/misc";
-import { generatePdfThumbnail } from "@mail/utils/common/pdf_thumbnail";
+import { generatePdfThumbnail } from "@web/core/utils/pdfjs";
 
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 import { _t } from "@web/core/l10n/translation";
