@@ -101,6 +101,8 @@ class DocController(http.Controller):
         # TODO: gzip
         filename = f'odoo-doc-index-{db_registry_sequence}-{unique}.json'
         index_attach = self.env['ir.attachment'].sudo().search([('name', '=', filename)], limit=1)
+        if not use_cache:
+            modules, models = self._doc_index()
         if not index_attach:
             # No cache, generate the index and save it.
             modules, models = self._doc_index()
