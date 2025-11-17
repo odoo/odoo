@@ -85,5 +85,20 @@ const discussChannelPatch = {
         }
         rpc("/im_livechat/session/update_status", { channel_id: this.id, livechat_status: status });
     },
+    get allowedToLeaveChannelTypes() {
+        return [...super.allowedToLeaveChannelTypes, "livechat"];
+    },
+    computeCorrespondent() {
+        const correspondent = super.computeCorrespondent();
+        if (this.channel_type === "livechat" && !correspondent) {
+            return this.livechatVisitorMember;
+        }
+        return correspondent;
+    },
+    get correspondents() {
+        return super.correspondents.filter(
+            (correspondent) => correspondent.livechat_member_type !== "bot"
+        );
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);
