@@ -12055,10 +12055,7 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
 
     await pointerUp(".o_control_panel");
     await animationFrame();
-    // FIXME: Hoot incorrectly triggers"change" events *after* the blur instead of
-    // *before*, causing the internals of the list controller/renderer to dispatch
-    // 2 notifications.
-    expect(`.o_notification`).toHaveCount(2);
+    expect(`.o_notification`).toHaveCount(1);
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("10");
 });
 

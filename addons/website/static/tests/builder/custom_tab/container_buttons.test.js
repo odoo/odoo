@@ -256,7 +256,6 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(":iframe section.third").not.toHaveAttribute("id");
     expect(":iframe section.third").not.toHaveAttribute("data-anchor");
 
-    await contains(notificationCloseSelector).click();
     // Column without title nor data-name should use the default name for column
     await contains(":iframe section.fourth div.row div").click();
     await animationFrame();
