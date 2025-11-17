@@ -252,6 +252,7 @@ class TestHolidaysOvertime(TransactionCase):
         })
         self.assertNotEqual(leave.company_id, self.employee.company_id)
         self.manager.company_id = leave.company_id.id
+        self.manager.resource_calendar_id.company_id = leave.company_id
 
         for emp in [self.employee, self.manager]:
             self.env['hr.attendance'].create({
