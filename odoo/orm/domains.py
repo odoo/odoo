@@ -134,7 +134,6 @@ NEGATIVE_CONDITION_OPERATORS = {
     'not =like': '=like',
     'not =ilike': '=ilike',
     '!=': '=',
-    '<>': '=',
 }
 """A subset of operators with a 'negative' semantic, mapping to the 'positive' operator."""
 
@@ -149,7 +148,6 @@ _INVERSE_OPERATOR = {
     'not =like': '=like',
     'not =ilike': '=ilike',
     '!=': '=',
-    '<>': '=',
     # positive to negative
     'any': 'not any',
     'any!': 'not any!',
@@ -1267,22 +1265,6 @@ def _operator_equal_if_value(condition, _):
     return DomainCondition(condition.field_expr, '=', condition.value)
 
 
-@operator_optimization(['<>'])
-def _operator_different(condition, _):
-    """a <> b  =>  a != b"""
-    # already a rewrite-rule
-    warnings.warn("Operator '<>' is deprecated since 19.0, use '!=' directly", DeprecationWarning)
-    return DomainCondition(condition.field_expr, '!=', condition.value)
-
-
-@operator_optimization(['=='])
-def _operator_equals(condition, _):
-    """a == b  =>  a = b"""
-    # rewrite-rule
-    warnings.warn("Operator '==' is deprecated since 19.0, use '=' directly", DeprecationWarning)
-    return DomainCondition(condition.field_expr, '=', condition.value)
-
-
 @operator_optimization(['=', '!='])
 def _operator_equal_as_in(condition, _):
     """ Equality operators.
@@ -1409,8 +1391,7 @@ def _optimize_like_str(condition, model):
     if isinstance(value, str):
         return condition
     if isinstance(value, SQL):
-        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
-        return condition
+        condition._raise("Use Domain.custom instead of SQL", error=TypeError)
     if '=' in condition.operator:
         condition._raise("The pattern to match must be a string", error=TypeError)
     return DomainCondition(condition.field_expr, condition.operator, str(value))
@@ -1509,9 +1490,6 @@ def _value_to_date(value, env, iso_only=False):
         return _value_to_date(value, env)
     if isinstance(value, COLLECTION_TYPES):
         return OrderedSet(_value_to_date(v, env=env, iso_only=iso_only) for v in value)
-    if isinstance(value, SQL):
-        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
-        return value
     raise ValueError(f'Failed to cast {value!r} into a date')
 
 
@@ -1586,9 +1564,6 @@ def _value_to_datetime(value, env, iso_only=False):
     if isinstance(value, COLLECTION_TYPES):
         value, is_date = zip(*(_value_to_datetime(v, env=env, iso_only=iso_only) for v in value))
         return OrderedSet(value), all(is_date)
-    if isinstance(value, SQL):
-        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
-        return value, False
     raise ValueError(f'Failed to cast {value!r} into a datetime')
 
 

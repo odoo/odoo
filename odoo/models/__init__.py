@@ -26,7 +26,6 @@ from odoo.orm.query import Query
 from odoo.orm.table_objects import Constraint, Index, UniqueIndex
 from odoo.orm.utils import (
     READ_GROUP_TIME_GRANULARITY,
-    check_method_name,
     check_object_name,
     check_pg_name,
 )

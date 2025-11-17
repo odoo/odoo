@@ -5416,12 +5416,6 @@ class BaseModel(metaclass=MetaModel):
             The returned recordset has the same prefetch object as ``self``.
         """  # noqa: RST210
         context = dict(ctx if ctx is not None else self.env.context, **overrides)
-        if 'force_company' in context:
-            warnings.warn(
-                "Since 19.0, context key 'force_company' is no longer supported. "
-                "Use with_company(company) instead.",
-                DeprecationWarning,
-            )
         if 'company' in context:
             warnings.warn(
                 "Context key 'company' is not recommended, because "

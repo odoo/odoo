@@ -6,7 +6,6 @@ import enum
 import json
 import logging
 import re
-import warnings
 from binascii import crc32
 from collections import defaultdict
 from typing import TYPE_CHECKING
@@ -162,18 +161,6 @@ class SQL:
 
     def __hash__(self):
         return hash((self.__code, self.__params))
-
-    def __iter__(self):
-        """ Yields ``self.code`` and ``self.params``. This was introduced for
-        backward compatibility, as it enables to access the SQL and parameters
-        by deconstructing the object::
-
-            sql = SQL(...)
-            code, params = sql
-        """
-        warnings.warn("Deprecated since 19.0, use code and params properties directly", DeprecationWarning)
-        yield self.code
-        yield self.params
 
     def join(self, args: Iterable) -> SQL:
         """ Join SQL objects or parameters with ``self`` as a separator. """
@@ -609,12 +596,6 @@ def add_index(cr, indexname, tablename, definition, *, unique: bool, comment='')
     if query_comment:
         cr.execute(query_comment, log_exceptions=False)
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
-
-
-def create_unique_index(cr, indexname, tablename, expressions):
-    """ Create the given index unless it exists. """
-    warnings.warn("Since 19.0, use create_index(unique=True)", DeprecationWarning)
-    return create_index(cr, indexname, tablename, expressions, unique=True)
 
 
 def drop_index(cr, indexname, tablename):

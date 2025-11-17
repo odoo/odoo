@@ -495,10 +495,6 @@ class Field(typing.Generic[T]):
         if 'depends_context' in attrs:
             attrs['_depends_context'] = tuple(attrs.pop('depends_context'))
 
-        if 'group_operator' in attrs:
-            warnings.warn("Since Odoo 18, 'group_operator' is deprecated, use 'aggregator' instead", DeprecationWarning, stacklevel=2)
-            attrs['aggregator'] = attrs.pop('group_operator')
-
         return attrs
 
     def _setup_attrs__(self, model_class: type[BaseModel], name: str) -> None:
@@ -1316,8 +1312,8 @@ class Field(typing.Generic[T]):
 
         # support for SQL value
         if operator in SQL_OPERATORS and isinstance(value, SQL):
-            warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
-            return SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], value)
+            condition = (field_expr, operator, value)
+            raise TypeError(f"Unexpected SQL in condition {condition}, use Domain.custom() instead")
 
         # nullability
         can_be_null = self not in model.env.registry.not_null_fields

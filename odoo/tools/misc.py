@@ -40,9 +40,7 @@ import markupsafe
 import pytz
 from lxml import etree, objectify
 
-# get_encodings, ustr and exception_to_unicode were originally from tools.misc.
-# There are moved to loglevels until we refactor tools.
-from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F401
+from odoo.loglevels import exception_to_unicode
 
 from .config import config
 from .float_utils import float_round
@@ -83,7 +81,6 @@ __all__ = [
     'format_duration',
     'format_time',
     'frozendict',
-    'get_encodings',
     'get_iso_codes',
     'get_lang',
     'groupby',
@@ -107,7 +104,6 @@ __all__ = [
     'street_split',
     'topological_sort',
     'unique',
-    'ustr',
     'real_time',
 ]
 
@@ -318,39 +314,6 @@ def file_open_temporary_directory(env: Environment):
 #----------------------------------------------------------
 # iterables
 #----------------------------------------------------------
-def flatten(list):
-    """Flatten a list of elements into a unique list
-    Author: Christophe Simonis (christophe@tinyerp.com)
-
-    Examples::
-    >>> flatten(['a'])
-    ['a']
-    >>> flatten('b')
-    ['b']
-    >>> flatten( [] )
-    []
-    >>> flatten( [[], [[]]] )
-    []
-    >>> flatten( [[['a','b'], 'c'], 'd', ['e', [], 'f']] )
-    ['a', 'b', 'c', 'd', 'e', 'f']
-    >>> t = (1,2,(3,), [4, 5, [6, [7], (8, 9), ([10, 11, (12, 13)]), [14, [], (15,)], []]])
-    >>> flatten(t)
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    """
-    warnings.warn(
-        "deprecated since 18.0",
-        category=DeprecationWarning,
-        stacklevel=2,
-    )
-    r = []
-    for e in list:
-        if isinstance(e, (bytes, str)) or not isinstance(e, collections.abc.Iterable):
-            r.append(e)
-        else:
-            r.extend(flatten(e))
-    return r
-
-
 def reverse_enumerate(lst: Sequence[T]) -> Iterator[tuple[int, T]]:
     """Like enumerate but in the other direction
 
