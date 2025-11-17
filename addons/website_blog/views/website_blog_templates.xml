@@ -169,8 +169,7 @@ list of filtered posts (by date or tag).
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
 <template id="website_blog.blog_post_complete" name="Blog Post" track="1">
-    <t t-call="website_blog.index">
-
+    <t  t-if="blog_post.is_visible_on_website" t-call="website_blog.index">
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_post_readable" t-value="is_view_active('website_blog.opt_blog_post_readable')"/>
         <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>
@@ -226,6 +225,9 @@ list of filtered posts (by date or tag).
             </div>
         </section>
         <section id="o_wblog_post_footer"/>
+    </t>
+    <t t-else="">
+        <t t-call="http_routing.403"/>
     </t>
 </template>
 

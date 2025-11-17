@@ -202,6 +202,41 @@ class BlogPost(models.Model):
     write_uid = fields.Many2one('res.users', 'Last Contributor', readonly=True)
     visits = fields.Integer('No of Views', copy=False, default=0, readonly=True)
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
+    visibility = fields.Selection([
+        ('public', 'Everyone'),
+        ('connected', 'Logged In'),
+    ], default='public', string='Visibility', required=True, help='Defines who can access your blog and their content.')
+    is_visible_on_website = fields.Boolean(
+        compute='_compute_is_visible_on_website',
+        search='_search_is_visible_on_website',
+    )
+
+    @api.depends_context('uid')
+    @api.depends('visibility')
+    def _compute_is_visible_on_website(self):
+        public_user = self.env.user._is_public()
+
+        for post in self:
+            if post.visibility == 'public':
+                post.is_visible_on_website = True
+            elif not public_user and post.visibility == 'connected':
+                post.is_visible_on_website = True
+            else:
+                post.is_visible_on_website = False
+
+    @api.model
+    def _search_is_visible_on_website(self, operator, value):
+        if operator not in ('=', 'in'):
+            return []
+
+        user = self.env.user
+        # Public visitors: only public posts
+        if user._is_public():
+            return [('visibility', '=', 'public')]
+
+        # Logged in users: all
+        return [('visibility', 'in', ['public', 'connected'])]
+
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
