@@ -23,6 +23,7 @@ Activates:
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
     ],
