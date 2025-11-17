@@ -4,12 +4,15 @@ from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools.translate import html_translate
 
+from odoo.addons.website_sale.const import SHOP_PATH
+
 
 class ProductPublicCategory(models.Model):
     _name = 'product.public.category'
     _inherit = [
         'website.seo.metadata',
         'website.multi.mixin',
+        'website.located.mixin',
         'website.searchable.mixin',
         'image.mixin',
     ]
@@ -106,6 +109,12 @@ class ProductPublicCategory(models.Model):
             category.display_name = " / ".join(category.parents_and_self.mapped(
                 lambda cat: cat.name or self.env._("New")
             ))
+
+    def _compute_website_url(self):
+        super()._compute_website_url()
+        for category in self:
+            if category.id:
+                category.website_url = f'{SHOP_PATH}/category/%s' % self.env['ir.http']._slug(category)
 
     @api.depends('product_tmpl_ids.is_published', 'child_id.has_published_products')
     def _compute_has_published_products(self):
