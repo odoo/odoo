@@ -1484,6 +1484,7 @@ class SaleOrder(models.Model):
     def _get_action_add_from_catalog_extra_context(self):
         return {
             **super()._get_action_add_from_catalog_extra_context(),
+            'order_customer_id': self.partner_id.id,
             'product_catalog_currency_id': self.currency_id.id,
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
             'show_sections': bool(self.id),

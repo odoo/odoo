@@ -163,6 +163,14 @@
         <field name="inherit_id" ref="product.product_view_search_catalog"/>
         <field name="model">product.product</field>
         <field name="arch" type="xml">
+            <filter name="favorites" position="after">
+                <filter
+                    string="Previously bought"
+                    name="products_previously_bought_by_customer"
+                    domain="[('previously_bought_by_customer', '=', True)]"
+                    invisible="context.get('active_model', '') != 'sale.order.line'"
+                />
+            </filter>
             <filter name="goods" position="after">
                 <filter string="In the Order"
                         invisible="context.get('active_model', '') != 'sale.order.line'"
