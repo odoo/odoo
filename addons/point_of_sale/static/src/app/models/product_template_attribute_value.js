@@ -5,9 +5,9 @@ export class ProductTemplateAttributeValue extends Base {
     static pythonModel = "product.template.attribute.value";
 
     get exclusions() {
-        const values = this.models["product.template.attribute.value"].filter((value) =>
-            value.exclude_for.some(({ value_ids }) => value_ids.some(({ id }) => id === this.id))
-        );
+        const values = this.models["product.template.attribute.exclusion"]
+            .filter(({ value_ids }) => value_ids.some(({ id }) => id === this.id))
+            .map((exclusion) => exclusion.product_template_attribute_value_id);
 
         return [...this.exclude_for.flatMap(({ value_ids }) => value_ids), ...values];
     }
