@@ -147,6 +147,10 @@ export class DropZonePlugin extends Plugin {
 
         // Prevent dropping an element into another one.
         // (e.g. ToC inside another ToC)
+        const hasForm = snippetEl.matches("form") || !!snippetEl.querySelector("form");
+        if (hasForm && !selectorExcludeAncestor.includes("form")) {
+            selectorExcludeAncestor.push("form");
+        }
         if (selectorExcludeAncestor.length) {
             const excludeAncestor = selectorExcludeAncestor.join(",");
             selectorSiblings = selectorSiblings.filter((el) => !el.closest(excludeAncestor));
