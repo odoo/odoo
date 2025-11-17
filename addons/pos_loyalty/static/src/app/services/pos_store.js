@@ -855,7 +855,7 @@ patch(PosStore.prototype, {
             }
             if (payload.coupon_report) {
                 for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
-                    await this.report.doAction(actionId, active_ids);
+                    await this.env.services.report.doAction(actionId, active_ids);
                 }
                 order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
             }
