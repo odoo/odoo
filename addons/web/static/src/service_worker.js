@@ -147,21 +147,41 @@ const nextMessageMap = new Map();
  * @param message : string
  * @return {Promise}
  */
-const waitingMessage = async (message) =>
-    new Promise((resolve) => {
-        if (!nextMessageMap.has(message)) {
-            nextMessageMap.set(message, []);
+const waitingMessage = async (message, clientId = false) => {
+    if (typeof message !== "string") {
+        throw new Error("message must be a string");
+    }
+    return new Promise((resolve) => {
+        if (!nextMessageMap.has(clientId)) {
+            nextMessageMap.set(clientId, new Map());
         }
-        nextMessageMap.get(message).push(resolve);
+        if (!nextMessageMap.get(clientId).has(message)) {
+            nextMessageMap.get(clientId).set(message, []);
+        }
+        nextMessageMap.get(clientId).get(message).push(resolve);
     });
+};
 
 self.addEventListener("message", (event) => {
-    const messageNotifiers = nextMessageMap.get(event.data);
+    if (typeof event.data !== "string") {
+        return;
+    }
+    const messageNotifiers = [
+        ...(nextMessageMap.get(false)?.get(event.data) || []),
+        ...(nextMessageMap.get(event.source.id)?.get(event.data) || []),
+    ];
     if (messageNotifiers) {
         for (const messageNotified of messageNotifiers) {
             messageNotified();
         }
-        nextMessageMap.delete(event.data);
+        nextMessageMap.get(false)?.delete(event.data);
+        nextMessageMap.get(event.source.id)?.delete(event.data);
+        if (nextMessageMap.has(false) && !nextMessageMap.get(false).size) {
+            nextMessageMap.delete(false);
+        }
+        if (nextMessageMap.has(event.source.id) && !nextMessageMap.get(event.source.id).size) {
+            nextMessageMap.delete(event.source.id);
+        }
     }
     if (event.data === "user_logout") {
         sessionInfo = null;
