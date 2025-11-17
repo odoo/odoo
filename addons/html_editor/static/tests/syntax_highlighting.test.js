@@ -14,6 +14,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { unformat } from "./_helpers/format";
+import { parseHTML } from "@html_editor/utils/html";
 
 // Press a key combination, then wait for useEffect to kick in.
 const pressAndWait = async (...args) => {
@@ -184,7 +185,6 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
     });
 });
 
-test.tags();
 test("changing languages in a code block changes its highlighting", async () => {
     await testEditorWithHighlightedContent({
         contentBefore: "<pre>some code</pre>",
@@ -247,7 +247,6 @@ test("the textarea should never contains zws", async () => {
     });
 });
 
-test.tags();
 test("can copy content with the copy button", async () => {
     patchWithCleanup(browser.navigator.clipboard, {
         async writeText(text) {
@@ -1045,4 +1044,46 @@ test("multiple ctrl+z in a highlighted code block undo changes in the block and 
         "redo: should have done nothing",
         editor
     );
+});
+
+test("can copy/paste a highlighted code block", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: unformat(
+            `<p>[ab</p>
+        <pre data-language-id="javascript">some code</pre>
+        <p>cd]</p>`
+        ),
+        contentBeforeEdit: unformat(
+            `<p>[ab</p>
+            ${highlightedPre({ language: "javascript", value: "some code" })}
+            <p>cd]</p>`
+        ),
+        stepFunction: async (editor) => {
+            const clipboardData = new DataTransfer();
+            await press(["ctrl", "c"], { dataTransfer: clipboardData });
+            const copiedValue = unformat(
+                `<p>ab</p>
+                <pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">some code</pre>
+                <p>cd</p>`
+            );
+            expect(clipboardData.getData("text/html")).toBe(copiedValue);
+            await press("delete");
+            expect(getContent(editor.editable)).toBe(
+                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+            );
+            editor.shared.dom.insert(parseHTML(editor.document, copiedValue));
+            editor.shared.history.addStep();
+            await animationFrame();
+        },
+        contentAfterEdit: unformat(
+            `<p>ab</p>
+            ${highlightedPre({ language: "javascript", value: "some code" })}
+            <p>cd[]</p>`
+        ),
+        contentAfter: unformat(
+            `<p>ab</p>
+            <pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">some code</pre>
+            <p>cd[]</p>`
+        ),
+    });
 });
