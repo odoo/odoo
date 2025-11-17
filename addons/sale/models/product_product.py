@@ -18,6 +18,10 @@ class ProductProduct(models.Model):
         compute='_compute_product_is_in_sale_order',
         search='_search_product_is_in_sale_order',
     )
+    previously_bought_by_customer = fields.Boolean(
+        search='_search_previously_bought_by_customer',
+        store=False,
+    )
 
     def _compute_sales_count(self):
         r = {}
@@ -93,6 +97,20 @@ class ProductProduct(models.Model):
             ('order_id', 'in', [self.env.context.get('order_id', '')]),
         ], ['product_id']).product_id.ids
         return [('id', 'in', product_ids)]
+
+    def _search_previously_bought_by_customer(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+
+        customer_id = self.env.context.get('order_customer_id')
+        if not customer_id:
+            return Domain(False)
+
+        subquery = self.env['sale.order.line']._search([
+            ('order_partner_id', '=', customer_id),
+            ('state', '=', 'sale'),
+        ])
+        return [('id', operator, subquery.subselect('product_id'))]
 
     @api.readonly
     def action_view_sales(self):
