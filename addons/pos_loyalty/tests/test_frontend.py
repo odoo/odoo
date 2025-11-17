@@ -529,6 +529,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        gift_card_program.pos_report_print_id = self.env.ref('loyalty.report_gift_card')
         # Run the tour to create a gift card
         self.start_pos_tour("GiftCardProgramTour1")
         # Check that gift cards are created
