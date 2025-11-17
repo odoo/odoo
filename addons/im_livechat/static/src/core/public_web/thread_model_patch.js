@@ -9,19 +9,6 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.country_id = fields.One("res.country");
     },
-    get correspondents() {
-        return super.correspondents.filter(
-            (correspondent) => correspondent.livechat_member_type !== "bot"
-        );
-    },
-
-    computeCorrespondent() {
-        const correspondent = super.computeCorrespondent();
-        if (this.channel?.channel_type === "livechat" && !correspondent) {
-            return this.livechatVisitorMember;
-        }
-        return correspondent;
-    },
 
     get inChathubOnNewMessage() {
         if (this.channel?.channel_type === "livechat") {

@@ -53,5 +53,14 @@ const discussChannelPatch = {
     get memberListTypes() {
         return [...super.memberListTypes, "livechat"];
     },
+    get showCorrespondentCountry() {
+        if (this.channel_type === "livechat") {
+            return (
+                this.correspondent?.livechat_member_type === "visitor" &&
+                Boolean(this.correspondentCountry)
+            );
+        }
+        return super.showCorrespondentCountry;
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

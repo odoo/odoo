@@ -38,15 +38,6 @@ patch(Thread.prototype, {
             super.autoOpenChatWindowOnNewMessage
         );
     },
-    get showCorrespondentCountry() {
-        if (this.channel?.channel_type === "livechat") {
-            return (
-                this.correspondent?.livechat_member_type === "visitor" &&
-                Boolean(this.correspondentCountry)
-            );
-        }
-        return super.showCorrespondentCountry;
-    },
 
     get composerHidden() {
         return this.channel?.channel_type === "livechat" && this.livechat_end_dt;
@@ -72,7 +63,9 @@ patch(Thread.prototype, {
         }
         const memberType = this.self_member_id?.livechat_member_type;
         if (memberType === "visitor") {
-            const agents = this.correspondents.filter((c) => c.livechat_member_type === "agent");
+            const agents = this.channel?.correspondents.filter(
+                (c) => c.livechat_member_type === "agent"
+            );
             if (agents.length) {
                 return formatList(
                     agents.map((agent) => agent.name),
@@ -89,7 +82,7 @@ patch(Thread.prototype, {
             }
         }
         if (memberType === "agent") {
-            const visitors = this.correspondents.filter(
+            const visitors = this.channel?.correspondents.filter(
                 (c) => c.livechat_member_type === "visitor"
             );
             if (visitors.length) {
