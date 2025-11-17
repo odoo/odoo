@@ -19,6 +19,7 @@ Activates:
 - Withholding Tax Report
     """,
     'depends': ['account'],
+    'auto_install': ['account'],
     'data': [
         'data/account_tax_vat_report.xml',
         'data/account_tax_wh_report.xml',
