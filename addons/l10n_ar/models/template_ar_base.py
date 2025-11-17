@@ -56,3 +56,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'base_variacion_mercaderia_reventa',
             },
         }
+
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
+        accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
+        if company.account_fiscal_country_id.code == 'AR':
+            accounts_data['default_cash_difference_expense_account_id'].update({
+                'description': self.env._('Cash count differences recognized as loss.'),
+            })
+            accounts_data['account_journal_early_pay_discount_loss_account_id'].update({
+                'description': self.env._('Discounts granted for early payment recognized as loss.'),
+            })
+        return accounts_data
