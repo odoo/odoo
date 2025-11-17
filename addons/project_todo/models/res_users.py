@@ -21,18 +21,26 @@ class ResUsers(models.Model):
         if to_remove:
             activity_groups.remove(to_remove)
 
-        # 2. creating groups for todo and task seperately
-        query = """SELECT BOOL(t.project_id) as is_task, count(*), act.res_model, act.res_id,
-                       CASE
-                           WHEN %(date)s - act.date_deadline::date = 0 THEN 'today'
-                           WHEN %(date)s - act.date_deadline::date > 0 THEN 'overdue'
-                           WHEN %(date)s - act.date_deadline::date < 0 THEN 'planned'
-                        END AS states
-                     FROM mail_activity AS act
-                     JOIN project_task AS t ON act.res_id = t.id
-                    WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
-                 GROUP BY is_task, states, act.res_model, act.res_id
-                """
+        # 2. Splitting tasks in 'regular-task' (is_task=TRUE) and 'to-do' (is_task=False)
+        #    Counting max 1 activity per task
+        query = """
+            WITH task_states AS (
+                SELECT BOOL(t.project_id) AS is_task, act.res_id,
+                    CASE
+                        WHEN %(date)s - MIN(act.date_deadline)::date = 0 THEN 'today'
+                        WHEN %(date)s - MIN(act.date_deadline)::date > 0 THEN 'overdue'
+                        WHEN %(date)s - MIN(act.date_deadline)::date < 0 THEN 'planned'
+                    END AS states
+                FROM mail_activity AS act
+                JOIN project_task AS t ON act.res_id = t.id
+                WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
+                GROUP BY is_task, act.res_id
+            )
+            SELECT is_task, states, array_agg(res_id) AS res_ids, COUNT(res_id) AS count
+            FROM task_states
+            GROUP BY is_task, states
+        """
+
         self.env.cr.execute(query, {
             'date': str(fields.Date.context_today(self)),
             'user_id': self.env.uid,
@@ -64,7 +72,7 @@ class ResUsers(models.Model):
                     'res_ids': set(),
                     'view_type': view_type,
                 }
-            user_activities[is_task]['res_ids'].add(activity['res_id'])
+            user_activities[is_task]['res_ids'].update(activity['res_ids'])
             user_activities[is_task][f"{activity['states']}_count"] += activity['count']
             if activity['states'] in ('today', 'overdue'):
                 user_activities[is_task]['total_count'] += activity['count']
