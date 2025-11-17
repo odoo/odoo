@@ -4092,13 +4092,18 @@ class MailThread(models.AbstractModel):
             return devices_su, None, None
         return devices_su.search([("partner_id", "in", partner_ids)]), vapid_private_key, vapid_public_key
 
-    def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None):
+    def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None, force_direct_send=False):
         """Send a push notification to the given devices.
 
         :param payload: JSON serializable dict following the notification API specs (https://notifications.spec.whatwg.org/#api)
         :param payload_by_lang: a dict mapping payload by lang, either this or payload must be provided
+        :param force_direct_send: push to the endpoints from the current request
+          instead of queuing ``mail.push`` records for the cron once more than
+          ``MAX_DIRECT_PUSH`` devices are targeted. Endpoints are then contacted
+          one after the other, hence only for notifications that cannot wait for
+          the cron (e.g. an incoming call) and on few devices.
         """
-        if len(devices) < MAX_DIRECT_PUSH:
+        if len(devices) < MAX_DIRECT_PUSH or force_direct_send:
             session = Session()
             devices_to_unlink = set()
             for device in devices:
