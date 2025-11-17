@@ -38,6 +38,7 @@ class HrEmployee(models.Model):
     _order = 'name'
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
+    _mailing_enabled = True
     _primary_email = 'work_email'
     _inherits = {'hr.version': 'version_id'}
 

@@ -11,6 +11,7 @@ import {
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
 import { Component, useState, useEffect } from "@odoo/owl";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 export class MailingFilterDropdown extends Dropdown {
     setup() {
@@ -42,10 +43,12 @@ export class FieldMany2OneMailingFilter extends Component {
         ...Many2OneField.props,
         domain_field: { type: String, optional: true },
         model_field: { type: String, optional: true },
+        noLabel: { type: Boolean, optional: true },
     };
     static defaultProps = {
         domain_field: "mailing_domain",
         model_field: "mailing_model_id",
+        noLabel: false,
     };
 
     setup() {
@@ -204,10 +207,11 @@ registry.category("fields").add("mailing_filter", {
             availableTypes: ["char"]
         },
     ],
-    extractProps({ options }) {
+    extractProps({ attrs, options }) {
         const props = extractM2OFieldProps(...arguments);
         props.domain_field = options.domain_field;
         props.model_field = options.model_field;
+        props.noLabel = exprToBoolean(attrs.nolabel);
         return props;
     },
 });

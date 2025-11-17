@@ -793,10 +793,10 @@ class MailingMailing(models.Model):
             ),
         return action
 
-    def action_view_mailing_contacts(self):
-        """Show the mailing contacts who are in a mailing list selected for this mailing."""
+    def action_import_mailing_contacts(self):
+        """Display the mailing contact import-by-paste wizard for this mailing's contact lists"""
         self.ensure_one()
-        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.mailing_contact_import_action')
         if self.contact_list_ids:
             action['context'] = {
                 'default_mailing_list_ids': self.contact_list_ids[0].ids,

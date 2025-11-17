@@ -12,7 +12,7 @@
                             <MailingFilterDropdown>
                                 <button class="btn py-0">
                                     <span class="o_mass_mailing_add_filter">
-                                        <span t-attf-class="o_mass_mailing_no_filter {{ this.props.record.data.mailing_filter_count ? 'd-none' : '' }}">Save as Favorite Filter</span>
+                                        <span t-attf-class="o_mass_mailing_no_filter {{ this.props.record.data.mailing_filter_count || this.props.noLabel ? 'd-none' : '' }}">Save as Favorite Filter</span>
                                         <i class="fa fa-floppy-o px-1 py-1"/>
                                     </span>
                                 </button>
