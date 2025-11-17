@@ -9,9 +9,11 @@ import { useCategoryScrollSpy } from "../../utils/category_scrollspy_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
 import { useScrollShadow, useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
+import { useVirtualList } from "@pos_self_order/app/utils/use_virtual_list";
+import { useDeferEffect } from "@pos_self_order/app/utils/use_defer_effect";
+import { cloneProxy } from "@pos_self_order/app/utils";
 
 let savedScrollTop = 0;
-
 export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
     static components = { OrderWidget, ProductNameWidget };
@@ -44,11 +46,49 @@ export class ProductListPage extends Component {
             subCategories: [],
         });
 
+        this.baseItems = useState({ value: this.flattenProductCategories() });
+        const { virtual, dimensions, rows } = useVirtualList({
+            ref: this.productListRef,
+            items: this.baseItems,
+            types: [
+                {
+                    name: "category",
+                    selector: ".product_list_category",
+                },
+                {
+                    name: "product",
+                    selector: ".o_self_product_box",
+                    isMainType: true,
+                },
+            ],
+            defaultNumberItems: 50,
+        });
+        this.virtual = virtual;
+        this.dimensions = dimensions;
+        this.rows = rows;
+
+        useDeferEffect(
+            () => {
+                if (this.selfOrder.kioskMode) {
+                    this.baseItems.value = this.flattenProductCategories();
+                }
+            },
+            () => [this.state.selectedCategory]
+        );
+
         if (!this.selfOrder.kioskMode) {
+            const getScrollCategories = () =>
+                this.rows
+                    .filter((row) => row.type === "category")
+                    .map((row) => ({
+                        id: row.items[0]._virtualCategoryId,
+                        top: row.cumulativeHeight - row.height,
+                    }));
             this.scrollToCategory = useCategoryScrollSpy(
                 this.state.selectedCategory?.id,
                 this.categoryListRef,
                 this.productListRef,
+                getScrollCategories,
                 (catId) => {
                     this.state.selectedCategory = this.state.topCategories.find(
                         (c) => c.id === catId
@@ -98,7 +138,6 @@ export class ProductListPage extends Component {
                 this.toggleSubCategoryPanel();
             }
             this.ensureCategoryVisible();
-            this.productListRef.el?.scrollTo({ top: 0 });
         } else {
             this.scrollToCategory(category.id);
         }
@@ -183,6 +222,43 @@ export class ProductListPage extends Component {
 
         this.state.subCategories = nextSubCategories;
         el.classList.add("show");
+    }
+
+    /**
+     * Flattens categories and their products into a single array
+     * with virtual metadata (_virtualId, _virtualType, etc.).
+     *
+     * @returns {Object[]} Flattened list of virtualized items.
+     */
+    flattenProductCategories() {
+        const baseItems = [];
+        for (const category of this.productCategories) {
+            const products = this.getProducts(category);
+
+            // Add category if not a kiosk
+            if (!this.selfOrder.kioskMode) {
+                const flatCategory = cloneProxy(category, {
+                    _virtualId: `virtual_category_${category.id}`,
+                    _virtualType: "category",
+                    _virtualCategoryId: category.id,
+                    _virtualCategoryProductsCount: products.length,
+                });
+                baseItems.push(flatCategory);
+            }
+
+            const flatProducts = products.map((product) =>
+                cloneProxy(product, {
+                    _virtualId: `virtual_category_${category.id}_product_${product.id}`,
+                    _virtualType: "product",
+                    _virtualCategoryId: category.id,
+                    _virtualCategoryProductsCount: products.length,
+                })
+            );
+
+            baseItems.push(...flatProducts);
+        }
+
+        return baseItems;
     }
 
     review() {

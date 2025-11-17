@@ -171,3 +171,114 @@ export function checkProductOutOfStock(productName) {
         trigger: `.o_self_product_box:has(span:contains('${productName}')):has(div:contains('Out of stock'))`,
     };
 }
+
+export function checkProductLoaded(productName) {
+    return {
+        content: `Check product '${productName}' is loaded`,
+        trigger: `.product_container .o_self_product_box .self_order_product_name > span:contains('${productName}')`,
+    };
+}
+
+export function checkProductNotLoaded(productName) {
+    const selector = ".product_container .o_self_product_box .self_order_product_name > span";
+    return {
+        content: `Check product '${productName}' is not loaded`,
+        trigger: selector,
+        run: () => {
+            const productElements = document.querySelectorAll(selector);
+            const texts = productElements?.values().map((el) => el.textContent.trim());
+            if (texts && texts.some((text) => text === productName.trim())) {
+                throw Error(`Product ${productName} should not be loaded.`);
+            }
+        },
+    };
+}
+
+export function checkCategoryButtonNotLoaded(categoryName) {
+    const selector = ".category_container .category_btn span";
+    return {
+        content: `Check category '${categoryName}' is not loaded`,
+        trigger: selector,
+        run: () => {
+            const categoryElements = document.querySelectorAll(selector);
+            const texts = categoryElements?.values().map((el) => el.textContent.trim());
+            if (texts && texts.some((text) => text === categoryName.trim())) {
+                throw Error(`Category ${categoryName} should not be loaded.`);
+            }
+        },
+    };
+}
+
+export function checkActiveCategoryButton(categoryName) {
+    return {
+        content: `Check active category is '${categoryName}'`,
+        trigger: `.category_container .category_btn > div.text-bg-primary > span:contains('${categoryName}')`,
+    };
+}
+
+export function checkActiveSubcategoryButton(categoryName) {
+    return {
+        content: `Check active category is '${categoryName}'`,
+        trigger:
+            categoryName === "All"
+                ? ".sub_category_container .child_category_all.btn-light"
+                : `.sub_category_container .child_category_btn.btn-light > span:contains('${categoryName}')`,
+    };
+}
+
+export function clickOnCategory(categoryName) {
+    return {
+        content: `Click on category '${categoryName}'`,
+        trigger: `.category_container .category_btn span:contains('${categoryName}')`,
+        run: "click",
+    };
+}
+
+export function clickOnCategoryNotLoaded(categoryName) {
+    return [
+        {
+            content: "Open category list",
+            trigger: ".category_container .category_end .fa-list-ul",
+            run: "click",
+        },
+        {
+            content: `Click on ${categoryName} category`,
+            trigger: `.modal .modal-body > div:contains('${categoryName}')`,
+            run: "click",
+        },
+    ];
+}
+
+export function clickOnSubcategory(categoryName) {
+    return {
+        content: `Click on subcategory '${categoryName}'`,
+        trigger:
+            categoryName === "All"
+                ? ".sub_category_container .child_category_all"
+                : `.sub_category_container .child_category_btn > span:contains('${categoryName}')`,
+        run: "click",
+    };
+}
+
+export function checkCategoryLoaded(categoryName) {
+    return {
+        content: `Check category '${categoryName}' is loaded`,
+        trigger: `.product_container .product_list_category:contains('${categoryName}')`,
+    };
+}
+
+export function checkCategoryNotLoaded(categoryName) {
+    return {
+        content: `Check category '${categoryName}' is not loaded`,
+        trigger: ".product_container",
+        run: () => {
+            const categoryElements = document.querySelectorAll(
+                ".product_container .product_list_category"
+            );
+            const texts = Array.from(categoryElements).map((el) => el.textContent.trim());
+            if (texts && texts.some((text) => text === categoryName.trim())) {
+                throw Error(`Category ${categoryName} should not be loaded.`);
+            }
+        },
+    };
+}
