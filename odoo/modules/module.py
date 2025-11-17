@@ -13,7 +13,6 @@ import re
 import sys
 import traceback
 import typing
-import warnings
 from collections.abc import Collection, Iterable, Mapping
 from os.path import join as opj
 
@@ -43,7 +42,6 @@ __all__ = [
     "get_manifest",
     "get_module_path",
     "get_modules",
-    "get_modules_with_version",
     "get_resource_from_path",
     "initialize_sys_path",
     "load_openerp_module",
@@ -396,22 +394,6 @@ def get_module_icon(module: str) -> str:
         return "/base/static/description/icon.png"
 
 
-def load_manifest(module: str, mod_path: str | None = None) -> dict:
-    """ Load the module manifest from the file system. """
-    warnings.warn("Since 19.0, use Manifest", DeprecationWarning)
-
-    if mod_path:
-        mod = Manifest._from_path(mod_path)
-        assert mod.path == mod_path
-    else:
-        mod = Manifest.for_addon(module)
-    if not mod:
-        _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
-        return {}
-
-    return dict(mod)
-
-
 def _load_manifest(module: str, manifest_content: dict) -> dict:
     """ Load and validate the module manifest.
 
@@ -539,12 +521,6 @@ def get_modules() -> list[str]:
     """Get the list of module names that can be loaded.
     """
     return [m.name for m in Manifest.all_addon_manifests()]
-
-
-def get_modules_with_version() -> dict[str, str]:
-    """Get the module list with the linked version."""
-    warnings.warn("Since 19.0, use Manifest.all_addon_manifests", DeprecationWarning)
-    return {m.name: m.version for m in Manifest.all_addon_manifests()}
 
 
 def adapt_version(version: str) -> str:

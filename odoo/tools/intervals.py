@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import itertools
 import typing
-import warnings
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -111,16 +110,6 @@ class Intervals(typing.Generic[T]):
                 enabled = not enabled
 
         return result
-
-    def remove(self, interval):
-        """ Remove an interval from the set. """
-        warnings.warn("Deprecated since 19.0, do not mutate intervals", DeprecationWarning)
-        self._items.remove(interval)
-
-    def items(self):
-        """ Return the intervals. """
-        warnings.warn("Deprecated since 19.0, just iterate over Intervals", DeprecationWarning)
-        return self._items
 
 
 def intervals_overlap(interval_a: tuple[T, T], interval_b: tuple[T, T]) -> bool:

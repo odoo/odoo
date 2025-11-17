@@ -91,22 +91,6 @@ else:
     _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 
 
-# backward compatibility: Form was defined in this file
-def __getattr__(name):
-    # pylint: disable=import-outside-toplevel
-    if name != 'Form':
-        raise AttributeError(name)
-
-    from .form import Form
-
-    warnings.warn(
-        "Since 18.0: odoo.tests.common.Form is deprecated, use odoo.tests.Form",
-        category=DeprecationWarning,
-        stacklevel=2,
-    )
-    return Form
-
-
 # The odoo library is supposed already configured.
 HOST = '127.0.0.1'
 # Useless constant, tests are aware of the content of demo data
