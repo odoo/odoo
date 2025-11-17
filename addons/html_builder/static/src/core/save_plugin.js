@@ -12,7 +12,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 /**
  * @typedef {(() => void)[]} after_save_handlers
- * @typedef {((el: HTMLElement) => Promise<Map<string,string> | void>)[]} before_save_handlers
+ * @typedef {((el?: HTMLElement) => Promise<void>)[]} before_save_handlers
  * Called at the very beginning of the save process.
  *
  * @typedef {((el: HTMLElement) => Promise<void>)[]} save_element_handlers

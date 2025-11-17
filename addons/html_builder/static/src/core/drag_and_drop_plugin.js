@@ -27,6 +27,7 @@ import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
  *     restoreGridItem?: () => void;
  *     rowSpan: number;
  *     snippet: { gridColumnSpan?: number };
+ *     snippetEl: HTMLElement | undefined;
  *     startGridArea: string;
  *     startGridEl: HTMLElement;
  *     startMiddle: number;
