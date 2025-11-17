@@ -29,6 +29,10 @@ class GroupOperator(models.Model):
     many2one = fields.Many2one('export.integer')
     one2many = fields.One2many('export.group_operator.one2many', 'parent_id')
     active = fields.Boolean(default=True)
+    parent_id = fields.Many2one('export.group_operator', string='Parent')
+    definition_properties = fields.PropertiesDefinition('Definitions')
+    properties = fields.Properties('Properties', definition='parent_id.definition_properties')
+
 
 class GroupOperatorO2M(models.Model):
     _name = 'export.group_operator.one2many'
