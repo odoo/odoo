@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
         },
         {
             content: "check the price of 1 website_sale_cart_notification_product_1",
-            trigger: '.toast-body div:contains("$ 1,000.00")',
+            trigger: '.toast-body div:contains("$ 1,150.00")',
         },
         ...tourUtils.searchProduct("website_sale_cart_notification_product_2", { select: true }),
         {
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
         },
         {
             content: "check the price of 3 website_sale_cart_notification_product_2",
-            trigger: '.toast-body div:contains("$ 15,000.00")',
+            trigger: '.toast-body div:contains("$ 17,250.00")',
         },
         {
             content: "Go To Cart",
@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification_qty_and_
         },
         {
             content: "check the price of 1 website_sale_cart_notification_product_1",
-            trigger: '.toast-body div:contains("$ 1,000.00")',
+            trigger: '.toast-body div:contains("$ 1,150.00")',
         },
         // Again add same product
         {
@@ -104,7 +104,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification_qty_and_
         },
         {
             content: "check that price total only showing total of newly added quantity",
-            trigger: '.toast-body div:contains("$ 3,000.00")',
+            trigger: '.toast-body div:contains("$ 3,450.00")',
         },
     ],
 });

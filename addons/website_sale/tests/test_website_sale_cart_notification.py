@@ -12,18 +12,20 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.website = cls.env.company.website_id = cls.env.ref('website.default_website')
+
         cls.size_attribute.create_variant = 'no_variant'
-        cls.env['product.template'].create({
+        cls.product_tmpl_1, cls.product_tmpl_2 = cls.env['product.template'].create([{
             'name': 'website_sale_cart_notification_product_1',
             'type': 'consu',
             'website_published': True,
-            'list_price': 1000,
-        })
-        cls.env['product.template'].create({
+            'list_price': 1150.0,
+        }, {
             'name': 'website_sale_cart_notification_product_2',
             'type': 'consu',
             'website_published': True,
-            'list_price': 5000,
+            'list_price': 5750.0,
             'attribute_line_ids': [Command.create({
                 'attribute_id': cls.size_attribute.id,
                 'value_ids': [Command.set([
@@ -32,11 +34,20 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
                     cls.size_attribute_l.id,
                 ])],
             })],
-        })
+        }])
 
     def test_website_sale_cart_notification(self):
         self.env.ref('website_sale.product_search').active = True
-        self.start_tour("/", 'website_sale_cart_notification')
+
+        with self.subTest("Tax Excluded"):
+            self.website.show_line_subtotals_tax_selection = 'tax_excluded'
+            self.start_tour("/", 'website_sale_cart_notification')
+
+        with self.subTest("Tax Included"):
+            self.website.show_line_subtotals_tax_selection = 'tax_included'
+            self.product_tmpl_1.list_price = 1000.0
+            self.product_tmpl_2.list_price = 5000.0
+            self.start_tour("/", 'website_sale_cart_notification')
 
     def test_website_sale_cart_notification_qty_and_total(self):
         """ Check that adding product into cart which is already in the cart only display newly
