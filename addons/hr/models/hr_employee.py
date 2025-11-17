@@ -51,26 +51,26 @@ class HrEmployee(models.Model):
         required=True,
         store=False,
         compute_sudo=True,
-        groups="hr.group_hr_user")
+        groups="base.group_user")
     current_version_id = fields.Many2one(
         'hr.version',
         compute='_compute_current_version_id',
         store=True,
-        groups="hr.group_hr_user",
+        groups="base.group_user",
     )
     current_date_version = fields.Date(
         related="current_version_id.date_version",
         string="Current Date Version",
-        groups="hr.group_hr_user"
+        groups="base.group_user"
     )
     version_ids = fields.One2many(
         'hr.version',
         'employee_id',
         string='Employee Versions',
-        groups="hr.group_hr_user",
+        groups="base.group_user",
         required=True
     )
-    versions_count = fields.Integer(compute='_compute_versions_count', groups="hr.group_hr_user")
+    versions_count = fields.Integer(compute='_compute_versions_count', groups="base.group_user")
 
     @api.model
     def _lang_get(self):
@@ -128,7 +128,7 @@ class HrEmployee(models.Model):
     lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
-    birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
+    birthday = fields.Date('Birthday', groups="base.group_user", tracking=True)
     birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_user", default=False)
     birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
     bank_account_ids = fields.Many2many(

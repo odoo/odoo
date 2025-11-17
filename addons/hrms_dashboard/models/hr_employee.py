@@ -84,8 +84,15 @@ class HrEmployee(models.Model):
     def get_user_employee_details(self):
         """To fetch the details of employee"""
         uid = request.session.uid
+        # With the new security rules, employees can read their own version records
         employee = self.env['hr.employee'].sudo().search_read(
-            [('user_id', '=', uid)], limit=1)
+            [('user_id', '=', uid)],
+            fields=['id', 'name', 'birthday', 'joining_date', 'job_id', 'mobile_phone',
+                    'work_email', 'private_street', 'private_street2', 'private_city',
+                    'private_state_id', 'private_zip', 'private_country_id', 'image_1920',
+                    'attendance_state', 'department_id', 'payslip_count'],
+            limit=1)
+
         attendance = self.env['hr.attendance'].sudo().search_read(
             [('employee_id', '=', employee[0]['id'])],
             fields=['id', 'check_in', 'check_out', 'worked_hours'])
@@ -462,6 +469,16 @@ class HrEmployee(models.Model):
     @api.model
     def join_resign_trends(self):
         """Returns join/resign details of departments"""
+        # Security check: only HR managers can access this data
+        user = self.env.user
+        if not user.has_group('hr.group_hr_manager'):
+            return [{
+                'name': 'Join',
+                'values': []
+            }, {
+                'name': 'Resign',
+                'values': []
+            }]
         cr = self._cr
         month_list = []
         join_trend = []
@@ -525,6 +542,10 @@ class HrEmployee(models.Model):
     @api.model
     def get_attrition_rate(self):
         """Returns monthly wise attrition rate"""
+        # Security check: only HR managers can access this data
+        user = self.env.user
+        if not user.has_group('hr.group_hr_manager'):
+            return []
         month_attrition = []
         monthly_join_resign = self.join_resign_trends()
         month_join = monthly_join_resign[0]['values']

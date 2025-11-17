@@ -345,6 +345,7 @@
                     <div class="oh-card-body pb-0">
                         <p class="stat_head" style="padding : 0px;"><t t-esc="this.translations.attendance"/>
                             <div class="add_lines"
+                                 t-if="this.state.is_manager"
                                  t-on-click="add_attendance">
                                 <i class="fa fa-plus"/>
                             </div>
@@ -376,6 +377,7 @@
                     <div class="oh-card-body pb-0">
                         <p class="stat_head" style="padding : 0px;" t-esc="this.translations.leaves"/>
                         <div class="add_lines"
+                             t-if="this.state.is_manager"
                              t-on-click="add_leave">
                                 <i class="fa fa-plus"/>
                             </div>
@@ -413,6 +415,7 @@
             <div class="oh-card-body pb-0">
                 <p class="stat_head" style="padding : 0px;" t-esc="this.translations.expenses"/>
                 <div class="add_lines"
+                     t-if="this.state.is_manager"
                      t-on-click="add_expense">
                     <i class="fa fa-plus"/>
                 </div>
@@ -450,6 +453,7 @@
             <div class="oh-card-body pb-0">
                 <p class="stat_head" style="padding : 0px;" t-esc="this.translations.projects"/>
                 <div class="add_lines"
+                     t-if="this.state.is_manager"
                      t-on-click="add_project_task">
                     <i class="fa fa-plus"/>
                 </div>

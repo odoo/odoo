@@ -50,11 +50,11 @@ class HrVersion(models.Model):
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True, tracking=True)
 
-    date_version = fields.Date(required=True, default=fields.Date.today, tracking=True, groups="hr.group_hr_user")
+    date_version = fields.Date(required=True, default=fields.Date.today, tracking=True, groups="base.group_user")
     last_modified_uid = fields.Many2one('res.users', string='Last Modified by',
-                                        default=lambda self: self.env.uid, required=True, groups="hr.group_hr_user")
+                                        default=lambda self: self.env.uid, required=True, groups="base.group_user")
     last_modified_date = fields.Datetime(string='Last Modified on', default=fields.Datetime.now, required=True,
-                                         groups="hr.group_hr_user")
+                                         groups="base.group_user")
 
     # Personal Information
     country_id = fields.Many2one(
@@ -73,17 +73,17 @@ class HrVersion(models.Model):
         ('other', 'Other'),
     ], groups="hr.group_hr_user", tracking=True, help="This is the legal sex recognized by the state.", string='Gender')
 
-    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=True)
-    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=True)
-    private_city = fields.Char(string="Private City", groups="hr.group_hr_user", tracking=True)
-    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
+    private_street = fields.Char(string="Private Street", groups="base.group_user", tracking=True)
+    private_street2 = fields.Char(string="Private Street2", groups="base.group_user", tracking=True)
+    private_city = fields.Char(string="Private City", groups="base.group_user", tracking=True)
+    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="base.group_user")
     private_state_id = fields.Many2one(
         "res.country.state", string="Private State",
         domain="[('id', 'in', allowed_country_state_ids)]",
-        groups="hr.group_hr_user", tracking=True)
-    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=True)
+        groups="base.group_user", tracking=True)
+    private_zip = fields.Char(string="Private Zip", groups="base.group_user", tracking=True)
     private_country_id = fields.Many2one("res.country", string="Private Country",
-                                         groups="hr.group_hr_user", tracking=True)
+                                         groups="base.group_user", tracking=True)
 
     distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user",
