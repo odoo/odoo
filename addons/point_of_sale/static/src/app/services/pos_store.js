@@ -787,14 +787,25 @@ export class PosStore extends WithLazyGetterTrap {
         line.setDiscount(val);
     }
 
-    async setTip(tip) {
+    async setTip(tip, type = "fixed", value = false) {
         const currentOrder = this.getOrder();
         const tipProduct = this.config.tip_product_id;
         let line = currentOrder.lines.find((line) => line.product_id.id === tipProduct.id);
 
-        if (line) {
+        // Delete tip
+        if (line && !tip) {
+            line.delete();
+            currentOrder.setTip(false);
+        }
+
+        // Update tip
+        else if (line) {
             line.setUnitPrice(tip);
-        } else {
+            currentOrder.setTip(tip, type, value);
+        }
+
+        // Add tip
+        else if (tip) {
             line = await this.addLineToCurrentOrder(
                 {
                     product_id: tipProduct,
@@ -803,11 +814,18 @@ export class PosStore extends WithLazyGetterTrap {
                 },
                 {}
             );
+            currentOrder.setTip(tip, type, value);
         }
-
-        currentOrder.is_tipped = true;
-        currentOrder.tip_amount = tip;
         return line;
+    }
+
+    getTip() {
+        const currentOrder = this.getOrder();
+        return {
+            amount: currentOrder.tip_amount || 0,
+            type: currentOrder.uiState.tip.type || "fixed",
+            value: currentOrder.uiState.tip.value || 0,
+        };
     }
 
     selectOrderLine(order, line) {

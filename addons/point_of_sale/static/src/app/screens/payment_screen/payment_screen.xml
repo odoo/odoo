@@ -80,12 +80,18 @@
     <t t-name="point_of_sale.PaymentScreenValidate">
         <button class="validation-button next btn btn-primary btn-lg py-3 lh-lg"
             t-on-click="() => this.validateOrder()"
+            t-att-hidden="pos.config.set_tip_after_payment and !currentOrder.isPaid()"
             t-attf-class="
                 {{ ui.isSmall ? 'btn-switchpane flex-fill' : 'button next w-50' }}
                 {{ currentOrder.canBeValidated() and !currentOrder.isRefundInProcess() ? 'highlight' : 'disabled' }}
             "
         >
-            <span>Validate</span>
+            <t t-if="pos.config.set_tip_after_payment and currentOrder.isPaid()">
+                <span class="back_text">Close Tab</span>
+            </t>
+            <t t-else="">
+                <span>Validate</span>
+            </t>
         </button>
     </t>
 
@@ -99,7 +105,7 @@
         <t t-else="">
             <button class="button back back-button validation btn btn-secondary btn-lg w-50 py-3 lh-lg "
                 t-on-click="() => pos.onClickBackButton()">
-                <span class="back_text">Back</span>
+                <span class="back_text" t-esc="uiBackText" />
             </button>
         </t>
     </t>

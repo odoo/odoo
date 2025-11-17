@@ -12,7 +12,7 @@ patch(PosStore.prototype, {
             this.numpadMode = "price";
         }
     },
-    async applyDiscount(percent, order = this.getOrder()) {
+    async applyDiscount(value, type = "percent", order = this.getOrder()) {
         const lines = order.getOrderlines();
         const product = this.config.discount_product_id;
 
@@ -45,8 +45,8 @@ patch(PosStore.prototype, {
         const globalDiscountBaseLines = accountTaxHelpers.prepare_global_discount_lines(
             baseLines,
             order.company_id,
-            "percent",
-            percent,
+            type,
+            value,
             {
                 computation_key: "global_discount",
                 grouping_function: groupingFunction,
@@ -54,7 +54,8 @@ patch(PosStore.prototype, {
         );
         for (const baseLine of globalDiscountBaseLines) {
             const extra_tax_data = accountTaxHelpers.export_base_line_extra_tax_data(baseLine);
-            extra_tax_data.discount_percentage = percent;
+            extra_tax_data.discount_value = value;
+            extra_tax_data.discount_type = type;
             const line = await this.addLineToOrder(
                 {
                     product_id: baseLine.product_id,

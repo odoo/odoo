@@ -8,6 +8,7 @@
                 <t t-set="usePreset" t-value="pos.config.use_presets and pos.models['pos.preset'].length > 1" />
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 pe-lg-0 bg-view border-end overflow-y-auto">
                     <div class="controls d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 border-bottom bg-view">
+                        <button class="settle-tips btn btn-lg btn-primary" t-if="state.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
                         <SearchBar
                             config="getSearchBarConfig()"
                             placeholder.translate="Search Orders..."
@@ -84,6 +85,10 @@
                                                 <button t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
                                                     <i class="fa fa-trash" aria-hidden="true"/>
                                                 </button>
+                                                <div t-if="state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
+                                                    <div t-if="ui.isSmall">Tip</div>
+                                                    <div><TipCell order="order" /></div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </t>
@@ -119,6 +124,10 @@
                                             <div class="btn btn-danger btn-lg">
                                                 <i class="fa fa-trash" aria-hidden="true"/>
                                             </div>
+                                        </div>
+                                        <div t-if="state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
+                                            <div t-if="ui.isSmall">Tip</div>
+                                            <div><TipCell order="order" /></div>
                                         </div>
                                     </div>
                                 </div>

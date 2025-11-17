@@ -72,6 +72,7 @@ export class PosOrder extends PosOrderAccounting {
                 inputTipAmount: "",
             },
             requiredPartnerDetails: {},
+            tip: { value: false, type: false },
         };
     }
 
@@ -180,6 +181,10 @@ export class PosOrder extends PosOrderAccounting {
 
     get isRefund() {
         return this.is_refund === true;
+    }
+
+    get adjustableTipLine() {
+        return this.payment_ids.find((p) => p.canBeAdjusted());
     }
 
     setPreset(preset) {
@@ -306,6 +311,13 @@ export class PosOrder extends PosOrderAccounting {
         }
     }
 
+    setTip(amount, tipType, tipValue) {
+        this.is_tipped = !!amount;
+        this.tip_amount = amount || false;
+        this.uiState.tip.type = tipType || false;
+        this.uiState.tip.value = tipValue || amount || false;
+    }
+
     setPricelist(pricelist) {
         this.pricelist_id = pricelist ? pricelist : false;
 
@@ -383,6 +395,11 @@ export class PosOrder extends PosOrderAccounting {
      * @returns {boolean} true if the line was removed, false otherwise
      */
     removeOrderline(line, deep = true) {
+        // Remove tip
+        if (this.config.iface_tipproduct && this.config.tip_product_id.id === line.product_id.id) {
+            this.setTip(false);
+        }
+
         let linesToRemove = [];
         if (deep) {
             linesToRemove = line.getAllLinesInCombo();

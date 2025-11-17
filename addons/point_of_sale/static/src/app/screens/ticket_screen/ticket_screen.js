@@ -27,6 +27,8 @@ import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { TipCell } from "@point_of_sale/app/screens/ticket_screen/tip_cell/tip_cell";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
@@ -44,6 +46,7 @@ export class TicketScreen extends Component {
         Numpad,
         BackButton,
         BarcodeVideoScanner,
+        TipCell,
     };
     static props = {
         reuseSavedUIState: { type: Boolean, optional: true },
@@ -738,7 +741,8 @@ export class TicketScreen extends Component {
     _getScreenToStatusMap() {
         return {
             ProductScreen: "ONGOING",
-            PaymentScreen: "PAYMENT",
+            PaymentScreen: this.pos.config.set_tip_after_payment ? "OPEN" : "PAYMENT",
+            TipScreen: "TIPPING",
         };
     }
     _getOrderStates() {
@@ -753,14 +757,16 @@ export class TicketScreen extends Component {
             text: _t("Ongoing"),
             indented: true,
         });
-        states.set("PAYMENT", {
-            text: _t("Payment"),
-            indented: true,
-        });
         states.set("RECEIPT", {
             text: _t("Receipt"),
             indented: true,
         });
+        if (this.pos.config.set_tip_after_payment) {
+            states.set("OPEN", { text: _t("Open"), indented: true });
+            states.set("TIPPING", { text: _t("Tipping"), indented: true });
+        } else {
+            states.set("PAYMENT", { text: _t("Payment"), indented: true });
+        }
         return states;
     }
     //#region SEARCH SYNCED ORDERS
@@ -860,6 +866,56 @@ export class TicketScreen extends Component {
         } else {
             return "bg-light text-emphasis";
         }
+    }
+
+    async settleTips() {
+        const promises = [];
+        for (const order of this.getFilteredOrderList()) {
+            const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
+
+            if (!order.isSynced) {
+                logPosMessage(
+                    "TicketScreen",
+                    "settleTips",
+                    `${order.name} is not yet sync. Sync it to server before setting a tip.`
+                );
+                continue;
+            }
+
+            order.state = "draft";
+            this.pos.selectedOrderUuid = order.uuid;
+            await this.pos.setTip(amount);
+            order.state = "paid";
+            order.uiState.screen_data.value = { name: "", props: {} };
+
+            const serializedTipLine = order.getSelectedOrderline().serializeForORM();
+            order.getSelectedOrderline().delete();
+
+            promises.push(
+                new Promise((resolve) => {
+                    const fn = async () => {
+                        const tipLine = await this.pos.data.create("pos.order.line", [
+                            serializedTipLine,
+                        ]);
+                        const state = await this.pos.data.ormWrite("pos.order", [order.id], {
+                            is_tipped: true,
+                            tip_amount: tipLine[0].price_unit,
+                        });
+
+                        if (state) {
+                            order.update({
+                                is_tipped: true,
+                                tip_amount: tipLine[0].price_unit,
+                            });
+                        }
+                        resolve();
+                    };
+                    fn();
+                })
+            );
+        }
+
+        await Promise.all(promises);
     }
 }
 
