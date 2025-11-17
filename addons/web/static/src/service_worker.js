@@ -138,30 +138,95 @@ self.addEventListener("fetch", (event) => {
 });
 
 /**
+ * Resolvers of the pending `waitingMessage` calls, keyed by the id of the
+ * client the message is expected from (`false` for any client), then by
+ * awaited message.
  *
- * @type {Map<String, Function[]>}
+ * @type {Map<string|false, Map<string, Function[]>>}
  */
 const nextMessageMap = new Map();
+
 /**
+ * Drop the resolvers waiting for `message` from `clientId`, and the client
+ * entry itself once it has no awaited message left.
  *
- * @param message : string
- * @return {Promise}
+ * @param {string|false} clientId
+ * @param {string} message
+ * @param {Function} [resolver] if given, only that resolver is dropped
  */
-const waitingMessage = async (message) =>
-    new Promise((resolve) => {
-        if (!nextMessageMap.has(message)) {
-            nextMessageMap.set(message, []);
+const forgetMessage = (clientId, message, resolver) => {
+    const messageMap = nextMessageMap.get(clientId);
+    if (!messageMap) {
+        return;
+    }
+    const resolvers = resolver ? (messageMap.get(message) || []).filter((r) => r !== resolver) : [];
+    if (resolvers.length) {
+        messageMap.set(message, resolvers);
+    } else {
+        messageMap.delete(message);
+    }
+    if (!messageMap.size) {
+        nextMessageMap.delete(clientId);
+    }
+};
+
+/**
+ * Wait for a client to post `message` to this service worker.
+ *
+ * @param {string} message
+ * @param {string|false} [clientId] id of the client the message is expected
+ *  from, `false` to resolve on the message from any client.
+ * @param {Object} [options]
+ * @param {AbortSignal} [options.signal] stop waiting when aborted: the
+ *  returned promise rejects with the abort reason and the resolver is dropped.
+ *  Pass one whenever the message may never come (e.g. the client is closed
+ *  before answering), otherwise its resolver is kept for the whole lifetime of
+ *  the service worker.
+ * @return {Promise<void>}
+ */
+const waitingMessage = async (message, clientId = false, { signal } = {}) => {
+    if (typeof message !== "string") {
+        throw new Error("message must be a string");
+    }
+    if (signal?.aborted) {
+        throw signal.reason;
+    }
+    return new Promise((resolve, reject) => {
+        function settle() {
+            signal?.removeEventListener("abort", onAbort);
+            resolve();
         }
-        nextMessageMap.get(message).push(resolve);
+        function onAbort() {
+            forgetMessage(clientId, message, settle);
+            reject(signal.reason);
+        }
+        if (!nextMessageMap.has(clientId)) {
+            nextMessageMap.set(clientId, new Map());
+        }
+        if (!nextMessageMap.get(clientId).has(message)) {
+            nextMessageMap.get(clientId).set(message, []);
+        }
+        nextMessageMap.get(clientId).get(message).push(settle);
+        signal?.addEventListener("abort", onAbort, { once: true });
     });
+};
 
 self.addEventListener("message", (event) => {
-    const messageNotifiers = nextMessageMap.get(event.data);
-    if (messageNotifiers) {
+    if (typeof event.data !== "string") {
+        return;
+    }
+    // `source` is null for a message that does not come from a client.
+    const clientId = event.source?.id;
+    const messageNotifiers = [
+        ...(nextMessageMap.get(false)?.get(event.data) || []),
+        ...(nextMessageMap.get(clientId)?.get(event.data) || []),
+    ];
+    if (messageNotifiers.length) {
         for (const messageNotified of messageNotifiers) {
             messageNotified();
         }
-        nextMessageMap.delete(event.data);
+        forgetMessage(false, event.data);
+        forgetMessage(clientId, event.data);
     }
     if (event.data === "user_logout") {
         sessionInfo = null;
