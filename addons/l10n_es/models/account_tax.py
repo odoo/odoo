@@ -20,7 +20,7 @@ class AccountTax(models.Model):
     l10n_es_type = fields.Selection(
         selection=[
             ('exento', 'Exento'),
-            ('sujeto', 'Sujeto'),
+            ('sujeto', 'Sujeto o ISP intracomunitario'),
             ('sujeto_agricultura', 'Sujeto Agricultura'),
             ('sujeto_isp', 'Sujeto ISP'),
             ('no_sujeto', 'No Sujeto'),
