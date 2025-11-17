@@ -1,5 +1,5 @@
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from odoo.addons.event_product.tests.common import TestEventProductCommon
 
@@ -20,4 +20,5 @@ class TestEventProduct(TestEventProductCommon):
         with self.assertRaises(ValidationError):
             self.event_product.service_tracking = 'no'
         with self.assertRaises(ValidationError):
-            self.event_product.type = 'consu'
+            with Form(self.event_product) as product_form:
+                product_form.type = 'consu'
