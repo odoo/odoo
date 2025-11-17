@@ -29,10 +29,19 @@ declare module "plugins" {
     import { WebsitePageConfigOptionShared } from "@website/builder/plugins/options/website_page_config_option_plugin";
     import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
+<<<<<<< ad57127369ae52db2f0e7d489b06e7a3c3fcda6c
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
     import { mark_translatable_nodes } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
+||||||| 83443dfd5b2230d80ac48f4b7b1ab45726dce7be
+    import { ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
+    import { mark_translatable_nodes } from "@website/builder/plugins/translation_plugin";
+=======
+    import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
+    import { mark_translatable_nodes } from "@website/builder/plugins/translation_plugin";
+    import { translate_options } from "@html_builder/core/builder_options_plugin_translate";
+>>>>>>> 03708c71315cb39e12a514ba1c12075372a7a794
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
     interface SharedMethods {
@@ -94,7 +103,13 @@ declare module "plugins" {
         // Data
         searchbar_option_display_items: searchbar_option_display_items;
         searchbar_option_order_by_items: searchbar_option_order_by_items;
+<<<<<<< ad57127369ae52db2f0e7d489b06e7a3c3fcda6c
         theme_options: theme_options;
+||||||| 83443dfd5b2230d80ac48f4b7b1ab45726dce7be
+=======
+        theme_options: theme_options;
+        translate_options: translate_options;
+>>>>>>> 03708c71315cb39e12a514ba1c12075372a7a794
         visibility_selector_parameters: visibility_selector_parameters;
     }
 }

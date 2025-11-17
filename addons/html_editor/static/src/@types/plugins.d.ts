@@ -37,10 +37,22 @@ declare module "plugins" {
     import { LocalOverlayShared } from "@html_editor/main/local_overlay_plugin";
     import { ImageCropShared } from "@html_editor/main/media/image_crop_plugin";
     import { delete_image_overrides, image_name_predicates, ImageShared } from "@html_editor/main/media/image_plugin";
+<<<<<<< ad57127369ae52db2f0e7d489b06e7a3c3fcda6c
     import { ImagePostProcessShared, on_image_updated_handlers, process_image_post_handlers, process_image_warmup_handlers } from "@html_editor/main/media/image_post_process_plugin";
     import { closest_savable_providers, ImageSaveShared, on_image_saved_handlers } from "@html_editor/main/media/image_save_plugin";
     import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_added_media_handlers, on_media_dialog_saved_handlers, on_replaced_media_handlers } from "@html_editor/main/media/media_plugin";
     import { move_node_blacklist_selectors, move_node_whitelist_selectors, set_movable_element_handlers, unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
+||||||| 83443dfd5b2230d80ac48f4b7b1ab45726dce7be
+    import { ImagePostProcessShared, process_image_post_handlers, process_image_warmup_handlers } from "@html_editor/main/media/image_post_process_plugin";
+    import { closest_savable_providers, ImageSaveShared } from "@html_editor/main/media/image_save_plugin";
+    import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_added_media_handlers, on_media_dialog_saved_handlers, on_replaced_media_handlers } from "@html_editor/main/media/media_plugin";
+    import { move_node_blacklist_selectors, move_node_whitelist_selectors } from "@html_editor/main/movenode_plugin";
+=======
+    import { ImagePostProcessShared, on_image_updated_handlers, process_image_post_handlers, process_image_warmup_handlers } from "@html_editor/main/media/image_post_process_plugin";
+    import { closest_savable_providers, ImageSaveShared } from "@html_editor/main/media/image_save_plugin";
+    import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_added_media_handlers, on_image_saved_handlers, on_media_dialog_saved_handlers, on_replaced_media_handlers } from "@html_editor/main/media/media_plugin";
+    import { move_node_blacklist_selectors, move_node_whitelist_selectors, set_movable_element_handlers, unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
+>>>>>>> 03708c71315cb39e12a514ba1c12075372a7a794
     import { layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
     import { power_buttons, power_buttons_visibility_predicates } from "@html_editor/main/power_buttons_plugin";
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
