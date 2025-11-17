@@ -51,6 +51,8 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 /** @typedef {PowerboxCategory[]} powerbox_categories */
 /**
+ * @typedef {import("plugins").CSSSelector[]} powerbox_blacklist_selectors
+ *
  * @see UserCommand
  * @typedef {PowerboxItem[]} powerbox_items
  *

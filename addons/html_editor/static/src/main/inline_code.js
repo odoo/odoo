@@ -3,6 +3,8 @@ import { splitTextNode } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 
+/** @typedef {((codeElement: HTMLElement) => void)[]} to_inline_code_processors */
+
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
     static dependencies = ["selection", "history", "input"];

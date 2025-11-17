@@ -34,6 +34,7 @@ import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
  * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_added_media_handlers
  * @typedef {((elements: HTMLElement[], params: { node: Node }) => Promise<void>)[]} on_media_dialog_saved_handlers
  * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_replaced_media_handlers
+ * @typedef {((args: {imageEl: HTMLElement}) => void)[]} on_image_saved_handlers
  *
  * @typedef {((el: HTMLElement) => HTMLElement)[]} closest_savable_providers
  *

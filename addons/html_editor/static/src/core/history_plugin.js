@@ -29,6 +29,7 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @property { SerializedSelection } selection
  * @property { HistoryMutation[] } mutations
  * @property { string } previousStepId
+ * @property { Object } extraStepInfos
  *
  * @typedef { Object } HistoryMutationCharacterData
  * @property { "characterData" } type
@@ -144,9 +145,10 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @typedef {((revertedStep: HistoryStep) => void)[]} post_redo_handlers
  * @typedef {((revertedStep: HistoryStep) => void)[]} post_undo_handlers
  * @typedef {(() => void)[]} restore_savepoint_handlers
- * @typedef {((arg: { stepCommonAncestor: HTMLElement }) => void)[]} step_added_handlers
+ * @typedef {((arg: { step: HistoryStep, stepCommonAncestor: HTMLElement, isPreviewing: boolean }) => void)[]} step_added_handlers
  *
  * @typedef {((record: HistoryMutationRecord) => boolean)[]} savable_mutation_record_predicates
+ * @typedef {((step: HistoryStep) => boolean)[]} unreversible_step_predicates
  *
  * @typedef {((
  *    arg: {
@@ -158,7 +160,9 @@ import { toggleClass } from "@html_editor/utils/dom";
  *    },
  *    options: { forNewStep: boolean }
  *  ) => void)[]} attribute_change_processors
+ * @typedef {((step: HistoryStep) => HistoryStep)[]} history_step_processors
  * @typedef {((node: Node, childTreesToSerialize: Tree[]) => Tree[])[]} serializable_descendants_processors
+ * @typedef {((node: Node, attributeName: string, attributeValue: string) => boolean)[]} set_attribute_overrides
  */
 
 export class HistoryPlugin extends Plugin {

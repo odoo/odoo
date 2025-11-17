@@ -1,5 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 
+/** @typedef {import("./builder_options_plugin").BuilderOptionContainer[]} translate_options */
+
 export class BuilderOptionsTranslationPlugin extends Plugin {
     static id = "builderOptions";
     static shared = ["deactivateContainers", "getTarget", "updateContainers", "setNextTarget"];
