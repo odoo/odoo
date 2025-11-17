@@ -164,12 +164,14 @@ patch(PosStore.prototype, {
             const product_unit = line.product_id.uom_id;
             if (product_unit && !product_unit.is_pos_groupable) {
                 let remaining_quantity = newLine.qty;
+                const priceUnit = newLine.price_unit;
                 newLine.delete();
                 while (!this.env.utils.floatIsZero(remaining_quantity)) {
                     const splitted_line = this.models["pos.order.line"].create({
                         ...newLineValues,
                     });
                     splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
+                    splitted_line.set_unit_price(priceUnit);
                     splitted_line.set_discount(line.discount);
                     remaining_quantity -= splitted_line.qty;
                 }
