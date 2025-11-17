@@ -3542,16 +3542,20 @@ test("empty stages kanban examples", async () => {
             </kanban>`,
     });
 
-    expect(".o_kanban_stages_nocontent").toHaveCount(1, {
+    expect(".o_kanban_group_nocontent").toHaveCount(1, {
         message: "should show the empty stages kanban helper",
     });
 
-    expect(".o_kanban_stages_nocontent .o_kanban_examples").toHaveCount(1, {
+    expect(".o_kanban_group_nocontent").toHaveText(
+        "No product yet, let's create some!\n\nLack of inspiration? See examples"
+    );
+
+    expect(".o_kanban_group_nocontent .o_kanban_examples").toHaveCount(1, {
         message: "should have a link to see examples",
     });
 
     // click to see the examples
-    await contains(".o_kanban_stages_nocontent .o_kanban_examples").click();
+    await contains(".o_kanban_group_nocontent .o_kanban_examples").click();
 
     expect(".modal .o_kanban_examples_dialog").toHaveCount(1, {
         message: "should have open the examples dialog",
@@ -3695,7 +3699,7 @@ test("empty stages kanban examples: with folded columns", async () => {
     });
 
     // click to see the examples
-    await contains(".o_kanban_stages_nocontent .o_kanban_examples").click();
+    await contains(".o_kanban_group_nocontent .o_kanban_examples").click();
 
     // apply the examples
     expect.verifySteps([]);
@@ -3747,7 +3751,7 @@ test("empty stages kanban examples: apply button's display text", async () => {
     });
 
     // click to see the examples
-    await contains(".o_kanban_stages_nocontent .o_kanban_examples").click();
+    await contains(".o_kanban_group_nocontent .o_kanban_examples").click();
 
     expect(".modal footer.modal-footer button.btn-primary").toHaveText(applyExamplesText, {
         message: "the primary button should display the value of applyExamplesText",
@@ -3931,7 +3935,7 @@ test("stages nocontent helper for grouped kanban with no records", async () => {
 
     expect(".o_kanban_group").toHaveCount(0, { message: "there should be no columns" });
     expect(".o_kanban_record").toHaveCount(0, { message: "there should be no records" });
-    expect(".o_view_nocontent.o_kanban_stages_nocontent").toHaveCount(1);
+    expect(".o_view_nocontent.o_kanban_group_nocontent").toHaveCount(1);
     expect(".o_column_quick_create").toHaveCount(1);
 });
 
@@ -3952,7 +3956,7 @@ test("basic nocontent helper is shown when no longer creating column", async () 
         noContentHelp: "No content helper",
     });
 
-    expect(".o_view_nocontent.o_kanban_stages_nocontent").toHaveCount(1, {
+    expect(".o_view_nocontent.o_kanban_group_nocontent").toHaveCount(1, {
         message: "there should be no nocontent helper (we are in 'column creation mode')",
     });
 
@@ -3968,7 +3972,7 @@ test("basic nocontent helper is shown when no longer creating column", async () 
     await press("Escape");
     await animationFrame();
 
-    expect(".o_view_nocontent:not(.o_kanban_stages_nocontent)").toHaveCount(1);
+    expect(".o_view_nocontent:not(.o_kanban_group_nocontent)").toHaveCount(1);
 });
 
 test("no nocontent helper is hidden when quick creating a column", async () => {
@@ -4076,7 +4080,7 @@ test("empty grouped kanban with sample data and no columns", async () => {
         noContentHelp: "No content helper",
     });
 
-    expect(".o_kanban_stages_nocontent").toHaveCount(1);
+    expect(".o_kanban_group_nocontent").toHaveCount(1);
     expect(".o_quick_create_unfolded").toHaveCount(1);
 });
 
@@ -9002,7 +9006,7 @@ test(`cache web_read_group (no data, no change)`, async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
-    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
 
     // execute another action to remove the kanban from the DOM
     await getService("action").doAction(2);
@@ -9012,13 +9016,13 @@ test(`cache web_read_group (no data, no change)`, async () => {
     def = new Deferred();
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
-    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
 
     // simulate the return of web_read_group => the sample data should still be displayed
     def.resolve();
     await animationFrame();
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
-    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
 });
 
 test(`cache web_read_group (no data, change)`, async () => {
@@ -9059,7 +9063,7 @@ test(`cache web_read_group (no data, change)`, async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
-    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
 
     // simulate the create of new records by someone else
     MockServer.env.partner.create([{ product_id: 3 }, { product_id: 5 }]);
@@ -9072,7 +9076,7 @@ test(`cache web_read_group (no data, change)`, async () => {
     def = new Deferred();
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
-    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
 
     // simulate the return of web_read_group => the data should have been updated
     def.resolve();
@@ -9163,7 +9167,7 @@ test(`cache web_read_group (group_expand: groups, then no group)`, async () => {
     expect(`.o_kanban_view`).toHaveCount(1);
     expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(0);
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
-    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
 });
 
 test(`cache web_read_group (group_expand: groups, then more groups)`, async () => {

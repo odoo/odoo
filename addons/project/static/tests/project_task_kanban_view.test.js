@@ -47,7 +47,7 @@ test("stages nocontent helper should be displayed in the project Kanban", async 
     });
 
     expect(".o_kanban_header").toHaveCount(1);
-    expect(".o_kanban_stages_nocontent").toHaveCount(1);
+    expect(".o_kanban_group_nocontent").toHaveCount(1);
 });
 
 test("quick create button is visible when the user has access rights.", async () => {
