@@ -1762,6 +1762,57 @@ describe("symmetrical selection", () => {
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
+
+    test("select single cell containing text when pressing shift + arrow key backward", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td>ab</td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const secondTd = el.querySelectorAll("td")[1];
+        setSelection({
+            anchorNode: secondTd,
+            anchorOffset: nodeSize(secondTd),
+            focusNode: secondTd,
+            focusOffset: 0,
+        }); // <td>]ab[</td>
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td><br></td><td class="o_selected_td">]ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">]<br></td><td class="o_selected_td">ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
 });
 
 describe("single cell selection", () => {
