@@ -10,7 +10,7 @@
                         <t t-set="items" t-value="formatRawValue(state.value)"/>
                         <t t-foreach="items" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">
-                                <td t-if="props.sortable" class="o_handle_cell">
+                                <td t-if="props.sortable" class="o_handle_cell w-0">
                                     <button type="button" class="btn">
                                         <i class="fa fa-fw fa-arrows" aria-hidden="true"/>
                                         <span class="visually-hidden">Drag and sort field</span>
