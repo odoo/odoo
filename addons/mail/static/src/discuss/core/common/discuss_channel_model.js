@@ -59,6 +59,9 @@ export class DiscussChannel extends Record {
     chatWindow = fields.One("ChatWindow", {
         inverse: "channel",
     });
+    get chatChannelTypes() {
+        return ["chat", "group"];
+    }
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     hasOtherMembersTyping = fields.Attr(false, {
@@ -87,6 +90,9 @@ export class DiscussChannel extends Record {
     }
     /** @type {Number|undefined} */
     member_count;
+    get isChatChannel() {
+        return this.chatChannelTypes.includes(this.channel?.channel_type);
+    }
     otherTypingMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").Thread} */
         compute() {

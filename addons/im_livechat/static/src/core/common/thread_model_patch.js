@@ -57,10 +57,6 @@ patch(Thread.prototype, {
         return super.typesAllowingCalls.concat(["livechat"]);
     },
 
-    get isChatChannel() {
-        return this.channel?.channel_type === "livechat" || super.isChatChannel;
-    },
-
     get allowDescription() {
         return this.channel?.channel_type === "livechat" || super.allowDescription;
     },

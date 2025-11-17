@@ -297,7 +297,7 @@ export class Thread extends Record {
     }
 
     get supportsCustomChannelName() {
-        return this.isChatChannel && this.channel?.channel_type !== "group";
+        return this.channel?.isChatChannel && this.channel?.channel_type !== "group";
     }
 
     get displayName() {
@@ -387,7 +387,7 @@ export class Thread extends Record {
     }
 
     get prefix() {
-        return this.isChatChannel ? "@" : "#";
+        return this.channel?.isChatChannel ? "@" : "#";
     }
 
     get rpcParams() {
