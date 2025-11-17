@@ -370,8 +370,10 @@
                                         <div class="o_row" name="contract_dates">
                                             <field name="contract_date_start" string="Start Date" placeholder="Not Employed" class="o_hr_narrow_field me-3"/>
                                             <span invisible="not contract_date_start">to</span>
+                                            <field name="contract_date_start_proxy" invisible="1"/>
                                             <field name="contract_date_end" string="End Date" placeholder="Indefinite"
-                                                class="o_hr_narrow_field ms-3" invisible="not contract_date_start"/>
+                                                class="o_hr_narrow_field ms-3" invisible="not contract_date_start"
+                                                options="{'start_date_field': 'contract_date_start_proxy'}"/>
                                             <widget name="button_new_contract"/>
                                         </div>
                                         <label for="wage"/>

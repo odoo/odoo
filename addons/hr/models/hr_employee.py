@@ -183,6 +183,11 @@ class HrEmployee(models.Model):
         ("other", "Other")], compute="_compute_work_location_type", tracking=True)
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
+    contract_date_start_proxy = fields.Date(
+        compute='_compute_contract_date_start_proxy',
+        string="Start Date Proxy",
+        groups = "hr.group_hr_manager"
+    )
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
     contract_wage = fields.Monetary(related="version_id.contract_wage", inherited=True, groups="hr.group_hr_manager")
     date_start = fields.Date(related='version_id.date_start', inherited=True, groups="hr.group_hr_manager")
@@ -276,6 +281,14 @@ class HrEmployee(models.Model):
         compute='_compute_has_country_contract_type',
         groups="hr.group_hr_user",
     )
+
+    @api.depends('contract_date_start')
+    def _compute_contract_date_start_proxy(self):
+        for record in self:
+            if record.contract_date_start:
+                record.contract_date_start_proxy = max(record.contract_date_start, fields.Date.today())
+            else:
+                record.contract_date_start_proxy = fields.Date.today()
 
     def _prepare_create_values(self, vals_list):
         result = super()._prepare_create_values(vals_list)
