@@ -76,12 +76,16 @@
     <div class="overflow-hidden w-100" t-att-class="{o_loading: state.loading}">
         <!-- Do not rely on Notebook to avoid pages from needing reload -->
         <div class="d-flex w-100 h-100 vertical flex-row">
-            <ul t-ref="tabs" class="nav nav-pills flex-column flex-nowrap overflow-y-auto">
-                <t t-foreach="state.pages" t-as="page" t-key="page.id">
-                    <li class="nav-item">
-                        <a t-att-data-id="page.id"
+            <aside class="border-end overflow-auto">
+                <div t-ref="tabs"
+                    class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
+                    role="tablist"
+                    aria-orientation="vertical"
+                    aria-label="Page categories">
+                    <t t-foreach="state.pages" t-as="page" t-key="page.id">
+                        <button t-att-data-id="page.id"
                             t-on-click="() => this.onTabClick(page.id)"
-                            class="nav-link p-3 rounded-0"
+                            class="list-group-item list-group-item-action p-3"
                             t-att-class="{active: page_first}"
                             href="#"
                             role="tab"
@@ -89,10 +93,10 @@
                         >
                             <span t-if="page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
                             <t t-out="page.title"/>
-                        </a>
-                    </li>
-                </t>
-            </ul>
+                        </button>
+                    </t>
+                </div>
+            </aside>
             <div t-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200">
                 <t t-foreach="state.pages" t-as="page" t-key="page.id">
                     <div t-att-data-id="page.id"
