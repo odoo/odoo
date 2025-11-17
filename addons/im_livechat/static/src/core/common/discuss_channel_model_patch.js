@@ -23,5 +23,8 @@ const discussChannelPatch = {
     get membersThatCanSeen() {
         return super.membersThatCanSeen.filter((member) => member.livechat_member_type !== "bot");
     },
+    get chatChannelTypes() {
+        return [...super.chatChannelTypes, "livechat"];
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);
