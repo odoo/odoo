@@ -176,7 +176,7 @@ class IrAsset(models.Model):
 
         # 2. Process all addons' manifests.
         for addon in addons:
-            for command in Manifest.for_addon(addon)['assets'].get(bundle, ()):
+            for command in Manifest.for_addon(addon)._Manifest__manifest_cached['assets'].get(bundle, ()):
                 directive, target, path_def = self._process_command(command)
                 self._process_path(bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 

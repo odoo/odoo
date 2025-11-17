@@ -16,6 +16,7 @@ from odoo import api
 from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError, ANY_UNIQUE
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
+from odoo.modules import Manifest
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
@@ -97,23 +98,23 @@ class TestAddonPaths(TransactionCase):
         ])
 
 
-class Manifests(dict):
-    def __init__(self, default):
-        self.defaults = default
-
-    def __missing__(self, key):
-        return self.defaults(key)
-
-
 class AddonManifestPatched(TransactionCase):
     def setUp(self):
         super().setUp()
 
         self.installed_modules = {'base', 'test_assetsbundle'}
-        self.manifests = Manifests(odoo.modules.Manifest.for_addon)
+        self.manifests = {}
 
         self.patch(self.env.registry, '_init_modules', self.installed_modules)
-        self.patch(odoo.modules.Manifest, 'for_addon', lambda module, **kw: self.manifests[module])
+
+        default_for_addon = odoo.modules.Manifest.for_addon
+
+        def for_addon(module, **kwargs):
+            if manifest := self.manifests.get(module):
+                return Manifest(path=__file__.rsplit(os.sep, 2)[0], manifest_content={'author': 'test_assetsbundle', 'license': 'LGPL-3', **manifest})
+            return default_for_addon(module)
+
+        self.patch(odoo.modules.Manifest, 'for_addon', for_addon)
 
 
 class FileTouchable(AddonManifestPatched):
