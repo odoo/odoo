@@ -821,6 +821,7 @@ test("multiple ctrl+z in a highlighted code block undo changes in the block and 
     // Write in the P again.
     actions.push("type: insert 'o' into the paragraph", "type: insert 'k' into the paragraph");
     const p = queryOne("p:not([data-selection-placeholder])");
+    await click(p);
     editor.shared.selection.setCursorEnd(p);
     await insertText(editor, "ok"); // <wrapper><highlight><pre>some codeyes</pre></highlight></wrapper><p>hello!ok[]</p>
     await compareHighlightedContent(
@@ -1095,5 +1096,41 @@ test("invisible whitespace gets trimmed before changing tag to pre", async () =>
         </p>`,
         stepFunction: insertPre,
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">hello</pre>[]`,
+    });
+});
+
+test("can write in a highlighted code block within a nested list", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: unformat(
+            `<p>a</p>
+            <ul>
+                <li class="oe-nested">
+                    <ul>
+                        <li>
+                            <pre>some code</pre>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>b</p>`
+        ),
+        stepFunction: async () => {
+            await click("textarea");
+            await pressAndWait("x");
+            await pressAndWait("y");
+        },
+        contentAfter: unformat(
+            `<p>a</p>
+            <ul>
+                <li class="oe-nested">
+                    <ul>
+                        <li>
+                            <pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">some codexy</pre>[]
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>b</p>`
+        ),
     });
 });
