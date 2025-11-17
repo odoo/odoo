@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_attendance_absence_management_wizard_form" model="ir.ui.view">
+        <field name="name">hr.attendance.absence.management.wizard.form</field>
+        <field name="model">hr.attendance.absence.management.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Absence Management Recommended">
+                <group>
+                    <p>
+                        To obtain best results, we suggest to activate the Absence Management feature. It will create missing attendance records for days where the expected attendances have not been made at all.
+                    </p>
+                </group>
+                <footer>
+                    <button name="action_confirm_and_activate"
+                        string="Confirm &amp; Activate the Settings"
+                        type="object"
+                        class="btn-primary"/>
+                    <button name="action_confirm_without_activate"
+                        string="Confirm but don't activate the Settings"
+                        type="object"
+                        class="btn-primary"/>
+                    <button name="action_discard"
+                        string="Discard"
+                        type="object"
+                        class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_attendance_absence_management" model="ir.actions.act_window">
+        <field name="name">Absence Management Recommendation</field>
+        <field name="res_model">hr.attendance.absence.management.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
