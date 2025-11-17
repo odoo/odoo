@@ -2096,15 +2096,17 @@ class StockPicking(models.Model):
         self.ensure_one()
         return self.state == 'done'
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _add_reference(self, reference=False):
-        """ link the given reference to the list of references. """
+        """ link the given references to the list of references. """
         self.ensure_one()
-        self.move_ids.reference_ids = [Command.link(reference.id)]
+        self.move_ids.reference_ids = [Command.link(stock_reference.id) for stock_reference in reference]
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _remove_reference(self, reference):
-        """ remove the given reference to the list of references. """
+        """ remove the given references from the list of references. """
         self.ensure_one()
-        self.move_ids.reference_ids = [Command.unlink(reference.id)]
+        self.move_ids.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]
 
     def _prepare_entire_pack_move_line_vals(self, packages):
         """ Prepares the move line values for every packages within packages and their children that contain products.
