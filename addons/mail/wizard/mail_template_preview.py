@@ -38,7 +38,7 @@ class MailTemplatePreview(models.TransientModel):
         selection='_selection_target_model',
         store=True
     )
-    lang = fields.Selection(_selection_languages, string='Template Preview Language')
+    lang = fields.Selection(_selection_languages, string='Template Preview Language', default=lambda self: self.env.user.lang)
     no_record = fields.Boolean('No Record', compute='_compute_no_record')
     error_msg = fields.Char('Error Message', compute='_compute_mail_template_fields')
     # Fields same than the mail.template model, computed with resource_ref and lang
