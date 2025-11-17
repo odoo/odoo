@@ -1399,7 +1399,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         - it should be possible to reserve R1
         """
         stock_location = self.warehouse_3_steps_pull.lot_stock_id
-        pack_location, out_location, custo_location = self.warehouse_3_steps_pull.delivery_route_id.rule_ids.location_dest_id
+        pack_location, out_location, custo_location, __, __ = self.warehouse_3_steps_pull.delivery_route_id.rule_ids.location_dest_id
 
         product = self.env['product.product'].create({
             'name': 'SuperProduct',

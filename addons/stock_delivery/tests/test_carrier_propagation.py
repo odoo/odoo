@@ -131,9 +131,11 @@ class TestCarrierPropagation(TransactionCase):
         """Ensure that the carrier is propagated in pickings through all pull rules
         where 'propagate_carrier' is enabled."""
         delivery_route_rules = self.warehouse.delivery_route_id.rule_ids
-        delivery_route_rules[0].location_dest_id = self.rule_pack.location_src_id
+        # Filter to only customer-related rules (not intercompany/inter-warehouse)
+        delivery_route_rules[0:3].location_dest_id = self.rule_pack.location_src_id
         delivery_route_rules.action = 'pull'
-        delivery_route_rules[2].propagate_carrier = False
+        # Disable carrier propagation on the ship rule (Output → Customer)
+        delivery_route_rules[4:7].propagate_carrier = False
         so = self.SaleOrder.create({
             'partner_id': self.partner_propagation.id,
             'order_line': [Command.create({'product_id': self.super_product.id})],

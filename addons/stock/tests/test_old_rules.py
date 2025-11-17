@@ -25,10 +25,18 @@ class TestOldRules(TestStockCommon):
         })
         delivery_route_3 = cls.warehouse_3_steps.delivery_route_id
         delivery_route_3.rule_ids[0].write({
-            'location_dest_id': delivery_route_3.rule_ids[1].location_src_id.id,
+            'location_dest_id': delivery_route_3.rule_ids[3].location_src_id.id,
         })
-        delivery_route_3.rule_ids[1].write({'action': 'pull'})
-        delivery_route_3.rule_ids[2].write({'action': 'pull'})
+        delivery_route_3.rule_ids[1].write({
+            'location_dest_id': delivery_route_3.rule_ids[3].location_src_id.id,
+        })
+        delivery_route_3.rule_ids[2].write({
+            'location_dest_id': delivery_route_3.rule_ids[3].location_src_id.id,
+        })
+        delivery_route_3.rule_ids[3].write({'action': 'pull'})
+        delivery_route_3.rule_ids[4].write({'action': 'pull'})
+        delivery_route_3.rule_ids[5].write({'action': 'pull'})
+        delivery_route_3.rule_ids[6].write({'action': 'pull'})
         reception_route_3 = cls.warehouse_3_steps.reception_route_id
         reception_route_3.rule_ids[0].write({
             'location_src_id': reception_route_3.rule_ids[1].location_dest_id.id,
@@ -46,10 +54,16 @@ class TestOldRules(TestStockCommon):
         })
         delivery_route_2 = cls.warehouse_2_steps.delivery_route_id
         delivery_route_2.rule_ids[0].write({
-            'location_dest_id': delivery_route_2.rule_ids[1].location_src_id.id,
+            'location_dest_id': delivery_route_2.rule_ids[3].location_src_id.id,
             'name': '2S: Stock → Output',
         })
-        delivery_route_2.rule_ids[1].write({'action': 'pull'})
+        delivery_route_2.rule_ids[1].write({
+            'location_dest_id': delivery_route_2.rule_ids[3].location_src_id.id,
+            'name': '2S: Inter-company transit → Output',
+        })
+        delivery_route_2.rule_ids[3].write({'action': 'pull'})
+        delivery_route_2.rule_ids[4].write({'action': 'pull'})
+        delivery_route_2.rule_ids[5].write({'action': 'pull'})
 
     def test_delay_alert_3_old(self):
         partner_demo_customer = self.partner
@@ -433,7 +447,7 @@ class TestOldRules(TestStockCommon):
                 product1,
                 1.0,
                 product1.uom_id,
-                ship_rule.location_dest_id,
+                ship_rule[0].location_dest_id,
                 'test_mtso_mts_1',
                 'test_mtso_mts_1',
                 self.warehouse_3_steps.company_id,

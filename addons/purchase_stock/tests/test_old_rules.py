@@ -53,12 +53,16 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'delivery_steps': 'pick_pack_ship',
         })
         delivery_route_3 = cls.warehouse_3_steps.delivery_route_id
-        delivery_route_3.rule_ids[0].location_dest_id = delivery_route_3.rule_ids[1].location_src_id.id
-        delivery_route_3.rule_ids[1].action = 'pull'
-        delivery_route_3.rule_ids[2].action = 'pull'
+        delivery_route_3.rule_ids[0].location_dest_id = delivery_route_3.rule_ids[3].location_src_id.id
+        delivery_route_3.rule_ids[1].location_dest_id = delivery_route_3.rule_ids[3].location_src_id.id
+        delivery_route_3.rule_ids[2].location_dest_id = delivery_route_3.rule_ids[3].location_src_id.id
+        delivery_route_3.rule_ids[3].action = 'pull'
+        delivery_route_3.rule_ids[4].action = 'pull'
+        delivery_route_3.rule_ids[5].action = 'pull'
+        delivery_route_3.rule_ids[6].action = 'pull'
         cls.route_mto.rule_ids.filtered(
             lambda r: r.picking_type_id == cls.warehouse_3_steps.pick_type_id
-        ).location_dest_id = delivery_route_3.rule_ids[1].location_src_id.id
+        ).location_dest_id = delivery_route_3.rule_ids[3].location_src_id.id
         reception_route_3 = cls.warehouse_3_steps.reception_route_id
         reception_route_3.rule_ids[0].action = 'pull_push'
         reception_route_3.rule_ids[1].action = 'pull_push'
@@ -74,11 +78,15 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'delivery_steps': 'pick_ship',
         })
         delivery_route_2 = cls.warehouse_2_steps.delivery_route_id
-        delivery_route_2.rule_ids[0].location_dest_id = delivery_route_2.rule_ids[1].location_src_id.id
-        delivery_route_2.rule_ids[1].action = 'pull'
+        delivery_route_2.rule_ids[0].location_dest_id = delivery_route_2.rule_ids[3].location_src_id.id
+        delivery_route_2.rule_ids[1].location_dest_id = delivery_route_2.rule_ids[3].location_src_id.id
+        delivery_route_2.rule_ids[2].location_dest_id = delivery_route_2.rule_ids[3].location_src_id.id
+        delivery_route_2.rule_ids[3].action = 'pull'
+        delivery_route_2.rule_ids[4].action = 'pull'
+        delivery_route_2.rule_ids[5].action = 'pull'
         cls.route_mto.rule_ids.filtered(
             lambda r: r.picking_type_id == cls.warehouse_2_steps.pick_type_id
-        ).location_dest_id = delivery_route_2.rule_ids[1].location_src_id.id
+        ).location_dest_id = delivery_route_2.rule_ids[3].location_src_id.id
         reception_route_2 = cls.warehouse_2_steps.reception_route_id
         reception_route_2.rule_ids[0].action = 'pull_push'
         cls.route_buy.rule_ids.filtered(

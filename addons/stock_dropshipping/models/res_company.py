@@ -77,9 +77,11 @@ class ResCompany(models.Model):
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         customer_location = self.env.ref('stock.stock_location_customers')
+        intercompany_location = self.env.ref('stock.stock_location_inter_company')
 
         dropship_vals = []
         for company in self:
+            inter_wh_location = company.internal_transit_location_id
             dropship_picking_type = self.env['stock.picking.type'].search([
                 ('company_id', '=', company.id),
                 ('default_location_src_id.usage', '=', 'supplier'),
@@ -87,16 +89,16 @@ class ResCompany(models.Model):
             ], limit=1, order='sequence')
             if not dropship_picking_type:
                 continue
-            dropship_vals.append({
-                'name': '%s → %s' % (supplier_location.name, customer_location.name),
+            dropship_vals += [{
+                'name': '%s → %s' % (supplier_location.name, location.name),
                 'action': 'buy',
-                'location_dest_id': customer_location.id,
+                'location_dest_id': location.id,
                 'location_src_id': supplier_location.id,
                 'procure_method': 'make_to_stock',
                 'route_id': dropship_route.id,
                 'picking_type_id': dropship_picking_type.id,
                 'company_id': company.id,
-            })
+            } for location in [intercompany_location, customer_location, inter_wh_location]]
         if dropship_vals:
             self.env['stock.rule'].create(dropship_vals)
 

@@ -76,12 +76,15 @@ class ResCompany(models.Model):
            we don't want to create accounting entries at that time.
         '''
         for company in self:
-            location = self.env['stock.location'].create({
-                'name': _('Inter-warehouse transit'),
-                'usage': 'transit',
-                'company_id': company.id,
-                'active': False
-            })
+            if company.parent_id:
+                location = company.parent_id.internal_transit_location_id
+            else:
+                location = self.env['stock.location'].create({
+                    'name': _('Inter-warehouse transit'),
+                    'usage': 'transit',
+                    'company_id': company.id,
+                    'active': False
+                })
 
             company.write({'internal_transit_location_id': location.id})
 

@@ -227,8 +227,7 @@ class StockMove(models.Model):
 
     @api.depends('picking_id.location_dest_id', 'is_scrap')
     def _compute_location_dest_id(self):
-        customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
-        inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
+        customer_loc, __, inter_comp_location = self.env['stock.warehouse']._get_partner_locations()
         for move in self:
             location_dest = False
             if move.picking_id:

@@ -655,7 +655,7 @@ class TestReorderingRule(TransactionCase):
             'delivery_steps': 'ship_only',
             'code': 'TEST'
         })
-        customer_loc, _ = warehouse._get_partner_locations()
+        customer_loc, __, __ = warehouse._get_partner_locations()
         mto_rule = self.env['stock.rule'].search(
             [('warehouse_id', '=', warehouse.id),
              ('procure_method', '=', 'make_to_order'),
