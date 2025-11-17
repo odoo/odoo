@@ -14,19 +14,19 @@ commandCategoryRegistry
 
 patch(DiscussCommandPalette.prototype, {
     buildResults() {
-        const importantThreads = this.store.getSelfImportantChannels();
+        const importantChannels = this.store.getSelfImportantChannels();
         const recentChannels = this.store.getSelfRecentChannels();
         const mentionedSet = new Set();
         const recentSet = new Set();
         const CATEGORY_LIMIT = 3;
         if (!this.cleanedTerm) {
-            const limitedMentioned = importantThreads.slice(0, CATEGORY_LIMIT);
-            for (const thread of limitedMentioned) {
-                this.commands.push(this.makeDiscussCommand(thread, DISCUSS_MENTIONED));
-                if (thread.channel?.channel_type === "chat") {
-                    mentionedSet.add(thread.correspondent.persona);
+            const limitedMentioned = importantChannels.slice(0, CATEGORY_LIMIT);
+            for (const channel of limitedMentioned) {
+                this.commands.push(this.makeDiscussCommand(channel, DISCUSS_MENTIONED));
+                if (channel.channel_type === "chat") {
+                    mentionedSet.add(channel.correspondent.persona);
                 } else {
-                    mentionedSet.add(thread);
+                    mentionedSet.add(channel);
                 }
             }
             const limitedRecent = recentChannels
@@ -36,12 +36,12 @@ patch(DiscussCommandPalette.prototype, {
                         !mentionedSet.has(channel.correspondent?.persona)
                 )
                 .slice(0, CATEGORY_LIMIT);
-            for (const thread of limitedRecent) {
-                this.commands.push(this.makeDiscussCommand(thread, DISCUSS_RECENT));
-                if (thread.channel?.channel_type === "chat") {
-                    recentSet.add(thread.correspondent.persona);
+            for (const channel of limitedRecent) {
+                this.commands.push(this.makeDiscussCommand(channel, DISCUSS_RECENT));
+                if (channel.channel_type === "chat") {
+                    recentSet.add(channel.correspondent.persona);
                 } else {
-                    recentSet.add(thread);
+                    recentSet.add(channel);
                 }
             }
         }
