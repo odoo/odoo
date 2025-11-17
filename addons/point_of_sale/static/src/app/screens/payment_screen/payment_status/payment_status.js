@@ -54,11 +54,11 @@ export class PaymentScreenStatus extends Component {
     }
 
     get statusText() {
-        if (!this.isRemaining) {
-            return _t("Change");
-        } else {
-            return _t("Remaining");
-        }
+        return this.isRemaining ? _t("Remaining") : _t("Change");
+    }
+
+    get showStatus() {
+        return Boolean(this.order.remainingDue || this.order.change);
     }
 
     get amountText() {

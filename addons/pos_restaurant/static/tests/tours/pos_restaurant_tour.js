@@ -750,7 +750,6 @@ registry.category("web_tour.tours").add("test_no_kitchen_confirmation_for_deposi
             },
             PaymentScreen.clickNumpad("+10"),
             PaymentScreen.fillPaymentLineAmountMobile("bank", "10.0"),
-            PaymentScreen.changeIs("0"),
             PaymentScreen.clickValidate(),
             Dialog.is("The order is empty"),
             Dialog.confirm("Yes"),
