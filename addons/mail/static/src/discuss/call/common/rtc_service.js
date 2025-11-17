@@ -43,6 +43,7 @@ function subscribe(target, event, f) {
     return () => target.removeEventListener(event, f);
 }
 
+export const PTT_RELEASE_DURATION = 200;
 const SW_MESSAGE_TYPE = {
     POST_RTC_LOGS: "POST_RTC_LOGS",
 };
@@ -450,6 +451,7 @@ export class Rtc extends Record {
                 session.playAudio();
             }
         });
+        browser.addEventListener("blur", () => this.onBlur());
         browser.addEventListener(
             "keydown",
             (ev) => {
@@ -506,6 +508,19 @@ export class Rtc extends Record {
         return this.state.sourceScreenStream?.getVideoTracks()[0]?.getSettings().displaySurface;
     }
 
+    isPushToTalkRelease(ev) {
+        if (
+            !this.state.channel ||
+            !this.store.settings.use_push_to_talk ||
+            (ev instanceof KeyboardEvent && !this.store.settings.isPushToTalkKey(ev)) ||
+            !this.localSession.isTalking ||
+            this.pttExtService.voiceActivated
+        ) {
+            return false;
+        }
+        return true;
+    }
+
     onKeyDown(ev) {
         if (!this.store.settings.isPushToTalkKey(ev)) {
             return;
@@ -514,12 +529,14 @@ export class Rtc extends Record {
     }
 
     onKeyUp(ev) {
-        if (
-            !this.state.channel ||
-            !this.store.settings.use_push_to_talk ||
-            !this.store.settings.isPushToTalkKey(ev) ||
-            !this.localSession.isTalking
-        ) {
+        if (!this.isPushToTalkRelease(ev)) {
+            return;
+        }
+        this.setPttReleaseTimeout();
+    }
+
+    onBlur() {
+        if (!this.isPushToTalkRelease()) {
             return;
         }
         this.setPttReleaseTimeout();
@@ -548,7 +565,7 @@ export class Rtc extends Record {
         this.state.screenTrack.addEventListener("ended", trackEndedFn, { once: true });
     }
 
-    setPttReleaseTimeout(duration = 200) {
+    setPttReleaseTimeout(duration = PTT_RELEASE_DURATION) {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
             if (!this.localSession?.isMute) {
