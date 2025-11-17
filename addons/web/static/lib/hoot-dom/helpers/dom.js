@@ -524,7 +524,24 @@ function makePseudoClassMatcher(getContent, exact) {
             };
         } else {
             const lowerContent = content.toLowerCase();
-            if (exact) {
+            if (exact === "DEBUG_EXACT") {
+                return function __debug__stringEquals(node) {
+                    const nodeContentLower = String(getContent(node)).toLowerCase();
+                    if (nodeContentLower === lowerContent) {
+                        return true;
+                    }
+                    if (nodeContentLower.includes(lowerContent)) {
+                        console.warn(
+                            `[DEBUG] partial match found`,
+                            `\nexpected:`,
+                            lowerContent,
+                            `\nactual:`,
+                            nodeContentLower
+                        );
+                    }
+                    return false;
+                };
+            } else if (exact) {
                 return function stringEquals(node) {
                     return String(getContent(node)).toLowerCase() === lowerContent;
                 };
@@ -1138,7 +1155,7 @@ customPseudoClasses
     .set("selected", () => isNodeSelected)
     .set("shadow", () => getNodeShadowRoot)
     .set("text", makePseudoClassMatcher(getInlineNodeText, true))
-    .set("value", makePseudoClassMatcher(getNodeValue, true))
+    .set("value", makePseudoClassMatcher(getNodeValue, "DEBUG_EXACT"))
     .set("viewPort", () => isNodeInViewPort)
     .set("visible", () => isNodeVisible);
 
