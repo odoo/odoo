@@ -647,6 +647,35 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             order_line = order_line.with_context(lang=partner_test.lang)
             self.assertIn(format_date(order_line.env, order_line.order_id.date_order), order_line.name)
 
+    def test_settle_so_with_non_pos_groupable_uom(self):
+        """
+        For products with a non-groupable PoS UoM (e.g., Kg), ensure that when a SO
+        uses another UoM (e.g., g), the PoS correctly displays the quantity converted
+        back to the original UoM.
+        """
+        self.component_kg = self.env['product.product'].create({
+            'name': 'Pomme de Terre',
+            'is_storable': True,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'lst_price': 10.0,
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+        })
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.component_kg.id,
+                'name': self.component_kg.name,
+                'product_uom_qty': 500,
+                'product_uom_id': self.env.ref('uom.product_uom_gram').id,
+                'price_unit': 0.01,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.start_pos_tour('test_settle_so_with_non_pos_groupable_uom')
+
     def test_settle_so_with_pos_downpayment(self):
         so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
