@@ -1571,7 +1571,9 @@ class Website(models.Model):
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
-            record['lastmod'] = max(page.write_date, page.view_write_date).date()
+            last_dates = [d for d in (page.write_date, page.view_write_date) if d]
+            if last_dates:
+                record['lastmod'] = max(last_dates).date()
             yield record
 
         # ==== CONTROLLERS ====
