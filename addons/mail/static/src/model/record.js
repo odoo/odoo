@@ -69,6 +69,9 @@ export class Record {
         }
         return `${Model.getName()},${idStr}`;
     }
+    get localId() {
+        return toRaw(this)._.localId;
+    }
     static _localId(expr, data, { brackets = false } = {}) {
         const Model = toRaw(this);
         if (!Array.isArray(expr)) {
@@ -281,9 +284,6 @@ export class Record {
      */
     Model;
     /** @type {string} */
-    get localId() {
-        return toRaw(this)._.localId;
-    }
     /** @type {this} */
     _raw;
     /** @type {this} */
@@ -320,7 +320,7 @@ export class Record {
     }
 
     exists() {
-        return !this._[IS_DELETED_SYM];
+        return !this[IS_DELETED_SYM];
     }
 
     /** @param {Record} record */
