@@ -38,7 +38,7 @@ export class ToggleFetchEcomCategoriesAction extends BuilderAction {
             editingElement,
             true
         );
-        const cls = [...editingElement.firstElementChild.classList].find((cls) =>
+        const cls = [...editingElement.querySelector("section").classList].find((cls) =>
             cls.startsWith("s_mega_menu_")
         );
         const templateKey = `${module}${cls}`;
