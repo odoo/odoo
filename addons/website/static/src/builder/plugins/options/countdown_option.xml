@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
 
 <t t-name="website.CountdownOption">
-    <BuilderContext action="'reloadCountdown'"> <!-- TODO AGAU: remove after merging generalized restart interactions -->
     <BuilderRow label.translate="Due Date">
         <BuilderDateTimePicker dataAttributeAction="'endTime'" acceptEmptyDate="false"/>
     </BuilderRow>
@@ -84,7 +83,6 @@
             </BuilderRow>
         </t>
     </t>
-    </BuilderContext>
 </t>
 
 <t t-name="website.s_countdown.end_message">
