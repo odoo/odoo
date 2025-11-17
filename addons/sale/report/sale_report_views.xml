@@ -65,9 +65,19 @@
                 <field name="price_subtotal" optional="hide" sum="Sum of Untaxed Total"/>
                 <field name="price_unit" widget="monetary" avg="Average"/>
                 <field name="price_total" optional="show" sum="Sum of Total"/>
-                <field name="state" optional="hide"/>
+                <field name="state"
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="state == 'sale'"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'sent'"/>
                 <field name="pricelist_id" optional="hide"/>
-                <field name="line_invoice_status" optional="hide"/>
+                <field name="line_invoice_status"
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="line_invoice_status == 'invoiced'"
+                       decoration-info="line_invoice_status == 'to invoice'"
+                       decoration-warning="line_invoice_status == 'upselling'"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
         </field>
