@@ -134,7 +134,6 @@ export class MassMailingIframe extends Component {
         };
         const sidebarResize = () => {
             const sidebar = this.sidebarRef.el;
-            const iframe = this.iframeRef.el;
             if (!sidebar) {
                 return;
             }
@@ -170,7 +169,12 @@ export class MassMailingIframe extends Component {
                     : `${stickyHeight}px`;
                 const maxHeight = this.state.isMobile
                     ? 1000
-                    : iframe.getBoundingClientRect().height;
+                    : Math.max(
+                          // height to fill remaining viewport space on an unscrolled page
+                          window.innerHeight - sidebar.parentElement.getBoundingClientRect().y - 5,
+                          // height of the parent element
+                          sidebar.parentElement.clientHeight
+                      );
                 const offsetHeight =
                     window.innerHeight -
                     stickyHeight -
