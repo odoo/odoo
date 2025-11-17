@@ -186,16 +186,6 @@ class configmanager:
         self._load_default_options()
         self._parse_config()
 
-    @property
-    def rcfile(self):
-        self._warn("Since 19.0, use odoo.tools.config['config'] instead", DeprecationWarning, stacklevel=2)
-        return self['config']
-
-    @rcfile.setter
-    def rcfile(self, rcfile):
-        self._warn(f"Since 19.0, use odoo.tools.config['config'] = {rcfile!r} instead", DeprecationWarning, stacklevel=2)
-        self._runtime_options['config'] = rcfile
-
     def _build_cli(self):
         OdooOption = type('OdooOption', (_OdooOption,), {'config': self})
         FileOnlyOption = type('FileOnlyOption', (_FileOnlyOption, OdooOption), {})
@@ -880,10 +870,6 @@ class configmanager:
         else:
             format_func = self.parser.option_class.TYPE_FORMATTER[option.type]
         return format_func(value)
-
-    def load(self):
-        self._warn("Since 19.0, use config._load_file_options instead", DeprecationWarning, stacklevel=2)
-        self._load_file_options(self['config'])
 
     def _load_file_options(self, rcfile):
         self._file_options.clear()

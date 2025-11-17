@@ -1,11 +1,10 @@
 import re
-import warnings
 from collections.abc import Reversible
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
@@ -65,13 +64,6 @@ SQL_OPERATORS = {
     "not =like": SQL(" NOT LIKE "),
     "not =ilike": SQL(" NOT ILIKE "),
 }
-
-
-def check_method_name(name):
-    """ Raise an ``AccessError`` if ``name`` is a private method name. """
-    warnings.warn("Since 19.0, use odoo.service.model.get_public_method", DeprecationWarning)
-    if regex_private.match(name):
-        raise AccessError('Private methods (such as %s) cannot be called remotely.' % name)
 
 
 def check_object_name(name):

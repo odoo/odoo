@@ -1120,17 +1120,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     self.__caches[cache].clear()
             self.cache_invalidated.clear()
 
-    @contextmanager
-    def manage_changes(self):
-        """ Context manager to signal/discard registry and cache invalidations. """
-        warnings.warn("Since 19.0, use signal_changes() and reset_changes() directly", DeprecationWarning)
-        try:
-            yield self
-            self.signal_changes()
-        except Exception:
-            self.reset_changes()
-            raise
-
     def cursor(self, /, readonly: bool = False) -> BaseCursor:
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.

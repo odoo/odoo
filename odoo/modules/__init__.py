@@ -14,7 +14,6 @@ from .module import (
     adapt_version,
     get_module_path,
     get_modules,
-    get_modules_with_version,
     get_resource_from_path,
     initialize_sys_path,
     get_manifest,

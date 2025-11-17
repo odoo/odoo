@@ -57,11 +57,6 @@ class Environment(Mapping[str, "BaseModel"]):
     su: bool
     transaction: Transaction
 
-    def reset(self) -> None:
-        """ Reset the transaction, see :meth:`Transaction.reset`. """
-        warnings.warn("Since 19.0, use directly `transaction.reset()`", DeprecationWarning)
-        self.transaction.reset()
-
     def __new__(cls, cr: BaseCursor, uid: int, context: dict, su: bool = False):
         assert isinstance(cr, BaseCursor)
         if uid == SUPERUSER_ID:
@@ -779,35 +774,6 @@ class Cache:
         for record, value in zip(records, values):
             field._update_cache(record, value, dirty=dirty)
 
-    def insert_missing(self, records: BaseModel, field: Field, values: Iterable) -> None:
-        """ Set the values of ``field`` for the records in ``records`` that
-        don't have a value yet.  In other words, this does not overwrite
-        existing values in cache.
-        """
-        warnings.warn("Since 19.0, use Field._insert_cache", DeprecationWarning)
-        field._insert_cache(records, values)
-
-    def patch(self, records: BaseModel, field: Field, new_id: NewId):
-        """ Apply a patch to an x2many field on new records. The patch consists
-        in adding new_id to its value in cache. If the value is not in cache
-        yet, it will be applied once the value is put in cache with method
-        :meth:`patch_and_set`.
-        """
-        warnings.warn("Since 19.0, this method is internal", DeprecationWarning)
-        from .fields_relational import _RelationalMulti  # noqa: PLC0415
-        assert isinstance(field, _RelationalMulti)
-        value = records.env[field.comodel_name].browse((new_id,))
-        field._update_inverse(records, value)
-
-    def patch_and_set(self, record: BaseModel, field: Field, value: typing.Any) -> typing.Any:
-        """ Set the value of ``field`` for ``record``, like :meth:`set`, but
-        apply pending patches to ``value`` and return the value actually put
-        in cache.
-        """
-        warnings.warn("Since 19.0, this method is internal", DeprecationWarning)
-        field._update_cache(record, value)
-        return self.get(record, field)
-
     def remove(self, record: BaseModel, field: Field) -> None:
         """ Remove the value of ``field`` for ``record``. """
         assert record.id not in self.transaction.field_dirty.get(field, ())
@@ -825,23 +791,6 @@ class Cache:
                 yield field_cache[record_id]
             except KeyError:
                 pass
-
-    def get_until_miss(self, records: BaseModel, field: Field) -> list[typing.Any]:
-        """ Return the cached values of ``field`` for ``records`` until a value is not found. """
-        warnings.warn("Since 19.0, this is managed directly by Field")
-        field_cache = self._get_field_cache(records, field)
-        vals = []
-        for record_id in records._ids:
-            try:
-                vals.append(field_cache[record_id])
-            except KeyError:
-                break
-        return vals
-
-    def get_records_different_from(self, records: M, field: Field, value: typing.Any) -> M:
-        """ Return the subset of ``records`` that has not ``value`` for ``field``. """
-        warnings.warn("Since 19.0, becomes internal function of fields", DeprecationWarning)
-        return field._filter_not_equal(records, value)
 
     def get_fields(self, record: BaseModel) -> Iterator[Field]:
         """ Return the fields with a value for ``record``. """
@@ -865,49 +814,6 @@ class Cache:
     def get_missing_ids(self, records: BaseModel, field: Field) -> Iterator[IdType]:
         """ Return the ids of ``records`` that have no value for ``field``. """
         return field._cache_missing_ids(records)
-
-    def get_dirty_fields(self) -> Collection[Field]:
-        """ Return the fields that have dirty records in cache. """
-        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
-        return self.transaction.field_dirty.keys()
-
-    def filtered_dirty_records(self, records: BaseModel, field: Field) -> BaseModel:
-        """ Filtered ``records`` where ``field`` is dirty. """
-        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
-        dirties = self.transaction.field_dirty.get(field, ())
-        return records.browse(id_ for id_ in records._ids if id_ in dirties)
-
-    def filtered_clean_records(self, records: BaseModel, field: Field) -> BaseModel:
-        """ Filtered ``records`` where ``field`` is not dirty. """
-        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
-        dirties = self.transaction.field_dirty.get(field, ())
-        return records.browse(id_ for id_ in records._ids if id_ not in dirties)
-
-    def has_dirty_fields(self, records: BaseModel, fields: Collection[Field] | None = None) -> bool:
-        """ Return whether any of the given records has dirty fields.
-
-        :param fields: a collection of fields or ``None``; the value ``None`` is
-            interpreted as any field on ``records``
-        """
-        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
-        if fields is None:
-            return any(
-                not ids.isdisjoint(records._ids)
-                for field, ids in self.transaction.field_dirty.items()
-                if field.model_name == records._name
-            )
-        else:
-            return any(
-                field in self.transaction.field_dirty and not self.transaction.field_dirty[field].isdisjoint(records._ids)
-                for field in fields
-            )
-
-    def clear_dirty_field(self, field: Field) -> Collection[IdType]:
-        """ Make the given field clean on all records, and return the ids of the
-        formerly dirty records for the field.
-        """
-        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
-        return self.transaction.field_dirty.pop(field, ())
 
     def invalidate(self, spec: Collection[tuple[Field, Collection[IdType] | None]] | None = None) -> None:
         """ Invalidate the cache, partially or totally depending on ``spec``.
