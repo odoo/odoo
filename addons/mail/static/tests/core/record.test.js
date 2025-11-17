@@ -7,6 +7,7 @@ import { Record, Store, makeStore } from "@mail/core/common/record";
 import { AND, fields } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
+import { effect } from "@web/core/utils/reactive";
 
 const Markup = markup().constructor;
 
@@ -1308,4 +1309,26 @@ test("Delete record with side-effect compute to insert it should have resulting 
     discussApp.state.delete();
     expect(discussApp.state.status).toEqual("init");
     expect(discussApp.state.thread).toBe(undefined);
+});
+
+test("Record exists is reactive", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    effect(
+        (rec) => {
+            if (rec.exists()) {
+                expect.step("thread exists");
+            } else {
+                expect.step("thread does not exist");
+            }
+        },
+        [thread]
+    );
+    await expect.waitForSteps(["thread exists"]);
+    thread.delete();
+    await expect.waitForSteps(["thread does not exist"]);
 });
