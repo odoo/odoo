@@ -1087,3 +1087,13 @@ test("can copy/paste a highlighted code block", async () => {
         ),
     });
 });
+
+test("invisible whitespace gets trimmed before changing tag to pre", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: `<p>
+            hel[]lo
+        </p>`,
+        stepFunction: insertPre,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">hello</pre>[]`,
+    });
+});
