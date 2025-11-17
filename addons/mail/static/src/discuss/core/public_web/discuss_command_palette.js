@@ -177,13 +177,13 @@ export class DiscussCommandPalette {
             // selfPersona filtered here to put at the bottom as lowest priority
             partners = partners.filter((p) => p.notEq(selfPartner));
         }
-        const channels = Object.values(this.store["mail.thread"].records)
+        const channels = Object.values(this.store["discuss.channel"].records)
             .filter(
-                (thread) =>
-                    thread.channel?.channel_type &&
-                    thread.channel?.channel_type !== "chat" &&
-                    cleanTerm(thread.displayName).includes(this.cleanedTerm) &&
-                    (!filtered || !filtered.has(thread))
+                (channel) =>
+                    channel.channel_type &&
+                    channel.channel_type !== "chat" &&
+                    cleanTerm(channel.displayName).includes(this.cleanedTerm) &&
+                    (!filtered || !filtered.has(channel))
             )
             .sort((c1, c2) => {
                 if (c1.self_member_id && !c2.self_member_id) {
@@ -225,32 +225,32 @@ export class DiscussCommandPalette {
         }
     }
 
-    makeDiscussCommand(threadOrPersona, category) {
-        if (threadOrPersona?.Model?.name === "Thread") {
-            /** @type {import("models").Thread} */
-            const thread = threadOrPersona;
+    makeDiscussCommand(channelOrPersona, category) {
+        if (channelOrPersona?.Model?.getName() === "discuss.channel") {
+            /** @type {import("models").DiscussChannel} */
+            const channel = channelOrPersona;
             return {
                 Component: DiscussCommand,
                 action: async () => {
-                    const channel = await this.store["mail.thread"].getOrFetch(thread);
-                    channel.open({ focus: true, bypassCompact: true });
+                    const channelToOpen = await this.store["discuss.channel"].getOrFetch(
+                        channel.id
+                    );
+                    channelToOpen.open({ focus: true, bypassCompact: true });
                 },
-                name: thread.displayName,
+                name: channel.displayName,
                 category,
                 props: {
-                    imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl,
-                    channel: thread.channel?.channel_type !== "chat" ? thread : undefined,
+                    imgUrl: channel.parent_channel_id?.avatarUrl ?? channel.avatarUrl,
+                    channel: channel.channel_type !== "chat" ? channel : undefined,
                     persona:
-                        thread.channel?.channel_type === "chat"
-                            ? thread.correspondent.persona
-                            : undefined,
-                    counter: thread.importantCounter,
+                        channel.channel_type === "chat" ? channel.correspondent.persona : undefined,
+                    counter: channel.importantCounter,
                 },
             };
         }
-        if (threadOrPersona?.Model?._name === "res.partner") {
+        if (channelOrPersona?.Model?.getName() === "res.partner") {
             /** @type {import("models").Persona} */
-            const persona = threadOrPersona;
+            const persona = channelOrPersona;
             const chat = persona.searchChat();
             return {
                 Component: DiscussCommand,
@@ -266,7 +266,7 @@ export class DiscussCommandPalette {
                 },
             };
         }
-        if (threadOrPersona === NEW_CHANNEL) {
+        if (channelOrPersona === NEW_CHANNEL) {
             return {
                 Component: DiscussCommand,
                 action: async () => {
@@ -282,7 +282,7 @@ export class DiscussCommandPalette {
                 props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
             };
         }
-        if (threadOrPersona === NEW_GROUP_CHAT) {
+        if (channelOrPersona === NEW_GROUP_CHAT) {
             const name = this.options.searchValue.trim();
             return {
                 Component: DiscussCommand,
@@ -294,7 +294,7 @@ export class DiscussCommandPalette {
                 props: { action: { icon: "oi fa-fw oi-users" } },
             };
         }
-        throw new Error(`Unsupported use of makeDiscussCommand("${threadOrPersona}")`);
+        throw new Error(`Unsupported use of makeDiscussCommand("${channelOrPersona}")`);
     }
 }
 
