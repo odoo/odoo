@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, resize, test } from "@odoo/hoot";
 import {
     click,
     Deferred,
@@ -1192,4 +1192,97 @@ test("cache: update current status if it changed", async () => {
     // updated when the rpc returns
     expect(".o_last_breadcrumb_item").toHaveText("second record");
     expect('.o_statusbar_status button[data-value="1"]').toHaveClass("o_arrow_button_current");
+});
+
+test("[adjust] statusbar with a lot of stages, click to change stage", async () => {
+    // force the window width and define long stage names s.t. at most 3 stages can be displayed
+    resize({ width: 800 });
+    class Stage extends models.Model {
+        name = fields.Char();
+        _records = Array.from(Array(6).keys()).map((i) => {
+            const id = i + 1;
+            return { id, name: `Stage with very long name ${id}` };
+        });
+    }
+    defineModels([Stage]);
+    Partner._fields.stage_id = { type: "many2one", relation: "stage" };
+    Partner._records[0].stage_id = 3;
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': 1}" />
+                </header>
+            </form>
+        `,
+    });
+
+    // initial rendering: there should be a dropdown before and a dropdown after
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(2);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 4",
+        "Stage with very long name 3",
+        "Stage with very long name 2",
+    ]);
+    expect(".o_statusbar_status button[data-value='3']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_last").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["Stage with very long name 1"]);
+    await contains(".o_statusbar_status .o_first").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 5",
+        "Stage with very long name 6",
+    ]);
+
+    // choose the next value: there should still be one dropdown before and one after
+    await contains(".o_statusbar_status button[data-value='4']").click();
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(2);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 5",
+        "Stage with very long name 4",
+        "Stage with very long name 3",
+    ]);
+    expect(".o_statusbar_status button[data-value='4']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_last").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 1",
+        "Stage with very long name 2",
+    ]);
+    await contains(".o_statusbar_status .o_first").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["Stage with very long name 6"]);
+
+    // choose the next value: there should only be a dropdown before
+    await contains(".o_statusbar_status button[data-value='5']").click();
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(1);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 6",
+        "Stage with very long name 5",
+        "Stage with very long name 4",
+    ]);
+    expect(".o_statusbar_status button[data-value='5']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_last").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 1",
+        "Stage with very long name 2",
+        "Stage with very long name 3",
+    ]);
+
+    // select the first item from the dropdown before => there should only be a dropdown after
+    await contains(".o-dropdown-item:first").click();
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(1);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 3",
+        "Stage with very long name 2",
+        "Stage with very long name 1",
+    ]);
+    expect(".o_statusbar_status button[data-value='1']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_first").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 4",
+        "Stage with very long name 5",
+        "Stage with very long name 6",
+    ]);
 });
