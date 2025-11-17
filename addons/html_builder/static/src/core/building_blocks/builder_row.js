@@ -21,8 +21,9 @@ export class BuilderRow extends Component {
         expand: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
         observeCollapseContent: { type: Boolean, optional: true },
+        fullRowToggler: { type: Boolean, optional: true },
     };
-    static defaultProps = { expand: false, observeCollapseContent: false };
+    static defaultProps = { expand: false, observeCollapseContent: false, fullRowToggler: false };
 
     setup() {
         useBuilderComponent();
@@ -45,6 +46,12 @@ export class BuilderRow extends Component {
 
     getLevelClass() {
         return this.props.level ? `hb-row-sublevel hb-row-sublevel-${this.props.level}` : "";
+    }
+
+    onRowContentClick() {
+        if (this.props.fullRowToggler) {
+            this.toggleCollapseContent();
+        }
     }
 
     toggleCollapseContent() {
