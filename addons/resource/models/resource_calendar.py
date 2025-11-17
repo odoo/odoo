@@ -542,6 +542,7 @@ class ResourceCalendar(models.Model):
             ('resource_id', 'in', [False] + [r.id for r in resources_list]),
             ('date_from', '<=', datetime_to_string(end_dt)),
             ('date_to', '>=', datetime_to_string(start_dt)),
+            ('company_id', '=', self.company_id.id),
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
