@@ -18,6 +18,7 @@ class BlogBlog(models.Model):
         'mail.thread',
         'website.seo.metadata',
         'website.multi.mixin',
+        'website.located.mixin',
         'website.cover_properties.mixin',
         'website.searchable.mixin',
     ]
@@ -35,6 +36,12 @@ class BlogBlog(models.Model):
     content = fields.Html('Content', translate=html_translate, sanitize=False)
     blog_post_ids = fields.One2many('blog.post', 'blog_id', 'Blog Posts')
     blog_post_count = fields.Integer("Posts", compute='_compute_blog_post_count')
+
+    def _compute_website_url(self):
+        super()._compute_website_url()
+        for record in self:
+            if record.id:
+                record.website_url = '/blog/%s' % self.env['ir.http']._slug(record)
 
     @api.depends('blog_post_ids')
     def _compute_blog_post_count(self):
