@@ -636,7 +636,7 @@ class BaseAutomation(models.Model):
 
         # Minimum 1 minute, maximum 4 hours, 10% tolerance
         delay = min(automations.mapped(get_delay), default=0)
-        return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
+        return min(max(1, delay // 10), 4 * 60) if automations else 4 * 60
 
     def _compute_least_delay_msg(self):
         msg = _("Note that this automation rule can be triggered up to %d minutes after its schedule.")
