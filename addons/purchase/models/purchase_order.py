@@ -1043,7 +1043,8 @@ class PurchaseOrder(models.Model):
                 uom_id=pol.product_uom)
             if seller:
                 # Fix the PO line's price on the seller's one.
-                pol.price_unit = seller.price_discounted
+                pol.price_unit = seller.price
+                pol.discount = seller.discount
         return pol.price_unit_discounted
 
     def _create_update_date_activity(self, updated_dates):
