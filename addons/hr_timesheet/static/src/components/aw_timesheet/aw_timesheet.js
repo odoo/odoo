@@ -31,6 +31,26 @@ export class ActivityWatchTimesheet extends Component {
         this.localConfig = loadFrequency();
         this.selectedTimesheet = null;
         this.roundingValues = { minimum: 15, rounding: 15 };
+        this.linkResolvers = [
+            {
+                name: _t("Configuring Planning Slots"),
+                regex: `/(?:my-planning|employees-planning|schedule-by-project|schedule-by-role|schedule-by-sales-order|open-shifts|planning\\.slot)/(\\d+)`,
+                model: "planning.slot",
+                fields: { project: "project_id" },
+            },
+            {
+                name: _t("Configuring Helpdesk Ticket"),
+                regex: `/(?:helpdesk/\\d+/tickets|helpdesk\\.ticket)/(\\d+)`,
+                model: "helpdesk.ticket",
+                fields: { project: "project_id" },
+            },
+            {
+                name: _t("Configuring Sales Order"),
+                regex: `/(?:sales|orders|sale\\.order)/(\\d+)`,
+                model: "sale.order",
+                fields: { project: "project_id" /*, task: "task_id" */ },
+            },
+        ];
 
         onWillStart(async () => {
             await this.loadData();
@@ -224,6 +244,20 @@ export class ActivityWatchTimesheet extends Component {
         // project and task in odoo url
         const url = event.data.url;
         const odooUrl = RegExp.escape(window.location.origin); // should be moved outside (this function is called many times)
+
+        for (const resolver of this.linkResolvers) {
+            const re = new RegExp(`^${origin}(?:/[^?#]*)*${resolver.regex}(?:\\?|$)`);
+            const match = url.match(re);
+            if (match) {
+                event.name = resolver.name;
+                event._model = resolver.model;
+                event._res_id = Number(match[1]);
+                event._resolver = resolver;
+                event.keyEvent = true;
+                return;
+            }
+        }
+
         let match = url.match(
             new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:tasks|project\\.task)/(\\d+)(?:\\?|$)`)
         );
@@ -452,8 +486,51 @@ export class ActivityWatchTimesheet extends Component {
         this.merge(ranges, events["aw-client-web"]); // assumin one browser => if 2 two, the 2 pointers algo will fail (no sorted non overlapping ranges)
         this.merge(ranges, events["aw-watcher-window"]);
 
+        const idsByModel = {};
+        for (const range of ranges) {
+            if (range._model && range._res_id) {
+                if (!idsByModel[range._model]) {
+                    idsByModel[range._model] = new Set();
+                }
+                idsByModel[range._model].add(range._res_id);
+            }
+        }
+
+        const modelRecords = {};
+        for (const resolver of this.linkResolvers) {
+            const model = resolver.model;
+            const ids = idsByModel[model] ? [...idsByModel[model]] : null;
+            if (!ids) {
+                continue;
+            }
+            const readFields = ["id", resolver.fields.project, resolver.fields.task].filter(
+                Boolean
+            );
+            const records = await this.orm.searchRead(model, [["id", "in", ids]], readFields);
+            modelRecords[model] = Object.fromEntries(records.map((r) => [r.id, r]));
+        }
+
         const tasksIds = new Set();
         const projectsIds = new Set();
+
+        for (const range of ranges) {
+            const resolver = range._resolver;
+            if (!resolver) {
+                continue;
+            }
+            const rec = modelRecords[resolver.model]?.[range._res_id];
+            if (!rec) {
+                continue;
+            }
+            if (resolver.fields.task && rec[resolver.fields.task]) {
+                range.task_id = rec[resolver.fields.task][0];
+                tasksIds.add(range.task_id);
+            }
+            if (resolver.fields.project && rec[resolver.fields.project]) {
+                range.project_id = rec[resolver.fields.project][0];
+                projectsIds.add(range.project_id);
+            }
+        }
 
         ranges.forEach((range) => {
             if (range.project_id != null) {
