@@ -1434,6 +1434,24 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue(/file\.txt/);
     });
 
+    test("setInputFiles: shadow root", async () => {
+        await mountForTest(/* xml */ `
+            <div class="container" />
+        `);
+
+        const shadow = queryOne(".container").attachShadow({
+            mode: "open",
+        });
+        const input = document.createElement("input");
+        input.type = "file";
+        shadow.appendChild(input);
+
+        await click(".container:shadow input");
+        await setInputFiles(new File([""], "file.txt"));
+
+        expect(".container:shadow input").toHaveValue(/file\.txt/);
+    });
+
     test("setInputRange: basic case and events", async () => {
         await mountForTest(/* xml */ `<input type="range" min="10" max="40" />`);
 

@@ -793,8 +793,9 @@ function registerButton(eventInit, toggle) {
  * @param {Event} ev
  */
 function registerFileInput({ target }) {
-    if (getTag(target) === "input" && target.type === "file") {
-        runTime.fileInput = target;
+    const actualTarget = target.shadowRoot ? target.shadowRoot.activeElement : target;
+    if (getTag(actualTarget) === "input" && actualTarget.type === "file") {
+        runTime.fileInput = actualTarget;
     } else {
         runTime.fileInput = null;
     }
