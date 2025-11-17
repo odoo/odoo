@@ -84,7 +84,6 @@ export class HintPlugin extends Plugin {
     }
 
     makeHint(el, text) {
-        this.dispatchTo("make_hint_handlers", el);
         el.setAttribute("o-we-hint-text", text);
         el.classList.add("o-we-hint");
     }
