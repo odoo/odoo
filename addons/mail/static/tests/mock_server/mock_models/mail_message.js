@@ -439,7 +439,7 @@ export class MailMessage extends models.ServerModel {
         ]);
         let reaction_group = mailDataHelpers.Store.many(
             MailMessageReaction.browse(reactions),
-            "ADD"
+            makeKwArgs({ mode: "ADD" })
         );
         if (reactions.length === 0) {
             reaction_group = [["DELETE", { message: this.browse(id), content: content }]];
