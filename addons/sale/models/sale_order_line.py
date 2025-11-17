@@ -1318,6 +1318,9 @@ class SaleOrderLine(models.Model):
             return lines
 
         for line in lines:
+            if line.qty_delivered_method == 'manual' and line.product_id.is_storable:
+                qty_delivered = line.product_uom_id._compute_quantity(line.qty_delivered, line.product_id.uom_id)
+                line.product_id.with_context(skip_qty_available_update=True).qty_available -= qty_delivered
             if line.product_id and line.state == 'sale':
                 msg = _("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
@@ -1356,6 +1359,14 @@ class SaleOrderLine(models.Model):
             # the field is not sent by the client and expected to be recomputed, but isn't
             # because technical_price_unit is set.
             values.pop('technical_price_unit')
+
+        if 'qty_delivered' in values:
+            for line in self:
+                if line.qty_delivered_method != 'manual' or not line.product_id.is_storable:
+                    continue
+                delta_qty_delivered = values['qty_delivered'] - line.qty_delivered
+                delta_qty_delivered = line.product_uom_id._compute_quantity(delta_qty_delivered, line.product_id.uom_id)
+                line.product_id.with_context(skip_qty_available_update=True).qty_available -= delta_qty_delivered
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
