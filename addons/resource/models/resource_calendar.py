@@ -542,6 +542,7 @@ class ResourceCalendar(models.Model):
             ('resource_id', 'in', [False] + [r.id for r in resources_list]),
             ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
             ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
+            ('company_id', 'in', [False] + [self.company_id.id]),
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
