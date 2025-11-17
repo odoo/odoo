@@ -64,7 +64,7 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
             "website_published": True,
         })
         url = f"/mail/view?model=product.template&res_id={product_template.id}"
-        shop_url = f"/shop/test-product-template-{product_template.id}"
+        shop_url = f"/shop/product/test-product-template-{product_template.id}"
 
         with self.subTest(user="admin"):
             self.authenticate("admin", "admin")

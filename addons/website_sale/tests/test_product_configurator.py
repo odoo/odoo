@@ -445,7 +445,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
         with self.mock_request():
             product_values = self.pc_controller._prepare_product_values(
-                main_product, attribute_values=str(attribute_single.value_ids.id)
+                main_product, **{str(attribute_single.id): str(attribute_single.value_ids.id)}
             )
         is_combination_possible = product_values["combination_info"]["is_combination_possible"]
         combination_product_id = product_values["combination_info"]["product_id"]
@@ -457,29 +457,29 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         page breadcrumb should show the category accessible from the current website, not the one
         from another website.
         """
-        second_website = self.env['website'].create({'name': 'Second Website'})
+        second_website = self.env["website"].create({"name": "Second Website"})
 
-        categ_website_1 = self.env['product.public.category'].create({
-            'name': 'My Category',
-            'website_id': self.website.id,
+        categ_website_1 = self.env["product.public.category"].create({
+            "name": "My Category",
+            "website_id": self.website.id,
         })
-        categ_website_2 = self.env['product.public.category'].create({
-            'name': 'My Category',
-            'website_id': second_website.id,
+        categ_website_2 = self.env["product.public.category"].create({
+            "name": "My Category",
+            "website_id": second_website.id,
         })
 
-        product_tmpl = self.env['product.template'].create({
-            'name': 'Multi Website Product',
-            'website_published': True,
-            'public_categ_ids': [Command.set([categ_website_1.id, categ_website_2.id])],
+        product_tmpl = self.env["product.template"].create({
+            "name": "Multi Website Product",
+            "website_published": True,
+            "public_categ_ids": [Command.set([categ_website_1.id, categ_website_2.id])],
         })
 
         # On website 1, the category from website 1 should be selected.
         with MockRequest(self.env, website=self.website):
             values = self.pc_controller._prepare_product_values(product_tmpl)
-        self.assertEqual(values['category'], categ_website_1)
+        self.assertEqual(values["category"], categ_website_1)
 
         # On website 2, the category from website 2 should be selected.
         with MockRequest(self.env, website=second_website):
             values = self.pc_controller._prepare_product_values(product_tmpl)
-        self.assertEqual(values['category'], categ_website_2)
+        self.assertEqual(values["category"], categ_website_2)
