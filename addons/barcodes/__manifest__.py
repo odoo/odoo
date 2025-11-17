@@ -14,7 +14,6 @@
         'web.assets_backend': [
             'barcodes/static/src/**/*',
         ],
-        'web.tests_assets': ['barcodes/static/tests/legacy/helpers.js'],
         'web.assets_unit_tests': [
             'barcodes/static/tests/*.test.js',
         ],
