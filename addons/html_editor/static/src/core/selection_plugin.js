@@ -660,6 +660,8 @@ export class SelectionPlugin extends Plugin {
      * @returns {() => void}
      */
     preserveTextareaSelections() {
+        const focusedTextarea =
+            this.document.activeElement?.nodeName === "TEXTAREA" && this.document.activeElement;
         const selections = [...this.editable.querySelectorAll("textarea")].map((textarea) => ({
             textarea,
             start: textarea.selectionStart,
@@ -667,12 +669,9 @@ export class SelectionPlugin extends Plugin {
             direction: textarea.selectionDirection,
         }));
         return () => {
-            if (
-                this.activeSelection?.isCollapsed &&
-                this.activeSelection.anchorNode?.nodeName === "TEXTAREA"
-            ) {
+            if (focusedTextarea) {
                 // If a textarea is targeted, focus it so its selection is active.
-                this.activeSelection.anchorNode.focus();
+                focusedTextarea.focus();
             }
             for (const { textarea, start, end, direction } of selections) {
                 textarea.setSelectionRange(start, end, direction);
