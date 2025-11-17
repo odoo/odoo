@@ -719,6 +719,42 @@
                         }
                     }
                 </t>
+                <t t-elif="company.report_tables_id == 'striped'" >
+                    &amp;.o_report_layout_striped {
+                        table:not(.o_ignore_layout_styling) {
+                            th {
+                                color: <t t-out='secondary'/> !important;
+                            }
+                            tbody tr {
+                                &amp;:first-child, &amp;:last-child {
+                                    border-color: <t t-out='secondary'/>;
+                                }
+                                &amp;.o_line_section td {
+                                    background-color: <t t-out='secondary'/> !important;
+                                    color: preview-color-contrast(<t t-out='secondary'/>) !important;
+                                }
+
+                                &amp;.o_line_subsection td {
+                                    background-color: mix(white, <t t-out='secondary'/>, 40%) !important;
+                                    color: preview-color-contrast(mix(white, <t t-out='secondary'/>, 40%)) !important;
+                                }
+
+                                &amp;:nth-child(odd) td {
+                                    background-color: mix(white, <t t-out='secondary'/>, 90%);
+                                }
+                            }
+                        }
+
+                        .o_total_table:not(.o_ignore_layout_styling) {
+                            tr:first-child {
+                                border-color: transparent;
+                            }
+                            tr:nth-child(odd) td {
+                                background-color: mix(white, <t t-out='secondary'/>, 90%);
+                            }
+                        }
+                    }
+                </t>
                 <t t-elif="company.report_tables_id == 'bubble'">
                     &amp;.o_report_layout_bubble {
                         #informations {

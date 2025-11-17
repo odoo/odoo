@@ -108,49 +108,26 @@ div#total {
 
 .o_table_striped {
     table:not(.o_ignore_layout_styling) {
-        tr:not(:first-child) {
-            // Using border-top not bottom, to manage a different border on line sections
-            border-top: $border-width solid $gray-200;
-        }
-
         tbody tr {
+            &.o_line_section, &.o_line_subsection {
+                border: none;
+            }
+
             &:first-child {
-                border-top: $border-width solid $gray-600;
-            }
-
-            &.o_line_section {
-                border-top: $border-width solid $gray-800;
-                & td {
-                    background-color: rgba($gray-800, 1) !important;
-                    color: $white;
-                }
-            }
-
-            &.o_line_subsection td {
-                background-color: $gray-300 !important;
+                border-top: $border-width solid;
             }
 
             &:last-child {
-                border-bottom: $border-width solid $gray-200;
-            }
-
-            &:nth-child(odd) td {
-                background-color: rgba($gray-200, .5);
+                border-bottom: $border-width solid;
             }
 
             &.is-subtotal {
-                border-bottom: $border-width solid $gray-400;
+                border-bottom: $border-width solid;
             }
-        }
-    }
 
-    .o_total_table:not(.o_ignore_layout_styling) {
-        tr:first-child {
-            border-top: none;
-        }
-
-        tr:nth-child(odd) td {
-            background-color: rgba($gray-200, .5);
+            &.o_total strong {
+                color: $body-color;
+            }
         }
     }
 }
