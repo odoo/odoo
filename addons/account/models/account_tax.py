@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Any
 from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
@@ -1006,6 +1007,153 @@ class AccountTax(models.Model):
             incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
             return raw_base * self.amount / 100.0 / incl_base_multiplicator
 
+    def _get_tax_details_new(
+        self,
+        price_unit,
+        quantity,
+        precision_rounding=0.01,
+        rounding_method='round_per_line',
+        product=None,
+        special_mode=False,
+        manual_tax_amounts=None,
+        filter_tax_function=None,
+        batching_results=None,
+    ):
+        """ Compute tax amounts exactly in one shot, only works for combinations of fixed and percentage taxes. """
+        # 1: Construct a list of taxes to apply. Reverse-charge taxes are treated as a combination of two taxes, one positive,
+        # the other negative.
+        taxes_to_apply = []
+        for tax in self:
+            if tax.has_negative_factor:
+                taxes_to_apply.append((tax, 1))
+                taxes_to_apply.append((tax, -1))
+            else:
+                taxes_to_apply.append((tax, 1))
+
+        # 2: Traverse the taxes in order, and generate for each tax a vector of coefficients that express the tax amount
+        # in terms of:
+        #    - the line quantity
+        #    - the line subtotal
+        #    - the tax amount of any previous tax in the list
+        #
+        # For example, suppose there are three taxes, A, B and C, in that order.
+        # A is a fixed tax that affects the base of B but not C,
+        # B is a percentage tax that affects the base of C,
+        # C is a percentage tax.
+        #
+        # Let Q be the line quantity, S the (yet unknown) tax-excluded subtotal of the line, and a, b, c the rates of A, B and C.
+        # Then we have:
+        # A = a * Q + 0 * S = (a 0) . (Q S)  As a result we give A the coefficients {'quantity': a, 'subtotal': 0}.
+        # B = 0 * Q + b * S + b * A = (0 b b) . (Q S A)  As a result we give B the coefficients {'quantity': 0, 'subtotal': b, A: b}.
+        # C = 0 * Q + c * S + 0 * A + c * B = (0 c 0 c) . (Q S A B)  As a result we give C the coefficients {'quantity': 0, 'subtotal': c, A: 0, B: c}.
+
+        # By default, all coefficients are 0 unless explicitly set.
+        tax_coefficients = defaultdict(lambda: defaultdict(float))
+
+        # We also generate for each tax a vector of base coefficients that express the base amount in terms of the same variables.
+        base_coefficients = defaultdict[Any, defaultdict[Any, float]](lambda: defaultdict(float))
+
+        for current_tax_index, current_tax_key in enumerate(taxes_to_apply):
+            # Every tax always has at least one coefficient, either for the quantity (if fixed) or for the subtotal (if percentage).
+            current_tax, current_tax_sign = current_tax_key
+
+            # If a tax is filtered out, its tax amount will be zero.
+            is_tax_filtered = filter_tax_function and not filter_tax_function(current_tax)
+            if current_tax.amount_type == 'fixed':
+                if not is_tax_filtered:
+                    tax_coefficients[current_tax_key]['quantity'] = current_tax.amount * current_tax_sign
+                base_coefficients[current_tax_key]['quantity'] = 1
+            elif current_tax.amount_type == 'percent':
+                if not is_tax_filtered:
+                    tax_coefficients[current_tax_key]['subtotal'] = current_tax.amount / 100.0 * current_tax_sign
+                base_coefficients[current_tax_key]['subtotal'] = 1
+            elif current_tax.amount_type == 'division':
+                if not is_tax_filtered:
+                    tax_coefficients[current_tax_key]['subtotal'] = current_tax.amount / 100.0 / (1 - current_tax.amount / 100.0) * current_tax_sign
+                base_coefficients[current_tax_key]['subtotal'] = 1 / (1 - current_tax.amount / 100.0)
+
+            # Subsequent taxes can also depend on previous taxes, in which case we add a coefficient for each previous tax.
+            for previous_tax_key in taxes_to_apply[:current_tax_index]:
+                previous_tax, _previous_tax_sign = previous_tax_key
+                if (
+                    not is_tax_filtered
+                    and current_tax.amount_type == 'percent'
+                    and previous_tax.include_base_amount
+                    # Tax-included taxes are always considered to have their base affected by previous taxes.
+                    and (current_tax.is_base_affected or current_tax.price_include == 'tax_included')
+                ):
+                    tax_coefficients[current_tax_key][previous_tax_key] = current_tax.amount / 100.0 * current_tax_sign
+                    base_coefficients[current_tax_key][previous_tax_key] = 1
+
+        # 2: Iteratively substitute coefficients to obtain all taxes in terms of Q and S.
+        # For example, since A = (a 0) . (Q S), in all other equations, we can set the coefficient of A to 0,
+        # by increasing the coefficient of Q by a and the coefficient of S by 0.
+        # This works because taxes only affect the base of subsequent taxes, not the previous ones.
+        for current_tax_index, current_tax_key in enumerate(taxes_to_apply):
+            # E.g. we substitute A in terms of Q and S in the equations for B and C.
+            for subsequent_tax_key in taxes_to_apply[current_tax_index + 1:]:
+                if tax_coefficients[subsequent_tax_key][current_tax_key] != 0:
+                    for coeff_key, coeff in tax_coefficients[current_tax_key].items():
+                        tax_coefficients[subsequent_tax_key][coeff_key] += coeff * tax_coefficients[subsequent_tax_key][current_tax_key]
+                    tax_coefficients[subsequent_tax_key][current_tax_key] = 0
+
+                # Note that the base coefficients are also expressing the base amount in terms of the tax amounts of previous taxes.
+                # So we need to use the tax coefficients of the current tax to update the base coefficients of the subsequent tax.
+                if base_coefficients[subsequent_tax_key][current_tax_key] != 0:
+                    for coeff_key, coeff in tax_coefficients[current_tax_key].items():
+                        base_coefficients[subsequent_tax_key][coeff_key] += coeff * tax_coefficients[subsequent_tax_key][current_tax_key]
+                    base_coefficients[subsequent_tax_key][current_tax_key] = 0
+
+        # 3: Now we have expressions for all the tax amounts in terms of Q and S.
+        # The unit price is the sum of S + all the tax-included tax amounts. We can substitute those
+        # tax amounts to get an expression for the unit price in terms of Q and S.
+        unit_price_coefficients = {'quantity': 0, 'subtotal': 1}
+        for tax_key in taxes_to_apply:
+            tax, _tax_sign = tax_key
+
+            # If special_mode is 'total_excluded', we should not include any taxes in the unit price.
+            # If special_mode is 'total_included', we should include all taxes in the unit price.
+            if tax.price_include and special_mode != 'total_excluded' or special_mode == 'total_included':
+                # Substitute the expressions for the tax amounts in terms of Q and S
+                unit_price_coefficients['quantity'] += tax_coefficients[tax_key]['quantity']
+                unit_price_coefficients['subtotal'] += tax_coefficients[tax_key]['subtotal']
+
+        # 4. Now we have an expression for the unit price in terms of Q and S.
+        # Q is known (the line quantity), so we can solve for S.
+
+        # If the unit price's coefficient for S is 0, this means the combined rate of percentage taxes in the unit price
+        # is -100%. This is a wrong configuration (e.g. a -100% tax-included tax which doesn't mean anything) and should not happen.
+        if unit_price_coefficients['subtotal'] == 0:
+            raise UserError(_("The combination of tax-included taxes results in a combined rate of -100% which is not solvable."))
+        subtotal = (price_unit - (unit_price_coefficients['quantity'] * quantity)) / unit_price_coefficients['subtotal']
+
+        taxes_data = []
+        for tax_key in taxes_to_apply:
+            tax, tax_sign = tax_key
+
+            tax_amount = tax_sign * (tax_coefficients[tax_key]['quantity'] * quantity + tax_coefficients[tax_key]['subtotal'] * subtotal)
+            base_amount = base_coefficients[tax_key]['quantity'] * quantity + base_coefficients[tax_key]['subtotal'] * subtotal
+
+            if rounding_method == 'round_per_line':
+                tax_amount = float_round(tax_amount, precision_rounding=precision_rounding)
+                base_amount = float_round(base_amount, precision_rounding=precision_rounding)
+
+            taxes_data.append({
+                'tax': tax,
+                'group': batching_results['group_per_tax'].get(tax.id) or self.env['account.tax'],
+                'batch': batching_results['batch_per_tax'][tax.id],
+                'tax_amount': tax_amount,
+                'price_include': tax.price_include,
+                'base_amount': base_amount,
+                'is_reverse_charge': tax_sign == -1,
+            })
+
+        return {
+            'total_excluded': subtotal,
+            'total_included': subtotal + sum(tax_data['tax_amount'] for tax_data in taxes_data),
+            'taxes_data': taxes_data,
+        }
+
     def _get_tax_details(
         self,
         price_unit,
@@ -1091,6 +1239,22 @@ class AccountTax(models.Model):
         # Flatten the taxes, order them and filter them if necessary.
         batching_results = self._batch_for_taxes_computation(special_mode=special_mode, filter_tax_function=filter_tax_function)
         sorted_taxes = batching_results['sorted_taxes']
+
+        # If all the taxes are fixed or percentage taxes, we can calculate them all using simultaneous equations.
+        # TODO: handle manual tax amounts
+        if all(tax.amount_type != 'code' for tax in self) and not manual_tax_amounts:
+            return self._get_tax_details_new(
+                price_unit,
+                quantity,
+                precision_rounding=precision_rounding,
+                rounding_method=rounding_method,
+                product=product,
+                special_mode=special_mode,
+                manual_tax_amounts=manual_tax_amounts,
+                filter_tax_function=filter_tax_function,
+                batching_results=batching_results,
+            )
+
         taxes_data = {}
         reverse_charge_taxes_data = {}
         for tax in sorted_taxes:
