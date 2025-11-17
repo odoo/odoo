@@ -11,6 +11,8 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 /**
  * @typedef {CSSSelector[]} move_node_blacklist_selectors
  * @typedef {CSSSelector[]} move_node_whitelist_selectors
+ * @typedef {((movableElement: HTMLElement) => void)[]} set_movable_element_handlers
+ * @typedef {(() => void)[]} unset_movable_element_handlers
  */
 
 const WIDGET_CONTAINER_WIDTH = 25;
