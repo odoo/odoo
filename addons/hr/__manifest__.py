@@ -69,9 +69,6 @@
         'mail.assets_public': [
             'hr/static/src/core/common/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'hr/static/tests/legacy/**/*',
-        ],
         'web.assets_unit_tests': [
             'hr/static/tests/**/*',
             'hr/static/tests/mock_server/mock_server.js',

@@ -655,7 +655,7 @@ export function setupQUnit() {
     // from the handler registry and assume it is the default one, which handles all "not already
     // handled" errors, like tracebacks.
     const errorHandlerRegistry = registry.category("error_handlers");
-    const [defaultHandlerName, defaultHandler] = errorHandlerRegistry.getEntries().at(-1);
+    const [defaultHandlerName = "DefaultHandler", defaultHandler = console.error.bind(console)] = errorHandlerRegistry.getEntries().at(-1) || [];
     const testDefaultHandler = (env, uncaughtError, originalError) => {
         onUncaughtErrorInTest(originalError);
         return defaultHandler(env, uncaughtError, originalError);
