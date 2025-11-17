@@ -18,6 +18,14 @@ class AccountAnalyticLine(models.Model):
         ondelete='cascade',
     )
 
+    def _compute_calendar_display_name(self):
+        """Override to include employee name in calendar view for managers"""
+        super()._compute_calendar_display_name()
+        for line in self:
+            if line.calendar_display_name and line.employee_id:
+                # Append employee name: "Project (8h) - Employee Name"
+                line.calendar_display_name = f"{line.calendar_display_name} - {line.employee_id.name}"
+
     @api.model_create_multi
     def create(self, vals_list):
         """Override create to auto-set employee_id and user_id from attendance"""

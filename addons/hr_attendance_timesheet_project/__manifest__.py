@@ -38,6 +38,7 @@ Workflow:
         'data/default_project_data.xml',
         'views/hr_attendance_views.xml',
         'views/hr_employee_views.xml',
+        'views/timesheet_views.xml',
         'wizard/attendance_change_project_wizard_views.xml',
     ],
     'assets': {

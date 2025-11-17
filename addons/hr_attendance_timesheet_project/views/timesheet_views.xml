@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Remove kanban view from My Timesheets action -->
+        <record id="hr_timesheet.act_hr_timesheet_line" model="ir.actions.act_window">
+            <field name="view_mode">list,form,pivot,graph</field>
+        </record>
+
+        <!-- Remove kanban view window record for My Timesheets -->
+        <delete model="ir.actions.act_window.view" id="hr_timesheet.act_hr_timesheet_line_view_kanban"/>
+
+        <!-- Remove kanban view from All Timesheets action -->
+        <record id="hr_timesheet.timesheet_action_all" model="ir.actions.act_window">
+            <field name="view_mode">list,form,pivot,graph</field>
+        </record>
+
+        <!-- Remove kanban view window record for All Timesheets -->
+        <delete model="ir.actions.act_window.view" id="hr_timesheet.timesheet_action_view_all_kanban"/>
+
+        <!-- Remove kanban view from Project Timesheets action -->
+        <record id="hr_timesheet.act_hr_timesheet_line_by_project" model="ir.actions.act_window">
+            <field name="view_mode">list,pivot,graph,form</field>
+        </record>
+
+        <!-- Remove kanban view window record for Project Timesheets -->
+        <delete model="ir.actions.act_window.view" id="hr_timesheet.act_hr_timesheet_line_by_project_view_kanban"/>
+    </data>
+</odoo>
