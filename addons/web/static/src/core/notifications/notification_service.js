@@ -50,6 +50,11 @@ export const notificationService = {
                 props,
                 onClose: options.onClose,
             };
+            for (const [notifId, notif] of Object.entries(notifications)) {
+                if (notif.props.message.toString() === notification.props.message.toString()) {
+                    close(notifId);
+                }
+            }
             notifications[id] = notification;
             return closeFn;
         }
