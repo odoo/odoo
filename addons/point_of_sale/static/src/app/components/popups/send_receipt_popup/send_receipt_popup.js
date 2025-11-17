@@ -51,7 +51,7 @@ export class SendReceiptPopup extends Component {
     }
 
     async generateTicketImage(basicReceipt = false) {
-        await this.renderer.toJpeg(
+        return await this.renderer.toJpeg(
             OrderReceipt,
             {
                 order: this.order,
