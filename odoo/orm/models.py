@@ -6292,12 +6292,10 @@ class BaseModel(metaclass=MetaModel):
                         except MissingError:
                             records = self.exists()[invf.name]
 
-                    # TODO: find a better fix
-                    if field.model_name == records._name:
-                        if not any(self._ids):
-                            # if self are new, records should be new as well
-                            records = records.browse(it and NewId(it) for it in records._ids)
-                        break
+                    if not any(self._ids):
+                        # if self are new, records should be new as well
+                        records = records.browse(it and NewId(it) for it in records._ids)
+                    break
             else:
                 new_records = self.filtered(lambda r: not r.id)
                 real_records = self - new_records
