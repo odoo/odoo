@@ -6272,9 +6272,15 @@ class BaseModel(metaclass=MetaModel):
                 # upon creation, no other record has a reference to self
                 continue
 
+            inverses = self.pool.field_inverses[field]
+            if create and field.type == 'many2many' and field.store and not inverses:
+                # upon creation, no other record has a reference to self
+                # for this M2M because no inverse has been able to use commands.
+                continue
+
             # subtree is another tree of dependencies
             model = self.env[field.model_name]
-            for invf in model.pool.field_inverses[field]:
+            for invf in inverses:
                 # use an inverse of field without domain
                 if not (invf.type in ('one2many', 'many2many') and invf.domain):
                     if invf.type == 'many2one_reference':

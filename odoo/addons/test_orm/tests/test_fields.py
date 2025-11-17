@@ -5205,6 +5205,5 @@ class TestModifiedPerformance(TransactionCase):
         LinePositive.create({}).is_positive  # warmup + fill cache of is_positive
 
         # One INSERT
-        # One SEARCH trying to LinePositive to invalidate is_positive field (never exists)
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             self.ModifiedLine.create({})
