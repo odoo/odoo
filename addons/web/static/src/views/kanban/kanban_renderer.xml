@@ -95,10 +95,10 @@
                         onValidate="props.list.createGroup.bind(props.list)"
                         groupByField="props.list.groupByField"
                     />
-                    <div t-if="props.list.groups.length === 0" class="o_view_nocontent o_kanban_stages_nocontent">
+                    <div t-if="props.list.groups.length === 0" class="o_view_nocontent o_kanban_group_nocontent">
                         <div class="o_nocontent_help">
                             <p class="o_view_nocontent_smiling_face">
-                                No stages yet, let's create some!
+                                No <t t-out="props.list.groupByField.string.toLowerCase()"/> yet, let's create some!
                             </p>
                             <p t-if="canShowExamples">
                                 Lack of inspiration? <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
