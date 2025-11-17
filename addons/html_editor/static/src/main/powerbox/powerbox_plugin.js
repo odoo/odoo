@@ -52,6 +52,8 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef {PowerboxCategory[]} powerbox_categories */
 /**
+ * @typedef {import("plugins").CSSSelector[]} powerbox_blacklist_selectors
+ *
  * @see UserCommand
  * @typedef {PowerboxItem[]} powerbox_items
  *

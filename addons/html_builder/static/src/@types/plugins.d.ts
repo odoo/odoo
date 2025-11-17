@@ -1,13 +1,13 @@
 declare module "plugins" {
     import { AnchorShared } from "@html_builder/core/anchor/anchor_plugin";
     import { builder_components, BuilderComponentShared } from "@html_builder/core/builder_component_plugin";
-    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, change_current_options_containers_listeners, clone_disabled_reason_providers, container_title, elements_to_options_title_components, get_options_container_top_buttons, has_overlay_options, no_parent_containers, on_restore_containers_handlers, remove_disabled_reason_providers } from "@html_builder/core/builder_options_plugin";
+    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, change_current_options_containers_listeners, clone_disabled_reason_providers, container_title, elements_to_options_title_components, get_options_container_top_buttons, has_overlay_options, keep_overlay_options, no_parent_containers, on_restore_containers_handlers, remove_disabled_reason_providers } from "@html_builder/core/builder_options_plugin";
     import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
     import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
     import { CustomizeTabShared } from "@html_builder/core/customize_tab_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
-    import { dropzone_selector, DropZoneShared } from "@html_builder/core/drop_zone_plugin";
+    import { dropzone_selector, DropZoneShared, filter_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
@@ -20,13 +20,13 @@ declare module "plugins" {
     import { is_draggable_handlers, on_element_dragged_handlers, on_element_dropped_handlers, on_element_dropped_near_handlers, on_element_dropped_over_handlers, on_element_move_handlers, on_element_out_dropzone_handlers, on_element_over_dropzone_handlers, on_prepare_drag_handlers } from "@html_builder/core/drag_and_drop_plugin";
     import { lower_panel_entries, on_mobile_preview_clicked, trigger_dom_updated } from "@html_builder/builder";
     import { on_reveal_target_handlers } from "@html_builder/sidebar/invisible_elements_panel";
-    import { on_snippet_dropped_handlers } from "@html_builder/sidebar/block_tab";
+    import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_handlers } from "@html_builder/snippets/add_snippet_dialog";
     import { background_shape_target_providers } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
     import { is_movable_selector } from "@html_builder/core/move_plugin";
     import { content_editable_selectors, content_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
-    import { builder_actions } from "@html_builder/core/builder_actions_plugin";
+    import { builder_actions, BuilderActionsShared } from "@html_builder/core/builder_actions_plugin";
     import { so_content_addition_selector, so_snippet_addition_selector } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style } from "@html_builder/core/core_builder_action_plugin";
@@ -56,8 +56,9 @@ declare module "plugins" {
         // Other
     }
 
-    interface GlobalResources extends BuilderResources {}
-    export type BuilderResources = EditorResources & ResourcesTypesFactory<BuilderResourcesList>;
+    interface GlobalResources extends BuilderResourcesAccess {}
+    export type BuilderResourcesAccess = EditorResourcesAccess & ResourcesTypesFactory<BuilderResourcesList>;
+    export type BuilderResources = ResourcesDeclarationsFactory<BuilderResourcesAccess>;
     export interface BuilderResourcesList {
         // Handlers
         after_save_handlers: after_save_handlers;
@@ -80,7 +81,13 @@ declare module "plugins" {
         on_removed_handlers: on_removed_handlers;
         on_restore_containers_handlers: on_restore_containers_handlers;
         on_reveal_target_handlers: on_reveal_target_handlers;
+        on_snippet_dragged_handlers: on_snippet_dragged_handlers;
         on_snippet_dropped_handlers: on_snippet_dropped_handlers;
+        on_snippet_dropped_near_handlers: on_snippet_dropped_near_handlers;
+        on_snippet_dropped_over_handlers: on_snippet_dropped_over_handlers;
+        on_snippet_move_handlers: on_snippet_move_handlers;
+        on_snippet_out_dropzone_handlers: on_snippet_out_dropzone_handlers;
+        on_snippet_over_dropzone_handlers: on_snippet_over_dropzone_handlers;
         on_will_clone_handlers: on_will_clone_handlers;
         on_will_remove_handlers: on_will_remove_handlers;
         post_compute_shape_listeners: post_compute_shape_listeners;
@@ -97,7 +104,9 @@ declare module "plugins" {
 
         // Predicates
         empty_node_predicates: empty_node_predicates;
+        filter_for_sibling_dropzone_predicates: filter_for_sibling_dropzone_predicates;
         is_draggable_handlers: is_draggable_handlers;
+        keep_overlay_options: keep_overlay_options;
 
         // Processors
 

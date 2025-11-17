@@ -79,6 +79,8 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  * @typedef {((node: Node) => boolean)[]} is_empty_predicates
  *
  * @typedef {((node: Node) => Node[])[]} removable_descendants_providers
+ *
+ * @typedef {CSSSelector[]} system_node_selectors
  */
 /**
  * The `root` argument is used by some predicates in which a node is

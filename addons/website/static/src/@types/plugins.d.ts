@@ -29,7 +29,8 @@ declare module "plugins" {
     import { WebsitePageConfigOptionShared } from "@website/builder/plugins/options/website_page_config_option_plugin";
     import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
-    import { ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
+    import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
+    import { translate_options } from "@html_builder/core/builder_options_plugin_translate";
     import { mark_translatable_nodes } from "@website/builder/plugins/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
@@ -67,8 +68,9 @@ declare module "plugins" {
         websiteSession: WebsiteSessionShared;
     }
 
-    interface GlobalResources extends WebsiteResources {}
-    export type WebsiteResources = BuilderResources & ResourcesTypesFactory<WebsiteResourcesList>;
+    interface GlobalResources extends WebsiteResourcesAccess {}
+    export type WebsiteResourcesAccess = BuilderResourcesAccess & ResourcesTypesFactory<WebsiteResourcesList>;
+    export type WebsiteResources = ResourcesDeclarationsFactory<WebsiteResourcesAccess>;
     export interface WebsiteResourcesList {
         // Handlers
         content_manually_updated_handlers: content_manually_updated_handlers;
@@ -92,6 +94,8 @@ declare module "plugins" {
         // Data
         searchbar_option_display_items: searchbar_option_display_items;
         searchbar_option_order_by_items: searchbar_option_order_by_items;
+        theme_options: theme_options;
+        translate_options: translate_options;
         visibility_selector_parameters: visibility_selector_parameters;
     }
 }
