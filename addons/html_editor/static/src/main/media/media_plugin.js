@@ -31,7 +31,7 @@ import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
  *
  * @typedef {{
  *      id: "DOCUMENTS" | "ICONS" | "IMAGES" | "VIDEOS";
- *      title: import("plugins").LazyTranslatedString;
+ *      title: import("plugins").TranslatedString;
  *      Component: import("@odoo/owl").Component;
  *      sequence: number;
  *  }[]} media_dialog_extra_tabs

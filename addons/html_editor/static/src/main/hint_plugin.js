@@ -8,7 +8,7 @@ import { closestBlock } from "../utils/blocks";
  * @typedef {import("@html_editor/editor").EditorContext} EditorContext
  * @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData
  * @typedef {import("plugins").CSSSelector} CSSSelector
- * @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString
+ * @typedef {import("plugins").TranslatedString} TranslatedString
  */
 
 /**
@@ -16,7 +16,7 @@ import { closestBlock } from "../utils/blocks";
  *   selectionData: SelectionData,
  *   editable: EditorContext["editable"]
  * ) => HTMLElement[] | NodeList)[]} hint_targets_providers
- * @typedef {{ selector: CSSSelector; text: LazyTranslatedString; }[]} hints
+ * @typedef {{ selector: CSSSelector; text: TranslatedString; }[]} hints
  */
 
 export class HintPlugin extends Plugin {

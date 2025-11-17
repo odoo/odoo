@@ -9,11 +9,11 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
-/** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
+/** @typedef {import("plugins").TranslatedString} TranslatedString */
 /**
  * @typedef {{
  *        class: string;
- *        title: LazyTranslatedString;
+ *        title: TranslatedString;
  *        handler: () => Promise<void>;
  *        disabledReason?: string;
  * }} BuilderButtonDescriptor

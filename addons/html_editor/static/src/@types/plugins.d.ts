@@ -9,7 +9,7 @@ declare module "plugins" {
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { after_insert_handlers, before_insert_processors, before_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties } from "@html_editor/core/dom_plugin";
     import { format_class_predicates, format_selection_handlers, FormatShared, has_format_predicates, remove_all_formats_handlers } from "@html_editor/core/format_plugin";
-    import { attribute_change_handlers, attribute_change_processors, before_add_step_handlers, before_filter_mutation_record_handlers, content_updated_handlers, external_step_added_handlers, handleNewRecords, history_cleaned_handlers, history_reset_from_steps_handlers, history_reset_handlers, HistoryShared, post_redo_handlers, restore_savepoint_handlers, savable_mutation_record_predicates, serializable_descendants_processors, step_added_handlers } from "@html_editor/core/history_plugin";
+    import { attribute_change_handlers, attribute_change_processors, before_add_step_handlers, before_filter_mutation_record_handlers, content_updated_handlers, external_step_added_handlers, handleNewRecords, history_cleaned_handlers, history_reset_from_steps_handlers, history_reset_handlers, HistoryShared, post_redo_handlers, post_undo_handlers, restore_savepoint_handlers, savable_mutation_record_predicates, serializable_descendants_processors, step_added_handlers } from "@html_editor/core/history_plugin";
     import { beforeinput_handlers, input_handlers } from "@html_editor/core/input_plugin";
     import { before_line_break_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
@@ -51,9 +51,11 @@ declare module "plugins" {
     import { DynamicPlaceholderShared } from "@html_editor/others/dynamic_placeholder_plugin";
     import { EmbeddedComponentShared, mount_component_handlers, post_mount_component_handlers } from "@html_editor/others/embedded_component_plugin";
 
+    import { _t } from "@web/core/l10n/translation.js";
+
     /* Misc */
     export interface CSSSelector extends String {}
-    export interface LazyTranslatedString extends String {}
+    export type TranslatedString = ReturnType<typeof _t>
 
     /** Plugin */
     export type PluginConstructor = (typeof Plugin) & {

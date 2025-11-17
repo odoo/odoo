@@ -36,11 +36,11 @@ import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
-/** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
+/** @typedef {import("plugins").TranslatedString} TranslatedString */
 
 /**
  * @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors
- * @typedef {{ name: LazyTranslatedString; tagName: string; extraClass?: string; }[]} font_items
+ * @typedef {{ name: TranslatedString; tagName: string; extraClass?: string; }[]} font_items
  */
 
 export const fontSizeItems = [

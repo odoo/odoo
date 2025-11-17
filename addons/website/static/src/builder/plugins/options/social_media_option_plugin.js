@@ -28,7 +28,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 /**
  * @typedef { Object } SocialMediaInfo
  * @property { boolean } [recorded] whether the social media is one from the orm
- * @property { string|Markup|LazyTranslatedString } label
+ * @property { import("plugins").TranslatedString } label
  * @property { string } iconClass the icon class to use for the social media
  * @property { RegExp } [extraHostnameRegex] a regex for host names that belongs to this social media, but are not catch by the default mechanism
  */

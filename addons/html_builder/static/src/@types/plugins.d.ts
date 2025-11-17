@@ -26,7 +26,7 @@ declare module "plugins" {
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
     import { is_movable_selector } from "@html_builder/core/move_plugin";
     import { content_editable_selectors, content_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
-    import { builder_actions } from "@html_builder/core/builder_actions_plugin";
+    import { builder_actions, BuilderActionsShared } from "@html_builder/core/builder_actions_plugin";
     import { so_content_addition_selector, so_snippet_addition_selector } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style } from "@html_builder/core/core_builder_action_plugin";
