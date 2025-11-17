@@ -758,8 +758,8 @@ patch(PosStore.prototype, {
             );
         }
     },
-    postSyncAllOrders(orders) {
-        super.postSyncAllOrders(orders);
+    async postSyncAllOrders(orders) {
+        await super.postSyncAllOrders(orders);
 
         for (const order of orders) {
             for (const line of order.lines) {
@@ -780,7 +780,7 @@ patch(PosStore.prototype, {
                     });
                 }
             }
-            this._postProcessLoyalty(order);
+            await this._postProcessLoyalty(order);
         }
     },
     async _postProcessLoyalty(order) {
