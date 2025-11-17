@@ -457,7 +457,7 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
+                        domain="[('activity_exception_decoration', 'in', ('warning','danger'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
@@ -495,7 +495,7 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
+                        domain="[('activity_exception_decoration', 'in', ('warning','danger'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
