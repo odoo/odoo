@@ -30,14 +30,14 @@ const StorePatch = {
         ).reduce((acc, channel) => acc + channel.message_needaction_counter, 0);
         return super.computeGlobalCounter() + channelsContribution + channelsNeedactionCounter;
     },
-    /** @returns {import("models").Thread[]} */
+    /** @returns {import("models").DiscussChannel[]} */
     getSelfImportantChannels() {
         return this.getSelfRecentChannels().filter((channel) => channel.importantCounter > 0);
     },
-    /** @returns {import("models").Thread[]} */
+    /** @returns {import("models").DiscussChannel[]} */
     getSelfRecentChannels() {
-        return Object.values(this["mail.thread"].records)
-            .filter((thread) => thread.model === "discuss.channel" && thread.self_member_id)
+        return Object.values(this["discuss.channel"].records)
+            .filter((channel) => channel.self_member_id)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },
     onStarted() {
