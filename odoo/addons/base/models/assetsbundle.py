@@ -882,7 +882,17 @@ class JavascriptAsset(WebAsset):
         return content
 
     def minify(self):
-        return self.with_header(rjsmin(self.content))
+        cache = self.bundle.env.cr.cache.setdefault('assets_js_transpiled', {})
+        cache_key = None
+        if self._filename and self.last_modified:
+            cache_key = (self._filename, self.last_modified)
+            content = cache.get(cache_key)
+            if content is not None:
+                return content
+        content = self.with_header(rjsmin(self.content))
+        if cache_key:
+            cache[cache_key] = content
+        return content
 
     def _fetch_content(self):
         try:
