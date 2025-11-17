@@ -13,6 +13,7 @@ Activates:
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'demo': [
         'demo/demo_company.xml',
     ],
