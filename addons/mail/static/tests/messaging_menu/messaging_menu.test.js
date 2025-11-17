@@ -1421,3 +1421,38 @@ test("ensure messaging menu shows standalone inbox messages", async () => {
     await contains(".o-mail-Message-author", { text: "Partner1" });
     await contains(".o-mail-Message-textContent", { text: "Message with needaction" });
 });
+
+test("Messaging Menu Inbox tab shows notifications", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const authorId = pyEnv["res.partner"].create({ name: "Test Author" });
+    const channelIds = pyEnv["discuss.channel"].create(
+        [...Array(20).keys()].map((i) => ({ name: `Channel ${i}` }))
+    );
+    pyEnv["mail.message"].create(
+        channelIds.map((channelId, i) => ({
+            author_id: authorId,
+            body: `Test Message ${i}`,
+            model: "discuss.channel",
+            needaction: i < 10,
+            res_id: channelId,
+        }))
+    );
+    pyEnv["mail.message"].create({
+        author_id: authorId,
+        body: "Another Test Message",
+        model: "discuss.channel",
+        needaction: true,
+        res_id: channelIds[0],
+    });
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
+    await contains(".o-mail-Message", { count: 11 });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-MessagingMenu button", { text: "Inbox" });
+    await contains(".o-mail-NotificationItem", { count: 10 });
+    await contains(".o-mail-NotificationItem:eq(0) .o-mail-NotificationItem-text", {
+        text: "Test Author: Another Test Message",
+    });
+});

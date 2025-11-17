@@ -1,3 +1,4 @@
+import { cleanTerm } from "@mail/utils/common/format";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { useEffect } from "@odoo/owl";
@@ -58,6 +59,32 @@ patch(MessagingMenu.prototype, {
             }
         });
     },
+
+    get threads() {
+        if (this.store.discuss.activeTab === "inbox") {
+            return this.inboxTabThreads;
+        }
+        return super.threads;
+    },
+
+    get inboxTabThreads() {
+        const seen = new Set();
+        const threads = [];
+        const messages = this.store.inbox.messages;
+        const term = this.store.discuss.searchTerm;
+        for (let i = messages.length - 1; i >= 0; i--) {
+            const thread = messages[i].thread;
+            if (thread && !seen.has(thread.localId)) {
+                seen.add(thread.localId);
+                threads.push(thread);
+            }
+        }
+        if (!term) {
+            return threads;
+        }
+        return threads.filter((thread) => cleanTerm(thread.displayName).includes(term));
+    },
+
     get canPromptToInstall() {
         return this.pwa.canPromptToInstall;
     },
