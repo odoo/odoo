@@ -1060,6 +1060,54 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         picking.button_validate()
         self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')
 
+    def test_deliveryslip_aggregated_qty_sale_backorders(self):
+        # Sale product named "MTO": ensure the aggregation logic is correct for
+        # backorders when the move description changes across pickings.
+        product = self.env['product.product'].create({
+            'name': 'MTO',
+            'is_storable': True,
+        })
+        self.env['stock.quant']._update_available_quantity(
+            product,
+            self.company_data['default_warehouse'].lot_stock_id,
+            50,
+        )
+
+        so = self._get_new_sale_order(amount=20.0, product=product)
+        so.action_confirm()
+        picking1 = so.picking_ids
+        self.assertEqual(len(picking1), 1)
+
+        picking1.move_ids.write({'quantity': 10, 'picked': True})
+        res1 = picking1.button_validate()
+        backorder_wizard1 = Form.from_action(self.env, res1).save()
+        backorder_wizard1.process()
+        picking2 = so.picking_ids.filtered(lambda p: p.backorder_id == picking1)
+        self.assertEqual(len(picking2), 1)
+
+        picking2.move_ids.write({
+            'description_picking': f"{picking2.move_ids[0].description_picking}\nExtra",
+        })
+
+        picking2.move_ids.write({'quantity': 5, 'picked': True})
+        res2 = picking2.button_validate()
+        backorder_wizard2 = Form.from_action(self.env, res2).save()
+        backorder_wizard2.process()
+        picking3 = so.picking_ids.filtered(lambda p: p.backorder_id == picking2)
+        self.assertEqual(len(picking3), 1)
+
+        aggregated1 = picking1.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregated1), 1)
+        val1 = next(iter(aggregated1.values()))
+        self.assertEqual(val1['qty_ordered'], 20)
+        self.assertEqual(val1['quantity'], 10)
+
+        aggregated2 = picking2.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregated2), 1)
+        val2 = next(iter(aggregated2.values()))
+        self.assertEqual(val2['qty_ordered'], 10)
+        self.assertEqual(val2['quantity'], 5)
+
     def test_17_qty_update_propagation(self):
         """ Creates a sale order, then modifies the sale order lines qty and verifies
         that quantity changes are correctly propagated to the picking and delivery picking.
