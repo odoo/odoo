@@ -24,13 +24,6 @@ class SmsSms(models.Model):
         'sent': 'pending',
         'delivered': 'sent',
     }
-    IAP_TO_SMS_FAILURE_TYPE = {  # TODO RIGR remove me in master
-        'insufficient_credit': 'sms_credit',
-        'wrong_number_format': 'sms_number_format',
-        'country_not_supported': 'sms_country_not_supported',
-        'server_error': 'sms_server',
-        'unregistered': 'sms_acc'
-    }
 
     BOUNCE_DELIVERY_ERRORS = {'sms_invalid_destination', 'sms_not_allowed', 'sms_rejected'}
     DELIVERY_ERRORS = {'sms_expired', 'sms_not_delivered', *BOUNCE_DELIVERY_ERRORS}
