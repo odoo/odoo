@@ -21,11 +21,7 @@ patch(Composer.prototype, {
         }
     },
     get placeholder() {
-        if (
-            this.displayNextLivechatHint() &&
-            this.props.composer.isFocused &&
-            this.env.inChatWindow
-        ) {
+        if (this.displayNextLivechatHint() && this.props.composer.isFocused) {
             return _t("Tab to next livechat");
         }
         return super.placeholder;
