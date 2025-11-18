@@ -13544,6 +13544,35 @@ test("edit o2m with default_order on a field not in view (2)", async () => {
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa2", "yop"]);
 });
 
+test("one2many list with aggregates in first column", async () => {
+    Partner._records[0].turtles = [1, 2, 3];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list>
+                        <field name="turtle_int" sum="My sum"/>
+                        <field name="display_name"/>
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_cell")).toEqual([
+        "0",
+        "leonardo",
+        "9",
+        "donatello",
+        "21",
+        "raphael",
+    ]);
+    expect(`tfoot td:first`).toHaveText("30");
+});
+
 test.tags("desktop");
 test("one2many list with monetary aggregates and different currencies", async () => {
     class Currency extends models.Model {
