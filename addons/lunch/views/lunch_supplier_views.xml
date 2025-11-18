@@ -56,8 +56,7 @@
                             <field name="delivery"/>
                             <field name="available_location_ids" widget="many2many_tags"/>
                             <field name="send_by" widget="radio"/>
-                            <label for="automatic_email_time" invisible="send_by != 'mail'"/>
-                            <div class="o_row" invisible="send_by != 'mail'"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
+                            <field name="automatic_email_time" widget="float_time" invisible="send_by != 'mail'"/>
                         </group>
                     </group>
                     <group>

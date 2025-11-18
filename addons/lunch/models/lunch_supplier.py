@@ -1,34 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import math
 from collections import defaultdict
-from datetime import datetime, time, timedelta, UTC
+from datetime import datetime, timedelta, UTC
 from textwrap import dedent
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import float_round
+from odoo.tools.date_utils import float_to_time
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.base.models.res_partner import _tz_get
 
 WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-CRON_DEPENDS = {'name', 'active', 'send_by', 'automatic_email_time', 'moment', 'tz'}
+CRON_DEPENDS = {'name', 'active', 'send_by', 'automatic_email_time', 'tz'}
 _lt = LazyTranslate(__name__)
-
-def float_to_time(hours, moment='am'):
-    """ Convert a number of hours into a time object. """
-    if hours == 12.0 and moment == 'pm':
-        return time.max
-    fractional, integral = math.modf(hours)
-    if moment == 'pm':
-        integral += 12
-    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
-
-def time_to_float(t):
-    return float_round(t.hour + t.minute/60 + t.second/3600, precision_digits=2)
 
 
 class LunchSupplier(models.Model):
@@ -81,11 +68,6 @@ class LunchSupplier(models.Model):
 
     active = fields.Boolean(default=True)
 
-    moment = fields.Selection([
-        ('am', 'AM'),
-        ('pm', 'PM'),
-    ], default='am', required=True)
-
     delivery = fields.Selection([
         ('delivery', 'Delivery'),
         ('no_delivery', 'No Delivery')
@@ -114,8 +96,8 @@ class LunchSupplier(models.Model):
     show_confirm_button = fields.Boolean(compute='_compute_buttons')
 
     _automatic_email_time_range = models.Constraint(
-        'CHECK(automatic_email_time >= 0 AND automatic_email_time <= 12)',
-        'Automatic Email Sending Time should be between 0 and 12',
+        'CHECK(automatic_email_time >= 0 AND automatic_email_time <= 24)',
+        'Automatic Email Sending Time should be between 0 and 24',
     )
 
     @api.depends('phone')
@@ -130,7 +112,7 @@ class LunchSupplier(models.Model):
         for supplier in self:
             supplier = supplier.with_context(tz=supplier.tz)
 
-            sendat_tz = datetime.combine(fields.Date.context_today(supplier), float_to_time(supplier.automatic_email_time, supplier.moment), tzinfo=ZoneInfo(supplier.tz))
+            sendat_tz = datetime.combine(fields.Date.context_today(supplier), float_to_time(supplier.automatic_email_time), tzinfo=ZoneInfo(supplier.tz))
             cron = supplier.cron_id.sudo()
             lc = cron.lastcall
             if ((
@@ -314,7 +296,7 @@ class LunchSupplier(models.Model):
         for supplier in self:
             if supplier.send_by == 'mail':
                 now = now.astimezone(ZoneInfo(supplier.tz))
-                email_time = datetime.combine(fields.Date.context_today(supplier), float_to_time(supplier.automatic_email_time, supplier.moment), tzinfo=ZoneInfo(supplier.tz))
+                email_time = datetime.combine(fields.Date.context_today(supplier), float_to_time(supplier.automatic_email_time), tzinfo=ZoneInfo(supplier.tz))
                 supplier.order_deadline_passed = supplier.available_today and now > email_time
             else:
                 supplier.order_deadline_passed = not supplier.available_today
