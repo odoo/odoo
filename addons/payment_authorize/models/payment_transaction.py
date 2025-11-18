@@ -160,6 +160,9 @@ class PaymentTransaction(models.Model):
         tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
             payment_data.get('response', {}).get('x_trans_id')
         )
+        if 'err_code' in tx_details:  # Transaction details are missing when an API error occurs.
+            return None  # Skip the validation
+
         amount = tx_details.get('transaction', {}).get('authAmount')
         # Authorize supports only one currency per account.
         currency = self.provider_id.available_currency_ids  # The currency has not been removed from the provider.
