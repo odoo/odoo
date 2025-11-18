@@ -7,7 +7,7 @@ from odoo.fields import Domain
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
-    sale_amount_total = fields.Monetary(compute='_compute_sale_data', string="Sum of Orders", help="Untaxed Total of Confirmed Orders", currency_field='company_currency')
+    sale_amount_total = fields.Monetary(compute='_compute_sale_data', string="Sum of Orders", help="Total of Confirmed Orders", currency_field='company_currency')
     quotation_count = fields.Integer(compute='_compute_sale_data', string="Number of Quotations")
     sale_order_count = fields.Integer(compute='_compute_sale_data', string="Number of Sale Orders")
     order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')
@@ -19,7 +19,7 @@ class CrmLead(models.Model):
             sale_orders = lead.order_ids.filtered_domain(self._get_lead_sale_order_domain())
             lead.sale_amount_total = sum(
                 order.currency_id._convert(
-                    order.amount_untaxed, company_currency, order.company_id, order.date_order or fields.Date.today()
+                    order.amount_total, company_currency, order.company_id, order.date_order or fields.Date.today()
                 )
                 for order in sale_orders
             )

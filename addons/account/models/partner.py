@@ -467,10 +467,10 @@ class ResPartner(models.Model):
         if they have one or the currency of the active company."""
         if self.ids:
             query_res = self.env.execute_query(SQL(
-                """SELECT partner_id, SUM(amount_untaxed_signed_converted) amount_untaxed_signed_converted_sum
+                """SELECT partner_id, SUM(amount_total_signed_converted) amount_total_signed_converted_sum
                      FROM (
-                         /* Avoid computing amount_untaxed_signed_converted in the subquery as a lot of records are not used. */
-                         SELECT partner_id, amount_untaxed_signed * COALESCE(rate, 1) amount_untaxed_signed_converted
+                         /* Avoid computing amount_total_signed_converted in the subquery as a lot of records are not used. */
+                         SELECT partner_id, amount_total_signed * COALESCE(rate, 1) amount_total_signed_converted
                            FROM (
                                SELECT *,
                                       /* Must use the effective exchange rate when the invoice was created. */
@@ -478,7 +478,7 @@ class ResPartner(models.Model):
                                  FROM (
                                      SELECT move.id move_id,
                                             move.partner_id,
-                                            move.amount_untaxed_signed,
+                                            move.amount_total_signed,
                                             currency_rate.rate,
                                             move.date - currency_rate.name dates_difference
                                        FROM account_move move

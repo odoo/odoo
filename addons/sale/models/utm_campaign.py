@@ -29,18 +29,19 @@ class UtmCampaign(models.Model):
             self.env['account.move.line'].flush_model(['balance', 'move_id', 'account_id', 'display_type'])
             self.env['account.move'].flush_model(['state', 'campaign_id', 'move_type'])
             query_res = self.env.execute_query_dict(SQL(
-                """SELECT campaign_id, -SUM(balance_converted) balance_converted_sum
+                """SELECT campaign_id, SUM(price_total_converted) price_total_converted_sum
                      FROM (
-                         /* Avoid computing balance_converted in the subquery as a lot of records are not used. */
-                         SELECT campaign_id, balance * COALESCE(rate, 1) balance_converted
+                         /* Avoid computing price_total_converted in the subquery as a lot of records are not used. */
+                         SELECT campaign_id, price_total / COALESCE(invoice_currency_rate, 1) * COALESCE(rate, 1) price_total_converted
                            FROM (
                                SELECT *,
                                       /* Must use the effective exchange rate when the invoice was created. */
                                       ROW_NUMBER() OVER (PARTITION BY line_id ORDER BY dates_difference) rn
                                  FROM (
                                      SELECT line.id line_id,
-                                            line.balance,
+                                            line.price_total,
                                             move.campaign_id,
+                                            move.invoice_currency_rate,
                                             currency_rate.rate,
                                             line.date - currency_rate.name dates_difference
                                        FROM account_move_line line
@@ -72,7 +73,7 @@ class UtmCampaign(models.Model):
         campaigns = self.browse()
         for datum in query_res:
             campaign = self.browse(datum['campaign_id'])
-            campaign.invoiced_amount = datum['balance_converted_sum']
+            campaign.invoiced_amount = datum['price_total_converted_sum']
             campaigns |= campaign
         for campaign in (self - campaigns):
             campaign.invoiced_amount = 0
