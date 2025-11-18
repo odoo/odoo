@@ -9,8 +9,6 @@ import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
 
-const isSmall = utils.isSmall;
-
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
@@ -285,7 +283,7 @@ export class Field extends Component {
             let viewMode = node.getAttribute("mode");
             if (viewMode) {
                 if (viewMode.split(",").length !== 1) {
-                    viewMode = isSmall() ? "kanban" : "list";
+                    viewMode = utils.isSmall() ? "kanban" : "list";
                 }
             } else {
                 if (views.list && !views.kanban) {
@@ -293,7 +291,7 @@ export class Field extends Component {
                 } else if (!views.list && views.kanban) {
                     viewMode = "kanban";
                 } else if (views.list && views.kanban) {
-                    viewMode = isSmall() ? "kanban" : "list";
+                    viewMode = utils.isSmall() ? "kanban" : "list";
                 }
             }
             if (viewMode) {
