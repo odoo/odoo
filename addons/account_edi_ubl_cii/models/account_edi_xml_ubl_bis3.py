@@ -273,6 +273,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 }
             })
 
+        # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID (code 0204)
+        if invoice.commercial_partner_id.peppol_eas == '0204':
+            vals['vals'].update({
+                'buyer_reference': invoice.commercial_partner_id.peppol_endpoint,
+            })
+
         return vals
 
     def _export_invoice_constraints(self, invoice, vals):
