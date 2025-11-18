@@ -85,8 +85,8 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     await start();
     await openDiscuss(channelIds[0]);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
-    await contains(".o-mail-Composer-footer", { text: "Tab to next livechat" });
     await focus(".o-mail-Composer-input");
+    await contains(".o-mail-Composer-input[placeholder='Tab to next livechat']");
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 13" });
