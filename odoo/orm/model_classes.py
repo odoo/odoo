@@ -161,7 +161,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
                         "please use @api.constrains on methods instead.")
     if hasattr(model_def, '_sql_constraints'):
         _logger.warning("Model attribute '_sql_constraints' is no longer supported, "
-                        "please define model.Constraint on the model.")
+                        "please define models.Constraint on the model.")
 
     # all models except 'base' implicitly inherit from 'base'
     name = model_def._name
