@@ -104,7 +104,7 @@ class ResPartner(models.Model):
             *self.env["discuss.channel.member"]._to_store_persona([]),
         ]
         store = Store(members, member_fields).add(partners)
-        store.add(channel, "group_public_id")
+        store.add(channel, Store.One("group_public_id", []))
         if allowed_group:
             for p in partners:
                 store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
