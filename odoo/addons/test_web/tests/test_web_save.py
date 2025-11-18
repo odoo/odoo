@@ -41,8 +41,8 @@ class TestWebSave(TransactionCase):
             {'name': 'test', 'image_wo_attachment': SVG_B64},
             {'image_wo_attachment': {}, 'image_wo_attachment_related': {}},
         )
-        self.assertEqual(result['image_wo_attachment'], '432 bytes')  # From PostgreSQL
-        self.assertEqual(result['image_wo_attachment_related'], b'432.00 bytes')  # From human_size
+        self.assertEqual(result['image_wo_attachment'], '322 bytes')  # From PostgreSQL
+        self.assertEqual(result['image_wo_attachment_related'], b'322.00 bytes')  # From human_size
 
         # check cache values
         record = self.env['test_orm.binary_svg'].browse(result['id'])
@@ -60,8 +60,8 @@ class TestWebSave(TransactionCase):
             {'image_wo_attachment': JPG_B64},
             {'image_wo_attachment': {}, 'image_wo_attachment_related': {}},
         )
-        self.assertEqual(result['image_wo_attachment'], '39 kB')  # From PostgreSQL
-        self.assertEqual(result['image_wo_attachment_related'], b'39.30 Kb')  # From human_size
+        self.assertEqual(result['image_wo_attachment'], '29 kB')  # From PostgreSQL
+        self.assertEqual(result['image_wo_attachment_related'], b'29.47 Kb')  # From human_size
 
         # check cache values
         self.assertEqual(record.image_wo_attachment, JPG_B64)

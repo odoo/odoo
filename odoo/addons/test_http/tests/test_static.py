@@ -294,13 +294,14 @@ class TestHttpStatic(TestHttpStaticCommon):
             res = self.url_open('/web/content/test_http.earth?field=galaxy_picture')
             self.assertEqual(res.status_code, 404)
 
-    def test_static17_content_missing_checksum(self):
+    def test_static17_content_from_db_datas(self):
+        self.env['ir.config_parameter'].set_str('ir_attachment.location', 'db')
         att = self.env['ir.attachment'].create({
             'name': 'testhttp.txt',
-            'db_datas': 'some data',
+            'raw': b'some data',
             'public': True,
         })
-        self.assertFalse(att.checksum)
+        self.assertFalse(att.store_fname)
         self.assertDownload(
             url=f'/web/content/{att.id}',
             headers={},
@@ -314,15 +315,16 @@ class TestHttpStatic(TestHttpStaticCommon):
             assert_content=b'some data',
         )
 
-    def test_static18_image_missing_checksum(self):
+    def test_static18_image_from_db_datas(self):
+        self.env['ir.config_parameter'].set_str('ir_attachment.location', 'db')
         with file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
             att = self.env['ir.attachment'].create({
                 'name': 'gizeh.png',
-                'db_datas': file.read(),
+                'raw': file.read(),
                 'mimetype': 'image/png',
                 'public': True,
             })
-        self.assertFalse(att.checksum)
+        self.assertFalse(att.store_fname)
         self.assertDownloadGizeh(f'/web/image/{att.id}')
 
     def test_static19_fallback_redirection_loop(self):

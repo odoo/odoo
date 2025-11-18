@@ -358,6 +358,7 @@ class IrAttachment(models.Model):
             mimetype = mimetypes.guess_type(values['url'].split('?')[0])[0]
         if not mimetype or mimetype == 'application/octet-stream':
             if raw := values.get('raw'):
+                assert isinstance(raw, bytes), f"Expecting raw bytes, got {type(raw)}"
                 mimetype = guess_mimetype(raw)
         return mimetype.lower() if mimetype else 'application/octet-stream'
 
@@ -752,7 +753,7 @@ class IrAttachment(models.Model):
         for values in vals_list:
             # needs to be popped in all cases to bypass `_inverse_datas`
             datas = values.pop('datas', None)
-            if raw := values.get('raw'):
+            if raw := (values.get('raw') or values.get('db_datas')):
                 if isinstance(raw, str):
                     values['raw'] = raw.encode()
             elif datas:
