@@ -54,6 +54,7 @@ export class LinkPopoverWidget {
         this.container = params.container || this.target.ownerDocument.body;
         this.href = this.$target.attr('href'); // for template
         this._keepLastPromise = new KeepLast();
+        this.isDocument = !!this.$target.attr("data-mimetype");
     }
 
     /**
@@ -66,6 +67,11 @@ export class LinkPopoverWidget {
         this.$previewFaviconFa = this.$el.find('.o_we_preview_favicon .fa');
         this.$copyLink = this.$el.find('.o_we_copy_link');
         this.$fullUrl = this.$el.find('.o_we_full_url');
+
+        // hide buttons for document links
+        if (this.isDocument) {
+            this.$el.find('.o_we_edit_link, .o_we_remove_link, .o_we_full_url').attr('hidden', true);
+        }
 
         this.$urlLink.attr('href', this.href);
         this.$fullUrl.attr('href', this.href);
