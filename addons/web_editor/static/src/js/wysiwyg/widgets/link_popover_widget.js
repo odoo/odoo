@@ -24,6 +24,7 @@ const LinkPopoverWidget = Widget.extend({
         this.$target = $(target);
         this.container = this.options.container || this.target.ownerDocument.body;
         this.href = this.$target.attr('href'); // for template
+        this.isDocument = !!$(target).attr("data-mimetype");
         this._dp = new DropPrevious();
     },
     /**
