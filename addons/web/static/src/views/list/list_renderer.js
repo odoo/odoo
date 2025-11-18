@@ -200,7 +200,21 @@ export class ListRenderer extends Component {
         });
         this.state = useState({ groupInput: false, currencyRates: null });
         onWillStart(async () => {
-            if (!this.isX2Many && this.hasMonetary) {
+            const needsCurrencyRates = this.props.archInfo.columns.some((column) => {
+                if (column.type !== "field") {
+                    return false;
+                }
+                const field = this.props.list.fields[column.name];
+                if (field.type !== "monetary" && column.widget !== "monetary") {
+                    return false;
+                }
+                const currencyField = this.getCurrencyField(column);
+                if (!(currencyField in this.props.list.activeFields)) {
+                    return false;
+                }
+                return ["sum", "avg", "max", "min"].some((agg) => agg in column.attrs);
+            });
+            if (needsCurrencyRates) {
                 this.state.currencyRates = await getCurrencyRates();
             }
         });
@@ -345,18 +359,6 @@ export class ListRenderer extends Component {
             // spare some space to display the cog icon in group headers
             this.props.list.isGrouped
         );
-    }
-
-    get hasMonetary() {
-        return this.props.archInfo.columns.some((column) => {
-            if (column.type !== "field") {
-                return false;
-            }
-            const field = this.props.list.fields[column.name];
-            return (
-                (field.type === "monetary" && field.currency_field) || column.widget === "monetary"
-            );
-        });
     }
 
     add(params) {

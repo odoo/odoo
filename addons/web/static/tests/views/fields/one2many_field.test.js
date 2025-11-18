@@ -13543,3 +13543,71 @@ test("edit o2m with default_order on a field not in view (2)", async () => {
     await contains(".modal-footer .o_form_button_save").click();
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa2", "yop"]);
 });
+
+test.tags("desktop");
+test("one2many list with monetary aggregates and different currencies", async () => {
+    class Currency extends models.Model {
+        _name = "res.currency";
+
+        name = fields.Char();
+        symbol = fields.Char();
+        position = fields.Selection({
+            selection: [
+                ["after", "A"],
+                ["before", "B"],
+            ],
+        });
+        inverse_rate = fields.Float();
+        rate_date = fields.Date();
+
+        _records = [
+            {
+                id: 1,
+                name: "USD",
+                symbol: "$",
+                position: "before",
+                inverse_rate: 1,
+                rate_date: "2019-06-13",
+            },
+            {
+                id: 2,
+                name: "EUR",
+                symbol: "€",
+                position: "after",
+                inverse_rate: 0.5,
+                rate_date: "2019-06-13",
+            },
+        ];
+    }
+    defineModels([Currency]);
+
+    Turtle._fields.amount = fields.Monetary({ currency_field: "currency", default: 100 });
+    Turtle._fields.currency = fields.Many2one({ relation: "res.currency", default: 1 });
+    Turtle._records[2].currency = 2;
+    Partner._records[0].turtles = [1, 2, 3];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list>
+                        <field name="amount" sum="My sum"/>
+                        <field name="currency"/>
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_cell.o_list_number")).toEqual([
+        "$ 100.00",
+        "$ 100.00",
+        "100.00 €",
+    ]);
+    expect(`tfoot`).toHaveText("$ 250.00?");
+    await contains("tfoot span sup").hover();
+    expect(".o_multi_currency_popover").toHaveCount(1);
+    expect(".o_multi_currency_popover").toHaveText("500.00 € at $ 0.50 on Jun 13");
+});
