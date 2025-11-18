@@ -92,6 +92,7 @@
                 <filter string="Date" name="year" invisible="1" date="date" default_period="year"/>
                 <filter string="Quotations" name="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
                 <filter string="Sales Orders" name="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
+                <filter string="Not Cancelled" name="filter_not_cancelled" domain="[('state', '!=', 'cancel')]"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="month"/>
                 <filter name="filter_order_date" invisible="1" string="Order Date: Last 365 Days" domain="[('date', '&gt;=', '-365d')]"/>

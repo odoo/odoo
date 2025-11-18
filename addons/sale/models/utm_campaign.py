@@ -18,7 +18,7 @@ class UtmCampaign(models.Model):
 
     def _compute_quotation_count(self):
         quotation_data = self.env['sale.order']._read_group([
-            ('campaign_id', 'in', self.ids)],
+            ('campaign_id', 'in', self.ids), ('state', '!=', 'cancel')],
             ['campaign_id'], ['__count'])
         data_map = {campaign.id: count for campaign, count in quotation_data}
         for campaign in self:
@@ -81,7 +81,7 @@ class UtmCampaign(models.Model):
     def action_redirect_to_quotations(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
         action['domain'] = [('campaign_id', '=', self.id)]
-        action['context'] = {'default_campaign_id': self.id}
+        action['context'] = {'default_campaign_id': self.id, 'search_default_filter_not_cancelled': 1}
         return action
 
     def action_redirect_to_invoiced(self):
