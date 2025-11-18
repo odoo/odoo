@@ -33,7 +33,8 @@ export class SearchBar extends Interaction {
         const orderByEl = this.el.querySelector(".o_search_order_by");
         const form = orderByEl.closest("form");
         this.order = orderByEl.value;
-        this.limit = parseInt(this.inputEl.dataset.limit) || 5;
+        this.limit = parseInt(this.inputEl.dataset.limit) || 3;
+        this.perGroupLimit = 6;
         this.wasEmpty = !this.inputEl.value;
         this.linkHasFocus = false;
         if (this.limit) {
@@ -101,14 +102,34 @@ export class SearchBar extends Interaction {
             options: this.options,
         });
         const fieldNames = this.getFieldsNames();
-        res.results.forEach((record) => {
-            for (const fieldName of fieldNames) {
-                if (record[fieldName]) {
-                    record[fieldName] = markup(record[fieldName]);
+        for (const group in res.results) {
+            const data = res.results[group].data;
+            data.forEach((record) => {
+                for (const fieldName of fieldNames) {
+                    if (record[fieldName]) {
+                        record[fieldName] = markup(record[fieldName]);
+                    }
                 }
-            }
-        });
+            });
+        }
         return res;
+    }
+    /**
+     * Sort models inside each group with more then limited data and apply limit
+     * TODO: This needs to be done in backend.
+     *
+     * @param {Object} rawData - raw results keyed by model name
+     */
+    limitGroupItems(results) {
+        for (const groupName in results) {
+            const list = results[groupName].data;
+            if (list && list.length > this.limit) {
+                list.sort((a, b) =>
+                    (a.name?.toString() || "").localeCompare(b.name?.toString() || "")
+                );
+                results[groupName].data = list.slice(0, this.limit);
+            }
+        }
     }
 
     /**
@@ -120,7 +141,8 @@ export class SearchBar extends Interaction {
         }
         const prevMenuEl = this.menuEl;
         if (res && this.limit) {
-            const results = res["results"];
+            const results = res.results;
+            this.limitGroupItems(results);
             let template = "website.s_searchbar.autocomplete";
             const candidate = template + "." + this.searchType;
             if (getTemplate(candidate)) {
@@ -131,7 +153,10 @@ export class SearchBar extends Interaction {
                 {
                     results: results,
                     parts: res["parts"],
-                    hasMoreResults: results.length < res["results_count"],
+                    // Todo: - re-enable when pagination is supported
+                    //       - make each model give their search count, so that view all button works accordingly
+                    // hasMoreResults: results.length < res["results_count"],
+                    limit: this.limit,
                     search: this.inputEl.value,
                     fuzzySearch: res["fuzzy_search"],
                     widget: this.options,

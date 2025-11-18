@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_forum.search_items_forum">
+        <div class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0">
+            <t t-call="website.search_image_item"/>
+            <span t-out="details"/>
+            <span>12-12-1221</span>
+        </div>
+        <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+            <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+            <t t-call="website.search_description_item"/>
+        </div>
+        <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto"><t t-out="details"/></div>
+    </t>
+
+    <t t-inherit="website.s_searchbar.autocomplete" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='website.search_items']" position="replace">
+            <t t-set="isforum" t-value="bucket.model == 'forum.forum' or bucket.model == 'forum.tags' or bucket.model == 'forum.post'"/>
+            <t t-if="isforum">
+                <t t-call="website_forum.search_items_forum"/>
+            </t>
+            <t t-else="">
+                <t t-call="website.search_items"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

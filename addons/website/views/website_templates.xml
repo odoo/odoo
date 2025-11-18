@@ -3071,6 +3071,30 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
     </t>
 </template>
 
+<template id="website.search_image_item_view">
+    <div class="d-flex align-items-center justify-content-baseline flex-column">
+        <img t-if="result.get('image_url')" t-att-src="result['image_url']"
+            class="flex-shrink-0 o_image_64_contain"/>
+        <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}"
+            style="font-size: 34px;"/>
+    </div>
+</template>
+
+<template id="website.search_description_item_view">
+    <t t-set="description" t-value="result['description']"/>
+    <p t-if="description" class="mb-0 w-100 text-truncate" t-out="description"/>
+</template>
+
+<template id="website.search_items_view">
+    <div class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0"/>
+    <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+        <div t-attf-class="h6 fw-bold #{'' if description else 'mb-0'}" t-out="result['name']"/>
+            <!-- There is no separate module for website.page  -->
+        <t t-if="bucket['model'] == 'website.page'" t-call="website.search_description_item_view"/>
+    </div>
+    <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto" style="font-size: 13px;"/>
+</template>
+
 <template id="list_hybrid" name="Any Search Results">
     <t t-call="website.layout">
         <div id="wrap">
@@ -3098,10 +3122,34 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                     </div>
                 </t>
                 <div t-if="results" class="table-responsive">
-                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" t-key="result_index"/>
-                </div>
-                <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
-                    <t t-call="website.pager"/>
+
+                    <!-- Loop over key/value pairs of results -->
+                    <t t-foreach="results.items()" t-as="grp">
+
+                        <!-- grp[0] = group name (Pages, Blogs, ...) -->
+                        <!-- grp[1] = bucket object {} -->
+                        <t t-set="bucket" t-value="grp[1]"/>
+                        <!-- Group header -->
+                        <div class="px-3 py-2 fw-bold mt-3">
+                            <t t-out="bucket['rowTitle']"/>
+                        </div>
+                        <!-- Item Grid -->
+                        <div class="row g-0 px-2 py-2">
+                            <t t-foreach="bucket['data']" t-as="result" t-key="result['website_url']">
+                                <div class="col-12 col-md-4">
+                                    <a  t-att-href="result['website_url']"
+                                    class="dropdown-item o_search_result_item p-2 text-wrap w-100 h-100
+                                    d-flex align-items-center justify-content-baseline
+                                    flex-nowrap text-truncate"
+                                    style="min-height: 80px;">
+                                        <!-- <t t-debug="pdb"/> -->
+                                        <t t-call="website.search_items_view"/>
+                                    </a>
+                                </div>
+                            </t>
+                        </div>
+
+                    </t>
                 </div>
             </div>
         </div>
@@ -3146,7 +3194,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 <template id="website_search_box_input" inherit_id="website.website_search_box" primary="True">
     <xpath expr="//input[@name='search']" position="attributes">
         <attribute name="t-att-data-search-type">search_type</attribute>
-        <attribute name="t-att-data-limit">limit or '5'</attribute>
+        <attribute name="t-att-data-limit">limit or '3'</attribute>
         <attribute name="t-att-data-display-image">display_image or 'true'</attribute>
         <attribute name="t-att-data-display-description">display_description or 'true'</attribute>
         <attribute name="t-att-data-display-extra-link">display_extra_link or 'true'</attribute>
@@ -3252,7 +3300,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
     <t t-call="website.website_search_box_input"
         search_type.f="all"
         action.f="/website/search"
-        limit="limit or '5'"
+        limit="limit or '3'"
         display_image.f="true"
         display_description.f="true"
         display_extra_link.f="true"

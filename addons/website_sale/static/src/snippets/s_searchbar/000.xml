@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_sale.search_items_product">
+        <div
+            class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0">
+            <t t-call="website.search_image_item"/>
+        </div>
+        <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+            <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+            <t t-if="result['rating']">
+                <t t-call="portal_rating.rating_stars_static">
+                    <t t-set="val" t-value="result['rating']"/>
+                    <t t-set="inline_mode" t-value="True"/>
+                </t>
+            </t>
+            <button t-if="extra_link" class="extra_link btn btn-link btn-sm"
+                t-att-data-target="result['extra_link_url']"
+                t-out="extra_link"/>
+
+            <t t-if="extra_link_html" t-out="extra_link_html"/>
+        </div>
+        <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto"
+            style="font-size: 13px;">
+            <t t-if="result['detail_strike']">
+                <span class="text-muted text-nowrap" style="text-decoration: line-through;">
+                    <t t-out="result['detail_strike']"/>
+                </span>
+                <br/>
+            </t>
+            <b t-if="result['detail']" class="text-nowrap">
+                <t t-out="result['detail']"/>
+            </b>
+            <t t-if="result['detail_extra']">
+                <br/>
+                <span class="text-nowrap" t-out="result['detail_extra']"/>
+            </t>
+        </div>
+    </t>
+    <t t-name="website_sale.search_items_product_category">
+        <div
+            class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0">
+            <t t-call="website.search_image_item"/>
+        </div>
+        <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+            <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+            <!-- <span>Product > Desk > Category</span> -->
+            <t t-out="result['breadcrumb']"/>
+        </div>
+        <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto"/>
+    </t>
+
+    <t t-inherit="website.s_searchbar.autocomplete" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='website.search_items']" position="replace">
+            <t t-if="bucket.model =='product.template'">
+                <t t-call="website_sale.search_items_product"/>
+            </t>
+            <t t-elif="bucket.model =='product.public.category'">
+                <t t-call="website_sale.search_items_product_category"/>
+            </t>
+            <t t-else="">
+                <t t-call="website.search_items"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

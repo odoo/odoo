@@ -115,10 +115,13 @@ class HrJob(models.Model):
 
 
         search_fields = ['name']
-        fetch_fields = ['name', 'website_url']
+        fetch_fields = ['name', 'website_url', 'open_application_count']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text', 'truncate':  False},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'department_id': {'name': 'department_id', 'type': 'text'},
+            'open_application_count': {'name': 'open_application_count', 'type': 'integer'},
+            'address_id': {'name': 'address_id', 'type': 'text'},
         }
         if with_description:
             search_fields.append('description')
@@ -133,3 +136,11 @@ class HrJob(models.Model):
             'mapping': mapping,
             'icon': 'fa-briefcase',
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for data in results_data:
+            job = self.browse(data['id'])
+            data['department_id'] = job.department_id.name if job.department_id else ''
+            data['address_id'] = job.address_id.name if job.address_id else ''
+        return results_data

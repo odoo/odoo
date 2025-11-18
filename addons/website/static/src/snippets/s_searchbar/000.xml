@@ -1,55 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<!-- Search Bar autocomplete item -->
+<t t-name="website.search_image_item">
+    <div class="d-flex align-items-center justify-content-baseline flex-column">
+        <img t-if="result['image_url']" t-att-src="result['image_url']"
+            class="flex-shrink-0 o_image_64_contain"/>
+        <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}"
+            style="font-size: 34px;"/>
+    </div>
+</t>
+
+<t t-name="website.search_description_item">
+    <t t-set="description" t-value="result['description']"/>
+    <p t-if="description" class="mb-0 w-100 text-truncate" t-out="description"/>
+</t>
+
+<t t-name="website.search_items">
+    <div class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0"/>
+    <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+        <div t-attf-class="h6 fw-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
+            <!-- There is no separate module for website.page  -->
+        <t t-if="result['model'] == 'website.page'" t-call="website.search_description_item"/>
+    </div>
+    <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto" style="font-size: 13px;"/>
+</t>
+
+    <!-- Search Bar autocomplete item -->
 <div t-name="website.s_searchbar.autocomplete"
-    class="o_dropdown_menu show position-absolute w-100">
-    <t t-if="fuzzySearch and results.length">
+     class="o_dropdown_menu show position-absolute w-100">
+
+    <!-- Fuzzy search fallback -->
+    <t t-if="fuzzySearch and Object.keys(results).length === 0">
         <span class="dropdown-item-text">
-            <span class="text-muted">No results found for '<t t-out="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.</span>
+            <span class="text-muted">
+                No results found for '<t t-out="search"/>'. Showing results for
+                '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.
+            </span>
         </span>
     </t>
-    <t t-elif="!results.length">
+
+    <!-- Normal no-result state -->
+    <t t-elif="Object.keys(results).length === 0">
         <span class="dropdown-item-text">
             <span class="text-muted">No results found. Please try another search.</span>
         </span>
     </t>
-    <a t-foreach="results" t-as="result" t-key="result_index"
-        t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center flex-wrap o_search_result_item">
-            <t t-if="widget.displayImage">
-                <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
-                <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
-            </t>
-            <div class="o_search_result_item_detail px-3">
-                <t t-set="description" t-value="parts['description'] and widget.displayDescription and result['description']"/>
-                <t t-set="extra_link" t-value="parts['extra_link'] and widget.displayExtraLink and result['extra_link_url'] and result['extra_link']"/>
-                <t t-set="extra_link_html" t-value="parts['extra_link'] and widget.displayExtraLink and !result['extra_link_url'] and result['extra_link']"/>
-                <div t-attf-class="h6 fw-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
-                <p t-if="description" class="mb-0" t-out="description"/>
-                <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
-                <t t-if="extra_link_html" t-out="extra_link_html"/>
+
+    <!-- Render results -->
+    <t t-foreach="Object.entries(results)" t-as="grp" t-key="grp[0]">
+
+        <!-- grp[0] = Group Name (Pages, Blogs, etc.) -->
+        <!-- grp[1] = Single bucket object -->
+        <t t-set="bucket" t-value="grp[1]"/>
+
+        <!-- Group header -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="px-3 py-2 fw-bold">
+                <t t-out="bucket.rowTitle"/>
             </div>
-            <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0 ms-auto">
-                <t t-if="result['detail_strike']">
-                    <span class="text-muted text-nowrap" style="text-decoration: line-through;">
-                        <t t-out="result['detail_strike']"/>
-                    </span>
-                    <br/>
-                </t>
-                <b t-if="result['detail']" class="text-nowrap">
-                    <t t-out="result['detail']"/>
-                </b>
-                <t t-if="result['detail_extra']">
-                    <br/>
-                    <span class="text-nowrap" t-out="result['detail_extra']"/>
-                </t>
-            </div>
+
+            <!-- Show 'View More' if bucket has data equal or more results than limit -->
+            <button t-if="bucket.data.length >= limit"
+                    type="button"
+                    class="text-primary-emphasis fw-semibold btn btn-link btn-sm"
+                    t-att-data-group-name="bucket.model">
+                View More
+            </button>
         </div>
-    </a>
-    <t t-if="hasMoreResults">
-        <button type="submit" class="dropdown-item text-center text-primary-emphasis">All results</button>
+
+        <!-- Items -->
+        <div class="row g-0 px-2 py-2">
+            <t t-foreach="bucket.data" t-as="result" t-key="result['website_url']">
+                <div class="col-12 col-md-4">
+                    <a  t-att-href="result['website_url']"
+                        class="dropdown-item o_search_result_item p-2 text-wrap w-100 h-100
+                            d-flex align-items-center justify-content-baseline
+                            flex-nowrap text-truncate"
+                        style="min-height: 80px;">
+                        <t t-call="website.search_items"/>
+                    </a>
+                </div>
+            </t>
+        </div>
     </t>
 </div>
+
 
 </templates>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_blog.search_items_blog_post">
+        <div
+            class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0">
+            <t t-call="website.search_image_item"/>
+        </div>
+        <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+            <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+            <div class="d-inline-flex align-items-center mt-2" style="font-size: 12px">
+                <img t-if="result['author_image_url']" t-att-src="result['author_image_url']"
+                    class="flex-shrink-0 o_image_24_cover"/>
+                    <p class="m-0">
+                        <t t-out="result['author_name']"/>
+                    <!-- add space here &amp;nbsp; not working -->
+                        <t t-out="result['detail']"/>
+                    </p>
+            </div>
+        </div>
+        <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto"/>
+    </t>
+    <t t-name="website_blog.search_items_blog_blog">
+        <div
+            class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0">
+            <t t-call="website.search_image_item"/>
+        </div>
+        <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+            <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+        </div>
+        <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto"/>
+    </t>
+
+    <t t-inherit="website.s_searchbar.autocomplete" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='website.search_items']" position="replace">
+            <t t-if="bucket.model =='blog.post'">
+                <t t-call="website_blog.search_items_blog_post"/>
+            </t>
+            <t t-elif="bucket.model =='blog.blog'">
+                <t t-call="website_blog.search_items_blog_blog"/>
+            </t>
+            <t t-else="">
+                <t t-call="website.search_items"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

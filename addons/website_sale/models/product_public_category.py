@@ -146,10 +146,11 @@ class ProductPublicCategory(models.Model):
     def _search_get_detail(self, website, order, options):
         with_description = options['displayDescription']
         search_fields = ['name']
-        fetch_fields = ['id', 'name']
+        fetch_fields = ['id', 'name', 'parents_and_self']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
+            'breadcrumb': {'name': 'breadcrumb', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('website_description')
@@ -169,6 +170,14 @@ class ProductPublicCategory(models.Model):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for data in results_data:
             data['url'] = '/shop/category/%s' % data['id']
+            category_ids = data.get('parents_and_self', [])
+            if category_ids:
+                cats = self.env['product.public.category'].browse(category_ids)
+                names = cats.mapped('name')
+                data['breadcrumb'] = " > ".join(names)
+            else:
+                data['breadcrumb'] = ""
+
         return results_data
 
     @api.model

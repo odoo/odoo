@@ -188,7 +188,7 @@ class BlogPost(models.Model):
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
-    author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
+    author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False, store=True)
     author_name = fields.Char(related='author_id.display_name', string="Author Name", readonly=False, store=True)
     active = fields.Boolean('Active', default=True)
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, index=True, ondelete='cascade', default=lambda self: self.env['blog.blog'].search([], limit=1))
@@ -337,10 +337,12 @@ class BlogPost(models.Model):
         def search_in_tags(env, search_term):
             tags_like_search = env['blog.tag'].search([('name', 'ilike', search_term)])
             return [('tag_ids', 'in', tags_like_search.ids)]
-        fetch_fields = ['name', 'website_url']
+        fetch_fields = ['name', 'website_url', 'author_name']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'author_name': {'name': 'author_name', 'type': 'text', 'skip_markup': True},
+            'author_image_url': {'name': 'author_image_url', 'type': 'html', 'truncate': False},
         }
         if with_description:
             search_fields.append('content')
@@ -358,3 +360,9 @@ class BlogPost(models.Model):
             'mapping': mapping,
             'icon': 'fa-rss',
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for data in results_data:
+            data['author_image_url'] = '/web/image/blog.post/%s/author_avatar' % data['id']
+        return results_data

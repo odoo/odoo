@@ -1999,6 +1999,7 @@ class Website(models.Model):
         """
         result = []
         if search_type in ['pages', 'all']:
+
             result.append(self.env['website.page']._search_get_detail(self, order, options))
         return result
 
@@ -2057,6 +2058,7 @@ class Website(models.Model):
             results, count = model._search_fetch(search_detail, search, limit, order)
             search_detail['results'] = results
             total_count += count
+            count_per_model = count
             search_detail['count'] = count
             all_results.append(search_detail)
         return total_count, all_results

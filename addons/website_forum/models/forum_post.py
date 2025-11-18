@@ -858,6 +858,7 @@ class ForumPost(models.Model):
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'image_url': {'name': 'image_url', 'type': 'text', 'truncate': False},
         }
 
         domain = website.website_domain()
@@ -916,11 +917,10 @@ class ForumPost(models.Model):
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        with_date = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for post, data in zip(self, results_data):
-            if with_date:
-                data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
+            data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
+            data['image_url'] = self.env['website'].image_url(post.create_uid, 'avatar_128')
         return results_data
 
     def _get_related_posts(self, limit=5):

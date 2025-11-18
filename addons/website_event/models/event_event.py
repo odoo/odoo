@@ -606,11 +606,13 @@ class EventEvent(models.Model):
                     current_date = date_details[1]
 
         search_fields = ['name']
-        fetch_fields = ['name', 'website_url', 'address_name']
+        fetch_fields = ['name', 'website_url', 'address_name', 'date_begin']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
             'address_name': {'name': 'address_name', 'type': 'text', 'match': True},
+            'date_begin': {'name': 'date_begin', 'type': 'date'},
+            'lowest_ticket_price': {'name': 'lowest_ticket_price', 'type': 'float', 'precision': 2},
         }
         if with_description:
             search_fields.append('subtitle')
@@ -642,15 +644,18 @@ class EventEvent(models.Model):
             'no_country_domain': no_country_domain,
         }
 
+    def _get_lowest_ticket_price(self):
+        self.ensure_one()
+        tickets = self.event_ticket_ids.filtered(lambda t: t.price and t.price not in (None, False))
+        if not tickets:
+            return 0.0
+        return min(tickets.mapped('price'))
+
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        with_date = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
-        if with_date:
-            for event, data in zip(self, results_data):
-                begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
-                end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
-                data['range'] = (
-                    Markup('{} <i class="fa fa-long-arrow-right"></i> {}').format(begin, end)
-                    if begin != end else begin
-                )
+        for data in results_data:
+            event = self.browse(data['id'])
+            data['lowest_ticket_price'] = event._get_lowest_ticket_price()
         return results_data
+

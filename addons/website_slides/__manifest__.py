@@ -97,6 +97,7 @@ Featuring
             'website_slides/static/src/xml/slide_quiz_create.xml',
             'website_slides/static/src/xml/slide_quiz.xml',
             'website_slides/static/src/js/public/**/*',
+            'website_slides/static/snippets/**/*.xml',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',

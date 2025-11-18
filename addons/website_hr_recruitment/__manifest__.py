@@ -26,6 +26,7 @@
         'web.assets_frontend': [
             'website_hr_recruitment/static/src/scss/**/*',
             'website_hr_recruitment/static/src/interactions/*',
+            'website_hr_recruitment/static/src/snippets/**/*.xml',
         ],
         'web.assets_backend': [
             'website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js',

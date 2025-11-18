@@ -48,6 +48,7 @@
             'website_blog/static/src/interactions/**/*',
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/snippets/**/*.js',
+            'website_blog/static/src/snippets/s_searchbar/000.xml',
         ],
         'website.assets_editor': [
             'website_blog/static/src/js/systray_items/*.js',

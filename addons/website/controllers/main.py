@@ -44,7 +44,22 @@ LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
-
+GROUP_MAP = {
+    "website.page": "Pages",
+    "product.template": "Products",
+    "product.public.category": "Product Categories",
+    "slide.channel": "Courses",
+    "slide.slide": "Courses",
+    "blog.blog": "Blogs",
+    "blog.post": "Blogs",
+    "event.event": "Events",
+    "hr.job": "Jobs",
+    "forum.forum": "Forum",
+    "forum.tags": "Forum",
+    "forum.post": "Forum",
+    "appointment.type": "Appointment",
+    "knowledge.knowledge": "Articles",
+}
 
 class QueryURL:
     def __init__(self, path='', path_args=None, **args):
@@ -495,7 +510,7 @@ class Website(Home):
         return 'is_published desc, %s, id desc' % order
 
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
-    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+    def autocomplete(self, search_type=None, term=None, order=None, limit=3, max_nb_chars=999, options=None):
         """
         Returns list of results according to the term and options
 
@@ -530,47 +545,55 @@ class Website(Home):
         search_results = request.website._search_render_results(search_results, limit)
 
         mappings = []
-        results_data = []
+        result = {}
         for search_result in search_results:
-            results_data += search_result['results_data']
             mappings.append(search_result['mapping'])
-        if search_type == 'all':
-            # Only supported order for 'all' is on name
-            results_data.sort(key=lambda r: r.get('name', ''), reverse='name desc' in order)
-        results_data = results_data[:limit]
-        result = []
-        for record in results_data:
-            mapping = record['_mapping']
-            mapped = {
-                '_fa': record.get('_fa'),
-            }
-            for mapped_name, field_meta in mapping.items():
-                value = record.get(field_meta.get('name'))
-                if not value:
-                    mapped[mapped_name] = ''
-                    continue
-                field_type = field_meta.get('type')
-                if field_type == 'text':
-                    if value and field_meta.get('truncate', True):
-                        value = shorten(value, max_nb_chars, placeholder='...')
-                    if field_meta.get('match') and value and term:
-                        pattern = '|'.join(map(re.escape, term.split()))
-                        if pattern:
-                            parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
-                            if len(parts) > 1:
-                                value = request.env['ir.ui.view'].sudo()._render_template(
-                                    "website.search_text_with_highlight",
-                                    {'parts': parts}
-                                )
-                                field_type = 'html'
+            model = search_result["model"]
+            group_title = GROUP_MAP.get(model, model)
+            for record in search_result['results_data']:
+                mapping = record['_mapping']
+                mapped = {
+                    '_fa': record.get('_fa'),
+                }
+                for mapped_name, field_meta in mapping.items():
+                    value = record.get(field_meta.get('name'))
+                    if not value:
+                        mapped[mapped_name] = ''
+                        continue
+                    field_type = field_meta.get('type')
+                    if field_type == 'text':
+                        if value and field_meta.get('truncate', True):
+                            value = shorten(value, max_nb_chars, placeholder='...')
+                        if field_meta.get('match') and value and term:
+                            pattern = '|'.join(map(re.escape, term.split()))
+                            if pattern:
+                                parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
+                                if len(parts) > 1:
+                                    value = request.env['ir.ui.view'].sudo()._render_template(
+                                        "website.search_text_with_highlight",
+                                        {'parts': parts}
+                                    )
+                                    field_type = 'html'
 
-                if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
-                    opt = {}
-                    if field_type == 'monetary':
-                        opt['display_currency'] = options['display_currency']
-                    value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
-                mapped[mapped_name] = escape(value)
-            result.append(mapped)
+                    if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
+                        opt = {}
+                        if field_type == 'monetary':
+                            opt['display_currency'] = options['display_currency']
+                        if field_type == 'float':
+                            opt['precision'] = field_meta.get('precision', 2)
+                        value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
+                    mapped[mapped_name] = escape(value)
+
+                # Only create group when data exist
+                if group_title not in result:
+                    result[group_title] = {
+                        "model": model,
+                        "rowTitle": group_title,
+                        "data": [],
+                    }
+
+                result[group_title]["data"].append(mapped)
+
 
         return {
             'results': result,
@@ -644,19 +667,18 @@ class Website(Home):
         search_count = len(results)
         parts = data.get('parts', {})
 
-        step = 50
-        pager = portal_pager(
-            url="/website/search/%s" % search_type,
-            url_args={'search': search},
-            total=search_count,
-            page=page,
-            step=step
-        )
+        # step = 50
+        # pager = portal_pager(
+        #     url="/website/search/%s" % search_type,
+        #     url_args={'search': search},
+        #     total=search_count,
+        #     page=page,
+        #     step=step
+        # )
 
-        results = results[(page - 1) * step:page * step]
 
         values = {
-            'pager': pager,
+            # 'pager': pager,
             'results': results,
             'parts': parts,
             'search': search,

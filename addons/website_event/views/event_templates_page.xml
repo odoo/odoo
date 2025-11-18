@@ -105,4 +105,45 @@
     </div>
 </template>
 
+<template id="website_event.search_items_event_view">
+    <div
+        class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0">
+        <t t-call="website.search_image_item_view"/>
+        <span t-if="result.get('date_begin')" t-out="result['date_begin']"
+            style="font-size: 12px;"/>
+
+    </div>
+    <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+        <div t-attf-class="h6 fw-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
+        <span t-if="result.get('address_name')" class="small">
+            <span class="fa fa-map-marker"/>
+            <t t-out="result['address_name']"/>
+        </span>
+    </div>
+    <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto"
+        style="font-size: 13px;">
+        <p class="text-center fst-italic my-0">From</p>
+        <h6 t-out="result['lowest_ticket_price'] or 'Free'"/>
+    </div>
+</template>
+
+<template inherit_id="website.list_hybrid" id="website_event.list_hybrid">
+    <xpath expr="//t[@t-call='website.search_items_view']" position="replace">
+        <t t-if="bucket['model'] =='event.event'">
+            <t t-call="website_event.search_items_event_view"/>
+        </t>
+        <t t-else="">
+            <t t-call="website.search_items_view"/>
+        </t>
+    </xpath>
+    <!-- <xpath expr="//t[@t-call='website.search_items_view']" position="attributes">
+        <attribute name="t-if">result['module_model'] != 'event.event'</attribute>
+        <attribute name="t-if">false</attribute>
+    </xpath>
+    <xpath expr="//a[hasclass('o_search_result_item')]" position="inside">
+        <t t-if="true" t-call="website_event.search_items_event"/>
+        <t t-if="result['module_model'] == 'event.event'" t-call="website_event.search_items_event"/>
+    </xpath> -->
+</template>
+
 </odoo>

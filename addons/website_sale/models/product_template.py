@@ -877,6 +877,7 @@ class ProductTemplate(models.Model):
             'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
             'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'rating': {'name': 'rating', 'type': 'float', 'precision': 1},
         }
         if with_image:
             mapping['image_url'] = {'name': 'image_url', 'type': 'html'}
@@ -928,6 +929,7 @@ class ProductTemplate(models.Model):
                         'shop_path': SHOP_PATH,
                     }
                 )
+            data['rating'] = product.rating_avg
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):

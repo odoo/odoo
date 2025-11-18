@@ -75,6 +75,7 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/xml/website_forum_tags_wrapper.xml',
             'website_forum/static/src/components/**/*',
             'website_forum/static/src/plugins/**/*',
+            'website_forum/static/src/snippets/**/*',
         ],
         'web.assets_unit_tests': [
             'website_forum/static/tests/interactions/**/*',

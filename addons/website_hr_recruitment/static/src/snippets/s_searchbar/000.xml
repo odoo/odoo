@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_hr_recruitment.search_items_jobs">
+        <div class="o_before_search_result_item_detail d-flex align-items-center justify-content-baseline flex-column flex-shrink-0"/>
+        <div class="o_search_result_item_detail px-3" style="max-width: 100%; width: 60%;">
+            <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+            <div class="d-flex justify-content-between o_small-fs">
+                <span class="d-flex gap-1">
+                    <span t-if="result['address_id']" class="small">
+                        <span class="fa fa-map-marker"/> <t t-out="result['address_id']"/>
+                    </span>
+                    <span t-if="result['department_id']" class="small ms-3">
+                        <span class="fa fa-sitemap"/> <t t-out="result['department_id']"/>
+                    </span>
+                </span>
+                <span t-if="result['open_application_count']"><t t-out="result['open_application_count']"/> positions left</span>
+            </div>
+        </div>
+        <div class="o_after_search_result_item_detail flex-shrink-0 ms-auto"/>
+    </t>
+
+    <t t-inherit="website.s_searchbar.autocomplete" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='website.search_items']" position="replace">
+            <t t-if="bucket.model =='hr.job'">
+                <t t-call="website_hr_recruitment.search_items_jobs"/>
+            </t>
+            <t t-else="">
+                <t t-call="website.search_items"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
