@@ -31,6 +31,7 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
         case 'iot_action':
             if device_identifier not in main.iot_devices:
                 # Notify the controller that the device is not connected
+                _logger.warning("No IoT device with identifier '%s' found", device_identifier)
                 return {**base_response, 'status': 'disconnected'}
             _logger.info("Received message of type %s:\n%s", message_type, pprint.pformat(kwargs))
             main.iot_devices[device_identifier].action(kwargs)
@@ -43,7 +44,7 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
             })
             helpers.get_odoo_server_url.cache_clear()
         case 'restart_odoo':
-            helpers.odoo_restart(1)
+            helpers.odoo_restart(2)
             return {
                 **base_response,
                 'status': 'success',

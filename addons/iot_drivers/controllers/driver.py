@@ -11,8 +11,7 @@ from zlib import adler32
 from odoo import http, tools
 
 from odoo.addons.iot_drivers.event_manager import event_manager
-from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, route
+from odoo.addons.iot_drivers.tools import communication, helpers, route
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
@@ -30,34 +29,16 @@ class DriverController(http.Controller):
         We specify in data from which session_id that action is called
         And call the action of specific device
         """
-        if device_identifier == IOT_IDENTIFIER:
-            match data.get('action'):
-                case "restart_odoo":
-                    event_manager.events.append({
-                        'time': time.time(),
-                        'device_identifier': device_identifier,
-                        'owner': session_id,
-                        'status': 'success',
-                    })
-                    return helpers.odoo_restart(2)
-                case _:
-                    # Special case for testing if longpolling protocol is working
-                    return True
+        message_type = data.get('action', 'test_protocol') if device_identifier == IOT_IDENTIFIER else 'iot_action'
 
-        # If device_identifier is a type of device, we take the first device of this type
-        # required for longpolling with community db
-        if device_identifier in DEVICE_TYPES:
-            device_identifier = next((d for d in iot_devices if iot_devices[d].device_type == device_identifier), None)
+        result = communication.handle_message(
+            message_type, session_id=session_id, device_identifier=device_identifier, **data
+        )
+        if result:
+            if result.get('status') == 'disconnected':
+                return False
+            event_manager.events.append(result)
 
-        iot_device = iot_devices.get(device_identifier)
-
-        if not iot_device:
-            _logger.warning("IoT Device with identifier %s not found", device_identifier)
-            return False
-
-        data['session_id'] = session_id  # ensure session_id is in data as for websocket communication
-        _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
-        iot_device.action(data)
         return True
 
     @helpers.toggleable
