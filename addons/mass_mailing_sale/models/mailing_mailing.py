@@ -31,17 +31,17 @@ class MailingMailing(models.Model):
     def _compute_sale_invoiced_amount(self):
         if self.source_id.ids:
             query_res = self.env.execute_query(SQL(
-                """SELECT mailing_id, SUM(amount_untaxed_signed_converted) amount_untaxed_signed_converted_sum
+                """SELECT mailing_id, SUM(amount_total_signed_converted) amount_total_signed_converted_sum
                      FROM (
-                         /* Avoid computing amount_untaxed_signed_converted in the subquery as a lot of records are not used. */
-                         SELECT mailing_id, amount_untaxed_signed * COALESCE(rate, 1) amount_untaxed_signed_converted
+                         /* Avoid computing amount_total_signed_converted in the subquery as a lot of records are not used. */
+                         SELECT mailing_id, amount_total_signed * COALESCE(rate, 1) amount_total_signed_converted
                            FROM (
                                SELECT *,
                                       /* Must use the effective exchange rate when the invoice was created. */
                                       ROW_NUMBER() OVER (PARTITION BY move_id ORDER BY dates_difference) rn
                                  FROM (
                                      SELECT move.id move_id,
-                                            move.amount_untaxed_signed,
+                                            move.amount_total_signed,
                                             mailing_mailing.id mailing_id,
                                             currency_rate.rate,
                                             move.date - currency_rate.name dates_difference
