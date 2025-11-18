@@ -123,18 +123,9 @@ const threadPatch = {
         }
         return subChannels;
     },
-    onPinStateUpdated() {
-        super.onPinStateUpdated();
-        if (this.self_member_id?.is_pinned) {
-            this.isLocallyPinned = false;
-        }
-        if (!this.self_member_id?.is_pinned && !this.isLocallyPinned) {
-            this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
-        }
-    },
     setAsDiscussThread() {
         super.setAsDiscussThread(...arguments);
-        if (!this.displayToSelf && this.model === "discuss.channel") {
+        if (!this.channel || !this.channel.displayToSelf) {
             this.isLocallyPinned = true;
         }
     },

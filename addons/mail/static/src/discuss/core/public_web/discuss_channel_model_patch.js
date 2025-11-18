@@ -10,6 +10,19 @@ const discussChannelPatch = {
         this.discuss_category_id = fields.One("discuss.category", {
             inverse: "channel_ids",
         });
+        this.displayToSelf = fields.Attr(false, {
+            compute() {
+                return (
+                    this.self_member_id?.is_pinned ||
+                    (["channel", "group"].includes(this.channel_type) &&
+                        this.self_member_id &&
+                        !this.parent_channel_id)
+                );
+            },
+            onUpdate() {
+                this.onPinStateUpdated();
+            },
+        });
         this.isDisplayInSidebar = fields.Attr(false, {
             compute() {
                 return (
@@ -71,6 +84,15 @@ const discussChannelPatch = {
                 }
             }
             this.store.env.services["mail.out_of_focus"].notify(message, this.thread);
+        }
+    },
+    onPinStateUpdated() {
+        super.onPinStateUpdated();
+        if (this.self_member_id?.is_pinned) {
+            this.isLocallyPinned = false;
+        }
+        if (!this.self_member_id?.is_pinned && !this.isLocallyPinned) {
+            this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
     },
     /** @override */

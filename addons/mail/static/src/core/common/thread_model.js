@@ -93,19 +93,6 @@ export class Thread extends Record {
     description;
     /** @type {string} */
     display_name;
-    displayToSelf = fields.Attr(false, {
-        compute() {
-            return (
-                this.self_member_id?.is_pinned ||
-                (["channel", "group"].includes(this.channel?.channel_type) &&
-                    this.channel?.self_member_id &&
-                    !this.parent_channel_id)
-            );
-        },
-        onUpdate() {
-            this.onPinStateUpdated();
-        },
-    });
     followers = fields.Many("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
@@ -226,7 +213,7 @@ export class Thread extends Record {
     /** @type {Boolean} */
     isLocallyPinned = fields.Attr(false, {
         onUpdate() {
-            this.onPinStateUpdated();
+            this.channel?.onPinStateUpdated();
         },
     });
     /** @type {integer|null} */
@@ -367,8 +354,6 @@ export class Thread extends Record {
     get oldestPersistentMessage() {
         return this.messages.find((msg) => Number.isInteger(msg.id));
     }
-
-    onPinStateUpdated() {}
 
     computeComposerDisabled() {}
 
