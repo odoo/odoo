@@ -643,6 +643,8 @@ class TestMailMail(MailCommon):
         # SMTP sending issues
         with self.mock_mail_gateway():
             _send_current = self.send_email_mocked.side_effect
+            self.addCleanup(setattr, self.send_email_mocked, 'side_effect', _send_current)
+
             self._reset_data()
             mail.write({'email_to': 'test@example.com'})
 
@@ -650,9 +652,7 @@ class TestMailMail(MailCommon):
             for error, error_class in [
                     (smtplib.SMTPServerDisconnected("Some exception"), smtplib.SMTPServerDisconnected),
                     (MemoryError("Some exception"), MemoryError)]:
-                def _send_email(*args, **kwargs):
-                    raise error
-                self.send_email_mocked.side_effect = _send_email
+                self.send_email_mocked.side_effect = error
 
                 with self.assertRaises(error_class):
                     mail.send(raise_exception=False)
@@ -668,9 +668,7 @@ class TestMailMail(MailCommon):
             for error, msg in [
                     (MailDeliveryException("Some exception"), 'Some exception'),
                     (ValueError("Unexpected issue"), 'Unexpected issue')]:
-                def _send_email(*args, **kwargs):
-                    raise error
-                self.send_email_mocked.side_effect = _send_email
+                self.send_email_mocked.side_effect = error
 
                 self._reset_data()
                 mail.send(raise_exception=False)
@@ -680,8 +678,6 @@ class TestMailMail(MailCommon):
                 self.assertEqual(notification.failure_reason, msg)
                 self.assertEqual(notification.failure_type, 'unknown', 'Mail: generic failure type')
                 self.assertEqual(notification.notification_status, 'exception')
-
-            self.send_email_mocked.side_effect = _send_current
 
     def test_mail_mail_values_misc(self):
         """ Test various values on mail.mail, notably default values """

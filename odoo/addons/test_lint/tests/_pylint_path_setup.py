@@ -42,8 +42,8 @@ class AddonsPackageFinder(spec.Finder):
     forcefully discovered as namespace packages since otherwise they get
     discovered as directory packages.
     """
+    @staticmethod
     def find_module(
-        self,
         modname: str,
         module_parts: Sequence[str],
         processed: list[str],
