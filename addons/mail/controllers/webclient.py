@@ -108,5 +108,9 @@ class WebclientController(ThreadController):
             record_id, model = params.get("id"), params.get("model")
             if not record_id or model not in ("res.users", "res.partner"):
                 return
-            record = request.env[model].with_context(active_test=False).search([("id", "=", record_id)])
+            context = {
+                "active_test": False,
+                "allowed_company_ids": request.env.user._get_company_ids(),
+            }
+            record = request.env[model].with_context(**context).search([("id", "=", record_id)])
             store.add(record, record._get_store_avatar_card_fields(store.target))

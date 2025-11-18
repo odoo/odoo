@@ -86,12 +86,35 @@ class TestAvatarCardTour(MailCommon, HttpCase):
                 "state": "validate",
             }
         )
+        cls.test_record = cls.env["hr.department"].create(
+            [
+                {"name": "Test", "company_id": cls.env.company.id},
+                {"name": "Test 2", "company_id": cls.env.company.id},
+                {"name": "Test 3", "company_id": cls.company_2.id},
+            ]
+        )
 
     def _setup_channel(self, user):
         self.user_employee_c2.partner_id.sudo().with_user(self.user_employee_c2).message_post(
             body="Test message in chatter",
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
+        )
+        activity_type_todo = "mail.mail_activity_data_todo"
+        self.test_record[0].activity_schedule(
+            activity_type_todo,
+            summary="Test Activity for Company 2",
+            user_id=user.id,
+        )
+        self.test_record[1].activity_schedule(
+            activity_type_todo,
+            summary="Another Test Activity for Company 2",
+            user_id=user.id,
+        )
+        self.test_record[2].activity_schedule(
+            activity_type_todo,
+            summary="Test Activity for Company 3",
+            user_id=user.id,
         )
 
     @users("admin", "hr_user")
