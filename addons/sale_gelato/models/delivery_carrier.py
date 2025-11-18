@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.sale_gelato import utils
 
@@ -67,11 +67,13 @@ class ProviderGelato(models.Model):
         :return: The shipment rate request results.
         :rtype: dict
         """
-        if error_message := order._ensure_partner_address_is_complete():
+        try:
+            order.partner_shipping_id._gelato_validate_address()
+        except ValidationError as e:
             return {
                 'success': False,
                 'price': 0,
-                'error_message': error_message,
+                'error_message': str(e),
             }
 
         # Fetch the delivery price from Gelato.

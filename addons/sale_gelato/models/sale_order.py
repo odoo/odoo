@@ -4,10 +4,10 @@ import logging
 import pprint
 from functools import partial, wraps
 
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 
-from odoo.addons.sale_gelato import const, utils
+from odoo.addons.sale_gelato import utils
 
 
 _logger = logging.getLogger(__name__)
@@ -49,6 +49,20 @@ class SaleOrder(models.Model):
                 raise ValidationError(
                     _("You cannot mix Gelato products with non-Gelato products in the same order."))
 
+    # === ONCHANGE METHODS ===#
+
+    # Depend on partner_id to trigger the onchange if partner_shipping_id is not in the view.
+    @api.onchange('partner_id', 'partner_shipping_id', 'order_line')
+    def _onchange_gelato_validate_shipping_address(self):
+        """Warn if the address doesn't comply with Gelato requirements."""
+        for gelato_order in self.filtered(
+            lambda o: any(o.order_line.product_id.mapped('gelato_product_uid'))
+        ):
+            try:
+                gelato_order.partner_shipping_id._gelato_validate_address()
+            except ValidationError as e:
+                return {'warning': {'title': _("The address is incorrect."), 'message': str(e)}}
+
     # === ACTION METHODS === #
 
     def action_open_delivery_wizard(self):
@@ -71,32 +85,12 @@ class SaleOrder(models.Model):
         for order in self.filtered(
             lambda o: any(o.order_line.product_id.mapped('gelato_product_uid'))
         ):
-            if message := order._ensure_partner_address_is_complete():
-                raise ValidationError(message)
+            shipping_address = order.partner_shipping_id
+            shipping_address._gelato_validate_address()
             order._create_order_on_gelato()
         return res
 
     # === BUSINESS METHODS === #
-
-    def _ensure_partner_address_is_complete(self):
-        """Ensure that all order's partner address fields required by Gelato are set.
-
-        :return: An error message if the address is incomplete, None otherwise.
-        :rtype: str | None
-        """
-        required_address_fields = ['city', 'country_id', 'email', 'name', 'street']
-        if self.partner_id.country_id.code not in const.COUNTRIES_WITHOUT_ZIPCODE:
-            required_address_fields.append('zip')
-        missing_fields = [
-            self.partner_id._fields[field_name]
-            for field_name in required_address_fields if not self.partner_id[field_name]
-        ]
-        if missing_fields:
-            translated_field_names = [f._description_string(self.env) for f in missing_fields]
-            return _(
-                "The following required address fields are missing: %s",
-                ", ".join(translated_field_names),
-            )
 
     def _create_order_on_gelato(self):
         """ Send the order creation request to Gelato and log the request result on the chatter.
