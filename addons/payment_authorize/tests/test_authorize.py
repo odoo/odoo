@@ -46,6 +46,22 @@ class AuthorizeTest(AuthorizeCommon):
         self.assertEqual(self.authorize._get_validation_amount(), 0.01)
         self.assertEqual(self.authorize._get_validation_currency(), self.currency_usd)
 
+    def test_amount_validation_is_skipped_when_transaction_details_are_missing(self):
+        """Test that the amount validation is skipped when the API returns with an error."""
+        tx = self._create_transaction('direct')
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
+            '.get_transaction_details',
+            return_value={'err_code': 'E00040', 'err_msg': "The record cannot be found."},
+        ):
+            amount_data = tx._extract_amount_data({
+                'response': {
+                    'x_response_code': "E00040",
+                    'x_response_reason_text': 'The record cannot be found.',
+                }
+            })
+        self.assertEqual(amount_data, None)  # Amount validation is skipped.
+
     def test_voiding_confirmed_tx_cancels_it(self):
         """ Test that voiding a transaction cancels it even if it's already confirmed. """
         source_tx = self._create_transaction('direct', state='done')
