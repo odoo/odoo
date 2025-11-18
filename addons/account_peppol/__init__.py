@@ -11,6 +11,14 @@ from odoo.tools.sql import column_exists, create_column
 def pre_init_hook(cr):
     env = api.Environment(cr, SUPERUSER_ID, {})
 
+    # We set the edi mode to `prod` by default to ease the onboarding.
+    # Currently the switching between edi modes is error-prone.
+    # The mode is not stored on the proxy user. So system parameter may have been
+    # different at the time the proxy user was created.
+    peppol_in_demo = bool(env['ir.module.module'].search_count([('name', '=', 'account_peppol'), ('demo', '=', True)], limit=1))
+    if not peppol_in_demo and not env['account_edi_proxy_client.user'].search_count([], limit=1):
+        env['ir.config_parameter'].set_param('account_edi_proxy_client.demo', 'prod')
+
     ubl_bis3 = env.ref('account_edi_ubl_cii.ubl_bis3', raise_if_not_found=False)
     if ubl_bis3 and ubl_bis3.name == "Peppol BIS Billing 3.0":
         ubl_bis3.name = "BIS Billing 3.0 (XML)"
