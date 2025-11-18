@@ -30,7 +30,6 @@
         'views/res_config_settings_view.xml',
         'views/website_visitor_views.xml',
         'views/event_menus.xml',
-        'views/snippets.xml',
     ],
     'demo': [
         'data/event_demo.xml',
@@ -50,7 +49,6 @@
             'website_event_track/static/src/xml/website_event_pwa.xml',
             'website_event_track/static/src/xml/website_event_track_form_tags_wrapper.xml',
             'website_event_track/static/src/xml/website_event_track_email_reminder.xml',
-            'website_event_track/static/src/snippets/**/*.js',
             'website_event_track/static/src/interactions/*',
         ],
         'web.assets_tests': [

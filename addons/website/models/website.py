@@ -2066,16 +2066,17 @@ class Website(models.CachedModel):
         :return: list of search details obtained from the `website.searchable.mixin`'s `_search_get_detail()`
         """
         result = []
-        if search_type in ['pages', 'all']:
+        if search_type in ['pages', 'website_page', 'all']:
             result.append(self.env['website.page']._search_get_detail(self, order, options))
         return result
 
-    def _search_with_fuzzy(self, search_type, search, limit, order, options):
+    def _search_with_fuzzy(self, search_type, search, offset, limit, order, options):
         """
         Performs a search with a search text or with a resembling word
 
         :param search_type: indicates what to search within, 'all' matches all available types
         :param search: text against which to match results
+        :param offset: number of results to skip per model type involved in the result
         :param limit: maximum number of results per model type involved in the result
         :param order: order on which to sort results within a model type
         :param options: search options from the submitted form containing:
@@ -2093,21 +2094,20 @@ class Website(models.CachedModel):
         if search and options.get('allowFuzzy', True):
             fuzzy_term = self._search_find_fuzzy_term(search_details, search)
             if fuzzy_term:
-                count, results = self._search_exact(search_details, fuzzy_term, limit, order)
-                if fuzzy_term.lower() == search.lower():
+                if fuzzy_term.lower() != search.lower():
+                    search = fuzzy_term
+                else:
                     fuzzy_term = False
-            else:
-                count, results = self._search_exact(search_details, search, limit, order)
-        else:
-            count, results = self._search_exact(search_details, search, limit, order)
+        count, results = self._search_exact(search_details, search, offset, limit, order)
         return count, results, fuzzy_term
 
-    def _search_exact(self, search_details, search, limit, order):
+    def _search_exact(self, search_details, search, offset, limit, order):
         """
         Performs a search with a search text
 
         :param search_details: see :meth:`_search_get_details`
         :param search: text against which to match results
+        :param offset: number of results to skip per model type involved in the result
         :param limit: maximum number of results per model type involved in the result
         :param order: order on which to sort results within a model type
 
@@ -2122,7 +2122,7 @@ class Website(models.CachedModel):
         total_count = 0
         for search_detail in search_details:
             model = self.env[search_detail['model']]
-            results, count = model._search_fetch(search_detail, search, limit, order)
+            results, count = model._search_fetch(search_detail, search, offset, limit, order)
             search_detail['results'] = results
             total_count += count
             search_detail['count'] = count
@@ -2368,7 +2368,7 @@ class Website(models.CachedModel):
             if len(records) == perf_limit:
                 # Exact match might have been missed because the fetched
                 # results are limited for performance reasons.
-                exact_records, _ = model._search_fetch(search_detail, search, 1, None)
+                exact_records, _ = model._search_fetch(search_detail, search, offset=0, limit=1, order=None)
                 if exact_records:
                     yield search
             for record in records:

@@ -246,7 +246,7 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
 
 // Default style inputs
 input[type="search"] {
-    @include o-search-cancel-button($input-color);
+    @include o-search-cancel-button(color-contrast($light));
 }
 
 $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);

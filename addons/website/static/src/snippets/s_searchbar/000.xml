@@ -1,56 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+<div t-name="website.s_searchbar.autocomplete.skeleton.loader" class="o_dropdown_menu o_cc o_cc1 show w-100">
+    <ul class="list-unstyled mb-0">
+        <li class="o_search_result_item o_search_result_item_placeholder" t-foreach="[1, 2, 3]" t-as="i" t-key="i">
+            <div class="d-flex align-items-center justify-content-between gap-3 py-2 px-3">
+                <div class="o_search_result_image flex-shrink-0 rounded-2 placeholder-glow">
+                    <span class="placeholder rounded-2 w-100 h-100 d-block bg-500"/>
+                </div>
+                <div class="o_search_result_content d-flex justify-content-between flex-grow-1 placeholder-glow gap-1">
+                    <div class="placeholder col-4 bg-500"/>
+                    <div t-attf-class="placeholder col-{{ i % 2 ? '6' : '4' }} bg-500"/>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
 <!-- Search Bar autocomplete item -->
-<div t-name="website.s_searchbar.autocomplete"
-    class="o_dropdown_menu show position-absolute w-100">
-    <t t-if="fuzzySearch and results.length">
-        <span class="dropdown-item-text">
-            <span class="text-muted">No results found for '<t t-out="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.</span>
+<div t-name="website.s_searchbar.autocomplete" class="o_dropdown_menu o_cc o_cc1 show position-absolute w-100">
+    <!-- Fuzzy search fallback -->
+    <t t-if="fuzzySearch and Object.keys(results).length !== 0">
+        <span class="dropdown-item-text px-3">
+            <span class="text-muted">
+                No results found for '<t t-out="search"/>'. <br/>Showing results for
+                '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.
+            </span>
         </span>
     </t>
-    <t t-elif="!results.length">
-        <span class="dropdown-item-text">
+    <!-- No result state -->
+    <t t-elif="Object.keys(results).length === 0">
+        <span class="dropdown-item-text px-3">
             <span class="text-muted">No results found. Please try another search.</span>
         </span>
     </t>
-    <a t-foreach="results" t-as="result" t-key="result_index"
-        t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center flex-wrap o_search_result_item">
-            <t t-if="widget.displayImage">
-                <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
-                <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
-            </t>
-            <div class="o_search_result_item_detail px-3">
-                <t t-set="description" t-value="parts['description'] and widget.displayDescription and result['description']"/>
-                <t t-set="extra_link" t-value="parts['extra_link'] and widget.displayExtraLink and result['extra_link_url'] and result['extra_link']"/>
-                <t t-set="extra_link_html" t-value="parts['extra_link'] and widget.displayExtraLink and !result['extra_link_url'] and result['extra_link']"/>
-                <div t-attf-class="h6 fw-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
-                <p t-if="description" class="mb-0" t-out="description"/>
-                <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
-                <t t-if="extra_link_html" t-out="extra_link_html"/>
-                <div t-if="result['tags']" t-out="result['tags']" class="my-2"/>
-            </div>
-            <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0 ms-auto">
-                <t t-if="result['detail_strike']">
-                    <span class="text-muted text-nowrap" style="text-decoration: line-through;">
-                        <t t-out="result['detail_strike']"/>
-                    </span>
-                    <br/>
-                </t>
-                <b t-if="result['detail']" class="text-nowrap">
-                    <t t-out="result['detail']"/>
-                </b>
-                <t t-if="result['detail_extra']">
-                    <br/>
-                    <span class="text-nowrap" t-out="result['detail_extra']"/>
-                </t>
+    <!-- Render results -->
+    <ul class="list-unstyled mb-0">
+        <div t-out="results"/>
+    </ul>
+</div>
+
+<t t-name="website.s_searchbar.modal">
+    <div id="o_search_modal" class="modal fade css_editable_mode_hidden" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg pt-5">
+            <div class="modal-content mt-lg-5 o_colored_level o_cc o_cc2 border-0">
+                <form method="get"
+                      class="o_searchbar_form s_searchbar_input"
+                      t-att-action="action"
+                      data-snippet="s_searchbar_input">
+                    <div role="search" class="o_search_input_group input-group">
+                        <input
+                            type="search"
+                            name="search"
+                            class="oe_search_box search-query form-control border-0 p-3 text-bg-light"
+                            t-att-placeholder="placeholder"
+                            t-att-data-limit="limit"
+                            t-att-data-order-by="order"
+                            t-att-data-search-type="searchType"
+                            t-att-autocomplete="autocomplete"/>
+                        <button type="submit"
+                                class="oe_search_button btn btn-light border-start px-3"
+                                aria-label="Search"
+                                title="Search">
+                            <span class="o_search_spinner d-none spinner-border spinner-border-sm text-500"
+                                  style="--spinner-border-width: 0.1em;"
+                                  role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                            <small class="o_search_found_results d-none">
+                                <span class="o_search_count"></span> result(s)
+                            </small>
+                            <i class="oi oi-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    </a>
-    <t t-if="hasMoreResults">
-        <button type="submit" class="dropdown-item text-center text-primary-emphasis">All results</button>
-    </t>
-</div>
+    </div>
+</t>
 
 </templates>

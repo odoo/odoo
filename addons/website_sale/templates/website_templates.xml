@@ -418,4 +418,17 @@
         </xpath>
     </template>
 
+    <template id="website_sale.search_result_items" inherit_id="website.search_result_items">
+        <xpath expr="//div[hasclass('o_search_result_description')]" position="inside">
+            <p t-if="result.get('attribute_value_ids')"
+                class="o_line_clamp mb-0 small"
+                style="--lines-clamp: 1;"
+                t-out="result['attribute_value_ids']"/>
+            <p t-elif="result.get('description_sale')"
+                class="o_line_clamp mb-0 small"
+                style="--lines-clamp: 1;"
+                t-out="result['description_sale']"/>
+        </xpath>
+    </template>
+
 </odoo>
