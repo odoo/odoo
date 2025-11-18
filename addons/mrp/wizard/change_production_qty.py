@@ -81,7 +81,6 @@ class ChangeProductionQty(models.TransientModel):
                 production._set_qty_producing()
 
             for wo in production.workorder_ids:
-                operation = wo.operation_id
                 wo.duration_expected = wo._get_duration_expected(ratio=new_production_qty / old_production_qty)
                 quantity = wo.qty_production - wo.qty_produced
                 if production.product_id.tracking == 'serial':
@@ -93,15 +92,6 @@ class ChangeProductionQty(models.TransientModel):
                     wo.state = 'progress'
                 if wo.qty_produced == wo.qty_production and wo.state == 'progress':
                     wo.state = 'done'
-                # assign moves; last operation receive all unassigned moves
-                # TODO: following could be put in a function as it is similar as code in _workorders_create
-                # TODO: only needed when creating new moves
-                moves_raw = production.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.state not in ('done', 'cancel'))
-                if wo == production.workorder_ids[-1]:
-                    moves_raw |= production.move_raw_ids.filtered(lambda move: not move.operation_id)
-                moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
-                moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
-                (moves_finished + moves_raw).write({'workorder_id': wo.id})
 
             # replan production based on new workorder durations
             if factor != 1.0 and production.is_planned and (production.state == 'confirmed'
