@@ -52,3 +52,4 @@ from . import product_tag
 from . import resource_calendar_attendance
 from . import product_uom
 from . import ir_sequence
+from . import pos_printer_ip

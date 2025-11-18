@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="your_module.SelectPrinterIPPopup" owl="1">
+        <div class="modal-body">
+            <h4>Select Printer IP</h4>
+
+            <t t-foreach="props.ips" t-as="ip" t-key="ip">
+                <div class="form-check my-2">
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        t-att-name="'selected_ip'"
+                        t-att-value="ip"
+                        t-att-checked="ip === selectedIp"
+                        t-on-click="() => choose(ip)"
+                    />
+                    <label class="form-check-label">
+                        <t t-esc="ip"/>
+                    </label>
+                </div>
+            </t>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary" t-on-click="onConfirm">Confirm</button>
+            <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+        </div>
+    </t>
+</templates>

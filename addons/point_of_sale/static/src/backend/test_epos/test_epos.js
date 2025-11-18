@@ -31,18 +31,18 @@ export class TestEPos extends Component {
         this.notification = useService("notification");
     }
 
-    _getReceipt() {
+    _getReceipt(printer_ip) {
         return `
-        <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-            <s:Body>
-                <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
-                    <feed line="1" />
-                    <text align="center">This is a test receipt&#10;</text>
-                    <feed line="3" />
-                    <cut type="feed" />
-                </epos-print>
-            </s:Body>
-        </s:Envelope>`;
+            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                <s:Body>
+                    <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
+                        <feed line="1" />
+                        <text align="center">This is a test receipt&#10;Printer IP: ${printer_ip}&#10;</text>
+                        <feed line="3" />
+                        <cut type="feed" />
+                    </epos-print>
+                </s:Body>
+            </s:Envelope>`;
     }
 
     async onClick() {
@@ -64,7 +64,7 @@ export class TestEPos extends Component {
             // Parse response
             const result = await fetch(this.address, {
                 method: "POST",
-                body: this._getReceipt(),
+                body: this._getReceipt(printer_ip),
                 signal: AbortSignal.timeout(15000),
             });
             const body = await result.text();

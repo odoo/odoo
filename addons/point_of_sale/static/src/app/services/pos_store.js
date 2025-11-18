@@ -47,6 +47,7 @@ import { formatDate } from "@web/core/l10n/dates";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
+import { SelectPrinterIPPopup } from "@point_of_sale/app/components/popups/select_receipt_printer_popup/select_receipt_printer_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
 import {
     EpsonPrinter,
@@ -158,6 +159,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.scale = pos_scale;
 
         this.orderCounter = new Counter(0);
+        this.isFirstTimePrint = true;
 
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
@@ -1713,6 +1715,24 @@ export class PosStore extends WithLazyGetterTrap {
         order = this.getOrder(),
         printBillActionTriggered = false,
     } = {}) {
+        if (this.isFirstTimePrint && this.config.epson_printer_ips) {
+            this.isFirstTimePrint = false;
+            const printerIps = this.pos.config.epson_printer_ips.map(
+                (id) => this.pos.models["pos.printer.ip"].get(id).name
+            );
+            const selectedIp = await new Promise((resolve) => {
+                this.dialog.add(SelectPrinterIPPopup, {
+                    ips: printerIps,
+                    confirm: (value) => resolve(value),
+                    close: () => resolve(false),
+                });
+            });
+            if (!selectedIp) {
+                return;
+            }
+            console.log("Selected printer IP:", selectedIp);
+            this.hardwareProxy.printer = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+        }
         const result = await this.printer.print(
             OrderReceipt,
             {

@@ -208,6 +208,10 @@ class PosConfig(models.Model):
             "'Automatic Certificate Update' option is enabled in the printer settings."
         ),
     )
+    epson_printer_ips = fields.Many2many(
+        "pos.printer.ip",
+        string="Epson Printer IPs",
+    )
     # Epson Server Direct Print printer configuration
     use_epson_server_direct_print = fields.Boolean(
         string="Use Epson Server Direct Printer",
@@ -1241,3 +1245,11 @@ class PosConfig(models.Model):
         for rec in self:
             if rec.epson_printer_ip:
                 rec.epson_printer_ip = format_epson_certified_domain(rec.epson_printer_ip)
+
+    @api.onchange("epson_printer_ips")
+    def _onchange_epson_printer_ips(self):
+        for rec in self:
+            for ip in rec.epson_printer_ips:
+                formatted = format_epson_certified_domain(ip.name)
+                if ip.name != formatted:
+                    ip.name = formatted
