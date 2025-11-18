@@ -7,7 +7,8 @@ from odoo.fields import Domain
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import escape_psql
+from odoo.models import Query
+from odoo.tools import SQL, escape_psql
 from odoo.tools import split_every
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.json import scriptsafe as json_safe
@@ -633,6 +634,18 @@ class WebsiteSearchableMixin(models.AbstractModel):
         return parts, has_highlight
 
     @api.model
+    def _search_get_matching_threshold(self, number_of_terms):
+        """
+        Returns the minimum number of terms that must match in a search expression
+        for a record to be considered a match.
+
+        :return: integer indicating the minimum number of terms to match
+        """
+        if number_of_terms < 5:
+            return number_of_terms - 1
+        return number_of_terms - 2
+
+    @api.model
     def _search_build_domain(self, domain_list, search, fields, extra=None):
         """
         Builds a search domain AND-combining a base domain with partial matches of each term in
@@ -646,12 +659,43 @@ class WebsiteSearchableMixin(models.AbstractModel):
         :return: domain limited to the matches of the search expression
         """
         domain = Domain.AND(domain_list)
-        if search:
-            for search_term in search.split():
-                subdomains = [Domain(field, 'ilike', escape_psql(search_term)) for field in fields]
+        if not search:
+            return domain
+
+        search_terms = [escape_psql(t) for t in search.split()]
+        # less number of terms - each term must match at least one field
+        if len(search_terms) <= 2:
+            for search_term in search_terms:
+                subdomains = [
+                    Domain(field, "ilike", search_term)
+                    for field in fields
+                ]
                 if extra:
                     subdomains.append(extra(self.env, search_term))
                 domain &= Domain.OR(subdomains)
+        else:  # more than 2 terms - partial match using threshold
+            threshold = self._search_get_matching_threshold(len(search_terms))
+            query = Query(self)
+            case_parts = []
+            for search_term in search_terms:
+                subdomains = [
+                    Domain(field, "ilike", search_term)
+                    for field in fields
+                ]
+                if extra:
+                    subdomains.append(extra(self.env, search_term))
+                or_domain = Domain.OR(subdomains).optimize_full(self)
+                term_sql = or_domain._to_sql(query.table)
+                case_parts.append(
+                    SQL("(CASE WHEN (%s) THEN 1 ELSE 0 END)", term_sql)
+                )
+            where_clause = SQL(
+                "%s >= %s",
+                SQL(" + ").join(case_parts),
+                threshold,
+            )
+            query.add_where(where_clause)
+            domain &= Domain("id", "in", query)
         return domain
 
     @api.model

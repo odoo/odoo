@@ -370,7 +370,7 @@ export function searchProduct(productName, { select = false } = {}) {
     if (select) {
         steps.push({
             content: `Select ${productName}`,
-            trigger: `.oe_product_cart:first a:text(${productName})`,
+            trigger: `.oe_product_cart a:text(${productName})`,
             run: "click",
             expectUnloadPage: true,
         });

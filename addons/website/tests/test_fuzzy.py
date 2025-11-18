@@ -303,3 +303,14 @@ class TestAutoComplete(TransactionCase):
         suggestions = self._autocomplete("week-end")
         self.assertEqual(1, len(suggestions['results']), "All results must be present")
         self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
+
+    def test_10_multiple_word_search(self):
+        """ Ensures partial word match is used when search contains multiple words """
+        suggestions = self._autocomplete("results page")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one exact match")
+        suggestions = self._autocomplete("results no_match_1")
+        self.assertEqual(0, suggestions['results_count'], "Test data contains no exact match")
+        suggestions = self._autocomplete("results page no_match")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one exact match")
+        suggestions = self._autocomplete("results no_match_1 no_match_2")
+        self.assertEqual(0, suggestions['results_count'], "Test data contains no exact match")
