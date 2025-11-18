@@ -20,6 +20,7 @@ from odoo.tools.image import image_data_uri
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.web_editor.tools import get_video_thumbnail
@@ -1483,6 +1484,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'sale_order_id': order.id,  # Allow Stripe to check if tokenization is required.
         }
         return checkout_page_values | payment_form_values
+
+    @route(
+        _express_checkout_delivery_route + '/compute_taxes', type='jsonrpc', auth='public',
+        website=True, sitemap=False,
+    )
+    def express_checkout_shipping_address_compute_taxes(self):
+        order_sudo = request.cart
+        order_sudo._recompute_taxes()
+
+        return payment_utils.to_minor_currency_units(order_sudo.amount_total, order_sudo.currency_id)
 
     def _get_shop_payment_errors(self, order):
         """ Check that there is no error that should block the payment.
