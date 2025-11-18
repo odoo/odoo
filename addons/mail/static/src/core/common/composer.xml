@@ -9,7 +9,7 @@
     <t t-set="extended" t-value="props.mode === 'extended'"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble'"/>
     <div t-ref="root">
-        <div class="o-mail-Composer d-grid flex-shrink-0 pt-0"
+        <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
                 t-att-class="{
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
@@ -21,7 +21,7 @@
                     'o-editing': props.composer.message,
                     'o-chatWindow mx-2 my-1': env.inChatWindow,
                     'mb-2': env.inChatWindow and !props.composer.message,
-                    'o-discussApp pt-1 ps-2 pe-4 pb-2': env.inDiscussApp,
+                    'o-discussApp pt-1 ps-2 pe-4 o-pb-2_5': env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                 <t t-set-slot="toggler">
