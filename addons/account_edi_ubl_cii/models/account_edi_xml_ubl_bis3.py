@@ -77,6 +77,11 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             'cbc:CustomizationID': {'_text': self._get_customization_id(vals['process_type'])},
             'cbc:ProfileID': {'_text': f"urn:fdc:peppol.eu:2017:poacc:{vals['process_type']}:01:1.0"},
         })
+        # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID (code 0204)
+        if invoice.commercial_partner_id.peppol_eas == '0204':
+            document_node.update({
+                'cbc:BuyerReference': {'_text': invoice.commercial_partner_id.peppol_endpoint}
+            })
 
         # [NL-R-001] For suppliers in the Netherlands, if the document is a creditnote, the document MUST
         # contain an invoice reference (cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID)
