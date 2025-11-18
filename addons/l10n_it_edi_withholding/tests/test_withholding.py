@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from contextlib import suppress
 from collections import namedtuple
 
 from odoo import fields, Command
@@ -393,6 +394,15 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
             self.assertEqual(-8.5, enasarco_imported_tax.amount)
             self.assertEqual(self.withholding_purchase_tax_23_base50 | enasarco_imported_tax, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
+
+    def test_enasarco_wrong_reason_tax_import(self):
+        with suppress(ValidationError):
+            self.enasarco_purchase_tax.l10n_it_withholding_reason = 'Q'
+        invoice = self._assert_import_invoice('IT00470550013_enasa.xml', [{}])
+        invoice_data = self.get_real_client_invoice_data()
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in invoice_data.lines]):
+            enasarco_imported_tax = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type == 'TC07')
+            self.assertEqual(enasarco_imported_tax.l10n_it_withholding_reason, 'Q')
 
     def test_enasarco_tax_import_global(self):
         """Test that if we have a unique ENASARCO line with a price of 0.0,
