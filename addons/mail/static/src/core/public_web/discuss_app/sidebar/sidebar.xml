@@ -6,7 +6,7 @@
                 <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto o-scrollbar-thin flex-shrink-0 h-100 border-end border-secondary z-1 o-mail-discussSidebarBgColor o-gap-0_5" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }">
                     <DiscussSearch class="{
                         'position-sticky top-0 z-2 o-mail-discussSidebarBgColor': true,
-                        'pt-2 pb-1': !store.inPublicPage and store.discuss.isSidebarCompact,
+                        'pt-2 o-pb-0_5 o-mb-0_5': !store.inPublicPage and store.discuss.isSidebarCompact,
                         'py-2': !store.inPublicPage and !store.discuss.isSidebarCompact,
                         'pt-2 o-px-2_5': store.inPublicPage,
                         'flex-column': store.discuss.isSidebarCompact and !ui.isSmall,
