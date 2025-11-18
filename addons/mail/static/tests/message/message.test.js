@@ -1368,7 +1368,7 @@ test("allow attachment delete on authored message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage");
     await click("button[title='Remove']");
-    await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
+    await contains(".modal-dialog .modal-body", { text: 'Are you sure you want to delete "BLAH"?\nThis action cannot be undone.' });
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentImage", { count: 0 });
 });
@@ -1699,7 +1699,7 @@ test("delete all attachments of a message with some text content should still ke
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click(".o-mail-AttachmentContainer button[title='Remove']");
-    await click(".modal button", { text: "Ok" });
+    await click(".modal button", { text: "Delete Attachment" });
     await contains(".o-mail-Message");
 });
 

@@ -396,7 +396,9 @@ class DeleteRibbonAction extends BuilderAction {
     async apply({ editingElement }) {
         const save = await new Promise((resolve) => {
             this.services.dialog.add(ConfirmationDialog, {
-                body: _t("Are you sure you want to delete this ribbon?"),
+                title: _t("Delete Ribbon"),
+                body: _t("It will be removed from all products. Are you sure?"),
+                confirmLabel: _t("Delete Ribbon"),
                 confirm: () => resolve(true),
                 cancel: () => resolve(false),
             });

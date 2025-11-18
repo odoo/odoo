@@ -7,13 +7,15 @@ export class RecruitmentListController extends ListController {
      */
     get archiveDialogProps() {
         const result = super.archiveDialogProps;
+        result.title = _t("Archive job position")
+        result.confirmLabel = _t("Archive")
         result.body =
             this.model.root.isDomainSelected || this.model.root.selection.length > 1
                 ? _t(
-                      "These job positions and all related applicants will be archived. Are you sure?"
+                      "If you archive these job positions, all their applicants will be archived too. Are you sure?"
                   )
                 : _t(
-                      "This job position and all related applicants will be archived. Are you sure?"
+                      "If you archive this job position, all its applicants will be archived too. Are you sure?"
                   );
         return result;
     }

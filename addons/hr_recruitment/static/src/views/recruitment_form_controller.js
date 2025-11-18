@@ -7,11 +7,12 @@ export class RecruitmentFormController extends FormController {
      */
     get archiveDialogProps() {
         const result = super.archiveDialogProps;
+        result.title = _t("Archive job position")
+        result.confirmLabel = _t("Archive")
         result.body =
             this.model.root.data.all_application_count > 0
-                ? _t("This job position and all related applicants will be archived. Are you sure?")
+                ? _t("If you archive this job position, all its applicants will be archived too. Are you sure?")
                 : _t("Are you sure that you want to archive this job position?");
-        console.log(this.model.root.data.all_application_count);
         return result;
     }
 }
