@@ -21,6 +21,7 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     ],
     'auto_install': ['account'],
     'data': [
+        'data/country_group.xml',
         'data/l10n_uk_chart_data.xml',
         'data/account_tax_report_data.xml',
     ],
