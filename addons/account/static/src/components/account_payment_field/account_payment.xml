@@ -42,6 +42,7 @@
                         <td t-if="!line.is_exchange">
                             <i class="o_field_widget text-start o_payment_label">
                                 <t t-if="line.is_refund">Reversed on </t>
+                                <t t-elif="line.is_withhold_line">Tax Deducted on </t>
                                 <t t-else="">Paid on </t>
                                 <t t-out="line.formattedDate"></t>
                             </i>

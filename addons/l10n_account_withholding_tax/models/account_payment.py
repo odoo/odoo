@@ -156,15 +156,10 @@ class AccountPayment(models.Model):
                 'account_id': tax_account.id,
                 'tax_ids': False,
             }))
-            print(line_vals)
-
             move_id = self.with_company(self.company_id).env['account.move'].create({
                 **header_vals,
                 'line_ids': line_vals,
             })
-            # move_id.line_ids[0].tax_ids = [Command.set(self.withholding_line_ids.mapped('tax_id').ids)]
-            # move_container = {'records': move_id}
-
             self.move_id = move_id
 
         return res
@@ -235,20 +230,64 @@ class AccountPayment(models.Model):
         move_vals = super()._generate_move_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance, line_ids=line_ids)
         if not self.withholding_line_ids or not self.should_withhold_tax:
             return move_vals
+        withhold_vals = []
+        tax_amount = 0.0
+        total_amount = sum(self.withholding_line_ids.mapped('base_amount'))
 
-        liquidity_line_values = move_vals['line_ids'][0][2]
-        liquidity_line_balance = liquidity_line_values['debit'] - liquidity_line_values['credit']
-        liquidity_line_amount_currency = liquidity_line_values['amount_currency']
-        withholding_line_values_list = self.withholding_line_ids._prepare_withholding_amls_create_values()
-        for line_values in withholding_line_values_list:
-            move_vals['line_ids'].append(Command.create(line_values))
-            liquidity_line_balance -= line_values['balance']
-            liquidity_line_amount_currency -= line_values['amount_currency']
-        liquidity_line_values['amount_currency'] = liquidity_line_amount_currency
-        if liquidity_line_balance > 0.0:
-            liquidity_line_values['debit'] = liquidity_line_balance
-            liquidity_line_values['credit'] = 0.0
-        else:
-            liquidity_line_values['debit'] = 0.0
-            liquidity_line_values['credit'] = -liquidity_line_balance
+
+        for line in self.withholding_line_ids:
+            tax_account = line.tax_id.invoice_repartition_line_ids.filtered(
+                lambda r: r.repartition_type == 'tax').account_id
+            withhold_vals.append(Command.create({
+                'quantity': 1.0,
+                'price_unit': line.base_amount,
+                'debit': line.base_amount,
+                'credit': 0.0,
+                'account_id': self.company_id.withholding_tax_control_account_id.id,
+                'tax_ids': [Command.set([line.tax_id.id])],
+            }))
+            tax_amount += line.amount
+
+        # balancing line (credit)
+        withhold_vals.append(Command.create({
+            'quantity': 1.0,
+            'price_unit': total_amount,
+            'debit': 0.0,
+            'credit': total_amount,
+            'account_id': self.company_id.withholding_tax_control_account_id.id,
+            'tax_ids': False,
+        }))
+
+        # Balance line with partner account (debit)
+        withhold_vals.append(Command.create({
+            'quantity': 1.0,
+            'debit': tax_amount,
+            'price_unit': tax_amount,
+            'credit': 0.0,
+            'account_id': self.partner_id.property_account_payable_id.id,
+            'tax_ids': False,
+            'is_withhold_line': True,
+        }))
+
+        withhold_vals.append(Command.create({
+            'quantity': 1.0,
+            'debit': 0.0,
+            'price_unit': tax_amount,
+            'credit': tax_amount,
+            'account_id': tax_account.id,
+            'tax_ids': False,
+            'is_withhold_line': True,
+        }))
+
+        for line in move_vals['line_ids']:
+            move_line =  line[2]
+            amount_currency = move_line['amount_currency']
+            if amount_currency > 0.0:
+                line[2]['debit'] -= tax_amount
+                line[2]['amount_currency'] -= tax_amount
+            else:
+                line[2]['credit'] -= tax_amount
+                line[2]['amount_currency'] += tax_amount
+
+        move_vals['line_ids'] += withhold_vals
         return move_vals

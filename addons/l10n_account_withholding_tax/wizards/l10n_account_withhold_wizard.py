@@ -21,8 +21,6 @@ class L10nAccountWithholdWizard(models.TransientModel):
             raise UserError(_("You can only create a withhold for only one record at a time."))
         move = self.env[active_model].browse(active_ids)
         result['reference'] = _("Tax Deduction for %s", move.name)
-        print(move)
-        print(move.move_type)
         if move.move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or move.state != 'posted':
             raise UserError(_("Withhold must be created from Posted Customer Invoices, Customer Credit Notes, Vendor Bills or Vendor Refunds."))
         result['related_move_id'] = move.id
@@ -198,6 +196,7 @@ class L10nAccountWithholdWizard(models.TransientModel):
                 'credit': credit,
                 'account_id': account_id.id,
                 'tax_ids': tax_ids,
+                'is_withhold_line': True,
             }
 
         vals = []

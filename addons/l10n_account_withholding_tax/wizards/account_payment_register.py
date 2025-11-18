@@ -32,6 +32,7 @@ class AccountPaymentRegister(models.TransientModel):
         string="Base Amount",
         compute='_compute_withhold_base_amount',
         store=True,
+        readonly=False,
     )
     withhold_tax_amount = fields.Monetary(string="Withholding Tax Amount", compute='_compute_withhold_tax_amount')
     withhold_account_ids = fields.One2many(

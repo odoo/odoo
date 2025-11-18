@@ -23,9 +23,9 @@ class AccountMove(models.Model):
         reconciled_partials = super()._get_all_reconciled_invoice_partials()
         for i, reconciled_partial in enumerate(reconciled_partials):
             if reconciled_partial['aml'].move_id.l10n_withholding_ref_move_id:
-                reconciled_partials[i]['is_withhold_payment'] = True
+                reconciled_partials[i]['is_withhold_line'] = True
             else:
-                reconciled_partials[i]['is_withhold_payment'] = False
+                reconciled_partials[i]['is_withhold_line'] = False
         return reconciled_partials
 
     def _compute_payments_widget_reconciled_info(self):
@@ -36,14 +36,15 @@ class AccountMove(models.Model):
                 if move.state == 'posted' and move.is_invoice(include_receipts=True):
                     reconciled_partials = move._get_all_reconciled_invoice_partials()
                     for i, reconciled_partial in enumerate(reconciled_partials):
-                        if reconciled_partial['aml'].move_id.l10n_withholding_ref_move_id:
+                        if reconciled_partial['aml'].is_withhold_line:
                             move.invoice_payments_widget['content'][i].update({
-                                'is_withhold_payment': True,
+                                'is_withhold_line': True,
                             })
                         else:
                             move.invoice_payments_widget['content'][i].update({
-                                'is_withhold_payment': False,
+                                'is_withhold_line': False,
                             })
+            print(move.invoice_payments_widget)
 
     # def _compute_payments_widget_reconciled_info(self):
     #     """Add withhold field in the reconciled vals to be able to show the payment method in the invoice."""
@@ -89,10 +90,4 @@ class AccountMoveLine(models.Model):
 
     is_withhold_line = fields.Boolean(
         string="Is Withhold Line",
-        compute='_compute_is_withhold_line'
     )
-
-    def _compute_is_withhold_line(self):
-        for line in self:
-            print("================", line, "================")
-            line.is_withhold_line = bool(line.tax_ids.filtered('is_withhold_tax'))
