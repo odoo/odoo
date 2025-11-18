@@ -28,27 +28,6 @@ class AccountMove(models.Model):
       help="Technical field to know if the chain has been stopped by a previous invoice",
   )
 
-    def _l10n_gcc_get_invoice_title(self):
-        # EXTENDS l10n_gcc_invoice
-        self.ensure_one()
-        if self.company_id.country_code == 'SA' and self._l10n_sa_is_simplified():
-            return self.env._('Simplified Tax Invoice')
-
-        return super()._l10n_gcc_get_invoice_title()
-
-    def _l10n_sa_is_simplified(self):
-        """
-            Returns True if the customer is an individual, i.e: The invoice is B2C
-        :return:
-        """
-        self.ensure_one()
-
-        return (
-            self.partner_id.commercial_partner_id.company_type == "person"
-            if self.partner_id.commercial_partner_id
-            else self.partner_id.company_type == "person"
-        )
-
     @api.ondelete(at_uninstall=False)
     def _prevent_zatca_rejected_invoice_deletion(self):
         # Prevent deletion of ZATCA-rejected invoices in production mode
