@@ -466,7 +466,7 @@ class ResPartner(models.Model):
         is either the one of the partner's company if they have one or the currency of the environment's company."""
         if self.ids:
             query_res = self.env.execute_query(SQL(
-                """SELECT move.partner_id, SUM(move.amount_untaxed_signed * COALESCE(currency_rate.rate, 1))
+                """SELECT move.partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
                      FROM account_move move
                      LEFT JOIN res_partner partner
                        ON partner.id = move.partner_id
