@@ -746,6 +746,23 @@ class EventEvent(models.Model):
         """Get a url-encoded version of the description for mail templates."""
         return urllib.parse.quote_plus(self._get_external_description())
 
+    def _get_ics_file_outlook(self):
+        """ Returns iCalendar file for the event invitation compatible with Outlook.
+            :returns a dict of .ics file content for each event
+        """
+        ics_results = self._get_ics_file()
+        for event_id, ical_bytes in ics_results.items():
+            event = self.browse(event_id)
+            ext_description = event._get_external_description()
+            cal = vobject.readOne(ical_bytes.decode('utf-8'))
+            cal_event = cal.vevent
+            alt_desc = cal_event.add('X-ALT-DESC')
+            alt_desc.value = ext_description
+            alt_desc.params['FMTTYPE'] = ['text/html']
+            ics_results[event_id] = cal.serialize().encode('utf-8')
+        return ics_results
+
+
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
             :returns a dict of .ics file content for each event

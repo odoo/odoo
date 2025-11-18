@@ -483,7 +483,8 @@ class Event(models.Model):
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = f'/event/{self.id:d}/ics?{encoded_params}'
-        return {'google_url': google_url, 'iCal_url': iCal_url}
+        iCal_url_outlook = f'/event/{self.id:d}/outlook_ics?{encoded_params}'
+        return {'google_url': google_url, 'iCal_url': iCal_url, 'iCal_url_outlook': iCal_url_outlook}
 
     def _default_website_meta(self):
         res = super(Event, self)._default_website_meta()

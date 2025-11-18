@@ -13,11 +13,18 @@ class EventController(Controller):
 
     @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
     def event_ics_file(self, event, **kwargs):
+        return self.create_event_ics_file(event, False)
+
+    @route(['''/event/<model("event.event"):event>/outlook_ics'''], type='http', auth="public")
+    def event_outlook_ics_file(self, event, **kwargs):
+        return self.create_event_ics_file(event, True)
+
+    def create_event_ics_file(self, event, is_outlook):
         lang = request.context.get('lang', request.env.user.lang)
         if request.env.user._is_public():
             lang = request.cookies.get('frontend_lang')
         event = event.with_context(lang=lang)
-        files = event._get_ics_file()
+        files = event._get_ics_file_outlook() if is_outlook else event._get_ics_file()
         if not event.id in files:
             return NotFound()
         content = files[event.id]
