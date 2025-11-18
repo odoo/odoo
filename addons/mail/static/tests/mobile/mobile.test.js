@@ -1,4 +1,7 @@
-import { mailCanAddMessageReactionMobile } from "@mail/../tests/mail_shared_tests";
+import {
+    mailCanAddMessageReactionMobile,
+    mailCanCopyTextToClipboardMobile,
+} from "@mail/../tests/mail_shared_tests";
 import {
     SIZES,
     click,
@@ -86,6 +89,8 @@ test("enter key should create a newline in composer", async () => {
 });
 
 test("can add message reaction (mobile)", mailCanAddMessageReactionMobile);
+
+test("can copy text to clipboard (mobile)", mailCanCopyTextToClipboardMobile);
 
 test("Can edit message comment in chatter (mobile)", async () => {
     mockTouch(true);
