@@ -8,7 +8,6 @@ from threading import Lock
 import time
 import traceback
 
-from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.driver import Driver
 
 _logger = logging.getLogger(__name__)
@@ -81,10 +80,12 @@ class SerialDriver(Driver):
             'get_status': self._push_status,
         })
         self.device_connection = 'serial'
+        self._connection = None
         self._device_lock = Lock()
         self._status = {'status': self.STATUS_CONNECTING, 'message_title': '', 'message_body': ''}
         self._set_name()
 
+    @staticmethod
     def _get_raw_response(connection):
         pass
 
@@ -105,40 +106,16 @@ class SerialDriver(Driver):
     def _take_measure(self):
         pass
 
-    def _do_action(self, data):
-        """Helper function that calls a specific action method on the device.
-
-        :param data: the `_actions` key mapped to the action method we want to call
-        :type data: string
-        """
-
-        with self._device_lock:
-            try:
-                self._actions[data['action']](data)
-                time.sleep(self._protocol.commandDelay)
-                self._status = {'status': self.STATUS_CONNECTED, 'message_title': '', 'message_body': ''}
-            except Exception:
-                msg = f'An error occurred while performing action "{data}" on "{self.device_name}"'
-                _logger.exception(msg)
-                self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
-            self._push_status()
-
     def action(self, data):
-        """Establish a connection with the device if needed and have it perform a specific action.
+        """Override to lock the serial connection during action execution."""
 
-        :param data: the `_actions` key mapped to the action method we want to call
-        :type data: string
-        """
-        self.data["owner"] = data.get('session_id')
-        self.data["action_args"] = {**data}
-
-        if self._connection and self._connection.isOpen():
-            self._do_action(data)
-        else:
+        if not self._connection or not self._connection.is_open:
             with serial_connection(self.device_identifier, self._protocol) as connection:
                 self._connection = connection
-                self._do_action(data)
-        event_manager.device_changed(self, data)  # Make response available to /event route or websocket
+
+        with self._device_lock:
+            super().action(data)
+            time.sleep(self._protocol.commandDelay)
 
     def run(self):
         """Continuously gets new measures from the device."""
