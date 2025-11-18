@@ -7,6 +7,7 @@ import { Thread } from "@mail/core/common/thread";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
+import { MailboxIcon } from "@mail/core/public_web/mailbox_icon";
 
 import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -21,6 +22,7 @@ export class DiscussContent extends Component {
         Composer,
         FileUploader,
         ImStatus,
+        MailboxIcon,
     };
     static props = ["thread?"];
     static template = "mail.DiscussContent";

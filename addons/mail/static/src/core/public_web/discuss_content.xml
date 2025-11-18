@@ -17,9 +17,8 @@
                     </FileUploader>
                     <ImStatus t-if="thread.correspondent and showImStatus" className="'o-mail-DiscussContent-headerImStatus position-absolute'" member="thread.correspondent"/>
                 </div>
-                <t t-else="">
-                    <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>
-                </t>
+                <MailboxIcon t-elif="thread.model === 'mail.box'" mailbox="thread" size="'large'"/>
+                <ThreadIcon t-else="" className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-1">
                     <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
                         <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.parent_channel_id.displayName" t-on-click="() => this.thread.parent_channel_id.open({ focus: true })"/>

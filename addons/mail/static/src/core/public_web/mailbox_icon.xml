@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MailboxIcon">
+        <div class="o-mail-MailboxIcon d-flex justify-content-center flex-shrink-0 bg-inherit opacity-75" t-att-class="{
+            'o-ms-1_5 me-2 pt-1': !store.discuss.isSidebarCompact and props.size !== 'large',
+            'fs-3': props.size === 'large',
+        }">
+            <div class="fa fa-fw" t-att-class="{
+                'fa-lg': store.discuss.isSidebarCompact or props.size === 'large',
+                'fa-inbox': props.mailbox.id === 'inbox',
+                'fa-star-o': props.mailbox.id === 'starred',
+                'fa-history': props.mailbox.id === 'history',
+            }"/>
+        </div>
+    </t>
+</templates>

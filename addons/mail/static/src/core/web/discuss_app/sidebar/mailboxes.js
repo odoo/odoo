@@ -1,4 +1,5 @@
 import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { MailboxIcon } from "@mail/core/public_web/mailbox_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useHover } from "@mail/utils/common/hooks";
 
@@ -12,7 +13,7 @@ import { markEventHandled } from "@web/core/utils/misc";
 export class Mailbox extends Component {
     static template = "mail.Mailbox";
     static props = ["mailbox"];
-    static components = { Dropdown, ThreadIcon };
+    static components = { Dropdown, MailboxIcon, ThreadIcon };
 
     setup() {
         super.setup();

@@ -2473,3 +2473,9 @@ test("do not show control panel without breadcrumbs", async () => {
     await contains(".o-mail-Discuss");
     await contains(".o_control_panel .breadcrumb", { text: serverState.partnerName });
 });
+
+test("Display mailbox icon in header", async () => {
+    await start();
+    await openDiscuss("mail.box_starred");
+    await contains(".o-mail-DiscussContent-header .fa-star-o");
+});
