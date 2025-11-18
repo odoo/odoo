@@ -1584,7 +1584,13 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         return [{
             'label': _('Import Template for Products'),
+<<<<<<< 1b534272c8a39a5fa6a2b03650d4dbc00f14e04a
             'template': '/product/static/xls/products_import_template.xlsx'
+||||||| 3cd709172e997f5a726cf3ae85ffcb9965619fcb
+            'template': '/product/static/xls/product_template.xls'
+=======
+            'template': '/product/static/xls/product_product.xls'
+>>>>>>> ecbd55e620bdd459ea995c37552d4f8090dec961
         }]
 
     def get_contextual_price(self, product=None):

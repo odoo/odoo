@@ -3,6 +3,8 @@
 import re
 from collections import defaultdict
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
