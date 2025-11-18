@@ -24,7 +24,7 @@ export class DiscussAppCategory extends Record {
     get isVisible() {
         return (
             !this.hideWhenEmpty ||
-            this.threads.some((thread) => thread.displayToSelf || thread.isLocallyPinned)
+            this.threads.some((thread) => thread.channel?.displayToSelf || thread.isLocallyPinned)
         );
     }
 

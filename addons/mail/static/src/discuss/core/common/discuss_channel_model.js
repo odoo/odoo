@@ -295,6 +295,8 @@ export class DiscussChannel extends Record {
         ]);
     }
 
+    onPinStateUpdated() {}
+
     /**
      * @returns {boolean} true if the channel was opened, false otherwise
      */

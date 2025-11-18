@@ -1,6 +1,5 @@
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
-import { threadCompareRegistry } from "@mail/core/common/thread_compare";
-import { cleanTerm, generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
+import { generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
@@ -110,48 +109,6 @@ export class Store extends BaseStore {
     });
 
     messagePostMutex = new Mutex();
-
-    menuThreads = fields.Many("mail.thread", {
-        /** @this {import("models").Store} */
-        compute() {
-            /** @type {import("models").Thread[]} */
-            const searchTerm = cleanTerm(this.discuss.searchTerm);
-            let threads = Object.values(this["mail.thread"].records).filter(
-                (thread) =>
-                    (thread.displayToSelf ||
-                        (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
-                    cleanTerm(thread.displayName).includes(searchTerm)
-            );
-            const tab = this.discuss.activeTab;
-            if (tab === "inbox") {
-                threads = threads.filter((thread) =>
-                    this.tabToThreadType("mailbox").includes(thread.channel?.channel_type)
-                );
-            } else if (tab === "starred") {
-                threads = [this.starred];
-            } else if (tab !== "notification") {
-                threads = threads.filter((thread) =>
-                    this.tabToThreadType(tab).includes(thread.channel?.channel_type)
-                );
-            }
-            return threads;
-        },
-        /**
-         * @this {import("models").Store}
-         * @param {import("models").Thread} thread1
-         * @param {import("models").Thread} thread2
-         */
-        sort(thread1, thread2) {
-            const compareFunctions = threadCompareRegistry.getAll();
-            for (const fn of compareFunctions) {
-                const result = fn(thread1, thread2);
-                if (result !== undefined) {
-                    return result;
-                }
-            }
-            return thread2.localId > thread1.localId ? 1 : -1;
-        },
-    });
 
     shouldSimulateDarkTheme(ctx) {
         return (
