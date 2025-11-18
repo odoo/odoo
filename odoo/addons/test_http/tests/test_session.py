@@ -12,12 +12,20 @@ import pytz
 from freezegun import freeze_time
 
 import odoo
-from odoo.http import root, SESSION_DELETION_TIMER, SESSION_LIFETIME, SESSION_ROTATION_INTERVAL, STORED_SESSION_BYTES, _session_identifier_re
+from odoo.http import (
+    SESSION_DELETION_TIMER,
+    SESSION_LIFETIME,
+    SESSION_ROTATION_INTERVAL,
+    STORED_SESSION_BYTES,
+    _session_identifier_re,
+    root,
+)
 from odoo.tests import get_db_name, tagged
 from odoo.tools import config, mute_logger, reset_cached_properties
 
 from .test_common import TestHttpBase
 from odoo.addons.base.tests.common import HttpCase, HttpCaseWithUserDemo
+from odoo.addons.test_http.controllers import CT_JSON
 
 GEOIP_ODOO_FARM_2 = {
     'city': 'Ramillies',
@@ -343,6 +351,17 @@ class TestHttpSession(TestHttpBase):
             "Cannot use both the session_id cookie and the x-odoo-database header.",
             res.text,
         )
+
+    def test_session16_soft_rotate_with_abort(self):
+        session = self.authenticate('admin', 'admin')
+        session['create_time'] -= SESSION_ROTATION_INTERVAL
+        odoo.http.root.session_store.save(session)
+
+        # Any route that uses werkzeug.exceptions.abort would do, here
+        # we call a simple type='jsonrpc' route with bad data to trigger
+        # the abort in odoo.http.JsonRPCDispatcher.dispatch.
+        res = self.url_open('/test_http/echo-json', data="not json", headers=CT_JSON)
+        self.assertEqual(res.status_code, 400, res.text)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

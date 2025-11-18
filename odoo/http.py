@@ -1284,7 +1284,8 @@ class SessionStore:
         else:
             self.delete(session)
             session.sid = self.generate_key()
-        if session.uid and env:
+        if session.uid:
+            assert env, "saving this session requires an environment"
             session.session_token = security.compute_session_token(session, env)
         session.should_rotate = False
         session['create_time'] = time.time()
@@ -2238,19 +2239,27 @@ class Request:
         Dispatch the request to its matching controller in a
         database-free environment.
         """
-        router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
         try:
-            rule, args = router.match(return_rule=True)
-        except NotFound as exc:
-            exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
-                ('Content-Type', 'text/html; charset=utf-8'),
-            ])
-            raise
-        self._set_request_dispatcher(rule)
-        self.dispatcher.pre_dispatch(rule, args)
-        response = self.dispatcher.dispatch(rule.endpoint, args)
-        self.dispatcher.post_dispatch(response)
-        return response
+            router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
+            try:
+                rule, args = router.match(return_rule=True)
+            except NotFound as exc:
+                exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
+                    ('Content-Type', 'text/html; charset=utf-8'),
+                ])
+                raise
+            self._set_request_dispatcher(rule)
+            self.dispatcher.pre_dispatch(rule, args)
+            response = self.dispatcher.dispatch(rule.endpoint, args)
+            self.dispatcher.post_dispatch(response)
+            return response
+        except HTTPException as exc:
+            if exc.code is not None:
+                raise
+            # Valid response returned via werkzeug.exceptions.abort
+            response = exc.get_response()
+            HttpDispatcher(self).post_dispatch(response)
+            return response
 
     def _serve_db(self):
         """ Load the ORM and use it to process the request. """
@@ -2316,13 +2325,21 @@ class Request:
                 return service_model.retrying(serve_func, env=self.env)
             except Exception as exc:  # noqa: BLE001
                 raise self._update_served_exception(exc)
+        except HTTPException as exc:
+            if exc.code is not None:
+                raise
+            # Valid response returned via werkzeug.exceptions.abort
+            response = exc.get_response()
+            HttpDispatcher(self).post_dispatch(response)
+            return response
         finally:
+            self.env = None
             if cr is not None:
                 cr.close()
 
     def _update_served_exception(self, exc):
         if isinstance(exc, HTTPException) and exc.code is None:
-            return exc  # bubble up to odoo.http.Application.__call__
+            return exc  # bubble up to _serve_db
         if (
             'werkzeug' in config['dev_mode']
             and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
@@ -2857,12 +2874,6 @@ class Application:
                 return response(environ, start_response)
 
             except Exception as exc:
-                # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
-                if isinstance(exc, HTTPException) and exc.code is None:
-                    response = exc.get_response()
-                    HttpDispatcher(request).post_dispatch(response)
-                    return response(environ, start_response)
-
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
                     _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
