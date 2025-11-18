@@ -24,12 +24,14 @@ export class BackgroundImageOptionPlugin extends Plugin {
         "setImageBackground",
         "loadReplaceBackgroundImage",
         "applyReplaceBackgroundImage",
+        "removeBackgroundImage",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SelectFilterColorAction,
             ToggleBgImageAction,
+            RemoveBgImageAction,
             ReplaceBgImageAction,
             DynamicColorAction,
         },
@@ -138,6 +140,21 @@ export class BackgroundImageOptionPlugin extends Plugin {
         // removed too.
         this.dependencies.style.setBackgroundImageUrl(el, backgroundURL);
     }
+    /**
+     * Remove the current background image and notify listeners.
+     *
+     * @param {Object} context
+     * @param {HTMLElement} context.editingElement
+     * @param {Object} [context.params]
+     */
+    removeBackgroundImage({ editingElement, params }) {
+        this.applyReplaceBackgroundImage({
+            editingElement,
+            loadResult: "",
+            params: { ...params, forceClean: true },
+        });
+        this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+    }
 }
 
 export class SelectFilterColorAction extends StyleAction {
@@ -207,13 +224,16 @@ export class ToggleBgImageAction extends BuilderAction {
     isApplied({ editingElement }) {
         return !!getBgImageURLFromEl(editingElement);
     }
-    clean({ editingElement }) {
-        this.dependencies.backgroundImageOption.applyReplaceBackgroundImage({
-            editingElement: editingElement,
-            loadResult: "",
-            params: { forceClean: true },
-        });
-        this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+    clean(context) {
+        this.dependencies.backgroundImageOption.removeBackgroundImage(context);
+    }
+}
+
+export class RemoveBgImageAction extends BuilderAction {
+    static id = "removeBgImage";
+    static dependencies = ["backgroundImageOption"];
+    apply(context) {
+        this.dependencies.backgroundImageOption.removeBackgroundImage(context);
     }
 }
 
