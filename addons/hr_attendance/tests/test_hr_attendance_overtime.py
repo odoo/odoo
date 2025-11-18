@@ -399,3 +399,31 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         self.assertEqual(attendance.overtime_hours, 0)
         self.assertEqual(attendance_2.overtime_hours, -2)
+
+    def test_company_tolerance_multiple_attendances(self):
+        """
+        This test checks that the company tolerance is correct in case of multiple attendances registered
+        for a same day.
+        """
+        self.company.overtime_company_threshold = 15
+        attendance_1, attendance_2, attendance_3, attendance_4 = self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 4, 8, 0),
+            'check_out': datetime(2023, 1, 4, 15, 0)
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 4, 16, 0),
+            'check_out': datetime(2023, 1, 4, 18, 30)
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 5, 8, 0),
+            'check_out': datetime(2023, 1, 5, 15, 0)
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 5, 16, 0),
+            'check_out': datetime(2023, 1, 5, 18, 14)
+        }])
+        self.assertEqual(
+            (attendance_1.overtime_hours, attendance_2.overtime_hours, attendance_3.overtime_hours, attendance_4.overtime_hours),
+            (0.0, 0.5, 0.0, 0.0)
+        )

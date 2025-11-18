@@ -318,6 +318,9 @@ class HrAttendance(models.Model):
                         pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(emp, working_times, attendance_date)
                         # Overtime within the planned work hours + overtime before/after work hours is > company threshold
                         overtime_duration = work_duration - planned_work_duration
+                        if overtime_duration < 0 and post_work_time >= abs(overtime_duration):
+                            post_work_time += overtime_duration
+                            overtime_duration = 0
                         if pre_work_time > company_threshold:
                             overtime_duration += pre_work_time
                         if post_work_time > company_threshold:
