@@ -40,11 +40,16 @@ class WebsiteBackgroundShapeOptionPlugin extends Plugin {
 class WebsiteBackgroundVideoPlugin extends Plugin {
     static id = "websiteBackgroundVideoPlugin";
     static dependencies = ["media"];
-    static shared = ["loadReplaceBackgroundVideo", "applyReplaceBackgroundVideo"];
+    static shared = [
+        "loadReplaceBackgroundVideo",
+        "applyReplaceBackgroundVideo",
+        "removeBackgroundVideo",
+    ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             ToggleBgVideoAction,
+            RemoveBgVideoAction,
             ReplaceBgVideoAction,
         },
         system_node_selectors: ".o_bg_video_container",
@@ -100,6 +105,22 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
             delete editingElement.dataset.bgVideoSrc;
         }
     }
+    /**
+     * Remove the current background video and notify listeners.
+     *
+     * @param {Object} context
+     * @param {HTMLElement} context.editingElement
+     * @param {Object} [context.params]
+     */
+    removeBackgroundVideo({ editingElement, params }) {
+        editingElement.querySelector(":scope > .o_we_bg_filter")?.remove();
+        this.applyReplaceBackgroundVideo({
+            editingElement,
+            loadResult: "",
+            params: { ...params, forceClean: true },
+        });
+        this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+    }
 }
 
 export class ToggleBgVideoAction extends BuilderAction {
@@ -119,13 +140,16 @@ export class ToggleBgVideoAction extends BuilderAction {
     isApplied({ editingElement }) {
         return editingElement.classList.contains("o_background_video");
     }
-    clean({ editingElement }) {
-        editingElement.querySelector(":scope > .o_we_bg_filter")?.remove();
-        this.dependencies.websiteBackgroundVideoPlugin.applyReplaceBackgroundVideo({
-            editingElement: editingElement,
-            loadResult: "",
-            params: { forceClean: true },
-        });
+    clean(context) {
+        this.dependencies.websiteBackgroundVideoPlugin.removeBackgroundVideo(context);
+    }
+}
+
+export class RemoveBgVideoAction extends BuilderAction {
+    static id = "removeBgVideo";
+    static dependencies = ["websiteBackgroundVideoPlugin"];
+    apply(context) {
+        this.dependencies.websiteBackgroundVideoPlugin.removeBackgroundVideo(context);
     }
 }
 
