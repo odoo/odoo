@@ -11905,6 +11905,27 @@ test(`only re-render necessary fields after change (with onchange)`, async () =>
     expect.verifySteps(["[Field int_field] onPatched", "[IntegerField int_field] onPatched"]);
 });
 
+test(`datetimepicker re-renders when date field is cleared`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="date"/>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_field_widget[name=date] input`).toHaveCount(1);
+    
+    await contains(`.o_field_widget[name=date] input`).edit("01/15/2025");
+    expect(`.o_field_widget[name=date] input`).not.toHaveValue("");
+
+    await contains(`.o_field_widget[name=date] input`).clear();
+    
+    expect(`.o_field_widget[name=date] input`).toHaveValue("");
+});
+
 test(`widget update several fields including an x2m`, async () => {
     Partner._onChanges = {
         name() {},
