@@ -1,7 +1,6 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/export";
 import { useSequential } from "@mail/utils/common/hooks";
-import { nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 
 import { formatList } from "@web/core/l10n/utils";
@@ -28,25 +27,8 @@ const threadPatch = {
         });
         this.group_ids = fields.Many("res.groups");
         this.firstUnreadMessage = fields.One("mail.message", {
-            /** @this {import("models").Thread} */
             compute() {
-                if (!this.channel?.self_member_id) {
-                    return null;
-                }
-                const messages = this.messages.filter((m) => !m.isNotification);
-                const separator = this.channel.self_member_id.new_message_separator_ui;
-                if (separator === 0 && !this.loadOlder) {
-                    return messages[0];
-                }
-                if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
-                    return null;
-                }
-                // try to find a perfect match according to the member's separator
-                let message = this.store["mail.message"].get({ id: separator });
-                if (!message || this.notEq(message.thread)) {
-                    message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
-                }
-                return message;
+                return this.channel?.firstUnreadMessage;
             },
             inverse: "threadAsFirstUnread",
         });
