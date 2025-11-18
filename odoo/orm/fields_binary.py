@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import base64
 import binascii
-import contextlib
 import functools
 import typing
 import warnings
@@ -57,43 +56,51 @@ class Binary(Field):
         return False
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        # Binary values may be byte strings (python 2.6 byte array), but
-        # the legacy OpenERP convention is to transfer and store binaries
-        # as base64-encoded strings. The base64 string may be provided as a
-        # unicode in some circumstances, hence the str() cast here.
+        # Binary values may be byte strings, but the legacy Odoo convention is
+        # to transfer binaries as base64-encoded strings.
         # This str() coercion will only work for pure ASCII unicode strings,
         # on purpose - non base64 data must be passed as a 8bit byte strings.
         if not value:
             return None
-        # Detect if the binary content is an SVG for restricting its upload
-        # only to system users.
-        magic_bytes = {
-            b'P',  # first 6 bits of '<' (0x3C) b64 encoded
-            b'<',  # plaintext XML tag opening
-        }
         if isinstance(value, str):
             value = value.encode()
-        if validate and value[:1] in magic_bytes:
+        elif not isinstance(value, bytes):
             try:
-                decoded_value = base64.b64decode(value.translate(None, delete=b'\r\n'), validate=True)
-            except binascii.Error:
+                value = str(value).encode('ascii')
+            except UnicodeEncodeError as e:
+                msg = record.env._("ASCII characters are required for %(value)s in %(field)s", value=value, field=self.name)
+                raise UserError(msg) from e
+        try:
+            if (self.related_field or self).name == 'db_datas':
                 decoded_value = value
+            else:
+                decoded_value = base64.b64decode(value.translate(None, delete=b'\r\n'), validate=True)
+        except binascii.Error:
+            decoded_value = value
+        # Detect if the binary content is an SVG for restricting its upload
+        # only to system users.
+        if validate and decoded_value[:1] == b'<':  # XML tag opening
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
                     not record.env.is_system()):
                 raise UserError(record.env._("Only admins can upload SVG files."))
-        if isinstance(value, bytes):
-            return psycopg2.Binary(value)
-        try:
-            return psycopg2.Binary(str(value).encode('ascii'))
-        except UnicodeEncodeError:
-            raise UserError(record.env._("ASCII characters are required for %(value)s in %(field)s", value=value, field=self.name))
+        return psycopg2.Binary(decoded_value)
 
     def get_column_update(self, record: BaseModel):
         # since the field depends on context, force the value where we have the data
         bin_size_name = 'bin_size_' + self.name
         record_no_bin_size = record.with_context(**{'bin_size': False, bin_size_name: False})
-        return self._get_cache(record_no_bin_size.env)[record.id]
+        value = self._get_cache(record_no_bin_size.env)[record.id]
+        return self.convert_to_column(value, record_no_bin_size)
+
+    def _insert_cache(self, records, values):
+        if not (
+            (self.related_field or self).name == 'db_datas'
+            or records.env.context.get('bin_size')
+            or records.env.context.get('bin_size_' + self.name)
+        ):
+            values = [base64.b64encode(val) if val else None for val in values]
+        return super()._insert_cache(records, values)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, bytes):
@@ -153,14 +160,12 @@ class Binary(Field):
             for record in records:
                 try:
                     value = field_cache_data[record.id]
-                    # don't decode non-attachments to be consistent with pg_size_pretty
-                    if not (self.store and self.column_type):
-                        with contextlib.suppress(TypeError, binascii.Error):
-                            value = base64.b64decode(value)
                     try:
-                        if isinstance(value, (bytes, _BINARY)):
-                            value = human_size(len(value))
-                    except (TypeError):
+                        decoded_value = base64.b64decode(value)
+                        value = human_size(len(decoded_value))
+                    except binascii.Error:
+                        value = human_size(len(value))
+                    except TypeError:
                         pass
                     cache_value = self.convert_to_cache(value, record)
                     # the dirty flag is independent from this assignment
@@ -188,7 +193,7 @@ class Binary(Field):
             att.res_id: _encode(human_size(att.file_size)) if bin_size else att.datas
             for att in records.env['ir.attachment'].sudo().search_fetch(domain)
         }
-        self._insert_cache(records, map(data.get, records._ids))
+        super()._insert_cache(records, map(data.get, records._ids))
 
     def create(self, record_values):
         assert self.attachment
