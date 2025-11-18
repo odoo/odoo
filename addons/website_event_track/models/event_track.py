@@ -520,6 +520,8 @@ class EventTrack(models.Model):
             'mapping': mapping,
             'icon': 'fa-microphone',
             'order': order,
+            'template_key': 'website_event_track.search_items_event_track',
+            'group_name': self.env._("Talks"),
         }
 
     # ------------------------------------------------------------

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website_event.search_items_event_view">
+    <t t-foreach="bucket['data']" t-as="result">
+         <div t-attf-class="#{row_classes}">
+             <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                 <div class="d-flex align-items-center flex-column flex-shrink-0">
+                     <t t-call="website.search_image_item_view"/>
+                     <span t-if="result.get('date_begin')" t-out="result['date_begin']" class="smaller"/>
+                 </div>
+                 <div class="o_search_result_item_content">
+                    <div class="d-flex p-2">
+                        <div class="flex-grow-1">
+                            <div class="fs-6 fw-bold" t-out="result['name']"/>
+                            <span t-if="result.get('address_name')" class="smaller">
+                                <span class="fa fa-map-marker"/>
+                                <t t-out="result['address_name']"/>
+                            </span>
+                        </div>
+                        <div t-if="result.get('lowest_ticket_price')"
+                            class="d-flex flex-column text-center smaller justify-content-center">
+                            <span class="fst-italic">From</span>
+                            <h6 t-out="result['lowest_ticket_price']"/>
+                        </div>
+                    </div>
+                    <div id="o_search_item_matching_content">
+                        <t t-out="result.get('tags')"/>
+                    </div>
+                 </div>
+             </a>
+         </div>
+    </t>
+</template>
+
+</odoo>

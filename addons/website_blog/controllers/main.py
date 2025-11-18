@@ -55,11 +55,6 @@ class WebsiteBlog(http.Controller):
 
     def _get_blog_post_search_options(self, blog=None, active_tags=None, date_begin=None, date_end=None, state=None, **post):
         return {
-            'displayDescription': True,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
             'allowFuzzy': not post.get('noFuzzy'),
             'blog': str(blog.id) if blog else None,
             'tag': ','.join([str(id) for id in active_tags.ids]),
@@ -123,7 +118,7 @@ class WebsiteBlog(http.Controller):
             **post
         )
         total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
-            limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
+            offset=0, limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         posts = posts[offset:offset + self._blog_post_per_page]
 

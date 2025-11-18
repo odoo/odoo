@@ -45,6 +45,8 @@ class TestModel(models.Model):
             },
             'icon': 'fa-check-square-o',
             'order': 'name asc, id desc',
+            'template': 'test_website.search_result_item_test_model',
+            'group_name': self.env._("Test Models"),
         }
 
     def _get_search_highlight_handlers(self):

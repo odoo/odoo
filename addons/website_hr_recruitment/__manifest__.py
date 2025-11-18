@@ -13,6 +13,7 @@
         'security/website_hr_recruitment_security.xml',
         'data/config_data.xml',
         'views/website_hr_recruitment_templates.xml',
+        'views/website_searchbar_templates.xml',
         'views/hr_recruitment_views.xml',
         'views/hr_job_views.xml',
         'views/website_pages_views.xml',
@@ -26,6 +27,8 @@
         'web.assets_frontend': [
             'website_hr_recruitment/static/src/scss/**/*',
             'website_hr_recruitment/static/src/interactions/*',
+            'website_hr_recruitment/static/src/snippets/**/*.xml',
+            'website_hr_recruitment/static/src/snippets/**/*.js',
         ],
         'web.assets_backend': [
             'website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js',

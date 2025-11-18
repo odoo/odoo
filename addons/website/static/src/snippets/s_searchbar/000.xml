@@ -1,55 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+<t t-name="website.search_image_item">
+    <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_cover"/>
+    <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
+</t>
+
+<t t-name="website.search_items_page">
+    <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+        <div t-attf-class="#{row_classes}">
+            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                <div class="o_search_result_item_content p-2">
+                    <div class="fs-6 fw-bold" t-out="result['name']"/>
+                    <div id="o_search_item_matching_content">
+                        <p t-if="result['description']" class="small"
+                            t-out="result['description']"/>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </t>
+</t>
+
 <!-- Search Bar autocomplete item -->
-<div t-name="website.s_searchbar.autocomplete"
-    class="o_dropdown_menu show position-absolute w-100">
-    <t t-if="fuzzySearch and results.length">
+<div t-name="website.s_searchbar.autocomplete" class="o_dropdown_menu show position-absolute w-100 p-2">
+    <!-- Fuzzy search fallback -->
+    <t t-if="fuzzySearch and Object.keys(results).length !== 0">
         <span class="dropdown-item-text">
-            <span class="text-muted">No results found for '<t t-out="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.</span>
+            <span class="text-muted">
+                No results found for '<t t-out="search"/>'. Showing results for
+                '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.
+            </span>
         </span>
     </t>
-    <t t-elif="!results.length">
+    <!-- No result state -->
+    <t t-elif="Object.keys(results).length === 0">
         <span class="dropdown-item-text">
             <span class="text-muted">No results found. Please try another search.</span>
         </span>
     </t>
-    <a t-foreach="results" t-as="result" t-key="result_index"
-        t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center flex-wrap o_search_result_item">
-            <t t-if="widget.displayImage">
-                <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
-                <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
-            </t>
-            <div class="o_search_result_item_detail px-3">
-                <t t-set="description" t-value="parts['description'] and widget.displayDescription and result['description']"/>
-                <t t-set="extra_link" t-value="parts['extra_link'] and widget.displayExtraLink and result['extra_link_url'] and result['extra_link']"/>
-                <t t-set="extra_link_html" t-value="parts['extra_link'] and widget.displayExtraLink and !result['extra_link_url'] and result['extra_link']"/>
-                <div t-attf-class="h6 fw-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
-                <p t-if="description" class="mb-0" t-out="description"/>
-                <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
-                <t t-if="extra_link_html" t-out="extra_link_html"/>
-                <div t-if="result['tags']" t-out="result['tags']" class="my-2"/>
+    <!-- Render results -->
+    <t t-foreach="Object.values(results)" t-as="group_result" t-key="group_result_index">
+        <t t-set="bucket" t-value="group_result"/>
+        <!-- Group header -->
+        <div class="d-flex align-items-center justify-content-between">
+            <div t-if="Object.keys(results).length > 1 || widget.searchType === 'all'" class="d-flex gap-1 p-2">
+                <span class="fw-bold" t-out="bucket.groupName"/>
+                <span class="text-muted"> - <t t-out="bucket.searchCount"/> <t t-out="(bucket.searchCount > 1) ? 'results': 'result'" /></span>
             </div>
-            <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0 ms-auto">
-                <t t-if="result['detail_strike']">
-                    <span class="text-muted text-nowrap" style="text-decoration: line-through;">
-                        <t t-out="result['detail_strike']"/>
-                    </span>
-                    <br/>
-                </t>
-                <b t-if="result['detail']" class="text-nowrap">
-                    <t t-out="result['detail']"/>
-                </b>
-                <t t-if="result['detail_extra']">
-                    <br/>
-                    <span class="text-nowrap" t-out="result['detail_extra']"/>
-                </t>
-            </div>
+            <!-- Show 'View More' if bucket has more results than visibility limit -->
+            <t t-set="redirect_hash" t-value="bucket['groupName'].replace(' ', '_').toLowerCase()"/>
+            <a t-if="bucket.searchCount > limit and widget.searchType === 'all'"
+                type="button"
+                class="text-primary-emphasis fw-semibold btn btn-link btn-sm"
+                t-attf-href="/website/search?search=#{search}##{redirect_hash}">
+                View More
+            </a>
         </div>
-    </a>
-    <t t-if="hasMoreResults">
-        <button type="submit" class="dropdown-item text-center text-primary-emphasis">All results</button>
+
+        <t t-set="row_classes" t-value="'o_search_result_item col-12 ' + (displayType === 'columns' ? 'col-md-6 col-lg-4' : '')"/>
+
+        <!-- Items -->
+         <div class="row g-0 p-2">
+            <t t-call="{{ bucket.templateKey }}"/>
+         </div>
     </t>
 </div>
 

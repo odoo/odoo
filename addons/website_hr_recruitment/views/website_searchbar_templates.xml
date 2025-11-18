@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website_hr_recruitment.search_items_jobs_view">
+    <t t-foreach="bucket['data']" t-as="result">
+        <div t-attf-class="#{row_classes}">
+            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                <div class="o_search_result_item_content">
+                    <div class="p-2">
+                        <div class="fs-6 fw-bold" t-out="result['name']"/>
+                        <div class="d-flex justify-content-between small">
+                            <div t-if="result.get('address')">
+                                <span class="fa fa-map-marker"/>
+                                <span t-out="result['address']"/>
+                            </div>
+                            <div t-if="result.get('department_name')">
+                                <span class="fa fa-sitemap"/>
+                                <span t-out="result['department_name']"/>
+                            </div>
+                            <div t-if="result.get('no_of_recruitment')">
+                                <span class="fw-bold" t-out="result['no_of_recruitment']"/>
+                                open positions
+                            </div>
+                        </div>
+                    </div>
+                    <div id="o_search_item_matching_content"></div>
+                </div>
+            </a>
+        </div>
+    </t>
+</template>
+
+</odoo>

@@ -420,6 +420,43 @@ list of filtered posts (by date or tag).
 </feed>
 </template>
 
+<template id="website_blog.search_items_blog_post_view">
+    <t t-foreach="bucket['data']" t-as="result">
+        <div t-attf-class="#{row_classes}">
+            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                <t t-call="website.search_image_item_view"/>
+                <div class="o_search_result_item_content p-2">
+                    <div class="fs-6 fw-bold" t-out="result['name']"/>
+                    <div id="o_search_item_matching_content">
+                        <div t-if="result.get('tags')" t-out="result['tags']" class="my-1"/>
+                    </div>
+                    <div class="d-inline-flex align-items-center smaller w-100">
+                        <img t-att-src="result['author_avatar_url']" class="o_avatar me-1 rounded"/>
+                        <div class="d-flex w-100 justify-content-between">
+                            <div t-out="result['author_name']"/>
+                            <div t-out="result['published_date']"/>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </t>
+</template>
+
+<template id="website_blog.search_items_blog_blog_view">
+    <t t-foreach="bucket['data']" t-as="result">
+        <div t-attf-class="#{row_classes}">
+            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                <t t-call="website.search_image_item_view"/>
+                <div class="o_search_result_item_content p-2">
+                    <div class="fs-6 fw-bold" t-out="result['name']"/>
+                     <div class="small" t-out="result['description']"/>
+                </div>
+            </a>
+        </div>
+    </t>
+</template>
+
 <!-- Robots.txt -->
 <template id="robots" inherit_id="website.robots">
     <xpath expr="//t[@id='robots_module_rules']" position="inside">

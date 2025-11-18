@@ -559,8 +559,6 @@ class EventEvent(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        with_date = options['displayDetail']
         date = options.get('date', 'all')
         country = options.get('country')
         tags = options.get('tags')
@@ -610,20 +608,17 @@ class EventEvent(models.Model):
                 if date_details[0] != 'scheduled':
                     current_date = date_details[1]
 
-        search_fields = ['name', 'tag_ids.name']
-        fetch_fields = ['name', 'website_url', 'address_name', 'tag_ids']
+        search_fields = ['name', 'tag_ids.name', 'subtitle', 'tag_ids.name']
+        fetch_fields = ['name', 'website_url', 'address_name', 'date_begin', 'tag_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
             'address_name': {'name': 'address_name', 'type': 'text', 'match': True},
-            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True}
+            'date_begin': {'name': 'date_begin', 'type': 'date'},
+            'lowest_ticket_price': {'name': 'lowest_ticket_price', 'type': 'html'},
+            'image_url': {'name': 'image_url', 'type': 'html'},
+            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
-        if with_description:
-            search_fields.append('subtitle')
-            fetch_fields.append('subtitle')
-            mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
-        if with_date:
-            mapping['detail'] = {'name': 'range', 'type': 'html'}
 
         # Bypassing the access rigths of partner to search the address.
         def search_in_address(env, search_term):
@@ -646,18 +641,45 @@ class EventEvent(models.Model):
             'search_tags': search_tags,
             'no_date_domain': no_date_domain,
             'no_country_domain': no_country_domain,
+            'template_key': 'website_event.search_items_event',
+            'group_name': self.env._("Events"),
+            'sequence': 40,
         }
 
+    def _get_lowest_ticket_price(self):
+        # Exit early if the price field does not exist
+        if 'price' not in self.env["event.event.ticket"]._fields:
+            return False
+
+        prices = [
+            ticket.price
+            for ticket in self.event_ticket_ids
+            if ticket.price is not None
+        ]
+
+        if not prices:
+            return False
+        price = min(prices)
+        # Zero means free → highest priority
+        if price == 0.0:
+            return Markup("Free")
+
+        currency = self.currency_id or self.env.company.currency_id
+        return self.env['ir.qweb.field.monetary'].value_to_html(
+            price,
+            {'display_currency': currency}
+        )
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        with_date = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for event, data in zip(self, results_data):
-            if with_date:
-                begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
-                end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
-                data['range'] = (
-                    Markup('{} <i class="fa fa-long-arrow-right"></i> {}').format(begin, end)
-                    if begin != end else begin
-                )
+            begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
+            end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
+            data['range'] = (
+                Markup('{} <i class="fa fa-long-arrow-right"></i> {}').format(begin, end)
+                if begin != end else begin
+            )
             data['tag_ids'] = event.tag_ids.read(['name'])
+            data['lowest_ticket_price'] = event._get_lowest_ticket_price()
+            data['image_url'] = event._get_image_url()
         return results_data

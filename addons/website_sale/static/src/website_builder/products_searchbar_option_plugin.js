@@ -1,6 +1,5 @@
 import { products_sort_mapping } from "@website_sale/website_builder/shared";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 class ProductsSearchbarOptionPlugin extends Plugin {
@@ -16,28 +15,6 @@ class ProductsSearchbarOptionPlugin extends Plugin {
                 orderBy: query_and_label.query,
                 dependency: "search_products_opt",
             })),
-        searchbar_option_display_items: [
-            {
-                label: _t("Description"),
-                dataAttribute: "displayDescription",
-                dependency: "search_products_opt",
-            },
-            {
-                label: _t("Category"),
-                dataAttribute: "displayExtraLink",
-                dependency: "search_products_opt",
-            },
-            {
-                label: _t("Price"),
-                dataAttribute: "displayDetail",
-                dependency: "search_products_opt",
-            },
-            {
-                label: _t("Image"),
-                dataAttribute: "displayImage",
-                dependency: "search_products_opt",
-            },
-        ],
     };
 }
 

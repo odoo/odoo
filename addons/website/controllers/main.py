@@ -588,21 +588,28 @@ class Website(Home):
         return 'is_published desc, %s, id desc' % order
 
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
-    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+    def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
         """
         Returns list of results according to the term and options
 
         :param str search_type: indicates what to search within, 'all' matches all available types
         :param str term: search term written by the user
         :param str order:
-        :param int limit: number of results to consider, defaults to 5
+        :param int offset: number of results to skip, defaults to 0
+        :param int limit: number of results to consider, defaults to 6
         :param int max_nb_chars: max number of characters for text fields
         :param dict options: options map containing
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
 
         :returns: dict (or False if no result) containing
-            - 'results' (list): results (only their needed field values)
+            - 'results' (dict): contain multiple groups of results, each group is a dict with:
+                    - 'group_key' (str): the key of the group of results
+                     (usually the model name with '.' replaced by '_')
+                    - 'groupName' (str): the name of the group of results
+                    - 'templateKey' (str): the template key to use to render the results
+                    - 'searchCount' (int): the number of results in this group
+                    - 'data' (list of dict): the actual results (only their needed field values)
                     note: the monetary fields will be strings properly formatted and
                     already containing the currency
             - 'results_count' (int): the number of results in the database
@@ -612,10 +619,12 @@ class Website(Home):
         """
         order = self._get_search_order(order)
         options = options or {}
-        results_count, search_results, fuzzy_term = request.website._search_with_fuzzy(search_type, term, limit, order, options)
+        results_count, search_results, fuzzy_term = request.website._search_with_fuzzy(search_type, term, offset, limit, order, options)
+        # Sort result based in sequence for ordered results.
+        search_results.sort(key=lambda d: d.get('sequence', float('inf')))
         if not results_count:
             return {
-                'results': [],
+                'results': {},
                 'results_count': 0,
                 'parts': {},
             }
@@ -623,44 +632,51 @@ class Website(Home):
         search_results = request.website._search_render_results(search_results, limit)
 
         mappings = []
-        results_data = []
+        result = {}
         for search_result in search_results:
-            for result in search_result['results_data']:
-                result['model'] = search_result['model']
-                results_data.append(result)
+            if not len(search_result['results_data']):
+                continue
+            search_result['results_data'].sort(key=lambda r: r.get('name', ''), reverse='name desc' in order)
             mappings.append(search_result['mapping'])
-        if search_type == 'all':
-            # Only supported order for 'all' is on name
-            results_data.sort(key=lambda r: r.get('name', ''), reverse='name desc' in order)
-        results_data = results_data[:limit]
-        result = []
-        for record in results_data:
-            mapping = record['_mapping']
-            model = request.env[record['model']]
-            mapped = {
-                '_fa': record.get('_fa'),
-            }
-            for mapped_name, field_meta in mapping.items():
-                value = record.get(field_meta.get('name'))
-                if not value:
-                    mapped[mapped_name] = ''
-                    continue
-                field_type = field_meta.get('type')
-                if field_type == 'text' and field_meta.get('truncate', True):
-                    value = self._shorten_around_match(value, term, max_nb_chars)
-
-                if field_meta.get('match'):
-                    skip_field, value, field_type = model._search_highlight_field(field_meta, value, term)
-                    if skip_field:
+            group_name = search_result.get("group_name")
+            group_key = search_result.get("model").replace('.', '_')
+            result_data = []
+            for record in search_result['results_data']:
+                model = request.env[search_result['model']]
+                mapping = record['_mapping']
+                mapped = {
+                    '_fa': record.get('_fa'),
+                }
+                for mapped_name, field_meta in mapping.items():
+                    value = record.get(field_meta.get('name'))
+                    if not value:
+                        mapped[mapped_name] = ''
                         continue
+                    field_type = field_meta.get('type')
+                    if field_type == 'text' and field_meta.get('truncate', True):
+                        value = self._shorten_around_match(value, term, max_nb_chars)
 
-                if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
-                    opt = {}
-                    if field_type == 'monetary':
-                        opt['display_currency'] = options['display_currency']
-                    value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
-                mapped[mapped_name] = escape(value)
-            result.append(mapped)
+                    if field_meta.get('match'):
+                        skip_field, value, field_type = model._search_highlight_field(field_meta, value, term)
+                        if skip_field:
+                            continue
+
+                    if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
+                        opt = {}
+                        if field_type == 'monetary':
+                            opt['display_currency'] = options['display_currency']
+                        elif field_type == 'float':
+                            opt['precision'] = field_meta.get('precision', 2)
+                        value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
+                    mapped[mapped_name] = escape(value)
+                result_data.append(mapped)
+
+            result[group_key] = {
+                "groupName": group_name,
+                "templateKey": search_result.get("template_key"),
+                "searchCount": search_result.get('count'),
+                "data": result_data,
+            }
 
         return {
             'results': result,
@@ -671,11 +687,6 @@ class Website(Home):
 
     def _get_page_search_options(self, **post):
         return {
-            'displayDescription': False,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
             'allowFuzzy': not post.get('noFuzzy'),
         }
 
@@ -684,7 +695,7 @@ class Website(Home):
         options = self._get_page_search_options(**kw)
         step = 50
         pages_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
-            "pages", search, limit=page * step, order='name asc, website_id desc, id',
+            "pages", search, offset=0, limit=page * step, order='name asc, website_id desc, id',
             options=options)
         pages = details[0].get('results', request.env['website.page'])
 
@@ -709,51 +720,62 @@ class Website(Home):
 
     def _get_hybrid_search_options(self, **post):
         return {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
             'allowFuzzy': not post.get('noFuzzy'),
         }
 
     @http.route([
         '/website/search',
-        '/website/search/page/<int:page>',
         '/website/search/<string:search_type>',
-        '/website/search/<string:search_type>/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=False, readonly=True)
-    def hybrid_list(self, page=1, search='', search_type='all', **kw):
+    def hybrid_list(self, search='', limit=24, search_type='all', **kw):
         if not search:
             return request.render("website.list_hybrid")
 
         options = self._get_hybrid_search_options(**kw)
-        data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=500, max_nb_chars=200, options=options)
+        data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=limit, offset=0, max_nb_chars=200, options=options)
 
         results = data.get('results', [])
-        search_count = len(results)
+        search_count = data.get('results_count', 0)
         parts = data.get('parts', {})
 
-        step = 50
-        pager = portal_pager(
-            url="/website/search/%s" % search_type,
-            url_args={'search': search},
-            total=search_count,
-            page=page,
-            step=step
-        )
-
-        results = results[(page - 1) * step:page * step]
-
         values = {
-            'pager': pager,
             'results': results,
             'parts': parts,
             'search': search,
+            'limit': limit,
             'fuzzy_search': data.get('fuzzy_search'),
             'search_count': search_count,
         }
         return request.render("website.list_hybrid", values)
+
+    @http.route('/website/load_more_search', type='jsonrpc', auth="public", website=True, readonly=True)
+    def load_more_search(self, search='', search_type='all', offset=0, limit=24, **kwargs):
+        """
+            Returns rendered HTML of next search results in website.list_hybrid
+
+            :param str search: search term written by the user
+            :param str search_type: indicates what to search within, 'all' matches all available types
+            :param int offset: number of results to skip, defaults to 0
+
+            :returns: tuple (html, has_more):
+                - html (str): rendered HTML of next search results
+                - has_more (bool): indicates if there are more results to load for offset
+        """
+        options = self._get_hybrid_search_options(**kwargs)
+        max_nb_chars = kwargs.get('max_nb_chars')
+        row_classes = kwargs.get('row_classes', {})
+        data = self.autocomplete(search_type=search_type, term=search, order='name asc', offset=offset, limit=limit, max_nb_chars=max_nb_chars, options=options)
+
+        bucket = next(iter(data.get("results").values()), {})
+        template_name = f"{bucket.get('templateKey')}_view"
+        has_more = bucket.get("searchCount") > offset + limit
+
+        values = {
+            'bucket': bucket,
+            'row_classes': row_classes,
+        }
+        html = self.env['ir.ui.view']._render_template(template_name, values)
+        return html, has_more
 
     # ------------------------------------------------------
     # Edit

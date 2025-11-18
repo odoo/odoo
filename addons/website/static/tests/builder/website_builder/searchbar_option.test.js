@@ -57,17 +57,6 @@ test("Available 'order by' options are updated after switching search type", asy
     expect(".o_popover[role=menu] [data-action-id='setOrderBy']").toHaveCount(2);
 });
 
-test("Switching search type changes data checkboxes", async () => {
-    await setupWebsiteBuilder(searchbarHTML("name asc"));
-    await contains(":iframe .search-query").click();
-    expect("[data-label='Search within'] button.o-dropdown").toHaveText("Pages");
-    expect(".form-check-input").toHaveCount(1);
-    await contains("[data-label='Search within'] button.o-dropdown").click();
-    await contains(".o_popover[role=menu] [data-action-value='/website/search']").click();
-    expect("[data-label='Search within'] button.o-dropdown").toHaveText("Everything");
-    expect(".form-check-input").toHaveCount(4);
-});
-
 test("Switching search type resets 'order by' option to default", async () => {
     await setupWebsiteBuilder(searchbarHTML("write_date asc"));
     await contains(":iframe .search-query").click();

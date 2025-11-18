@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website_forum.search_items_forum_post_view">
+    <t t-foreach="bucket['data']" t-as="result">
+        <div t-attf-class="#{row_classes}">
+            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex">
+                <div class="d-flex align-items-center flex-column">
+                    <t t-call="website.search_image_item_view"/>
+                    <span class="smaller" t-out="result['date']"/>
+                </div>
+                <div class="o_search_result_item_content px-2">
+                    <div class="fs-6 fw-bold" t-out="result['name']"/>
+                    <div id="o_search_item_matching_content">
+                        <p t-if="result.get('description')" class="o_line_clamp smaller"
+                            t-out="result['description']"/>
+                        <t t-out="result.get('tags')"/>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </t>
+</template>
+
+<template id="website_forum.search_items_forum_view">
+    <t t-foreach="bucket['data']" t-as="result">
+         <div t-attf-class="#{row_classes}">
+             <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                <t t-call="website.search_image_item_view"/>
+                <div class="o_search_result_item_content p-2">
+                    <div class="fs-6 fw-bold" t-out="result['name']"/>
+                    <div class="small" t-out="result['description']"/>
+                </div>
+            </a>
+        </div>
+    </t>
+</template>
+
+</odoo>

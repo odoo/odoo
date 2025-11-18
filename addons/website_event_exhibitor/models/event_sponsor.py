@@ -189,6 +189,8 @@ class EventSponsor(models.Model):
             'mapping': mapping,
             'icon': 'fa-black-tie',
             'order': order,
+            'template_key': 'website_event_exhibitor.search_items_event_sponsor',
+            'group_name': self.env._("Sponsors"),
         }
 
     # ------------------------------------------------------------

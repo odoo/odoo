@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_slides.search_items_slide_channels">
+        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+            <div t-attf-class="#{row_classes}">
+                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                    <t t-call="website.search_image_item"/>
+                    <div class="o_search_result_item_content">
+                        <div class="o_search_result_item_content d-flex p-2">
+                            <div class="flex-grow-1">
+                                <div class="fs-6 fw-bold" t-out="result['name']"/>
+                                <t t-if="result['rating_avg_stars']">
+                                    <t t-call="portal_rating.rating_stars_static">
+                                        <t t-set="val" t-value="result['rating_avg_stars']"/>
+                                        <t t-set="inline_mode" t-value="True"/>
+                                    </t>
+                                </t>
+                            </div>
+                            <div class="smaller align-items-center flex-shrink-0 m-auto">
+                                <span t-if="result['total_time']" t-out="result['total_time']"
+                                class="fw-bold bg-secondary p-1 rounded"/>
+                            </div>
+                        </div>
+                        <div id="o_search_item_matching_content">
+                            <div t-if="result['tags']" t-out="result['tags']" class="my-1"/>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website_slides.search_items_slide_slides">
+        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+            <div t-attf-class="#{row_classes}">
+                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                    <t t-call="website.search_image_item"/>
+                    <div class="o_search_result_item_content p-2">
+                        <div class="fs-6 fw-bold" t-out="result['name']"/>
+                        <button t-if="result['extra_link'].length"
+                            class="btn btn-link btn-sm text-start p-0"
+                            t-att-data-target="result['extra_link_url']"
+                            t-out="result['extra_link']"
+                        />
+                        <div t-if="result['tags']" t-out="result['tags']" class="mt-1"/>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </t>
+</templates>

@@ -29,11 +29,6 @@
         <span class="flex-grow-1 w-100">results</span>
     </BuilderRow>
 
-    <t t-if="this.getItemValue('limit_opt') > 0" t-foreach="this.displayItems" t-as="item" t-key="`${item.label}_${item.dataAttribute}_${item.dependency}`">
-        <BuilderRow label="item.label" t-if="this.isActiveItem(item.dependency)">
-            <BuilderCheckbox action="'setNonEmptyDataAttribute'" actionParam="item.dataAttribute" actionValue="'true'"/>
-        </BuilderRow>
-    </t>
     <BuilderRow label.translate="Style">
         <BuilderSelect action="'setSearchbarStyle'">
             <BuilderSelectItem actionParam="'default'">Default Input Style</BuilderSelectItem>

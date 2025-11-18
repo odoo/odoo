@@ -50,6 +50,7 @@ Featuring
         'views/website_slides_templates_profile.xml',
         'views/website_slides_templates_utils.xml',
         'views/website_pages_views.xml',
+        'views/website_searchbar_templates.xml',
         'views/slide_channel_add.xml',
         'wizard/slide_channel_invite_views.xml',
         'data/digest_data.xml',
@@ -94,6 +95,7 @@ Featuring
             'website_slides/static/src/xml/slide_course_prerequisite.xml',
             'website_slides/static/src/xml/slide_quiz.xml',
             'website_slides/static/src/js/public/**/*',
+            'website_slides/static/snippets/**/*.xml',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',

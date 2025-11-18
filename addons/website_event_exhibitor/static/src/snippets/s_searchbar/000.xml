@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_event_exhibitor.search_items_event_sponsor">
+        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+            <div t-attf-class="#{row_classes}">
+                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                    <t t-call="website.search_image_item"/>
+                    <div class="o_search_result_item_content p-2">
+                        <div class="h6 fw-bold mb-0" t-out="result['name']"/>
+                        <span t-out="result['description']" class="small"/>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </t>
+</templates>

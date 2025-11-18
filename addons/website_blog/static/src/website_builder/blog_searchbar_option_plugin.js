@@ -19,18 +19,6 @@ class BlogSearchbarOptionPlugin extends Plugin {
                 dependency: "search_blogs_opt",
             },
         ],
-        searchbar_option_display_items: [
-            {
-                label: _t("Description"),
-                dataAttribute: "displayDescription",
-                dependency: "search_blogs_opt",
-            },
-            {
-                label: _t("Publication Date"),
-                dataAttribute: "displayDetail",
-                dependency: "search_blogs_opt",
-            },
-        ],
     };
 }
 

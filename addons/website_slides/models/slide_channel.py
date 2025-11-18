@@ -1039,8 +1039,6 @@ class SlideChannel(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        with_date = options['displayDetail']
         my = options.get('my')
         search_tags = options.get('tag')
         slide_category = options.get('slide_category')
@@ -1060,20 +1058,16 @@ class SlideChannel(models.Model):
                 domain.append([('tag_ids', 'in', tags_.ids)])
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
-        search_fields = ['name', 'tag_ids.name']
-        fetch_fields = ['name', 'website_url', 'tag_ids']
+        search_fields = ['name', 'tag_ids.name', 'description_short']
+        fetch_fields = ['name', 'website_url', 'tag_ids', 'total_time', 'rating_avg_stars']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'total_time': {'name': 'total_time', 'type': 'text'},
+            'rating_avg_stars': {'name': 'rating_avg_stars', 'type': 'float', 'precision': 1},
+            'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
-        if with_description:
-            search_fields.append('description_short')
-            fetch_fields.append('description_short')
-            mapping['description'] = {'name': 'description_short', 'type': 'text', 'html': True, 'match': True}
-        if with_date:
-            fetch_fields.append('slide_last_update')
-            mapping['detail'] = {'name': 'slide_last_update', 'type': 'date'}
         return {
             'model': 'slide.channel',
             'base_domain': domain,
@@ -1081,12 +1075,20 @@ class SlideChannel(models.Model):
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-graduation-cap',
+            'template_key': 'website_slides.search_items_slide_channels',
+            'group_name': self.env._("Courses"),
+            'sequence': 90,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for channel, data in zip(self, results_data):
             data['tag_ids'] = channel.tag_ids.read(['name'])
+            data['image_url'] = '/web/image/slide.channel/%s/image_128' % data['id']
+            if data['total_time']:
+                h = int(data['total_time'])
+                m = round((data['total_time'] - h) * 60)
+                data['total_time'] = f"{h:2d}:{m:02d} h"
         return results_data
 
     def _get_placeholder_filename(self, field):

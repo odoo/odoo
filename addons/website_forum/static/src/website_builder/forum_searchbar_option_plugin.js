@@ -18,18 +18,6 @@ class ForumSearchbarOptionPlugin extends Plugin {
                 dependency: "search_forums_opt",
             },
         ],
-        searchbar_option_display_items: [
-            {
-                label: _t("Description"),
-                dataAttribute: "displayDescription",
-                dependency: "search_forums_opt",
-            },
-            {
-                label: _t("Date"),
-                dataAttribute: "displayDetail",
-                dependency: "search_forums_opt",
-            },
-        ],
     };
 }
 

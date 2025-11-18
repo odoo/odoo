@@ -211,7 +211,6 @@ class WebsitePage(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
         # Read access on website.page requires sudo.
         requires_sudo = True
         domain = [website.website_domain()]
@@ -229,16 +228,13 @@ class WebsitePage(models.Model):
                 [('group_ids', '=', False)], [('group_ids', 'in', self.env.user.group_ids.ids)]
             ]))
 
-        search_fields = ['name', 'url']
-        fetch_fields = ['id', 'name', 'url']
+        search_fields = ['name', 'url', 'arch_db']
+        fetch_fields = ['id', 'name', 'url', 'arch']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
+            'description': {'name': 'arch', 'type': 'text', 'html': True, 'match': True}
         }
-        if with_description:
-            search_fields.append('arch_db')
-            fetch_fields.append('arch')
-            mapping['description'] = {'name': 'arch', 'type': 'text', 'html': True, 'match': True}
         return {
             'model': 'website.page',
             'base_domain': domain,
@@ -247,10 +243,13 @@ class WebsitePage(models.Model):
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-file-o',
+            'template_key': 'website.search_items_page',
+            'group_name': self.env._("Pages"),
+            'sequence': 10,
         }
 
     @api.model
-    def _search_fetch(self, search_detail, search, limit, order):
+    def _search_fetch(self, search_detail, search, offset, limit, order):
         with_description = 'description' in search_detail['mapping']
         # Cannot rely on the super's _search_fetch because the search must be
         # performed among the most specific pages only.
@@ -296,7 +295,9 @@ class WebsitePage(models.Model):
                 return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
             return True
         results = results.filtered(lambda result: filter_page(search, result, results))
-        return results[:limit], len(results)
+        start = offset
+        end = offset + limit
+        return results[start:end], len(results)
 
     def action_page_debug_view(self):
         return {

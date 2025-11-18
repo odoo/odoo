@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+<t t-name="test_website.search_result_item_test_model">
+    <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+        <a t-att-href="result['website_url']" class="h-100 p-2 o_search_result_item">
+            <div class="o_search_result_item_content">
+                <div class="fs-6 fw-bold mb-0" t-out="result['name']"/>
+            </div>
+        </a>
+    </t>
+</t>
+
+</templates>

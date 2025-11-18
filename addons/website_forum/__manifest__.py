@@ -43,6 +43,7 @@ Ask questions, get answers, no distractions
         'views/forum_forum_templates_tools.xml',
         'views/forum_templates_mail.xml',
         'views/website_profile_templates.xml',
+        'views/website_searchbar_templates.xml',
 
         'security/ir.model.access.csv',
         'security/ir_rule_data.xml',
@@ -75,6 +76,7 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/xml/website_forum_tags_wrapper.xml',
             'website_forum/static/src/components/**/*',
             'website_forum/static/src/plugins/**/*',
+            'website_forum/static/src/snippets/**/*',
         ],
         'web.assets_unit_tests': [
             'website_forum/static/tests/interactions/**/*',

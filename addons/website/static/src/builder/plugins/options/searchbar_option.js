@@ -10,6 +10,5 @@ export class SearchbarOption extends BaseOptionComponent {
         this.getItemValue = useGetItemValue();
 
         this.orderByItems = this.getResource("searchbar_option_order_by_items");
-        this.displayItems = this.getResource("searchbar_option_display_items");
     }
 }

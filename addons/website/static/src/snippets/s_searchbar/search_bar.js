@@ -5,6 +5,7 @@ import { markup } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { getTemplate } from "@web/core/templates";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
 
 export class SearchBar extends Interaction {
     static selector = ".o_searchbar_form";
@@ -33,7 +34,7 @@ export class SearchBar extends Interaction {
         const orderByEl = this.el.querySelector(".o_search_order_by");
         const form = orderByEl.closest("form");
         this.order = orderByEl.value;
-        this.limit = parseInt(this.inputEl.dataset.limit) || 5;
+        this.limit = parseInt(this.inputEl.dataset.limit) || 6;
         this.wasEmpty = !this.inputEl.value;
         this.linkHasFocus = false;
         if (this.limit) {
@@ -41,10 +42,7 @@ export class SearchBar extends Interaction {
         }
         const dataset = this.inputEl.dataset;
         this.options = {
-            displayImage: dataset.displayImage && JSON.parse(dataset.displayImage),
-            displayDescription: dataset.displayDescription && JSON.parse(dataset.displayDescription),
-            displayExtraLink: dataset.displayExtraLink && JSON.parse(dataset.displayExtraLink),
-            displayDetail: dataset.displayDetail && JSON.parse(dataset.displayDetail),
+            searchType: dataset.searchType,
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
             allowFuzzy: !(dataset.noFuzzy && JSON.parse(dataset.noFuzzy)),
         };
@@ -89,6 +87,13 @@ export class SearchBar extends Interaction {
         this.render(null);
     }
 
+    getDisplayType() {
+        if (this.el.clientWidth > MEDIAS_BREAKPOINTS[SIZES.SM].maxWidth) {
+            return "columns";
+        }
+        return "list";
+    }
+
     async fetch() {
         const res = await rpc("/website/snippet/autocomplete", {
             search_type: this.searchType,
@@ -96,18 +101,25 @@ export class SearchBar extends Interaction {
             order: this.order,
             limit: this.limit,
             max_nb_chars: Math.round(
-                Math.max(this.autocompleteMinWidth, parseInt(this.el.clientWidth)) * 0.22
+                Math.max(
+                    this.autocompleteMinWidth,
+                    parseInt(this.el.clientWidth / (this.getDisplayType() === "columns" ? 3 : 1))
+                ) * 0.22
             ),
             options: this.options,
         });
-        const fieldNames = this.getFieldsNames();
-        res.results.forEach((record) => {
-            for (const fieldName of fieldNames) {
-                if (record[fieldName]) {
-                    record[fieldName] = markup(record[fieldName]);
+
+        const field_set = new Set(this.getFieldsNames());
+        for (const group in res.results) {
+            const data = res.results[group].data;
+            data.forEach((record) => {
+                for (const key in record) {
+                    if (field_set.has(key) && record[key]) {
+                        record[key] = markup(record[key]);
+                    }
                 }
-            }
-        });
+            });
+        }
         return res;
     }
 
@@ -120,7 +132,7 @@ export class SearchBar extends Interaction {
         }
         const prevMenuEl = this.menuEl;
         if (res && this.limit) {
-            const results = res["results"];
+            const results = res.results;
             let template = "website.s_searchbar.autocomplete";
             const candidate = template + "." + this.searchType;
             if (getTemplate(candidate)) {
@@ -131,10 +143,11 @@ export class SearchBar extends Interaction {
                 {
                     results: results,
                     parts: res["parts"],
-                    hasMoreResults: results.length < res["results_count"],
+                    limit: this.limit,
                     search: this.inputEl.value,
                     fuzzySearch: res["fuzzy_search"],
                     widget: this.options,
+                    displayType: this.getDisplayType(),
                 },
                 this.el
             )[0];

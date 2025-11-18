@@ -320,18 +320,15 @@ class ForumForum(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        search_fields = ['name', 'tag_ids.name']
-        fetch_fields = ['id', 'name', 'tag_ids']
+        search_fields = ['name', 'tag_ids.name', 'description']
+        fetch_fields = ['id', 'name', 'tag_ids', 'description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'description', 'type': 'text', 'truncate': True},
         }
-        if with_description:
-            search_fields.append('description')
-            fetch_fields.append('description')
-            mapping['description'] = {'name': 'description', 'type': 'text', 'match': True}
         return {
             'model': 'forum.forum',
             'base_domain': [website.website_domain()],
@@ -340,6 +337,9 @@ class ForumForum(models.Model):
             'mapping': mapping,
             'icon': 'fa-comments-o',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+            'template_key': 'website_forum.search_items_forum',
+            'group_name': self.env._("Forum"),
+            'sequence': 140,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
@@ -347,4 +347,5 @@ class ForumForum(models.Model):
         for forum, data in zip(self, results_data):
             data['website_url'] = forum.website_url
             data['tag_ids'] = forum.tag_ids.read(['name'])
+            data['image_url'] = 'web/image/forum.forum/%s/image_128' % data['id']
         return results_data

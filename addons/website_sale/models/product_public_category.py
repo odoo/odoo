@@ -170,17 +170,14 @@ class ProductPublicCategory(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        search_fields = ['name']
-        fetch_fields = ['id', 'name']
+        search_fields = ['name', 'website_description']
+        fetch_fields = ['id', 'name', 'parents_and_self']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
+            'breadcrumb': {'name': 'breadcrumb', 'type': 'text', 'truncate': False},
+            'image_url': {'name': 'image_url', 'type': 'html'},
         }
-        if with_description:
-            search_fields.append('website_description')
-            fetch_fields.append('website_description')
-            mapping['description'] = {'name': 'website_description', 'type': 'text', 'match': True, 'html': True}
         return {
             'model': 'product.public.category',
             'base_domain': [website.website_domain()],
@@ -189,12 +186,22 @@ class ProductPublicCategory(models.Model):
             'mapping': mapping,
             'icon': 'fa-folder-o',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+            'template_key': 'website_sale.search_items_product_category',
+            'group_name': self.env._("Categories"),
+            'sequence': 30,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        product_category_model = self.env['product.public.category']
         for data in results_data:
             data['url'] = '/shop/category/%s' % data['id']
+            data['image_url'] = '/web/image/product.public.category/%s/image_128' % data['id']
+            category_ids = data.get('parents_and_self', [])
+            if category_ids and len(category_ids) > 1:
+                category_names = product_category_model.browse(category_ids).mapped('name')
+                data['breadcrumb'] = " > ".join(category_names)
+
         return results_data
 
     @api.model

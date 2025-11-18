@@ -850,14 +850,15 @@ class ForumPost(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        with_date = options['displayDetail']
-        search_fields = ['name', 'tag_ids.name']
-        fetch_fields = ['id', 'name', 'website_url', 'tag_ids']
+        search_fields = ['name', 'tag_ids.name', 'content']
+        fetch_fields = ['id', 'name', 'tag_ids', 'website_url', 'content', 'write_date']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'content', 'type': 'text', 'html': True, 'match': True},
+            'date': {'name': 'write_date', 'type': 'date'},
+            'image_url': {'name': 'image_url', 'type': 'html'},
         }
 
         domain = website.website_domain()
@@ -898,13 +899,6 @@ class ForumPost(models.Model):
             parts = [part for part in order.split(',') if 'is_published' not in part]
             order = ','.join(parts)
 
-        if with_description:
-            search_fields.append('content')
-            fetch_fields.append('content')
-            mapping['description'] = {'name': 'content', 'type': 'text', 'html': True, 'match': True}
-        if with_date:
-            fetch_fields.append('write_date')
-            mapping['detail'] = {'name': 'date', 'type': 'html'}
         return {
             'model': 'forum.post',
             'base_domain': [domain],
@@ -913,15 +907,16 @@ class ForumPost(models.Model):
             'mapping': mapping,
             'icon': 'fa-comment-o',
             'order': order,
+            'template_key': 'website_forum.search_items_forum_post',
+            'group_name': self.env._("Forum Post"),
+            'sequence': 130,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        with_date = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for post, data in zip(self, results_data):
-            if with_date:
-                data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
             data['tag_ids'] = post.tag_ids.read(['name'])
+            data['image_url'] = self.env['website'].image_url(post.create_uid, 'avatar_128')
         return results_data
 
     def _get_related_posts(self, limit=5):

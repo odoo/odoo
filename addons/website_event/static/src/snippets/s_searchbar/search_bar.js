@@ -3,6 +3,6 @@ import { SearchBar } from "@website/snippets/s_searchbar/search_bar";
 
 patch(SearchBar.prototype, {
     getFieldsNames() {
-        return [...super.getFieldsNames(), "address_name"];
+        return [...super.getFieldsNames(), "address_name", "date_begin", "lowest_ticket_price"];
     }
 });

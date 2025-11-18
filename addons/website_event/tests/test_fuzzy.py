@@ -26,10 +26,6 @@ class TestWebsiteEventAutocomplete(TestAutoComplete):
             options = {
                 "allowFuzzy": True,
                 "display_currency": request.website.company_id.currency_id.id,
-                "displayDescription": True,
-                "displayDetail": False,
-                "displayExtraLink": True,
-                "displayImage": True,
                 "order": "name asc",
             }
             result = self.WebsiteController.autocomplete(

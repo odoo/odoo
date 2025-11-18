@@ -18,6 +18,7 @@
         'views/website_blog_components.xml',
         'views/website_blog_posts_loop.xml',
         'views/website_blog_templates.xml',
+        'views/website_searchbar_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
         'views/snippets/s_dynamic_snippet_blog_posts_preview_data.xml',
@@ -48,6 +49,7 @@
             'website_blog/static/src/interactions/**/*',
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/snippets/**/*.js',
+            'website_blog/static/src/snippets/**/*.xml',
         ],
         'website.assets_editor': [
             'website_blog/static/src/js/systray_items/*.js',

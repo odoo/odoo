@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_forum.search_items_forum_post">
+        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+            <div t-attf-class="#{row_classes}">
+                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex">
+                    <div class="d-flex align-items-center flex-column">
+                        <t t-call="website.search_image_item"/>
+                        <span t-out="result['date']" class="smaller mt-1"/>
+                    </div>
+                    <div class="o_search_result_item_content px-2">
+                        <div t-out="result['name']" class="fs-6 fw-bold"/>
+                        <div id="o_search_item_matching_content">
+                            <p t-if="result['description']" t-out="result['description']" class="o_line_clamp smaller"/>
+                            <t t-if="result['tags']" t-out="result['tags']"/>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website_forum.search_items_forum">
+        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+            <div t-attf-class="#{row_classes}">
+                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
+                    <t t-call="website.search_image_item"/>
+                    <div class="o_search_result_item_content p-2">
+                        <div class="fs-6 fw-bold" t-out="result['name']"/>
+                        <div class="small" t-out="result['description']"/>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website_forum.search_items_forum_tags">
+        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
+            <div t-attf-class="#{row_classes} p-2">
+                <a t-att-href="result['website_url']" class="o_cc o_cc1 text-decoration-none d-flex align-items-center">
+                    <t t-call="website.search_image_item"/>
+                    <div class="o_search_result_item_content p-2">
+                        <div class="fs-6 fw-bold" t-out="result['name']"/>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </t>
+</templates>

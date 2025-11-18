@@ -228,11 +228,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         **post,
     ):
         return {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
             'allowFuzzy': not post.get('noFuzzy'),
             'category': str(category.id) if category else None,
             'tags': tags,
@@ -246,6 +241,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _shop_lookup_products(self, options, post, search, website):
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = website._search_with_fuzzy("products_only", search,
+                                                                               offset=0,
                                                                                limit=None,
                                                                                order=self._get_search_order(post),
                                                                                options=options)
