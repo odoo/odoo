@@ -41,7 +41,7 @@ class CustomerPortal(portal.CustomerPortal):
             quantity = input_quantity
         else:
             number = -1 if remove else 1
-            quantity = order_line.product_uom_qty + number
+            quantity = max((order_line.product_uom_qty + number), 0)
 
         if order_line.product_type == 'combo':
             # for combo products, we update the quantities of the combo items too
