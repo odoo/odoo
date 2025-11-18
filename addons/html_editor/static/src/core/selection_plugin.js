@@ -175,6 +175,7 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['isSelectionInEditable'] } isSelectionInEditable
  * @property { SelectionPlugin['isNodeEditable'] } isNodeEditable
  * @property { SelectionPlugin['selectAroundNonEditable'] } selectAroundNonEditable
+ * @property { SelectionPlugin['selectElement'] } selectElement
  */
 
 /**
@@ -213,6 +214,7 @@ export class SelectionPlugin extends Plugin {
         "isSelectionInEditable",
         "isNodeEditable",
         "selectAroundNonEditable",
+        "selectElement",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -1127,5 +1129,19 @@ export class SelectionPlugin extends Plugin {
             ? [start, startOffset, end, endOffset]
             : [end, endOffset, start, startOffset];
         return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+    }
+
+    /**
+     * @param {Element} element
+     */
+    selectElement(element) {
+        const [anchorNode, anchorOffset] = leftPos(element);
+        const [focusNode, focusOffset] = rightPos(element);
+        this.setSelection({
+            anchorNode,
+            anchorOffset,
+            focusNode,
+            focusOffset,
+        });
     }
 }

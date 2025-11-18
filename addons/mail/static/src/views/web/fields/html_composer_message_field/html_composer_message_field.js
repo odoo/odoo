@@ -1,4 +1,4 @@
-import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
+import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
@@ -45,7 +45,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
         }
         if (!this.props.record.data.composition_batch) {
             config.Plugins = config.Plugins.filter(
-                (plugin) => !DYNAMIC_PLACEHOLDER_PLUGINS.includes(plugin)
+                (plugin) => !DYNAMIC_FIELD_PLUGINS.includes(plugin)
             );
         }
         config.onAttachmentChange = (attachment) => {

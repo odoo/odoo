@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import { delay } from "@web/core/utils/concurrency";
 
-registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
+registry.category("web_tour.tours").add("mail_template_dynamic_field_tour", {
     url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
@@ -122,38 +122,42 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             },
         },
         {
-            content: "Click on the the dynamic placeholder powerBox options",
-            trigger: "div.o-we-powerbox .o-we-command:contains(Dynamic Placeholder)",
+            content: "Click on the the dynamic field powerBox options",
+            trigger: "div.o-we-powerbox .o-we-command:contains(Field)",
             run: "click",
         },
         {
-            content: "Check if the dynamic placeholder popover is opened",
-            trigger: "div.o_model_field_selector_popover",
+            content: "Check if the dynamic field popover is opened",
+            trigger: "div.o-dynamic-field-popover",
             run: "click",
         },
         {
-            content: "filter the dph result",
+            content: "Select a model",
+            trigger: ".o_model_field_selector_value",
+            run: "click",
+        },
+        {
+            content: "Filter the field selector result",
             trigger: "div.o_model_field_selector_popover_search input[type='text']",
             run: "edit name",
         },
         {
-            content: "Click on the first entry of the dynamic placeholder",
+            content: "Click on the first entry of the dynamic field",
             trigger: 'div.o_model_field_selector_popover button:contains("Parent Name")',
             run: "click",
         },
         {
             content: "Enter a default value",
-            trigger:
-                'div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type="text"]',
+            trigger: 'div.o-dynamic-field-popover input[name="label_value"]',
             run: "edit defValue",
         },
         {
             content: "Click on the insert button",
-            trigger: "div.o_model_field_selector_popover button:first-child",
+            trigger: "div.o-dynamic-field-popover button:first-child",
             run: "click",
         },
         {
-            content: "Ensure the editable contain the dynamic placeholder t tag",
+            content: "Ensure the editable contain the dynamic field t tag",
             trigger: `.note-editable.odoo-editor-editable t[t-out="object.parent_name"]:contains("defValue")`,
         },
         {
@@ -180,39 +184,43 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             },
         },
         {
-            content: "Click on the the dynamic placeholder powerBox options",
-            trigger: "div.o-we-powerbox .o-we-command:contains(Dynamic Placeholder)",
+            content: "Click on the the dynamic field powerBox options",
+            trigger: "div.o-we-powerbox .o-we-command:contains(Field)",
             run: "click",
         },
         {
-            content: "Check if the dynamic placeholder popover is opened",
-            trigger: "div.o_model_field_selector_popover",
+            content: "Check if the dynamic field popover is opened",
+            trigger: "div.o-dynamic-field-popover",
             run: "click",
         },
         {
-            content: "filter the dph result",
+            content: "Select a model",
+            trigger: ".o_model_field_selector_value",
+            run: "click",
+        },
+        {
+            content: "Filter the field selector result",
             trigger: "div.o_model_field_selector_popover_search input[type='text']",
             run: "edit created on",
         },
         {
-            content: "Click on the first entry of the dynamic placeholder",
+            content: "Click on the first entry of the dynamic field",
             trigger:
                 'div.o_model_field_selector_popover li:first-child button:contains("Created on")',
             run: "click",
         },
         {
             content: "Enter a default value",
-            trigger:
-                "div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type='text']",
+            trigger: 'div.o-dynamic-field-popover input[name="label_value"]',
             run: "edit localTime",
         },
         {
             content: "Click on the insert button",
-            trigger: "div.o_model_field_selector_popover button:first-child:contains('Insert)",
+            trigger: "div.o-dynamic-field-popover button:first-child:contains('Update')",
             run: "click",
         },
         {
-            content: "Ensure the editable contain the dynamic placeholder t tag",
+            content: "Ensure the editable contain the dynamic field t tag",
             trigger: `.note-editable.odoo-editor-editable t[t-out="format_datetime(object.create_date, tz=object.partner_id.tz) or 'localTime'"]:contains("localTime")`,
         },
         {

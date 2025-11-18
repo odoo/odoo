@@ -9,6 +9,7 @@ import {
     getAdjacents,
     lastLeaf,
     getCommonAncestor,
+    traverseNode,
 } from "@html_editor/utils/dom_traversal";
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { insertTestHtml } from "../_helpers/editor";
@@ -335,5 +336,35 @@ describe("getCommonAncestor", () => {
 
         result = getCommonAncestor([span1, li1, ol], root);
         expect(result).toBe(root);
+    });
+});
+
+describe("traverseNode", () => {
+    test("should iterate over non-skipped children", () => {
+        const [root] = insertTestHtml(
+            unformat(`
+            <div id="a">
+                <div id="b" class="skip">
+                    <div id="c"></div>
+                    <div id="d"></div>
+                </div>
+                <div id="e">
+                    <div id="f"></div>
+                    <div id="g" class="skip">
+                        <div id="h"></div>
+                        <div id="i"></div>
+                    </div>
+                    <div id="j"></div>
+                </div>
+            </div>
+        `)
+        );
+
+        expect.verifySteps([]);
+        traverseNode(root, (node) => {
+            expect.step(node.id);
+            return !node.classList.contains("skip");
+        });
+        expect.verifySteps(["a", "b", "e", "f", "g", "j"]);
     });
 });
