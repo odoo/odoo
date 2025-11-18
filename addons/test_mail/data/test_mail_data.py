@@ -680,6 +680,102 @@ AAAAACwAAAAAAgACAAAEA3DJFQA7
 --001a11416b9e9b229a05272b7052--
 """
 
+MAIL_MULTIPART_IMAGE_WITH_SIGNATURE = """X-Original-To: raoul@example.com
+Delivered-To: micheline@example.com
+Received: by mail1.example.com (Postfix, from userid 99999)
+    id 9DFB7BF509; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on mail1.example.com
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=5.0 tests=FREEMAIL_FROM,
+    HTML_IMAGE_ONLY_08,HTML_MESSAGE,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
+    RCVD_IN_MSPIKE_WL,T_DKIM_INVALID autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-lf0-f44.example.com (mail-lf0-f44.example.com [209.85.215.44])
+    by mail1.example.com (Postfix) with ESMTPS id 1D80DBF509
+    for <micheline@example.com>; Thu, 17 Dec 2015 15:22:56 +0100 (CET)
+Authentication-Results: mail1.example.com; dkim=pass
+    reason="2048-bit key; unprotected key"
+    header.d=example.com header.i=@example.com header.b=kUkTIIlt;
+    dkim-adsp=pass; dkim-atps=neutral
+Received: by mail-lf0-f44.example.com with SMTP id z124so47959461lfa.3
+        for <micheline@example.com>; Thu, 17 Dec 2015 06:22:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=example.com; s=20120113;
+        h=mime-version:date:message-id:subject:from:to:content-type;
+        bh=GdrEuMrz6vxo/Z/F+mJVho/1wSe6hbxLx2SsP8tihzw=;
+        b=kUkTIIlt6fe4dftKHPNBkdHU2rO052o684R0e2bqH7roGUQFb78scYE+kqX0wo1zlk
+         zhKPVBR1TqTsYlqcHu+D3aUzai7L/Q5m40sSGn7uYGkZJ6m1TwrWNqVIgTZibarqvy94
+         NWhrjjK9gqd8segQdSjCgTipNSZME4bJCzPyBg/D5mqe07FPBJBGoF9SmIzEBhYeqLj1
+         GrXjb/D8J11aOyzmVvyt+bT+oeLUJI8E7qO5g2eQkMncyu+TyIXaRofOOBA14NhQ+0nS
+         w5O9rzzqkKuJEG4U2TJ2Vi2nl2tHJW2QPfTtFgcCzGxQ0+5n88OVlbGTLnhEIJ/SYpem
+         O5EA==
+MIME-Version: 1.0
+X-Received: by 10.25.167.197 with SMTP id q188mr22222517lfe.129.1450362175493;
+ Thu, 17 Dec 2015 06:22:55 -0800 (PST)
+Received: by 10.25.209.145 with HTTP; Thu, 17 Dec 2015 06:22:55 -0800 (PST)
+Date: Thu, 17 Dec 2015 15:22:55 +0100
+Message-ID: <CAP76m_UB=aLqWEFccnq86AhkpwRB3aZoGL9vMffX7co3YEro_A@mail.gmail.com>
+Subject: {subject}
+From: =?UTF-8?Q?Thibault_Delavall=C3=A9e?= <raoul@example.com>
+To: {to}
+Content-Type: multipart/related; boundary=001a11416b9e9b229a05272b7052
+
+--001a11416b9e9b229a05272b7052
+Content-Type: multipart/alternative; boundary=001a11416b9e9b229805272b7051
+
+--001a11416b9e9b229805272b7051
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">
+<div>Seconde image, rosa=C3=A7=C3=A9e.</div>
+<div><img src=3D"cid:ii_2_expected" alt=3D"Inline image 2" width=3D"2" height=3D"2"></div>
+<div><br></div>
+<div>J&#39;espere que tout se passera bien.</div>
+-- <br>
+<div class=3D"gmail_signature">
+Thibault Delavallee
+<div><br></div>
+<div>Seconde image, rosa=C3=A7=C3=A9e.</div>
+<div><img src=3D"cid:ii_2_expected" alt=3D"Inline image 2" width=3D"2" height=3D"2"></div>
+<div><br></div>
+<div>Troisieme image, verte!=C2=B5</div>
+<div><img src=3D"cid:ii_3_not_expected" alt=3D"Inline image 3" width=3D"10" height=3D"10"><br></div>
+<div><br></div>
+</div>
+
+</div>
+
+--001a11416b9e9b229805272b7051--
+--001a11416b9e9b229a05272b7052
+Content-Type: image/gif; name="=?UTF-8?B?ZW1iZWRkZWQtYXR0YWNobWVudC0xLWJvZHlBbmRTaWduYXR1cmU==?="
+Content-Disposition: inline; filename="=?UTF-8?B?ZW1iZWRkZWQtYXR0YWNobWVudC0xLWJvZHlBbmRTaWduYXR1cmU==?="
+Content-Transfer-Encoding: base64
+Content-ID: <ii_1_expected>
+X-Attachment-Id: ii_1_expected
+
+R0lGODdhAgACALMAAAAAAP///wAAAP//AP8AAP+AAAD/AAAAAAAA//8A/wAAAAAAAAAAAAAAAAAA
+AAAAACwAAAAAAgACAAAEA7DIEgA7
+--001a11416b9e9b229a05272b7052
+Content-Type: image/gif; name="=?UTF-8?B?ZW1iZWRkZWQtYXR0YWNobWVudC0zLXNpZ25hdHVyZQ==?="
+Content-Disposition: inline; filename="=?UTF-8?B?ZW1iZWRkZWQtYXR0YWNobWVudC0zLXNpZ25hdHVyZQ==?="
+Content-Transfer-Encoding: base64
+Content-ID: <ii_3_not_expected>
+X-Attachment-Id: ii_3_not_expected
+
+R0lGODlhCgAKALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD/
+/////ywAAAAACgAKAAAEClDJSau9OOvNe44AOw==
+--001a11416b9e9b229a05272b7052
+Content-Type: image/gif; name="=?UTF-8?B?ZW1iZWRkZWQtYXR0YWNobWVudC0yLWF0dGFjaGVk==?="
+Content-Disposition: inline; filename="=?UTF-8?B?ZW1iZWRkZWQtYXR0YWNobWVudC0yLWF0dGFjaGVk==?="
+Content-Transfer-Encoding: base64
+Content-ID: <ii_2_expected>
+X-Attachment-Id: ii_2_expected
+
+R0lGODdhAgACALMAAAAAAP///wAAAP//AP8AAP+AAAD/AAAAAAAA//8A/wAAAP+AgAAAAAAAAAAA
+AAAAACwAAAAAAgACAAAEA3DJFQA7
+--001a11416b9e9b229a05272b7052--
+"""
+
 MAIL_EML_ATTACHMENT = """Subject: {subject}
 From: {email_from}
 To: {to}

@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="ir_attachment_view_search_inherit_mail" model="ir.ui.view">
+            <field name="name">ir.attachment.search.inherit.mail</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="base.view_attachment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='binary_filter']" position="after">
+                    <filter name="quote_attachments" string="Quote Attachments" domain="[('quote_attachment', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

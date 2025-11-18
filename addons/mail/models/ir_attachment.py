@@ -4,6 +4,7 @@ import contextlib
 
 from odoo import _, models, fields, api
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
 from odoo.tools.misc import limited_field_access_token, verify_limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
@@ -13,6 +14,8 @@ class IrAttachment(models.Model):
 
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
+    quote_attachment = fields.Boolean('Quote attachments are hidden in \
+        thread attachment lists unless specifically called upon', default=False)
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):
@@ -47,6 +50,13 @@ class IrAttachment(models.Model):
         """
         super()._post_add_create(**kwargs)
         self.register_as_main_attachment(force=False)
+
+    def _search(self, domain, *args, **kwargs):
+        domain = Domain(domain)
+        if self.env.context.get('hide_quote_attachments') and not any(d.field_expr in ('id', 'quote_attachment') for d in domain.iter_conditions()):
+            # if domain doesn't have quote_attachment field, exclude it from search results
+            domain &= Domain('quote_attachment', '=', False)
+        return super()._search(domain, *args, **kwargs)
 
     def register_as_main_attachment(self, force=True):
         """ Registers this attachment as the main one of the model it is
