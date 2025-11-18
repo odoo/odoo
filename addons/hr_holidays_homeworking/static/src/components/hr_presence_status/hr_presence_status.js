@@ -3,8 +3,6 @@ import { patch } from "@web/core/utils/patch";
 
 import { HrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
 import { HrPresenceStatusPrivate } from "@hr/components/hr_presence_status_private/hr_presence_status_private";
-import { HrPresenceStatusPill } from "@hr/components/hr_presence_status_pill/hr_presence_status_pill";
-import { HrPresenceStatusPrivatePill } from "@hr/components/hr_presence_status_private_pill/hr_presence_status_private_pill";
 
 const patchHrPresenceStatus = () => ({
     get color() {
@@ -62,30 +60,6 @@ const patchHrPresenceStatus = () => ({
 patch(HrPresenceStatus.prototype, patchHrPresenceStatus());
 patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 
-const patchHrPresenceStatusPill = () => ({
-    get color() {
-        if (this.value?.includes("holiday")) {
-            return this.value === "presence_holiday_present"
-                ? "btn-outline-success"
-                : "btn-outline-warning";
-        }
-        else if (this.location) {
-            let color = "btn-outline-secondary text-muted";
-            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
-                color =
-                    this.props.record.data.hr_presence_state === "present"
-                        ? "btn-outline-success"
-                        : "btn-outline-warning";
-            }
-            return color;
-        }
-        return super.color;
-    },
-});
-
-patch(HrPresenceStatusPill.prototype, patchHrPresenceStatusPill);
-patch(HrPresenceStatusPrivatePill.prototype, patchHrPresenceStatusPill);
-
 const patchHrPresenceStatusPrivate = () => ({
     get label() {
         return this.props.record.data.current_leave_id
@@ -106,4 +80,3 @@ const patchHrPresenceStatusPrivate = () => ({
 });
 
 patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatusPrivate());
-patch(HrPresenceStatusPrivatePill.prototype, patchHrPresenceStatusPrivate());
