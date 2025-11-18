@@ -8,15 +8,17 @@ import {
     contains,
     inputFiles,
     insertText,
+    mockGetMedia,
     onRpcBefore,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -68,6 +70,52 @@ test("The name of the conversation changes based on the agents' names", async ()
         partner_ids: [secondAgent],
     });
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp, James" });
+});
+
+test("Portal users should not be able to start a call", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+    const joelUid = pyEnv["res.users"].create({
+        name: "Joel",
+        share: true,
+        login: "joel",
+        password: "joel",
+    });
+    const joelPid = pyEnv["res.partner"].create({
+        name: "Joel",
+        user_ids: [joelUid],
+    });
+    pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
+    await start({ authenticateAs: { login: "joel", password: "joel" } });
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow-header:text('MitchellOp')");
+    await insertText(".o-mail-Composer-input", "Hello MitchellOp!");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Message[data-persistent]:contains('Hello MitchellOp!')");
+    await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button", { count: 2 });
+    await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title='Fold']");
+    await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title*='Close']");
+    await contains(".o-discuss-Call", { count: 0 });
+    // simulate operator starts call
+    const [channelId] = pyEnv["discuss.channel"].search([
+        ["channel_type", "=", "livechat"],
+        [
+            "channel_member_ids",
+            "in",
+            pyEnv["discuss.channel.member"].search([["partner_id", "=", joelPid]]),
+        ],
+    ]);
+    await withUser(serverState.userId, () =>
+        rpc("/mail/rtc/channel/join_call", { channel_id: channelId }, { silent: true })
+    );
+    await contains(".o-discuss-Call button", { count: 2 });
+    await contains(".o-discuss-Call button[title='Join Video Call']");
+    await contains(".o-discuss-Call button[title='Join Call']");
+    // still same actions in header
+    await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button", { count: 2 });
+    await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title='Fold']");
+    await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title*='Close']");
 });
 
 test("avatar url contains access token for non-internal users", async () => {
