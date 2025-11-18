@@ -6268,7 +6268,7 @@ class BaseModel(metaclass=MetaModel):
 
         # then traverse dependencies backwards, and proceed recursively
         for field, subtree in tree.items():
-            if create and field.type in ('many2one', 'many2one_reference'):
+            if create and field.type in ('many2one', 'many2one_reference') and field.store:
                 # upon creation, no other record has a reference to self
                 continue
 
