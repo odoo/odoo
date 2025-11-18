@@ -42,7 +42,7 @@ export class NumberPopup extends Component {
     }
 
     get confirmButtonLabel() {
-        return this.props.confirmButtonLabel || _t("Ok");
+        return this.props.confirmButtonLabel || _t("Confirm");
     }
 
     confirm() {
