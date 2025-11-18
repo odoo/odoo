@@ -514,6 +514,7 @@ class AccountPartialReconcile(models.Model):
         for move_values in tax_cash_basis_values_per_move.values():
             move = move_values['move']
             pending_cash_basis_lines = []
+            amount_residual_per_tax_line = {line.id: line.amount_residual_currency for line_type, line in move_values['to_process_lines'] if line_type == 'tax'}
 
             for partial_values in move_values['partials']:
                 partial = partial_values['partial']
@@ -553,8 +554,13 @@ class AccountPartialReconcile(models.Model):
                             move_values['is_fully_paid']
                             or line.currency_id.compare_amounts(abs(line.amount_residual_currency), abs(amount_currency)) < 0
                         )
+                        and partial_values == move_values['partials'][-1]
                     ):
-                        amount_currency = line.amount_residual_currency
+                        # If the move is supposed to be fully paid, and we're on the last partial for it,
+                        # put the remaining amount to avoid rounding issues
+                        amount_currency = amount_residual_per_tax_line[line.id]
+                    if caba_treatment == 'tax':
+                        amount_residual_per_tax_line[line.id] -= amount_currency
                     balance = partial_values['payment_rate'] and amount_currency / partial_values['payment_rate'] or 0.0
 
                     # ==========================================================================
