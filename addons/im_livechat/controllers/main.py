@@ -200,10 +200,10 @@ class LivechatController(http.Controller):
     @http.route("/im_livechat/email_livechat_transcript", type="jsonrpc", auth="user")
     @add_guest_to_context
     def email_livechat_transcript(self, channel_id, email):
+        if not request.env.user._is_internal():
+            raise NotFound()
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
-            channel._email_livechat_transcript(
-                email if not request.env.user.share else request.env.user.email,
-            )
+            channel._email_livechat_transcript(email)
 
     @http.route("/im_livechat/download_transcript/<int:channel_id>", type="http", auth="public")
     @add_guest_to_context
