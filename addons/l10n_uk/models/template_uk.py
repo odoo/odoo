@@ -39,14 +39,14 @@ class AccountChartTemplate(models.AbstractModel):
         """If the company is located in Northern Ireland, activate the relevant taxes and fiscal postions."""
         result = super()._post_load_data(template_code, company, template_data)
 
-        is_ni = {
+        is_ni_state = {
             'base.state_uk18', 'base.state_uk19', 'base.state_uk20', 'base.state_uk21',
             'base.state_uk22', 'base.state_uk23', 'base.state_uk24',
         }.intersection(
             company.state_id._get_external_ids().get(company.state_id.id, [])
         )
 
-        if is_ni:
+        if is_ni_state or company.country_id.code == 'XI':
             for xmlid in ['PT8', 'ST4', 'PT7', 'account_fiscal_position_ni_to_eu_b2b']:
                 self.ref(xmlid).active = True
 
