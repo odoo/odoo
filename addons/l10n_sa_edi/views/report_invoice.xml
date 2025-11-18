@@ -46,6 +46,7 @@
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('col-4')]//span[@t-if=&quot;o.move_type == &apos;out_invoice&apos; and o.state == &apos;posted&apos;&quot;]" position="replace">
+                <!-- DEPRECATED - to be removed in master  -->
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                     <t t-if="o._l10n_sa_is_simplified()">
                         Simplified Tax Invoice
@@ -56,6 +57,7 @@
                 </span>
             </xpath>
             <xpath expr="//div[hasclass('col-4')][3]//span[@t-if=&quot;o.move_type == &apos;out_invoice&apos; and o.state == &apos;posted&apos;&quot;]" position="replace">
+                <!-- DEPRECATED - to be removed in master -->
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                     <t t-if="o._l10n_sa_is_simplified()">
                         فاتورة ضريبية مبسطة
