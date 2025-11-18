@@ -203,6 +203,7 @@ class Delivery(WebsiteSale):
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
+        order_sudo._recompute_taxes()
 
         sorted_delivery_methods = sorted([{
             'id': dm.id,
@@ -224,7 +225,12 @@ class Delivery(WebsiteSale):
             order_sudo._set_delivery_method(cheapest_dm)
 
         # Return the list of delivery methods available for the sales order.
-        return {'delivery_methods': sorted_delivery_methods}
+        return {
+            'delivery_methods': sorted_delivery_methods,
+            'adjusted_minor_amount': payment_utils.to_minor_currency_units(
+                order_sudo.amount_total, order_sudo.currency_id
+            ),
+        }
 
     @classmethod
     def _get_delivery_methods_express_checkout(cls, order_sudo):
