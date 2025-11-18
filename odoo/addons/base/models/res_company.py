@@ -52,9 +52,7 @@ class ResCompany(models.Model):
     company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
     is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
-    # logo_web: do not store in attachments, since the image is retrieved in SQL for
-    # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
-    logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
+    logo_web = fields.Binary(compute='_compute_logo_web', store=True)
     uses_default_logo = fields.Boolean(compute='_compute_uses_default_logo', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._default_currency_id())
     user_ids = fields.Many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', string='Accepted Users')
