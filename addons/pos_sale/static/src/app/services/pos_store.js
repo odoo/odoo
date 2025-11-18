@@ -4,7 +4,7 @@ import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_p
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
+import { enhancedButtons, DECIMAL } from "@point_of_sale/app/components/numpad/numpad";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
@@ -256,10 +256,23 @@ patch(PosStore.prototype, {
             });
             return;
         }
+        const colorClassMap = {
+            [DECIMAL.value]: "o_colorlist_item_numpad_color_6",
+            Backspace: "o_colorlist_item_numpad_color_1",
+            "+10": "o_colorlist_item_numpad_color_10",
+            "+20": "o_colorlist_item_numpad_color_10",
+            "+50": "o_colorlist_item_numpad_color_10",
+            "-": "o_colorlist_item_numpad_color_3",
+        };
+
         const payload = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Down Payment"),
             subtitle: _t("Due balance: %s", this.env.utils.formatCurrency(saleOrder.amount_unpaid)),
-            buttons: enhancedButtons(),
+            buttons: enhancedButtons().map((button) => ({
+                ...button,
+                class: `${colorClassMap[button.value] || ""}`,
+            })),
+            confirmButtonLabel: _t("Apply"),
             formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
             feedback: (buffer) =>
                 isPercentage && buffer
