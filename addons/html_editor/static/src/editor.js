@@ -50,6 +50,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
  * @property { Editor['getResource'] } getResource
  * @property { Editor['dispatchTo'] } dispatchTo
  * @property { Editor['delegateTo'] } delegateTo
+ * @property { Editor['processThrough'] } processThrough
  */
 
 /**
@@ -269,6 +270,7 @@ export class Editor {
             getResource: this.getResource.bind(this),
             dispatchTo: this.dispatchTo.bind(this),
             delegateTo: this.delegateTo.bind(this),
+            processThrough: this.processThrough.bind(this),
         };
     }
 
@@ -329,6 +331,35 @@ export class Editor {
      */
     delegateTo(resourceId, ...args) {
         return this.getResource(resourceId).some((fn) => fn(...args));
+    }
+
+    /**
+     * Execute a series of functions that each process an item, and return its
+     * final value.
+     *
+     * This function is meant to enhance code readability by clearly expressing
+     * its intent.
+     *
+     * An item is processed by each processor in sequence, each processor
+     * returning the new value of the item. If a processor returns a falsy
+     * value, the item remains unchanged.
+     *
+     * Example:
+     * ```js
+     * const processedItem = this.processThrough("my_item_processors", item, arg1, arg2);
+     * ```
+     *
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @param {Parameters<GlobalResources[R][0]>[0]} item The item to process.
+     * @param  {Parameters<GlobalResources[R][0]>} args The other arguments to pass to the processors.
+     * @returns {Parameters<GlobalResources[R][0]>[0]} The processed value of the item.
+     */
+    processThrough(resourceId, item, ...args) {
+        this.getResource(resourceId).forEach((processor) => {
+            item = processor(item, ...args) || item;
+        });
+        return item;
     }
 
     getContent() {

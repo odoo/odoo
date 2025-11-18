@@ -157,17 +157,17 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @typedef {((step: HistoryStep) => boolean)[]} unreversible_step_predicates
  *
  * @typedef {((
+ *    value: string,
  *    arg: {
  *      target: Node,
  *      attributeName: string,
  *      oldValue: string,
- *      value: string,
  *      reverse: boolean,
  *    },
  *    options: { forNewStep: boolean }
  *  ) => void)[]} attribute_change_processors
  * @typedef {((step: HistoryStep) => HistoryStep)[]} history_step_processors
- * @typedef {((node: Node, childTreesToSerialize: Tree[]) => Tree[])[]} serializable_descendants_processors
+ * @typedef {((childTreesToSerialize: Tree[], node: Node) => Tree[])[]} serializable_descendants_processors
  * @typedef {((node: Node, attributeName: string, attributeValue: string) => boolean)[]} set_attribute_overrides
  */
 
@@ -355,10 +355,7 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryStep } step
      */
     processHistoryStep(step) {
-        for (const fn of this.getResource("history_step_processors")) {
-            step = fn(step);
-        }
-        return step;
+        return this.processThrough("history_step_processors", step);
     }
 
     enableObserver() {
@@ -1420,19 +1417,17 @@ export class HistoryPlugin extends Plugin {
                 case "attributes": {
                     const node = this.nodeMap.getNode(mutation.nodeId);
                     if (node) {
-                        let value = mutation.value;
-                        for (const cb of this.getResource("attribute_change_processors")) {
-                            value = cb(
-                                {
-                                    target: node,
-                                    attributeName: mutation.attributeName,
-                                    oldValue: mutation.oldValue,
-                                    value,
-                                    reverse,
-                                },
-                                { forNewStep }
-                            );
-                        }
+                        const { value } = this.processThrough(
+                            "attribute_change_processors",
+                            {
+                                target: node,
+                                attributeName: mutation.attributeName,
+                                oldValue: mutation.oldValue,
+                                value: mutation.value,
+                                reverse,
+                            },
+                            { forNewStep }
+                        );
                         this.setAttribute(node, mutation.attributeName, value);
                     }
                     break;
@@ -1875,10 +1870,11 @@ export class HistoryPlugin extends Plugin {
         if (node.nodeType === Node.TEXT_NODE) {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            let childTreesToSerialize = tree.children;
-            for (const cb of this.getResource("serializable_descendants_processors")) {
-                childTreesToSerialize = cb(node, childTreesToSerialize);
-            }
+            const childTreesToSerialize = this.processThrough(
+                "serializable_descendants_processors",
+                tree.children,
+                node
+            );
             result.tagName = node.tagName;
             result.attributes = Object.fromEntries(
                 [...node.attributes].map((attr) => [attr.name, attr.value])

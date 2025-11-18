@@ -54,6 +54,8 @@ export class BuilderAction {
         this.dispatchTo = context.dispatchTo;
         /** @type { EditorContext['delegateTo'] } **/
         this.delegateTo = context.delegateTo;
+        /** @type { EditorContext['processThrough'] } **/
+        this.processThrough = context.processThrough;
 
         this.setup();
 

@@ -613,9 +613,10 @@ export class FontPlugin extends Plugin {
         if (block.nodeName !== "PRE") {
             return insertContainer;
         }
-        for (const cb of this.getResource("before_insert_within_pre_processors")) {
-            insertContainer = cb(insertContainer);
-        }
+        insertContainer = this.processThrough(
+            "before_insert_within_pre_processors",
+            insertContainer
+        );
         const isDeepestBlock = (node) =>
             isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
         let linebreak;

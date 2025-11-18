@@ -78,11 +78,11 @@ export class EmbeddedComponentPlugin extends Plugin {
     /**
      * @typedef {import("@html_editor/core/history_plugin").Tree} Tree
      *
-     * @param {Node} elem
      * @param {Tree[]} serializableDescendants
+     * @param {Node} elem
      * @returns {Tree[]}
      */
-    processDescendantsToSerialize(elem, serializableDescendants) {
+    processDescendantsToSerialize(serializableDescendants, elem) {
         const embedding = this.getEmbedding(elem);
         if (!embedding) {
             return serializableDescendants;
@@ -151,7 +151,8 @@ export class EmbeddedComponentPlugin extends Plugin {
                 });
             }
         }
-        return newAttributeValue || attributeValue;
+        attributeChange.value = newAttributeValue || attributeValue;
+        return attributeChange;
     }
 
     getStateChangeManager(host) {
