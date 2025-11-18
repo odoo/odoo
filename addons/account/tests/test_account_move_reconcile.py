@@ -5970,3 +5970,97 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         # Check that there is two exchanges for the two partials
         self.assertEqual(len(partials.mapped('exchange_move_id')), 2)
+
+    def test_reconcile_cash_basis_payment_term_full_amount(self):
+        """ Test cash basis accounting with a payment term with multiple installments but paying full amount.
+        When creating a payment for the full amount instead of the first installment,
+        the cash basis entries should have proportional tax amounts.
+        """
+        self.env.company.tax_exigibility = True
+
+        # Create invoice with cash basis tax and payment term
+        product = self._create_product(
+            lst_price=100.0,
+            taxes_id=self.cash_basis_tax_a_third_amount,
+        )
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            invoice_payment_term_id=self.pay_terms_b,
+            post=True,
+        )
+
+        # Pay full amount instead of just the first 30%
+        payments = self._register_payment(invoice, payment_date='2016-01-01', amount=invoice.amount_total, group_payment=False)
+        self.assertEqual(len(payments), 1)
+
+        tax_cash_basis_moves = self._get_caba_moves(invoice)
+        self.assertEqual(len(tax_cash_basis_moves), 2)
+        self.assertRecordValues(tax_cash_basis_moves.line_ids.sorted(), [
+            # Invoice - 70%
+            {'balance': 70.0},
+            {'balance': -70.0},
+            {'balance': 23.33},
+            {'balance': -23.33},
+
+            # Invoice - 30%
+            {'balance': 30.0},
+            {'balance': -30.0},
+            {'balance': 10.0},
+            {'balance': -10.0},
+        ])
+
+    def test_reconcile_cash_basis_payment_term_full_amount_two_invoices(self):
+        """ Test cash basis accounting with a payment term with multiple installments but paying full amount on 2
+        invoices at the same time
+        """
+        self.env.company.tax_exigibility = True
+
+        # Create invoice with cash basis tax and payment term
+        product = self._create_product(
+            lst_price=100.0,
+            taxes_id=self.cash_basis_tax_a_third_amount,
+        )
+        invoices = (
+            self._create_invoice_one_line(
+                product_id=product,
+                invoice_payment_term_id=self.pay_terms_b,
+                post=True,
+            )
+            | self._create_invoice_one_line(
+                product_id=product,
+                invoice_payment_term_id=self.pay_terms_b,
+                post=True,
+            )
+        )
+
+        # Pay full amount instead of just the first 30%
+        payments = self._register_payment(invoices, payment_date='2016-01-01', amount=sum(invoices.mapped('amount_total')), group_payment=False)
+        self.assertEqual(len(payments), 2)
+
+        tax_cash_basis_moves = self._get_caba_moves(invoices)
+        self.assertEqual(len(tax_cash_basis_moves), 4)
+        self.assertRecordValues(tax_cash_basis_moves.line_ids.sorted(), [
+            # Invoice 1 - 70%
+            {'balance': 70.0},
+            {'balance': -70.0},
+            {'balance': 23.33},
+            {'balance': -23.33},
+
+            # Invoice 1 - 30%
+            {'balance': 30.0},
+            {'balance': -30.0},
+            {'balance': 10.0},
+            {'balance': -10.0},
+
+            # Invoice 2 - 70%
+            {'balance': 70.0},
+            {'balance': -70.0},
+            {'balance': 23.33},
+            {'balance': -23.33},
+
+            # Invoice 2 - 30%
+            {'balance': 30.0},
+            {'balance': -30.0},
+            {'balance': 10.0},
+            {'balance': -10.0},
+        ])
