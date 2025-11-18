@@ -98,7 +98,15 @@ class HrAttendanceOvertimeRule(models.Model):
     ], default='work_days')
     timing_start = fields.Float("From", default=0)
     timing_stop = fields.Float("To", default=24)
-    expected_hours_from_contract = fields.Boolean("Hours from employee schedule", default=True)
+    expected_hours_from_contract = fields.Boolean(
+        string="Hours from employee schedule",
+        default=True,
+        help=(
+            "The attendance can go into negative extra hours to\n"
+            "represent the missing hours compared to what is expected.\n"
+            "It will not work if the employee doesn't have a 'Working Schedule'."
+        ),
+    )
 
     resource_calendar_id = fields.Many2one(
         'resource.calendar',
