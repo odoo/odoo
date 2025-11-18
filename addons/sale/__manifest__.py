@@ -2,6 +2,7 @@
 
 {
     'name': 'Sales',
+    'version': '1.2',
     'category': 'Sales/Sales',
     'summary': 'Sales internal machinery',
     'description': """
