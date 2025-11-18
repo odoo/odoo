@@ -1116,7 +1116,7 @@
                                          groups="base.group_multi_currency"
                                          class="d-flex flex-column mx-3 text-center"
                                          style="width: 6ch;"
-                                         invisible="move_type == 'entry'">
+                                         invisible="move_type == 'entry' or not show_journal">
                                         <div>in</div>
                                         <div class="d-flex flex-column justify-content-center flex-grow-1"
                                              invisible="state != 'draft' or invoice_currency_rate == expected_currency_rate">
@@ -1144,8 +1144,16 @@
                                             <span>1</span>
                                             <field name="company_currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
                                             <span>=</span>
-                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="state != 'draft'"/>
+                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="state != 'draft'" style="max-width: 21ch;"/>
                                             <field name="currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
+                                            <div
+                                             invisible="show_journal or state != 'draft' or invoice_currency_rate == expected_currency_rate">
+                                            <button type="object"
+                                                    name="refresh_invoice_currency_rate"
+                                                    icon="fa-refresh"
+                                                    title="Reset the currency rate to the default accordingly to the invoice date"
+                                                    class="btn btn-link p-0"/>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
