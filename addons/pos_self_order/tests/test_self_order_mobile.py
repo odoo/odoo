@@ -315,3 +315,48 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         self.start_tour(self_route, "test_self_order_table_sharing-meal_mode")
+
+    def test_pos_self_order_table_transfer(self):
+        """
+        Verify that transferring a POS order to a new table clears
+        `self_ordering_table_id`, preventing the order from remaining linked
+        to the original self-order table.
+        """
+
+        self.browser_size = '1366x768'
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'meal',
+            'self_ordering_service_mode': 'table',
+            'floor_ids': [(6, 0, [self.pos_main_floor.id])],
+        })
+
+        self.pos_main_floor.write({
+            'table_ids': [(0, 0, {
+                'table_number': '2',
+            })],
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'self_ordering_table_id': self.pos_main_floor.table_ids[0].id,
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'amount_paid': 0.0,
+            'lines': [(0, 0, {
+                'qty': 1,
+                'product_id': self.cola.id,
+                'price_unit': self.cola.lst_price,
+                'price_subtotal': self.cola.lst_price,
+                'price_subtotal_incl': self.cola.lst_price,
+            })],
+        })
+
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_table_transfer', login='pos_user')
+
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.self_ordering_table_id, order.table_id)
