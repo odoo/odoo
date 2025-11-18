@@ -48,6 +48,16 @@
     }
 }
 
+// Image format badge.
+.o-hb-select-toggle.dropdown-toggle, .o-hb-select-dropdown-item {
+    > div > .badge {
+        color: $o-we-item-clickable-bg;
+        background-color: $o-we-item-clickable-color;
+        border-radius: 14px;
+        padding: 0.12rem 0.37rem;
+    }
+}
+
 // These styles are common between BuilderSelect and Many2X builder components.
 // TODO: review the SelectMenu template to allow both light/dark backgrounds and
 // remove most '!important' needed here to override Bootstrap classes. See

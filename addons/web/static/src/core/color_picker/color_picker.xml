@@ -122,7 +122,7 @@
             </div>
             <div class="px-2">
                 <button t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
-                    class="w-50 border btn mb-2 o_custom_gradient_button" t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}" t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
+                    class="w-50 btn mb-2 o_custom_gradient_button" t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}" t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
                     Custom
                 </button>
                 <GradientPicker t-if="state.showGradientPicker" onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>

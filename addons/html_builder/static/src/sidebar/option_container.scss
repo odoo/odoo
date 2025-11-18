@@ -5,6 +5,10 @@
         --o-hb-btn-has-icon-paddingX: #{map-get($spacers, 1)};
 
         background-color: $o-we-bg-light;
+
+        .o-hb-image-size-info {
+            margin-left: 8px;
+        }
     }
 
     &:where(:not(:first-of-type)) .options-container-header {
@@ -35,6 +39,14 @@
             border-collapse: separate;
             border-spacing: $o-hb-row-spacing $o-hb-row-spacing;
         }
+    }
+
+    .o-hb-image-size-info {
+        background-color: $o-we-bg-darker;
+    }
+
+    .hb-row-content .o-hb-image-size-info {
+        font-size: 0.9em;
     }
 
     .o_we_version_control {
