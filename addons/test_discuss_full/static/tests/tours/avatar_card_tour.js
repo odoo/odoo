@@ -31,6 +31,21 @@ registry.category("web_tour.tours").add("avatar_card_tour", {
             content: "Check that the employee's job title is displayed",
             trigger: ".o_avatar_card:contains(Test Job Title)",
         },
+        {
+            trigger: ".o-mail-ActivityMenu-counter:text('2')",
+        },
+        {
+            trigger: ".o_switch_company_menu button",
+            run: "click",
+        },
+        {
+            trigger: `[role=button][title='Switch to Company 2']`,
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: ".o-mail-ActivityMenu-counter:text('1')",
+        },
     ],
 });
 
