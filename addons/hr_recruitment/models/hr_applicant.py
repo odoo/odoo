@@ -157,6 +157,12 @@ class HrApplicant(models.Model):
             if talent.pool_applicant_id == talent and not talent.talent_pool_ids:
                 raise ValidationError(self.env._("Talent must belong to at least one Talent Pool."))
 
+    @api.model
+    def _get_model_description(self, model_name):
+        if model_name != 'hr.applicant':
+            return super()._get_model_description(model_name)
+        return self.env._("Application")
+
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id.talent_pool_ids")
     def _compute_talent_pool_count(self):
         """
