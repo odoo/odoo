@@ -2,13 +2,14 @@ import json
 import os
 import tempfile
 import unittest
-
 from contextlib import contextmanager
 from subprocess import run, PIPE
 from textwrap import dedent
 
-from odoo.tools.which import which
+import astroid
+
 from odoo.tests.common import TransactionCase
+from odoo.tools.which import which
 
 from . import _odoo_checker_sql_injection
 
@@ -161,7 +162,7 @@ class TestSqlLint(TestPylintChecks):
         self.linter.current_file = 'dummy.py' # should not be prefixed by test
         checker = _odoo_checker_sql_injection.OdooBaseChecker(self.linter)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test(): 
             arg = "test"
             arg = arg + arg
@@ -171,7 +172,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function9(self,arg):
             my_injection_variable= "aaa" % arg #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -180,7 +181,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function10(self):
             my_injection_variable= "aaa" + "aaa" #Const
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -188,7 +189,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function11(self, arg):
             my_injection_variable= "aaaaaaaa" + arg #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -197,7 +198,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function12(self):
             arg1 = "a"
             arg2 = "b" + arg1
@@ -210,7 +211,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function1(self, arg):
             my_injection_variable= f"aaaaa{arg}aaa" #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -218,7 +219,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function2(self):
             arg = 'bbb'
             my_injection_variable= f"aaaaa{arg}aaa" #Uninferable
@@ -227,7 +228,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function3(self, arg):
             my_injection_variable= "aaaaaaaa".format() # Const
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -235,7 +236,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function4(self, arg):
             my_injection_variable= "aaaaaaaa {test}".format(test="aaa") 
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -243,7 +244,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function5(self):
             arg = 'aaa'
             my_injection_variable= "aaaaaaaa {test}".format(test=arg) #Uninferable
@@ -252,7 +253,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function6(self,arg):
             my_injection_variable= "aaaaaaaa {test}".format(test="aaa" + arg) #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -260,7 +261,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function7(self):
             arg = "aaa"
             my_injection_variable= "aaaaaaaa {test}".format(test="aaa" + arg) #Const
@@ -269,7 +270,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertNoMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function8(self):
             global arg
             my_injection_variable= "aaaaaaaa {test}".format(test="aaa" + arg) #Uninferable
@@ -278,18 +279,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
 
-        #TODO
-        #node = _odoo_checker_sql_injection.astroid.extract_node("""
-        #def test_function(self):
-        #    def test():
-        #        return "hello world"
-        #    my_injection_variable= "aaaaaaaa {test}".format(test=test()) #Const
-        #    self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
-        #""")
-        #with self.assertNoMessages():
-        #    checker.visit_call(node)
-
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function9(self,arg):
             my_injection_variable= "aaa" % arg
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
@@ -298,7 +288,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test_function10(self,arg):
             if_else_variable = "aaa" if arg else "bbb" # the two choice of a condition are constant, this is not injectable
             self.env.cr.execute('select * from hello where id = %s' % if_else_variable) #@
@@ -307,7 +297,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def _search_phone_mobile_search(self, operator, value):
   
             condition = 'IS NULL' if operator == '=' else 'IS NOT NULL'
@@ -322,7 +312,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test1(self):
             operator = 'aaa' 
             value = 'bbb'
@@ -332,7 +322,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test2(self):
             operator = 'aaa' 
             operator += 'bbb'
@@ -341,14 +331,14 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def test3(self):
             self.env.cr.execute(f'{self._table}') #@
         """)
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def _init_column(self, column_name):
             query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
             self._cr.execute(query, (value,)) #@
@@ -356,7 +346,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def _init_column1(self, column_name):
             query = 'SELECT %(var1)s FROM %(var2)s WHERE %(var3)s' % {'var1': 'field_name','var2': 'table_name','var3': 'where_clause'}
             self._cr.execute(query) #@
@@ -364,7 +354,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def _graph_data(self, start_date, end_date):
 
             query = '''SELECT %(x_query)s as x_value, %(y_query)s as y_value
@@ -403,34 +393,34 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def first_fun():
             anycall() #@
             return 'a'
         """)
         with self.assertMessages():
             checker.visit_call(node)
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def second_fun(value):
             anycall() #@
             return value
         """)
         with self.assertMessages():
             checker.visit_call(node)
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def injectable():
             cr.execute(first_fun())#@
         """)
         with self.assertMessages():
             checker.visit_call(node)
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def injectable1():
             cr.execute(second_fun('aaaaa'))#@
         """)
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def injectable2(var):
             a = ['a','b']
             cr.execute('a'.join(a))#@
@@ -438,21 +428,21 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def return_tuple(var):
             return 'a',var
         """)
         with self.assertMessages():
             checker.visit_functiondef(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def injectable4(var):
             a, _ =  return_tuple(var)
             cr.execute(a) #@
         """)
         with self.assertMessages():
             checker.visit_call(node)
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def not_injectable5(var):
             star = ('defined','constant','string')
             cr.execute(*star)#@
@@ -460,7 +450,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def injectable6(var):
             star = ('defined','variable','string',var)
             cr.execute(*star)#@
@@ -468,14 +458,14 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def formatNumber(var):
             cr.execute('LIMIT %d'  % var)#@
         """)
         with self.assertMessages():
             checker.visit_call(node)
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def wrapper1(var):
             query = SQL(var) #@
             return query
@@ -483,7 +473,7 @@ class TestSqlLint(TestPylintChecks):
         with self.assertMessages("sql-injection"):
             checker.visit_call(list(node.get_children())[1])
 
-        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        node = astroid.extract_node("""
         def wrapper2(var):
             query = tools.SQL(var) #@
             return query
