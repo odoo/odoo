@@ -44,6 +44,12 @@ class PosOrder(models.Model):
         ('kiosk', 'Self-Order Kiosk')
     ])
 
+    def write(self, vals):
+        if 'table_id' in vals and self.self_ordering_table_id:
+            # Clear stale self-order table link when the order is transferred to a new table.
+            vals['self_ordering_table_id'] = vals['table_id']
+        return super().write(vals)
+
     @api.model
     def _load_pos_self_data_domain(self, data, config):
         return [('id', '=', False)]
