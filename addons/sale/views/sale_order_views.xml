@@ -1054,6 +1054,7 @@
                 <separator/>
                 <filter string="Quotations" name="draft" domain="[('state', 'in', ('draft', 'sent'))]"/>
                 <filter string="Sales Orders" name="sales" domain="[('state', '=', 'sale')]"/>
+                <filter string="Not Cancelled" name="filter_not_cancelled" domain="[('state', '!=', 'cancel')]"/>
                 <separator/>
                 <filter string="Create Date" name="filter_create_date" date="create_date"/>
                 <separator/>

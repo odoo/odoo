@@ -20,7 +20,7 @@ class MailingMailing(models.Model):
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
         quotation_data = self.env['sale.order'].sudo()._read_group(
-            [('source_id', 'in', self.source_id.ids), ('order_line', '!=', False)],
+            [('source_id', 'in', self.source_id.ids), ('order_line', '!=', False), ('state', '!=', 'cancel')],
             ['source_id'], ['__count'],
         )
         mapped_data = {source.id: count for source, count in quotation_data}
@@ -79,6 +79,7 @@ class MailingMailing(models.Model):
         return {
             'context': {
                 'create': False,
+                'search_default_filter_not_cancelled': True,
                 'search_default_group_by_date_day': True,
                 'sale_report_view_hide_date': True,
             },
