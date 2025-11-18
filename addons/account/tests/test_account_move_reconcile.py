@@ -5934,3 +5934,126 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         # Check that there is two exchanges for the two partials
         self.assertEqual(len(partials.mapped('exchange_move_id')), 2)
+
+    def test_reconcile_cash_basis_payment_term_full_amount(self):
+        """ Test cash basis accounting with a payment term with multiple installments but paying full amount.
+        When creating a payment for the full amount instead of the first installment,
+        the cash basis entries should have proportional tax amounts.
+        """
+        self.env.company.tax_exigibility = True
+
+        # Create payment term: 30% now, balance 60 days
+        payment_term = self.env['account.payment.term'].create({
+            'name': '30% now, balance 60 days',
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 50.0,
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 50.0,
+                    'nb_days': 60,
+                }),
+            ],
+        })
+
+        # Create invoice with cash basis tax and payment term
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2016-01-01',
+            'date': '2016-01-01',
+            'invoice_payment_term_id': payment_term.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 99.99,
+                'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        # Pay full amount instead of just the first 30%
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                'payment_date': '2016-01-01',
+                'amount': 133.32,  # Full amount instead of 30%
+            })._create_payments()
+
+        tax_cash_basis_moves = self._get_caba_moves(invoice)
+        tax_lines = tax_cash_basis_moves.line_ids.filtered(
+            lambda l: l.account_id == self.tax_account_1 and l.credit > 0
+        ).sorted('id')
+        self.assertRecordValues(tax_lines, [
+            {'credit': 16.67, 'name': 'tax_1'},
+            {'credit': 16.66, 'name': 'tax_1'},
+        ])
+
+    def test_reconcile_cash_basis_payment_term_full_amount_two_invoices(self):
+        """ Test cash basis accounting with a payment term with multiple installments but paying full amount on 2
+        invoices at the same time
+        """
+        self.env.company.tax_exigibility = True
+
+        # Create payment term: 30% now, balance 60 days
+        payment_term = self.env['account.payment.term'].create({
+            'name': '30% now, balance 60 days',
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 50.0,
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 50.0,
+                    'nb_days': 60,
+                }),
+            ],
+        })
+
+        # Create invoice with cash basis tax and payment term
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2016-01-01',
+                'date': '2016-01-01',
+                'invoice_payment_term_id': payment_term.id,
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 99.99,
+                    'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
+                })],
+            },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2016-01-01',
+                'date': '2016-01-01',
+                'invoice_payment_term_id': payment_term.id,
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 99.99,
+                    'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
+                })],
+            },
+        ])
+        invoices.action_post()
+
+        # Pay full amount instead of just the first 30%
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoices.ids).create({
+                'payment_date': '2016-01-01',
+                'amount': 266.64,  # Full amount of both invoices
+            })._create_payments()
+
+        tax_cash_basis_moves = self._get_caba_moves(invoices)
+        tax_lines = tax_cash_basis_moves.line_ids.filtered(
+            lambda l: l.account_id == self.tax_account_1 and l.credit > 0
+        ).sorted('id')
+        self.assertRecordValues(tax_lines, [
+            {'credit': 16.67, 'name': 'tax_1'},
+            {'credit': 16.66, 'name': 'tax_1'},
+            {'credit': 16.67, 'name': 'tax_1'},
+            {'credit': 16.66, 'name': 'tax_1'},
+        ])
