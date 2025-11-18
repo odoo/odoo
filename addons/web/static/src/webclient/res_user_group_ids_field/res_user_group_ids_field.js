@@ -70,9 +70,11 @@ class ResUserGroupIdsField extends Component {
                         helpLines.push(`- ${groups[gid].name}: ${groups[gid].comment}`);
                     }
                 }
+                const selection = privilege.group_ids.map((gId) => [gId, groups[gId].name]);
+                selection.unshift([false, privilege.placeholder || ""]);
                 this._fields[this.getFieldName(privilege)] = {
                     help: helpLines.join("\n"),
-                    selection: privilege.group_ids.map((gId) => [gId, groups[gId].name]),
+                    selection,
                     string: privilege.name,
                     type: "selection",
                 };
@@ -183,7 +185,7 @@ class ResUserGroupIdsField extends Component {
                         this.shadowedGroupIds.push(groupId);
                         groupId = false;
                     }
-                    this.values[this.getFieldName(privilege)] = groupId;
+                    this.values[fieldName] = groupId;
                 }
             }
             if (this.extraCategory) {

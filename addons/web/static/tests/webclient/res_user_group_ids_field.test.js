@@ -191,6 +191,7 @@ beforeEach(() => {
                         description: false,
                         group_ids: [1, 2],
                         category_id: 121,
+                        placeholder: "No",
                     },
                     222: {
                         id: 222,
@@ -198,6 +199,7 @@ beforeEach(() => {
                         description: "Project access rights description",
                         group_ids: [11, 12, 13],
                         category_id: 221,
+                        placeholder: "View",
                     },
                     223: {
                         id: 223,
@@ -522,7 +524,7 @@ test("implied groups: lower level groups no longer available", async () => {
     expect(".o_inner_group:eq(1) .o_select_menu").toHaveCount(2);
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("Project User");
-    expect(".o_select_menu_item").toHaveCount(3);
+    expect(".o_select_menu_item").toHaveCount(4);
     expect(".o_inner_group:eq(1) .o_wrap_input:last-child input").toHaveValue("");
     await editSelectMenu(
         ".o_field_widget[name='group_ids'] .o_inner_group:nth-child(2) .o_wrap_input:last-child input",
@@ -543,7 +545,7 @@ test("implied groups: lower level groups no longer available", async () => {
 
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("Project User");
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
-    expect(".o_select_menu_item").toHaveCount(3);
+    expect(".o_select_menu_item").toHaveCount(4);
 });
 
 test("implied groups: lower level groups of same privilege still available", async () => {
@@ -560,7 +562,7 @@ test("implied groups: lower level groups of same privilege still available", asy
         resId: 1,
     });
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
-    expect(".o_select_menu_item").toHaveCount(3);
+    expect(".o_select_menu_item").toHaveCount(4);
 });
 
 test("do not lose shadowed groups when editing", async () => {
@@ -737,4 +739,47 @@ test("privileges without category", async () => {
     });
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
+});
+
+test("privileges with placeholder", async () => {
+    ResUsers._records[0].group_ids = [];
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(queryAllValues(".o_select_menu_input")).toEqual(["No", "View", ""]);
+
+    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual([
+        "View",
+        "Project User",
+        "Project Manager",
+        "Project Administrator",
+    ]);
+
+    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)").click();
+    expect(`.o_select_menu_item`).toHaveCount(2);
+
+    await editSelectMenu(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)", {
+        value: "Helpdesk Administrator",
+    });
+    expect(queryAllValues(".o_select_menu_input")).toEqual(["No", "", "Helpdesk Administrator"]);
+    expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveAttribute(
+        "placeholder",
+        "Project Manager"
+    );
+
+    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual([
+        "Project Manager",
+        "Project Administrator",
+    ]);
 });
