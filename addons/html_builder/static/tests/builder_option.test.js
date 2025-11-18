@@ -312,7 +312,7 @@ test("Option containers should update reactively", async () => {
         static id = "test";
         resources = {
             builder_options: [Option],
-            clone_disabled_reason_processors: ({ el, reasons }) => {
+            clone_disabled_reason_processors: (reasons, el) => {
                 if (el.classList.contains("disabled_clone")) {
                     reasons.push("Test reason");
                 }
@@ -357,7 +357,7 @@ test("Option containers dispatched to plugins are updated reactively", async () 
         resources = {
             builder_options: [Option],
             builder_actions: { TestAction },
-            remove_disabled_reason_processors: ({ el, reasons }) => {
+            remove_disabled_reason_processors: (reasons, el) => {
                 if (el.classList.contains("not_removable")) {
                     reasons.push("Class list has 'not_removable'");
                 }

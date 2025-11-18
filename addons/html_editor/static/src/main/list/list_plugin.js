@@ -833,7 +833,7 @@ export class ListPlugin extends Plugin {
     // Handlers of other plugins commands
     // --------------------------------------------------------------------------
 
-    processNodeToInsert({ nodeToInsert, container }) {
+    processNodeToInsert(nodeToInsert, container) {
         if (isListItemElement(container) && isParagraphRelatedElement(nodeToInsert)) {
             nodeToInsert = this.dependencies.dom.setTagName(nodeToInsert, "LI");
         }

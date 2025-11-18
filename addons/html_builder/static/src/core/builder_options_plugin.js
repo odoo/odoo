@@ -91,25 +91,33 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
  */
 /**
- * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_processors
+ * @typedef {((
+ *      reasons: Array<string|Markup|LazyTranslatedString>,
+ *      el: HTMLElement
+ * ) => Array<string|Markup|LazyTranslatedString>)[]} clone_disabled_reason_processors
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
  * Example:
  *
- *     ({ el, reasons }) => {
+ *     (reasons, el) => {
  *         reasons.push(`I hate ${el.dataset.name}`);
+ *         return reasons;
  *     }
  */
 /**
- * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} remove_disabled_reason_processors
+ * @typedef {((
+ *      reasons: Array<string|Markup|LazyTranslatedString>,
+ *      el: HTMLElement
+ * ) => Array<string|Markup|LazyTranslatedString>)[]} remove_disabled_reason_processors
  *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
  * Example:
  *
- *     ({ el, reasons }) => {
+ *     (reasons, el) => {
  *         reasons.push(`I hate ${el.dataset.name}`);
+ *         return reasons;
  *     }
  */
 
@@ -525,15 +533,15 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     getRemoveDisabledReason(el) {
-        const reasons = [];
-        this.dispatchTo("remove_disabled_reason_processors", { el, reasons });
-        return reasons.length ? reasons.join(" ") : undefined;
+        return (
+            this.processThrough("remove_disabled_reason_processors", [], el).join(" ") || undefined
+        );
     }
 
     getCloneDisabledReason(el) {
-        const reasons = [];
-        this.dispatchTo("clone_disabled_reason_processors", { el, reasons });
-        return reasons.length ? reasons.join(" ") : undefined;
+        return (
+            this.processThrough("clone_disabled_reason_processors", [], el).join(" ") || undefined
+        );
     }
 
     patchBuilderOptions({ target_name, target_element, method, value }) {

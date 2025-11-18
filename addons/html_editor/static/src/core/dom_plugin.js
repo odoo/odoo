@@ -74,7 +74,7 @@ function getConnectedParents(nodes) {
  * @typedef {((el: HTMLElement) => void)[]} before_set_tag_handlers
  *
  * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
- * @typedef {((arg: { nodeToInsert: Node, container: HTMLElement }) => nodeToInsert)[]} node_to_insert_processors
+ * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -157,9 +157,7 @@ export class DomPlugin extends Plugin {
         }
 
         const block = closestBlock(selection.anchorNode);
-        for (const cb of this.getResource("before_insert_processors")) {
-            container = cb(container, block);
-        }
+        container = this.processThrough("before_insert_processors", container, block);
         if (!container.hasChildNodes()) {
             return [];
         }
@@ -402,9 +400,7 @@ export class DomPlugin extends Plugin {
             // Ensure that all adjacent paragraph elements are converted to
             // <li> when inserting in a list.
             const block = closestBlock(currentNode);
-            for (const processor of this.getResource("node_to_insert_processors")) {
-                nodeToInsert = processor({ nodeToInsert, container: block });
-            }
+            nodeToInsert = this.processThrough("node_to_insert_processors", nodeToInsert, block);
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
                 insertBefore = false;

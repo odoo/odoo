@@ -846,7 +846,7 @@ export class SelectionPlugin extends Plugin {
                     (node === selection.anchorNode || node === selection.focusNode))
         );
 
-        const modifiers = [
+        const processors = [
             // Remove the editable from the list
             (nodes) => (nodes[0] === this.editable ? nodes.slice(1) : nodes),
             // Filter out text nodes that have no content selected
@@ -858,13 +858,12 @@ export class SelectionPlugin extends Plugin {
                     return nodes.filter((node) => !edgeTextNodes.has(node));
                 }
             },
-            // Custom modifiers
-            ...this.getResource("targeted_nodes_processors"),
         ];
-        for (const modifier of modifiers) {
-            targetedNodes = modifier(targetedNodes);
+        for (const processor of processors) {
+            targetedNodes = processor(targetedNodes);
         }
-        return targetedNodes;
+        // Custom modifiers
+        return this.processThrough("targeted_nodes_processors", targetedNodes);
     }
 
     /**
