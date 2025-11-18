@@ -30,7 +30,7 @@ export class MultiCurrencyPopover extends Component {
 
     get currencies() {
         return this.props.currencyIds.reduce((currencies, currencyId) => {
-            if (currencyId !== this.defaultCurrency) {
+            if (currencyId && currencyId !== this.defaultCurrency) {
                 currencies.push({
                     ...getCurrency(currencyId),
                     id: currencyId,
