@@ -28,6 +28,7 @@ import { MockConsole } from "./console";
 import { MockDate, MockIntl } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
+    MockBlob,
     MockBroadcastChannel,
     MockMessageChannel,
     MockMessagePort,
@@ -46,7 +47,6 @@ import {
 } from "./network";
 import { MockNotification } from "./notification";
 import { MockStorage } from "./storage";
-import { MockBlob } from "./sync_values";
 
 //-----------------------------------------------------------------------------
 // Global
