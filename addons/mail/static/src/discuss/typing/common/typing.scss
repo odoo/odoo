@@ -38,7 +38,7 @@
     }
 }
 
-.o-discuss-Typing:before {
-    // invisible character so that typing status bar has constant height, regardless of text content.
-    content: "\200b"; /* unicode zero width space character */
+.o-mail-DiscussContent .o-discuss-Typing {
+    transform: translateY(-85%);
+    padding-left: calc(#{$o-mail-Message-sidebarWidth} + #{map-get($spacers, 2)});
 }
