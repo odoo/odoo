@@ -93,7 +93,8 @@
                 </tbody>
                 <tfoot t-on-click="() => props.list.leaveEditMode()" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
-                        <td t-att-colspan="getGroupNameCellColSpan()">
+                        <t t-set="groupNameCellColspan" t-value="getGroupNameCellColSpan()"/>
+                        <td t-if="groupNameCellColspan > 0" t-att-colspan="groupNameCellColspan">
                             <button
                                 t-if="props.list.isGrouped and canCreateGroup and !state.showGroupInput"
                                 class="btn btn-link o_list_group_add"
