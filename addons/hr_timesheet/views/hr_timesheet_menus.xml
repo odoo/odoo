@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="action_aw_local_config" model="ir.actions.client">
+        <field name="name">ActivityWatch Local Config</field>
+        <field name="tag">frequency_viewer</field>
+    </record>
+
     <record id="action_activitywatch_sync" model="ir.actions.client">
         <field name="name">ActivityWatch Sync</field>
         <field name="tag">hr_timesheet_activitywatch_action</field>
@@ -108,6 +113,11 @@
             groups="group_timesheet_manager"
             action="action_activitywatch_browser_rule"
             sequence="300"
+        />
+        <menuitem id="menu_aw_local_config"
+            name="Local Config"
+            action="action_aw_local_config"
+            sequence="400"
         />
     </menuitem>
 </odoo>

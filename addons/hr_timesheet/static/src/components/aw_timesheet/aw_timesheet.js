@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { TimesheetTimer } from "@timesheet_grid/components/static_timesheet_form/static_timesheet_timer";
 import { user } from "@web/core/user";
+import { incrementFrequency, loadFrequency } from './aw_local_config';
 
 const { DateTime, Duration } = luxon;
 
@@ -24,6 +25,7 @@ export class ActivityWatchTimesheet extends Component {
         });
         this.localKey = "aw_taken_deleted_events";
         this.consumedEvents = JSON.parse(localStorage.getItem(this.localKey) || "{}");
+        this.localConfig = loadFrequency();
 
         onWillStart(async () => {
             await this.loadData();
@@ -272,7 +274,7 @@ export class ActivityWatchTimesheet extends Component {
                     for (const event of events) {
                         let eventType = watchers[index].client;
                         if (watchers[index].client === "aw-watcher-vscode") {
-                            event.name = _t("Programming In VS Code"); // should be done in config
+                            event.name = _t("VsCode - %(folder)s", { folder: event.data.project });
                             event.keyEvent = true;
                             event.type = "vs_code";
                         } else if (
@@ -471,8 +473,23 @@ export class ActivityWatchTimesheet extends Component {
         ]);
         this.state.taskById = Object.fromEntries(tasks.map(({ id, name }) => [id, name]));
 
+        // get projects in local config
+        for (const [rowTitle, combos] of Object.entries(this.localConfig)) {
+            for (const [jsonKey, count] of Object.entries(combos)) {
+
+                const parsed = JSON.parse(jsonKey);
+                if (parsed.project_id && !this.state.projectById[parsed.project_id.id]) {
+                    this.state.projectById[parsed.project_id.id] = parsed.project_id.display_name;
+                }
+
+                if (parsed.task_id && !this.state.taskById[parsed.task_id?.id]) {
+                    this.state.taskById[parsed.task_id.id] = parsed.task_id.display_name;
+                }
+            }
+        };
+
         let prevKeyyEvent = null;
-        let isLastEventPrimary = false;
+        let primaryEventSeen = false;
         let prevProjectId = false;
         let prevTaskId = false;
         for (const range of ranges) {
@@ -480,30 +497,48 @@ export class ActivityWatchTimesheet extends Component {
                 continue;
             }
 
+            let projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
             if (range.primary) {
                 // when rule is primary => we change project and task (to dicuss if we should have one of them mandatory)
                 // it doesn't make sens to set primary event without project and task
                 prevKeyyEvent = range.name;
-                isLastEventPrimary = true;
+                primaryEventSeen = true;
                 prevProjectId = range.project_id || false;
                 prevTaskId = range.task_id || false;
+                // vals changed
+                projectTask = this.projectTaskKey(prevProjectId, prevTaskId)
                 // non primary key event can only overide a previous non primary key event, but not primary events
-            } else if (range.keyEvent) {
+            } else if (range.keyEvent || this.localConfig[prevKeyyEvent]) {
                 // no primary key events preceed this event
-                if (!isLastEventPrimary) {
+                if (!primaryEventSeen && range.keyEvent) {
                     prevKeyyEvent = range.name;
                 }
-                if (
-                    (!isLastEventPrimary || (!prevProjectId && !prevTaskId)) &&
-                    (range.project_id || range.task_id)
-                ) {
-                    prevProjectId = range.project_id;
-                    prevTaskId = range.task_id;
-                    // no need to overide if both are null
+                if (!primaryEventSeen || (!prevProjectId && !prevTaskId)) {
+                    if (range.keyEvent && (range.project_id || range.task_id)) {
+                        prevProjectId = range.project_id;
+                        prevTaskId = range.task_id;
+                        projectTask = this.projectTaskKey(prevProjectId, prevTaskId)
+                    } else if (this.localConfig[prevKeyyEvent]) {
+                        // to refactor with getRowStats(rowTitle) { later
+                        const stats = Object.entries(this.localConfig[prevKeyyEvent])
+                            .map(([jsonKey, count]) => {
+                                const parsed = JSON.parse(jsonKey);
+                                return { ...parsed, count };
+                            })
+                            .sort((a, b) => b.count - a.count);
+
+                        const justForThisEventProjectId = stats[0].project_id?.id || false;
+                        const justForThisEventTaskId = stats[0].task_id?.id || false;
+                        projectTask = this.projectTaskKey(justForThisEventProjectId, justForThisEventTaskId);
+                    }
                 }
             }
             const duration = (range.stop - range.start) / 1000;
-            const projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
+
+            if (duration < 60) {
+                continue;
+            }
+
             if (!(projectTask in this.state.grouped)) {
                 this.state.grouped[projectTask] = {};
             }
@@ -527,7 +562,7 @@ export class ActivityWatchTimesheet extends Component {
             for (const [title, {duration, start}] of Object.entries(activities)) {
                 const eventKey = this.keyForWithDay(groupKey, title);
                 if (this.consumedEvents[eventKey]) { // can be done directly when adding
-                    delete this.state.grouped[groupKey][title];
+                    this.state.grouped[groupKey][title].duration -= this.consumedEvents[eventKey];
                 } else {
                     const data = {
                         start,
@@ -679,15 +714,16 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     onDelete(groupKey, title) {
-        this.consumedEvents[this.keyForWithDay(groupKey, title)] = true;
+        const keyWithDay = this.keyForWithDay(groupKey, title);
+        this.consumedEvents[keyWithDay] = (this.consumedEvents[keyWithDay] || 0) + this.state.grouped[groupKey][title].duration;
         localStorage.setItem(this.localKey, JSON.stringify(this.consumedEvents));
 
         delete this.state.grouped[groupKey][title];
     }
 
     get selectedData() {
-        let project_id = null;
-        let task_id = null;
+        let project_id = false;
+        let task_id = false;
         let name = "";
         let total_amount = 0.0;
 
@@ -697,7 +733,7 @@ export class ActivityWatchTimesheet extends Component {
 
             if (!project_id && params.project_id) {
                 project_id = params.project_id;
-                task_id = params.task_id;
+                task_id = params.task_id || false;
             }
 
             name += params.name + ' ';
@@ -714,10 +750,17 @@ export class ActivityWatchTimesheet extends Component {
         }
     }
 
-    onSaveTimesheetForm() {
+    onSaveTimesheetForm(project_id, task_id, billable) {
         for (const row of this.state.selectedRows) {
             const { groupKey, title } = JSON.parse(row);
             this.onDelete(groupKey, title);
+
+            incrementFrequency(
+                title,
+                project_id,
+                task_id,
+                billable,
+            );
         }
 
         this.state.records = this.state.records.filter(record => {

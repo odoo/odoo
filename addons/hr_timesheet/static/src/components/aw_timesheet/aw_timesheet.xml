@@ -48,7 +48,7 @@
                   <table class="table table-sm table-borderless align-middle mb-0">
                     <tbody>
                       <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
-                        <tr t-if="state.grouped[groupKey][title].duration >= 120"
+                        <tr
                             t-att-class="{'table-danger': this.isSelected(groupKey, title)}"
                             t-on-mousedown.stop="(ev) => this.onMouseDown(groupKey, title, ev)"
                             t-on-mouseenter.stop="() => this.onMouseEnter(groupKey, title)"
@@ -125,7 +125,7 @@
             <TimesheetTimer onSaveCallback="() => this.onSaveTimesheetForm()"/>
           </t>
           <t t-else="">
-            <TimesheetTimer data="this.selectedData" onSaveCallback="() => this.onSaveTimesheetForm()"/>
+            <TimesheetTimer data="this.selectedData" onSaveCallback="(project_id, task_id, is_billable) => this.onSaveTimesheetForm(project_id, task_id, is_billable)"/>
           </t>
         </div>
 
