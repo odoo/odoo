@@ -5,47 +5,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 
 patch(Thread.prototype, {
-    /**
-     * Handle the notification of a new message based on the notification setting of the user.
-     * Thread on mute:
-     * 1. No longer see the unread status: the bold text disappears and the channel name fades out.
-     * 2. Without sound + need action counter.
-     * Thread Notification Type:
-     * All messages:All messages sound + need action counter
-     * Mentions:Only mention sounds + need action counter
-     * Nothing: No sound + need action counter
-     *
-     * @param {import("models").Message} message
-     */
-    async notifyMessageToUser(message) {
-        const channel_notifications =
-            this.self_member_id?.custom_notifications || this.store.settings.channel_notifications;
-        if (
-            !this.self_member_id?.mute_until_dt &&
-            !this.store.self.im_status.includes("busy") &&
-            (this.channel?.channel_type !== "channel" ||
-                (this.channel?.channel_type === "channel" &&
-                    (channel_notifications === "all" ||
-                        (channel_notifications === "mentions" &&
-                            message.partner_ids?.includes(this.store.self)))))
-        ) {
-            if (this.model === "discuss.channel" && this.inChathubOnNewMessage) {
-                await this.store.chatHub.initPromise;
-                if (!this.channel.chatWindow) {
-                    const chatWindow = this.store.ChatWindow.insert({ channel: this.channel });
-                    if (
-                        this.autoOpenChatWindowOnNewMessage &&
-                        this.store.chatHub.opened.length < this.store.chatHub.maxOpened
-                    ) {
-                        chatWindow.open();
-                    } else {
-                        chatWindow.fold();
-                    }
-                }
-            }
-            this.store.env.services["mail.out_of_focus"].notify(message, this);
-        }
-    },
     /** Condition for whether the conversation should become present in chat hub on new message */
     get inChathubOnNewMessage() {
         return !this.store.discuss.isActive;
