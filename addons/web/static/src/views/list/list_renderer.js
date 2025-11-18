@@ -198,7 +198,8 @@ export class ListRenderer extends Component {
         this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
             position: "right",
         });
-        this.state = useState({ groupInput: false, currencyRates: null });
+        this.state = useState({ showGroupInput: false });
+        this.currencyRates = null;
         onWillStart(async () => {
             const needsCurrencyRates = this.props.archInfo.columns.some((column) => {
                 if (column.type !== "field") {
@@ -215,7 +216,7 @@ export class ListRenderer extends Component {
                 return ["sum", "avg", "max", "min"].some((agg) => agg in column.attrs);
             });
             if (needsCurrencyRates) {
-                this.state.currencyRates = await getCurrencyRates();
+                this.currencyRates = await getCurrencyRates();
             }
         });
         this.groupInputRef = useRef("groupInput");
@@ -725,7 +726,7 @@ export class ListRenderer extends Component {
                     } else {
                         currencyId = values[0][currencyField] && values[0][currencyField].id;
                     }
-                    if (currencyId && func) {
+                    if (func) {
                         const currencies = this.getFieldCurrencies(fieldName);
                         // in case of multiple currencies, convert values into default currency using conversion rates
                         if (currencies.size > 1) {
@@ -743,7 +744,9 @@ export class ListRenderer extends Component {
                                             : values[i][currencyField][0];
                                 }
                                 if (currency !== currencyId) {
-                                    fieldValues[i] *= this.state.currencyRates[currency].rate;
+                                    fieldValues[i] *= currency
+                                        ? this.currencyRates[currency].rate
+                                        : 1;
                                 }
                             }
                         }
@@ -790,7 +793,7 @@ export class ListRenderer extends Component {
                 return set;
             }, new Set());
         }
-        return values.reduce((set, value) => set.add(value[currencyField]?.id), new Set());
+        return values.reduce((set, value) => set.add(value[currencyField]?.id || false), new Set());
     }
 
     getCurrencyField(column) {

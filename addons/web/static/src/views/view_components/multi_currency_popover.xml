@@ -9,6 +9,9 @@
                         <t t-out="formatedValue(currency.value, currency.id)"/> at <t t-out="formatedValue(currency.rate, defaultCurrency)"/> on <t t-out="currency.date"/>
                     </div>
                 </t>
+                <div t-if="props.currencyIds.includes(false)">
+                    <t t-esc="formatedValue(this.props.value)"/> without currency
+                </div>
             </div>
         </div>
     </t>
