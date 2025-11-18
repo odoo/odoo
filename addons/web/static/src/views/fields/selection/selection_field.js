@@ -46,7 +46,7 @@ export class SelectionField extends Component {
                 return [...this.specialData.data];
             case "selection":
                 return this.props.record.fields[this.props.name].selection.filter(
-                    (option) => option[0] !== false && option[1] !== ""
+                    (option) => option[1] !== ""
                 );
             default:
                 return [];
