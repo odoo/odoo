@@ -4,7 +4,11 @@ import { fields, Record } from "@mail/model/export";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
-import { compareDatetime, effectWithCleanup } from "@mail/utils/common/misc";
+import {
+    compareDatetime,
+    effectWithCleanup,
+    nearestGreaterThanOrEqual,
+} from "@mail/utils/common/misc";
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
@@ -146,6 +150,28 @@ export class DiscussChannel extends Record {
     get hasAttachmentPanel() {
         return true;
     }
+    firstUnreadMessage = fields.One("mail.message", {
+        /** @this {import("models").DiscussChannel} */
+        compute() {
+            if (!this.self_member_id) {
+                return null;
+            }
+            const messages = this.messages.filter((m) => !m.isNotification);
+            const separator = this.self_member_id.new_message_separator_ui;
+            if (separator === 0 && !this.loadOlder) {
+                return messages[0];
+            }
+            if (!separator || messages.length === 0 || messages.at(-1).id < separator) {
+                return null;
+            }
+            // try to find a perfect match according to the member's separator
+            let message = this.store["mail.message"].get({ id: separator });
+            if (!message || this.notEq(message.channel_id)) {
+                message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
+            }
+            return message;
+        },
+    });
     hasOtherMembersTyping = fields.Attr(false, {
         /** @this {import("models").DiscussChannel} */
         compute() {
