@@ -62,18 +62,3 @@ class AccountTax(models.Model):
             tax.tax_label = tax.invoice_label
 
         super(AccountTax, self - withholding_taxes)._compute_tax_label()
-
-    # -----------------------
-    # CRUD, inherited methods
-    # -----------------------
-
-    # @api.model
-    # def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
-    #     """
-    #     Withholding taxes should not affect the tax computation unless explicitly required (via a specific key in the base line).
-    #     This requires to adapt the tax computation slightly to achieve this behavior.
-    #     """
-    #     # EXTENDS 'account'
-    #     if not base_line.get('calculate_withholding_taxes'):
-    #         base_line['filter_tax_function'] = lambda t: not t.is_withholding_tax_on_payment
-    #     super()._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)

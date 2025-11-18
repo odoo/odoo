@@ -47,6 +47,90 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
                 'withholding_sequence_id': 'purchase_wth_sequence',
             },
+            'withholding_demo_tax_5': {
+                'name': '5% WTH',
+                'tax_group_id': 'withholding_demo_tax_group',
+                'type_tax_use': 'purchase',
+                'is_withholding_tax_on_payment': True,
+                'amount_type': 'percent',
+                'amount': -5,
+                'price_include_override': 'tax_excluded',
+                'invoice_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': account_ref,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': account_ref,
+                    }),
+                ],
+                'withholding_sequence_id': 'purchase_wth_sequence',
+            },
+            'withholding_demo_tax_10': {
+                'name': '10% WTH',
+                'tax_group_id': 'withholding_demo_tax_group',
+                'type_tax_use': 'purchase',
+                'is_withholding_tax_on_payment': True,
+                'amount_type': 'percent',
+                'amount': -10,
+                'price_include_override': 'tax_excluded',
+                'invoice_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': account_ref,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': account_ref,
+                    }),
+                ],
+                'withholding_sequence_id': 'purchase_wth_sequence',
+            },
+            'withholding_demo_tax_20': {
+                'name': '20% WTH',
+                'tax_group_id': 'withholding_demo_tax_group',
+                'type_tax_use': 'purchase',
+                'is_withholding_tax_on_payment': True,
+                'amount_type': 'percent',
+                'amount': -20,
+                'price_include_override': 'tax_excluded',
+                'invoice_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': account_ref,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': account_ref,
+                    }),
+                ],
+                'withholding_sequence_id': 'purchase_wth_sequence',
+            },
         }
 
     @template(model='account.tax.group', demo=True)

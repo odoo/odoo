@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, api, fields, models, _
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -16,14 +16,7 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=False,
         store=True,
         copy=False,
-    )
-    withhold_tax_id = fields.Many2one(
-        comodel_name='account.tax',
-        string='Withholding Tax',
-        compute='_compute_withhold_tax_id',
-        store=True,
-        readonly=False,
-        domain="[('company_id', '=', company_id), ('is_withholding_tax_on_payment', '=', True)]",
+        default=True
     )
     withholding_default_account_id = fields.Many2one(
         related='journal_id.default_account_id',
@@ -35,10 +28,27 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=False,
     )
     withhold_tax_amount = fields.Monetary(string="Withholding Tax Amount", compute='_compute_withhold_tax_amount')
-    withhold_account_ids = fields.One2many(
+    amount_after_withholding = fields.Monetary(
+        string="Amount After Withholding",
+        compute='_compute_amount_after_withholding',
+    )
+    withhold_account_ids = fields.Many2many(
         comodel_name='account.account',
         compute='_compute_withhold_account_ids',
         string="Withhold Accounts",
+    )
+    withhold_tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        compute='_compute_withhold_account_ids',
+        string="Withhold Taxes",
+    )
+    withhold_tax_id = fields.Many2one(
+        comodel_name='account.tax',
+        string='Withholding Tax',
+        compute='_compute_withhold_tax_id',
+        store=True,
+        readonly=False,
+        domain="[('company_id', '=', company_id), ('is_withholding_tax_on_payment', '=', True), ('id', 'in', withhold_tax_ids)]",
     )
     withholding_outstanding_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -57,6 +67,12 @@ class AccountPaymentRegister(models.TransientModel):
     # Compute, inverse, search methods
     # --------------------------------
 
+    @api.depends('amount', 'withhold_tax_amount', 'should_withhold_tax')
+    def _compute_amount_after_withholding(self):
+        for wizard in self:
+            if wizard.should_withhold_tax:
+                wizard.amount_after_withholding = wizard.amount - wizard.withhold_tax_amount
+
     @api.depends('withhold_tax_id', 'should_withhold_tax')
     def _compute_withhold_base_amount(self):
         for wizard in self:
@@ -64,9 +80,6 @@ class AccountPaymentRegister(models.TransientModel):
             if wizard.withhold_tax_id:
                 withhold_account_by_sum = wizard.line_ids.move_id._get_withhold_account_by_sum()
                 for account, amount in withhold_account_by_sum.items():
-                    print(account)
-                    print(amount)
-                    print(wizard.withhold_tax_id)
                     if wizard.withhold_tax_id in account.withhold_tax_ids:
                         base = amount
             wizard.withhold_base_amount = abs(base)
@@ -76,11 +89,10 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             tax = self.env['account.tax']
             # Search for the last withhold move line that matches the account and partner
+            withhold_tax_ids = wizard.withhold_account_ids._origin.mapped('withhold_tax_ids')
             withhold_move_line = self.env['account.move.line'].search([
-                ('move_id.l10n_withholding_ref_move_id.commercial_partner_id', '=', wizard.line_ids.partner_id.commercial_partner_id.id),
-                ('move_id.l10n_withholding_ref_move_id.line_ids.account_id', 'in', wizard.withhold_account_ids.ids),
-                ('move_id.state', '=', 'posted'),
-                ('tax_ids', '!=', False),
+                ('partner_id', '=', wizard.line_ids.partner_id.id),
+                ('tax_ids', 'in', withhold_tax_ids.ids),
             ], limit=1, order='id desc')
             if withhold_move_line:
                 applied_withhold_taxes = withhold_move_line.tax_ids.filtered(lambda t: t in wizard.withhold_account_ids._origin.withhold_tax_ids)
@@ -92,7 +104,8 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_withhold_account_ids(self):
         for wizard in self:
             accounts = wizard.line_ids.move_id._get_withhold_account_by_sum().keys()
-            wizard.withhold_account_ids = list(acc._origin.id for acc in accounts)
+            wizard.withhold_account_ids = [acc._origin.id for acc in accounts]
+            wizard.withhold_tax_ids = wizard.withhold_account_ids._origin.mapped('withhold_tax_ids')
 
     @api.depends('withhold_tax_id', 'withhold_base_amount')
     def _compute_withhold_tax_amount(self):
@@ -107,6 +120,7 @@ class AccountPaymentRegister(models.TransientModel):
                 )
                 tax_amount = taxes_res['total_included'] - taxes_res['total_excluded']
             wizard.withhold_tax_amount = abs(tax_amount)
+            wizard.amount = wizard.withhold_base_amount
 
     @api.depends('withholding_payment_account_id', 'should_withhold_tax')
     def _compute_withholding_outstanding_account_id(self):
@@ -185,7 +199,6 @@ class AccountPaymentRegister(models.TransientModel):
         """
         # EXTEND 'account'
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
-        print(payment_vals)
 
         if not self.should_withhold_tax:
             return payment_vals

@@ -9,7 +9,6 @@
 
         'views/account_account_views.xml',
         'wizards/l10n_in_withhold_wizard.xml',
-
         'views/account_move_views.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',

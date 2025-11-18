@@ -2,7 +2,6 @@ from markupsafe import Markup
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import float_compare
 
 
 class L10nAccountWithholdWizard(models.TransientModel):
@@ -56,6 +55,11 @@ class L10nAccountWithholdWizard(models.TransientModel):
         compute='_compute_withhold_account_ids',
         string="Withhold Accounts",
     )
+    withhold_tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        related='withhold_account_ids.withhold_tax_ids',
+        string="Withhold Taxes",
+    )
     tax_id = fields.Many2one(
         comodel_name='account.tax',
         string="Withhold Tax",
@@ -63,6 +67,7 @@ class L10nAccountWithholdWizard(models.TransientModel):
         compute='_compute_tax_id',
         store=True,
         readonly=False,
+        domain="[('company_id', '=', company_id), ('is_withholding_tax_on_payment', '=', True), ('id', 'in', withhold_tax_ids)]",
     )
     amount = fields.Monetary(
         string="Tax Amount",
@@ -88,7 +93,7 @@ class L10nAccountWithholdWizard(models.TransientModel):
     def _compute_withhold_account_ids(self):
         for wizard in self:
             accounts = wizard.related_move_id._get_withhold_account_by_sum().keys()
-            wizard.withhold_account_ids = list(acc._origin.id for acc in accounts)
+            wizard.withhold_account_ids = [acc._origin.id for acc in accounts]
 
     @api.depends('related_move_id')
     def _compute_tax_id(self):
@@ -106,7 +111,6 @@ class L10nAccountWithholdWizard(models.TransientModel):
                 if applied_withhold_taxes:
                     tax = applied_withhold_taxes[0]
             wizard.tax_id = tax
-
 
     @api.depends('tax_id', 'related_move_id')
     def _compute_base(self):

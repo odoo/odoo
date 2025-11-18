@@ -22,8 +22,7 @@
                     <group>
                         <group id="header_left_group">
                             <field name="base" widget="monetary" options="{'currency_field': 'currency_id'}" required="True"/>
-                            <field name="tax_id" string="Withhold Tax" domain="[('is_withholding_tax_on_payment', '=', True)]"
-                                   required="True" context="{'default_type_tax_use': 'withholding'}"/>
+                            <field name="tax_id" string="Withhold Tax" required="True" context="{'default_type_tax_use': 'withholding'}"/>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="currency_id" invisible="1"/> <!-- used to display the currency symbol -->
                             <field name="related_move_id" invisible="1"/> <!-- used to compute the l10n_in_tds_tax_type -->

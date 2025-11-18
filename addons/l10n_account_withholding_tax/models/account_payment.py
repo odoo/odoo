@@ -234,7 +234,6 @@ class AccountPayment(models.Model):
         tax_amount = 0.0
         total_amount = sum(self.withholding_line_ids.mapped('base_amount'))
 
-
         for line in self.withholding_line_ids:
             tax_account = line.tax_id.invoice_repartition_line_ids.filtered(
                 lambda r: r.repartition_type == 'tax').account_id
@@ -280,7 +279,7 @@ class AccountPayment(models.Model):
         }))
 
         for line in move_vals['line_ids']:
-            move_line =  line[2]
+            move_line = line[2]
             amount_currency = move_line['amount_currency']
             if amount_currency > 0.0:
                 line[2]['debit'] -= tax_amount
