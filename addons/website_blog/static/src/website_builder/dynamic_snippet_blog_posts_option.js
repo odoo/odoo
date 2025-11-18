@@ -5,7 +5,7 @@ import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynami
 export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
     static template = "website_blog.DynamicSnippetBlogPostsOption";
     static dependencies = ["dynamicSnippetBlogPostsOption"];
-    static selector = ".s_dynamic_snippet_blog_posts";
+    static selector = ".s_dynamic_snippet_blog_posts, .s_blog_posts_carousel";
     setup() {
         super.setup();
         const { fetchBlogs, getModelNameFilter } = this.dependencies.dynamicSnippetBlogPostsOption;
@@ -17,8 +17,9 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
         onWillStart(async () => {
             this.blogState.blogs.push(...(await fetchBlogs()));
         });
-        this.templateKeyState = useDomState((el) => ({
+        this.domState = useDomState((el) => ({
             templateKey: el.dataset.templateKey,
+            isCarousel: el.classList.contains("s_blog_posts_carousel"),
         }));
     }
     showPictureSizeOption() {
@@ -26,13 +27,13 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
             "website_blog.dynamic_filter_template_blog_post_big_picture",
             "website_blog.dynamic_filter_template_blog_post_horizontal",
             "website_blog.dynamic_filter_template_blog_post_card",
-        ].includes(this.templateKeyState.templateKey);
+        ].includes(this.domState.templateKey);
     }
     showTeaserOption() {
         return [
             "website_blog.dynamic_filter_template_blog_post_list",
             "website_blog.dynamic_filter_template_blog_post_card",
-        ].includes(this.templateKeyState.templateKey);
+        ].includes(this.domState.templateKey);
     }
     showDateOption() {
         return [
@@ -42,7 +43,7 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
             "website_blog.dynamic_filter_template_blog_post_single_full",
             "website_blog.dynamic_filter_template_blog_post_single_aside",
             "website_blog.dynamic_filter_template_blog_post_single_circle",
-        ].includes(this.templateKeyState.templateKey);
+        ].includes(this.domState.templateKey);
     }
     showCategoryOption() {
         return [
@@ -53,17 +54,17 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
             "website_blog.dynamic_filter_template_blog_post_single_aside",
             "website_blog.dynamic_filter_template_blog_post_single_circle",
             "website_blog.dynamic_filter_template_blog_post_single_badge",
-        ].includes(this.templateKeyState.templateKey);
+        ].includes(this.domState.templateKey);
     }
     showNewTagOption() {
         return (
-            this.templateKeyState.templateKey ===
+            this.domState.templateKey ===
             "website_blog.dynamic_filter_template_blog_post_single_badge"
         );
     }
     showHoverEffectOption() {
         return (
-            this.templateKeyState.templateKey ===
+            this.domState.templateKey ===
             "website_blog.dynamic_filter_template_blog_post_big_picture"
         );
     }
