@@ -54,10 +54,7 @@
                             </div>
                             <div class="o_col">
                                 <widget name="week_days"/>
-                                <div class="o_row" invisible="mode != 'chat'">
-                                    <field name="notification_time" required="mode == 'chat'" widget="float_time"/>
-                                    <field name="notification_moment"/>
-                                </div>
+                                <field name="notification_time" invisible="mode != 'chat'" required="mode == 'chat'" widget="float_time"/>
                             </div>
                             <field name="tz" groups="base.group_no_one"/>
                         </group>
@@ -82,8 +79,7 @@
                             <field name="mode"/>
                             <span invisible="mode != 'chat'">
                                 to <field name="recipients"/>
-                                on <field name="notification_time"/>
-                                <field name="notification_moment"/>
+                                on <field name="notification_time" widget="float_time"/>
                             </span>
                         </div>
                         <field name="location_ids" widget="many2many_tags"/>
