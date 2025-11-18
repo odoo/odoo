@@ -12,7 +12,7 @@ patch(ThreadAction.prototype, {
         ];
         if (
             thread?.channel_type === "livechat" &&
-            !store.self_partner &&
+            store.self_partner?.main_user_id?.share !== false &&
             !visitorActions.includes(action.id)
         ) {
             return false;
