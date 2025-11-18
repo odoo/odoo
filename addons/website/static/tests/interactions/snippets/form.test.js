@@ -12,8 +12,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 setupInteractionWhiteList(["website.form", "website.post_link", "website.form.add_other_option"]);
 
@@ -271,7 +270,7 @@ test("form checks fields", async () => {
     expect(queryOne("form a.s_website_form_send")).not.toBe(undefined);
 });
 
-test("(name) form checks conditions", async () => {
+test("(name) form checks conditions and should focus the first invalid field on submit", async () => {
     await startInteractions(formTemplate);
     const nameEl = queryOne("input[name=name]");
 
@@ -280,7 +279,7 @@ test("(name) form checks conditions", async () => {
     await click("a.s_website_form_send");
     checkField(nameEl, true, false);
     // Fill mail
-    await click("input[name=email_from]");
+    expect("input[name=email_from]").toBeFocused();
     await fill("a@b.com");
     await advanceTime(400); // Debounce delay.
     checkField(nameEl, true, false);
@@ -288,7 +287,7 @@ test("(name) form checks conditions", async () => {
     await click("a.s_website_form_send");
     checkField(nameEl, true, false);
     // Fill subject
-    await click("input[name=subject]");
+    expect("input[name=subject]").toBeFocused();
     await fill("Subject");
     await advanceTime(400); // Debounce delay.
     checkField(nameEl, true, false);
@@ -296,7 +295,7 @@ test("(name) form checks conditions", async () => {
     await click("a.s_website_form_send");
     checkField(nameEl, true, false);
     // Fill question
-    await click("textarea[name=description]");
+    expect("textarea[name=description]").toBeFocused();
     await fill("Question");
     await advanceTime(400); // Debounce delay.
     checkField(nameEl, true, false);
@@ -702,24 +701,29 @@ test("should make 'Other' input fields required when 'Other' option is selected"
     await startInteractions(formTemplateWithRadioAndSelect);
     const selectOtherInputEl = queryOne(".o_other_input[placeholder='Other option... (select)']");
     const radioOtherInputEl = queryOne(".o_other_input[placeholder='Other option... (radio)']");
+
     await contains("input[name=email_from]").fill("a@b.com");
     await contains("input[name=subject]").fill("Subject");
     await click(".form-select");
     await select("_other");
     await click("a.s_website_form_send");
     checkField(selectOtherInputEl, true, true);
+
     await contains(selectOtherInputEl).fill("Other option input for select");
     await click(".s_website_form_input[value='_other']");
     await click("a.s_website_form_send");
     checkField(radioOtherInputEl, true, true);
+
     await contains(radioOtherInputEl).fill("Other option input for radio");
-    patchWithCleanup(browser, {
-        fetch(_url, { body: formData }) {
-            expect(formData.get("Radio Button")).toBe("Other option input for radio");
-            expect(formData.get("Select")).toBe("Other option input for select");
-        },
-    });
     // Wait for the debounced input event to update the form state.
     await advanceTime(400);
+    onRpc("/website/form/mail.mail", async (request) => {
+        const formData = await request.formData();
+        expect(formData.get("Radio Button")).toBe("Other option input for radio");
+        expect.step("Valid Radio Value");
+        expect(formData.get("Select")).toBe("Other option input for select");
+        expect.step("Valid Select Value");
+    });
     await click("a.s_website_form_send");
+    expect.verifySteps(["Valid Radio Value", "Valid Select Value"]);
 });
