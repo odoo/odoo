@@ -38,7 +38,7 @@ class MailingMailing(models.Model):
     def _compute_sale_invoiced_amount(self):
         if self.ids:
             query_res = self.env.execute_query(SQL(
-                """SELECT move.utm_reference, SUM(move.amount_untaxed_signed * COALESCE(currency_rate.rate, 1))
+                """SELECT move.utm_reference, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
                      FROM account_move move
                      /* To use the exchange rate effective at the creation of the invoice. */
                      LEFT JOIN LATERAL (

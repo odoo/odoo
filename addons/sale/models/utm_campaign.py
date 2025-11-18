@@ -55,7 +55,7 @@ class UtmCampaign(models.Model):
             query_res = self.env.execute_query_dict(
                 SQL(
                     """
-                    SELECT move.campaign_id, -SUM(line.balance * COALESCE(currency_rate.rate, 1)) as price_subtotal
+                    SELECT move.campaign_id, SUM(line.price_total / COALESCE(currency_rate.rate, 1)) as price_total_converted_sum
                       FROM account_move_line line
                 INNER JOIN account_move move ON line.move_id = move.id
                       /* To use the exchange rate effective at the creation of the invoice. */
@@ -86,7 +86,7 @@ class UtmCampaign(models.Model):
         campaigns = self.browse()
         for datum in query_res:
             campaign = self.browse(datum["campaign_id"])
-            campaign.invoiced_amount = datum["price_subtotal"]
+            campaign.invoiced_amount = datum["price_total_converted_sum"]
             campaigns |= campaign
         for campaign in self - campaigns:
             campaign.invoiced_amount = 0
