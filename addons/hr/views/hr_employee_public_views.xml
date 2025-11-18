@@ -62,12 +62,13 @@
                         </div>
                         <div class="row flex-column flex-sm-row align-items-center">
                             <div class="o_employee_avatar ms-2 p-0 h-100">
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                                 <field name="image_1920" widget='image' class="m-0" options='{"size": [175,175], "zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
                             <div class="col-12 col-sm-6 col-md-7 col-lg-8 px-4 o_employee_form_header_info">
                                 <div class="oe_title mw-100 ps-0 pe-sm-2">
-                                    <h1 class="d-flex flex-row align-items-center">
+                                    <h1 class="d-flex flex-row align-items-center o_employee_form_header_info">
                                         <field name="name" placeholder="Employee's Name"
                                             required="True" style="font-size: min(4vw, 2.6rem);"/>
                                     </h1>
@@ -84,12 +85,6 @@
                                         <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
                                     </p>
                                 </div>
-                            </div>
-                            <div class="align-self-start w-auto end-0 mt-2 d-flex align-items-center justify-content-end gap-2 o_presence_status_pill_wrapper">
-                                <div invisible="not user_id">
-                                    <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
-                                </div>
-                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
