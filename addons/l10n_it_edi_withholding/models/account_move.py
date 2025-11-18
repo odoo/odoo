@@ -154,20 +154,35 @@ class AccountMove(models.Model):
             withholding_type = tipo_ritenuta.text if tipo_ritenuta is not None else "RT02"
             withholding_reason = reason.text if reason is not None else "A"
             withholding_percentage = -float(percentage.text if percentage is not None else "0.0")
-            withholding_tax = self._l10n_it_edi_search_tax_for_import(
-                company,
-                withholding_percentage,
-                ([('l10n_it_withholding_type', '=', withholding_type),
-                  ('l10n_it_withholding_reason', '=', withholding_reason)]
-                 + type_tax_use_domain),
-                vat_only=False)
-            if withholding_tax:
-                withholding_taxes.append(withholding_tax)
+
+            # Some bills involving ENASARCO come in with a wrong withholding_reason
+            # so we defend ourselves by searching with exact type and reason first,
+            # then with just the type
+            for extra_domain, message in ([(
+                [
+                    ('l10n_it_withholding_type', '=', withholding_type),
+                    ('l10n_it_withholding_reason', '=', withholding_reason),
+                    *type_tax_use_domain
+                ],
+                None
+            ), (
+                [
+                    ('l10n_it_withholding_type', '=', withholding_type),
+                    *type_tax_use_domain
+                ],
+                _("ENASARCO tax (type %(wtype)s) has wrong reason %(reason)s",
+                  wtype=withholding_type, reason=withholding_reason))
+            ]):
+                if withholding_tax := self._l10n_it_edi_search_tax_for_import(
+                    company, withholding_percentage, extra_domain, vat_only=False
+                ):
+                    withholding_taxes.append(withholding_tax)
+                    break
             else:
-                message_to_log.append(Markup("%s<br/>%s") % (
-                    _("Withholding tax not found"),
-                    self.env['account.move']._compose_info_message(body_tree, '.'),
-                ))
+                message = _("Withholding tax not found")
+            if message:
+                message_to_log.append(Markup("%s<br/>%s") % (message, self._compose_info_message(body_tree, '.')))
+
         extra_info["withholding_taxes"] = withholding_taxes
 
         pension_fund_elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiCassaPrevidenziale')
