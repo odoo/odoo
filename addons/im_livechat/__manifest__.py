@@ -102,9 +102,6 @@ Help your customers with this chat, and analyse their feedback.
             ('remove', 'im_livechat/static/tests/embed/**/*'),
             ('remove', 'im_livechat/static/tests/tours/**/*'),
         ],
-        'im_livechat.qunit_embed_suite': [
-            'im_livechat/static/tests/embed/**/*',
-        ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
         ],
