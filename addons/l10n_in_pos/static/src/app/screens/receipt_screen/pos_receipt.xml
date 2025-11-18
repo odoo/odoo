@@ -37,16 +37,16 @@
                 <tr>
                     <th class="text-center">HSN Code</th>
                     <th class="text-center">Rate%</th>
-                    <th class="text-center">CGST</th>
-                    <th class="text-center">SGST</th>
+                    <th class="text-center" t-if="l10n_in_hsn_summary.has_gst">CGST</th>
+                    <th class="text-center" t-if="l10n_in_hsn_summary.has_gst">SGST</th>
                     <th class="text-center" t-if="l10n_in_hsn_summary.has_igst">IGST</th>
                     <th class="text-center" t-if="l10n_in_hsn_summary.has_cess">CESS</th>
                 </tr>
                 <tr t-foreach="l10n_in_hsn_summary.items" t-as="item" t-key="item_index">
                     <td class="text-center" t-out="item.l10n_in_hsn_code"/>
                     <td class="text-center"><t t-out="item.rate"/> %</td>
-                    <td class="text-center" t-out="item.tax_amount_cgst"/>
-                    <td class="text-center" t-out="item.tax_amount_sgst"/>
+                    <td class="text-center" t-if="l10n_in_hsn_summary.has_gst" t-out="item.tax_amount_cgst"/>
+                    <td class="text-center" t-if="l10n_in_hsn_summary.has_gst" t-out="item.tax_amount_sgst"/>
                     <td class="text-center" t-if="l10n_in_hsn_summary.has_igst" t-out="item.tax_amount_igst"/>
                     <td class="text-center" t-if="l10n_in_hsn_summary.has_cess" t-out="item.tax_amount_cess"/>
                 </tr>
