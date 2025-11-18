@@ -845,6 +845,20 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
             if line:
                 yield "  %s" % (line.strip(),)
 
+    def find_env(stack):
+        from odoo.api import Environment  # noqa: PLC0415
+
+        for frame, _ in traceback.walk_stack(stack):
+            self = frame.f_locals.get('self')
+            if not self:
+                continue
+            if not hasattr(self, 'env'):
+                continue
+            if not isinstance(self.env, Environment):
+                continue
+            return self.env
+        return None
+
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
     threads_info = {th.ident: {'repr': repr(th),
@@ -873,6 +887,23 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
                          thread_info.get('query_count', 'n/a'),
                          query_time or 'n/a',
                          remaining_time or 'n/a'))
+
+            env = find_env(stack)
+            if env:
+                stopwatches = env.cr.cache.get('base_automation_stopwatches')
+                last_stopwatches = list(env.cr.cache.get('base_automation_last_stopwatches', []))
+                now = time.monotonic()
+                if stopwatches is not None:
+                    for automation_id, start_time in last_stopwatches:
+                        # this automated action is currently running
+                        duration = now - start_time
+                        stopwatches[automation_id] = stopwatches.get(automation_id, 0) + duration
+                    code.append(f"# Base Automations dict[id, duration]: {stopwatches}")
+                    for automation_id, start_time in last_stopwatches:
+                        # this automated action is currently running
+                        duration = now - start_time
+                        stopwatches[automation_id] -= duration
+
             for line in extract_stack(stack):
                 code.append(line)
 
