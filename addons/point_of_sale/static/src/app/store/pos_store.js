@@ -45,6 +45,7 @@ import { user } from "@web/core/user";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "./devices_synchronisation";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { initLNA } from "../utils/init_lna";
 
 const { DateTime } = luxon;
 
@@ -160,6 +161,8 @@ export class PosStore extends Reactive {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
+
+        initLNA(this.notification);
     }
 
     get firstScreen() {
