@@ -13,7 +13,7 @@ class ResCompany(models.Model):
 
     def _localization_use_documents(self):
         self.ensure_one()
-        return self.account_fiscal_country_id.code == "BR" or super()._localization_use_documents()
+        return self.chart_template == 'br' or super()._localization_use_documents()
 
     def _is_latam(self):
         return super()._is_latam() or self.account_fiscal_country_id.code == 'BR'
