@@ -2715,7 +2715,8 @@ class AccountMove(models.Model):
             error_msg = _("The following entries are unbalanced:\n\n")
             for move in unbalanced_moves:
                 error_msg += f"  - {self.browse(move[0]).name}\n"
-                raise UserError(error_msg)
+
+            raise UserError(error_msg)
 
     def _get_unbalanced_moves(self, container):
         moves = container['records'].filtered(lambda move: move.line_ids)
