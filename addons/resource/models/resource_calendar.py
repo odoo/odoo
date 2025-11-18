@@ -500,7 +500,7 @@ class ResourceCalendar(models.Model):
         # Public leave don't have a resource_id
         # !! to be ignored
         domain = domain + [
-            ('resource_id', 'in', [r.id for r in resources_list]),
+            ('resource_id', 'in', [False] + [r.id for r in resources_list]),
             ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
             ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
         ]
@@ -515,7 +515,7 @@ class ResourceCalendar(models.Model):
             leave_date_from = leave.date_from
             leave_date_to = leave.date_to
             for resource in resources_list:
-                if leave_resource.id not in [resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
+                if leave_resource.id not in [False, resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
                     continue
                 tz = tz if tz else timezone((resource or self).tz)
                 if (tz, start_dt) in tz_dates:
@@ -540,7 +540,7 @@ class ResourceCalendar(models.Model):
                 ("date_start", "<=", end_dt.astimezone(utc).replace(tzinfo=None)),
                 ("date_end", ">=", start_dt.astimezone(utc).replace(tzinfo=None)),
             ])
-            allowed_public_holidays = public_holidays.filtered(lambda p: self.env.user.employee_id.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
+            allowed_public_holidays = public_holidays.filtered(lambda p: not p.condition_domain or self.env.user.employee_id.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
             for public_holiday in allowed_public_holidays:
                 # Same timezone logic as above
                 tz = tz if tz else timezone((self).tz)

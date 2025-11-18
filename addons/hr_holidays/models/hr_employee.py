@@ -340,7 +340,7 @@ class HrEmployee(models.Model):
             ("date_start", "<=", date_end),
             ("date_end", ">=", date_start),
         ])
-        return public_holidays.filtered(lambda p: self.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
+        return public_holidays.filtered(lambda p: not p.condition_domain or self.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
 
     @api.model
     def get_mandatory_days_data(self, date_start, date_end):
