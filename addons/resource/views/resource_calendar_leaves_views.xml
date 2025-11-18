@@ -43,7 +43,7 @@
                         <field name="name" string="Reason"/>
                         <field name="calendar_id"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="not calendar_id"/>
-                        <field name="resource_id"/>
+                        <field name="resource_id" options="{'no_create': True}"/>
                     </group>
                     <group name="leave_dates">
                        <field name="date_from"/>
