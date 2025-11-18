@@ -21,3 +21,8 @@ export const D3_COLORS = [
     "#17becf",
     "#9edae5",
 ];
+
+export function getStringColor(str, paletteSize = D3_COLORS.length) {
+    const charsSum = Array.from(str).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    return D3_COLORS[charsSum % paletteSize];
+}

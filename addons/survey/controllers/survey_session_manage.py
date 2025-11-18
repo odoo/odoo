@@ -11,6 +11,8 @@ from odoo import fields, http
 from odoo.http import request
 from odoo.tools import is_html_empty
 
+from odoo.addons.survey.models.survey_survey import SURVEY_LEADERBOARD_MAX_PARTICIPANTS
+
 
 class UserInputSession(http.Controller):
     def _fetch_from_token(self, survey_token):
@@ -208,6 +210,7 @@ class UserInputSession(http.Controller):
             'is_last_question': is_last_question,
             'is_first_question': is_first_question,
             'is_session_closed': not survey.session_state,
+            'all_participants_shown': survey.session_answer_count <= SURVEY_LEADERBOARD_MAX_PARTICIPANTS
         }
 
         if is_last_question:

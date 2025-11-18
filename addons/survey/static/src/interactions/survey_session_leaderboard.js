@@ -2,7 +2,7 @@ import { fadeIn, fadeOut } from "@survey/utils";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
+import { getStringColor } from "@survey/interactions/utils";
 
 export class SurveySessionLeaderboard extends Interaction {
     // Note: the class `o_survey_session_leaderboard` is present in two
@@ -75,15 +75,10 @@ export class SurveySessionLeaderboard extends Interaction {
         this.waitFor(Promise.all([fadeOutPromise, leaderboardPromise])).then(
             this.protectSyncAfterAsync((results) => {
                 const leaderboardResults = results[1];
-                const renderedTemplate = document.createElement("div");
                 const parser = new DOMParser();
                 const parsedResults = parser.parseFromString(leaderboardResults, "text/html").body
                     .firstChild;
-                if (parsedResults) {
-                    // In case of scored survey with no participants, parsedResults
-                    // would be null and it would break the insert below
-                    this.insert(parsedResults, renderedTemplate);
-                }
+                const renderedTemplate = parsedResults || document.createElement("div");
                 this.insert(
                     renderedTemplate,
                     this.el.querySelector(".o_survey_session_leaderboard_container")
@@ -91,18 +86,23 @@ export class SurveySessionLeaderboard extends Interaction {
                 this.el
                     .querySelectorAll(".o_survey_session_leaderboard_item")
                     .forEach((item, index) => {
-                        const rgb = SESSION_CHART_COLORS[index % 10];
+                        const nickname = item.querySelector(
+                            ".o_survey_session_leaderboard_name"
+                        ).textContent;
+                        const rgb = getStringColor(nickname, 10);
                         item.querySelector(
                             ".o_survey_session_leaderboard_bar"
-                        ).style.backgroundColor = `rgba(${rgb},1)`;
+                        ).style.backgroundColor = `${rgb}99`;
                         item.querySelector(
                             ".o_survey_session_leaderboard_bar_question"
-                        ).style.backgroundColor = `rgba(${rgb},0.4)`;
+                        ).style.backgroundColor = `${rgb}FF`;
                     });
                 fadeIn(this.el, this.fadeInOutTime, async () => {
                     if (ev.detail.isScoredQuestion) {
                         await this.waitFor(this.showQuestionScores());
+                        this.updateAutoScrollStyle();
                         await this.waitFor(this.sumScores());
+                        await this.waitFor(this.animatePositionLabels());
                         await this.waitFor(this.reorderScores());
                         this.leaderboardAnimationPhase = null;
                     }
@@ -141,6 +141,40 @@ export class SurveySessionLeaderboard extends Interaction {
                 this.animateScoreCounter(scoreEl, nextScore, totalScore, increment, plusSign);
             }
         }, 25);
+    }
+
+    animatePositionLabel(positionEl, oldPosition, newPosition, increment) {
+        this.waitForTimeout(() => {
+            const nextPosition = oldPosition + increment;
+            positionEl.textContent = `${nextPosition}.`;
+            if (nextPosition !== newPosition) {
+                this.animatePositionLabel(positionEl, nextPosition, newPosition, increment);
+            }
+        }, 25);
+    }
+
+    animatePositionLabels() {
+        let animationDone;
+        const animationPromise = new Promise(function (resolve) {
+            animationDone = resolve;
+        });
+        this.waitForTimeout(() => {
+            this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach((item) => {
+                const currentPosition = parseInt(item.dataset.currentPosition) + 1;
+                const newPosition = parseInt(item.dataset.newPosition) + 1;
+                if (currentPosition !== newPosition) {
+                    const increment = newPosition > currentPosition ? 1 : -1;
+                    this.animatePositionLabel(
+                        item.querySelector(".o_survey_session_leaderboard_position"),
+                        currentPosition,
+                        newPosition,
+                        increment
+                    );
+                }
+            });
+            animationDone();
+        }, 1200);
+        return animationPromise;
     }
 
     /**
@@ -195,8 +229,28 @@ export class SurveySessionLeaderboard extends Interaction {
                     animationDone();
                 }
             });
-        }, 1800);
+        }, 1000);
         return animationPromise;
+    }
+
+    /**
+     * Update auto-scroll animation parameters
+     */
+    updateAutoScrollStyle() {
+        const content = this.el.querySelector(".o_survey_leaderboard_scores");
+        const container = this.el.querySelector(".o_survey_session_leaderboard_container");
+        const contentHeight = content.scrollHeight;
+        const containerHeight = container.clientHeight;
+        if (contentHeight <= containerHeight) {
+            return;
+        }
+        const translateYValue = `${-(contentHeight - containerHeight)}px`;
+        const duration = (contentHeight / containerHeight) * 11;
+        document.documentElement.style.setProperty(
+            "--surveyLeaderboardTranslateY",
+            translateYValue
+        );
+        content.style.animationDuration = `${duration}s`;
     }
 
     /**
