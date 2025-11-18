@@ -7,7 +7,7 @@ import {
     MAIN_PLUGINS,
     NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS,
 } from "@html_editor/plugin_sets";
-import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
+import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import {
     MAIN_EMBEDDINGS,
     READONLY_MAIN_EMBEDDINGS,
@@ -53,8 +53,8 @@ export class HtmlField extends Component {
         ...standardFieldProps,
         isCollaborative: { type: Boolean, optional: true },
         collaborativeTrigger: { type: String, optional: true },
-        dynamicPlaceholder: { type: Boolean, optional: true, default: false },
-        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
+        dynamicField: { type: Boolean, optional: true, default: false },
+        dynamicFieldReferenceModel: { type: String, optional: true },
         migrateHTML: { type: Boolean, optional: true },
         cssReadonlyAssetId: { type: String, optional: true },
         sandboxedPreview: { type: Boolean, optional: true },
@@ -63,7 +63,7 @@ export class HtmlField extends Component {
         embeddedComponents: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        dynamicPlaceholder: false,
+        dynamicField: false,
     };
     static components = {
         Wysiwyg,
@@ -107,10 +107,10 @@ export class HtmlField extends Component {
             }
         });
         useRecordObserver((record) => {
-            const value = record.data[this.props.dynamicPlaceholderModelReferenceField || "model"];
+            const value = record.data[this.props.dynamicFieldReferenceModel || "model"];
             // update Dynamic Placeholder reference model
-            if (this.props.dynamicPlaceholder && this.editor) {
-                this.editor.shared.dynamicPlaceholder?.updateDphDefaultModel(value);
+            if (this.editor && this.editor.isReady) {
+                this.editor.dispatchTo("dynamic_model_change_handlers", value);
             }
         });
     }
@@ -243,7 +243,7 @@ export class HtmlField extends Component {
                 ...(this.props.migrateHTML ? [EditorVersionPlugin] : []),
                 ...MAIN_PLUGINS,
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
-                ...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : []),
+                ...(this.props.dynamicField ? DYNAMIC_FIELD_PLUGINS : []),
                 ...(this.props.embeddedComponents
                     ? EMBEDDED_COMPONENT_PLUGINS
                     : NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS),
@@ -262,9 +262,9 @@ export class HtmlField extends Component {
                 peerId: this.generateId(),
             },
             dropImageAsAttachment: true, // @todo @phoenix always true ?
-            dynamicPlaceholder: this.props.dynamicPlaceholder,
-            dynamicPlaceholderResModel:
-                this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
+            dynamicPlaceholder: this.props.dynamicField,
+            dynamicResModel:
+                this.props.record.data[this.props.dynamicFieldReferenceModel || "model"],
             direction: localization.direction || "ltr",
             getRecordInfo: () => {
                 const { resModel, resId, data, fields, id } = this.props.record;
@@ -383,9 +383,8 @@ export const htmlField = {
             isCollaborative: options.collaborative,
             collaborativeTrigger: options.collaborative_trigger,
             migrateHTML: "migrateHTML" in options ? Boolean(options.migrateHTML) : true,
-            dynamicPlaceholder: options.dynamic_placeholder,
-            dynamicPlaceholderModelReferenceField:
-                options.dynamic_placeholder_model_reference_field,
+            dynamicField: options.dynamic_placeholder,
+            dynamicFieldReferenceModel: options.dynamic_placeholder_model_reference_field,
             embeddedComponents:
                 "embedded_components" in options ? Boolean(options.embedded_components) : true,
             sandboxedPreview: Boolean(options.sandboxedPreview),

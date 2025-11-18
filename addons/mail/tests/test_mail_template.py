@@ -567,9 +567,9 @@ class TestMailTemplateReset(MailCommon):
 @tagged("mail_template")
 class TestMailTemplateUI(HttpCase):
 
-    def test_mail_template_dynamic_placeholder_tour(self):
+    def test_mail_template_dynamic_field_tour(self):
         # keep debug for technical fields visibility
-        self.start_tour('/odoo?debug=1', 'mail_template_dynamic_placeholder_tour', login='admin')
+        self.start_tour('/odoo?debug=1', 'mail_template_dynamic_field_tour', login='admin')
 
 
 @tagged("mail_template")
