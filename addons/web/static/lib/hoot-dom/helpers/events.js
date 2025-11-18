@@ -1171,7 +1171,8 @@ async function _fill(target, value, options) {
 
     if (getTag(target) === "input") {
         switch (target.type) {
-            case "color": {
+            case "color":
+            case "time": {
                 target.value = String(value);
                 await _dispatch(target, "input");
                 await _dispatch(target, "change");

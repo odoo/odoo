@@ -217,7 +217,7 @@ describe("DateTimeInput (date)", () => {
     });
 
     test.tags("mobile");
-    test("popover should have enough space to be displayed", async () => {
+    test("popover should be inside a bottom sheet", async () => {
         class Root extends Component {
             static components = { DateTimeInput };
             static template = xml`<div class="d-flex"><DateTimeInput t-props="props" /></div>`;
@@ -230,18 +230,9 @@ describe("DateTimeInput (date)", () => {
             },
         });
         const parent = queryFirst(".o_datetime_input").parentElement;
-        const initialParentHeight = parent.clientHeight;
 
         await contains(".o_datetime_input", { root: parent }).click();
-
-        const pickerRectHeight = queryFirst(".o_datetime_picker").clientHeight;
-
-        expect(initialParentHeight).toBeLessThan(pickerRectHeight, {
-            message: "initial height shouldn't be big enough to display the picker",
-        });
-        expect(parent.clientHeight).toBeGreaterThan(pickerRectHeight, {
-            message: "initial height should be big enough to display the picker",
-        });
+        expect(".o_bottom_sheet .o_datetime_picker").toHaveCount(1);
     });
 });
 
@@ -402,7 +393,7 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:05");
         expect(getPickerCell("8", true)).toHaveClass("o_selected");
 
-        expect(".o_time_picker_input").toHaveValue("15:45");
+        expect(queryFirst(".o_time_picker_input").value).toBe("15:45");
     });
 
     test("Date time format is correctly set", async () => {

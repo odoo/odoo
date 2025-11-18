@@ -1,4 +1,5 @@
 import { markRaw, onPatched, onWillRender, reactive, useEffect, useRef } from "@odoo/owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
@@ -18,7 +19,6 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  *
  * @typedef {{
  *  createPopover?: (component: Component, options: PopoverServiceAddOptions) => PopoverHookReturnType;
- *  ensureVisibility?: () => boolean;
  *  format?: string;
  *  getInputs?: () => HTMLElement[];
  *  onApply?: (value: DateTimePickerProps["value"]) => any;
@@ -72,8 +72,8 @@ const parsers = {
 };
 
 export const datetimePickerService = {
-    dependencies: ["popover"],
-    start(env, { popover: popoverService }) {
+    dependencies: ["bottom_sheet", "popover", "ui"],
+    start(env, { bottom_sheet: bottomSheetService, popover: popoverService, ui }) {
         const dateTimePickerList = new Set();
         return {
             /**
@@ -186,6 +186,10 @@ export const datetimePickerService = {
                     return targetRef ? targetRef.el : params.target;
                 }
 
+                function isBottomSheet() {
+                    return env.isSmall && hasTouch();
+                }
+
                 function isOpen() {
                     return popover.isOpen;
                 }
@@ -255,21 +259,10 @@ export const datetimePickerService = {
                     pickerProps.focusedDateIndex = inputIndex;
 
                     if (!isOpen()) {
-                        const popoverTarget = getPopoverTarget();
-                        if (ensureVisibility()) {
-                            const { marginBottom } = popoverTarget.style;
-                            // Adds enough space for the popover to be displayed below the target
-                            // even on small screens.
-                            popoverTarget.style.marginBottom = `100vh`;
-                            popoverTarget.scrollIntoView(true);
-                            restoreTargetMargin = async () => {
-                                popoverTarget.style.marginBottom = marginBottom;
-                            };
-                        }
                         for (const picker of dateTimePickerList) {
                             picker.close();
                         }
-                        popover.open(popoverTarget, { pickerProps });
+                        popover.open(getPopoverTarget(), { pickerProps });
                     }
 
                     focusActiveInput();
@@ -418,12 +411,11 @@ export const datetimePickerService = {
                 const createPopover =
                     params.createPopover ||
                     function defaultCreatePopover(...args) {
-                        return makePopover(popoverService.add, ...args);
-                    };
-                const ensureVisibility =
-                    params.ensureVisibility ||
-                    function defaultEnsureVisibility() {
-                        return env.isSmall;
+                        let service = popoverService;
+                        if (ui.isSmall) {
+                            service = bottomSheetService;
+                        }
+                        return makePopover(service.add, ...args);
                     };
                 const getInputs =
                     params.getInputs ||
@@ -473,6 +465,7 @@ export const datetimePickerService = {
                     shouldFocus = true;
                 });
                 const popover = createPopover(DateTimePickerPopover, {
+                    useBottomSheet: isBottomSheet(),
                     async onClose() {
                         updateValueFromInputs();
                         setFocusClass(null);

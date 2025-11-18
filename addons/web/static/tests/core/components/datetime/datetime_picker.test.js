@@ -1,11 +1,12 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, resize } from "@odoo/hoot-dom";
+import { click, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { ensureArray } from "@web/core/utils/arrays";
 import {
     defineParams,
+    getMockEnv,
     mountWithCleanup,
     makeMockEnv,
     serverState,
@@ -72,12 +73,17 @@ test("default params", async () => {
         time: ["13:00"],
     });
 
-    await click(".o_time_picker_input");
-    await animationFrame();
-    expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(TIME_OPTIONS);
     expect(".o_datetime_picker").toHaveStyle({
         "--DateTimePicker__Day-template-columns": "8",
     });
+
+    if (!getMockEnv().isSmall) {
+        await click(".o_time_picker_input");
+        await animationFrame();
+        expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(
+            TIME_OPTIONS
+        );
+    }
 });
 
 test("minDate: correct days/month/year/decades are disabled", async () => {
@@ -110,9 +116,13 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
         time: ["13:00"],
     });
 
-    await click(".o_time_picker_input");
-    await animationFrame();
-    expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(TIME_OPTIONS);
+    if (!getMockEnv().isSmall) {
+        await click(".o_time_picker_input");
+        await animationFrame();
+        expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(
+            TIME_OPTIONS
+        );
+    }
 
     await click(".o_zoom_out");
     await animationFrame();
@@ -220,9 +230,13 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
         time: ["13:00"],
     });
 
-    await click(".o_time_picker_input");
-    await animationFrame();
-    expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(TIME_OPTIONS);
+    if (!getMockEnv().isSmall) {
+        await click(".o_time_picker_input");
+        await animationFrame();
+        expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(
+            TIME_OPTIONS
+        );
+    }
 
     await click(".o_zoom_out");
     await animationFrame();
@@ -348,9 +362,13 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
         time: ["13:00"],
     });
 
-    await click(".o_time_picker_input");
-    await animationFrame();
-    expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(TIME_OPTIONS);
+    if (!getMockEnv().isSmall) {
+        await click(".o_time_picker_input");
+        await animationFrame();
+        expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(
+            TIME_OPTIONS
+        );
+    }
 
     await click(".o_zoom_out");
     await animationFrame();
@@ -439,6 +457,7 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
     });
 });
 
+test.tags("desktop");
 test("twelve-hour clock with non-null focus date index", async () => {
     // Test the case when we have focusDateIndex != 0
     defineParams({
@@ -464,6 +483,7 @@ test("twelve-hour clock with non-null focus date index", async () => {
     expect.verifySteps(["2023-04-20T08:45:00,2023-04-23T07:15:00"]);
 });
 
+test.tags("desktop");
 test("twelve-hour clock", async () => {
     defineParams({
         lang_parameters: {
@@ -691,9 +711,8 @@ test("range value", async () => {
     });
 });
 
+test.tags("mobile");
 test("range value on small device", async () => {
-    await resize({ width: 300 });
-
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -722,14 +741,6 @@ test("range value on small device", async () => {
         ],
         time: ["9:30", "21:05"],
     });
-
-    await click(".o_time_picker_input:eq(0)");
-    await animationFrame();
-    expect(queryAllTexts(".o_time_picker_option")).toEqual(TIME_OPTIONS);
-
-    await click(".o_time_picker_input:eq(1)");
-    await animationFrame();
-    expect(queryAllTexts(".o_time_picker_option")).toEqual(TIME_OPTIONS);
 
     expect(".o_datetime_picker").toHaveStyle({
         "--DateTimePicker__Day-template-columns": "8",
@@ -826,7 +837,7 @@ test("different rounding", async () => {
     });
 
     await editTime("10:16");
-    expect(".o_time_picker_input").toHaveValue("10:20");
+    expect(queryFirst(".o_time_picker_input").value).toBe("10:20");
 });
 
 test("rounding=0 enables seconds", async () => {
@@ -836,7 +847,7 @@ test("rounding=0 enables seconds", async () => {
         },
     });
 
-    expect(".o_time_picker_input").toHaveValue("13:00:00");
+    expect(queryFirst(".o_time_picker_input").value).toBe("13:00:00");
 });
 
 test("no value, select date without handler", async () => {
@@ -1042,6 +1053,7 @@ test("single value, select time", async () => {
     expect.verifySteps(["2023-04-30T18:05:00"]);
 });
 
+test.tags("desktop");
 test("single value, select time in twelve-hour clock format", async () => {
     defineParams({
         lang_parameters: {
