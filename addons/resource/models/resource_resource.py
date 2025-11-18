@@ -296,7 +296,7 @@ class ResourceResource(models.Model):
         locale = babel_locale_parse(get_lang(self.env).code)
         week_start_date = weekstart(locale, start)
         week_end_date = weekend(locale, end)
-        end_week = weeknumber(locale, week_end_date)[1]
+        end_year, end_week = weeknumber(locale, week_end_date)
 
         min_start_date = week_start_date + relativedelta(hour=0, minute=0, second=0, microsecond=0)
         max_end_date = week_end_date + relativedelta(days=1, hour=0, minute=0, second=0, microsecond=0)
@@ -334,9 +334,10 @@ class ResourceResource(models.Model):
                 if day >= start_day and day <= end_day:
                     resource_hours_per_day[resource.id][day] = day_working_hours
 
-                week = weeknumber(babel_locale_parse(locale), day)
-                if week[1] <= end_week:
-                    resource_hours_per_week[resource.id][week] = min(resource.calendar_id.full_time_required_hours, day_working_hours + resource_hours_per_week[resource.id][week])
+                year_week = weeknumber(babel_locale_parse(locale), day)
+                year, week = year_week
+                if (year < end_year) or (year == end_year and week <= end_week):
+                    resource_hours_per_week[resource.id][year_week] = min(resource.calendar_id.full_time_required_hours, day_working_hours + resource_hours_per_week[resource.id][year_week])
 
         for calendar, resources in calendar_resources.items():
             domain = [('calendar_id', '=', False)] if not calendar else None
