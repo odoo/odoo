@@ -12,6 +12,8 @@ from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.urls import urljoin as url_join
 
+SURVEY_LEADERBOARD_MAX_PARTICIPANTS = 250
+
 
 class SurveySurvey(models.Model):
     """ Settings for a multi-page/multi-question survey. Each survey can have one or more attached pages
@@ -986,7 +988,7 @@ class SurveySurvey(models.Model):
             'id',
             'nickname',
             'scoring_total',
-        ], limit=15, order="scoring_total desc")
+        ], limit=SURVEY_LEADERBOARD_MAX_PARTICIPANTS, order="scoring_total desc")
 
         if leaderboard and self.session_state == 'in_progress' and \
            any(answer.answer_score for answer in self.session_question_id.suggested_answer_ids):

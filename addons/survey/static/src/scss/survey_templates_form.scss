@@ -417,11 +417,34 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
     }
 }
 
+@keyframes vertical-marquee {
+    0% { // Spend more time on top positions
+        transform: translateY(0);
+    }
+    98% {  // Scroll back up so viewers are not lost
+        transform: translateY(var(--surveyLeaderboardTranslateY));  // defined in JS
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
 .o_survey_session_leaderboard {
     font-size: 1.4rem;
 
     .o_survey_session_leaderboard_container {
         height: calc(2.8rem * 15);
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        .o_survey_leaderboard_scores {
+            animation: vertical-marquee 10s linear infinite;  // duration adjusted in JS
+            animation-delay: 10s;
+        }
     }
 
     .o_survey_session_leaderboard_item {
@@ -429,8 +452,8 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         width: 100%;
         transition: top ease-in-out .3s;
 
-        .o_survey_session_leaderboard_score {
-            width: 6.5rem;
+        .o_survey_session_leaderboard_position {
+            width: 12rem;
             padding-top: .2rem;
             height: 2.8rem;
         }
@@ -452,9 +475,16 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
             z-index: 1;
         }
 
-        .o_survey_session_leaderboard_name {
+        .o_survey_session_leaderboard_score {
             padding-top: .2rem;
             width: 7.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .o_survey_session_leaderboard_name {
+            margin-top: -2.6rem;
+            width: 9rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
