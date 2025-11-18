@@ -64,7 +64,7 @@ export class CashMovePopup extends Component {
         const order = this.pos.models["pos.order"].create({
             session_id: this.session,
             company_id: this.company,
-            config_id: this.config,
+            config_id: this.pos.config,
             user_id: this.user,
             ticket_code: "",
             tracking_number: "",
