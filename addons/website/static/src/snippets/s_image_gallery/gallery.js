@@ -15,6 +15,9 @@ export class Gallery extends Interaction {
         this.originalSources = [...this.el.querySelectorAll("img")].map((img) =>
             img.getAttribute("src")
         );
+        this.carouselEl = this.el.querySelector(".carousel");
+        this.carouselInstance =
+            this.carouselEl && window.Carousel.getOrCreateInstance(this.carouselEl);
     }
 
     /**
@@ -27,6 +30,13 @@ export class Gallery extends Interaction {
         const clickedEl = ev.currentTarget;
         if (clickedEl.matches("a > img")) {
             return;
+        }
+
+        // Pause carousel autoplay while the lightbox is active
+        if (this.carouselEl) {
+            this.carouselRideValue = this.carouselInstance._config.ride;
+            this.carouselInstance.pause();
+            this.carouselInstance._config.ride = false;
         }
 
         let imageEls = this.el.querySelectorAll("img");
@@ -64,6 +74,15 @@ export class Gallery extends Interaction {
         })[0];
         this.insert(this.modalEl, document.body);
         new Modal(this.modalEl, { keyboard: true }).show();
+
+        // Restore carousel autoplay when closing the lightbox modal
+        if (this.carouselEl) {
+            this.addListener(this.modalEl, "hidden.bs.modal", () => {
+                // Restore the carousel's original auto-cycling state
+                this.carouselInstance._config.ride = this.carouselRideValue;
+                this.carouselInstance._maybeEnableCycle();
+            });
+        }
     }
 }
 
