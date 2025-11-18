@@ -28,6 +28,7 @@ class AccountMove(models.Model):
   )
 
     def _l10n_sa_is_simplified(self):
+        # DEPRECATED - to be removed in master
         """
             Returns True if the customer is an individual, i.e: The invoice is B2C
         :return:
