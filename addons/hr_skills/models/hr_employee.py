@@ -160,6 +160,8 @@ class HrEmployee(models.Model):
             raise AccessError(self.env._("You cannot access the resume of this employee."))
         res = []
         employee_versions = self.env['hr.employee'].sudo().browse(res_id).version_ids
+        if not employee_versions:
+            return res
         interval_date_start = False
         for i in range(len(employee_versions) - 1):
             current_version = employee_versions[i]
