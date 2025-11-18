@@ -735,7 +735,7 @@ class BaseAutomation(models.Model):
             interval_type = 'hours'
         return interval, interval_type
 
-    def _filter_pre(self, records, feedback=False):
+    def _filter_pre(self, records, feedback=False, changed_fields=()):
         """ Filter the records that satisfy the precondition of automation ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_pre_domain and records:
@@ -744,9 +744,19 @@ class BaseAutomation(models.Model):
                 # automations while evaluating their precondition
                 records = records.with_context(__action_feedback=True)
             domain = safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
-            return records.sudo().filtered_domain(domain).with_env(records.env)
-        else:
-            return records
+            # keep computed fields depending on the currently changed field
+            # as-is so they are recomputed after the value is set
+            # see `test_computation_sequence`
+            to_compute = {
+                dep: comp
+                for f in changed_fields
+                for dep in self.env.registry.get_dependent_fields(f)
+                if (comp := self.env.records_to_compute(dep))
+            }
+            records = records.sudo().filtered_domain(domain).with_env(records.env)
+            for dep, comp in to_compute.items():
+                self.env.add_to_compute(dep, comp)
+        return records
 
     def _filter_post(self, records, feedback=False):
         return self._filter_post_export_domain(records, feedback)[0]
@@ -931,7 +941,9 @@ class BaseAutomation(models.Model):
                     _compute_field_value.origin(self, field)
                     return True
                 # check preconditions on records
-                pre = {a: a._filter_pre(records) for a in automations}
+                # changed fields are all fields computed by the function
+                changed_fields = [f for f in records._fields.values() if f.compute == field.compute]
+                pre = {a: a._filter_pre(records, changed_fields=changed_fields) for a in automations}
                 # read old values before the update
                 old_values = {
                     record.id: {fname: record[fname] for fname in stored_fnames}
