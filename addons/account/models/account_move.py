@@ -1048,17 +1048,14 @@ class AccountMove(models.Model):
     def _compute_partner_bank_id(self):
         def _bank_selection_key(bank):
             """Sorting priority:
-            0. Same currency as the move
-            1. No currency set
-            2. Different currency
+            0. Same currency as the move or no currency
+            1. Different currency
             Then: prefer banks allowing outgoing payments (trusted ones)
             """
-            if bank.currency_id == move.currency_id:
+            if bank.currency_id == move.currency_id or not bank.currency_id:
                 currency_priority = 0
-            elif not bank.currency_id:
-                currency_priority = 1
             else:
-                currency_priority = 2
+                currency_priority = 1
             return (currency_priority, not bank.allow_out_payment)
 
         for move in self:
