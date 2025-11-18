@@ -5002,6 +5002,54 @@ test(`aggregates monetary (currency field in view)`, async () => {
     expect(`tfoot`).toHaveText("$ 2,000.00");
 });
 
+test(`aggregates monetary (currency field not set)`, async () => {
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_test" });
+    Foo._fields.currency_test = fields.Many2one({ relation: "res.currency" });
+    Foo._records[0].currency_test = 1;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_test"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
+        "$ 1,200.00",
+        "500.00",
+        "300.00",
+        "0.00",
+    ]);
+    expect(`tfoot`).toHaveText("$ 0.00?");
+});
+
+test(`aggregates monetary (currency field not set on first record)`, async () => {
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_test" });
+    Foo._fields.currency_test = fields.Many2one({ relation: "res.currency" });
+    Foo._records[1].currency_test = 1;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_test"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
+        "1,200.00",
+        "$ 500.00",
+        "300.00",
+        "0.00",
+    ]);
+    expect(`tfoot`).toHaveText("$ 0.00?");
+});
+
 test(`aggregates monetary with custom digits (same currency)`, async () => {
     Foo._records = Foo._records.map((record) => ({
         ...record,
