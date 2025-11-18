@@ -1,3 +1,4 @@
+
 import logging
 import re
 import uuid
@@ -1687,7 +1688,7 @@ class AccountMove(models.Model):
                 discount_type = get_text(discount, './/Tipo')
                 discount_sign = -1 if discount_type == 'MG' else 1
                 if (discount_percentage := get_float(discount, './/Percentuale')) and not float_is_zero(discount_percentage, precision_rounding=move_line.currency_id.rounding):
-                    current_unit_price *= discount_sign * (100 - discount_percentage) / 100
+                    current_unit_price *= (100 - discount_sign * discount_percentage) / 100
                 elif discount_amount := get_float(discount, './/Importo'):
                     current_unit_price -= discount_sign * discount_amount
             expected_total = get_float(element, './/PrezzoTotale')
