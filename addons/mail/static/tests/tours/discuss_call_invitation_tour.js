@@ -37,6 +37,10 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
                 trigger: ".o-discuss-CallInvitation-cameraPreview",
             },
             {
+                trigger: ".o-discuss-CallPermissionDeniedDialog",
+                run: "press Escape",
+            },
+            {
                 trigger: ".o-discuss-CallInvitation-cameraPreview button[title='Turn camera on']",
             },
             {
@@ -52,6 +56,10 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
             {
                 trigger: ".o-discuss-CallInvitation button[title='Hide camera preview']",
                 run: "click",
+            },
+            {
+                trigger: ".o-discuss-CallPermissionDeniedDialog",
+                run: "press Escape",
             },
             {
                 trigger: ".o-discuss-CallInvitation-cameraPreview:not(:visible)",
