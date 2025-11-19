@@ -525,7 +525,8 @@ export function makeActionManager(env, router = _router) {
                     (!lastAction.context?.active_id ||
                         lastAction.context?.active_id === context.active_id) &&
                     (!lastAction.context?.active_ids ||
-                        shallowEqual(lastAction.context?.active_ids, context.active_ids))
+                        shallowEqual(lastAction.context?.active_ids, context.active_ids)) &&
+                    !lastAction.embedded_action_ids?.length
                 ) {
                     actionRequest = lastAction;
                 } else {
