@@ -1577,6 +1577,11 @@ class HrExpense(models.Model):
         return_vals = []
         for employee_sudo, expenses_sudo in self.sudo().grouped('employee_id').items():
             multiple_expenses_name = _("Expenses of %(employee)s", employee=employee_sudo.name)
+            if (len(expenses_sudo) > 1):
+                latest_date = expenses_sudo[0].date
+                for expense in expenses_sudo:
+                    latest_date = max(latest_date, expense.date)
+                multiple_expenses_name = _("Expenses of %(employee)s", employee=employee_sudo.name + " " + format_date(env=self.env, value=latest_date, date_format="medium"))
             move_ref = expenses_sudo.name if len(expenses_sudo) == 1 else multiple_expenses_name
             return_vals.append({
             **expenses_sudo._prepare_move_vals(),
