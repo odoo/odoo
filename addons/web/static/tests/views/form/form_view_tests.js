@@ -461,6 +461,19 @@ QUnit.module("Views", (hooks) => {
         }
     });
 
+    QUnit.test("button box rendering invisible", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><div name="button_box" invisible="1"><button id="btn1">MyButton</button></div></form>`,
+            resId: 2,
+        });
+        const panelActions = target.querySelector(".o_control_panel .o_control_panel_actions")
+        assert.strictEqual(panelActions.childElementCount, 0);
+        assert.strictEqual(panelActions.textContent, "");
+    });
+
     QUnit.test("form view gets size class on small and big screens", async (assert) => {
         let uiSize = SIZES.MD;
         const bus = new EventBus();
