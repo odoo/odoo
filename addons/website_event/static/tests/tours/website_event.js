@@ -83,9 +83,10 @@ function websiteEditEventTourSteps() {
         ...clickOnEditAndWaitEditMode(),
         {
             content: "edit the short description of the event",
-            trigger: ":iframe .opt_events_list_columns small",
+            trigger: ":iframe .opt_events_list_columns",
             run: function () {
-                this.anchor.innerHTML = "new short description";
+                const descriptionEl = this.anchor.querySelector("[itemprop='description']");
+                descriptionEl.textContent = "new short description";
             }
         },
         ...clickOnSave(),
