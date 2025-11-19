@@ -51,12 +51,6 @@ pdfjs-download-button-label = Descargar
 pdfjs-bookmark-button =
     .title = Página actual (Ver URL de la página actual)
 pdfjs-bookmark-button-label = Página actual
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Abrir en aplicación
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Abrir en aplicación
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Propiedades del documento…
 pdfjs-document-properties-file-name = Nombre de archivo:
 pdfjs-document-properties-file-size = Tamaño de archivo:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bytes)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Asunto:
 pdfjs-document-properties-keywords = Palabras clave:
 pdfjs-document-properties-creation-date = Fecha de creación:
 pdfjs-document-properties-modification-date = Fecha de modificación:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -281,6 +286,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Anotación { $type }]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -304,8 +312,6 @@ pdfjs-editor-stamp-button-label = Añadir o editar imágenes
 pdfjs-editor-highlight-button =
     .title = Resaltar
 pdfjs-editor-highlight-button-label = Resaltar
-pdfjs-highlight-floating-button =
-    .title = Resaltar
 pdfjs-highlight-floating-button1 =
     .title = Resaltar
     .aria-label = Resaltar
@@ -374,6 +380,22 @@ pdfjs-editor-resizer-label-bottom-right = Esquina inferior derecha — redimensi
 pdfjs-editor-resizer-label-bottom-middle = Borde inferior en el medio — redimensionar
 pdfjs-editor-resizer-label-bottom-left = Esquina inferior izquierda — redimensionar
 pdfjs-editor-resizer-label-middle-left = Borde izquierdo en el medio — redimensionar
+pdfjs-editor-resizer-top-left =
+    .aria-label = Esquina superior izquierda — redimensionar
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Borde superior en el medio — redimensionar
+pdfjs-editor-resizer-top-right =
+    .aria-label = Esquina superior derecha — redimensionar
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Borde derecho en el medio — redimensionar
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Esquina inferior derecha — redimensionar
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Borde inferior en el medio — redimensionar
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Esquina inferior izquierda — redimensionar
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Borde izquierdo en el medio — redimensionar
 
 ## Color picker
 
@@ -400,3 +422,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Mostrar todo
 pdfjs-editor-highlight-show-all-button =
     .title = Mostrar todo
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Editar texto alternativo (descripción de la imagen)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Añadir texto alternativo (descripción de la imagen)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Escribir la descripción aquí…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Breve descripción para las personas que no pueden ver la imagen o cuando la imagen no se carga.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Este texto alternativo fue creado automáticamente y puede ser inexacto.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Saber más
+pdfjs-editor-new-alt-text-create-automatically-button-label = Crear texto alternativo automáticamente
+pdfjs-editor-new-alt-text-not-now-button = Ahora no
+pdfjs-editor-new-alt-text-error-title = No se ha podido crear el texto alternativo automáticamente
+pdfjs-editor-new-alt-text-error-description = Escriba su propio texto alternativo o inténtelo de nuevo más tarde.
+pdfjs-editor-new-alt-text-error-close-button = Cerrar
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Descargando el modelo de IA de texto alternativo ({ $downloadedSize } de { $totalSize } MB)
+    .aria-valuetext = Descargando el modelo de IA de texto alternativo ({ $downloadedSize } de { $totalSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Se añadió el texto alternativo
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Falta el texto alternativo
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Revisar el texto alternativo
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Creado automáticamente: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Ajustes del texto alternativo de la imagen
+pdfjs-image-alt-text-settings-button-label = Ajustes del texto alternativo de la imagen
+pdfjs-editor-alt-text-settings-dialog-label = Ajustes del texto alternativo de la imagen
+pdfjs-editor-alt-text-settings-automatic-title = Texto alternativo automático
+pdfjs-editor-alt-text-settings-create-model-button-label = Crear texto alternativo automáticamente
+pdfjs-editor-alt-text-settings-create-model-description = Sugiere descripciones para ayudar a las personas que no pueden ver la imagen o cuando la imagen no se carga.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Modelo de IA de texto alternativo ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Se ejecuta localmente en el dispositivo para que los datos se mantengan privados. Requerido para texto alternativo automático.
+pdfjs-editor-alt-text-settings-delete-model-button = Eliminar
+pdfjs-editor-alt-text-settings-download-model-button = Descargar
+pdfjs-editor-alt-text-settings-downloading-model-button = Descargando…
+pdfjs-editor-alt-text-settings-editor-title = Editor de texto alternativo
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostrar el editor de texto alternativo inmediatamente al añadir una imagen
+pdfjs-editor-alt-text-settings-show-dialog-description = Le ayuda a asegurarse de que todas sus imágenes tengan texto alternativo.
+pdfjs-editor-alt-text-settings-close-button = Cerrar

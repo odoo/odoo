@@ -22,6 +22,9 @@
   --hover-filter:brightness(0.9);
   --focus-ring-color:#0060df;
   --focus-ring-outline:2px solid var(--focus-ring-color);
+  --link-fg-color:#0060df;
+  --link-hover-fg-color:#0250bb;
+  --separator-color:#f0f0f4;
 
   --textarea-border-color:#8f8f9d;
   --textarea-bg-color:white;
@@ -41,20 +44,10 @@
 
   --button-primary-bg-color:#0060df;
   --button-primary-fg-color:#fbfbfe;
+  --button-primary-border-color:var(--button-primary-bg-color);
   --button-primary-hover-bg-color:var(--button-primary-bg-color);
   --button-primary-hover-fg-color:var(--button-primary-fg-color);
   --button-primary-hover-border-color:var(--button-primary-hover-bg-color);
-
-  font:message-box;
-  font-size:13px;
-  font-weight:400;
-  line-height:150%;
-  border-radius:4px;
-  padding:12px 16px;
-  border:1px solid var(--dialog-border-color);
-  background:var(--dialog-bg-color);
-  color:var(--text-primary-color);
-  box-shadow:var(--dialog-shadow);
 }
 
 @media (prefers-color-scheme: dark){
@@ -67,6 +60,9 @@
     --text-secondary-color:#cfcfd8;
     --focus-ring-color:#0df;
     --hover-filter:brightness(1.4);
+    --link-fg-color:#0df;
+    --link-hover-fg-color:#80ebff;
+    --separator-color:#52525e;
 
     --textarea-bg-color:#42414d;
 
@@ -88,6 +84,9 @@
     --text-secondary-color:#cfcfd8;
     --focus-ring-color:#0df;
     --hover-filter:brightness(1.4);
+    --link-fg-color:#0df;
+    --link-hover-fg-color:#80ebff;
+    --separator-color:#52525e;
 
     --textarea-bg-color:#42414d;
 
@@ -110,6 +109,9 @@
     --text-secondary-color:CanvasText;
     --hover-filter:none;
     --focus-ring-color:ButtonBorder;
+    --link-fg-color:LinkText;
+    --link-hover-fg-color:LinkText;
+    --separator-color:CanvasText;
 
     --textarea-border-color:ButtonBorder;
     --textarea-bg-color:Field;
@@ -133,26 +135,70 @@
 }
   }
 
-.dialog .mainContainer *:focus-visible{
+.dialog{
+
+  font:message-box;
+  font-size:13px;
+  font-weight:400;
+  line-height:150%;
+  border-radius:4px;
+  padding:12px 16px;
+  border:1px solid var(--dialog-border-color);
+  background:var(--dialog-bg-color);
+  color:var(--text-primary-color);
+  box-shadow:var(--dialog-shadow);
+}
+
+:is(.dialog .mainContainer) *:focus-visible{
       outline:var(--focus-ring-outline);
       outline-offset:2px;
     }
 
-.dialog .mainContainer .radio{
+:is(.dialog .mainContainer) .title{
+      display:flex;
+      width:auto;
+      flex-direction:column;
+      justify-content:flex-end;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+:is(:is(.dialog .mainContainer) .title)  > span{
+        font-size:13px;
+        font-style:normal;
+        font-weight:590;
+        line-height:150%;
+      }
+
+:is(.dialog .mainContainer) .dialogSeparator{
+      width:100%;
+      height:0;
+      margin-block:4px;
+      border-top:1px solid var(--separator-color);
+      border-bottom:none;
+    }
+
+:is(.dialog .mainContainer) .dialogButtonsGroup{
+      display:flex;
+      gap:12px;
+      align-self:flex-end;
+    }
+
+:is(.dialog .mainContainer) .radio{
       display:flex;
       flex-direction:column;
       align-items:flex-start;
       gap:4px;
     }
 
-.dialog .mainContainer .radio > .radioButton{
+:is(:is(.dialog .mainContainer) .radio)  > .radioButton{
         display:flex;
         gap:8px;
         align-self:stretch;
         align-items:center;
       }
 
-.dialog .mainContainer .radio > .radioButton input{
+:is(:is(:is(.dialog .mainContainer) .radio) > .radioButton) input{
           -webkit-appearance:none;
              -moz-appearance:none;
                   appearance:none;
@@ -164,16 +210,16 @@
           border:1px solid var(--radio-border-color);
         }
 
-.dialog .mainContainer .radio > .radioButton input:hover{
+:is(:is(:is(:is(.dialog .mainContainer) .radio) > .radioButton) input):hover{
             filter:var(--hover-filter);
           }
 
-.dialog .mainContainer .radio > .radioButton input:checked{
+:is(:is(:is(:is(.dialog .mainContainer) .radio) > .radioButton) input):checked{
             background-color:var(--radio-checked-bg-color);
             border:4px solid var(--radio-checked-border-color);
           }
 
-.dialog .mainContainer .radio > .radioLabel{
+:is(:is(.dialog .mainContainer) .radio)  > .radioLabel{
         display:flex;
         padding-inline-start:24px;
         align-items:flex-start;
@@ -181,13 +227,13 @@
         align-self:stretch;
       }
 
-.dialog .mainContainer .radio > .radioLabel > span{
+:is(:is(:is(.dialog .mainContainer) .radio) > .radioLabel)  > span{
           flex:1 0 0;
           font-size:11px;
           color:var(--text-secondary-color);
         }
 
-.dialog .mainContainer button{
+:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton)){
       border-radius:4px;
       border:1px solid;
       font:menu;
@@ -197,37 +243,45 @@
       height:32px;
     }
 
-.dialog .mainContainer button:hover{
+:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton))):hover{
         cursor:pointer;
         filter:var(--hover-filter);
       }
 
-.dialog .mainContainer button.secondaryButton{
+.secondaryButton:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton))){
         color:var(--button-secondary-fg-color);
         background-color:var(--button-secondary-bg-color);
         border-color:var(--button-secondary-border-color);
       }
 
-.dialog .mainContainer button.secondaryButton:hover{
+.secondaryButton:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton))):hover{
           color:var(--button-secondary-hover-fg-color);
           background-color:var(--button-secondary-hover-bg-color);
           border-color:var(--button-secondary-hover-border-color);
         }
 
-.dialog .mainContainer button.primaryButton{
-        color:var(--button-primary-hover-fg-color);
-        background-color:var(--button-primary-hover-bg-color);
-        border-color:var(--button-primary-hover-border-color);
+.primaryButton:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton))){
+        color:var(--button-primary-fg-color);
+        background-color:var(--button-primary-bg-color);
+        border-color:var(--button-primary-border-color);
         opacity:1;
       }
 
-.dialog .mainContainer button.primaryButton:hover{
+.primaryButton:is(:is(.dialog .mainContainer) button:not(:is(.toggle-button,.closeButton))):hover{
           color:var(--button-primary-hover-fg-color);
           background-color:var(--button-primary-hover-bg-color);
           border-color:var(--button-primary-hover-border-color);
         }
 
-.dialog .mainContainer textarea{
+:is(.dialog .mainContainer) a{
+      color:var(--link-fg-color);
+    }
+
+:is(:is(.dialog .mainContainer) a):hover{
+        color:var(--link-hover-fg-color);
+      }
+
+:is(.dialog .mainContainer) textarea{
       font:inherit;
       padding:8px;
       resize:none;
@@ -239,14 +293,183 @@
       color:var(--textarea-fg-color);
     }
 
-.dialog .mainContainer textarea:focus{
+:is(:is(.dialog .mainContainer) textarea):focus{
         outline-offset:0;
         border-color:transparent;
       }
 
-.dialog .mainContainer textarea:disabled{
+:is(:is(.dialog .mainContainer) textarea):disabled{
         pointer-events:none;
         opacity:0.4;
+      }
+
+:is(.dialog .mainContainer) .messageBar{
+      --message-bar-warning-icon:url(images/messageBar_warning.svg);
+      --closing-button-icon:url(images/messageBar_closingButton.svg);
+
+      --message-bar-bg-color:#ffebcd;
+      --message-bar-fg-color:#15141a;
+      --message-bar-border-color:rgb(0 0 0 / 0.08);
+      --message-bar-icon-color:#cd411e;
+      --message-bar-close-button-border-radius:4px;
+      --message-bar-close-button-border:none;
+      --message-bar-close-button-color:var(--text-primary-color);
+      --message-bar-close-button-hover-bg-color:rgb(21 20 26 / 0.14);
+      --message-bar-close-button-active-bg-color:rgb(21 20 26 / 0.21);
+      --message-bar-close-button-focus-bg-color:rgb(21 20 26 / 0.07);
+      --message-bar-close-button-color-hover:var(--text-primary-color);
+    }
+
+@media (prefers-color-scheme: dark){
+
+:where(html:not(.is-light)) :is(.dialog .mainContainer) .messageBar{
+        --message-bar-bg-color:#5a3100;
+        --message-bar-fg-color:#fbfbfe;
+        --message-bar-border-color:rgb(255 255 255 / 0.08);
+        --message-bar-icon-color:#e49c49;
+        --message-bar-close-button-hover-bg-color:rgb(251 251 254 / 0.14);
+        --message-bar-close-button-active-bg-color:rgb(251 251 254 / 0.21);
+        --message-bar-close-button-focus-bg-color:rgb(251 251 254 / 0.07);
+    }
+      }
+
+:where(html.is-dark) :is(.dialog .mainContainer) .messageBar{
+        --message-bar-bg-color:#5a3100;
+        --message-bar-fg-color:#fbfbfe;
+        --message-bar-border-color:rgb(255 255 255 / 0.08);
+        --message-bar-icon-color:#e49c49;
+        --message-bar-close-button-hover-bg-color:rgb(251 251 254 / 0.14);
+        --message-bar-close-button-active-bg-color:rgb(251 251 254 / 0.21);
+        --message-bar-close-button-focus-bg-color:rgb(251 251 254 / 0.07);
+    }
+
+@media screen and (forced-colors: active){
+
+:is(.dialog .mainContainer) .messageBar{
+        --message-bar-bg-color:HighlightText;
+        --message-bar-fg-color:CanvasText;
+        --message-bar-border-color:CanvasText;
+        --message-bar-icon-color:CanvasText;
+        --message-bar-close-button-color:ButtonText;
+        --message-bar-close-button-border:1px solid ButtonText;
+        --message-bar-close-button-hover-bg-color:ButtonText;
+        --message-bar-close-button-active-bg-color:ButtonText;
+        --message-bar-close-button-focus-bg-color:ButtonText;
+        --message-bar-close-button-color-hover:HighlightText;
+    }
+      }
+
+:is(.dialog .mainContainer) .messageBar{
+
+      display:flex;
+      position:relative;
+      padding:12px 8px 12px 0;
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-start;
+      gap:8px;
+      align-self:stretch;
+
+      border-radius:4px;
+      border:1px solid var(--message-bar-border-color);
+      background:var(--message-bar-bg-color);
+      color:var(--message-bar-fg-color);
+    }
+
+:is(:is(.dialog .mainContainer) .messageBar)  > div{
+        display:flex;
+        padding-inline-start:16px;
+        align-items:flex-start;
+        gap:8px;
+        align-self:stretch;
+      }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) > div)::before{
+          content:"";
+          display:inline-block;
+          width:16px;
+          height:16px;
+          -webkit-mask-image:var(--message-bar-warning-icon);
+                  mask-image:var(--message-bar-warning-icon);
+          -webkit-mask-size:cover;
+                  mask-size:cover;
+          background-color:var(--message-bar-icon-color);
+        }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) > div)  > div{
+          display:flex;
+          flex-direction:column;
+          align-items:flex-start;
+          gap:8px;
+          flex:1 0 0;
+        }
+
+:is(:is(:is(:is(.dialog .mainContainer) .messageBar) > div) > div) .title{
+            font-size:13px;
+            font-weight:590;
+          }
+
+:is(:is(:is(:is(.dialog .mainContainer) .messageBar) > div) > div) .description{
+            font-size:13px;
+          }
+
+:is(:is(.dialog .mainContainer) .messageBar) .closeButton{
+        position:absolute;
+        width:32px;
+        height:32px;
+        inset-inline-end:8px;
+        inset-block-start:8px;
+        background:none;
+        border-radius:var(--message-bar-close-button-border-radius);
+        border:var(--message-bar-close-button-border);
+      }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) .closeButton)::before{
+          content:"";
+          display:inline-block;
+          width:16px;
+          height:16px;
+          -webkit-mask-image:var(--closing-button-icon);
+                  mask-image:var(--closing-button-icon);
+          -webkit-mask-size:cover;
+                  mask-size:cover;
+          background-color:var(--message-bar-close-button-color);
+        }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) .closeButton):is(:hover,:active,:focus)::before{
+          background-color:var(--message-bar-close-button-color-hover);
+        }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) .closeButton):hover{
+          background-color:var(--message-bar-close-button-hover-bg-color);
+        }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) .closeButton):active{
+          background-color:var(--message-bar-close-button-active-bg-color);
+        }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) .closeButton):focus{
+          background-color:var(--message-bar-close-button-focus-bg-color);
+        }
+
+:is(:is(:is(.dialog .mainContainer) .messageBar) .closeButton)  > span{
+          display:inline-block;
+          width:0;
+          height:0;
+          overflow:hidden;
+        }
+
+:is(.dialog .mainContainer) .toggler{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      align-self:stretch;
+    }
+
+:is(:is(.dialog .mainContainer) .toggler)  > .togglerLabel{
+        -webkit-user-select:none;
+           -moz-user-select:none;
+                user-select:none;
       }
 
 .textLayer{
@@ -269,7 +492,7 @@
     touch-action:none;
   }
 
-.textLayer :is(span, br){
+.textLayer :is(span,br){
     color:transparent;
     position:absolute;
     white-space:pre;
@@ -277,8 +500,7 @@
     transform-origin:0% 0%;
   }
 
-.textLayer > :not(.markedContent),
-  .textLayer .markedContent span:not(.markedContent){
+.textLayer  > :not(.markedContent),.textLayer .markedContent span:not(.markedContent){
     z-index:1;
   }
 
@@ -287,18 +509,18 @@
     height:0;
   }
 
+.textLayer span[role="img"]{
+    -webkit-user-select:none;
+       -moz-user-select:none;
+            user-select:none;
+    cursor:default;
+  }
+
 .textLayer .highlight{
     --highlight-bg-color:rgb(180 0 170 / 0.25);
     --highlight-selected-bg-color:rgb(0 100 0 / 0.25);
     --highlight-backdrop-filter:none;
     --highlight-selected-backdrop-filter:none;
-
-    margin:-1px;
-    padding:1px;
-    background-color:var(--highlight-bg-color);
-    -webkit-backdrop-filter:var(--highlight-backdrop-filter);
-            backdrop-filter:var(--highlight-backdrop-filter);
-    border-radius:4px;
   }
 
 @media screen and (forced-colors: active){
@@ -313,23 +535,33 @@
   }
     }
 
-.textLayer .highlight.appended{
+.textLayer .highlight{
+
+    margin:-1px;
+    padding:1px;
+    background-color:var(--highlight-bg-color);
+    -webkit-backdrop-filter:var(--highlight-backdrop-filter);
+            backdrop-filter:var(--highlight-backdrop-filter);
+    border-radius:4px;
+  }
+
+.appended:is(.textLayer .highlight){
       position:initial;
     }
 
-.textLayer .highlight.begin{
+.begin:is(.textLayer .highlight){
       border-radius:4px 0 0 4px;
     }
 
-.textLayer .highlight.end{
+.end:is(.textLayer .highlight){
       border-radius:0 4px 4px 0;
     }
 
-.textLayer .highlight.middle{
+.middle:is(.textLayer .highlight){
       border-radius:0;
     }
 
-.textLayer .highlight.selected{
+.selected:is(.textLayer .highlight){
       background-color:var(--highlight-selected-bg-color);
       -webkit-backdrop-filter:var(--highlight-selected-backdrop-filter);
               backdrop-filter:var(--highlight-selected-backdrop-filter);
@@ -364,9 +596,9 @@
             user-select:none;
   }
 
-.textLayer .endOfContent.active{
-      top:0;
-    }
+.textLayer.selecting .endOfContent{
+    top:0;
+  }
 
 .annotationLayer{
   --annotation-unfocused-field-background:url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
@@ -376,12 +608,6 @@
   --input-disabled-border-color:transparent;
   --input-hover-border-color:black;
   --link-outline:none;
-
-  position:absolute;
-  top:0;
-  left:0;
-  pointer-events:none;
-  transform-origin:0 0;
 }
 
 @media screen and (forced-colors: active){
@@ -394,7 +620,7 @@
     --link-outline:1.5px solid LinkText;
 }
 
-    .annotationLayer .textWidgetAnnotation :is(input, textarea):required, .annotationLayer .choiceWidgetAnnotation select:required, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input:required{
+    .annotationLayer .textWidgetAnnotation :is(input,textarea):required,.annotationLayer .choiceWidgetAnnotation select:required,.annotationLayer .buttonWidgetAnnotation:is(.checkBox,.radioButton) input:required{
       outline:1.5px solid selectedItem;
     }
 
@@ -402,12 +628,12 @@
       outline:var(--link-outline);
     }
 
-      .annotationLayer .linkAnnotation:hover{
+      :is(.annotationLayer .linkAnnotation):hover{
         -webkit-backdrop-filter:var(--hcm-highlight-filter);
                 backdrop-filter:var(--hcm-highlight-filter);
       }
 
-      .annotationLayer .linkAnnotation > a:hover{
+      :is(.annotationLayer .linkAnnotation) > a:hover{
         opacity:0 !important;
         background:none !important;
         box-shadow:none;
@@ -436,6 +662,15 @@
     }
   }
 
+.annotationLayer{
+
+  position:absolute;
+  top:0;
+  left:0;
+  pointer-events:none;
+  transform-origin:0 0;
+}
+
 .annotationLayer[data-main-rotation="90"] .norotate{
     transform:rotate(270deg) translateX(-100%);
   }
@@ -448,8 +683,7 @@
     transform:rotate(90deg) translateY(-100%);
   }
 
-.annotationLayer.disabled section,
-    .annotationLayer.disabled .popup{
+.annotationLayer.disabled section,.annotationLayer.disabled .popup{
       pointer-events:none;
     }
 
@@ -460,7 +694,7 @@
     pointer-events:none;
   }
 
-.annotationLayer .annotationContent.freetext{
+.freetext:is(.annotationLayer .annotationContent){
       background:transparent;
       border:none;
       inset:0;
@@ -481,11 +715,15 @@
     transform-origin:0 0;
   }
 
-.annotationLayer section:has(div.annotationContent) canvas.annotationContent{
+:is(.annotationLayer section):has(div.annotationContent) canvas.annotationContent{
         display:none;
       }
 
-.annotationLayer :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton) > a{
+.textLayer.selecting ~ .annotationLayer section{
+    pointer-events:none;
+  }
+
+.annotationLayer :is(.linkAnnotation,.buttonWidgetAnnotation.pushButton) > a{
     position:absolute;
     font-size:1em;
     top:0;
@@ -494,8 +732,7 @@
     height:100%;
   }
 
-.annotationLayer :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton):not(.hasBorder)
-    > a:hover{
+.annotationLayer :is(.linkAnnotation,.buttonWidgetAnnotation.pushButton):not(.hasBorder) > a:hover{
     opacity:0.2;
     background-color:rgb(255 255 0);
     box-shadow:0 2px 10px rgb(255 255 0);
@@ -518,7 +755,7 @@
     left:0;
   }
 
-.annotationLayer .textWidgetAnnotation :is(input, textarea), .annotationLayer .choiceWidgetAnnotation select, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input{
+.annotationLayer .textWidgetAnnotation :is(input,textarea),.annotationLayer .choiceWidgetAnnotation select,.annotationLayer .buttonWidgetAnnotation:is(.checkBox,.radioButton) input{
     background-image:var(--annotation-unfocused-field-background);
     border:2px solid var(--input-unfocused-border-color);
     box-sizing:border-box;
@@ -529,7 +766,7 @@
     width:100%;
   }
 
-.annotationLayer .textWidgetAnnotation :is(input, textarea):required, .annotationLayer .choiceWidgetAnnotation select:required, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input:required{
+.annotationLayer .textWidgetAnnotation :is(input,textarea):required,.annotationLayer .choiceWidgetAnnotation select:required,.annotationLayer .buttonWidgetAnnotation:is(.checkBox,.radioButton) input:required{
     outline:1.5px solid red;
   }
 
@@ -545,28 +782,28 @@
     resize:none;
   }
 
-.annotationLayer .textWidgetAnnotation [disabled]:is(input, textarea), .annotationLayer .choiceWidgetAnnotation select[disabled], .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input[disabled]{
+.annotationLayer .textWidgetAnnotation [disabled]:is(input,textarea),.annotationLayer .choiceWidgetAnnotation select[disabled],.annotationLayer .buttonWidgetAnnotation:is(.checkBox,.radioButton) input[disabled]{
     background:none;
     border:2px solid var(--input-disabled-border-color);
     cursor:not-allowed;
   }
 
-.annotationLayer .textWidgetAnnotation :is(input, textarea):hover, .annotationLayer .choiceWidgetAnnotation select:hover, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input:hover{
+.annotationLayer .textWidgetAnnotation :is(input,textarea):hover,.annotationLayer .choiceWidgetAnnotation select:hover,.annotationLayer .buttonWidgetAnnotation:is(.checkBox,.radioButton) input:hover{
     border:2px solid var(--input-hover-border-color);
   }
 
-.annotationLayer .textWidgetAnnotation :is(input, textarea):hover, .annotationLayer .choiceWidgetAnnotation select:hover, .annotationLayer .buttonWidgetAnnotation.checkBox input:hover{
+.annotationLayer .textWidgetAnnotation :is(input,textarea):hover,.annotationLayer .choiceWidgetAnnotation select:hover,.annotationLayer .buttonWidgetAnnotation.checkBox input:hover{
     border-radius:2px;
   }
 
-.annotationLayer .textWidgetAnnotation :is(input, textarea):focus, .annotationLayer .choiceWidgetAnnotation select:focus{
+.annotationLayer .textWidgetAnnotation :is(input,textarea):focus,.annotationLayer .choiceWidgetAnnotation select:focus{
     background:none;
     border:2px solid var(--input-focus-border-color);
     border-radius:2px;
     outline:var(--input-focus-outline);
   }
 
-.annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) :focus{
+.annotationLayer .buttonWidgetAnnotation:is(.checkBox,.radioButton) :focus{
     background-image:none;
     background-color:transparent;
   }
@@ -582,17 +819,14 @@
     outline:var(--input-focus-outline);
   }
 
-.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::before,
-  .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after,
-  .annotationLayer .buttonWidgetAnnotation.radioButton input:checked::before{
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::before,.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after,.annotationLayer .buttonWidgetAnnotation.radioButton input:checked::before{
     background-color:CanvasText;
     content:"";
     display:block;
     position:absolute;
   }
 
-.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::before,
-  .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after{
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::before,.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after{
     height:80%;
     left:45%;
     width:1px;
@@ -624,7 +858,7 @@
     width:103%;
   }
 
-.annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input{
+.annotationLayer .buttonWidgetAnnotation:is(.checkBox,.radioButton) input{
     -webkit-appearance:none;
        -moz-appearance:none;
             appearance:none;
@@ -716,7 +950,7 @@
     pointer-events:none;
   }
 
-.annotationLayer .annotationTextContent span{
+:is(.annotationLayer .annotationTextContent) span{
       width:100%;
       display:inline-block;
     }
@@ -1053,76 +1287,76 @@
     transform:none;
   }
 
-.canvasWrapper svg[data-main-rotation="90"] mask,
-      .canvasWrapper svg[data-main-rotation="90"] use:not(.clip, .mask){
+[data-main-rotation="90"]:is(.canvasWrapper svg) mask,[data-main-rotation="90"]:is(.canvasWrapper svg) use:not(.clip,.mask){
         transform:matrix(0, 1, -1, 0, 1, 0);
       }
 
-.canvasWrapper svg[data-main-rotation="180"] mask,
-      .canvasWrapper svg[data-main-rotation="180"] use:not(.clip, .mask){
+[data-main-rotation="180"]:is(.canvasWrapper svg) mask,[data-main-rotation="180"]:is(.canvasWrapper svg) use:not(.clip,.mask){
         transform:matrix(-1, 0, 0, -1, 1, 1);
       }
 
-.canvasWrapper svg[data-main-rotation="270"] mask,
-      .canvasWrapper svg[data-main-rotation="270"] use:not(.clip, .mask){
+[data-main-rotation="270"]:is(.canvasWrapper svg) mask,[data-main-rotation="270"]:is(.canvasWrapper svg) use:not(.clip,.mask){
         transform:matrix(0, -1, 1, 0, 0, 1);
       }
 
-.canvasWrapper svg.highlight{
+.highlight:is(.canvasWrapper svg){
       --blend-mode:multiply;
+    }
+
+@media screen and (forced-colors: active){
+
+.highlight:is(.canvasWrapper svg){
+        --blend-mode:difference;
+    }
+      }
+
+.highlight:is(.canvasWrapper svg){
 
       position:absolute;
       mix-blend-mode:var(--blend-mode);
     }
 
-@media screen and (forced-colors: active){
-
-.canvasWrapper svg.highlight{
-        --blend-mode:difference;
-    }
-      }
-
-.canvasWrapper svg.highlight:not(.free){
+.highlight:is(.canvasWrapper svg):not(.free){
         fill-rule:evenodd;
       }
 
-.canvasWrapper svg.highlightOutline{
+.highlightOutline:is(.canvasWrapper svg){
       position:absolute;
       mix-blend-mode:normal;
       fill-rule:evenodd;
       fill:none;
     }
 
-.canvasWrapper svg.highlightOutline.hovered:not(.free):not(.selected){
+.highlightOutline.hovered:is(.canvasWrapper svg):not(.free):not(.selected){
           stroke:var(--hover-outline-color);
           stroke-width:var(--outline-width);
         }
 
-.canvasWrapper svg.highlightOutline.selected:not(.free) .mainOutline{
+.highlightOutline.selected:is(.canvasWrapper svg):not(.free) .mainOutline{
             stroke:var(--outline-around-color);
             stroke-width:calc(
               var(--outline-width) + 2 * var(--outline-around-width)
             );
           }
 
-.canvasWrapper svg.highlightOutline.selected:not(.free) .secondaryOutline{
+.highlightOutline.selected:is(.canvasWrapper svg):not(.free) .secondaryOutline{
             stroke:var(--outline-color);
             stroke-width:var(--outline-width);
           }
 
-.canvasWrapper svg.highlightOutline.free.hovered:not(.selected){
+.highlightOutline.free.hovered:is(.canvasWrapper svg):not(.selected){
           stroke:var(--hover-outline-color);
           stroke-width:calc(2 * var(--outline-width));
         }
 
-.canvasWrapper svg.highlightOutline.free.selected .mainOutline{
+.highlightOutline.free.selected:is(.canvasWrapper svg) .mainOutline{
             stroke:var(--outline-around-color);
             stroke-width:calc(
               2 * (var(--outline-width) + var(--outline-around-width))
             );
           }
 
-.canvasWrapper svg.highlightOutline.free.selected .secondaryOutline{
+.highlightOutline.free.selected:is(.canvasWrapper svg) .secondaryOutline{
             stroke:var(--outline-color);
             stroke-width:calc(2 * var(--outline-width));
           }
@@ -1140,48 +1374,6 @@
   --size-item-small:16px;
   --size-item-large:32px;
   --color-canvas:white;
-
-  --toggle-background-color:var(--button-background-color);
-  --toggle-background-color-hover:var(--button-background-color-hover);
-  --toggle-background-color-active:var(--button-background-color-active);
-  --toggle-background-color-pressed:var(--color-accent-primary);
-  --toggle-background-color-pressed-hover:var(--color-accent-primary-hover);
-  --toggle-background-color-pressed-active:var(--color-accent-primary-active);
-  --toggle-border-color:var(--border-interactive-color);
-  --toggle-border-color-hover:var(--toggle-border-color);
-  --toggle-border-color-active:var(--toggle-border-color);
-  --toggle-border-radius:var(--border-radius-circle);
-  --toggle-border-width:var(--border-width);
-  --toggle-height:var(--size-item-small);
-  --toggle-width:var(--size-item-large);
-  --toggle-dot-background-color:var(--toggle-border-color);
-  --toggle-dot-background-color-hover:var(--toggle-dot-background-color);
-  --toggle-dot-background-color-active:var(--toggle-dot-background-color);
-  --toggle-dot-background-color-on-pressed:var(--color-canvas);
-  --toggle-dot-margin:1px;
-  --toggle-dot-height:calc(
-    var(--toggle-height) - 2 * var(--toggle-dot-margin) - 2 *
-      var(--toggle-border-width)
-  );
-  --toggle-dot-width:var(--toggle-dot-height);
-  --toggle-dot-transform-x:calc(
-    var(--toggle-width) - 4 * var(--toggle-dot-margin) - var(--toggle-dot-width)
-  );
-
-  -webkit-appearance:none;
-
-     -moz-appearance:none;
-
-          appearance:none;
-  padding:0;
-  margin:0;
-  border:var(--toggle-border-width) solid var(--toggle-border-color);
-  height:var(--toggle-height);
-  width:var(--toggle-width);
-  border-radius:var(--toggle-border-radius);
-  background:var(--toggle-background-color);
-  box-sizing:border-box;
-  flex-shrink:0;
 }
 
 @media (prefers-color-scheme: dark){
@@ -1240,6 +1432,51 @@
 }
   }
 
+.toggle-button{
+
+  --toggle-background-color:var(--button-background-color);
+  --toggle-background-color-hover:var(--button-background-color-hover);
+  --toggle-background-color-active:var(--button-background-color-active);
+  --toggle-background-color-pressed:var(--color-accent-primary);
+  --toggle-background-color-pressed-hover:var(--color-accent-primary-hover);
+  --toggle-background-color-pressed-active:var(--color-accent-primary-active);
+  --toggle-border-color:var(--border-interactive-color);
+  --toggle-border-color-hover:var(--toggle-border-color);
+  --toggle-border-color-active:var(--toggle-border-color);
+  --toggle-border-radius:var(--border-radius-circle);
+  --toggle-border-width:var(--border-width);
+  --toggle-height:var(--size-item-small);
+  --toggle-width:var(--size-item-large);
+  --toggle-dot-background-color:var(--toggle-border-color);
+  --toggle-dot-background-color-hover:var(--toggle-dot-background-color);
+  --toggle-dot-background-color-active:var(--toggle-dot-background-color);
+  --toggle-dot-background-color-on-pressed:var(--color-canvas);
+  --toggle-dot-margin:1px;
+  --toggle-dot-height:calc(
+    var(--toggle-height) - 2 * var(--toggle-dot-margin) - 2 *
+      var(--toggle-border-width)
+  );
+  --toggle-dot-width:var(--toggle-dot-height);
+  --toggle-dot-transform-x:calc(
+    var(--toggle-width) - 4 * var(--toggle-dot-margin) - var(--toggle-dot-width)
+  );
+
+  -webkit-appearance:none;
+
+     -moz-appearance:none;
+
+          appearance:none;
+  padding:0;
+  margin:0;
+  border:var(--toggle-border-width) solid var(--toggle-border-color);
+  height:var(--toggle-height);
+  width:var(--toggle-width);
+  border-radius:var(--toggle-border-radius);
+  background:var(--toggle-background-color);
+  box-sizing:border-box;
+  flex-shrink:0;
+}
+
 .toggle-button:focus-visible{
     outline:var(--focus-outline);
     outline-offset:var(--focus-outline-offset);
@@ -1286,8 +1523,7 @@
     background-color:var(--toggle-dot-background-color-on-pressed);
   }
 
-.toggle-button[aria-pressed="true"]:enabled:hover::before,
-  .toggle-button[aria-pressed="true"]:enabled:active::before{
+.toggle-button[aria-pressed="true"]:enabled:hover::before,.toggle-button[aria-pressed="true"]:enabled:active::before{
     background-color:var(--toggle-dot-background-color-on-pressed);
   }
 
@@ -1315,8 +1551,7 @@
       position:relative;
     }
 
-    .toggle-button[aria-pressed="true"]:enabled:hover,
-    .toggle-button[aria-pressed="true"]:enabled:hover:active{
+    .toggle-button[aria-pressed="true"]:enabled:hover,.toggle-button[aria-pressed="true"]:enabled:hover:active{
       border-color:var(--toggle-border-color-hover);
     }
 
@@ -1325,8 +1560,7 @@
       border-color:var(--toggle-dot-background-color-hover);
     }
 
-    .toggle-button:hover::before,
-    .toggle-button:active::before{
+    .toggle-button:hover::before,.toggle-button:active::before{
       background-color:var(--toggle-dot-background-color-hover);
     }
   }
@@ -1384,6 +1618,8 @@
   --editorInk-editing-cursor:url(images/cursor-editorInk.svg) 0 16, pointer;
   --editorHighlight-editing-cursor:url(images/cursor-editorTextHighlight.svg) 24 24, text;
   --editorFreeHighlight-editing-cursor:url(images/cursor-editorFreeHighlight.svg) 1 18, pointer;
+
+  --new-alt-text-warning-image:url(images/altText_warning.svg);
 }
 .visuallyHidden{
   position:absolute;
@@ -1407,8 +1643,16 @@
     cursor:var(--editorHighlight-editing-cursor);
   }
 
+[role="img"]:is(.textLayer.highlighting:not(.free) span){
+      cursor:var(--editorFreeHighlight-editing-cursor);
+    }
+
 .textLayer.highlighting.free span{
     cursor:var(--editorFreeHighlight-editing-cursor);
+  }
+
+:is(#viewerContainer.pdfPresentationMode:fullscreen,.annotationEditorLayer.disabled) .noAltTextBadge{
+    display:none !important;
   }
 
 @media (min-resolution: 1.1dppx){
@@ -1448,6 +1692,14 @@
   cursor:auto;
 }
 
+.annotationEditorLayer .selectedEditor{
+    z-index:100000 !important;
+  }
+
+.annotationEditorLayer.drawing *{
+    pointer-events:none !important;
+  }
+
 .annotationEditorLayer.waiting{
   content:"";
   cursor:wait;
@@ -1480,20 +1732,20 @@
   border:var(--unfocus-outline);
 }
 
-.annotationEditorLayer .draggable.selectedEditor:is(.freeTextEditor, .inkEditor, .stampEditor){
+.draggable.selectedEditor:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)){
     cursor:move;
   }
 
-.annotationEditorLayer .moving:is(.freeTextEditor, .inkEditor, .stampEditor){
+.moving:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)){
     touch-action:none;
   }
 
-.annotationEditorLayer .selectedEditor:is(.freeTextEditor, .inkEditor, .stampEditor){
+.selectedEditor:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)){
     border:var(--focus-outline);
     outline:var(--focus-outline-around);
   }
 
-.annotationEditorLayer .selectedEditor:is(.freeTextEditor, .inkEditor, .stampEditor)::before{
+.selectedEditor:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor))::before{
       content:"";
       position:absolute;
       inset:0;
@@ -1501,20 +1753,19 @@
       pointer-events:none;
     }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor):hover:not(.selectedEditor){
+:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)):hover:not(.selectedEditor){
     border:var(--hover-outline);
     outline:var(--hover-outline-around);
   }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor):hover:not(.selectedEditor)::before{
+:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)):hover:not(.selectedEditor)::before{
       content:"";
       position:absolute;
       inset:0;
       border:var(--focus-outline-around);
     }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar{
     --editor-toolbar-delete-image:url(images/editor-toolbar-delete.svg);
     --editor-toolbar-bg-color:#f0f0f4;
     --editor-toolbar-highlight-image:url(images/toolbarButton-editorHighlight.svg);
@@ -1529,6 +1780,53 @@
     --editor-toolbar-vert-offset:6px;
     --editor-toolbar-height:28px;
     --editor-toolbar-padding:2px;
+    --alt-text-done-color:#2ac3a2;
+    --alt-text-warning-color:#0090ed;
+    --alt-text-hover-done-color:var(--alt-text-done-color);
+    --alt-text-hover-warning-color:var(--alt-text-warning-color);
+  }
+
+@media (prefers-color-scheme: dark){
+
+:where(html:not(.is-light)) :is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar{
+      --editor-toolbar-bg-color:#2b2a33;
+      --editor-toolbar-fg-color:#fbfbfe;
+      --editor-toolbar-hover-bg-color:#52525e;
+      --editor-toolbar-focus-outline-color:#0df;
+      --alt-text-done-color:#54ffbd;
+      --alt-text-warning-color:#80ebff;
+  }
+    }
+
+:where(html.is-dark) :is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar{
+      --editor-toolbar-bg-color:#2b2a33;
+      --editor-toolbar-fg-color:#fbfbfe;
+      --editor-toolbar-hover-bg-color:#52525e;
+      --editor-toolbar-focus-outline-color:#0df;
+      --alt-text-done-color:#54ffbd;
+      --alt-text-warning-color:#80ebff;
+  }
+
+@media screen and (forced-colors: active){
+
+:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar{
+      --editor-toolbar-bg-color:ButtonFace;
+      --editor-toolbar-fg-color:ButtonText;
+      --editor-toolbar-border-color:ButtonText;
+      --editor-toolbar-hover-border-color:AccentColor;
+      --editor-toolbar-hover-bg-color:ButtonFace;
+      --editor-toolbar-hover-fg-color:AccentColor;
+      --editor-toolbar-hover-outline:2px solid var(--editor-toolbar-hover-border-color);
+      --editor-toolbar-focus-outline-color:ButtonBorder;
+      --editor-toolbar-shadow:none;
+      --alt-text-done-color:var(--editor-toolbar-fg-color);
+      --alt-text-warning-color:var(--editor-toolbar-fg-color);
+      --alt-text-hover-done-color:var(--editor-toolbar-hover-fg-color);
+      --alt-text-hover-warning-color:var(--editor-toolbar-hover-fg-color);
+  }
+    }
+
+:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar{
 
     display:flex;
     width:-moz-fit-content;
@@ -1552,63 +1850,23 @@
     box-shadow:var(--editor-toolbar-shadow);
   }
 
-@media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      --editor-toolbar-bg-color:#2b2a33;
-      --editor-toolbar-fg-color:#fbfbfe;
-      --editor-toolbar-hover-bg-color:#52525e;
-      --editor-toolbar-focus-outline-color:#0df;
-  }
-    }
-
-:where(html.is-dark) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      --editor-toolbar-bg-color:#2b2a33;
-      --editor-toolbar-fg-color:#fbfbfe;
-      --editor-toolbar-hover-bg-color:#52525e;
-      --editor-toolbar-focus-outline-color:#0df;
-  }
-
-@media screen and (forced-colors: active){
-
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      --editor-toolbar-bg-color:ButtonFace;
-      --editor-toolbar-fg-color:ButtonText;
-      --editor-toolbar-border-color:ButtonText;
-      --editor-toolbar-hover-border-color:AccentColor;
-      --editor-toolbar-hover-bg-color:ButtonFace;
-      --editor-toolbar-hover-fg-color:AccentColor;
-      --editor-toolbar-hover-outline:2px solid var(--editor-toolbar-hover-border-color);
-      --editor-toolbar-focus-outline-color:ButtonBorder;
-      --editor-toolbar-shadow:none;
-  }
-    }
-
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar.hidden{
+.hidden:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar){
       display:none;
     }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar:has(:focus-visible){
+:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar):has(:focus-visible){
       border-color:transparent;
     }
 
-[dir="ltr"] :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+[dir="ltr"] :is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar){
       transform-origin:100% 0;
     }
 
-[dir="rtl"] :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+[dir="rtl"] :is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar){
       transform-origin:0 0;
     }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons{
+:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons{
       display:flex;
       justify-content:center;
       align-items:center;
@@ -1616,24 +1874,22 @@
       height:100%;
     }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .divider{
-        width:1px;
+:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .divider{
+        width:0;
         height:calc(
           2 * var(--editor-toolbar-padding) + var(--editor-toolbar-height)
         );
-        background-color:var(--editor-toolbar-border-color);
+        border-left:1px solid var(--editor-toolbar-border-color);
+        border-right:none;
         display:inline-block;
         margin-inline:2px;
       }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton{
+:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .highlightButton{
         width:var(--editor-toolbar-height);
       }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton::before{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .highlightButton)::before{
           content:"";
           -webkit-mask-image:var(--editor-toolbar-highlight-image);
                   mask-image:var(--editor-toolbar-highlight-image);
@@ -1647,18 +1903,15 @@
           height:100%;
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton:hover::before{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .highlightButton):hover::before{
           background-color:var(--editor-toolbar-hover-fg-color);
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete{
+:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .delete{
         width:var(--editor-toolbar-height);
       }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete::before{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .delete)::before{
           content:"";
           -webkit-mask-image:var(--editor-toolbar-delete-image);
                   mask-image:var(--editor-toolbar-delete-image);
@@ -1672,25 +1925,21 @@
           height:100%;
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete:hover::before{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .delete):hover::before{
           background-color:var(--editor-toolbar-hover-fg-color);
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > *{
+:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons)  > *{
         height:var(--editor-toolbar-height);
       }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider){
+:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons)  > :not(.divider){
         border:none;
         background-color:transparent;
         cursor:pointer;
       }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):hover{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) > :not(.divider)):hover{
           border-radius:2px;
           background-color:var(--editor-toolbar-hover-bg-color);
           color:var(--editor-toolbar-hover-fg-color);
@@ -1698,19 +1947,16 @@
           outline-offset:1px;
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):hover:active{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) > :not(.divider)):hover:active{
             outline:none;
           }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):focus-visible{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) > :not(.divider)):focus-visible{
           border-radius:2px;
           outline:2px solid var(--editor-toolbar-focus-outline-color);
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText{
+:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText{
         --alt-text-add-image:url(images/altText_add.svg);
         --alt-text-done-image:url(images/altText_done.svg);
 
@@ -1727,13 +1973,11 @@
         color:var(--editor-toolbar-fg-color);
       }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText:disabled{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText):disabled{
           pointer-events:none;
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText::before{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText)::before{
           content:"";
           -webkit-mask-image:var(--alt-text-add-image);
                   mask-image:var(--alt-text-add-image);
@@ -1748,28 +1992,77 @@
           margin-inline-end:4px;
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText:hover::before{
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText):hover::before{
           background-color:var(--editor-toolbar-hover-fg-color);
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText.done::before{
+.done:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText)::before{
           -webkit-mask-image:var(--alt-text-done-image);
                   mask-image:var(--alt-text-done-image);
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip{
+.new:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText)::before{
+            width:16px;
+            height:16px;
+            -webkit-mask-image:var(--new-alt-text-warning-image);
+                    mask-image:var(--new-alt-text-warning-image);
+            background-color:var(--alt-text-warning-color);
+            -webkit-mask-size:cover;
+                    mask-size:cover;
+          }
+
+.new:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText):hover::before{
+            background-color:var(--alt-text-hover-warning-color);
+          }
+
+.new.done:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText)::before{
+              -webkit-mask-image:var(--alt-text-done-image);
+                      mask-image:var(--alt-text-done-image);
+              background-color:var(--alt-text-done-color);
+            }
+
+.new.done:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText):hover::before{
+              background-color:var(--alt-text-hover-done-color);
+            }
+
+:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText) .tooltip{
           display:none;
+          word-wrap:anywhere;
         }
 
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
+.show:is(:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText) .tooltip){
             --alt-text-tooltip-bg:#f0f0f4;
             --alt-text-tooltip-fg:#15141a;
             --alt-text-tooltip-border:#8f8f9d;
             --alt-text-tooltip-shadow:0px 2px 6px 0px rgb(58 57 68 / 0.2);
+          }
+
+@media (prefers-color-scheme: dark){
+
+:where(html:not(.is-light)) .show:is(:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText) .tooltip){
+              --alt-text-tooltip-bg:#1c1b22;
+              --alt-text-tooltip-fg:#fbfbfe;
+              --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
+          }
+            }
+
+:where(html.is-dark) .show:is(:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText) .tooltip){
+              --alt-text-tooltip-bg:#1c1b22;
+              --alt-text-tooltip-fg:#fbfbfe;
+              --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
+          }
+
+@media screen and (forced-colors: active){
+
+.show:is(:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText) .tooltip){
+              --alt-text-tooltip-bg:Canvas;
+              --alt-text-tooltip-fg:CanvasText;
+              --alt-text-tooltip-border:CanvasText;
+              --alt-text-tooltip-shadow:none;
+          }
+            }
+
+.show:is(:is(:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor,.highlightEditor),.textLayer) .editToolbar) .buttons) .altText) .tooltip){
 
             display:inline-flex;
             flex-direction:column;
@@ -1793,34 +2086,6 @@
 
             pointer-events:none;
           }
-
-@media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
-              --alt-text-tooltip-bg:#1c1b22;
-              --alt-text-tooltip-fg:#fbfbfe;
-              --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
-          }
-            }
-
-:where(html.is-dark) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
-              --alt-text-tooltip-bg:#1c1b22;
-              --alt-text-tooltip-fg:#fbfbfe;
-              --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
-          }
-
-@media screen and (forced-colors: active){
-
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
-              --alt-text-tooltip-bg:Canvas;
-              --alt-text-tooltip-fg:CanvasText;
-              --alt-text-tooltip-border:CanvasText;
-              --alt-text-tooltip-shadow:none;
-          }
-            }
 
 .annotationEditorLayer .freeTextEditor{
   padding:calc(var(--freetext-padding) * var(--scale-factor));
@@ -1889,23 +2154,86 @@
   height:auto;
 }
 
-.annotationEditorLayer .stampEditor canvas{
+:is(.annotationEditorLayer .stampEditor) canvas{
     position:absolute;
     width:100%;
     height:100%;
     margin:0;
+    top:0;
+    left:0;
   }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers{
+:is(.annotationEditorLayer .stampEditor) .noAltTextBadge{
+    --no-alt-text-badge-border-color:#f0f0f4;
+    --no-alt-text-badge-bg-color:#cfcfd8;
+    --no-alt-text-badge-fg-color:#5b5b66;
+  }
+
+@media (prefers-color-scheme: dark){
+
+:where(html:not(.is-light)) :is(.annotationEditorLayer .stampEditor) .noAltTextBadge{
+      --no-alt-text-badge-border-color:#52525e;
+      --no-alt-text-badge-bg-color:#fbfbfe;
+      --no-alt-text-badge-fg-color:#15141a;
+  }
+    }
+
+:where(html.is-dark) :is(.annotationEditorLayer .stampEditor) .noAltTextBadge{
+      --no-alt-text-badge-border-color:#52525e;
+      --no-alt-text-badge-bg-color:#fbfbfe;
+      --no-alt-text-badge-fg-color:#15141a;
+  }
+
+@media screen and (forced-colors: active){
+
+:is(.annotationEditorLayer .stampEditor) .noAltTextBadge{
+      --no-alt-text-badge-border-color:ButtonText;
+      --no-alt-text-badge-bg-color:ButtonFace;
+      --no-alt-text-badge-fg-color:ButtonText;
+  }
+    }
+
+:is(.annotationEditorLayer .stampEditor) .noAltTextBadge{
+
+    position:absolute;
+    inset-inline-end:5px;
+    inset-block-end:5px;
+    display:inline-flex;
+    width:32px;
+    height:32px;
+    padding:3px;
+    justify-content:center;
+    align-items:center;
+    pointer-events:none;
+    z-index:1;
+
+    border-radius:2px;
+    border:1px solid var(--no-alt-text-badge-border-color);
+    background:var(--no-alt-text-badge-bg-color);
+  }
+
+:is(:is(.annotationEditorLayer .stampEditor) .noAltTextBadge)::before{
+      content:"";
+      display:inline-block;
+      width:16px;
+      height:16px;
+      -webkit-mask-image:var(--new-alt-text-warning-image);
+              mask-image:var(--new-alt-text-warning-image);
+      -webkit-mask-size:cover;
+              mask-size:cover;
+      background-color:var(--no-alt-text-badge-fg-color);
+    }
+
+:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers{
       position:absolute;
       inset:0;
     }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers.hidden{
+.hidden:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers){
         display:none;
       }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer{
+:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer{
         width:var(--resizer-size);
         height:var(--resizer-size);
         background:content-box var(--resizer-bg-color);
@@ -1914,270 +2242,108 @@
         position:absolute;
       }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.topLeft{
+.topLeft:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           top:var(--resizer-shift);
           left:var(--resizer-shift);
         }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.topMiddle{
+.topMiddle:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           top:var(--resizer-shift);
           left:calc(50% + var(--resizer-shift));
         }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.topRight{
+.topRight:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           top:var(--resizer-shift);
           right:var(--resizer-shift);
         }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.middleRight{
+.middleRight:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           top:calc(50% + var(--resizer-shift));
           right:var(--resizer-shift);
         }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.bottomRight{
+.bottomRight:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           bottom:var(--resizer-shift);
           right:var(--resizer-shift);
         }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.bottomMiddle{
+.bottomMiddle:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           bottom:var(--resizer-shift);
           left:calc(50% + var(--resizer-shift));
         }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.bottomLeft{
+.bottomLeft:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           bottom:var(--resizer-shift);
           left:var(--resizer-shift);
         }
 
-.annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.middleLeft{
+.middleLeft:is(:is(:is(.annotationEditorLayer :is(.freeTextEditor,.inkEditor,.stampEditor)) > .resizers) > .resizer){
           top:calc(50% + var(--resizer-shift));
           left:var(--resizer-shift);
         }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomRight{
+.topLeft:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer),.bottomRight:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer){
         cursor:nwse-resize;
       }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomMiddle{
+.topMiddle:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer),.bottomMiddle:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer){
         cursor:ns-resize;
       }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomLeft{
+.topRight:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer),.bottomLeft:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer){
         cursor:nesw-resize;
       }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleLeft{
+.middleRight:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer),.middleLeft:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="180"],[data-editor-rotation="0"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="90"],[data-editor-rotation="270"])) > .resizers > .resizer){
         cursor:ew-resize;
       }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomRight{
+.topLeft:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer),.bottomRight:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer){
         cursor:nesw-resize;
       }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomMiddle{
+.topMiddle:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer),.bottomMiddle:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer){
         cursor:ew-resize;
       }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomLeft{
+.topRight:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer),.bottomLeft:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer){
         cursor:nwse-resize;
       }
 
-.annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleLeft{
+.middleRight:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer),.middleLeft:is(:is(.annotationEditorLayer[data-main-rotation="0"] :is([data-editor-rotation="90"],[data-editor-rotation="270"]),.annotationEditorLayer[data-main-rotation="90"] :is([data-editor-rotation="0"],[data-editor-rotation="180"]),.annotationEditorLayer[data-main-rotation="180"] :is([data-editor-rotation="270"],[data-editor-rotation="90"]),.annotationEditorLayer[data-main-rotation="270"] :is([data-editor-rotation="180"],[data-editor-rotation="0"])) > .resizers > .resizer){
         cursor:ns-resize;
       }
 
-.annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="90"],
-      [data-main-rotation="90"] [data-editor-rotation="0"],
-      [data-main-rotation="180"] [data-editor-rotation="270"],
-      [data-main-rotation="270"] [data-editor-rotation="180"]
-    ) .editToolbar{
+:is(.annotationEditorLayer :is([data-main-rotation="0"] [data-editor-rotation="90"],[data-main-rotation="90"] [data-editor-rotation="0"],[data-main-rotation="180"] [data-editor-rotation="270"],[data-main-rotation="270"] [data-editor-rotation="180"])) .editToolbar{
       rotate:270deg;
     }
 
-[dir="ltr"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="90"],
-      [data-main-rotation="90"] [data-editor-rotation="0"],
-      [data-main-rotation="180"] [data-editor-rotation="270"],
-      [data-main-rotation="270"] [data-editor-rotation="180"]
-    ) .editToolbar{
+[dir="ltr"] :is(:is(.annotationEditorLayer :is([data-main-rotation="0"] [data-editor-rotation="90"],[data-main-rotation="90"] [data-editor-rotation="0"],[data-main-rotation="180"] [data-editor-rotation="270"],[data-main-rotation="270"] [data-editor-rotation="180"])) .editToolbar){
         inset-inline-end:calc(0px - var(--editor-toolbar-vert-offset));
         inset-block-start:0;
       }
 
-[dir="rtl"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="90"],
-      [data-main-rotation="90"] [data-editor-rotation="0"],
-      [data-main-rotation="180"] [data-editor-rotation="270"],
-      [data-main-rotation="270"] [data-editor-rotation="180"]
-    ) .editToolbar{
+[dir="rtl"] :is(:is(.annotationEditorLayer :is([data-main-rotation="0"] [data-editor-rotation="90"],[data-main-rotation="90"] [data-editor-rotation="0"],[data-main-rotation="180"] [data-editor-rotation="270"],[data-main-rotation="270"] [data-editor-rotation="180"])) .editToolbar){
         inset-inline-end:calc(100% + var(--editor-toolbar-vert-offset));
         inset-block-start:0;
       }
 
-.annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="180"],
-      [data-main-rotation="90"] [data-editor-rotation="90"],
-      [data-main-rotation="180"] [data-editor-rotation="0"],
-      [data-main-rotation="270"] [data-editor-rotation="270"]
-    ) .editToolbar{
+:is(.annotationEditorLayer :is([data-main-rotation="0"] [data-editor-rotation="180"],[data-main-rotation="90"] [data-editor-rotation="90"],[data-main-rotation="180"] [data-editor-rotation="0"],[data-main-rotation="270"] [data-editor-rotation="270"])) .editToolbar{
       rotate:180deg;
       inset-inline-end:100%;
       inset-block-start:calc(0pc - var(--editor-toolbar-vert-offset));
     }
 
-.annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="270"],
-      [data-main-rotation="90"] [data-editor-rotation="180"],
-      [data-main-rotation="180"] [data-editor-rotation="90"],
-      [data-main-rotation="270"] [data-editor-rotation="0"]
-    ) .editToolbar{
+:is(.annotationEditorLayer :is([data-main-rotation="0"] [data-editor-rotation="270"],[data-main-rotation="90"] [data-editor-rotation="180"],[data-main-rotation="180"] [data-editor-rotation="90"],[data-main-rotation="270"] [data-editor-rotation="0"])) .editToolbar{
       rotate:90deg;
     }
 
-[dir="ltr"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="270"],
-      [data-main-rotation="90"] [data-editor-rotation="180"],
-      [data-main-rotation="180"] [data-editor-rotation="90"],
-      [data-main-rotation="270"] [data-editor-rotation="0"]
-    ) .editToolbar{
+[dir="ltr"] :is(:is(.annotationEditorLayer :is([data-main-rotation="0"] [data-editor-rotation="270"],[data-main-rotation="90"] [data-editor-rotation="180"],[data-main-rotation="180"] [data-editor-rotation="90"],[data-main-rotation="270"] [data-editor-rotation="0"])) .editToolbar){
         inset-inline-end:calc(100% + var(--editor-toolbar-vert-offset));
         inset-block-start:100%;
       }
 
-[dir="rtl"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="270"],
-      [data-main-rotation="90"] [data-editor-rotation="180"],
-      [data-main-rotation="180"] [data-editor-rotation="90"],
-      [data-main-rotation="270"] [data-editor-rotation="0"]
-    ) .editToolbar{
+[dir="rtl"] :is(:is(.annotationEditorLayer :is([data-main-rotation="0"] [data-editor-rotation="270"],[data-main-rotation="90"] [data-editor-rotation="180"],[data-main-rotation="180"] [data-editor-rotation="90"],[data-main-rotation="270"] [data-editor-rotation="0"])) .editToolbar){
         inset-inline-start:calc(0px - var(--editor-toolbar-vert-offset));
         inset-block-start:0;
       }
@@ -2201,7 +2367,7 @@
     gap:16px;
   }
 
-.dialog.altText #altTextContainer #overallDescription{
+:is(.dialog.altText #altTextContainer) #overallDescription{
       display:flex;
       flex-direction:column;
       align-items:flex-start;
@@ -2209,40 +2375,244 @@
       align-self:stretch;
     }
 
-.dialog.altText #altTextContainer #overallDescription span{
+:is(:is(.dialog.altText #altTextContainer) #overallDescription) span{
         align-self:stretch;
       }
 
-.dialog.altText #altTextContainer #overallDescription .title{
+:is(:is(.dialog.altText #altTextContainer) #overallDescription) .title{
         font-size:13px;
         font-style:normal;
         font-weight:590;
       }
 
-.dialog.altText #altTextContainer #addDescription{
+:is(.dialog.altText #altTextContainer) #addDescription{
       display:flex;
       flex-direction:column;
       align-items:stretch;
       gap:8px;
     }
 
-.dialog.altText #altTextContainer #addDescription .descriptionArea{
+:is(:is(.dialog.altText #altTextContainer) #addDescription) .descriptionArea{
         flex:1;
         padding-inline:24px 10px;
       }
 
-.dialog.altText #altTextContainer #addDescription .descriptionArea textarea{
+:is(:is(:is(.dialog.altText #altTextContainer) #addDescription) .descriptionArea) textarea{
           width:100%;
           min-height:75px;
         }
 
-.dialog.altText #altTextContainer #buttons{
+:is(.dialog.altText #altTextContainer) #buttons{
       display:flex;
       justify-content:flex-end;
       align-items:flex-start;
       gap:8px;
       align-self:stretch;
     }
+
+.dialog.newAltText{
+  --new-alt-text-ai-disclaimer-icon:url(images/altText_disclaimer.svg);
+  --new-alt-text-spinner-icon:url(images/altText_spinner.svg);
+  --preview-image-bg-color:#f0f0f4;
+  --preview-image-border:none;
+}
+
+@media (prefers-color-scheme: dark){
+
+:where(html:not(.is-light)) .dialog.newAltText{
+    --preview-image-bg-color:#2b2a33;
+}
+  }
+
+:where(html.is-dark) .dialog.newAltText{
+    --preview-image-bg-color:#2b2a33;
+}
+
+@media screen and (forced-colors: active){
+
+.dialog.newAltText{
+    --preview-image-bg-color:ButtonFace;
+    --preview-image-border:1px solid ButtonText;
+}
+  }
+
+.dialog.newAltText{
+
+  width:80%;
+  max-width:570px;
+  min-width:300px;
+  padding:0;
+}
+
+.dialog.newAltText.noAi #newAltTextDisclaimer,.dialog.newAltText.noAi #newAltTextCreateAutomatically{
+      display:none !important;
+    }
+
+.dialog.newAltText.aiInstalling #newAltTextCreateAutomatically{
+      display:none !important;
+    }
+
+.dialog.newAltText.aiInstalling #newAltTextDownloadModel{
+      display:flex !important;
+    }
+
+.dialog.newAltText.error #newAltTextNotNow{
+      display:none !important;
+    }
+
+.dialog.newAltText.error #newAltTextCancel{
+      display:inline-block !important;
+    }
+
+.dialog.newAltText:not(.error) #newAltTextError{
+    display:none !important;
+  }
+
+.dialog.newAltText #newAltTextContainer{
+    display:flex;
+    width:auto;
+    padding:16px;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:flex-start;
+    gap:12px;
+    flex:0 1 auto;
+    line-height:normal;
+  }
+
+:is(.dialog.newAltText #newAltTextContainer) #mainContent{
+      display:flex;
+      justify-content:flex-end;
+      align-items:flex-start;
+      gap:12px;
+      align-self:stretch;
+      flex:1 1 auto;
+    }
+
+:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionAndSettings{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:16px;
+        flex:1 0 0;
+        align-self:stretch;
+      }
+
+:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:8px;
+        align-self:stretch;
+        flex:1 1 auto;
+      }
+
+:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer{
+          width:100%;
+          height:70px;
+          position:relative;
+        }
+
+:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer) textarea{
+            width:100%;
+            height:100%;
+            padding:8px;
+          }
+
+:is(:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer) textarea)::-moz-placeholder{
+              color:var(--text-secondary-color);
+            }
+
+:is(:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer) textarea)::placeholder{
+              color:var(--text-secondary-color);
+            }
+
+:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer) .altTextSpinner{
+            display:none;
+            position:absolute;
+            width:16px;
+            height:16px;
+            inset-inline-start:8px;
+            inset-block-start:8px;
+            -webkit-mask-size:cover;
+                    mask-size:cover;
+            background-color:var(--text-secondary-color);
+            pointer-events:none;
+          }
+
+.loading:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer) textarea::-moz-placeholder{
+              color:transparent;
+            }
+
+.loading:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer) textarea::placeholder{
+              color:transparent;
+            }
+
+.loading:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescriptionContainer) .altTextSpinner{
+              display:inline-block;
+              -webkit-mask-image:var(--new-alt-text-spinner-icon);
+                      mask-image:var(--new-alt-text-spinner-icon);
+            }
+
+:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDescription{
+          font-size:11px;
+        }
+
+:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDisclaimer{
+          display:flex;
+          flex-direction:row;
+          align-items:flex-start;
+          gap:4px;
+          font-size:11px;
+        }
+
+:is(:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #descriptionInstruction) #newAltTextDisclaimer)::before{
+            content:"";
+            display:inline-block;
+            width:17px;
+            height:16px;
+            -webkit-mask-image:var(--new-alt-text-ai-disclaimer-icon);
+                    mask-image:var(--new-alt-text-ai-disclaimer-icon);
+            -webkit-mask-size:cover;
+                    mask-size:cover;
+            background-color:var(--text-secondary-color);
+            flex:1 0 auto;
+          }
+
+:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #newAltTextDownloadModel{
+        display:flex;
+        align-items:center;
+        gap:4px;
+        align-self:stretch;
+      }
+
+:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #newAltTextDownloadModel)::before{
+          content:"";
+          display:inline-block;
+          width:16px;
+          height:16px;
+          -webkit-mask-image:var(--new-alt-text-spinner-icon);
+                  mask-image:var(--new-alt-text-spinner-icon);
+          -webkit-mask-size:cover;
+                  mask-size:cover;
+          background-color:var(--text-secondary-color);
+        }
+
+:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #newAltTextImagePreview{
+        width:180px;
+        aspect-ratio:1;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex:0 0 auto;
+        background-color:var(--preview-image-bg-color);
+        border:var(--preview-image-border);
+      }
+
+:is(:is(:is(.dialog.newAltText #newAltTextContainer) #mainContent) #newAltTextImagePreview)  > canvas{
+          max-width:100%;
+          max-height:100%;
+        }
 
 .colorPicker{
   --hover-outline-color:#0250bb;
@@ -2284,7 +2654,7 @@
     forced-color-adjust:none;
   }
 
-.colorPicker button:is(:hover, .selected) > .swatch{
+.colorPicker button:is(:hover,.selected) > .swatch{
     border:none;
   }
 
@@ -2317,11 +2687,11 @@
     transform-origin:0 0;
   }
 
-.annotationEditorLayer .highlightEditor:not(.free){
+:is(.annotationEditorLayer .highlightEditor):not(.free){
       transform:none;
     }
 
-.annotationEditorLayer .highlightEditor .internal{
+:is(.annotationEditorLayer .highlightEditor) .internal{
       position:absolute;
       top:0;
       left:0;
@@ -2330,21 +2700,21 @@
       pointer-events:auto;
     }
 
-.annotationEditorLayer .highlightEditor.disabled .internal{
+.disabled:is(.annotationEditorLayer .highlightEditor) .internal{
       pointer-events:none;
     }
 
-.annotationEditorLayer .highlightEditor.selectedEditor .internal{
+.selectedEditor:is(.annotationEditorLayer .highlightEditor) .internal{
         cursor:pointer;
       }
 
-.annotationEditorLayer .highlightEditor .editToolbar{
+:is(.annotationEditorLayer .highlightEditor) .editToolbar{
       --editor-toolbar-colorpicker-arrow-image:url(images/toolbarButton-menuArrow.svg);
 
       transform-origin:center !important;
     }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker{
+:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker{
           position:relative;
           width:auto;
           display:flex;
@@ -2354,7 +2724,7 @@
           padding:4px;
         }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker::after{
+:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker)::after{
             content:"";
             -webkit-mask-image:var(--editor-toolbar-colorpicker-arrow-image);
                     mask-image:var(--editor-toolbar-colorpicker-arrow-image);
@@ -2368,19 +2738,19 @@
             height:12px;
           }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker:hover::after{
+:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker):hover::after{
             background-color:var(--editor-toolbar-hover-fg-color);
           }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker:has(.dropdown:not(.hidden)){
+:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker):has(.dropdown:not(.hidden)){
             background-color:var(--editor-toolbar-hover-bg-color);
           }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker:has(.dropdown:not(.hidden))::after{
+:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker):has(.dropdown:not(.hidden))::after{
               scale:-1;
             }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown{
+:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker) .dropdown{
             position:absolute;
             display:flex;
             justify-content:center;
@@ -2396,7 +2766,7 @@
             width:calc(100% + 2 * var(--editor-toolbar-padding));
           }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button{
+:is(:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker) .dropdown) button{
               width:100%;
               height:auto;
               border:none;
@@ -2407,19 +2777,19 @@
               background:none;
             }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button:is(:active, :focus-visible){
+:is(:is(:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker) .dropdown) button):is(:active,:focus-visible){
                 outline:none;
               }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button > .swatch{
+:is(:is(:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker) .dropdown) button)  > .swatch{
                 outline-offset:2px;
               }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button[aria-selected="true"] > .swatch{
+[aria-selected="true"]:is(:is(:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker) .dropdown) button) > .swatch{
                 outline:2px solid var(--selected-outline-color);
               }
 
-.annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button:is(:hover, :active, :focus-visible) > .swatch{
+:is(:is(:is(:is(:is(:is(.annotationEditorLayer .highlightEditor) .editToolbar) .buttons) .colorPicker) .dropdown) button):is(:hover,:active,:focus-visible) > .swatch{
                 outline:2px solid var(--hover-outline-color);
               }
 
@@ -2428,20 +2798,10 @@
 }
 
 #highlightParamsToolbarContainer{
-  height:auto;
-  padding-inline:10px;
-  padding-block:10px 16px;
   gap:16px;
-  display:flex;
-  flex-direction:column;
-  box-sizing:border-box;
+  padding-inline:10px;
+  padding-block-end:12px;
 }
-
-#highlightParamsToolbarContainer .editorParamsLabel{
-    width:-moz-fit-content;
-    width:fit-content;
-    inset-inline-start:0;
-  }
 
 #highlightParamsToolbarContainer .colorPicker{
     display:flex;
@@ -2449,7 +2809,7 @@
     gap:8px;
   }
 
-#highlightParamsToolbarContainer .colorPicker .dropdown{
+:is(#highlightParamsToolbarContainer .colorPicker) .dropdown{
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -2457,7 +2817,7 @@
       height:auto;
     }
 
-#highlightParamsToolbarContainer .colorPicker .dropdown button{
+:is(:is(#highlightParamsToolbarContainer .colorPicker) .dropdown) button{
         width:auto;
         height:auto;
         border:none;
@@ -2467,22 +2827,23 @@
         align-items:center;
         background:none;
         flex:0 0 auto;
+        padding:0;
       }
 
-#highlightParamsToolbarContainer .colorPicker .dropdown button .swatch{
+:is(:is(:is(#highlightParamsToolbarContainer .colorPicker) .dropdown) button) .swatch{
           width:24px;
           height:24px;
         }
 
-#highlightParamsToolbarContainer .colorPicker .dropdown button:is(:active, :focus-visible){
+:is(:is(:is(#highlightParamsToolbarContainer .colorPicker) .dropdown) button):is(:active,:focus-visible){
           outline:none;
         }
 
-#highlightParamsToolbarContainer .colorPicker .dropdown button[aria-selected="true"] > .swatch{
+[aria-selected="true"]:is(:is(:is(#highlightParamsToolbarContainer .colorPicker) .dropdown) button) > .swatch{
           outline:2px solid var(--selected-outline-color);
         }
 
-#highlightParamsToolbarContainer .colorPicker .dropdown button:is(:hover, :active, :focus-visible) > .swatch{
+:is(:is(:is(#highlightParamsToolbarContainer .colorPicker) .dropdown) button):is(:hover,:active,:focus-visible) > .swatch{
           outline:2px solid var(--hover-outline-color);
         }
 
@@ -2494,13 +2855,12 @@
     align-self:stretch;
   }
 
-#highlightParamsToolbarContainer #editorHighlightThickness .editorParamsLabel{
-      width:100%;
+:is(#highlightParamsToolbarContainer #editorHighlightThickness) .editorParamsLabel{
       height:auto;
       align-self:stretch;
     }
 
-#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
+:is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker{
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -2511,28 +2871,27 @@
 
 @media (prefers-color-scheme: dark){
 
-:where(html:not(.is-light)) #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
+:where(html:not(.is-light)) :is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker{
         --example-color:#80808e;
     }
       }
 
-:where(html.is-dark) #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
+:where(html.is-dark) :is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker{
         --example-color:#80808e;
     }
 
 @media screen and (forced-colors: active){
 
-#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
+:is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker{
         --example-color:CanvasText;
     }
       }
 
-:is(#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker > .editorParamsSlider[disabled]){
+:is(:is(:is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker) > .editorParamsSlider[disabled]){
         opacity:0.4;
       }
 
-#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker::before,
-      #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker::after{
+:is(:is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker)::before,:is(:is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker)::after{
         content:"";
         width:8px;
         aspect-ratio:1;
@@ -2541,11 +2900,11 @@
         background-color:var(--example-color);
       }
 
-#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker::after{
+:is(:is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker)::after{
         width:24px;
       }
 
-#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker .editorParamsSlider{
+:is(:is(#highlightParamsToolbarContainer #editorHighlightThickness) .thicknessPicker) .editorParamsSlider{
         width:unset;
         height:14px;
       }
@@ -2558,8 +2917,29 @@
     align-self:stretch;
   }
 
-#highlightParamsToolbarContainer #editorHighlightVisibility .divider{
+:is(#highlightParamsToolbarContainer #editorHighlightVisibility) .divider{
       --divider-color:#d7d7db;
+    }
+
+@media (prefers-color-scheme: dark){
+
+:where(html:not(.is-light)) :is(#highlightParamsToolbarContainer #editorHighlightVisibility) .divider{
+        --divider-color:#8f8f9d;
+    }
+      }
+
+:where(html.is-dark) :is(#highlightParamsToolbarContainer #editorHighlightVisibility) .divider{
+        --divider-color:#8f8f9d;
+    }
+
+@media screen and (forced-colors: active){
+
+:is(#highlightParamsToolbarContainer #editorHighlightVisibility) .divider{
+        --divider-color:CanvasText;
+    }
+      }
+
+:is(#highlightParamsToolbarContainer #editorHighlightVisibility) .divider{
 
       margin-block:4px;
       width:100%;
@@ -2567,29 +2947,65 @@
       background-color:var(--divider-color);
     }
 
-@media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) #highlightParamsToolbarContainer #editorHighlightVisibility .divider{
-        --divider-color:#8f8f9d;
-    }
-      }
-
-:where(html.is-dark) #highlightParamsToolbarContainer #editorHighlightVisibility .divider{
-        --divider-color:#8f8f9d;
-    }
-
-@media screen and (forced-colors: active){
-
-#highlightParamsToolbarContainer #editorHighlightVisibility .divider{
-        --divider-color:CanvasText;
-    }
-      }
-
-#highlightParamsToolbarContainer #editorHighlightVisibility .toggler{
+:is(#highlightParamsToolbarContainer #editorHighlightVisibility) .toggler{
       display:flex;
       justify-content:space-between;
       align-items:center;
       align-self:stretch;
+    }
+
+#altTextSettingsDialog{
+  padding:16px;
+}
+
+#altTextSettingsDialog #altTextSettingsContainer{
+    display:flex;
+    width:573px;
+    flex-direction:column;
+    gap:16px;
+  }
+
+:is(#altTextSettingsDialog #altTextSettingsContainer) .mainContainer{
+      gap:16px;
+    }
+
+:is(#altTextSettingsDialog #altTextSettingsContainer) .description{
+      color:var(--text-secondary-color);
+    }
+
+:is(#altTextSettingsDialog #altTextSettingsContainer) #aiModelSettings{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+:is(:is(#altTextSettingsDialog #altTextSettingsContainer) #aiModelSettings) button{
+        width:-moz-fit-content;
+        width:fit-content;
+      }
+
+.download:is(:is(#altTextSettingsDialog #altTextSettingsContainer) #aiModelSettings) #deleteModelButton{
+          display:none;
+        }
+
+:is(:is(#altTextSettingsDialog #altTextSettingsContainer) #aiModelSettings):not(.download) #downloadModelButton{
+          display:none;
+        }
+
+:is(#altTextSettingsDialog #altTextSettingsContainer) #automaticAltText,:is(#altTextSettingsDialog #altTextSettingsContainer) #altTextEditor{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+:is(#altTextSettingsDialog #altTextSettingsContainer) #createModelDescription,:is(#altTextSettingsDialog #altTextSettingsContainer) #aiModelSettings,:is(#altTextSettingsDialog #altTextSettingsContainer) #showAltTextDialogDescription{
+      padding-inline-start:40px;
+    }
+
+:is(#altTextSettingsDialog #altTextSettingsContainer) #automaticSettings{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
     }
 
 :root{
@@ -2632,6 +3048,7 @@
 
 .pdfViewer{
   --scale-factor:1;
+  --page-bg-color:unset;
 
   padding-bottom:var(--pdfViewer-padding-bottom);
 
@@ -2646,31 +3063,40 @@
 }
   }
 
+.pdfViewer.copyAll{
+    cursor:wait;
+  }
+
 .pdfViewer .canvasWrapper{
     overflow:hidden;
     width:100%;
     height:100%;
   }
 
-.pdfViewer .canvasWrapper canvas{
+:is(.pdfViewer .canvasWrapper) canvas{
       margin:0;
       display:block;
+      width:100%;
+      height:100%;
     }
 
-.pdfViewer .canvasWrapper canvas[hidden]{
+[hidden]:is(:is(.pdfViewer .canvasWrapper) canvas){
         display:none;
       }
 
-.pdfViewer .canvasWrapper canvas[zooming]{
+[zooming]:is(:is(.pdfViewer .canvasWrapper) canvas){
         width:100%;
         height:100%;
       }
 
-.pdfViewer .canvasWrapper canvas .structTree{
+:is(:is(.pdfViewer .canvasWrapper) canvas) .structTree{
         contain:strict;
       }
 
 .pdfViewer .page{
+  --scale-round-x:1px;
+  --scale-round-y:1px;
+
   direction:ltr;
   width:816px;
   height:1056px;
@@ -2679,7 +3105,7 @@
   overflow:visible;
   border:var(--page-border);
   background-clip:content-box;
-  background-color:rgb(255 255 255);
+  background-color:var(--page-bg-color, rgb(255 255 255));
 }
 
 .pdfViewer .dummyPage{
@@ -2777,9 +3203,14 @@
   --sidebar-transition-duration:200ms;
   --sidebar-transition-timing-function:ease;
 
+  --toolbar-height:32px;
+  --toolbar-horizontal-padding:1px;
+  --toolbar-vertical-padding:2px;
+  --icon-size:16px;
+
   --toolbar-icon-opacity:0.7;
   --doorhanger-icon-opacity:0.9;
-  --editor-toolbar-base-offset:105px;
+  --doorhanger-height:8px;
 
   --main-color:rgb(12 12 13);
   --body-bg-color:rgb(212 212 215);
@@ -2866,6 +3297,9 @@
   --secondaryToolbarButton-spreadNone-icon:url(images/secondaryToolbarButton-spreadNone.svg);
   --secondaryToolbarButton-spreadOdd-icon:url(images/secondaryToolbarButton-spreadOdd.svg);
   --secondaryToolbarButton-spreadEven-icon:url(images/secondaryToolbarButton-spreadEven.svg);
+  --secondaryToolbarButton-imageAltTextSettings-icon:var(
+    --toolbarButton-editorStamp-icon
+  );
   --secondaryToolbarButton-documentProperties-icon:url(images/secondaryToolbarButton-documentProperties.svg);
   --editorParams-stampAddImage-icon:url(images/toolbarButton-zoomIn.svg);
 }
@@ -2994,10 +3428,23 @@
   }
 }
 
-*{
-  padding:0;
-  margin:0;
+@keyframes progressIndeterminate{
+  0%{
+    transform:translateX(calc(-142px * var(--dir-factor)));
+  }
+
+  100%{
+    transform:translateX(0);
+  }
 }
+
+html[data-toolbar-density="compact"]{
+    --toolbar-height:30px;
+  }
+
+html[data-toolbar-density="touch"]{
+    --toolbar-height:44px;
+  }
 
 html,
 body{
@@ -3006,9 +3453,19 @@ body{
 }
 
 body{
+  margin:0;
   background-color:var(--body-bg-color);
   scrollbar-color:var(--scrollbar-color) var(--scrollbar-bg-color);
 }
+
+body.wait::before{
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:100000;
+    cursor:wait;
+  }
 
 .hidden,
 [hidden]{
@@ -3044,17 +3501,18 @@ body{
   width:100%;
   height:100%;
   position:relative;
+  margin:0;
 }
 
 #sidebarContainer{
   position:absolute;
-  inset-block:32px 0;
+  inset-block:var(--toolbar-height) 0;
   inset-inline-start:calc(-1 * var(--sidebar-width));
   width:var(--sidebar-width);
   visibility:hidden;
-  z-index:100;
+  z-index:1;
   font:message-box;
-  border-top:1px solid rgb(51 51 51);
+  border-top:1px solid transparent;
   border-inline-end:var(--doorhanger-border-color-whcm);
   transition-property:inset-inline-start;
   transition-duration:var(--sidebar-transition-duration);
@@ -3064,6 +3522,7 @@ body{
 #outerContainer:is(.sidebarMoving, .sidebarOpen) #sidebarContainer{
   visibility:visible;
 }
+
 #outerContainer.sidebarOpen #sidebarContainer{
   inset-inline-start:0;
 }
@@ -3072,10 +3531,13 @@ body{
   position:absolute;
   inset:0;
   min-width:350px;
+  margin:0;
+  display:flex;
+  flex-direction:column;
 }
 
 #sidebarContent{
-  inset-block:32px 0;
+  inset-block:var(--toolbar-height) 0;
   inset-inline-start:0;
   overflow:auto;
   position:absolute;
@@ -3086,9 +3548,11 @@ body{
 #viewerContainer{
   overflow:auto;
   position:absolute;
-  inset:32px 0 0;
+  inset:var(--toolbar-height) 0 0;
   outline:none;
+  z-index:0;
 }
+
 #viewerContainer:not(.pdfPresentationMode){
   transition-duration:var(--sidebar-transition-duration);
   transition-timing-function:var(--sidebar-transition-timing-function);
@@ -3099,32 +3563,55 @@ body{
   transition-property:inset-inline-start;
 }
 
+#sidebarContainer :is(input, button, select){
+  font:message-box;
+}
+
 .toolbar{
-  position:relative;
-  inset-inline:0;
-  z-index:9999;
-  cursor:default;
-  font:message-box;
-}
-
-:is(.toolbar, .editorParamsToolbar, .findbar, #sidebarContainer)
-  :is(input, button, select),
-.secondaryToolbar :is(input, button, a, select){
-  outline:none;
-  font:message-box;
-}
-
-#toolbarContainer{
-  width:100%;
+  z-index:2;
 }
 
 #toolbarSidebar{
   width:100%;
-  height:32px;
+  height:var(--toolbar-height);
   background-color:var(--sidebar-toolbar-bg-color);
   box-shadow:var(--toolbarSidebar-box-shadow);
   border-bottom:var(--toolbarSidebar-border-bottom);
+  padding:var(--toolbar-vertical-padding) var(--toolbar-horizontal-padding);
+  justify-content:space-between;
 }
+
+#toolbarSidebar #toolbarSidebarLeft{
+    width:auto;
+    height:100%;
+  }
+
+:is(#toolbarSidebar #toolbarSidebarLeft) #viewThumbnail::before{
+      -webkit-mask-image:var(--toolbarButton-viewThumbnail-icon);
+              mask-image:var(--toolbarButton-viewThumbnail-icon);
+    }
+
+:is(#toolbarSidebar #toolbarSidebarLeft) #viewOutline::before{
+      -webkit-mask-image:var(--toolbarButton-viewOutline-icon);
+              mask-image:var(--toolbarButton-viewOutline-icon);
+      transform:scaleX(var(--dir-factor));
+    }
+
+:is(#toolbarSidebar #toolbarSidebarLeft) #viewAttachments::before{
+      -webkit-mask-image:var(--toolbarButton-viewAttachments-icon);
+              mask-image:var(--toolbarButton-viewAttachments-icon);
+    }
+
+:is(#toolbarSidebar #toolbarSidebarLeft) #viewLayers::before{
+      -webkit-mask-image:var(--toolbarButton-viewLayers-icon);
+              mask-image:var(--toolbarButton-viewLayers-icon);
+    }
+
+#toolbarSidebar #toolbarSidebarRight{
+    width:auto;
+    height:100%;
+    padding-inline-end:2px;
+  }
 
 #sidebarResizer{
   position:absolute;
@@ -3135,83 +3622,8 @@ body{
   cursor:ew-resize;
 }
 
-#toolbarContainer,
-.findbar,
-.secondaryToolbar,
-.editorParamsToolbar{
-  position:relative;
-  height:32px;
-  background-color:var(--toolbar-bg-color);
-  box-shadow:var(--toolbar-box-shadow);
-  border-bottom:var(--toolbar-border-bottom);
-}
-
-#toolbarViewer{
-  height:32px;
-}
-
-#loadingBar{
-  --progressBar-percent:0%;
-  --progressBar-end-offset:0;
-
-  position:absolute;
-  inset-inline:0 var(--progressBar-end-offset);
-  height:4px;
-  background-color:var(--progressBar-bg-color);
-  border-bottom:1px solid var(--toolbar-border-color);
-  transition-property:inset-inline-start;
-  transition-duration:var(--sidebar-transition-duration);
-  transition-timing-function:var(--sidebar-transition-timing-function);
-}
-
 #outerContainer.sidebarOpen #loadingBar{
   inset-inline-start:var(--sidebar-width);
-}
-
-#loadingBar .progress{
-  position:absolute;
-  top:0;
-  inset-inline-start:0;
-  width:100%;
-  transform:scaleX(var(--progressBar-percent));
-  transform-origin:calc(50% - 50% * var(--dir-factor)) 0;
-  height:100%;
-  background-color:var(--progressBar-color);
-  overflow:hidden;
-  transition:transform 200ms;
-}
-
-@keyframes progressIndeterminate{
-  0%{
-    transform:translateX(calc(-142px * var(--dir-factor)));
-  }
-  100%{
-    transform:translateX(0);
-  }
-}
-
-#loadingBar.indeterminate .progress{
-  transform:none;
-  background-color:var(--progressBar-bg-color);
-  transition:none;
-}
-
-#loadingBar.indeterminate .progress .glimmer{
-  position:absolute;
-  top:0;
-  inset-inline-start:0;
-  height:100%;
-  width:calc(100% + 150px);
-  background:repeating-linear-gradient(
-    135deg,
-    var(--progressBar-blend-color) 0,
-    var(--progressBar-bg-color) 5px,
-    var(--progressBar-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-blend-color) 100px
-  );
-  animation:progressIndeterminate 1s linear infinite;
 }
 
 #outerContainer.sidebarResizing
@@ -3219,271 +3631,62 @@ body{
   transition-duration:0s;
 }
 
-.findbar,
-.secondaryToolbar,
-.editorParamsToolbar{
-  top:32px;
-  position:absolute;
-  z-index:30000;
-  height:auto;
-  padding:0 4px;
-  margin:4px 2px;
-  font:message-box;
-  font-size:12px;
-  line-height:14px;
-  text-align:left;
-  cursor:default;
-}
-
-.findbar{
-  inset-inline-start:64px;
-  min-width:300px;
-  background-color:var(--toolbar-bg-color);
-}
-.findbar > div{
-  height:32px;
-}
-.findbar > div#findbarInputContainer{
-  margin-inline-end:4px;
-}
-.findbar.wrapContainers > div,
-.findbar.wrapContainers > div#findbarMessageContainer > *{
-  clear:both;
-}
-.findbar.wrapContainers > div#findbarMessageContainer{
-  height:auto;
-}
-
-.findbar input[type="checkbox"]{
-  pointer-events:none;
-}
-
-.findbar label{
-  -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
-}
-
-.findbar label:hover,
-.findbar input:focus-visible + label{
-  color:var(--toggled-btn-color);
-  background-color:var(--button-hover-color);
-}
-
-.findbar .toolbarField[type="checkbox"]:checked + .toolbarLabel{
-  background-color:var(--toggled-btn-bg-color) !important;
-  color:var(--toggled-btn-color);
-}
-
-#findInput{
-  width:200px;
-}
-
-#findInput::-moz-placeholder{
-    font-style:normal;
-  }
-
-#findInput::placeholder{
-    font-style:normal;
-  }
-
-.loadingInput:has(> #findInput[data-status="pending"])::after{
-    display:block;
-    visibility:visible;
-  }
-
-#findInput[data-status="notFound"]{
-    background-color:rgb(255 102 102);
-  }
-
-.secondaryToolbar,
-.editorParamsToolbar{
-  padding:6px 0 10px;
-  inset-inline-end:4px;
-  height:auto;
-  background-color:var(--doorhanger-bg-color);
-}
-
-.editorParamsToolbarContainer{
-  width:220px;
-  margin-bottom:-4px;
-}
-
-.editorParamsToolbarContainer > .editorParamsSetter{
-  min-height:26px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding-inline:10px;
-}
-
-.editorParamsToolbarContainer .editorParamsLabel{
-  padding-inline-end:10px;
-  flex:none;
-  font:menu;
-  font-size:13px;
-  font-style:normal;
-  font-weight:400;
-  line-height:150%;
-  color:var(--main-color);
-}
-
-.editorParamsToolbarContainer .editorParamsColor{
-  width:32px;
-  height:32px;
-  flex:none;
-}
-
-.editorParamsToolbarContainer .editorParamsSlider{
-  background-color:transparent;
-  width:90px;
-  flex:0 1 0;
-}
-
-.editorParamsToolbarContainer .editorParamsSlider::-moz-range-progress{
-  background-color:black;
-}
-
-.editorParamsToolbarContainer .editorParamsSlider::-webkit-slider-runnable-track,
-.editorParamsToolbarContainer .editorParamsSlider::-moz-range-track{
-  background-color:black;
-}
-
-.editorParamsToolbarContainer .editorParamsSlider::-webkit-slider-thumb,
-.editorParamsToolbarContainer .editorParamsSlider::-moz-range-thumb{
-  background-color:white;
-}
-
-#secondaryToolbarButtonContainer{
-  max-width:220px;
-  min-height:26px;
-  max-height:calc(var(--viewer-container-height) - 40px);
-  overflow-y:auto;
-  margin-bottom:-4px;
-}
-
-#editorStampParamsToolbar{
-  inset-inline-end:calc(var(--editor-toolbar-base-offset) + 0px);
-}
-
-#editorInkParamsToolbar{
-  inset-inline-end:calc(var(--editor-toolbar-base-offset) + 28px);
-}
-
-#editorFreeTextParamsToolbar{
-  inset-inline-end:calc(var(--editor-toolbar-base-offset) + 56px);
-}
-
-#editorHighlightParamsToolbar{
-  inset-inline-end:calc(var(--editor-toolbar-base-offset) + 84px);
-}
-
-#editorStampAddImage::before{
-  -webkit-mask-image:var(--editorParams-stampAddImage-icon);
-          mask-image:var(--editorParams-stampAddImage-icon);
-}
-
 .doorHanger,
 .doorHangerRight{
   border-radius:2px;
   box-shadow:0 1px 5px var(--doorhanger-border-color), 0 0 0 1px var(--doorhanger-border-color);
   border:var(--doorhanger-border-color-whcm);
+  background-color:var(--doorhanger-bg-color);
+  inset-block-start:calc(100% + var(--doorhanger-height) - 2px);
 }
-:is(.doorHanger, .doorHangerRight)::after,
-:is(.doorHanger, .doorHangerRight)::before{
-  bottom:100%;
-  border:8px solid rgb(0 0 0 / 0);
-  content:" ";
-  height:0;
-  width:0;
-  position:absolute;
-  pointer-events:none;
-  opacity:var(--doorhanger-triangle-opacity-whcm);
+
+:is(.doorHanger,.doorHangerRight)::after,:is(.doorHanger,.doorHangerRight)::before{
+    bottom:100%;
+    border-style:solid;
+    border-color:transparent;
+    content:"";
+    height:0;
+    width:0;
+    position:absolute;
+    pointer-events:none;
+    opacity:var(--doorhanger-triangle-opacity-whcm);
+  }
+
+:is(.doorHanger,.doorHangerRight)::before{
+    border-width:calc(var(--doorhanger-height) + 2px);
+    border-bottom-color:var(--doorhanger-border-color);
+  }
+
+:is(.doorHanger,.doorHangerRight)::after{
+    border-width:var(--doorhanger-height);
+  }
+
+.doorHangerRight{
+  inset-inline-end:calc(50% - var(--doorhanger-height) - 1px);
 }
-.doorHanger::after{
-  inset-inline-start:10px;
-  margin-inline-start:-8px;
-  border-bottom-color:var(--toolbar-bg-color);
-}
-.doorHangerRight::after{
-  inset-inline-end:10px;
-  margin-inline-end:-8px;
-  border-bottom-color:var(--doorhanger-bg-color);
-}
-:is(.doorHanger, .doorHangerRight)::before{
-  border-bottom-color:var(--doorhanger-border-color);
-  border-width:9px;
-}
-.doorHanger::before{
-  inset-inline-start:10px;
-  margin-inline-start:-9px;
-}
+
 .doorHangerRight::before{
-  inset-inline-end:10px;
-  margin-inline-end:-9px;
+    inset-inline-end:-1px;
+  }
+
+.doorHangerRight::after{
+    border-bottom-color:var(--doorhanger-bg-color);
+    inset-inline-end:1px;
+  }
+
+.doorHanger{
+  inset-inline-start:calc(50% - var(--doorhanger-height) - 1px);
 }
 
-#findResultsCount{
-  background-color:rgb(217 217 217);
-  color:rgb(82 82 82);
-  text-align:center;
-  padding:4px 5px;
-  margin:5px;
-}
+.doorHanger::before{
+    inset-inline-start:-1px;
+  }
 
-#findMsg[data-status="notFound"]{
-  font-weight:bold;
-}
+.doorHanger::after{
+    border-bottom-color:var(--toolbar-bg-color);
+    inset-inline-start:1px;
+  }
 
-:is(#findResultsCount, #findMsg):empty{
-  display:none;
-}
-
-#toolbarViewerMiddle{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-#toolbarViewerLeft,
-#toolbarSidebarLeft{
-  float:var(--inline-start);
-}
-#toolbarViewerRight,
-#toolbarSidebarRight{
-  float:var(--inline-end);
-}
-
-#toolbarViewerLeft > *,
-#toolbarViewerMiddle > *,
-#toolbarViewerRight > *,
-#toolbarSidebarLeft *,
-#toolbarSidebarRight *,
-.findbar *{
-  position:relative;
-  float:var(--inline-start);
-}
-
-#toolbarViewerLeft{
-  padding-inline-start:1px;
-}
-#toolbarViewerRight{
-  padding-inline-end:1px;
-}
-#toolbarSidebarRight{
-  padding-inline-end:2px;
-}
-
-.splitToolbarButton{
-  margin:2px;
-  display:inline-block;
-}
-.splitToolbarButton > .toolbarButton{
-  float:var(--inline-start);
-}
-
-.toolbarButton,
-.secondaryToolbarButton,
 .dialogButton{
   border:none;
   background:none;
@@ -3500,40 +3703,14 @@ body{
   color:var(--dialog-button-hover-color);
 }
 
-.toolbarButton > span{
-  display:inline-block;
-  width:0;
-  height:0;
-  overflow:hidden;
-}
-
-:is(.toolbarButton, .secondaryToolbarButton, .dialogButton)[disabled]{
-  opacity:0.5;
-}
-
-.splitToolbarButton > .toolbarButton:is(:hover, :focus-visible),
-.dropdownToolbarButton:hover{
-  background-color:var(--button-hover-color);
-}
-.splitToolbarButton > .toolbarButton{
-  position:relative;
-  margin:0;
-}
-#toolbarSidebar .splitToolbarButton > .toolbarButton{
-  margin-inline-end:2px;
-}
-
 .splitToolbarButtonSeparator{
   float:var(--inline-start);
-  margin:4px 0;
-  width:1px;
-  height:20px;
-  background-color:var(--separator-color);
+  width:0;
+  height:62%;
+  border-left:1px solid var(--separator-color);
+  border-right:none;
 }
 
-.toolbarButton,
-.dropdownToolbarButton,
-.secondaryToolbarButton,
 .dialogButton{
   min-width:16px;
   margin:2px 1px;
@@ -3550,83 +3727,7 @@ body{
   box-sizing:border-box;
 }
 
-.toolbarButton:is(:hover, :focus-visible){
-  background-color:var(--button-hover-color);
-}
-.secondaryToolbarButton:is(:hover, :focus-visible){
-  background-color:var(--doorhanger-hover-bg-color);
-  color:var(--doorhanger-hover-color);
-}
-
-:is(.toolbarButton, .secondaryToolbarButton).toggled,
-.splitToolbarButton.toggled > .toolbarButton.toggled{
-  background-color:var(--toggled-btn-bg-color);
-  color:var(--toggled-btn-color);
-}
-
-:is(.toolbarButton, .secondaryToolbarButton).toggled:hover,
-.splitToolbarButton.toggled > .toolbarButton.toggled:hover{
-  outline:var(--toggled-hover-btn-outline) !important;
-}
-
-:is(.toolbarButton, .secondaryToolbarButton).toggled::before{
-  background-color:var(--toggled-btn-color);
-}
-
-:is(.toolbarButton, .secondaryToolbarButton).toggled:hover:active,
-.splitToolbarButton.toggled > .toolbarButton.toggled:hover:active{
-  background-color:var(--toggled-hover-active-btn-color);
-}
-
-.dropdownToolbarButton{
-  display:flex;
-  width:-moz-fit-content;
-  width:fit-content;
-  min-width:140px;
-  padding:0;
-  background-color:var(--dropdown-btn-bg-color);
-  border:var(--dropdown-btn-border);
-}
-.dropdownToolbarButton::after{
-  top:6px;
-  inset-inline-end:6px;
-  pointer-events:none;
-  -webkit-mask-image:var(--toolbarButton-menuArrow-icon);
-          mask-image:var(--toolbarButton-menuArrow-icon);
-}
-
-.dropdownToolbarButton > select{
-  -webkit-appearance:none;
-     -moz-appearance:none;
-          appearance:none;
-  width:inherit;
-  min-width:inherit;
-  height:28px;
-  font-size:12px;
-  color:var(--main-color);
-  margin:0;
-  padding-block:1px 2px;
-  padding-inline:6px 38px;
-  border:none;
-  background-color:var(--dropdown-btn-bg-color);
-}
-.dropdownToolbarButton > select:is(:hover, :focus-visible){
-  background-color:var(--button-hover-color);
-  color:var(--toggled-btn-color);
-}
-.dropdownToolbarButton > select > option{
-  background:var(--doorhanger-bg-color);
-  color:var(--main-color);
-}
-
-.toolbarButtonSpacer{
-  width:30px;
-  display:inline-block;
-  height:1px;
-}
-
-:is(.toolbarButton, .secondaryToolbarButton, .treeItemToggler)::before,
-.dropdownToolbarButton::after{
+.treeItemToggler::before{
   position:absolute;
   display:inline-block;
   width:16px;
@@ -3638,47 +3739,16 @@ body{
           mask-size:cover;
 }
 
-.dropdownToolbarButton:is(:hover, :focus-visible, :active)::after{
-  background-color:var(--toolbar-icon-hover-bg-color);
-}
-
-.toolbarButton::before{
-  opacity:var(--toolbar-icon-opacity);
-  top:6px;
-  left:6px;
-}
-
-.toolbarButton:is(:hover, :focus-visible)::before,
-.secondaryToolbarButton:is(:hover, :focus-visible)::before{
-  background-color:var(--toolbar-icon-hover-bg-color);
-}
-
-.secondaryToolbarButton::before{
-  opacity:var(--doorhanger-icon-opacity);
-  top:5px;
-  inset-inline-start:12px;
-}
-
-#sidebarToggle::before{
+#sidebarToggleButton::before{
   -webkit-mask-image:var(--toolbarButton-sidebarToggle-icon);
           mask-image:var(--toolbarButton-sidebarToggle-icon);
   transform:scaleX(var(--dir-factor));
 }
 
-#secondaryToolbarToggle::before{
+#secondaryToolbarToggleButton::before{
   -webkit-mask-image:var(--toolbarButton-secondaryToolbarToggle-icon);
           mask-image:var(--toolbarButton-secondaryToolbarToggle-icon);
   transform:scaleX(var(--dir-factor));
-}
-
-#findPrevious::before{
-  -webkit-mask-image:var(--findbarButton-previous-icon);
-          mask-image:var(--findbarButton-previous-icon);
-}
-
-#findNext::before{
-  -webkit-mask-image:var(--findbarButton-next-icon);
-          mask-image:var(--findbarButton-next-icon);
 }
 
 #previous::before{
@@ -3691,12 +3761,12 @@ body{
           mask-image:var(--toolbarButton-pageDown-icon);
 }
 
-#zoomOut::before{
+#zoomOutButton::before{
   -webkit-mask-image:var(--toolbarButton-zoomOut-icon);
           mask-image:var(--toolbarButton-zoomOut-icon);
 }
 
-#zoomIn::before{
+#zoomInButton::before{
   -webkit-mask-image:var(--toolbarButton-zoomIn-icon);
           mask-image:var(--toolbarButton-zoomIn-icon);
 }
@@ -3706,27 +3776,27 @@ body{
           mask-image:var(--toolbarButton-presentationMode-icon);
 }
 
-#editorFreeText::before{
+#editorFreeTextButton::before{
   -webkit-mask-image:var(--toolbarButton-editorFreeText-icon);
           mask-image:var(--toolbarButton-editorFreeText-icon);
 }
 
-#editorHighlight::before{
+#editorHighlightButton::before{
   -webkit-mask-image:var(--toolbarButton-editorHighlight-icon);
           mask-image:var(--toolbarButton-editorHighlight-icon);
 }
 
-#editorInk::before{
+#editorInkButton::before{
   -webkit-mask-image:var(--toolbarButton-editorInk-icon);
           mask-image:var(--toolbarButton-editorInk-icon);
 }
 
-#editorStamp::before{
+#editorStampButton::before{
   -webkit-mask-image:var(--toolbarButton-editorStamp-icon);
           mask-image:var(--toolbarButton-editorStamp-icon);
 }
 
-:is(#print, #secondaryPrint)::before{
+#printButton::before{
   -webkit-mask-image:var(--toolbarButton-print-icon);
           mask-image:var(--toolbarButton-print-icon);
 }
@@ -3736,44 +3806,14 @@ body{
           mask-image:var(--toolbarButton-openFile-icon);
 }
 
-:is(#download, #secondaryDownload)::before{
+#downloadButton::before{
   -webkit-mask-image:var(--toolbarButton-download-icon);
           mask-image:var(--toolbarButton-download-icon);
-}
-
-a.secondaryToolbarButton{
-  padding-top:5px;
-  text-decoration:none;
-}
-a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
-  opacity:0.5;
-  pointer-events:none;
 }
 
 #viewBookmark::before{
   -webkit-mask-image:var(--toolbarButton-bookmark-icon);
           mask-image:var(--toolbarButton-bookmark-icon);
-}
-
-#viewThumbnail::before{
-  -webkit-mask-image:var(--toolbarButton-viewThumbnail-icon);
-          mask-image:var(--toolbarButton-viewThumbnail-icon);
-}
-
-#viewOutline::before{
-  -webkit-mask-image:var(--toolbarButton-viewOutline-icon);
-          mask-image:var(--toolbarButton-viewOutline-icon);
-  transform:scaleX(var(--dir-factor));
-}
-
-#viewAttachments::before{
-  -webkit-mask-image:var(--toolbarButton-viewAttachments-icon);
-          mask-image:var(--toolbarButton-viewAttachments-icon);
-}
-
-#viewLayers::before{
-  -webkit-mask-image:var(--toolbarButton-viewLayers-icon);
-          mask-image:var(--toolbarButton-viewLayers-icon);
 }
 
 #currentOutlineItem::before{
@@ -3782,7 +3822,7 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   transform:scaleX(var(--dir-factor));
 }
 
-#viewFind::before{
+#viewFindButton::before{
   -webkit-mask-image:var(--toolbarButton-search-icon);
           mask-image:var(--toolbarButton-search-icon);
 }
@@ -3799,109 +3839,47 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   border-radius:50%;
 }
 
-.secondaryToolbarButton{
-  position:relative;
-  margin:0;
-  padding:0 0 1px;
-  padding-inline-start:36px;
-  height:auto;
-  min-height:26px;
-  width:auto;
-  min-width:100%;
-  text-align:start;
-  white-space:normal;
-  border-radius:0;
-  box-sizing:border-box;
-  display:inline-block;
-}
-.secondaryToolbarButton > span{
-  padding-inline-end:4px;
-}
-
-#firstPage::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-firstPage-icon);
-          mask-image:var(--secondaryToolbarButton-firstPage-icon);
-}
-
-#lastPage::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-lastPage-icon);
-          mask-image:var(--secondaryToolbarButton-lastPage-icon);
-}
-
-#pageRotateCcw::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
-          mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
-}
-
-#pageRotateCw::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-rotateCw-icon);
-          mask-image:var(--secondaryToolbarButton-rotateCw-icon);
-}
-
-#cursorSelectTool::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-selectTool-icon);
-          mask-image:var(--secondaryToolbarButton-selectTool-icon);
-}
-
-#cursorHandTool::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-handTool-icon);
-          mask-image:var(--secondaryToolbarButton-handTool-icon);
-}
-
-#scrollPage::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-scrollPage-icon);
-          mask-image:var(--secondaryToolbarButton-scrollPage-icon);
-}
-
-#scrollVertical::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
-          mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
-}
-
-#scrollHorizontal::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
-          mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
-}
-
-#scrollWrapped::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
-          mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
-}
-
-#spreadNone::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-spreadNone-icon);
-          mask-image:var(--secondaryToolbarButton-spreadNone-icon);
-}
-
-#spreadOdd::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
-          mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
-}
-
-#spreadEven::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-spreadEven-icon);
-          mask-image:var(--secondaryToolbarButton-spreadEven-icon);
-}
-
-#documentProperties::before{
-  -webkit-mask-image:var(--secondaryToolbarButton-documentProperties-icon);
-          mask-image:var(--secondaryToolbarButton-documentProperties-icon);
-}
-
 .verticalToolbarSeparator{
   display:block;
-  margin:5px 2px;
-  width:1px;
-  height:22px;
-  background-color:var(--separator-color);
+  margin-inline:2px;
+  width:0;
+  height:80%;
+  border-left:1px solid var(--separator-color);
+  border-right:none;
+  box-sizing:border-box;
 }
+
 .horizontalToolbarSeparator{
   display:block;
   margin:6px 0;
-  height:1px;
+  border-top:1px solid var(--doorhanger-separator-color);
+  border-bottom:none;
+  height:0;
   width:100%;
-  background-color:var(--doorhanger-separator-color);
 }
+
+.toggleButton{
+  display:inline;
+}
+
+.toggleButton:is(:hover,:has( > input:focus-visible)){
+    color:var(--toggled-btn-color);
+    background-color:var(--button-hover-color);
+  }
+
+.toggleButton:has( > input:checked){
+    color:var(--toggled-btn-color);
+    background-color:var(--toggled-btn-bg-color);
+  }
+
+.toggleButton > input{
+    position:absolute;
+    top:50%;
+    left:50%;
+    opacity:0;
+    width:0;
+    height:0;
+  }
 
 .toolbarField{
   padding:4px 7px;
@@ -3917,13 +3895,9 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   outline:none;
 }
 
-.toolbarField[type="checkbox"]{
-  opacity:0;
-  position:absolute !important;
-  left:0;
-  margin:10px 0 3px;
-  margin-inline-start:7px;
-}
+.toolbarField:focus{
+    border-color:#0a84ff;
+  }
 
 #pageNumber{
   -moz-appearance:textfield;
@@ -3937,21 +3911,24 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
     -webkit-appearance:none;
   }
 
-.loadingInput:has(> #pageNumber.loading)::after{
-    display:block;
+.loadingInput:has( > .loading:is(#pageNumber))::after{
+    display:inline;
     visibility:visible;
 
     transition-property:visibility;
     transition-delay:var(--loading-icon-delay);
   }
 
+.loadingInput{
+  position:relative;
+}
+
 .loadingInput::after{
     position:absolute;
     visibility:hidden;
     display:none;
-    top:calc(50% - 8px);
-    width:16px;
-    height:16px;
+    width:var(--icon-size);
+    height:var(--icon-size);
 
     content:"";
     background-color:var(--toolbar-icon-bg-color);
@@ -3969,29 +3946,6 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
     inset-inline-end:4px;
   }
 
-.toolbarField:focus{
-  border-color:#0a84ff;
-}
-
-.toolbarLabel{
-  min-width:16px;
-  padding:7px;
-  margin:2px;
-  border-radius:2px;
-  color:var(--main-color);
-  font-size:12px;
-  line-height:14px;
-  text-align:left;
-  -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
-  cursor:default;
-}
-
-#numPages.toolbarLabel{
-  padding-inline-start:3px;
-}
-
 #thumbnailView,
 #outlineView,
 #attachmentsView,
@@ -4005,6 +3959,7 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
      -moz-user-select:none;
           user-select:none;
 }
+
 #thumbnailView{
   width:calc(100% - 60px);
   padding:10px 30px 0;
@@ -4035,6 +3990,7 @@ a:focus > .thumbnail,
 .thumbnail:hover{
   border-color:var(--thumbnail-hover-color);
 }
+
 .thumbnail.selected{
   border-color:var(--thumbnail-selected-color) !important;
 }
@@ -4044,10 +4000,12 @@ a:focus > .thumbnail,
   height:var(--thumbnail-height);
   opacity:0.9;
 }
+
 a:focus > .thumbnail > .thumbnailImage,
 .thumbnail:hover > .thumbnailImage{
   opacity:0.95;
 }
+
 .thumbnail.selected > .thumbnailImage{
   opacity:1 !important;
 }
@@ -4085,9 +4043,11 @@ a:focus > .thumbnail > .thumbnailImage,
 #layersView .treeItem > a *{
   cursor:pointer;
 }
+
 #layersView .treeItem > a > label{
   padding-inline-start:4px;
 }
+
 #layersView .treeItem > a > label > input{
   float:var(--inline-start);
   margin-top:1px;
@@ -4100,16 +4060,19 @@ a:focus > .thumbnail > .thumbnailImage,
   width:0;
   color:rgb(255 255 255 / 0.5);
 }
+
 .treeItemToggler::before{
   inset-inline-end:4px;
   -webkit-mask-image:var(--treeitem-expanded-icon);
           mask-image:var(--treeitem-expanded-icon);
 }
+
 .treeItemToggler.treeItemsHidden::before{
   -webkit-mask-image:var(--treeitem-collapsed-icon);
           mask-image:var(--treeitem-collapsed-icon);
   transform:scaleX(var(--dir-factor));
 }
+
 .treeItemToggler.treeItemsHidden ~ .treeItems{
   display:none;
 }
@@ -4134,7 +4097,7 @@ a:focus > .thumbnail > .thumbnailImage,
 }
 
 #sidebarContainer:has(#outlineView:not(.hidden)) #outlineOptionsContainer{
-    display:inherit;
+    display:inline flex;
   }
 
 .dialogButton{
@@ -4159,6 +4122,7 @@ dialog{
   border-radius:4px;
   box-shadow:0 1px 4px rgb(0 0 0 / 0.3);
 }
+
 dialog::backdrop{
   background-color:rgb(0 0 0 / 0.2);
 }
@@ -4178,9 +4142,10 @@ dialog .toolbarField{
 dialog .separator{
   display:block;
   margin:4px 0;
-  height:1px;
+  height:0;
   width:100%;
-  background-color:var(--separator-color);
+  border-top:1px solid var(--separator-color);
+  border-bottom:none;
 }
 
 dialog .buttonRow{
@@ -4195,6 +4160,7 @@ dialog :link{
 #passwordDialog{
   text-align:center;
 }
+
 #passwordDialog .toolbarField{
   width:200px;
 }
@@ -4202,18 +4168,22 @@ dialog :link{
 #documentPropertiesDialog{
   text-align:left;
 }
+
 #documentPropertiesDialog .row > *{
   min-width:100px;
   text-align:start;
 }
+
 #documentPropertiesDialog .row > span{
   width:125px;
   word-wrap:break-word;
 }
+
 #documentPropertiesDialog .row > p{
   max-width:225px;
   word-wrap:break-word;
 }
+
 #documentPropertiesDialog .buttonRow{
   margin-top:10px;
 }
@@ -4221,14 +4191,17 @@ dialog :link{
 .grab-to-pan-grab{
   cursor:grab !important;
 }
+
 .grab-to-pan-grab
   *:not(input):not(textarea):not(button):not(select):not(:link){
   cursor:inherit !important;
 }
+
 .grab-to-pan-grab:active,
 .grab-to-pan-grabbing{
   cursor:grabbing !important;
 }
+
 .grab-to-pan-grabbing{
   position:fixed;
   background:rgb(0 0 0 / 0);
@@ -4237,6 +4210,436 @@ dialog :link{
   overflow:hidden;
   z-index:50000;
 }
+
+.toolbarButton{
+  height:100%;
+  aspect-ratio:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:none;
+  color:var(--main-color);
+  outline:none;
+  border-radius:2px;
+  box-sizing:border-box;
+  font:message-box;
+  flex:none;
+  position:relative;
+}
+
+.toolbarButton  > span{
+    display:inline-block;
+    width:0;
+    height:0;
+    overflow:hidden;
+  }
+
+.toolbarButton::before{
+    opacity:var(--toolbar-icon-opacity);
+    display:inline-block;
+    width:var(--icon-size);
+    height:var(--icon-size);
+    content:"";
+    background-color:var(--toolbar-icon-bg-color);
+    -webkit-mask-size:cover;
+            mask-size:cover;
+    -webkit-mask-position:center;
+            mask-position:center;
+  }
+
+.toolbarButton.toggled{
+    background-color:var(--toggled-btn-bg-color);
+    color:var(--toggled-btn-color);
+  }
+
+.toolbarButton.toggled::before{
+      background-color:var(--toggled-btn-color);
+    }
+
+.toolbarButton.toggled:hover{
+      outline:var(--toggled-hover-btn-outline) !important;
+    }
+
+.toolbarButton.toggled:hover:active{
+        background-color:var(--toggled-hover-active-btn-color);
+      }
+
+.toolbarButton:is(:hover,:focus-visible){
+    background-color:var(--button-hover-color);
+  }
+
+.toolbarButton:is(:hover,:focus-visible)::before{
+      background-color:var(--toolbar-icon-hover-bg-color);
+    }
+
+.toolbarButton:is([disabled="disabled"],[disabled]){
+    opacity:0.5;
+    pointer-events:none;
+  }
+
+.toolbarButton.labeled{
+    width:100%;
+    min-height:var(--menuitem-height);
+    justify-content:flex-start;
+    gap:8px;
+    padding-inline-start:12px;
+    aspect-ratio:unset;
+    text-align:start;
+    white-space:normal;
+    cursor:default;
+  }
+
+.toolbarButton.labeled:is(a){
+      text-decoration:none;
+    }
+
+.toolbarButton.labeled[href="#"]:is(a){
+        opacity:0.5;
+        pointer-events:none;
+      }
+
+.toolbarButton.labeled::before{
+      opacity:var(--doorhanger-icon-opacity);
+    }
+
+.toolbarButton.labeled:is(:hover,:focus-visible){
+      background-color:var(--doorhanger-hover-bg-color);
+      color:var(--doorhanger-hover-color);
+    }
+
+.toolbarButton.labeled  > span{
+      display:inline-block;
+      width:-moz-max-content;
+      width:max-content;
+      height:auto;
+    }
+
+.toolbarButtonWithContainer{
+  height:100%;
+  aspect-ratio:1;
+  display:inline-block;
+  position:relative;
+  flex:none;
+}
+
+.toolbarButtonWithContainer  > .toolbarButton{
+    width:100%;
+    height:100%;
+  }
+
+.toolbarButtonWithContainer .menu{
+    padding-block:5px;
+  }
+
+.toolbarButtonWithContainer .menuContainer{
+    width:100%;
+    height:auto;
+    max-height:calc(
+      var(--viewer-container-height) - var(--toolbar-height) -
+        var(--doorhanger-height)
+    );
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+    overflow-y:auto;
+  }
+
+.toolbarButtonWithContainer .editorParamsToolbar{
+    height:auto;
+    width:220px;
+    position:absolute;
+    z-index:30000;
+    cursor:default;
+  }
+
+:is(.toolbarButtonWithContainer .editorParamsToolbar) #editorStampAddImage::before{
+      -webkit-mask-image:var(--editorParams-stampAddImage-icon);
+              mask-image:var(--editorParams-stampAddImage-icon);
+    }
+
+:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsLabel{
+      flex:none;
+      font:menu;
+      font-size:13px;
+      font-style:normal;
+      font-weight:400;
+      line-height:150%;
+      color:var(--main-color);
+      width:-moz-fit-content;
+      width:fit-content;
+      inset-inline-start:0;
+    }
+
+:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer{
+      width:100%;
+      height:auto;
+      display:flex;
+      flex-direction:column;
+      box-sizing:border-box;
+      padding-inline:10px;
+      padding-block:10px;
+    }
+
+:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer)  > .editorParamsSetter{
+        min-height:26px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+      }
+
+:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsColor{
+        width:32px;
+        height:32px;
+        flex:none;
+        padding:0;
+      }
+
+:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider{
+        background-color:transparent;
+        width:90px;
+        flex:0 1 0;
+        font:message-box;
+      }
+
+:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-moz-range-progress{
+          background-color:black;
+        }
+
+:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-webkit-slider-runnable-track,:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-moz-range-track{
+          background-color:black;
+        }
+
+:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-webkit-slider-thumb,:is(:is(:is(.toolbarButtonWithContainer .editorParamsToolbar) .editorParamsToolbarContainer) .editorParamsSlider)::-moz-range-thumb{
+          background-color:white;
+        }
+
+#secondaryToolbar{
+  height:auto;
+  width:220px;
+  position:absolute;
+  z-index:30000;
+  cursor:default;
+  min-height:26px;
+  max-height:calc(var(--viewer-container-height) - 40px);
+}
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #secondaryOpenFile::before{
+      -webkit-mask-image:var(--toolbarButton-openFile-icon);
+              mask-image:var(--toolbarButton-openFile-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #secondaryPrint::before{
+      -webkit-mask-image:var(--toolbarButton-print-icon);
+              mask-image:var(--toolbarButton-print-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #secondaryDownload::before{
+      -webkit-mask-image:var(--toolbarButton-download-icon);
+              mask-image:var(--toolbarButton-download-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #presentationMode::before{
+      -webkit-mask-image:var(--toolbarButton-presentationMode-icon);
+              mask-image:var(--toolbarButton-presentationMode-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #viewBookmark::before{
+      -webkit-mask-image:var(--toolbarButton-bookmark-icon);
+              mask-image:var(--toolbarButton-bookmark-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #firstPage::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-firstPage-icon);
+              mask-image:var(--secondaryToolbarButton-firstPage-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #lastPage::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-lastPage-icon);
+              mask-image:var(--secondaryToolbarButton-lastPage-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #pageRotateCcw::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
+              mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #pageRotateCw::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-rotateCw-icon);
+              mask-image:var(--secondaryToolbarButton-rotateCw-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #cursorSelectTool::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-selectTool-icon);
+              mask-image:var(--secondaryToolbarButton-selectTool-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #cursorHandTool::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-handTool-icon);
+              mask-image:var(--secondaryToolbarButton-handTool-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #scrollPage::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-scrollPage-icon);
+              mask-image:var(--secondaryToolbarButton-scrollPage-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #scrollVertical::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
+              mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #scrollHorizontal::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
+              mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #scrollWrapped::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
+              mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #spreadNone::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-spreadNone-icon);
+              mask-image:var(--secondaryToolbarButton-spreadNone-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #spreadOdd::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
+              mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #spreadEven::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-spreadEven-icon);
+              mask-image:var(--secondaryToolbarButton-spreadEven-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #imageAltTextSettings::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-imageAltTextSettings-icon);
+              mask-image:var(--secondaryToolbarButton-imageAltTextSettings-icon);
+    }
+
+:is(#secondaryToolbar #secondaryToolbarButtonContainer) #documentProperties::before{
+      -webkit-mask-image:var(--secondaryToolbarButton-documentProperties-icon);
+              mask-image:var(--secondaryToolbarButton-documentProperties-icon);
+    }
+
+#findbar{
+  --input-horizontal-padding:4px;
+  --findbar-padding:2px;
+
+  width:-moz-max-content;
+
+  width:max-content;
+  max-width:90vw;
+  min-height:var(--toolbar-height);
+  height:auto;
+  position:absolute;
+  z-index:30000;
+  cursor:default;
+  padding:0;
+  min-width:300px;
+  background-color:var(--toolbar-bg-color);
+  box-sizing:border-box;
+  flex-wrap:wrap;
+  justify-content:flex-start;
+}
+
+#findbar  > *{
+    height:var(--toolbar-height);
+    padding:var(--findbar-padding);
+  }
+
+#findbar #findInputContainer{
+    margin-inline-start:2px;
+  }
+
+:is(#findbar #findInputContainer) #findPreviousButton::before{
+      -webkit-mask-image:var(--findbarButton-previous-icon);
+              mask-image:var(--findbarButton-previous-icon);
+    }
+
+:is(#findbar #findInputContainer) #findNextButton::before{
+      -webkit-mask-image:var(--findbarButton-next-icon);
+              mask-image:var(--findbarButton-next-icon);
+    }
+
+:is(#findbar #findInputContainer) #findInput{
+      width:200px;
+      padding:5px var(--input-horizontal-padding);
+    }
+
+:is(:is(#findbar #findInputContainer) #findInput)::-moz-placeholder{
+        font-style:normal;
+      }
+
+:is(:is(#findbar #findInputContainer) #findInput)::placeholder{
+        font-style:normal;
+      }
+
+.loadingInput:has( > [data-status="pending"]:is(:is(#findbar #findInputContainer) #findInput))::after{
+        display:inline;
+        visibility:visible;
+        inset-inline-end:calc(var(--input-horizontal-padding) + 1px);
+      }
+
+[data-status="notFound"]:is(:is(#findbar #findInputContainer) #findInput){
+        background-color:rgb(255 102 102);
+      }
+
+#findbar #findbarMessageContainer{
+    display:none;
+    gap:4px;
+  }
+
+:is(#findbar #findbarMessageContainer):has( > :is(#findResultsCount,#findMsg):not(:empty)){
+      display:inline flex;
+    }
+
+:is(#findbar #findbarMessageContainer) #findResultsCount{
+      background-color:rgb(217 217 217);
+      color:rgb(82 82 82);
+      padding-block:4px;
+    }
+
+:is(:is(#findbar #findbarMessageContainer) #findResultsCount):empty{
+        display:none;
+      }
+
+[data-status="notFound"]:is(:is(#findbar #findbarMessageContainer) #findMsg){
+        font-weight:bold;
+      }
+
+:is(:is(#findbar #findbarMessageContainer) #findMsg):empty{
+        display:none;
+      }
+
+#findbar.wrapContainers{
+    flex-direction:column;
+    align-items:flex-start;
+    height:-moz-max-content;
+    height:max-content;
+  }
+
+#findbar.wrapContainers .toolbarLabel{
+      margin:0 4px;
+    }
+
+#findbar.wrapContainers #findbarMessageContainer{
+      flex-wrap:wrap;
+      flex-flow:column nowrap;
+      align-items:flex-start;
+      height:-moz-max-content;
+      height:max-content;
+    }
+
+:is(#findbar.wrapContainers #findbarMessageContainer) #findResultsCount{
+        height:calc(var(--toolbar-height) - 2 * var(--findbar-padding));
+      }
+
+:is(#findbar.wrapContainers #findbarMessageContainer) #findMsg{
+        min-height:var(--toolbar-height);
+      }
 
 @page{
   margin:0;
@@ -4250,12 +4653,15 @@ dialog :link{
   body{
     background:rgb(0 0 0 / 0) none;
   }
+
   body[data-pdfjsprinting] #outerContainer{
     display:none;
   }
+
   body[data-pdfjsprinting] #printContainer{
     display:block;
   }
+
   #printContainer{
     height:100%;
   }
@@ -4293,18 +4699,286 @@ dialog :link{
 }
 
 .visibleMediumView{
-  display:none;
+  display:none !important;
 }
 
-@media all and (max-width: 900px){
-  #toolbarViewerMiddle{
-    display:table;
-    margin:auto;
-    left:auto;
-    position:inherit;
-    transform:none;
-  }
+.toolbarLabel{
+  width:-moz-max-content;
+  width:max-content;
+  min-width:16px;
+  height:100%;
+  padding-inline:4px;
+  margin:2px;
+  border-radius:2px;
+  color:var(--main-color);
+  font-size:12px;
+  line-height:14px;
+  text-align:left;
+  -webkit-user-select:none;
+     -moz-user-select:none;
+          user-select:none;
+  cursor:default;
+  box-sizing:border-box;
+
+  display:inline flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
+
+.toolbarLabel  > label{
+    width:100%;
+  }
+
+.toolbarHorizontalGroup{
+  height:100%;
+  display:inline flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-between;
+  gap:1px;
+  box-sizing:border-box;
+}
+
+.dropdownToolbarButton{
+  display:inline flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+
+  width:-moz-fit-content;
+
+  width:fit-content;
+  min-width:140px;
+  padding:0;
+  background-color:var(--dropdown-btn-bg-color);
+  border:var(--dropdown-btn-border);
+  border-radius:2px;
+  color:var(--main-color);
+  font-size:12px;
+  line-height:14px;
+  -webkit-user-select:none;
+     -moz-user-select:none;
+          user-select:none;
+  cursor:default;
+  box-sizing:border-box;
+  outline:none;
+}
+
+.dropdownToolbarButton:hover{
+    background-color:var(--button-hover-color);
+  }
+
+.dropdownToolbarButton  > select{
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+    width:inherit;
+    min-width:inherit;
+    height:28px;
+    font:message-box;
+    font-size:12px;
+    color:var(--main-color);
+    margin:0;
+    padding-block:1px 2px;
+    padding-inline:6px 38px;
+    border:none;
+    outline:none;
+    background-color:var(--dropdown-btn-bg-color);
+  }
+
+:is(.dropdownToolbarButton > select)  > option{
+      background:var(--doorhanger-bg-color);
+      color:var(--main-color);
+    }
+
+:is(.dropdownToolbarButton > select):is(:hover,:focus-visible){
+      background-color:var(--button-hover-color);
+      color:var(--toggled-btn-color);
+    }
+
+.dropdownToolbarButton::after{
+    position:absolute;
+    display:inline;
+    width:var(--icon-size);
+    height:var(--icon-size);
+
+    content:"";
+    background-color:var(--toolbar-icon-bg-color);
+    -webkit-mask-size:cover;
+            mask-size:cover;
+
+    inset-inline-end:4px;
+    pointer-events:none;
+    -webkit-mask-image:var(--toolbarButton-menuArrow-icon);
+            mask-image:var(--toolbarButton-menuArrow-icon);
+  }
+
+.dropdownToolbarButton:is(:hover,:focus-visible,:active)::after{
+    background-color:var(--toolbar-icon-hover-bg-color);
+  }
+
+#toolbarContainer{
+  --menuitem-height:calc(var(--toolbar-height) - 6px);
+
+  width:100%;
+  height:var(--toolbar-height);
+  padding:var(--toolbar-vertical-padding) var(--toolbar-horizontal-padding);
+  position:relative;
+  box-sizing:border-box;
+  font:message-box;
+  background-color:var(--toolbar-bg-color);
+  box-shadow:var(--toolbar-box-shadow);
+  border-bottom:var(--toolbar-border-bottom);
+}
+
+#toolbarContainer #toolbarViewer{
+    width:100%;
+    height:100%;
+    justify-content:space-between;
+  }
+
+:is(#toolbarContainer #toolbarViewer)  > *{
+      flex:none;
+    }
+
+:is(#toolbarContainer #toolbarViewer) input{
+      font:message-box;
+    }
+
+:is(#toolbarContainer #toolbarViewer) .toolbarButtonSpacer{
+      width:30px;
+      display:block;
+      height:1px;
+    }
+
+:is(#toolbarContainer #toolbarViewer) #toolbarViewerLeft #numPages.toolbarLabel{
+      padding-inline-start:3px;
+      flex:none;
+    }
+
+#toolbarContainer #loadingBar{
+    --progressBar-percent:0%;
+    --progressBar-end-offset:0;
+
+    position:absolute;
+    top:var(--toolbar-height);
+    inset-inline:0 var(--progressBar-end-offset);
+    height:4px;
+    background-color:var(--progressBar-bg-color);
+    border-bottom:1px solid var(--toolbar-border-color);
+    transition-property:inset-inline-start;
+    transition-duration:var(--sidebar-transition-duration);
+    transition-timing-function:var(--sidebar-transition-timing-function);
+  }
+
+:is(#toolbarContainer #loadingBar) .progress{
+      position:absolute;
+      top:0;
+      inset-inline-start:0;
+      width:100%;
+      transform:scaleX(var(--progressBar-percent));
+      transform-origin:calc(50% - 50% * var(--dir-factor)) 0;
+      height:100%;
+      background-color:var(--progressBar-color);
+      overflow:hidden;
+      transition:transform 200ms;
+    }
+
+.indeterminate:is(#toolbarContainer #loadingBar) .progress{
+      transform:none;
+      background-color:var(--progressBar-bg-color);
+      transition:none;
+    }
+
+:is(.indeterminate:is(#toolbarContainer #loadingBar) .progress) .glimmer{
+        position:absolute;
+        top:0;
+        inset-inline-start:0;
+        height:100%;
+        width:calc(100% + 150px);
+        background:repeating-linear-gradient(
+          135deg,
+          var(--progressBar-blend-color) 0,
+          var(--progressBar-bg-color) 5px,
+          var(--progressBar-bg-color) 45px,
+          var(--progressBar-color) 55px,
+          var(--progressBar-color) 95px,
+          var(--progressBar-blend-color) 100px
+        );
+        animation:progressIndeterminate 1s linear infinite;
+      }
+
+#secondaryToolbar #firstPage::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-firstPage-icon);
+            mask-image:var(--secondaryToolbarButton-firstPage-icon);
+  }
+
+#secondaryToolbar #lastPage::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-lastPage-icon);
+            mask-image:var(--secondaryToolbarButton-lastPage-icon);
+  }
+
+#secondaryToolbar #pageRotateCcw::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
+            mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
+  }
+
+#secondaryToolbar #pageRotateCw::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-rotateCw-icon);
+            mask-image:var(--secondaryToolbarButton-rotateCw-icon);
+  }
+
+#secondaryToolbar #cursorSelectTool::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-selectTool-icon);
+            mask-image:var(--secondaryToolbarButton-selectTool-icon);
+  }
+
+#secondaryToolbar #cursorHandTool::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-handTool-icon);
+            mask-image:var(--secondaryToolbarButton-handTool-icon);
+  }
+
+#secondaryToolbar #scrollPage::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-scrollPage-icon);
+            mask-image:var(--secondaryToolbarButton-scrollPage-icon);
+  }
+
+#secondaryToolbar #scrollVertical::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
+            mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
+  }
+
+#secondaryToolbar #scrollHorizontal::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
+            mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
+  }
+
+#secondaryToolbar #scrollWrapped::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
+            mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
+  }
+
+#secondaryToolbar #spreadNone::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-spreadNone-icon);
+            mask-image:var(--secondaryToolbarButton-spreadNone-icon);
+  }
+
+#secondaryToolbar #spreadOdd::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
+            mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
+  }
+
+#secondaryToolbar #spreadEven::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-spreadEven-icon);
+            mask-image:var(--secondaryToolbarButton-spreadEven-icon);
+  }
+
+#secondaryToolbar #documentProperties::before{
+    -webkit-mask-image:var(--secondaryToolbarButton-documentProperties-icon);
+            mask-image:var(--secondaryToolbarButton-documentProperties-icon);
+  }
 
 @media all and (max-width: 840px){
   #sidebarContainer{
@@ -4316,27 +4990,22 @@ dialog :link{
 }
 
 @media all and (max-width: 750px){
-  :root{
-    --editor-toolbar-base-offset:40px;
-  }
   #outerContainer .hiddenMediumView{
-    display:none;
+    display:none !important;
   }
-  #outerContainer .visibleMediumView{
-    display:inherit;
+  #outerContainer .visibleMediumView:not(.hidden, [hidden]){
+    display:inline-block !important;
   }
 }
 
 @media all and (max-width: 690px){
   .hiddenSmallView,
   .hiddenSmallView *{
-    display:none;
+    display:none !important;
   }
-  .toolbarButtonSpacer{
+
+  #toolbarContainer #toolbarViewer .toolbarButtonSpacer{
     width:0;
-  }
-  .findbar{
-    inset-inline-start:34px;
   }
 }
 

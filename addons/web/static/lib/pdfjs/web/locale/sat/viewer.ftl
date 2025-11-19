@@ -51,12 +51,6 @@ pdfjs-download-button-label = ᱰᱟᱣᱩᱱᱞᱚᱰ
 pdfjs-bookmark-button =
     .title = ᱱᱤᱛᱚᱜᱟᱜ ᱥᱟᱦᱴᱟ (ᱱᱤᱛᱚᱜᱟᱜ ᱥᱟᱦᱴᱟ ᱠᱷᱚᱱ URL ᱫᱮᱠᱷᱟᱣ ᱢᱮ)
 pdfjs-bookmark-button-label = ᱱᱤᱛᱚᱜᱟᱜ ᱥᱟᱦᱴᱟ
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = ᱮᱯ ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = ᱮᱯ ᱨᱮ ᱡᱷᱤᱡᱽ ᱢᱮ
 
 ##  Secondary toolbar and context menu
 
@@ -286,6 +280,12 @@ pdfjs-editor-ink-button-label = ᱛᱮᱭᱟᱨ
 pdfjs-editor-stamp-button =
     .title = ᱪᱤᱛᱟᱹᱨᱠᱚ ᱥᱮᱞᱮᱫ ᱥᱮ ᱥᱟᱯᱲᱟᱣ ᱢᱮ
 pdfjs-editor-stamp-button-label = ᱪᱤᱛᱟᱹᱨᱠᱚ ᱥᱮᱞᱮᱫ ᱥᱮ ᱥᱟᱯᱲᱟᱣ ᱢᱮ
+
+## Remove button for the various kind of editor.
+
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = ᱨᱚᱝ
 pdfjs-editor-free-text-size-input = ᱢᱟᱯ
@@ -308,4 +308,18 @@ pdfjs-ink-canvas =
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
+
+
+## Color picker
+
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+
+## Image alt-text settings
 
