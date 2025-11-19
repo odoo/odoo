@@ -91,11 +91,20 @@ function websiteEditEventTourSteps() {
             content: "edit the short description of the event",
             trigger: ":iframe .opt_events_list_columns",
             run: function () {
+<<<<<<< 0936a2e465b6006cd2ae814aa7cf9db9f414cd7a
                 const descriptionEl = this.anchor.querySelector("[itemprop='description']");
                 descriptionEl.textContent = "new short description";
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
                 editor.shared.history.addStep();
             },
+||||||| 829256354344f4778910f6743cb9a8b2605c8897
+                this.anchor.innerHTML = "new short description";
+            }
+=======
+                const descriptionEl = this.anchor.querySelector("[itemprop='description']");
+                descriptionEl.textContent = "new short description";
+            }
+>>>>>>> 746efd173a78534ce39cf4de87731dda2136bbc8
         },
         ...clickOnSave(),
         {
