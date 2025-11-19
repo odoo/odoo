@@ -213,6 +213,11 @@ class WebsiteHrRecruitment(WebsiteForm):
         if short_introduction:
             introduction_label = self.env._("Short introduction from applicant")
             data["custom"] = data["custom"].replace("short_introduction", introduction_label)
+        if model_sudo.model == "hr.applicant":
+            if not request.cookies.get('odoo_utm_medium'):
+                website_medium = request.env['utm.mixin']._utm_ref('utm.utm_medium_website')
+                if website_medium:
+                    data['record']['medium_id'] = website_medium.id
         return data
 
     def _should_log_authenticate_message(self, record):
