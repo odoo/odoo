@@ -51,12 +51,6 @@ pdfjs-download-button-label = Λήψη
 pdfjs-bookmark-button =
     .title = Τρέχουσα σελίδα (Προβολή URL από τρέχουσα σελίδα)
 pdfjs-bookmark-button-label = Τρέχουσα σελίδα
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Άνοιγμα σε εφαρμογή
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Άνοιγμα σε εφαρμογή
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Ιδιότητες εγγράφου…
 pdfjs-document-properties-file-name = Όνομα αρχείου:
 pdfjs-document-properties-file-size = Μέγεθος αρχείου:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bytes)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bytes)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Θέμα:
 pdfjs-document-properties-keywords = Λέξεις-κλειδιά:
 pdfjs-document-properties-creation-date = Ημερομηνία δημιουργίας:
 pdfjs-document-properties-modification-date = Ημερομηνία τροποποίησης:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -281,6 +286,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Σχόλιο «{ $type }»]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -304,8 +312,6 @@ pdfjs-editor-stamp-button-label = Προσθήκη ή επεξεργασία ε�
 pdfjs-editor-highlight-button =
     .title = Επισήμανση
 pdfjs-editor-highlight-button-label = Επισήμανση
-pdfjs-highlight-floating-button =
-    .title = Επισήμανση
 pdfjs-highlight-floating-button1 =
     .title = Επισήμανση
     .aria-label = Επισήμανση
@@ -374,6 +380,22 @@ pdfjs-editor-resizer-label-bottom-right = Κάτω δεξιά γωνία — α�
 pdfjs-editor-resizer-label-bottom-middle = Μέσο κάτω πλευράς — αλλαγή μεγέθους
 pdfjs-editor-resizer-label-bottom-left = Κάτω αριστερή γωνία — αλλαγή μεγέθους
 pdfjs-editor-resizer-label-middle-left = Μέσο αριστερής πλευράς — αλλαγή μεγέθους
+pdfjs-editor-resizer-top-left =
+    .aria-label = Επάνω αριστερή γωνία — αλλαγή μεγέθους
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Μέσο επάνω πλευράς — αλλαγή μεγέθους
+pdfjs-editor-resizer-top-right =
+    .aria-label = Επάνω δεξιά γωνία — αλλαγή μεγέθους
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Μέσο δεξιάς πλευράς — αλλαγή μεγέθους
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Κάτω δεξιά γωνία — αλλαγή μεγέθους
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Μέσο κάτω πλευράς — αλλαγή μεγέθους
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Κάτω αριστερή γωνία — αλλαγή μεγέθους
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Μέσο αριστερής πλευράς — αλλαγή μεγέθους
 
 ## Color picker
 
@@ -400,3 +422,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Εμφάνιση όλων
 pdfjs-editor-highlight-show-all-button =
     .title = Εμφάνιση όλων
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Επεξεργασία εναλλακτικού κειμένου (περιγραφή εικόνας)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Προσθήκη εναλλακτικού κειμένου (περιγραφή εικόνας)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Γράψτε την περιγραφή σας εδώ…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Σύντομη περιγραφή για άτομα που δεν μπορούν να δουν την εικόνα ή όταν η εικόνα δεν φορτώνεται.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Αυτό το εναλλακτικό κείμενο δημιουργήθηκε αυτόματα και ενδέχεται να είναι ανακριβές.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Μάθετε περισσότερα
+pdfjs-editor-new-alt-text-create-automatically-button-label = Αυτόματη δημιουργία εναλλακτικού κειμένου
+pdfjs-editor-new-alt-text-not-now-button = Όχι τώρα
+pdfjs-editor-new-alt-text-error-title = Δεν ήταν δυνατή η αυτόματη δημιουργία εναλλακτικού κειμένου
+pdfjs-editor-new-alt-text-error-description = Γράψτε το δικό σας εναλλακτικό κείμενο ή δοκιμάστε ξανά αργότερα.
+pdfjs-editor-new-alt-text-error-close-button = Κλείσιμο
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Λήψη μοντέλου AI εναλλακτικού κειμένου ({ $downloadedSize } από { $totalSize } MB)
+    .aria-valuetext = Λήψη μοντέλου AI εναλλακτικού κειμένου ({ $downloadedSize } από { $totalSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Προστέθηκε εναλλακτικό κείμενο
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Απουσία εναλλακτικού κειμένου
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Έλεγχος εναλλακτικού κειμένου
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Αυτόματη δημιουργία: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Ρυθμίσεις εναλλακτικού κειμένου εικόνας
+pdfjs-image-alt-text-settings-button-label = Ρυθμίσεις εναλλακτικού κειμένου εικόνας
+pdfjs-editor-alt-text-settings-dialog-label = Ρυθμίσεις εναλλακτικού κειμένου εικόνας
+pdfjs-editor-alt-text-settings-automatic-title = Αυτόματο εναλλακτικό κείμενο
+pdfjs-editor-alt-text-settings-create-model-button-label = Αυτόματη δημιουργία εναλλακτικού κειμένου
+pdfjs-editor-alt-text-settings-create-model-description = Προτείνει περιγραφές για άτομα που δεν μπορούν να δουν την εικόνα ή όταν η εικόνα δεν φορτώνεται.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Μοντέλο AI εναλλακτικού κειμένου ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Εκτελείται τοπικά στη συσκευή σας, ώστε τα δεδομένα σας να παραμένουν ιδιωτικά. Απαιτείται για τη δημιουργία του αυτόματου εναλλακτικού κειμένου.
+pdfjs-editor-alt-text-settings-delete-model-button = Διαγραφή
+pdfjs-editor-alt-text-settings-download-model-button = Λήψη
+pdfjs-editor-alt-text-settings-downloading-model-button = Λήψη…
+pdfjs-editor-alt-text-settings-editor-title = Επεξεργασία εναλλακτικού κειμένου
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Άμεση εμφάνιση της επεξεργασίας εναλλακτικού κειμένου κατά την προσθήκη εικόνας
+pdfjs-editor-alt-text-settings-show-dialog-description = Σας βοηθά να βεβαιωθείτε ότι όλες οι εικόνες σας έχουν εναλλακτικό κείμενο.
+pdfjs-editor-alt-text-settings-close-button = Κλείσιμο

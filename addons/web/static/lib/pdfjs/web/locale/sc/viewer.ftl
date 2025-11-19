@@ -51,12 +51,6 @@ pdfjs-download-button-label = Iscàrriga
 pdfjs-bookmark-button =
     .title = Pàgina atuale (ammustra s’URL de sa pàgina atuale)
 pdfjs-bookmark-button-label = Pàgina atuale
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Aberi in un’aplicatzione
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Aberi in un’aplicatzione
 
 ##  Secondary toolbar and context menu
 
@@ -266,6 +260,27 @@ pdfjs-editor-ink-button-label = Disinnu
 pdfjs-editor-stamp-button =
     .title = Agiunghe o modìfica immàgines
 pdfjs-editor-stamp-button-label = Agiunghe o modìfica immàgines
+pdfjs-editor-highlight-button =
+    .title = Evidèntzia
+pdfjs-editor-highlight-button-label = Evidèntzia
+pdfjs-highlight-floating-button1 =
+    .title = Evidèntzia
+    .aria-label = Evidèntzia
+pdfjs-highlight-floating-button-label = Evidèntzia
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = Boga su disinnu
+pdfjs-editor-remove-freetext-button =
+    .title = Boga su testu
+pdfjs-editor-remove-stamp-button =
+    .title = Boga s’immàgine
+pdfjs-editor-remove-highlight-button =
+    .title = Boga s’evidèntzia
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Colore
 pdfjs-editor-free-text-size-input = Mannària
@@ -274,6 +289,8 @@ pdfjs-editor-ink-thickness-input = Grussària
 pdfjs-editor-stamp-add-image-button =
     .title = Agiunghe un’immàgine
 pdfjs-editor-stamp-add-image-button-label = Agiunghe un’immàgine
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Grussària
 pdfjs-free-text =
     .aria-label = Editore de testu
 pdfjs-free-text-default-content = Cumintza a iscrìere…
@@ -284,7 +301,67 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button-label = Testu alternativu
+pdfjs-editor-alt-text-edit-button-label = Modifica su testu alternativu
+pdfjs-editor-alt-text-dialog-label = Sèbera un’optzione
+pdfjs-editor-alt-text-dialog-description = Su testu alternativu (“alt text”) est ùtile pro persones chi non podent bìdere s’immàgine o cando non benit carrigada.
+pdfjs-editor-alt-text-add-description-label = Agiunghe una descritzione
+pdfjs-editor-alt-text-cancel-button = Annulla
+pdfjs-editor-alt-text-save-button = Sarva
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+
+## Color picker
+
+pdfjs-editor-colorpicker-button =
+    .title = Modifica su colore
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = Colores a disponimentu
+pdfjs-editor-colorpicker-yellow =
+    .title = Grogu
+pdfjs-editor-colorpicker-green =
+    .title = Birde
+pdfjs-editor-colorpicker-blue =
+    .title = Biaitu
+pdfjs-editor-colorpicker-pink =
+    .title = Rosa
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Mancat su testu alternativu
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Revisiona su testu alternativu
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Creadu in automàticu: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Cunfiguratzione de su testu alternativu de is immàgines
+pdfjs-image-alt-text-settings-button-label = Cunfiguratzione de su testu alternativu de is immàgines
+pdfjs-editor-alt-text-settings-dialog-label = Cunfiguratzione de su testu alternativu de is immàgines
+pdfjs-editor-alt-text-settings-automatic-title = Testu alternativu automàticu
+pdfjs-editor-alt-text-settings-create-model-button-label = Crea testu alternativu in automàticu
+pdfjs-editor-alt-text-settings-create-model-description = Cussìgiat descritziones pro agiudare a gente chi non podet bìdere s’immàgine o cando non benit carrigada.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Modellu de IA pro su testu alternativu ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Est esecutadu in locale in manera chi is datos tuos abarrent in privadu. Rechestu pro sa generatzione automàtica de testu alternativu.
+pdfjs-editor-alt-text-settings-delete-model-button = Cantzella
+pdfjs-editor-alt-text-settings-download-model-button = Iscàrriga
+pdfjs-editor-alt-text-settings-downloading-model-button = Iscarrighende…
+pdfjs-editor-alt-text-settings-editor-title = Editore de testu alternativu
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Mustra deretu s’editore de testu alternativu cando siat agiunta un’immàgine
+pdfjs-editor-alt-text-settings-show-dialog-description = T’agiudat a assegurare chi totu is immàgines tuas tèngiant unu testu alternativu.
+pdfjs-editor-alt-text-settings-close-button = Serra
