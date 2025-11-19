@@ -1741,7 +1741,7 @@ export class Runner {
         this._populateState = false;
 
         if (!this.state.tests.length) {
-            throw new HootError(`no tests to run`, { level: "critical" });
+            logger.logGlobal(`no tests to run`);
         }
 
         // Reduce non-included suites & tests info to a miminum
