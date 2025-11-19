@@ -125,7 +125,7 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     avg_cost = fields.Monetary(
-        string="Average Cost", compute='_compute_value',
+        string="Average Cost", compute='_compute_avg_cost',
         compute_sudo=True, currency_field='company_currency_id')
     total_value = fields.Monetary(
         string="Total Value", compute='_compute_value',
@@ -164,9 +164,16 @@ class ProductProduct(models.Model):
                 product.total_value = product._run_avco(at_date=at_date)[1] * qty_available / total_qty_available
             else:
                 product.total_value = product.with_context(warehouse_id=False)._run_fifo(total_qty_available, at_date=at_date) * qty_available / total_qty_available
+
+    @api.depends_context('to_date', 'company', 'warehouse_id')
+    @api.depends("total_value")
+    def _compute_avg_cost(self):
+        for product in self:
+            valuated_product = product.sudo(False)._with_valuation_context()
             if product.company_currency_id.is_zero(product.total_value):
                 product.avg_cost = product._get_standard_price_at_date()
             else:
+                qty_available = valuated_product.qty_available
                 product.avg_cost = product.total_value / qty_available if not product.uom_id.is_zero(qty_available) else product._get_standard_price_at_date()
 
     def write(self, vals):
