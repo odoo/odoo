@@ -73,12 +73,6 @@ class HrLeaveAttendanceReport(models.Model):
     def _timestamped(self, date):
         return fields.Datetime.context_timestamp(self, date).date()
 
-    @api.model
-    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
-        if order and any('date' in group for group in groupby):
-            order += ' desc'
-        return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
-
     def _select(self):
         return """
          SELECT row_number() OVER (ORDER BY gs.day DESC, emp.id) AS id,
