@@ -135,7 +135,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
         Also consider overriding _get_rotting_depends_fields() and _get_rotting_domain().
 
         Certain views have access to widgets to display rotting status:
-            'rotting' for kanbans, 'rotting_statusbar_duration' for forms, 'badge_rotting' for lists.
+            'rotting' for kanbans, 'rotting_statusbar_duration' for forms, 'rotting' for lists.
 
         :return: bool: whether the rotting feature has been configured for this model
         """
