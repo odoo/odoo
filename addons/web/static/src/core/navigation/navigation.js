@@ -239,11 +239,14 @@ export class Navigator {
                 oldActiveItem && oldActiveItem.el.isConnected
                     ? this.items.findIndex((item) => item.el === oldActiveItem.el)
                     : -1;
+            const focusedElementIndex = this.items.findIndex((item) => item.el === document.activeElement);
             if (activeItemIndex > -1) {
                 this._updateActiveItemIndex(activeItemIndex);
             } else if (this.activeItemIndex >= 0) {
                 const closest = Math.min(this.activeItemIndex, elements.length - 1);
                 this._updateActiveItemIndex(closest);
+            } else if (focusedElementIndex >= 0) {
+                this._updateActiveItemIndex(focusedElementIndex);
             } else {
                 this._updateActiveItemIndex(-1);
             }
