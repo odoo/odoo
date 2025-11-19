@@ -1336,7 +1336,7 @@
                                 </group>
                             </page>
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_readonly" name="aml_tab">
-                                <field name="journal_line_ids"
+                                <field name="line_ids"
                                        mode="list,kanban"
                                        context="{
                                            'default_move_type': context.get('default_move_type'),
@@ -1348,10 +1348,11 @@
                                        }"
                                        invisible="payment_state == 'invoicing_legacy' and move_type != 'entry'"
                                        readonly="state != 'draft'">
-                                    <list editable="bottom" string="Journal Items" default_order="sequence, id">
+                                    <list editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, id">
                                         <!-- Displayed fields -->
                                         <field name="account_id"
-                                               required="1"
+                                               invisible="display_type in ('line_section', 'line_note')"
+                                               required="display_type not in ('line_section', 'line_note')"
                                                domain="[('company_ids', 'parent_of', company_id)]" />
                                         <field name="partner_id"
                                                optional="show"
@@ -1365,6 +1366,7 @@
                                                business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill' or 'general'"/>
                                         <field name="date_maturity"
                                                optional="hide"
+                                               invisible="display_type in ('line_section', 'line_note')"
                                                column_invisible="context.get('view_no_maturity')"/>
                                         <field name="amount_currency"
                                                groups="base.group_multi_currency"
@@ -1381,15 +1383,15 @@
                                                }"
                                                options="{'no_create': True}"
                                                force_save="1"
-                                               readonly="tax_line_id or (parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and account_type in ('asset_receivable', 'liability_payable'))"/>
+                                               readonly="display_type in ('line_section', 'line_note') or tax_line_id or (parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and account_type in ('asset_receivable', 'liability_payable'))"/>
                                         <field name="debit"
                                                sum="Total Debit"
                                                invisible="display_type in ('line_section', 'line_note')"
-                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('product')"/>
+                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"/>
                                         <field name="credit"
                                                sum="Total Credit"
                                                invisible="display_type in ('line_section', 'line_note')"
-                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('product')"/>
+                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"/>
                                         <field name="balance" column_invisible="True"/>
                                         <field name="discount_date"
                                                string="Discount Date"
