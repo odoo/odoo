@@ -16,7 +16,8 @@ patch(PosStore.prototype, {
                     paymentLine.getPaymentStatus() !== "retry"
                 ) {
                     paymentLine.payment_method_id.payment_terminal.handleVivaWalletStatusResponse(
-                        paymentLine
+                        paymentLine,
+                        payload
                     );
                 }
             }
