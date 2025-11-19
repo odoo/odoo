@@ -172,3 +172,22 @@ class TestPortalWizard(MailCommon):
         portal_user.with_company(company_1).action_grant_access()
 
         self.assertEqual(portal_user.user_id.company_id, company_2, 'Must create the user in the same company as the partner.')
+
+    def test_portal_wizard_multiple_access_changes(self):
+        portal_wizard = self.env['portal.wizard'].with_context(active_ids=[self.partner.id]).create({})
+        self.assertEqual(len(portal_wizard.user_ids), 1)
+
+        portal_user = portal_wizard.user_ids[0]
+        self.assertFalse(portal_user.user_id)
+        self.assertFalse(portal_user.is_portal)
+
+        for _ in range(2):
+            portal_user.action_grant_access()
+            self.assertTrue(portal_user.user_id.active)
+            self.assertTrue(portal_user.is_portal)
+            self.assertTrue(self.partner.signup_type)
+
+            portal_user.action_revoke_access()
+            self.assertFalse(portal_user.user_id.active)
+            self.assertTrue(portal_user.is_portal)
+            self.assertFalse(self.partner.signup_type)

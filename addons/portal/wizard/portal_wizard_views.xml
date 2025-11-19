@@ -43,14 +43,15 @@
                             <button name="action_refresh_modal" type="object" icon="fa-user-times text-danger"
                                 invisible="email_state != 'exist'" title="Email Address already taken by another user"/>
                             <field name="login_date"/>
+                            <field name="is_active" column_invisible="True"/>
                             <field name="is_portal" column_invisible="True"/>
                             <field name="is_internal" column_invisible="True"/>
                             <button string="Grant Access" name="action_grant_access" type="object" class="btn-secondary"
-                                invisible="is_portal or is_internal or email_state != 'ok'"/>
+                                invisible="(is_portal and is_active) or is_internal or email_state != 'ok'"/>
                             <button string="Revoke Access" name="action_revoke_access" type="object" class="btn-secondary"
-                                invisible="not is_portal or is_internal"/>
+                                invisible="not is_portal or not is_active or is_internal"/>
                             <button string="Re-Invite" name="action_invite_again" type="object" class="btn-secondary"
-                                invisible="not is_portal or is_internal or email_state != 'ok'"/>
+                                invisible="not is_portal or not is_active or is_internal or email_state != 'ok'"/>
                             <button string="Internal User" invisible="not is_internal"
                                 disabled="True" title="This partner is linked to an internal User and already has access to the Portal."/>
                         </list>

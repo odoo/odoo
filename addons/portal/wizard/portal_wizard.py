@@ -84,6 +84,7 @@ class PortalWizardUser(models.TransientModel):
 
     user_id = fields.Many2one('res.users', string='User', compute='_compute_user_id', compute_sudo=True)
     login_date = fields.Datetime(related='user_id.login_date', string='Latest Authentication')
+    is_active = fields.Boolean('Is Active', related='user_id.active')
     is_portal = fields.Boolean('Is Portal', compute='_compute_group_details')
     is_internal = fields.Boolean('Is Internal', compute='_compute_group_details')
     email_state = fields.Selection([
@@ -139,7 +140,7 @@ class PortalWizardUser(models.TransientModel):
         self.ensure_one()
         self._assert_user_email_uniqueness()
 
-        if self.is_portal or self.is_internal:
+        if (self.is_portal and self.user_id.active) or self.is_internal:
             raise UserError(_('The partner "%s" already has the portal access.', self.partner_id.name))
 
         group_portal = self.env.ref('base.group_portal')
@@ -153,10 +154,9 @@ class PortalWizardUser(models.TransientModel):
             company = self.partner_id.company_id or self.env.company
             user_sudo = self.sudo().with_company(company.id)._create_user()
 
-        if not user_sudo.active or not self.is_portal:
-            user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
-            # prepare for the signup process
-            user_sudo.partner_id.signup_prepare()
+        user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
+        # prepare for the signup process
+        user_sudo.partner_id.signup_prepare()
 
         self.with_context(active_test=True)._send_email()
 
