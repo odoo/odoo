@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.CallPermissionDeniedDialog">
+        <Dialog title="''" size="'md'" contentClass="'o-discuss-CallPermissionDeniedDialog'">
+            <div class="d-flex align-items-center justify-content-between gap-4" t-att-class="ui.isSmall ? 'flex-column': 'flex-row pb-2'">
+                <div t-att-class="ui.isSmall ? 'w-100': 'w-50'">
+                    <t t-call="discuss.CallPermissionDeniedDialog.illustrationAnimated"/>
+                </div>
+                <div class="d-flex flex-column gap-3">
+                    <h2 class="mb-0" t-out="title" />
+                    <ol class="ps-3 fs-6 d-flex flex-column gap-2 text-muted" t-attf-style="width: {{ ui.isSmall ? '100%' : '85%' }};">
+                        <li>
+                            Click the
+                            <t t-call="discuss.CallPermissionDeniedDialog.slidersIcon"/>
+                            page info icon in your browser's address bar
+                        </li>
+                        <li t-out="stepTwoText"/>
+                    </ol>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+    <t t-name="discuss.CallPermissionDeniedDialog.illustrationAnimated">
+        <svg class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated" role="img" aria-label="Permissions Toggle - Animated illustration" width="100%" height="auto" viewBox="0 0 264 250" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <title>Permissions Toggle</title>
+            <description>Animated illustration showing toggles for camera and microphone permissions</description>
+            <g>
+                <path d="M281 1H7C3.68629 1 1 3.68629 1 7V253" stroke="var(--border-color)" stroke-width="2"/>
+                <g>
+                    <rect x="27" y="119" width="20" height="17" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M53 122V134L47 131V125L53 122Z" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>
+                </g>
+                <g>
+                    <rect class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-camera-toggleRect" x="94" y="116" width="45" height="24" rx="12" fill="var(--gray-300)"/>
+                    <circle class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-camera-toggleCircle" cx="106" cy="128" r="10" fill="#ffffff"/>
+                </g>
+                <g>
+                    <path d="M39.6367 164C42.1763 164 44.2422 166.069 44.2422 168.631V177.976C44.2421 180.537 42.1762 182.606 39.6367 182.606C37.0971 182.606 35.0304 180.537 35.0303 177.976V168.631C35.0303 166.069 37.097 164 39.6367 164Z" stroke="var(--primary)" stroke-width="2"/>
+                    <path d="M39.6364 186.561C34.8666 186.561 31 182.626 31 177.773M39.6364 186.561C44.4061 186.561 48.2727 182.626 48.2727 177.773M39.6364 186.561V193" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+                <g>
+                    <rect class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-mic-toggleRect" x="94" y="164" width="45" height="24" rx="12" fill="var(--gray-300)"/>
+                    <circle class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-mic-toggleCircle" cx="106" cy="176" r="10" fill="#ffffff"/>
+                </g>
+                <path d="M299 38.7333H227.173C221.65 38.7333 217.173 34.2562 217.173 28.7333V17C217.173 11.4772 212.695 7 207.173 7H108.934C103.411 7 98.9339 11.4771 98.9339 17V28.7333C98.9339 34.2562 94.4568 38.7333 88.9339 38.7333H3M3 82L299 81.2237" stroke="var(--gray-300)" stroke-width="2"/>
+                <g>
+                    <path d="M30 60.5H18M18 60.5L22.8649 65M18 60.5L22.8649 56" stroke="var(--border-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M48 60H59M59 60L54.5405 64.5M59 60L54.5405 55.5" stroke="var(--border-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M91 60.1179C91 61.3024 90.559 62.4464 89.7592 63.3369C88.9594 64.2274 87.8553 64.8036 86.6526 64.9582C85.45 65.1128 84.2308 64.8352 83.2222 64.1772C82.2135 63.5192 81.4843 62.5256 81.1704 61.3815C80.8564 60.2374 80.9791 59.0209 81.5156 57.9587C82.0522 56.8964 82.9659 56.0608 84.0866 55.6075C85.2073 55.1543 86.4585 55.1143 87.6072 55.495C88.7559 55.8757 89.7236 56.6512 90.3301 57.6769M90.3301 57.6769H87.6072M90.3301 57.6769V55" stroke="var(--border-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g>
+                        <rect x="171" y="47" width="120" height="26" fill="var(--gray-300)" stroke="var(--border-color)" stroke-width="2"/>
+                        <circle cx="145" cy="60.5" r="34" fill="var(--body-bg)" stroke="var(--primary)" stroke-width="2"/>
+                        <path d="M165.947 35C173.306 41.0523 178 50.2279 178 60.5C178 71.9795 172.137 82.0882 163.244 88H143.473V87.9619C129.296 87.261 118 75.6956 118 61.5C118 47.3045 129.296 35.7391 143.473 35.0381V35H165.947Z" fill="var(--gray-300)"/>
+                        <circle cx="145" cy="61.7496" r="21" fill="var(--body-bg)"/>
+                        <g>
+                            <circle cx="135.333" cy="55.0829" r="3.33333" stroke="var(--primary)" stroke-width="3"/>
+                            <path d="M144.5 55.0829L157 55.0829" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="3.33333" cy="3.33333" r="3.33333" transform="matrix(-1 0 0 1 157 65.0829)" stroke="var(--primary)" stroke-width="3"/>
+                            <path d="M144.5 68.4163H132" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+                        </g>
+                    </g>
+                </g>
+                <path d="M160.387 73.9249C160.751 73.7657 161.175 73.8367 161.467 74.1065L179.036 90.3575C179.283 90.5866 179.399 90.9253 179.343 91.2579C179.286 91.5906 179.066 91.8727 178.757 92.0079L172.914 94.5606L177.038 103.995V103.996C177.748 105.622 177.007 107.517 175.381 108.229C173.754 108.94 171.858 108.197 171.147 106.57L167.023 97.1358L161.181 99.6895C160.872 99.8246 160.516 99.7942 160.233 99.6094C159.951 99.4246 159.781 99.1099 159.781 98.7725L159.787 74.8409C159.787 74.4437 160.023 74.0841 160.387 73.9249Z" fill="var(--white)" stroke="var(--gray-400)" stroke-width="2" stroke-linejoin="round"/>
+                <g>
+                    <circle cx="40" cy="21" r="5" fill="var(--border-color)"/>
+                    <circle cx="60" cy="21" r="5" fill="var(--border-color)"/>
+                    <circle cx="20" cy="21" r="5" fill="var(--border-color)"/>
+                </g>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="discuss.CallPermissionDeniedDialog.slidersIcon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+        >
+            <path d="M14 17H5"></path>
+            <path d="M19 7h-9"></path>
+            <circle cx="17" cy="17" r="3"></circle>
+            <circle cx="7" cy="7" r="3"></circle>
+        </svg>
+    </t>
+</templates>
