@@ -23,4 +23,8 @@ patch(PosOrderline.prototype, {
             this.product_id.id === this.config.discount_product_id?.id
         );
     },
+
+    get isValidForRefund() {
+        return super.isValidForRefund && !this.isDiscountLine;
+    },
 });

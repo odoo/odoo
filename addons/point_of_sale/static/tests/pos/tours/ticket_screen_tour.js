@@ -393,9 +393,7 @@ registry.category("web_tour.tours").add("LotTour", {
             FeedbackScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("002"),
-            inLeftSide(
-                [Numpad.click("1"), ProductScreen.clickLine("Product B"), Numpad.click("1")].flat()
-            ),
+            inLeftSide([Numpad.click("1"), Numpad.click("1")].flat()),
             TicketScreen.confirmRefund(),
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),

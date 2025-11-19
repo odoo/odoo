@@ -187,8 +187,10 @@ export class TicketScreen extends Component {
         this.setSelectedOrder(clickedOrder);
         this.numberBuffer.reset();
         if ((!clickedOrder || clickedOrder.finalized) && !this.getSelectedOrderlineId()) {
-            // Automatically select the first orderline of the selected order.
-            const firstLine = this.getSelectedOrder().getOrderlines()[0];
+            // Automatically select the first refundable orderline of the selected order.
+            const firstLine = this.getSelectedOrder()
+                .getOrderlines()
+                .find((line) => line.isValidForRefund);
             if (firstLine) {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
@@ -278,6 +280,22 @@ export class TicketScreen extends Component {
                     }
                 } else {
                     toRefundDetail.qty = quantity;
+                    // Automatically select the next orderline if the refund quantity equals the refundable quantity
+                    if (quantity === refundableQty) {
+                        const orderlines = order.getOrderlines();
+                        const currentIndex = orderlines.findIndex(
+                            (line) => line.id === selectedOrderlineId
+                        );
+                        if (currentIndex !== -1) {
+                            const nextLine = orderlines
+                                .slice(currentIndex + 1)
+                                .find((line) => line.isValidForRefund);
+                            if (nextLine) {
+                                this.state.selectedOrderlineIds[order.id] = nextLine.id;
+                                this.numberBuffer.reset();
+                            }
+                        }
+                    }
                 }
             }
         }
