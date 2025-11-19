@@ -41,6 +41,14 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
         copy = dashboard.copy({"name": "a copy"})
         self.assertEqual(copy.name, "a copy")
 
+    def test_copy_group_name(self):
+        group = self.env["spreadsheet.dashboard.group"].create(
+            {"name": "My section"}
+        )
+
+        copy = group.copy()
+        self.assertEqual(copy.name, "My section (copy)")
+
     def test_unlink_prevent_spreadsheet_group(self):
         group = self.env["spreadsheet.dashboard.group"].create(
             {"name": "a_group"}
