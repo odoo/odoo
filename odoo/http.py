@@ -243,7 +243,6 @@ def get_default_session():
         'uid': None,
         'session_token': None,
         '_trace': [],
-        'create_time': time.time(),
     }
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
@@ -976,6 +975,10 @@ class Session(collections.abc.MutableMapping):
     # Session properties
     #
     @property
+    def should_soft_rotate(self):
+        return self.uid and time.time() >= self['create_time'] + SESSION_ROTATION_INTERVAL
+
+    @property
     def uid(self):
         return self.get('uid')
 
@@ -1139,9 +1142,6 @@ class Session(collections.abc.MutableMapping):
         self.is_dirty = True
         return new_trace
 
-    def _delete_old_sessions(self):
-        root.session_store.delete_old_sessions(self)
-
 
 # =========================================================
 # Session Store
@@ -1193,8 +1193,58 @@ class SessionStore:
             raise ValueError(f'Invalid session id {sid!r}')
         return os.path.join(self.path, sid[:2], sid)
 
-    def save(self, session: Session) -> None:
-        """ Save a session. """
+    def save(self, session: Session, env=None) -> bool:
+        """
+        Save a session according to its state.
+        :return: `True` if the session can be saved on disk, `False` otherwise.
+        """
+        if not session.can_save:
+            return False
+        if session.should_rotate:
+            self._hard_rotation(session, env)
+        elif session.should_soft_rotate:
+            self._soft_rotation(session, env)
+        if session.is_dirty:
+            self._save(session)
+        return True
+
+    def _hard_rotation(self, session: Session, env) -> None:
+        self.delete(session)
+        session.sid = self.generate_key()
+        session.should_rotate = False
+        session['create_time'] = time.time()
+        if session.uid:
+            assert env
+            session.session_token = security.compute_session_token(session, env)
+        session.is_dirty = True  # Do it explicitly to force the save
+
+    def _soft_rotation(self, session: Session, env) -> None:
+        # Multiple network requests can occur at the same time, all using the old session.
+        # We don't want to create a new session for each request, it's better to reference the one already made.
+        recent_session = self.get(session.sid)
+        next_sid = recent_session.get('next_sid')
+        if next_sid:
+            # A new session has already been saved on disk by a concurrent request,
+            # the _save_session is going to simply use session.sid to set a new cookie.
+            session.sid = next_sid
+            return
+
+        next_sid = session['next_sid'] = session.sid[:STORED_SESSION_BYTES] + self.generate_key()[STORED_SESSION_BYTES:]
+        session['deletion_time'] = time.time() + SESSION_DELETION_TIMER
+        self._save(session)
+        del session['next_sid']
+        del session['deletion_time']
+
+        # Now prepare the new session
+        session.sid = next_sid
+        session['gc_previous_sessions'] = True
+        session['create_time'] = time.time()
+        if session.uid:
+            assert env
+            session.session_token = security.compute_session_token(session, env)
+        session.is_dirty = True  # Do it explicitly to force the save
+
+    def _save(self, session: Session) -> None:
         # Perform an atomic save
         session_path = self.get_session_path(session.sid)
         # Create session in a transaction file in the
@@ -1212,6 +1262,7 @@ class SessionStore:
                 os.mkdir(session_dir, mode=0o755)
                 os.replace(tmp, session_path)
             os.chmod(session_path, 0o644)
+        session.is_dirty = False
 
     def delete(self, session: Session) -> None:
         """ Delete a session. """
@@ -1238,7 +1289,7 @@ class SessionStore:
             with open(self.get_session_path(sid), encoding='utf-8') as f:
                 try:
                     data = json.load(f)
-                    return self.session_cls(data, sid, new=False)
+                    session = self.session_cls(data, sid, new=False)
                 except ValueError:
                     _logger.debug("Could not load session data. Use empty session.", exc_info=True)
                     # The session file exists on the filesystem (the sid must be retained)
@@ -1251,44 +1302,18 @@ class SessionStore:
             _logger.debug("Could not load session from disk. Use new session.", exc_info=True)
             return self.new()
 
-    def rotate(self, session, env, *, soft=False):
-        """
-        Rotate the session sid.
-
-        With a soft rotation, things like the CSRF token will still work. It's
-        used for rotating the session in a way that half the bytes remain to
-        identify the user and the other half to authenticate the user.
-
-        Meanwhile with a hard rotation the entire session id is changed, which
-        is useful in cases such as logging the user out.
-        """
-        if soft:
-            # Multiple network requests can occur at the same time, all using the old session.
-            # We don't want to create a new session for each request, it's better to reference the one already made.
-            static = session.sid[:STORED_SESSION_BYTES]
-            recent_session = self.get(session.sid)
-            if 'next_sid' in recent_session:
-                # A new session has already been saved on disk by a concurrent request,
-                # the _save_session is going to simply use session.sid to set a new cookie.
-                session.sid = recent_session['next_sid']
-                return
-            next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
-            session['next_sid'] = next_sid
-            session['deletion_time'] = time.time() + SESSION_DELETION_TIMER
-            self.save(session)
-            # Now prepare the new session
-            session['gc_previous_sessions'] = True
-            session.sid = next_sid
-            del session['deletion_time']
-            del session['next_sid']
-        else:
+        # A session was found with data on disk, we can verify consistency.
+        # Delete old sessions based on expiration and cleanup flag value.
+        if 'gc_previous_sessions' in session:
+            if session['create_time'] + SESSION_DELETION_TIMER < time.time():
+                self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
+                del session['gc_previous_sessions']
+                self._save(session)
+        # Make sure we don't use a deleted session that can be saved again
+        if 'deletion_time' in session and session['deletion_time'] <= time.time():
             self.delete(session)
-            session.sid = self.generate_key()
-        if session.uid and env:
-            session.session_token = security.compute_session_token(session, env)
-        session.should_rotate = False
-        session['create_time'] = time.time()
-        self.save(session)
+            return self.new()
+        return session
 
     def vacuum(self, max_lifetime=SESSION_LIFETIME):
         """ Remove expired session files older than the given lifetime. """
@@ -1336,14 +1361,6 @@ class SessionStore:
         for fn in files_to_unlink:
             with contextlib.suppress(OSError):
                 os.unlink(fn)
-
-    def delete_old_sessions(self, session):
-        """ Delete old sessions based on expiration and cleanup flag value. """
-        if 'gc_previous_sessions' in session:
-            if session['create_time'] + SESSION_DELETION_TIMER < time.time():
-                self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
-                del session['gc_previous_sessions']
-                self.save(session)
 
 
 # =========================================================
@@ -2166,25 +2183,13 @@ class Request:
             MUST be left ``None`` (in which case it uses the request's
             env) UNLESS the database changed.
         """
-        sess = self.session
         if env is None:
             env = self.env
-
-        if not sess.can_save:
-            return
-
-        if sess.should_rotate:
-            root.session_store.rotate(sess, env)  # it saves
-        elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
-            root.session_store.rotate(sess, env, soft=True)
-        elif sess.is_dirty:
-            root.session_store.save(sess)
-
-        cookie_sid = self.cookies.get('session_id')
-        if sess.is_dirty or cookie_sid != sess.sid:
+        if root.session_store.save(self.session, env) \
+            and self.cookies.get('session_id') != self.session.sid:
             self.future_response.set_cookie(
                 'session_id',
-                sess.sid,
+                self.session.sid,
                 max_age=get_session_max_inactivity(env),
                 httponly=True
             )
@@ -2509,7 +2514,8 @@ class HttpDispatcher(Dispatcher):
             session.logout(keep_db=True)
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
             if was_connected:
-                root.session_store.rotate(session, self.request.env)
+                session.should_rotate = True
+                root.session_store.save(session, self.request.env)
                 response.set_cookie('session_id', session.sid, max_age=get_session_max_inactivity(self.request.env), httponly=True)
             return response
 

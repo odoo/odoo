@@ -48,7 +48,7 @@ class TestHttpSession(TestHttpBase):
 
     def test_session01_default_session(self):
         # The default session should not be saved on the filestore.
-        with patch.object(odoo.http.root.session_store, 'save') as mock_save:
+        with patch.object(odoo.http.root.session_store, '_save') as mock_save:
             res = self.db_url_open('/test_http/geoip')
             res.raise_for_status()
             try:
@@ -442,7 +442,7 @@ class TestSessionRotation(HttpCase):
         # Expire the first session
         session_one_obj = root.session_store.get(session_one)
         session_one_obj['create_time'] -= SESSION_ROTATION_INTERVAL
-        root.session_store.save(session_one_obj)
+        root.session_store._save(session_one_obj)
         self.url_open('/odoo')
         session_two = self.opener.cookies['session_id']
         self.assertNotEqual(session_one, session_two)
@@ -450,7 +450,7 @@ class TestSessionRotation(HttpCase):
         # Trigger cleanup
         session_two_obj = root.session_store.get(session_two)
         session_two_obj['create_time'] -= SESSION_DELETION_TIMER
-        root.session_store.save(session_two_obj)
+        root.session_store._save(session_two_obj)
         self.url_open('/odoo')
         session_three = self.opener.cookies['session_id']
         self.assertEqual(session_three, session_two)

@@ -158,7 +158,7 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
         # Force a rotation by changing the create date of the session
         self.session['create_time'] = time.time() - SESSION_ROTATION_INTERVAL
-        root.session_store.save(self.session)
+        root.session_store._save(self.session)
 
         # Trigger session rotation by calling another endpoint
         res = self.db_url_open('/test_http/echo-http-get')

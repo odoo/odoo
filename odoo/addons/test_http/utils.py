@@ -52,7 +52,7 @@ class MemorySessionStore(SessionStore):
         super().__init__(*args, **kwargs)
         self.store = {}
 
-    def save(self, session):
+    def _save(self, session, env=None):
         self.store[session.sid] = session
 
     def delete(self, session):
