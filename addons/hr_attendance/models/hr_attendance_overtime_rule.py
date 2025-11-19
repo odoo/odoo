@@ -348,6 +348,7 @@ class HrAttendanceOvertimeRule(models.Model):
             )
 
         quantity_intervals_by_date = defaultdict(list)
+        undertime_flag = {}
         for rule in self.filtered(lambda r: r.base_off == 'quantity').sorted(
             lambda r: {p: i for i, p in enumerate(periods)}[r.quantity_period]
         ):
@@ -360,7 +361,21 @@ class HrAttendanceOvertimeRule(models.Model):
 
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
-                if overtime_quantity <= 0 or overtime_quantity <= rule.employer_tolerance:
+                # # Handle undertime: convert missing hours into intervals to be deducted later
+                if overtime_quantity < 0:
+                    missing_hours = abs(overtime_quantity)
+
+                    new_intervals = _last_hours_as_intervals(
+                        starting_intervals=attendances_by[period][date],
+                        hours=missing_hours,
+                    )
+                    for start, end, attendance in new_intervals:
+                        quantity_intervals_by_date[attendance.date].append((start, end, rule))
+                        undertime_flag[attendance.date, start, end, rule.id] = True
+
+                    continue
+                # Handle overtime: convert overtime hours into intervals to be added later
+                if overtime_quantity <= rule.employer_tolerance:
                     continue
                 if overtime_quantity < overtime_hours_by[period][date]:
                     for start, end, attendance in _last_hours_as_intervals(
@@ -368,6 +383,7 @@ class HrAttendanceOvertimeRule(models.Model):
                         hours=overtime_quantity,
                     ):
                         quantity_intervals_by_date[attendance.date].append((start, end, rule))
+                        undertime_flag[attendance.date, start, end, rule.id] = False
                 else:
                     new_intervals = _last_hours_as_intervals(
                         starting_intervals=attendances_by[period][date],
@@ -389,13 +405,14 @@ class HrAttendanceOvertimeRule(models.Model):
                     ):
                         date = attendance[0].date
                         quantity_intervals_by_date[date].append((start, end, rule))
+                        undertime_flag[date, start, end, rule.id] = False
         intervals_by_date = {}
         for date in quantity_intervals_by_date.keys() | timing_intervals_by_date.keys():
             intervals_by_date[date] = _record_overlap_intervals([
                 *timing_intervals_by_date[date],
                 *quantity_intervals_by_date[date],
             ])
-        return intervals_by_date
+        return intervals_by_date, undertime_flag
 
     def _generate_overtime_vals(self, employee, attendances, version_map):
         # * Some attendances "see each other"
@@ -406,19 +423,26 @@ class HrAttendanceOvertimeRule(models.Model):
         #   (in pratices the attendances that see each other are found in `_update_overtime`)
         # * version_map[a.employee_id][a.date] is in the map for every attendance a in attendances
         vals = []
-        for date, intervals in self._get_overtime_intervals_by_date(attendances, version_map).items():
-            vals.extend([
-                {
+        interval_map, undertime_flag = self._get_overtime_intervals_by_date(attendances, version_map)
+        for date, intervals in interval_map.items():
+            for start, stop, rules in intervals:
+                is_undertime = undertime_flag.get(
+                    (date, start, stop, rules.id),
+                    False
+                )
+                duration = _time_delta_hours(stop - start)
+                if is_undertime:
+                    duration = -duration
+                vals.append({
                     'time_start': start,
                     'time_stop': stop,
-                    'duration': _time_delta_hours(stop - start),
+                    'duration': duration,
                     'employee_id': employee.id,
                     'date': date,
                     'rule_ids': rules.ids,
                     **rules._extra_overtime_vals(),
-                }
-                for start, stop, rules in intervals
-            ])
+                })
+
         return vals
 
     def _extra_overtime_vals(self):
