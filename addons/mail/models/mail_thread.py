@@ -3011,7 +3011,10 @@ class MailThread(models.AbstractModel):
                 [('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')],
                 order='date desc, id desc',
                 limit=200,  # arbitrary, but sometimes loops / spam may creater a long history
-            ).sorted(lambda msg: (msg.message_type in ('comment', 'email'), msg.date, msg.id), reverse=True)
+            ).sorted(
+                lambda msg: (msg.message_type in ('comment', 'email'), msg.date or msg.create_date, msg.id),
+                reverse=True,
+            )
             current_ancestor = current_ancestor[:1]
         return current_ancestor.id
 
