@@ -8,6 +8,7 @@ import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
+import { effect } from "@web/core/utils/reactive";
 
 const Markup = markup().constructor;
 
@@ -1495,4 +1496,26 @@ test("Fields with { localStorage: true } are restored from local storage", async
     const store = await start();
     const message = store.Message.insert(1);
     expect(message.body).toBe("test");
+});
+
+test("Record exists is reactive", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    effect(
+        (rec) => {
+            if (rec.exists()) {
+                expect.step("thread exists");
+            } else {
+                expect.step("thread does not exist");
+            }
+        },
+        [thread]
+    );
+    await expect.waitForSteps(["thread exists"]);
+    thread.delete();
+    await expect.waitForSteps(["thread does not exist"]);
 });
