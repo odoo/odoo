@@ -472,6 +472,10 @@ export class PosOrderline extends PosOrderlineAccounting {
         return this.discount || 0;
     }
 
+    get isValidForRefund() {
+        return this.qty - this.refundedQty > 0 && !this.combo_parent_id;
+    }
+
     // FIXME all below should be removed
     getValidLots() {
         return this.pack_lot_ids.filter((item) => item.lot_name);
