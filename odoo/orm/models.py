@@ -4149,7 +4149,7 @@ class BaseModel(metaclass=MetaModel):
         if any(self._ids):
             Rule = self.env['ir.rule']
             domain = Rule._compute_domain(self._name, operation)
-            if domain and (forbidden := self - self.sudo().filtered_domain(domain)):
+            if domain and (forbidden := self - self.sudo().with_context(active_test=False).filtered_domain(domain)):
                 return forbidden, functools.partial(Rule._make_access_error, operation, forbidden)
 
         return None
