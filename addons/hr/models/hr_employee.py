@@ -1570,23 +1570,23 @@ We can redirect you to the public employee list."""
         :param datetime stop: the stop of the period
         """
         calendar_periods_by_employee = defaultdict(list)
-        for employee in self.sudo():
-            for version in employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date()):
-                # if employee is under fully flexible contract, use timezone of the employee
-                calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
-                date_start = datetime.combine(
-                    version.contract_date_start,
+        versions = self.sudo()._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+        for version in versions:
+            # if employee is under fully flexible contract, use timezone of the employee
+            calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(version.employee_id.resource_id.tz)
+            date_start = datetime.combine(
+                version.contract_date_start,
+                time(0, 0, 0)
+            ).replace(tzinfo=calendar_tz).astimezone(utc)
+            if version.date_end:
+                date_end = datetime.combine(
+                    version.date_end + relativedelta(days=1),
                     time(0, 0, 0)
                 ).replace(tzinfo=calendar_tz).astimezone(utc)
-                if version.date_end:
-                    date_end = datetime.combine(
-                        version.date_end + relativedelta(days=1),
-                        time(0, 0, 0)
-                    ).replace(tzinfo=calendar_tz).astimezone(utc)
-                else:
-                    date_end = stop
-                calendar_periods_by_employee[employee].append(
-                    (max(date_start, start), min(date_end, stop), version.resource_calendar_id))
+            else:
+                date_end = stop
+            calendar_periods_by_employee[version.employee_id].append(
+                (max(date_start, start), min(date_end, stop), version.resource_calendar_id))
         return calendar_periods_by_employee
 
     @api.model
@@ -1728,8 +1728,8 @@ We can redirect you to the public employee list."""
         Returns the versions of the employee between date_from and date_to
         that have at least 1 day in contract during that period
         """
-        return self.env['hr.version'].search([
-            ('employee_id', 'in', self.ids), ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
+        return self.version_ids.filtered_domain([
+            ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
         ])
 
