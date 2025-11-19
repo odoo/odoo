@@ -65,12 +65,11 @@ export class EmailHtmlConverter extends PluginManager {
         });
     }
 
-    getContent() {
-        return this.getElContent().innerHTML;
-    }
-
-    getElContent() {
-        return this.editable.cloneNode(true);
+    getEmailTemplate() {
+        const template = this.config.referenceDocument.createElement("TEMPLATE");
+        this.dispatchTo("render_email_html_handlers", template);
+        // TODO EGGMAIL: post-process the template, or try to keep all the work before template generation?
+        return template;
     }
 
     async htmlConversion() {
@@ -81,14 +80,20 @@ export class EmailHtmlConverter extends PluginManager {
                 .flat()
         );
         // 2 notify plugins that the reference is ready to be used as such (e.g. for style computations)
-        this.getResource("reference_content_loaded_handlers").forEach((job) => job());
+        this.dispatchTo("reference_content_loaded_handlers");
+
+        // TODO EGGMAIL: rename
+        this.dispatchTo("specific_block_changes");
+
+        // TODO EGGMAIL: rename
+        this.dispatchTo("ensure_responsivity_handlers");
+
+        const emailTemplate = this.getEmailTemplate();
 
         // Old toInline
         // TODO EGGMAIL: adapt usage, use plugin instead of old method
         const cssRules = getCSSRules(this.config.referenceDocument);
         await toInline(this.config.reference, cssRules);
-        return this.config.reference.innerHTML;
-
-        // return this.getContent();
+        return emailTemplate.innerHTML;
     }
 }

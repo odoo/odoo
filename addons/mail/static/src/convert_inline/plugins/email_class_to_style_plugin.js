@@ -30,6 +30,7 @@ export class EmailClassToStylePlugin extends Plugin {
             propertyName.includes("-webkit") ||
             typeof value !== "string",
         reference_content_loaded_handlers: this.classToStyle.bind(this),
+        template_node_created_handlers: this.applyStyleInfoOnTemplateNode.bind(this),
     };
 
     setup() {
