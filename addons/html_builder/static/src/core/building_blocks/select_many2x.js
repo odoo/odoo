@@ -44,6 +44,7 @@ export class SelectMany2X extends Component {
         nullText: { type: String, optional: true },
         formatHeading: { type: Function, optional: true },
         formatLabel: { type: Function, optional: true },
+        fullWidthDropdown: { type: Boolean, optional: true },
     };
     static defaultProps = {
         fields: [],

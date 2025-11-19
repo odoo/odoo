@@ -21,6 +21,7 @@ export class BuilderMany2Many extends Component {
         formatSelection: { type: Function, optional: true },
         formatDropdownLabel: { type: Function, optional: true },
         formatDropdownHeading: { type: Function, optional: true },
+        fullWidthDropdown: { type: Boolean, optional: true },
     };
     static defaultProps = BuilderComponent.defaultProps;
     static components = { BuilderComponent, BasicMany2Many };
