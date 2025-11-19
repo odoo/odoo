@@ -1,27 +1,14 @@
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { OdooPivot } from "@spreadsheet/pivot/odoo_pivot";
+import { addEmptyGranularity } from "@spreadsheet/pivot/pivot_helpers";
 import { getBasicPivotArch, getPyEnv } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { helpers } from "@odoo/o-spreadsheet";
-const { parseDimension, isDateOrDatetimeField } = helpers;
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
  * @typedef {import("@spreadsheet").Zone} Zone
  */
-
-function addEmptyGranularity(dimensions, fields) {
-    return dimensions.map((dimension) => {
-        if (dimension.fieldName !== "id" && isDateOrDatetimeField(fields[dimension.fieldName])) {
-            return {
-                granularity: "month",
-                ...dimension,
-            };
-        }
-        return dimension;
-    });
-}
 
 async function insertStaticPivot(model, pivotId, params) {
     const ds = model.getters.getPivot(pivotId);
@@ -85,14 +72,8 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
             aggregator: pyEnv[resModel]._fields[measure]?.aggregator,
         })),
         model: resModel,
-        columns: addEmptyGranularity(
-            archInfo.colGroupBys.map(parseDimension),
-            pyEnv[resModel]._fields
-        ),
-        rows: addEmptyGranularity(
-            archInfo.rowGroupBys.map(parseDimension),
-            pyEnv[resModel]._fields
-        ),
+        columns: addEmptyGranularity(archInfo.colGroupBys, pyEnv[resModel]._fields),
+        rows: addEmptyGranularity(archInfo.rowGroupBys, pyEnv[resModel]._fields),
         name: "Partner Pivot",
         actionXmlId: params.actionXmlId,
     };
