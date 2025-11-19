@@ -9,6 +9,7 @@ import { exprToBoolean } from "@web/core/utils/strings";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
+import { DateTimeOperation } from "@web/model/relational_model/operation";
 
 const { DateTime } = luxon;
 
@@ -168,6 +169,21 @@ export class DateTimeField extends Component {
             },
             onChange: () => {
                 this.state.range = this.isRange(this.state.value);
+            },
+            onWillParseValues: (values) => {
+                const parsedValues = values.map((value) => DateTimeOperation.parse(value));
+                const toUpdate = {};
+                if (parsedValues[0]) {
+                    toUpdate[this.startDateField] = parsedValues[0];
+                }
+                if (parsedValues[1]) {
+                    toUpdate[this.endDateField] = parsedValues[1];
+                }
+                if (Object.keys(toUpdate).length) {
+                    this.props.record.update(toUpdate);
+                    return true;
+                }
+                return false;
             },
             onClose: () => {
                 this.picker.activeInput = "";

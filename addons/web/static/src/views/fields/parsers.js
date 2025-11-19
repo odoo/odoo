@@ -3,7 +3,7 @@ import { localization } from "@web/core/l10n/localization";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { escapeRegExp } from "@web/core/utils/strings";
-import { Operation } from "@web/model/relational_model/operation";
+import { ArithmeticOperation } from "@web/model/relational_model/operation";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -24,21 +24,6 @@ function evaluateMathematicalExpression(expr, context = {}) {
         safeEvalString += v;
     }
     return evaluateExpr(safeEvalString, context);
-}
-
-function parseOperation(value, parseValueFn) {
-    const regex = new RegExp(
-        `^(?<operator>[+\\-*/])\\s*=\\s*(?<operand>-?\\d+(?:[${escapeRegExp(
-            localization.decimalPoint
-        )}]\\d+)?)$`
-    );
-    const match = value.match(regex);
-    if (match?.groups) {
-        const operand = parseValueFn(match.groups.operand);
-        const operator = match.groups.operator;
-        return new Operation(operator, operand);
-    }
-    return false;
 }
 
 /**
@@ -86,8 +71,8 @@ export class InvalidNumberError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? parseOperation(value, parseFloat) : null;
-    if (operation instanceof Operation) {
+    const operation = allowOperation ? ArithmeticOperation.parse(value, parseFloat) : null;
+    if (operation) {
         return operation;
     }
     const thousandsSepRegex = localization.thousandsSep || "";
@@ -140,8 +125,8 @@ export function parseFloatTime(value) {
  * @returns {number} an integer
  */
 export function parseInteger(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? parseOperation(value, parseInteger) : null;
-    if (operation instanceof Operation) {
+    const operation = allowOperation ? ArithmeticOperation.parse(value, parseInteger) : null;
+    if (operation) {
         return operation;
     }
     const thousandsSepRegex = localization.thousandsSep || "";
@@ -198,8 +183,8 @@ export function parsePercentage(value) {
  * @returns {number}
  */
 export function parseMonetary(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? parseOperation(value, parseMonetary) : null;
-    if (operation instanceof Operation) {
+    const operation = allowOperation ? ArithmeticOperation.parse(value, parseMonetary) : null;
+    if (operation) {
         return operation;
     }
     value = value.trim();

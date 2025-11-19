@@ -77,7 +77,7 @@ const normalizeFormatTable = {
     X: "HH:mm:ss",
 };
 
-const smartDateUnits = {
+export const smartDateUnits = {
     d: "days",
     m: "months",
     w: "weeks",
@@ -304,8 +304,7 @@ function parseSmartDateInput(value) {
         const dayname = term.slice(1);
         if (Object.hasOwn(smartWeekdays, dayname) || dayname === "week_start") {
             const { weekStart } = localization;
-            const weekdayNumber =
-                dayname === "week_start" ? weekStart : smartWeekdays[dayname];
+            const weekdayNumber = dayname === "week_start" ? weekStart : smartWeekdays[dayname];
             let weekdayOffset =
                 ((weekdayNumber - weekStart + 7) % 7) - ((now.weekday - weekStart + 7) % 7);
             if (operator == "+" || operator == "-") {
