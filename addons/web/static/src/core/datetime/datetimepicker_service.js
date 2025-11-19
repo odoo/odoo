@@ -204,7 +204,10 @@ export const datetimePickerService = {
                  * @param {Event} ev
                  */
                 function onInputChange(ev) {
-                    updateValueFromInputs();
+                    const abort = updateValueFromInputs();
+                    if (abort) {
+                        return;
+                    }
                     inputsChanged[ev.target === getInput(1) ? 1 : 0] = true;
                     if (!isOpen() || inputsChanged.every(Boolean)) {
                         saveAndClose();
@@ -232,7 +235,10 @@ export const datetimePickerService = {
                 function onInputKeydown(ev) {
                     if (ev.key == "Enter" && ev.ctrlKey) {
                         ev.preventDefault();
-                        updateValueFromInputs();
+                        const abort = updateValueFromInputs();
+                        if (abort) {
+                            return;
+                        }
                         return open(ev.target === getInput(1) ? 1 : 0);
                     }
                     switch (ev.key) {
@@ -389,8 +395,15 @@ export const datetimePickerService = {
                 }
 
                 function updateValueFromInputs() {
+                    const inputs = getInputs();
+                    const updated = params.onWillParseValues?.(
+                        inputs.map((input) => input && input.value)
+                    );
+                    if (updated) {
+                        return true;
+                    }
                     const values = zipWith(
-                        getInputs(),
+                        inputs,
                         ensureArray(pickerProps.value),
                         (el, currentValue) => {
                             if (!el || el.tagName?.toLowerCase() !== "input") {
@@ -467,7 +480,10 @@ export const datetimePickerService = {
                 const popover = createPopover(DateTimePickerPopover, {
                     useBottomSheet: isBottomSheet(),
                     async onClose() {
-                        updateValueFromInputs();
+                        const abort = updateValueFromInputs();
+                        if (abort) {
+                            return;
+                        }
                         setFocusClass(null);
                         restoreTargetMargin?.();
                         restoreTargetMargin = null;

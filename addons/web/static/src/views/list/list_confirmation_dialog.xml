@@ -47,7 +47,7 @@
                                     <td style="pointer-events: none;">
                                         <span t-if="isValueEmpty(field)">None</span>
                                         <span t-elif="isValueOperation(field)" t-att-name="field.name">
-                                            <t t-out="field.label + ' ' + props.changes[field.name].operator + ' ' + props.changes[field.name].operand"></t>
+                                            <t t-out="field.label"></t> <t t-esc="props.changes[field.name]"></t>
                                         </span>
                                         <Field t-else="" name="field.name" record="props.record" type="field.widget" readonly="true" fieldInfo="field.fieldNode"/>
                                     </td>
@@ -58,8 +58,14 @@
                     <div t-if="showTip" class="alert alert-info d-flex align-items-center mt-3">
                         <i class="fa fa-lightbulb-o fa-lg me-4"></i>
                         <div class="text-muted">
-                            <div>Use the operators "+=", "-=", "*=" and "/=" to update the current value.</div>
-                            <div>For example, if the value is "1" and you enter "+=2", it will be updated to "3".</div>
+                            <t t-if="showNumberTip">
+                                <div>Use the operators "+=", "-=", "*=" and "/=" to update the current value.</div>
+                                <div>For example, if the value is "1" and you enter "+=2", it will be updated to "3".</div>
+                            </t>
+                            <t t-elif="showDateTip">
+                                <div t-esc="dateTip"/>
+                                <div t-esc="dateTipExample"/>
+                            </t>
                         </div>
                     </div>
                 </div>
