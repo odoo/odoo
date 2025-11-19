@@ -50,6 +50,51 @@ $line-height-truncate: 1.5em;
 }
 
 .o_wslides_body {
+<<<<<<< 2bb815bfebf87fba00d1321e8aa4b3befe2bf09e
+||||||| a585c88c7641baab0645d5693a0f726bdd0b94e3
+    > #wrapwrap > main {
+        // Change default "body" background in case of website_slides pages.
+        // Note: this only affects the "main" element as we don't want (semi-)
+        // transparent header/footer to be impacted and we also only want the
+        // "box" of boxed layouts to be impacted (not the color behind the box).
+        background-color: $o-wslides-color-bg;
+    }
+
+    .o_wslides_home_nav {
+        top: -40px;
+
+        @include media-breakpoint-up(lg) {
+            .o_wslides_nav_navbar_right {
+                padding-left: $spacer;
+                margin-left: auto;
+                border-left: 1px solid $border-color;
+            }
+        }
+    }
+
+=======
+    > #wrapwrap > main {
+        // Change default "body" background in case of website_slides pages.
+        // Note: this only affects the "main" element as we don't want (semi-)
+        // transparent header/footer to be impacted and we also only want the
+        // "box" of boxed layouts to be impacted (not the color behind the box).
+        background-color: $o-wslides-color-bg;
+        --body-bg: #{$o-wslides-color-bg};
+    }
+
+    .o_wslides_home_nav {
+        top: -40px;
+
+        @include media-breakpoint-up(lg) {
+            .o_wslides_nav_navbar_right {
+                padding-left: $spacer;
+                margin-left: auto;
+                border-left: 1px solid $border-color;
+            }
+        }
+    }
+
+>>>>>>> dddae9a446802d892610f9e9583f06acda85d2b3
     .o_wslides_js_slide_like_up,
     .o_wslides_js_slide_like_down {
         user-select: none;
