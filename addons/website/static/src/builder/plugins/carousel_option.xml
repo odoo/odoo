@@ -5,15 +5,19 @@
     <BuilderRow label.translate="Slide">
         <BuilderButton type="'success'" title.translate="Add Slide"  action="'addSlide'">Add Slide</BuilderButton>
     </BuilderRow>
+    
     <BuilderRow label.translate="Style">
         <BuilderSelect>
-            <BuilderSelectItem classAction="''">Classic</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators outside</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">Regular</BuilderSelectItem>
+            <BuilderSelectItem classAction="'carousel-dark'">Inverted colors</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Invert colors" level="1">
-        <BuilderCheckbox classAction="'carousel-dark'"/>
+    <BuilderRow label.translate="Control" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Indicators Inside</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators Outside</BuilderSelectItem>
+        </BuilderSelect>
     </BuilderRow>
 
     <BuilderRow label.translate="Arrows" level="1">
@@ -51,7 +55,7 @@
     </BuilderRow>
 
     <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
-        <BuilderRow label.translate="Speed" level="1">
+        <BuilderRow label.translate="Timespan" level="1">
             <BuilderNumberInput dataAttributeAction="'bsInterval'"
                 default="10"
                 unit="'s'"

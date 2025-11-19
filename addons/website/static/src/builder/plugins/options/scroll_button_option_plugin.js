@@ -32,9 +32,11 @@ class ScrollButtonManager {
             "rounded-circle",
             "align-items-center",
             "justify-content-center",
+            "o_cc",
+            "o_cc4",
             "mx-auto",
-            "bg-primary",
-            "o_not_editable"
+            "o_not_editable",
+            "anim-heartbeat"
         );
         anchor.href = "#";
         anchor.contentEditable = "false";

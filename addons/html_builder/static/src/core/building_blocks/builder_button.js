@@ -14,6 +14,7 @@ export class BuilderButton extends Component {
         ...clickableBuilderComponentProps,
 
         title: { type: String, optional: true },
+        titleActive: { type: String, optional: true },
         label: { type: String, optional: true },
         iconImg: { type: String, optional: true },
         iconImgAlt: { type: String, optional: true },
@@ -28,6 +29,7 @@ export class BuilderButton extends Component {
 
     static defaultProps = {
         type: "secondary",
+        titleActive: "",
     };
 
     setup() {

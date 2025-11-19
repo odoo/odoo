@@ -13,6 +13,7 @@ export const textInputBasePassthroughProps = {
     classes: { type: String, optional: true },
     inputClasses: { type: String, optional: true },
     prefix: { type: String, optional: true },
+    prefixIcon: { type: String, optional: true },
 };
 
 export class BuilderTextInputBase extends Component {

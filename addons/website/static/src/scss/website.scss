@@ -2216,7 +2216,6 @@ span.list-inline-item.o_add_language:last-child {
     display: flex;
     width: 50px;
     height: 50px;
-    animation: o-anim-heartbeat 2.6s ease-in-out 1s infinite;
 
     &, &:hover {
         text-decoration: none;
@@ -2224,19 +2223,26 @@ span.list-inline-item.o_add_language:last-child {
     &:focus {
         outline: none;
     }
+    
+}
+
+.anim-heartbeat {
+    animation: o-anim-heartbeat 2.6s ease-in-out 1s infinite;
+    opacity: 0.8;
+
     &:hover {
         animation-iteration-count: 1;
     }
-}
-
-// Attention keeper for the "scroll down" top-banner button
-@keyframes o-anim-heartbeat {
-    0%, 14%, 35% {
-        transform: scale(1);
-    }
-    7%, 21% {
-        transform: scale(1.3);
-        background-color: rgba(map-get($theme-colors, 'primary'), 0.8);
+    // Attention keeper for the "scroll down" top-banner button
+    @keyframes o-anim-heartbeat {
+        0%, 14%, 35% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+        7%, 21% {
+            transform: scale(1.3);
+            opacity: 1;
+        }
     }
 }
 

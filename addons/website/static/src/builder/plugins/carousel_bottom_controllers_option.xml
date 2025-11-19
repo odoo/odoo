@@ -14,7 +14,7 @@
     <xpath expr="//BuilderRow[@label.translate=&quot;Indicators&quot;]/BuilderSelect" position="attributes">
         <attribute name="action">"toggleControllers"</attribute>
     </xpath>
-    <xpath expr="//BuilderSelect" position="replace">
+    <xpath expr="//BuilderRow[@label.translate=&quot;Control&quot;]/BuilderSelect" position="replace">
         <BuilderSelect applyTo="'.o_horizontal_controllers_row'">
             <BuilderSelectItem classAction="'justify-content-between'">Default</BuilderSelectItem>
             <BuilderSelectItem classAction="'justify-content-between flex-row-reverse'" >Reversed</BuilderSelectItem>

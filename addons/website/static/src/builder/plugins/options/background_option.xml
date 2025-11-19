@@ -4,10 +4,12 @@
 <t t-name="website.WebsiteBackgroundOption" t-inherit="html_builder.BackgroundOption">
     <xpath expr="//BuilderButton[@action=&quot;'toggleBgImage'&quot;]" position="after">
         <t t-if="props.withVideos">
-            <BuilderButton title.translate="Video"
-                className="'fa fa-fw fa-film px-2'"
-                preview="false"
+            <BuilderButton
                 action="'toggleBgVideo'"
+                title.translate="Add a background video"
+                titleActive.translate="Remove the background video"
+                preview="false"
+                className="'fa fa-fw fa-film px-2'"
                 id="'toggle_bg_video_id'"
             />
         </t>
