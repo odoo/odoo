@@ -51,12 +51,6 @@ pdfjs-download-button-label = Sader
 pdfjs-bookmark-button =
     .title = Asebter amiran (Sken-d tansa URL seg usebter amiran)
 pdfjs-bookmark-button-label = Asebter amiran
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Ldi deg usnas
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Ldi deg usnas
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Taɣaṛa n isemli…
 pdfjs-document-properties-file-name = Isem n ufaylu:
 pdfjs-document-properties-file-size = Teɣzi n ufaylu:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } yibiten)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } yibiten)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } KAṬ ({ $size_b } ibiten)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Amgay:
 pdfjs-document-properties-keywords = Awalen n tsaruţ
 pdfjs-document-properties-creation-date = Azemz n tmerna:
 pdfjs-document-properties-modification-date = Azemz n usnifel:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -281,6 +286,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Tabzimt { $type }]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -301,8 +309,27 @@ pdfjs-editor-ink-button-label = Suneɣ
 pdfjs-editor-stamp-button =
     .title = Rnu neɣ ẓreg tugniwin
 pdfjs-editor-stamp-button-label = Rnu neɣ ẓreg tugniwin
-pdfjs-editor-remove-button =
-    .title = Kkes
+pdfjs-editor-highlight-button =
+    .title = Derrer
+pdfjs-editor-highlight-button-label = Derrer
+pdfjs-highlight-floating-button1 =
+    .title = Derrer
+    .aria-label = Derrer
+pdfjs-highlight-floating-button-label = Derrer
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = Kkes asuneɣ
+pdfjs-editor-remove-freetext-button =
+    .title = Kkes aḍris
+pdfjs-editor-remove-stamp-button =
+    .title = Kkes tugna
+pdfjs-editor-remove-highlight-button =
+    .title = Kkes aderrer
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Initen
 pdfjs-editor-free-text-size-input = Teɣzi
@@ -312,6 +339,10 @@ pdfjs-editor-ink-opacity-input = Tebrek
 pdfjs-editor-stamp-add-image-button =
     .title = Rnu tawlaft
 pdfjs-editor-stamp-add-image-button-label = Rnu tawlaft
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Tuzert
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Beddel tuzert mi ara d-tesbeggneḍ iferdisen niḍen ur nelli d aḍris
 pdfjs-free-text =
     .aria-label = Amaẓrag n uḍris
 pdfjs-free-text-default-content = Bdu tira...
@@ -335,3 +366,73 @@ pdfjs-editor-alt-text-decorative-tooltip = Yettwacreḍ d adlag
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+pdfjs-editor-resizer-label-top-left = Tiɣmert n ufella n zelmeḍ — semsawi teɣzi
+pdfjs-editor-resizer-label-top-middle = Talemmat n ufella — semsawi teɣzi
+pdfjs-editor-resizer-label-top-right = Tiɣmert n ufella n yeffus — semsawi teɣzi
+pdfjs-editor-resizer-label-middle-right = Talemmast tayeffust — semsawi teɣzi
+pdfjs-editor-resizer-label-bottom-right = Tiɣmert n wadda n yeffus — semsawi teɣzi
+pdfjs-editor-resizer-label-bottom-middle = Talemmat n wadda — semsawi teɣzi
+pdfjs-editor-resizer-label-bottom-left = Tiɣmert n wadda n zelmeḍ — semsawi teɣzi
+pdfjs-editor-resizer-label-middle-left = Talemmast tazelmdaḍt — semsawi teɣzi
+pdfjs-editor-resizer-top-left =
+    .aria-label = Tiɣmert n ufella n zelmeḍ — semsawi teɣzi
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Talemmat n ufella — semsawi teɣzi
+pdfjs-editor-resizer-top-right =
+    .aria-label = Tiɣmert n ufella n yeffus — semsawi teɣzi
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Talemmast tayeffust — semsawi teɣzi
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Tiɣmert n wadda n yeffus — semsawi teɣzi
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Talemmat n wadda — semsawi teɣzi
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Tiɣmert n wadda n zelmeḍ — semsawi teɣzi
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Talemmast tazelmdaḍt — semsawi teɣzi
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = Ini n uderrer
+pdfjs-editor-colorpicker-button =
+    .title = Senfel ini
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = Afran n yiniten
+pdfjs-editor-colorpicker-yellow =
+    .title = Awraɣ
+pdfjs-editor-colorpicker-green =
+    .title = Azegzaw
+pdfjs-editor-colorpicker-blue =
+    .title = Amidadi
+pdfjs-editor-colorpicker-pink =
+    .title = Axuxi
+pdfjs-editor-colorpicker-red =
+    .title = Azggaɣ
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Sken akk
+pdfjs-editor-highlight-show-all-button =
+    .title = Sken akk
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Rnu aḍris niḍen (aglam n tugna)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Aru aglam-ik dagi…
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Issin ugar
+pdfjs-editor-new-alt-text-create-automatically-button-label = Rnu aḍris niḍen s wudem awurman
+pdfjs-editor-new-alt-text-not-now-button = Mačči tura
+pdfjs-editor-new-alt-text-error-title = D awezɣi timerna n uḍris niḍen s wudem awurman
+pdfjs-editor-new-alt-text-error-close-button = Mdel
+
+## Image alt-text settings
+
+pdfjs-editor-alt-text-settings-delete-model-button = Kkes
+pdfjs-editor-alt-text-settings-download-model-button = Sader
+pdfjs-editor-alt-text-settings-downloading-model-button = Asader…
+pdfjs-editor-alt-text-settings-close-button = Mdel

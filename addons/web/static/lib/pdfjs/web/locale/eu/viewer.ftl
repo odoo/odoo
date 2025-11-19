@@ -51,12 +51,6 @@ pdfjs-download-button-label = Deskargatu
 pdfjs-bookmark-button =
     .title = Uneko orria (ikusi uneko orriaren URLa)
 pdfjs-bookmark-button-label = Uneko orria
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Ireki aplikazioan
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Ireki aplikazioan
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Dokumentuaren propietateak…
 pdfjs-document-properties-file-name = Fitxategi-izena:
 pdfjs-document-properties-file-size = Fitxategiaren tamaina:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } byte)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } byte)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } byte)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Gaia:
 pdfjs-document-properties-keywords = Gako-hitzak:
 pdfjs-document-properties-creation-date = Sortze-data:
 pdfjs-document-properties-modification-date = Aldatze-data:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -281,6 +286,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } ohartarazpena]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -304,8 +312,6 @@ pdfjs-editor-stamp-button-label = Gehitu edo editatu irudiak
 pdfjs-editor-highlight-button =
     .title = Nabarmendu
 pdfjs-editor-highlight-button-label = Nabarmendu
-pdfjs-highlight-floating-button =
-    .title = Nabarmendu
 pdfjs-highlight-floating-button1 =
     .title = Nabarmendu
     .aria-label = Nabarmendu
@@ -374,6 +380,22 @@ pdfjs-editor-resizer-label-bottom-right = Beheko eskuineko izkina — aldatu tam
 pdfjs-editor-resizer-label-bottom-middle = Behean erdian — aldatu tamaina
 pdfjs-editor-resizer-label-bottom-left = Beheko ezkerreko izkina — aldatu tamaina
 pdfjs-editor-resizer-label-middle-left = Erdian ezkerrean —  aldatu tamaina
+pdfjs-editor-resizer-top-left =
+    .aria-label = Goiko ezkerreko izkina — aldatu tamaina
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Goian erdian — aldatu tamaina
+pdfjs-editor-resizer-top-right =
+    .aria-label = Goiko eskuineko izkina — aldatu tamaina
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Erdian eskuinean — aldatu tamaina
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Beheko eskuineko izkina — aldatu tamaina
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Behean erdian — aldatu tamaina
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Beheko ezkerreko izkina — aldatu tamaina
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Erdian ezkerrean —  aldatu tamaina
 
 ## Color picker
 
@@ -400,3 +422,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Erakutsi denak
 pdfjs-editor-highlight-show-all-button =
     .title = Erakutsi denak
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Editatu testu alternatiboa (irudiaren azalpena)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Gehitu testu alternatiboa (irudiaren azalpena)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Idatzi zure azalpena hemen…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Azalpen laburra irudia ikusi ezin duen jendearentzat edo irudia kargatu ezin denerako.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Testu alternatibo hau automatikoki sortu da eta okerra izan liteke.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Argibide gehiago
+pdfjs-editor-new-alt-text-create-automatically-button-label = Sortu testu alternatiboa automatikoki
+pdfjs-editor-new-alt-text-not-now-button = Une honetan ez
+pdfjs-editor-new-alt-text-error-title = Ezin da testu alternatiboa automatikoki sortu
+pdfjs-editor-new-alt-text-error-description = Idatzi zure testu alternatibo propioa edo saiatu berriro geroago.
+pdfjs-editor-new-alt-text-error-close-button = Itxi
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Testu alternatiboaren AA modeloa deskargatzen ({ $totalSize }/{ $downloadedSize } MB)
+    .aria-valuetext = Testu alternatiboaren AA modeloa deskargatzen ({ $totalSize }/{ $downloadedSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Testu alternatiboa gehituta
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Testu alternatiboa falta da
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Berrikusi testu alternatiboa
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Automatikoki sortua: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Irudiaren testu alternatiboaren ezarpenak
+pdfjs-image-alt-text-settings-button-label = Irudiaren testu alternatiboaren ezarpenak
+pdfjs-editor-alt-text-settings-dialog-label = Irudiaren testu alternatiboaren ezarpenak
+pdfjs-editor-alt-text-settings-automatic-title = Testu alternatibo automatikoa
+pdfjs-editor-alt-text-settings-create-model-button-label = Sortu testu alternatiboa automatikoki
+pdfjs-editor-alt-text-settings-create-model-description = Azalpenak iradokitzen ditu irudia ikusi ezin duen jendearentzat edo irudia kargatu ezin denerako.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Testu alternatiboaren AA modeloa ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Zure gailuan modu lokalean exekutatzen da eta zure datuak pribatu mantentzen dira. Testu alternatibo automatikorako beharrezkoa.
+pdfjs-editor-alt-text-settings-delete-model-button = Ezabatu
+pdfjs-editor-alt-text-settings-download-model-button = Deskargatu
+pdfjs-editor-alt-text-settings-downloading-model-button = Deskargatzen…
+pdfjs-editor-alt-text-settings-editor-title = Testu alternatiboaren editorea
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Erakutsi testu alternatiboa irudi bat gehitzean berehala
+pdfjs-editor-alt-text-settings-show-dialog-description = Zure irudiek testu alternatiboa duela ziurtatzen laguntzen dizu.
+pdfjs-editor-alt-text-settings-close-button = Itxi

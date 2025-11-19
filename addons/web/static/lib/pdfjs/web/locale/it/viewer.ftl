@@ -104,6 +104,12 @@ pdfjs-document-properties-button =
 pdfjs-document-properties-button-label = Proprietà del documento…
 pdfjs-document-properties-file-name = Nome file:
 pdfjs-document-properties-file-size = Dimensione file:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } byte)
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } byte)
 # Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
@@ -118,6 +124,7 @@ pdfjs-document-properties-subject = Oggetto:
 pdfjs-document-properties-keywords = Parole chiave:
 pdfjs-document-properties-creation-date = Data creazione:
 pdfjs-document-properties-modification-date = Data modifica:
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -220,7 +227,6 @@ pdfjs-find-match-diacritics-checkbox-label = Segni diacritici
 pdfjs-find-entire-word-checkbox-label = Parole intere
 pdfjs-find-reached-top = Raggiunto l’inizio della pagina, continua dalla fine
 pdfjs-find-reached-bottom = Raggiunta la fine della pagina, continua dall’inizio
-
 # Variables:
 #   $current (Number) - the index of the currently active find result
 #   $total (Number) - the total number of matches in the document
@@ -229,7 +235,6 @@ pdfjs-find-match-count =
         [one] { $current } di { $total } corrispondenza
        *[other] { $current } di { $total } corrispondenze
     }
-
 # Variables:
 #   $limit (Number) - the maximum number of matches
 pdfjs-find-match-count-limit =
@@ -237,7 +242,6 @@ pdfjs-find-match-count-limit =
         [one] Più di una { $limit } corrispondenza
        *[other] Più di { $limit } corrispondenze
     }
-
 pdfjs-find-not-found = Testo non trovato
 
 ## Predefined zoom values
@@ -278,6 +282,7 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Annotazione: { $type }]
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -332,7 +337,6 @@ pdfjs-editor-stamp-add-image-button-label = Aggiungi immagine
 pdfjs-editor-free-highlight-thickness-input = Spessore
 pdfjs-editor-free-highlight-thickness-title =
     .title = Modifica lo spessore della selezione per elementi non testuali
-
 pdfjs-free-text =
     .aria-label = Editor di testo
 pdfjs-free-text-default-content = Inizia a digitare…
@@ -370,12 +374,27 @@ pdfjs-editor-resizer-label-bottom-right = Angolo in basso a destra — ridimensi
 pdfjs-editor-resizer-label-bottom-middle = Lato inferiore nel mezzo — ridimensiona
 pdfjs-editor-resizer-label-bottom-left = Angolo in basso a sinistra — ridimensiona
 pdfjs-editor-resizer-label-middle-left = Lato sinistro nel mezzo — ridimensiona
+pdfjs-editor-resizer-top-left =
+    .aria-label = Angolo in alto a sinistra — ridimensiona
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Lato superiore nel mezzo — ridimensiona
+pdfjs-editor-resizer-top-right =
+    .aria-label = Angolo in alto a destra — ridimensiona
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Lato destro nel mezzo — ridimensiona
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Angolo in basso a destra — ridimensiona
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Lato inferiore nel mezzo — ridimensiona
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Angolo in basso a sinistra — ridimensiona
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Lato sinistro nel mezzo — ridimensiona
 
 ## Color picker
 
 # This means "Color used to highlight text"
 pdfjs-editor-highlight-colorpicker-label = Colore evidenziatore
-
 pdfjs-editor-colorpicker-button =
     .title = Cambia colore
 pdfjs-editor-colorpicker-dropdown =
@@ -397,3 +416,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Mostra tutto
 pdfjs-editor-highlight-show-all-button =
     .title = Mostra tutto
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Modifica testo alternativo (descrizione dell’immagine)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Aggiungi testo alternativo (descrizione dell’immagine)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Scrivi qui la tua descrizione…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Breve descrizione per le persone che non possono vedere l’immagine, o mostrata quando l’immagine non si carica.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Questo testo alternativo è stato creato automaticamente e potrebbe non essere accurato.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Ulteriori informazioni
+pdfjs-editor-new-alt-text-create-automatically-button-label = Crea automaticamente testo alternativo
+pdfjs-editor-new-alt-text-not-now-button = Non adesso
+pdfjs-editor-new-alt-text-error-title = Impossibile creare automaticamente il testo alternativo
+pdfjs-editor-new-alt-text-error-description = Scrivi il testo alternativo o riprova più tardi.
+pdfjs-editor-new-alt-text-error-close-button = Chiudi
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Download in corso del modello IA per il testo alternativo ({ $downloadedSize } di { $totalSize } MB)
+    .aria-valuetext = Download in corso del modello IA per il testo alternativo ({ $downloadedSize } di { $totalSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Aggiunto testo alternativo
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Testo alternativo mancante
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Verifica testo alternativo
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Creato automaticamente: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Impostazioni testo alternativo per le immagini
+pdfjs-image-alt-text-settings-button-label = Impostazioni testo alternativo per le immagini
+pdfjs-editor-alt-text-settings-dialog-label = Impostazioni testo alternativo per le immagini
+pdfjs-editor-alt-text-settings-automatic-title = Testo alternativo automatico
+pdfjs-editor-alt-text-settings-create-model-button-label = Crea testo alternativo automaticamente
+pdfjs-editor-alt-text-settings-create-model-description = Suggerisce una descrizione per le persone che non possono vedere l’immagine, o mostrata quando l’immagine non si carica.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Modello IA per il testo alternativo ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Viene eseguito localmente sul tuo dispositivo in modo che i tuoi dati rimangano riservati. È richiesto per la generazione automatica del testo alternativo.
+pdfjs-editor-alt-text-settings-delete-model-button = Elimina
+pdfjs-editor-alt-text-settings-download-model-button = Scarica
+pdfjs-editor-alt-text-settings-downloading-model-button = Download…
+pdfjs-editor-alt-text-settings-editor-title = Modifica testo alternativo
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostra l’editor del testo alternativo non appena si aggiunge un’immagine
+pdfjs-editor-alt-text-settings-show-dialog-description = Ti aiuta ad assicurarti che tutte le tue immagini abbiano il testo alternativo.
+pdfjs-editor-alt-text-settings-close-button = Chiudi

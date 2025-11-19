@@ -51,12 +51,6 @@ pdfjs-download-button-label = Descargar
 pdfjs-bookmark-button =
     .title = Páxina actual (ver o URL da páxina actual)
 pdfjs-bookmark-button-label = Páxina actual
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Abrir cunha aplicación
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Abrir cunha aplicación
 
 ##  Secondary toolbar and context menu
 
@@ -359,6 +353,33 @@ pdfjs-editor-resizer-label-bottom-right = Esquina inferior dereita: cambia o tam
 pdfjs-editor-resizer-label-bottom-middle = Abaixo medio: cambia o tamaño
 pdfjs-editor-resizer-label-bottom-left = Esquina inferior esquerda: cambia o tamaño
 pdfjs-editor-resizer-label-middle-left = Medio esquerdo: cambia o tamaño
+pdfjs-editor-resizer-top-left =
+    .aria-label = Esquina superior esquerda: cambia o tamaño
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Medio superior: cambia o tamaño
+pdfjs-editor-resizer-top-right =
+    .aria-label = Esquina superior dereita: cambia o tamaño
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Medio dereito: cambia o tamaño
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Esquina inferior dereita: cambia o tamaño
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Abaixo medio: cambia o tamaño
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Esquina inferior esquerda: cambia o tamaño
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Medio esquerdo: cambia o tamaño
 
 ## Color picker
+
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+
+## Image alt-text settings
 
