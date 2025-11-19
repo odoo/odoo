@@ -12,7 +12,7 @@ class LivechatRtcController(RtcController):
     @add_guest_to_context
     def channel_call_join(self, channel_id, check_rtc_session_ids=None, camera=False):
         # sudo: discuss.channel - visitor can check if there is an ongoing call
-        if request.env.user.is_public and request.env["discuss.channel"].sudo().search([
+        if not request.env.user._is_internal() and request.env["discuss.channel"].sudo().search([
             ("id", "=", channel_id),
             ("channel_type", "=", "livechat"),
             ("rtc_session_ids", "=", False),
