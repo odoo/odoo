@@ -5,12 +5,7 @@ import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
-import {
-    BaseOptionComponent,
-    useApplyVisibility,
-    useGetItemValue,
-    useVisibilityObserver,
-} from "../core/utils";
+import { BaseOptionComponent, useApplyVisibility, useVisibilityObserver } from "../core/utils";
 
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
@@ -42,7 +37,6 @@ export class OptionsContainer extends BaseOptionComponent {
         useOptionsSubEnv(() => [this.props.editingElement]);
         super.setup();
         this.notification = useService("notification");
-        this.getItemValue = useGetItemValue();
         useVisibilityObserver("content", useApplyVisibility("root"));
 
         this.callOperation = useOperation();
