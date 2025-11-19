@@ -13,6 +13,8 @@ import {
     startServer,
     triggerEvents,
     waitStoreFetch,
+    dragenterFiles,
+    dropFiles,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
@@ -20,7 +22,7 @@ import {
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
 import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
@@ -32,6 +34,7 @@ import {
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
@@ -374,6 +377,86 @@ test("'New Meeting' in mobile", async () => {
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Members" });
     await contains(".o-discuss-ChannelMember", { text: "Partner 2" });
+});
+
+test("Dropzones below fullscreen meeting view are disabled", async () => {
+    const popoutIframe = document.createElement("iframe");
+    const outsideArea = document.createElement("div");
+    getFixture().appendChild(outsideArea);
+    const popoutWindow = {
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        closed: false,
+        get document() {
+            const doc = popoutIframe.contentDocument;
+            if (!doc) {
+                return undefined;
+            }
+            const originalWrite = doc.write;
+            doc.write = (content) => {
+                // This avoids duplicating the test script in the popoutWindow
+                const sanitizedContent = content.replace(
+                    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+                    ""
+                );
+                originalWrite.call(doc, sanitizedContent);
+            };
+            return doc;
+        },
+        close: () => {
+            popoutWindow.closed = true;
+            popoutIframe.remove(
+                popoutWindow.document.querySelector(".o-mail-PopoutAttachmentView")
+            );
+        },
+    };
+    patchWithCleanup(window, { documentPictureInPicture: false });
+    patchWithCleanup(browser, {
+        open: () => {
+            popoutWindow.closed = false;
+            outsideArea.append(popoutIframe);
+            return popoutWindow;
+        },
+    });
+
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({ name: "Slytherin" });
+    pyEnv["mail.message"].create([
+        {
+            author_id: partnerId,
+            body: "msg-1",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: partnerId,
+            body: "msg-2",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
+    await click("button[title='New Meeting']");
+    await contains(".o-mail-Meeting.o-fullscreen");
+    await click(".o-mail-Meeting button[title='Chat']");
+    await contains(".o-mail-Meeting.o-fullscreen .o-mail-ActionPanel .o-mail-Thread");
+    const textFile_1 = new File(["hello, world"], "text-1.txt", { type: "text/plain" });
+    await dragenterFiles(".o-mail-Meeting.o-fullscreen .o-mail-Thread", [textFile_1]);
+    await contains(".o-Dropzone"); // only dropzone in meeting view
+    await dropFiles(".o-Dropzone", [textFile_1]);
+    await contains(".o-mail-Meeting .o-mail-AttachmentContainer:not(.o-isUploading)");
+    // check picture-in-picture still enables dropzone
+    await click("button[title='Picture in Picture']");
+    await contains(".o-mail-Meeting:not(.o-fullscreen)", { target: popoutIframe.contentDocument });
+    const textFile_2 = new File(["hello, world"], "text-2.txt", { type: "text/plain" });
+    await dragenterFiles(".o-mail-Discuss .o-mail-Thread", [textFile_1]);
+    await contains(".o-Dropzone"); // only dropzone in discuss app
+    await dropFiles(".o-Dropzone", [textFile_2]);
+    await contains(".o-mail-Discuss .o-mail-AttachmentContainer:not(.o-isUploading)", { count: 2 });
 });
 
 test("Systray icon shows latest action", async () => {
