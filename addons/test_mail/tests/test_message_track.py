@@ -44,7 +44,8 @@ class TestTracking(MailCommon):
     @users('employee')
     def test_message_track_default_message(self):
         """Check that the default tracking log message defined on the model is used
-        and that setting a log message overrides it. See `_track_get_default_log_message`"""
+        and that setting a log message overrides it. See `_track_get_default_log_message`
+        Also verify that the tracking values are formatted correctly."""
 
         record = self.env['mail.test.track'].with_context(self._test_context).create({
             'name': 'Test',
@@ -60,6 +61,8 @@ class TestTracking(MailCommon):
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages.body, '<p>There was a change on Test for fields "user_id"</p>',
                          'Default message should be used')
+        self.assertEqual(messages.tracking_value_formatted,
+                        f'There was a change on Test for fields "user_id"\nNone ⇨ {self.user_admin.name} (Responsible)')
 
         with self.mock_mail_gateway():
             record._track_set_log_message('Hi')
@@ -69,6 +72,7 @@ class TestTracking(MailCommon):
         messages = record.message_ids - messages
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages.body, '<p>Hi</p>', '_track_set_log_message should take priority over default message')
+        self.assertEqual(messages.tracking_value_formatted, f'Hi\n{self.user_admin.name} ⇨ None (Responsible)')
 
     @users('employee')
     def test_message_track_filter_for_display(self):
@@ -129,7 +133,8 @@ class TestTracking(MailCommon):
         self.assertEqual(mail_render['tracking_values'], [(field_dname, original_user.display_name, new_user.display_name)])
 
     def test_message_track_message_type(self):
-        """Check that the right message type is applied for track templates."""
+        """Check that the right message type is applied for track templates, and ensure that
+            the tracking values are formatted properly according to that message type."""
         self.record.message_subscribe(
             partner_ids=[self.user_admin.partner_id.id],
             subtype_ids=[self.env.ref('mail.mt_comment').id]
@@ -163,6 +168,7 @@ class TestTracking(MailCommon):
         first_message = self.record.message_ids.filtered(lambda message: message.subject == 'Template 0')
         self.assertEqual(len(self.record.message_ids), 2, 'Should be one change message and one automated template')
         self.assertEqual(first_message.message_type, 'auto_comment')
+        self.assertFalse(first_message.tracking_value_formatted, 'Only the notification type should be formatted.')
 
         # auto_comment can be overriden by _track_template
         with self.mock_mail_gateway(mail_unlink_sent=False):
@@ -172,9 +178,11 @@ class TestTracking(MailCommon):
         second_message = self.record.message_ids.filtered(lambda message: message.subject == 'Template 1')
         self.assertEqual(len(self.record.message_ids), 4, 'Should have added one change message and one automated template')
         self.assertEqual(second_message.message_type, 'notification')
+        self.assertTrue(second_message.tracking_value_formatted)
 
     def test_message_track_multiple(self):
-        """ check that multiple updates generate a single tracking message """
+        """ check that multiple updates generate a single tracking message, and verify that
+            all corresponding tracking values are formatted correctly. """
         container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
         self.record.name = 'Zboub'
         self.record.customer_id = self.user_admin.partner_id
@@ -190,6 +198,8 @@ class TestTracking(MailCommon):
             ('user_id', 'many2one', False, self.user_admin),
             ('container_id', 'many2one', False, container),
         ])
+        self.assertEqual(self.record.message_ids[0].tracking_value_formatted,
+                    f'Container Changed Subtype\nNone ⇨ {self.user_admin.name} (Responsible)\nNone ⇨ {self.user_admin.partner_id.display_name} (Customer)\nNone ⇨ {container.name} (Container)')
 
     def test_message_track_no_subtype(self):
         """ Update some tracked fields not linked to some subtype -> message with onchange """
@@ -474,8 +484,8 @@ class TestTrackingInternals(MailCommon):
 
     @users('employee')
     def test_mail_track_2many(self):
-        """ Check result of tracking one2many and many2many fields. Current
-        usage is to aggregate names into value_char fields. """
+        """ Check the tracking results and the formatting of tracking values for one2many and
+        many2many fields. Current usage is to aggregate names into value_char fields. """
         # Create a record with an initially invalid selection value
         test_tags = self.env['mail.test.track.all.m2m'].create([
             {'name': 'Tag1',},
@@ -501,6 +511,8 @@ class TestTrackingInternals(MailCommon):
             last_message,
             [('many2many_field', 'many2many', '', ', '.join(test_tags[:2].mapped('name')))]
         )
+        self.assertEqual(last_message.tracking_value_formatted,
+                    f'None ⇨ {test_tags[0].name}, {test_tags[1].name} (Many2Many)')
 
         # update m2m + o2m
         test_record.write({
@@ -522,6 +534,8 @@ class TestTrackingInternals(MailCommon):
                 ('one2many_field', 'one2many', '', f'Child1, Child2, Child3, {child4_tracking}'),
             ]
         )
+        self.assertEqual(last_message.tracking_value_formatted,
+                f'{test_tags[0].name}, {test_tags[1].name} ⇨ {test_tags[1].name}, {test_tags[2].name} (Many2Many)\nNone ⇨ Child1, Child2, Child3, {child4_tracking} (One2Many)')
 
         # remove from o2m
         test_record.write({'one2many_field': [(3, test_record.one2many_field[0].id)]})
@@ -531,6 +545,8 @@ class TestTrackingInternals(MailCommon):
             last_message,
             [('one2many_field', 'one2many', f'Child1, Child2, Child3, {child4_tracking}', f'Child2, Child3, {child4_tracking}')]
         )
+        self.assertEqual(last_message.tracking_value_formatted,
+                    f'Child1, Child2, Child3, {child4_tracking} ⇨ Child2, Child3, {child4_tracking} (One2Many)')
 
     @users('employee')
     def test_mail_track_all_no2many(self):
@@ -587,7 +603,7 @@ class TestTrackingInternals(MailCommon):
 
     @users('employee')
     def test_mail_track_compute(self):
-        """ Test tracking of computed fields """
+        """ Test tracking and the formatting of tracking values of computed fields """
         # no tracking at creation
         compute_record = self.env['mail.test.track.compute'].create({})
         self.flush_tracking()
@@ -612,6 +628,8 @@ class TestTrackingInternals(MailCommon):
             ('partner_email', 'char', False, 'foo@example.com'),
             ('partner_phone', 'char', False, '1234567890'),
         ])
+        self.assertEqual(compute_record.message_ids[0].tracking_value_formatted,
+                f'None ⇨ {partner_su.email} (Email)\nNone ⇨ {partner_su.name} (Partner)\nNone ⇨ {partner_su.name} (Name)\nNone ⇨ {partner_su.phone} (Phone)')
 
         # modify partner: one tracking message for the only recomputed field
         partner_su.write({'name': 'Fool'})
@@ -621,6 +639,7 @@ class TestTrackingInternals(MailCommon):
         self.assertTracking(compute_record.message_ids[0], [
             ('partner_name', 'char', 'Foo', 'Fool'),
         ])
+        self.assertEqual(compute_record.message_ids[0].tracking_value_formatted, 'Foo ⇨ Fool (Name)')
 
         # modify partner: one tracking message for both stored computed fields;
         # the non-stored computed fields have no tracking
@@ -639,6 +658,8 @@ class TestTrackingInternals(MailCommon):
             ('partner_name', 'char', 'Fool', 'Bar'),
             ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
         ])
+        self.assertEqual(compute_record.message_ids[0].tracking_value_formatted,
+                    f'foo@example.com ⇨ {partner_su.email} (Email)\nFool ⇨ {partner_su.name} (Name)')
 
     @users('employee')
     def test_mail_track_monetary(self):
@@ -658,6 +679,7 @@ class TestTrackingInternals(MailCommon):
         self.assertTracking(monetary_record.message_ids[0], [
             ('revenue', 'monetary', 0, (100, self.env.company.currency_id)),
         ])
+        self.assertEqual(monetary_record.message_ids[0].tracking_value_formatted, '0.0 ⇨ 100.0 (Revenue)')
 
         # Check if the tracking value have the correct currency and values after changing the value and the company
         monetary_record.write({
@@ -670,6 +692,8 @@ class TestTrackingInternals(MailCommon):
             ('revenue', 'monetary', 100, (200, self.company_2.currency_id)),
             ('company_currency', 'many2one', self.user_employee.company_id.currency_id, self.company_2.currency_id)
         ])
+        self.assertEqual(monetary_record.message_ids[0].tracking_value_formatted,
+                    f'{self.user_employee.company_id.currency_id.name} ⇨ {self.company_2.currency_id.name} (Currency)\n100.0 ⇨ 200.0 (Revenue)')
 
     def test_mail_track_properties(self):
         """Test that the old properties values are logged when the parent changes."""
@@ -787,7 +811,7 @@ class TestTrackingInternals(MailCommon):
                 'isPropertyField': False,
             },
             'newValue': 'X',
-            'oldValue': False,
+            'oldValue': None,
         }]
         self.assertEqual(
             msg_emp["mail.message"][0].get("trackingValues"),
@@ -917,7 +941,7 @@ class TestTrackingInternals(MailCommon):
                         'isPropertyField': False,
                     },
                     'newValue': 'secret',
-                    'oldValue': False,
+                    'oldValue': None,
                 },
                 {
                     'id': trackings[2].id,
@@ -940,8 +964,8 @@ class TestTrackingInternals(MailCommon):
                         'floatPrecision': None,
                         'isPropertyField': False,
                     },
-                    'newValue': False,
-                    'oldValue': False,
+                    'newValue': None,
+                    'oldValue': None,
                 },
             ],
         )
@@ -1086,11 +1110,11 @@ class TestTrackingInternals(MailCommon):
             ('email_from', 'char', 'Email From'),
         ]
         values_info = [
-            ('', self.env.user.name),
-            ('', self.test_partner.name),
-            (False, 'new_value'),
+            (None, self.env.user.name),
+            (None, self.test_partner.name),
+            (None, 'new_value'),
             ('email.from.1@example.com', 'email.from.2@example.com'),
-            (False, 'email.from.1@example.com'),
+            (None, 'email.from.1@example.com'),
         ]
         formatted = trackings_all._tracking_value_format()
         self.assertEqual(

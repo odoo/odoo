@@ -43,7 +43,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
     def assertTrail(self, trail, expected):
         self.assertEqual(len(trail), len(expected))
         for message, expected_needle in zip(trail, expected[::-1]):
-            self.assertIn(expected_needle, message.audit_log_preview)
+            self.assertIn(expected_needle, message.tracking_value_formatted)
 
     def test_can_reset_deferred_invoice(self):
         customer = self.env['res.partner'].create({'name': 'Rob Odoo'})
@@ -108,15 +108,15 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.action_post()
-        messages.append("Updated\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)")
+        messages.append("None ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.button_draft()
-        messages.append("Updated\nPosted ⇨ Draft (Status)")
+        messages.append("Posted ⇨ Draft (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.name = "nawak"
-        messages.append("Updated\nMISC/2021/04/0001 ⇨ nawak (Number)")
+        messages.append("MISC/2021/04/0001 ⇨ nawak (Number)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.line_ids = [
@@ -130,30 +130,30 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         messages.extend([
             "updated\n100.0 ⇨ 300.0",
             "updated\n-100.0 ⇨ -200.0",
-            "created\n ⇨ 400000 Product Sales (Account)\n0.0 ⇨ -100.0 (Balance)",
+            "created\nNone ⇨ 400000 Product Sales (Account)\n0.0 ⇨ -100.0 (Balance)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.line_ids[0].tax_ids = self.env.company.account_purchase_tax_id
         suspense_account_code = self.env.company.account_journal_suspense_account_id.code
         messages.extend([
-            "updated\n ⇨ 15% (Taxes)",
-            "created\n ⇨ 131000 Tax Paid (Account)\n0.0 ⇨ 45.0 (Balance)\nFalse ⇨ 15% (Label)",
-            f"created\n ⇨ {suspense_account_code} Bank Suspense Account (Account)\n0.0 ⇨ -45.0 (Balance)\nFalse ⇨ Automatic Balancing Line (Label)",
+            "updated\nNone ⇨ 15% (Taxes)",
+            "created\nNone ⇨ 131000 Tax Paid (Account)\n0.0 ⇨ 45.0 (Balance)\nNone ⇨ 15% (Label)",
+            f"created\nNone ⇨ {suspense_account_code} Bank Suspense Account (Account)\n0.0 ⇨ -45.0 (Balance)\nNone ⇨ Automatic Balancing Line (Label)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
         self.move.with_context(dynamic_unlink=True).line_ids.unlink()
         messages.extend([
-            "deleted\n400000 Product Sales ⇨  (Account)\n300.0 ⇨ 0.0 (Balance)\n15% ⇨  (Taxes)",
-            "deleted\n400000 Product Sales ⇨  (Account)\n-200.0 ⇨ 0.0 (Balance)",
-            "deleted\n400000 Product Sales ⇨  (Account)\n-100.0 ⇨ 0.0 (Balance)",
-            "deleted\n131000 Tax Paid ⇨  (Account)\n45.0 ⇨ 0.0 (Balance)\n15% ⇨ False (Label)",
-            f"deleted\n{suspense_account_code} Bank Suspense Account ⇨  (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ False (Label)",
+            "deleted\n400000 Product Sales ⇨ None (Account)\n300.0 ⇨ 0.0 (Balance)\n15% ⇨ None (Taxes)",
+            "deleted\n400000 Product Sales ⇨ None (Account)\n-200.0 ⇨ 0.0 (Balance)",
+            "deleted\n400000 Product Sales ⇨ None (Account)\n-100.0 ⇨ 0.0 (Balance)",
+            "deleted\n131000 Tax Paid ⇨ None (Account)\n45.0 ⇨ 0.0 (Balance)\n15% ⇨ None (Label)",
+            f"deleted\n{suspense_account_code} Bank Suspense Account ⇨ None (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ None (Label)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.env.company.restrictive_audit_trail = True
-        messages_company = ["Updated\nFalse ⇨ True (Restrictive Audit Trail)"]
+        messages_company = ["None ⇨ True (Restrictive Audit Trail)"]
         self.assertTrail(self.get_trail(self.company), messages_company)
 
     def test_partner_notif(self):

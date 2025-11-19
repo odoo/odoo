@@ -292,6 +292,12 @@ class MailTrackingValue(models.Model):
             'text': ('old_value_text', 'new_value_text'),
         }
 
+        default_field_values = {
+            'integer': 0,
+            'float': 0.0,
+            'monetary': 0.0,
+        }
+
         result = []
         for record in self:
             value_fname = field_mapping.get(
@@ -299,6 +305,8 @@ class MailTrackingValue(models.Model):
             )[bool(new)]
             value = record[value_fname]
 
+            if not value:
+                value = default_field_values.get(field_type)
             if field_type in {'integer', 'float', 'char', 'text', 'monetary'}:
                 result.append(value)
             elif field_type in {'date', 'datetime'}:
