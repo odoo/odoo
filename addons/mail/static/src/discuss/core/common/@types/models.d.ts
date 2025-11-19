@@ -69,6 +69,7 @@ declare module "models" {
         otherTypingMembers: ChannelMember[];
         scrollUnread: boolean;
         self_member_id: ChannelMember;
+        shouldSubscribeToBusChannel: Readonly<boolean>;
         showCorrespondentCountry: Readonly<boolean>;
         showUnreadBanner: Readonly<boolean>;
         toggleBusSubscription: boolean;

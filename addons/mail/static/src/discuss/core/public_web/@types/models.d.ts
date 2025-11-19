@@ -28,7 +28,6 @@ declare module "models" {
         displayInSidebar: boolean;
         from_message_id: Message;
         hasSubChannelFeature: Readonly<boolean>;
-        isBusSubscribed: boolean;
         lastSubChannelLoaded: Thread|null;
         loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<Thread[]|undefined>;
         loadSubChannelsDone: boolean;
