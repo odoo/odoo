@@ -71,11 +71,11 @@ class TestSandwichLeave(TransactionCase):
             'company_id': self.indian_company.id,
             'resource_calendar_id': self.test_calendar.id,
         })
-        self.wednesday_public_holiday = self.env['resource.calendar.leaves'].create({
+
+        self.wednesday_public_holiday = self.env['hr.public.holiday.leave'].create({
             'name': 'test public holiday',
-            'date_from': '2025-01-29 00:00:00',
-            'date_to': '2025-01-29 23:59:59',
-            'resource_id': False,
+            'date_start': '2025-01-29 00:00:00',
+            'date_end': '2025-01-29 23:59:59',
         })
 
     def test_approved_leave_does_not_raise_access_error(self):
@@ -91,11 +91,10 @@ class TestSandwichLeave(TransactionCase):
         self.assertIsNotNone(approved_leave.with_user(self.demo_user).leave_type_increases_duration)
 
     def test_long_sandwich_leave(self):
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.public.holiday.leave'].create({
             'name': "Independence Day",
-            'date_from': "2025-08-15",
-            'date_to': "2025-08-15",
-            'resource_id': False,
+            'date_start': "2025-08-15",
+            'date_end': "2025-08-15",
             'company_id': self.indian_company.id,
         })
         holiday_leave = self.env['hr.leave'].create({

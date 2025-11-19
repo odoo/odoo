@@ -573,14 +573,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
-            ],
-            'global_leave_ids': [(0, 0, {
-                'name': 'Christmas Time Off',
-                'date_from': fields.Datetime.from_string('2019-12-25 00:00:00'),
-                'date_to': fields.Datetime.from_string('2019-12-26 23:59:59'),
-                'resource_id': False,
-                'time_type': 'leave',
-            })]
+            ]
+        })
+
+        self.env['hr.public.holiday.leave'].create({
+            'name': 'Christmas Time Off',
+            'date_start': fields.Datetime.from_string('2019-12-25 00:00:00'),
+            'date_end': fields.Datetime.from_string('2019-12-26 23:59:59'),
+            'condition_domain': f'[("resource_calendar_id", "in", [{calendar.id}])]',
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -1631,22 +1631,21 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'flexible_hours': True
         })
         self.employee_emp.resource_calendar_id = calendar
-        self.env['resource.calendar.leaves'].create([
+        self.env['hr.public.holiday.leave'].create([
             {
-                'date_from': datetime(2022, 3, 8, 0, 0, 0),
-                'date_to': datetime(2022, 3, 10, 23, 59, 59),
-                'calendar_id': calendar.id,
+                'date_start': datetime(2022, 3, 8, 0, 0, 0),
+                'date_end': datetime(2022, 3, 10, 23, 59, 59),
                 'company_id': self.employee_emp.company_id.id,
-                'resource_id': False,
+                'condition_domain': f'[("resource_calendar_id", "in", [{calendar.id}])]',
             },
             {
-                'date_from': datetime(2022, 3, 15, 0, 0, 0),
-                'date_to': datetime(2022, 3, 17, 23, 59, 59),
-                'calendar_id': calendar.id,
+                'date_start': datetime(2022, 3, 15, 0, 0, 0),
+                'date_end': datetime(2022, 3, 17, 23, 59, 59),
                 'company_id': self.employee_emp.company_id.id,
-                'resource_id': False,
-            }
+                'condition_domain': f'[("resource_calendar_id", "in", [{calendar.id}])]',
+            },
         ])
+
         leave_data = [
             {
                 'name': 'Leave fully on last day of first public holidays (Mar 10)',

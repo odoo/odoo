@@ -289,19 +289,20 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertEqual(leave_task.effective_hours, 0)
 
     def test_timesheet_creation_for_global_time_off_wo_calendar_in_batch(self):
-        self.env['resource.calendar.leaves'].with_company(self.test_company).create([{
-            'name': "Easter Monday",
-            'calendar_id': False,
-            'date_from': datetime(2022, 4, 18, 5, 0, 0),
-            'date_to': datetime(2022, 4, 18, 18, 0, 0),
-            'resource_id': False,
-            'time_type': "leave",
-        }, {
-            'name': "Ascension Day",
-            'calendar_id': False,
-            'date_from': datetime(2022, 4, 26, 5, 0, 0),
-            'date_to': datetime(2022, 4, 26, 18, 0, 0),
-        }])
+        self.env['hr.public.holiday.leave'].with_company(self.test_company).create([
+            {
+                'name': "Easter Monday",
+                'date_start': datetime(2022, 4, 18, 5, 0, 0),
+                'date_end': datetime(2022, 4, 18, 18, 0, 0),
+                'company_id': self.test_company.id,
+            },
+            {
+                'name': "Ascension Day",
+                'date_start': datetime(2022, 4, 26, 5, 0, 0),
+                'date_end': datetime(2022, 4, 26, 18, 0, 0),
+                'company_id': self.test_company.id,
+            },
+        ])
 
         # 2 Timesheets for 2 global leaves should have been created for current companies all calendar employees
         leave_task = self.test_company.leave_timesheet_task_id

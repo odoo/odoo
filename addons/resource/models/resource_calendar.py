@@ -498,9 +498,8 @@ class ResourceCalendar(models.Model):
 
         # for the computation, express all datetimes in UTC
         # Public leave don't have a resource_id
-        # !! to be ignored
         domain = domain + [
-            ('resource_id', 'in', [False] + [r.id for r in resources_list]),
+            ('resource_id', 'in', [r.id for r in resources_list]),
             ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
             ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
         ]
@@ -515,7 +514,7 @@ class ResourceCalendar(models.Model):
             leave_date_from = leave.date_from
             leave_date_to = leave.date_to
             for resource in resources_list:
-                if leave_resource.id not in [False, resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
+                if leave_resource.id not in [resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
                     continue
                 tz = tz if tz else timezone((resource or self).tz)
                 if (tz, start_dt) in tz_dates:
