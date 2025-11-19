@@ -1,5 +1,12 @@
 import { test, expect } from "@odoo/hoot";
-import { press, click, animationFrame, queryOne } from "@odoo/hoot-dom";
+import {
+    press,
+    click,
+    animationFrame,
+    queryOne,
+    manuallyDispatchProgrammaticEvent,
+} from "@odoo/hoot-dom";
+import { Component, useState, xml } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
@@ -307,6 +314,42 @@ test("custom color picker change from grey to solid color on hue click", async (
         expect(hsl.saturation).toBe(100);
         expect(Math.round(hsl.lightness)).toBe(25);
     }
+});
+
+test("should preserve color slider when picking max lightness color", async () => {
+    class TestColorPicker extends Component {
+        static template = xml`
+            <div style="width: 222px">
+                <CustomColorPicker selectedColor="state.color" onColorPreview.bind="onColorChange" onColorSelect.bind="onColorChange"/>
+            </div>`;
+        static components = { CustomColorPicker };
+        static props = ["*"];
+        setup() {
+            this.state = useState({
+                color: "#FFFF00",
+            });
+        }
+        onColorChange({ cssColor }) {
+            this.state.color = cssColor;
+        }
+    }
+    await mountWithCleanup(TestColorPicker);
+    const colorPickerArea = queryOne(".o_color_pick_area");
+    const colorPickerRect = colorPickerArea.getBoundingClientRect();
+
+    const clientX = colorPickerRect.left + colorPickerRect.width / 2;
+    const clientY = colorPickerRect.top; // Lightness 100%
+    manuallyDispatchProgrammaticEvent(colorPickerArea, "mousedown", {
+        clientX,
+        clientY,
+    });
+    manuallyDispatchProgrammaticEvent(colorPickerArea, "mouseup", {
+        clientX,
+        clientY,
+    });
+
+    await animationFrame();
+    expect(colorPickerArea).toHaveStyle({ backgroundColor: "rgb(255, 255, 0)" });
 });
 
 test("custom gradient must be defined", async () => {
