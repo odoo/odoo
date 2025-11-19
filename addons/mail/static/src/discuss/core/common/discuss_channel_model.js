@@ -88,6 +88,12 @@ export class DiscussChannel extends Record {
     }
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
+    get memberListTypes() {
+        return ["channel", "group"];
+    }
+    get hasMemberList() {
+        return this.memberListTypes.includes(this.channel_type);
+    }
     hasOtherMembersTyping = fields.Attr(false, {
         /** @this {import("models").Thread} */
         compute() {
