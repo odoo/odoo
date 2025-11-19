@@ -535,27 +535,33 @@ class ResourceCalendar(models.Model):
 
         if 'hr.public.holiday.leave' in self.env:
             public_holidays = self.env["hr.public.holiday.leave"].search([
-                ("company_id", "=", self.env.company.id),
+                ("company_id", "in", [self.company_id.id or self.env.company.id]),
                 ("date_start", "<=", end_dt.astimezone(utc).replace(tzinfo=None)),
                 ("date_end", ">=", start_dt.astimezone(utc).replace(tzinfo=None)),
             ])
-            allowed_public_holidays = public_holidays.filtered(lambda p: not p.condition_domain or self.env.user.employee_id.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
+            if self.env.context.get('employee_id'):
+                related_employee = self.env.context.get('employee_id')
+            else:
+                related_employee = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)]).id
+            allowed_public_holidays = public_holidays.filtered(lambda p: not p.condition_domain or (related_employee or self.env.user.employee_id.id) in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
             for public_holiday in allowed_public_holidays:
                 # Same timezone logic as above
-                tz = tz if tz else timezone((self).tz)
-                if (tz, start_dt) in tz_dates:
-                    start = tz_dates[tz, start_dt]
-                else:
-                    start = start_dt.astimezone(tz)
-                    tz_dates[tz, start_dt] = start
-                if (tz, end_dt) in tz_dates:
-                    end = tz_dates[tz, end_dt]
-                else:
-                    end = end_dt.astimezone(tz)
-                    tz_dates[tz, end_dt] = end
-                dt0 = public_holiday.date_start.astimezone(tz)
-                dt1 = public_holiday.date_end.astimezone(tz)
-                result[False].append((max(start, dt0), min(end, dt1), public_holiday))
+
+                for resource in resources_list:
+                    tz = tz if tz else timezone((self).tz)
+                    if (tz, start_dt) in tz_dates:
+                        start = tz_dates[tz, start_dt]
+                    else:
+                        start = start_dt.astimezone(tz)
+                        tz_dates[tz, start_dt] = start
+                    if (tz, end_dt) in tz_dates:
+                        end = tz_dates[tz, end_dt]
+                    else:
+                        end = end_dt.astimezone(tz)
+                        tz_dates[tz, end_dt] = end
+                    dt0 = public_holiday.date_start.astimezone(tz)
+                    dt1 = public_holiday.date_end.astimezone(tz)
+                    result[resource.id].append((max(start, dt0), min(end, dt1), public_holiday))
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
     def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):

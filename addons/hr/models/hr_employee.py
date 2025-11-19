@@ -1804,7 +1804,7 @@ We can redirect you to the public employee list."""
         employee_tz = timezone(self.tz) if self.tz else None
         if not valid_versions:
             calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
-            calendar_intervals = calendar._work_intervals_batch(
+            calendar_intervals = calendar.with_user(self.user_id)._work_intervals_batch(
                 date_from,
                 date_to,
                 tz=employee_tz,

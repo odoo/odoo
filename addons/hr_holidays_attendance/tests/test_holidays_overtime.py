@@ -229,10 +229,10 @@ class TestHolidaysOvertime(TransactionCase):
         self._check_deductible(16)
 
     def test_public_leave_overtime(self):
-        leave = self.env['resource.calendar.leaves'].create([{
+        leave = self.env['hr.public.holiday.leave'].create([{
             'name': 'Public Holiday',
-            'date_from': datetime(2022, 5, 5, 6),
-            'date_to': datetime(2022, 5, 5, 18),
+            'date_start': datetime(2022, 5, 5, 6),
+            'date_end': datetime(2022, 5, 5, 18),
         }])
 
         leave.company_id.write({
@@ -240,6 +240,8 @@ class TestHolidaysOvertime(TransactionCase):
         })
         self.assertNotEqual(leave.company_id, self.employee.company_id)
         self.manager.company_id = leave.company_id.id
+        # testing
+        self.manager.resource_calendar_id = self.env['resource.calendar'].search([('company_id', '=', leave.company_id.id)], limit=1)
 
         for emp in [self.employee, self.manager]:
             self.env['hr.attendance'].create({
