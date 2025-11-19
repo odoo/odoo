@@ -28,6 +28,10 @@ class ReportBomStructure(models.AbstractModel):
                 seller = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]
             else:
                 seller = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.product_uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+                if not seller:
+                    # If no vendor found for the right quantity, still display
+                    # a vendor to ensure the subcontracting price is shown
+                    seller = res['product']._select_seller(quantity=None, uom_id=bom.product_uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             if seller:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):
