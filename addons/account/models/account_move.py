@@ -903,7 +903,9 @@ class AccountMove(models.Model):
     @api.depends('move_type')
     def _compute_is_storno(self):
         for move in self:
-            move.is_storno = move.is_storno or (move.move_type in ('out_refund', 'in_refund') and move.company_id.account_storno)
+            is_invoice = move.move_type in ('in_invoice', 'out_invoice')
+            is_refund = move.move_type in ('out_refund', 'in_refund')
+            move.is_storno = not is_invoice and (move.is_storno or (is_refund and move.company_id.account_storno))
 
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
@@ -1616,6 +1618,11 @@ class AccountMove(models.Model):
             AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
             tax_amls = self.line_ids.filtered('tax_repartition_line_id')
             tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
+            if round_from_tax_lines == 'reapply_currency_rate':
+                for tax_line in tax_lines:
+                    rate = tax_line['record'].currency_rate
+                    if rate:
+                        tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
             AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines if round_from_tax_lines else [])
         else:
             # The move is not stored yet so the only thing we have is the invoice lines.
@@ -2912,7 +2919,7 @@ class AccountMove(models.Model):
             return move.line_ids.filtered('tax_repartition_line_id')
 
         def get_value(record, field):
-            return self.env['account.move.line']._fields[field].convert_to_write(record[field], record)
+            return record._fields[field].convert_to_write(record[field], record)
 
         def get_tax_line_tracked_fields(line):
             return ('amount_currency', 'balance', 'analytic_distribution')
@@ -2948,7 +2955,7 @@ class AccountMove(models.Model):
         moves_values_before = {
             move: {
                 field: get_value(move, field)
-                for field in ('currency_id', 'partner_id', 'move_type')
+                for field in ('currency_id', 'partner_id', 'move_type', 'invoice_currency_rate', 'invoice_date')
             }
             for move in container['records']
             if move.state == 'draft'
@@ -2994,6 +3001,9 @@ class AccountMove(models.Model):
             ):
                 # Changing the type of an invoice using 'switch to refund' feature or just changing the currency.
                 round_from_tax_lines = False
+            elif field_has_changed(moves_values_before, move, 'invoice_currency_rate') and not field_has_changed(moves_values_before, move, 'invoice_date'):
+                # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
+                round_from_tax_lines = 'reapply_currency_rate'
             elif changed_lines := list(get_changed_lines(move_base_lines_values_before, base_lines)):
                 # A base line has been modified.
                 round_from_tax_lines = (
