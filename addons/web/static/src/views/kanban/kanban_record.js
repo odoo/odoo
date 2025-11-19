@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -203,7 +202,6 @@ export class KanbanRecord extends Component {
             Object.assign(this.dataState.record, getFormattedRecord(record))
         );
         this.rootRef = useRef("root");
-        this.hasTouch = hasTouch();
 
         this.longTouchTimer = null;
         this.touchStartMs = 0;
