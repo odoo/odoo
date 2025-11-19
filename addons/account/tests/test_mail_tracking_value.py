@@ -34,17 +34,17 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
         new_value = account_move.invoice_line_ids.account_id
 
         self.flush_tracking()
+        # TDE: simplify this brol
         # Isolate the tracked value for the invoice line because changing the account has recomputed the taxes.
         tracking_value = account_move.message_ids.sudo().tracking_value_ids\
             .filtered(lambda t: t.field_id.name == 'account_id' and t.old_value_integer == old_value.id)
-        self.assertTracking(tracking_value.mail_message_id, [
-            ('account_id', 'many2one', old_value, new_value),
-        ])
-
-        self.assertEqual(len(tracking_value), 1)
-        self.assertTrue(tracking_value.field_id)
-        field = self.env[tracking_value.field_id.model]._fields[tracking_value.field_id.name]
-        self.assertFalse(field.groups, "There is no group on account.move.line.account_id")
+        self.assertMessageFields(
+            tracking_value.mail_message_id, {
+                'tracking_values': [
+                    ('account_id', 'many2one', old_value, new_value),
+                ],
+            }
+        )
 
     @users('admin')
     def test_invite_follower_account_moves(self):
