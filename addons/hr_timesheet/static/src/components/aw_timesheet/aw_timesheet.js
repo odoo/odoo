@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { TimesheetTimer } from "@timesheet_grid/components/static_timesheet_form/static_timesheet_timer";
 import { user } from "@web/core/user";
-import { incrementFrequency, loadFrequency } from './aw_local_config';
+import { incrementFrequency, loadFrequency } from "./aw_local_config";
 
 const { DateTime, Duration } = luxon;
 
@@ -20,12 +20,13 @@ export class ActivityWatchTimesheet extends Component {
         this.notification = useService("notification");
         this.state = useState({
             ...this.defaultStateValues,
-            groupBy: 'project',
-            currentDate: DateTime.now().startOf('day'),
+            groupBy: "project",
+            currentDate: DateTime.now().startOf("day"),
         });
         this.localKey = "aw_taken_deleted_events";
         this.consumedEvents = JSON.parse(localStorage.getItem(this.localKey) || "{}");
         this.localConfig = loadFrequency();
+        this.selectedTimesheet = null;
 
         onWillStart(async () => {
             await this.loadData();
@@ -34,7 +35,7 @@ export class ActivityWatchTimesheet extends Component {
         this._onMouseUp = this.onMouseUp.bind(this);
         this._onClickOutsideBound = this.onClickOutside.bind(this);
         onMounted(() => {
-            window.addEventListener("mouseup", this._onMouseUp)
+            window.addEventListener("mouseup", this._onMouseUp);
             // document.addEventListener("click", this._onClickOutsideBound);
             // the problem with this that when we click on the form
         });
@@ -60,7 +61,7 @@ export class ActivityWatchTimesheet extends Component {
             selectedRows: new Set(),
             isSelecting: false,
         };
-    };
+    }
 
     onClickOutside(ev) {
         const cards = document.querySelector(".o_suggestion");
@@ -127,7 +128,7 @@ export class ActivityWatchTimesheet extends Component {
             return;
         }
 
-        if (ev.target.closest('.btn')) {
+        if (ev.target.closest(".btn")) {
             return; // click on Take/Delete btns
         }
 
@@ -140,6 +141,7 @@ export class ActivityWatchTimesheet extends Component {
         if (!this.state.isSelecting) {
             return;
         }
+        this.clearSelectedTimesheet();
         const key = this.keyFor(groupKey, title);
         if (!this.state.selectedRows.has(key)) {
             this.state.selectedRows.add(key);
@@ -152,6 +154,7 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     toggleSelect(groupKey, title) {
+        this.clearSelectedTimesheet();
         const key = this.keyFor(groupKey, title);
         if (this.state.selectedRows.has(key)) {
             this.state.selectedRows.delete(key);
@@ -258,7 +261,9 @@ export class ActivityWatchTimesheet extends Component {
             for (const watcher of watchers) {
                 requests.push(
                     fetch(
-                        `${baseUrl}/api/0/buckets/${watcher["id"]}/events?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
+                        `${baseUrl}/api/0/buckets/${
+                            watcher["id"]
+                        }/events?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
                     )
                 );
             }
@@ -362,8 +367,6 @@ export class ActivityWatchTimesheet extends Component {
         });
     }
 
-
-
     async loadData() {
         this.resetState();
         this.awRules = await this.orm.call("aw.rule", "search_read", [
@@ -382,7 +385,7 @@ export class ActivityWatchTimesheet extends Component {
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
         const baseUrl = "http://localhost:5700";
         const todayStart = this.state.currentDate.toISO();
-        const todayEnd = this.state.currentDate.endOf('day').toISO();
+        const todayEnd = this.state.currentDate.endOf("day").toISO();
         const events = await this.loadAwEvents(baseUrl, todayStart, todayEnd);
 
         // we get planning slot and calendar events from odoo
@@ -419,7 +422,10 @@ export class ActivityWatchTimesheet extends Component {
         // once the final ranges is ready
         // if the range contains project AND/OR task info, everything coming after belongs to that context
 
-        const ranges = await this.orm.call("account.analytic.line", "get_events", [[], this.state.currentDate.toISO().split("T")[0]]);
+        const ranges = await this.orm.call("account.analytic.line", "get_events", [
+            [],
+            this.state.currentDate.toISO().split("T")[0],
+        ]);
         for (const range of ranges) {
             range["start"] = deserializeDateTime(range["start"]);
             range["stop"] = deserializeDateTime(range["stop"]);
@@ -474,9 +480,8 @@ export class ActivityWatchTimesheet extends Component {
         this.state.taskById = Object.fromEntries(tasks.map(({ id, name }) => [id, name]));
 
         // get projects in local config
-        for (const [rowTitle, combos] of Object.entries(this.localConfig)) {
-            for (const [jsonKey, count] of Object.entries(combos)) {
-
+        for (const [, combos] of Object.entries(this.localConfig)) {
+            for (const [jsonKey] of Object.entries(combos)) {
                 const parsed = JSON.parse(jsonKey);
                 if (parsed.project_id && !this.state.projectById[parsed.project_id.id]) {
                     this.state.projectById[parsed.project_id.id] = parsed.project_id.display_name;
@@ -486,7 +491,7 @@ export class ActivityWatchTimesheet extends Component {
                     this.state.taskById[parsed.task_id.id] = parsed.task_id.display_name;
                 }
             }
-        };
+        }
 
         let prevKeyyEvent = null;
         let primaryEventSeen = false;
@@ -506,7 +511,7 @@ export class ActivityWatchTimesheet extends Component {
                 prevProjectId = range.project_id || false;
                 prevTaskId = range.task_id || false;
                 // vals changed
-                projectTask = this.projectTaskKey(prevProjectId, prevTaskId)
+                projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
                 // non primary key event can only overide a previous non primary key event, but not primary events
             } else if (range.keyEvent || this.localConfig[prevKeyyEvent]) {
                 // no primary key events preceed this event
@@ -517,7 +522,7 @@ export class ActivityWatchTimesheet extends Component {
                     if (range.keyEvent && (range.project_id || range.task_id)) {
                         prevProjectId = range.project_id;
                         prevTaskId = range.task_id;
-                        projectTask = this.projectTaskKey(prevProjectId, prevTaskId)
+                        projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
                     } else if (this.localConfig[prevKeyyEvent]) {
                         // to refactor with getRowStats(rowTitle) { later
                         const stats = Object.entries(this.localConfig[prevKeyyEvent])
@@ -529,7 +534,10 @@ export class ActivityWatchTimesheet extends Component {
 
                         const justForThisEventProjectId = stats[0].project_id?.id || false;
                         const justForThisEventTaskId = stats[0].task_id?.id || false;
-                        projectTask = this.projectTaskKey(justForThisEventProjectId, justForThisEventTaskId);
+                        projectTask = this.projectTaskKey(
+                            justForThisEventProjectId,
+                            justForThisEventTaskId
+                        );
                     }
                 }
             }
@@ -559,9 +567,10 @@ export class ActivityWatchTimesheet extends Component {
         }
 
         for (const [groupKey, activities] of Object.entries(this.state.grouped)) {
-            for (const [title, {duration, start}] of Object.entries(activities)) {
+            for (const [title, { duration, start }] of Object.entries(activities)) {
                 const eventKey = this.keyForWithDay(groupKey, title);
-                if (this.consumedEvents[eventKey]) { // can be done directly when adding
+                if (this.consumedEvents[eventKey]) {
+                    // can be done directly when adding
                     this.state.grouped[groupKey][title].duration -= this.consumedEvents[eventKey];
                 } else {
                     const data = {
@@ -569,7 +578,7 @@ export class ActivityWatchTimesheet extends Component {
                         duration,
                         title,
                         groupKey,
-                    }
+                    };
                     const { project_id, task_id } = JSON.parse(groupKey);
 
                     if (project_id) {
@@ -621,14 +630,12 @@ export class ActivityWatchTimesheet extends Component {
             this.state.totalTime += timesheet.unit_amount;
         }
 
-        this.state.billablePercentage = this.state.totalTime ?
-            (this.state.billableTime * 100) / this.state.totalTime :
-            0
-        ;
-        this.state.nonBillablePercentage = this.state.totalTime ?
-            (this.state.nonBillableTime * 100) / this.state.totalTime :
-            0
-        ;
+        this.state.billablePercentage = this.state.totalTime
+            ? (this.state.billableTime * 100) / this.state.totalTime
+            : 0;
+        this.state.nonBillablePercentage = this.state.totalTime
+            ? (this.state.nonBillableTime * 100) / this.state.totalTime
+            : 0;
     }
 
     merge(ranges, intervalsToInclude) {
@@ -715,13 +722,26 @@ export class ActivityWatchTimesheet extends Component {
 
     onDelete(groupKey, title) {
         const keyWithDay = this.keyForWithDay(groupKey, title);
-        this.consumedEvents[keyWithDay] = (this.consumedEvents[keyWithDay] || 0) + this.state.grouped[groupKey][title].duration;
+        this.consumedEvents[keyWithDay] =
+            (this.consumedEvents[keyWithDay] || 0) + this.state.grouped[groupKey][title].duration;
         localStorage.setItem(this.localKey, JSON.stringify(this.consumedEvents));
 
         delete this.state.grouped[groupKey][title];
     }
 
     get selectedData() {
+        if (this.selectedTimesheet) {
+            return {
+                id: this.selectedTimesheet.id,
+                project_id: this.selectedTimesheet.project_id?.[0],
+                task_id: this.selectedTimesheet.task_id?.[0],
+                name: this.selectedTimesheet.name,
+                unit_amount: this.selectedTimesheet.unit_amount,
+                date: this.state.currentDate.toISO().split("T")[0],
+                user_id: user.userId,
+            };
+        }
+
         let project_id = false;
         let task_id = false;
         let name = "";
@@ -736,7 +756,7 @@ export class ActivityWatchTimesheet extends Component {
                 task_id = params.task_id || false;
             }
 
-            name += params.name + ' ';
+            name += params.name + " ";
             total_amount += params.unit_amount;
         }
 
@@ -747,7 +767,7 @@ export class ActivityWatchTimesheet extends Component {
             unit_amount: total_amount,
             date: this.state.currentDate.toISO().split("T")[0],
             user_id: user.userId,
-        }
+        };
     }
 
     onSaveTimesheetForm(project_id, task_id, billable) {
@@ -755,24 +775,42 @@ export class ActivityWatchTimesheet extends Component {
             const { groupKey, title } = JSON.parse(row);
             this.onDelete(groupKey, title);
 
-            incrementFrequency(
-                title,
-                project_id,
-                task_id,
-                billable,
-            );
+            incrementFrequency(title, project_id, task_id, billable);
         }
 
-        this.state.records = this.state.records.filter(record => {
-            return !this.state.selectedRows.has(JSON.stringify({
-                groupKey: record.groupKey,
-                title: record.title
-            }));
-        });
+        this.state.records = this.state.records.filter(
+            (record) =>
+                !this.state.selectedRows.has(
+                    JSON.stringify({
+                        groupKey: record.groupKey,
+                        title: record.title,
+                    })
+                )
+        );
 
         this.initSelectedRows();
         this.notification.add("Timesheet entry created!", { type: "success" });
         this.loadTimesheets();
+    }
+
+    onClickExistingTimesheet(timesheet) {
+        if (this.selectedTimesheet) {
+            this.selectedTimesheet.selected = false;
+        }
+        this.selectedTimesheet = timesheet;
+        timesheet.selected = true;
+        this.initSelectedRows();
+    }
+
+    clearSelectedTimesheet() {
+        if (this.selectedTimesheet) {
+            this.selectedTimesheet.selected = false;
+            this.selectedTimesheet = null;
+        }
+    }
+
+    onWriteTimesheet() {
+        this.loadTimesheets(); // TODO: Avoid refetching all timesheets if possible?
     }
 }
 

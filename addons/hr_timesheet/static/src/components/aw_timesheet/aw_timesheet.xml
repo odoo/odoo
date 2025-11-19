@@ -125,7 +125,10 @@
             <TimesheetTimer onSaveCallback="() => this.onSaveTimesheetForm()"/>
           </t>
           <t t-else="">
-            <TimesheetTimer data="this.selectedData" onSaveCallback="(project_id, task_id, is_billable) => this.onSaveTimesheetForm(project_id, task_id, is_billable)"/>
+            <TimesheetTimer data="this.selectedData" 
+              onSaveCallback="(project_id, task_id, is_billable) => this.onSaveTimesheetForm(project_id, task_id, is_billable)"
+              onWriteTimesheet="() => this.onWriteTimesheet()"
+            />
           </t>
         </div>
 
@@ -142,12 +145,13 @@
           <t t-else="">
             <ul class="list-group list-group-flush">
               <t t-foreach="state.billableTimesheets" t-as="tsh" t-key="tsh.id">
-                <li class="list-group-item py-1">
+                <li class="list-group-item py-1" t-att-class="{'bg-danger': tsh.selected}"
+                  t-on-click.stop="() => this.onClickExistingTimesheet(tsh)" style="cursor: pointer;"
+                >
                   <div class="fw-semibold"><t t-esc="tsh.name"/></div>
                   <small class="text-muted">
                     <t t-esc="tsh.unit_amount"/>h —
                     <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/> /
-                    <t t-esc="tsh.date"/>
                   </small>
                 </li>
               </t>
@@ -168,12 +172,13 @@
           <t t-else="">
             <ul class="list-group list-group-flush overflow-auto flex-grow-1" style="min-height: 0;">
               <t t-foreach="state.nonBillableTimesheets" t-as="tsh" t-key="tsh.id">
-                <li class="list-group-item py-1">
+                <li class="list-group-item py-1" t-att-class="{'bg-danger': tsh.selected}"
+                  t-on-click.stop="() => this.onClickExistingTimesheet(tsh)" style="cursor: pointer;"
+                >
                   <div class="fw-semibold"><t t-esc="tsh.name"/></div>
                   <small class="text-muted">
                     <t t-esc="tsh.unit_amount"/>h —
                     <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/> /
-                    <t t-esc="tsh.date"/>
                   </small>
                 </li>
               </t>
