@@ -730,3 +730,30 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_website_edit_megamenu_visibility(self):
         self.start_tour("/", 'edit_megamenu_visibility', login='admin')
+
+    def test_alt_a_edit(self):
+        lang_en = self.env.ref('base.lang_en')
+        self.env.ref('website.default_website').write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [Command.link(lang_en.id)],
+        })
+        self.start_tour('/', 'alt_a_edit', login='admin')
+
+    def add_fr_language_to_website(self):
+        lang_en = self.env.ref('base.lang_en')
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env['res.lang']._activate_lang(lang_fr.code)
+        self.env.ref('website.default_website').write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [Command.link(lang_en.id), Command.link(lang_fr.id)],
+        })
+
+    def test_alt_a_with_foreign_language(self):
+        self.add_fr_language_to_website()
+        self.start_tour('/', 'alt_a_translation', login='admin')
+
+    def test_alt_a_not_on_foreign_language_page(self):
+        self.add_fr_language_to_website()
+        # It should go in edit mode if we are not on the FR page even if FR is
+        # available
+        self.start_tour('/', 'alt_a_edit', login='admin')
