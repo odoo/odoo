@@ -267,9 +267,6 @@ const threadPatch = {
             this.isLoadingAttachments = false;
         }
     },
-    get hasSelfAsMember() {
-        return Boolean(this.self_member_id);
-    },
     /** @override */
     get importantCounter() {
         if (this.channel?.isChatChannel && this.self_member_id?.message_unread_counter_ui) {
