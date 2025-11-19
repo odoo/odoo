@@ -1614,10 +1614,8 @@ Please change the quantity done or the rounding precision in your settings.""",
             move.procure_method = 'make_to_stock'
         neg_r_moves._assign_picking()
 
-        # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
-        moves.filtered(lambda move: move.state in ('confirmed', 'partially_available')
-                       and (move._should_bypass_reservation() or move._should_assign_at_confirm()))\
-             ._action_assign()
+        # Call `_action_assign` on confirmed moves eligible for auto-assignment at confirmation.
+        moves._filtered_for_assign()._action_assign()
         if new_push_moves:
             neg_push_moves = new_push_moves.filtered(lambda sm: sm.product_uom.compare(sm.product_uom_qty, 0) < 0)
             (new_push_moves - neg_push_moves).sudo()._action_confirm()
@@ -1806,6 +1804,9 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _should_assign_at_confirm(self):
         return self._should_bypass_reservation() or self.picking_type_id.reservation_method == 'at_confirm' or (self.reservation_date and self.reservation_date <= fields.Date.today())
+
+    def _filtered_for_assign(self):
+        return self.filtered(lambda move: move.state in ('confirmed', 'partially_available') and move._should_assign_at_confirm())
 
     def _get_picked_quantity(self):
         self.ensure_one()
