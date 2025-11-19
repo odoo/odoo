@@ -7,7 +7,17 @@ import {
 } from '@website/js/tours/tour_utils';
 import { goToCart } from '@website_sale/js/tours/tour_utils';
 
-const productsSnippet = { id: "s_dynamic_snippet_products", name: "Products", groupName: "eCommerce" };
+const productsSnippet = {
+    name: "Products Carousel",
+    id: "s_dynamic_snippet_products_carousal",
+    groupName: "eCommerce",
+};
+
+const productsGridSnippet = {
+    name: "Products Grid",
+    id: "s_dynamic_snippet_products_grid",
+    groupName: "eCommerce",
+};
 
 registerWebsitePreviewTour(
     'website_sale.snippet_products',
@@ -36,6 +46,33 @@ registerWebsitePreviewTour(
     }
 );
 
+registerWebsitePreviewTour("website_sale.snippet_products_grid", { edition: true }, () => [
+    ...insertSnippet(productsGridSnippet),
+    {
+        content: "Verify that the products grid snippet is present",
+        trigger:
+            ":iframe .s_dynamic_snippet_products_grid[data-grid-columns='3'][data-mobile-columns='2']",
+    },
+    {
+        content: "Verify that the products grid layout is rendered",
+        trigger: ":iframe .s_dynamic_snippet_products_grid .s_dynamic_snippet_grid_container",
+    },
+    {
+        content: "Verify that the carousel layout is not rendered",
+        trigger: ":iframe .s_dynamic_snippet_products_grid:not(:has(.carousel))",
+    },
+    ...clickOnSnippet(productsGridSnippet),
+    {
+        content: "Verify desktop grid columns option is available",
+        trigger: "#o_wsale_grid_columns",
+    },
+    {
+        content: "Verify mobile grid columns option is available",
+        trigger: "#o_wsale_mobile_columns",
+    },
+    ...clickOnSave(),
+]);
+
 registerWebsitePreviewTour(
     'website_sale.products_snippet_recently_viewed',
     {
@@ -44,7 +81,7 @@ registerWebsitePreviewTour(
     () => [
         ...insertSnippet(productsSnippet),
         ...clickOnSnippet(productsSnippet),
-        ...changeOptionInPopover("Products", "Filter", "Recently Viewed"),
+        ...changeOptionInPopover(productsSnippet.name, "Filter", "Recently Viewed"),
         ...clickOnSave(),
         {
             content: 'make delete icon appear',
