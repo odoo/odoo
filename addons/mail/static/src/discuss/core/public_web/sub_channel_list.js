@@ -53,11 +53,14 @@ export class SubChannelList extends Component {
         return _t(`No thread named "%(thread_name)s"`, { thread_name: this.state.lastSearchTerm });
     }
 
-    async onClickSubThread(subThread) {
-        if (!subThread.hasSelfAsMember) {
-            await rpc("/discuss/channel/join", { channel_id: subThread.id });
+    /**
+     * @param {import("models").DiscussChannel} subChannel
+     */
+    async onClickSubThread(subChannel) {
+        if (!subChannel.self_member_id) {
+            await rpc("/discuss/channel/join", { channel_id: subChannel.id });
         }
-        subThread.open({ focus: true });
+        subChannel.open({ focus: true });
         if (this.env.inChatWindow) {
             this.props.close?.();
         }

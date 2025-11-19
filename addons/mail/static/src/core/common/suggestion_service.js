@@ -308,11 +308,11 @@ export class SuggestionService {
     }
 
     searchChannelSuggestions(cleanedSearchTerm) {
-        const suggestionList = Object.values(this.store["mail.thread"].records).filter(
-            (thread) =>
-                thread.channel?.channel_type === "channel" &&
-                thread.displayName &&
-                cleanTerm(thread.displayName).includes(cleanedSearchTerm)
+        const suggestionList = Object.values(this.store["discuss.channel"].records).filter(
+            (channel) =>
+                channel.channel_type === "channel" &&
+                channel.displayName &&
+                cleanTerm(channel.displayName).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
             const isPublicChannel1 = c1.channel_type === "channel" && !c2.group_public_id;
@@ -323,10 +323,10 @@ export class SuggestionService {
             if (!isPublicChannel1 && isPublicChannel2) {
                 return 1;
             }
-            if (c1.hasSelfAsMember && !c2.hasSelfAsMember) {
+            if (c1.self_member_id && !c2.self_member_id) {
                 return -1;
             }
-            if (!c1.hasSelfAsMember && c2.hasSelfAsMember) {
+            if (!c1.self_member_id && c2.self_member_id) {
                 return 1;
             }
             const cleanedDisplayName1 = cleanTerm(c1.displayName);
@@ -352,7 +352,7 @@ export class SuggestionService {
             return c1.id - c2.id;
         };
         return {
-            type: "Thread",
+            type: "discuss.channel",
             suggestions: suggestionList.sort(sortFunc),
         };
     }

@@ -430,7 +430,7 @@ export class Composer extends Component {
                         }
                     }),
                 };
-            case "Thread":
+            case "discuss.channel":
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionThread",
