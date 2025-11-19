@@ -157,7 +157,7 @@ export class StoreInternal extends RecordInternal {
             case "hard_delete": {
                 /** @type {import("./record").Record} */
                 const [record] = params;
-                record._[IS_DELETED_SYM] = true;
+                record._proxy[IS_DELETED_SYM] = true;
                 delete record.Model.records[record.localId];
                 if (!this.RHD_QUEUE.has(record)) {
                     this.RHD_QUEUE.set(record, true);
@@ -229,7 +229,10 @@ export class StoreInternal extends RecordInternal {
      * @param {Object} vals
      */
     updateFields(record, vals) {
-        for (const [fieldName, value] of Object.entries(vals)) {
+        const fieldEntries = Object.entries(vals).concat(
+            Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
+        );
+        for (const [fieldName, value] of fieldEntries) {
             if (record.Model._.fieldsLocalStorage.has(fieldName)) {
                 // should immediately write in local storage, for immediately correct next compute
                 const lse = record._.fieldsLocalStorage.get(fieldName);

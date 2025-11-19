@@ -338,7 +338,7 @@ export class Record {
     }
 
     exists() {
-        return !this._[IS_DELETED_SYM];
+        return !this[IS_DELETED_SYM];
     }
 
     /** @param {Record} record */
