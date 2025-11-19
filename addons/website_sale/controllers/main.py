@@ -14,6 +14,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
+from odoo.http.stream import content_disposition
 from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
@@ -1706,9 +1707,36 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
+            sale_order = request.env['sale.order'].sudo().browse(sale_order_id)
+            filename = "%s.pdf" % (f'Order - {sale_order.name}' or 'Order')
             pdf, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [sale_order_id])
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', '%s' % len(pdf))]
+            pdfhttpheaders = [
+                ('Content-Type', 'application/pdf'),
+                ('Content-Length', '%s' % len(pdf)),
+                ('Content-Disposition', content_disposition(filename, 'inline')),
+            ]
             return request.make_response(pdf, headers=pdfhttpheaders)
+        return request.redirect(self._get_shop_path())
+
+    @route(['/shop/print/invoice'], type='http', auth="public", website=True, sitemap=False)
+    def print_invoice(self, **kwargs):
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            sale_order = request.env['sale.order'].sudo().browse(sale_order_id)
+            invoice = sale_order.invoice_ids and sale_order.invoice_ids[0]
+            if invoice:
+                pdf, _ = (
+                    request.env['ir.actions.report']
+                    .sudo()
+                    ._render_qweb_pdf('account.account_invoices', [invoice.id])
+                )
+                filename = "%s.pdf" % (invoice.name or 'Invoice')
+                pdfhttpheaders = [
+                    ('Content-Type', 'application/pdf'),
+                    ('Content-Length', '%s' % len(pdf)),
+                    ('Content-Disposition', content_disposition(filename, 'inline')),
+                ]
+                return request.make_response(pdf, headers=pdfhttpheaders)
         return request.redirect(self._get_shop_path())
 
     # === CHECK METHODS === #
