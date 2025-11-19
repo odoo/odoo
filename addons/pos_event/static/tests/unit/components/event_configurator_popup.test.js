@@ -13,6 +13,7 @@ test("confirm payload and getTicketMaxQty and ticketIsAvailable", async () => {
 
     const comp = await mountPosDialog(EventConfiguratorPopup, {
         availabilityPerTicket: avaibilityByTicket,
+        slotOrEventAvailability: tickets[0].event_id.seats_available,
         slotResult: {},
         tickets: tickets,
         close: () => {},
