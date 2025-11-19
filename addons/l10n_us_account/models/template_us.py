@@ -99,3 +99,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': self.env._('Funds in Transit'),
             })
         return accounts_data
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code == 'us' and self.env.ref("account_asset.model_account_asset", raise_if_not_found=False):
+            for xml_id in (
+                "us_technology",
+                "us_buildings",
+                "us_improvements",
+                "us_machines",
+                "us_other_property",
+                "us_furniture",
+                "us_vehicles",
+            ):
+                self.ref(f"account_account_{xml_id}").asset_model_ids = self.ref(f"account_asset_{xml_id}", module='account_asset')

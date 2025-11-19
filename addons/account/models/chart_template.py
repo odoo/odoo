@@ -677,8 +677,16 @@ class AccountChartTemplate(models.AbstractModel):
                 if isinstance(xml_id, int):
                     record_vals['id'] = xml_id
                     xml_id = False
-                else:
-                    xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
+                elif '.' not in xml_id:
+                    module_prefix = 'account'
+                    # We presume that standard TEMPLATE_MODELS belong to the ``account`` module
+                    if model not in TEMPLATE_MODELS:
+                        # Otherwise we search for the module it belongs to.
+                        # When uninstalling the module, these records will be then correctly deleted
+                        model_nodots = model.replace(".", "_")
+                        if model_ir_model_data := self.env['ir.model.data'].search([('name', '=', f'model_{model_nodots}')], order="id", limit=1):
+                            module_prefix = model_ir_model_data.module.replace('.', '_')
+                    xml_id = f'{module_prefix}.{self.env.company.id}_{xml_id}'
 
                 all_records_vals.append({
                     'xml_id': xml_id,
@@ -1192,12 +1200,12 @@ class AccountChartTemplate(models.AbstractModel):
     # Tooling
     # --------------------------------------------------------------------------------
 
-    def ref(self, xmlid, raise_if_not_found=True):
+    def ref(self, xmlid, raise_if_not_found=True, module='account'):
         if '.' in xmlid:
             return self.env.ref(xmlid, raise_if_not_found)
         return (
-            self.env.ref(f"account.{self.env.company.id}_{xmlid}", raise_if_not_found=False)
-            or self.env.ref(f"account.{self.env.company.parent_ids[0].id}_{xmlid}", raise_if_not_found)
+            self.env.ref(f"{module}.{self.env.company.id}_{xmlid}", raise_if_not_found=False)
+            or self.env.ref(f"{module}.{self.env.company.parent_ids[0].id}_{xmlid}", raise_if_not_found)
         )
 
     def _get_parent_template(self, code):
