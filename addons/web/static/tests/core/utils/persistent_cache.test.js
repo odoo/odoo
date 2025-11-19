@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import { PersistentCache } from "@web/core/utils/persistent_cache";
 
@@ -10,6 +10,9 @@ function promiseState(promise) {
         (reason) => ({ status: "rejected", reason })
     );
 }
+
+describe.current.tags("headless");
+
 test("RamCache: can cache a simple call", async () => {
     // The fist call to persistentCache.read will save the result on the RamCache.
     // Each next call will retrive the ram cache independently, without executing the fallback
