@@ -16,7 +16,6 @@ import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
-    [IS_DELETED_SYM] = false;
     // Note: state of fields in Maps rather than object is intentional for improved performance.
     /**
      * For computed field, determines whether the field is computing its value.
@@ -180,7 +179,7 @@ export class RecordInternal {
     }
 
     requestCompute(record, fieldName, { force = false } = {}) {
-        if (record._[IS_DELETED_SYM]) {
+        if (record[IS_DELETED_SYM]) {
             return;
         }
         const Model = record.Model;
@@ -199,7 +198,7 @@ export class RecordInternal {
         }
     }
     requestSort(record, fieldName, { force } = {}) {
-        if (record._[IS_DELETED_SYM]) {
+        if (record[IS_DELETED_SYM]) {
             return;
         }
         const Model = record.Model;
