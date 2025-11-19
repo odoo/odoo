@@ -661,7 +661,7 @@ class AccountReconcileModel(models.Model):
         # to the query to only search on move lines that are younger than this limit.
         if self.past_months_limit:
             date_limit = fields.Date.context_today(self) - relativedelta(months=self.past_months_limit)
-            query += "AND aml.date >= %(aml_date_limit)s"
+            query += " AND aml.date >= %(aml_date_limit)s"
             params['aml_date_limit'] = date_limit
 
         # Filter out excluded account.move.line.
