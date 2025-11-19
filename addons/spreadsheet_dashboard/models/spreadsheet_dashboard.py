@@ -28,7 +28,7 @@ class SpreadsheetDashboard(models.Model):
         string='Is Favorite',
         help='Indicates whether the dashboard is favorited by the current user'
     )
-    main_data_model_ids = fields.Many2many('ir.model')
+    main_data_model_ids = fields.Many2many('ir.model', copy=False)
 
     @api.depends_context('uid')
     @api.depends('favorite_user_ids')
