@@ -81,7 +81,8 @@ class SaleOrder(models.Model):
         context = {
             'default_order_id': self.id,
             'default_carrier_id': self.carrier_id.id,
-            'default_total_weight': self._get_estimated_weight()
+            'default_total_weight': self._get_estimated_weight(),
+            'partner_zip_code': self.partner_id.zip,
         }
         if self.carrier_id.is_pickup:
             context['default_partner_shipping_id'] = self.partner_shipping_id.id
@@ -93,7 +94,7 @@ class SaleOrder(models.Model):
             'view_id': view_id,
             'views': [(view_id, 'form')],
             'target': 'new',
-            'context': context
+            'context': context,
         }
 
     def _prepare_delivery_line_vals(self, carrier, price_unit):

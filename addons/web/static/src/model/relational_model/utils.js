@@ -178,18 +178,22 @@ export function patchActiveFields(activeField, patch) {
     activeField.isHandle = activeField.isHandle || patch.isHandle;
     // x2manys
     if (patch.related) {
-        const related = activeField.related;
-        for (const fieldName in patch.related.activeFields) {
-            if (fieldName in related.activeFields) {
-                patchActiveFields(
-                    related.activeFields[fieldName],
-                    patch.related.activeFields[fieldName]
-                );
-            } else {
-                related.activeFields[fieldName] = { ...patch.related.activeFields[fieldName] };
+        if (activeField.related) {
+            const related = activeField.related;
+            for (const fieldName in patch.related.activeFields) {
+                if (fieldName in related.activeFields) {
+                    patchActiveFields(
+                        related.activeFields[fieldName],
+                        patch.related.activeFields[fieldName]
+                    );
+                } else {
+                    related.activeFields[fieldName] = { ...patch.related.activeFields[fieldName] };
+                }
             }
+            Object.assign(related.fields, patch.related.fields);
+        } else {
+            activeField.related = patch.related;
         }
-        Object.assign(related.fields, patch.related.fields);
     }
     if ("limit" in patch) {
         activeField.limit = patch.limit;
