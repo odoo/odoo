@@ -2549,9 +2549,9 @@ export class Wysiwyg extends Component {
             ));
             return rpc('/web_editor/field/translation/update', {
                 model: $els.data('oe-model'),
-                record_id: [+$els.data('oe-id')],  
+                record_id: [+$els.data('oe-id')],
                 field_name: $els.data('oe-field'),
-                translations,                
+                translations,
             });
         } else {
             var viewID = $el.data('oe-id');
@@ -3702,9 +3702,9 @@ export class Wysiwyg extends Component {
         }
         let newAttachmentSrc = isBackground ? el.dataset.bgSrc : el.getAttribute('src');
         const isImageAlreadySaved = !newAttachmentSrc || !newAttachmentSrc.startsWith("data:");
-        // Frequent media changes or page reloads may trigger a save request  
-        // without removing the `o_modified_image_to_save` class, causing a traceback  
-        // on the next save since the element loses its base64 `src`.  
+        // Frequent media changes or page reloads may trigger a save request
+        // without removing the `o_modified_image_to_save` class, causing a traceback
+        // on the next save since the element loses its base64 `src`.
         // If the image isn't already saved, a new copy is created.
         if (isImageAlreadySaved) {
             el.classList.remove('o_modified_image_to_save');

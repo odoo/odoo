@@ -153,16 +153,20 @@ export class HtmlField extends Component {
     }
 
     async updateValue(value) {
+        console.log("Updating HTML field value:", JSON.stringify(value));
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         this.isDirty = false;
         await this.props.record.update({ [this.props.name]: value }).catch(() => {
             this.isDirty = true;
         });
+        console.log("HTML field value updated. sending FIELD_IS_DIRTY:", this.isDirty);
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
     }
 
     async getEditorContent() {
         const content = this.editor.getElContent();
+        console.log("Getting editor content:", JSON.stringify(content));
+        console.log("innerHTML =", JSON.stringify(content.innerHTML));
         const oldSrcToNewSrcMap = await this.editor.shared.media?.savePendingImages(content);
         // Update the actual editable if still in the DOM.
         if (this.editor.editable && oldSrcToNewSrcMap) {
@@ -196,6 +200,7 @@ export class HtmlField extends Component {
             }
             const el = await this.getEditorContent();
             const content = el.innerHTML;
+            console.log("Committing changes, content =", JSON.stringify(content));
             this.clearElementToCompare(el);
             const comparisonValue = el.innerHTML;
             if (!urgent || (urgent && this.lastValue !== comparisonValue)) {
@@ -205,6 +210,7 @@ export class HtmlField extends Component {
     }
 
     async commitChanges({ urgent } = {}) {
+        console.log("Committing changes, urgent =", urgent ? "true" : "false");
         if (urgent) {
             this._commitChanges({ urgent });
         } else {
@@ -222,10 +228,12 @@ export class HtmlField extends Component {
     }
 
     onBlur() {
+        console.log("HTML field blurred, committing changes.");
         return this.commitChanges();
     }
 
     async toggleCodeView() {
+        console.log("Toggling code view.");
         await this.commitChanges();
         this.state.showCodeView = !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {

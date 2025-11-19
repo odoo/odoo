@@ -74,6 +74,7 @@ export class Record extends DataPoint {
 
     _setData(data, { orderBys } = {}) {
         this._isEvalContextReady = false;
+        console.log("_setData", this.resModel, this.resId, data);
         if (this.resId) {
             this._values = this._parseServerValues(data, { orderBys });
             this._changes = markRaw({});
@@ -229,7 +230,9 @@ export class Record extends DataPoint {
     }
 
     async save(options) {
+        console.log("Record.save called", this.resModel, this.resId);
         await this.model._askChanges();
+        console.log("Record.save", this.resModel, this.resId, this._changes);
         return this.model.mutex.exec(() => this._save(options));
     }
 
@@ -641,6 +644,7 @@ export class Record extends DataPoint {
 
     _getChanges(changes = this._changes, { withReadonly } = {}) {
         const result = {};
+        console.log("_getChanges", this.resModel, this.resId, changes, withReadonly);
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
             if (fieldName === "id") {
@@ -991,6 +995,7 @@ export class Record extends DataPoint {
     }
 
     async _save({ reload = true, onError, nextId } = {}) {
+        console.log(`Record._save called on ${this.resModel}(${this.resId || "new"})`, nextId ? `(nextId: ${nextId})` : "", reload ? "(with reload)" : "(without reload)", this.model._urgentSave ? "(urgent save)" : "");
         if (this.model._closeUrgentSaveNotification) {
             this.model._closeUrgentSaveNotification();
         }
@@ -1013,6 +1018,7 @@ export class Record extends DataPoint {
         }
         const changes = this._getChanges();
         delete changes.id; // id never changes, and should not be written
+        console.log("Prepared record changes for save:", changes, creation ? "(creation)" : "");
         if (!creation && !Object.keys(changes).length) {
             if (nextId) {
                 return this.model.load({ resId: nextId });
@@ -1022,6 +1028,7 @@ export class Record extends DataPoint {
             this.dirty = false;
             return true;
         }
+        console.log("Saving record changes:", changes, this.model._urgentSave ? "(urgent)" : "", this.model.useSendBeaconToSaveUrgently ? "[sendBeacon enabled]" : "");
         if (
             this.model._urgentSave &&
             this.model.useSendBeaconToSaveUrgently &&
@@ -1059,6 +1066,7 @@ export class Record extends DataPoint {
             return succeeded;
         }
         const canProceed = await this.model.hooks.onWillSaveRecord(this, changes);
+        console.log("onWillSaveRecord returned:", canProceed, nextId ? `(nextId: ${nextId})` : "", reload ? "(reload)" : "");
         if (canProceed === false) {
             return false;
         }
@@ -1087,6 +1095,7 @@ export class Record extends DataPoint {
         };
         let records = [];
         try {
+            console.log("Calling webSave with kwargs:", kwargs, onError ? "(with onError)" : "", this.isInEdition ? "(in edition mode)" : "");
             records = await this.model.orm.webSave(
                 this.resModel,
                 this.resId ? [this.resId] : [],

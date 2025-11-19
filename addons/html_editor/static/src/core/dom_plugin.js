@@ -528,6 +528,7 @@ export class DomPlugin extends Plugin {
      * @param {string} [param0.extraClass]
      */
     setTag({ tagName, extraClass = "" }) {
+        console.log("DomPlugin.setTag", tagName, extraClass);
         let newCandidate = this.document.createElement(tagName.toUpperCase());
         if (extraClass) {
             newCandidate.classList.add(extraClass);
@@ -553,6 +554,7 @@ export class DomPlugin extends Plugin {
                 block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
                 isListItemElement(block)
             ) {
+                console.log("Changing block", block, "into", newCandidate);
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
@@ -573,6 +575,7 @@ export class DomPlugin extends Plugin {
                     this.delegateTo("set_tag_overrides", block, newEl);
                 }
             } else {
+                console.log("Wrapping block", block, "into", newCandidate);
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
                 newCandidate.append(...childNodes(block));

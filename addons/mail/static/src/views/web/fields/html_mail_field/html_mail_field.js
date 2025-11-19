@@ -19,13 +19,16 @@ export class HtmlMailField extends HtmlField {
         // Insert the cloned element inside an DOM so we can get its computed style.
         editor.editable.after(el);
         el.classList.remove("odoo-editor-editable");
+        // await new Promise(() => {}); // Wait forever
         await toInline(el, cssRules);
         el.remove();
     }
 
     async getEditorContent() {
         const el = await super.getEditorContent();
+        console.log("Original content:", JSON.stringify(el.innerHTML));
         await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
+        console.log("Inlined content:", el);
         return el;
     }
 

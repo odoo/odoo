@@ -403,19 +403,26 @@
         }
         function listener(ev) {
             const currentTarget = ev.currentTarget;
-            if (!currentTarget || !inOwnerDocument(currentTarget))
+            if (!currentTarget || !inOwnerDocument(currentTarget)) {
+                console.log("Gotcha");
                 return;
+            }
             const data = currentTarget[eventKey];
-            if (!data)
+            if (!data) {
+                console.log("No data found for event", evName);
                 return;
+            }
+            console.log("Handling event", evName, "with data", data);
             config.mainEventHandler(data, ev, currentTarget);
         }
         function setup(data) {
             this[eventKey] = data;
+            console.log("Adding event listener", evName, "with data", data);
             this.addEventListener(evName, listener, { capture });
         }
         function remove() {
             delete this[eventKey];
+            console.trace("Removing event listener", evName);
             this.removeEventListener(evName, listener, { capture });
         }
         function update(data) {
