@@ -2,6 +2,7 @@ import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
 import { CallInfiniteMirroringWarning } from "@mail/discuss/call/common/call_infinite_mirroring_warning";
@@ -879,17 +880,18 @@ export class Rtc extends Record {
     }
 
     showMediaUnavailableWarning({ microphone, camera, screen }) {
-        let errorMessage;
-        if (microphone && camera) {
-            errorMessage = _t("Camera and microphone access blocked. Enable in browser settings.");
-        } else if (camera) {
-            errorMessage = _t("Camera access blocked. Enable in browser settings.");
-        } else if (microphone) {
-            errorMessage = _t("Microphone access blocked. Enable in browser settings.");
-        } else if (screen) {
-            errorMessage = _t("Screen sharing access blocked. Enable in browser settings.");
+        if (screen) {
+            this.notification.add(
+                _t("Screen sharing access blocked. Enable in browser settings."),
+                { type: "warning" }
+            );
+            return;
         }
-        this.notification.add(errorMessage, { type: "warning" });
+        let permissionType;
+        if (microphone !== camera) {
+            permissionType = microphone ? "microphone" : "camera";
+        }
+        this.dialog.add(CallPermissionDeniedDialog, { permissionType });
     }
 
     async askForBrowserPermission({ audio, video }) {
