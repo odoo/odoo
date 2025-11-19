@@ -30,6 +30,51 @@
         </BuilderSelect>
     </BuilderRow>
 
+    <t t-if="this.state.isSlideShow">
+        <BuilderRow label.translate="Style">
+            <BuilderSelect applyTo="'.carousel'">
+                <BuilderSelectItem classAction="''">Regular</BuilderSelectItem>
+                <BuilderSelectItem classAction="'carousel-dark'">Inverted colors</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Control" level="1">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">Classic</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_image_gallery_controllers_indicators_outside'">Indicators outside</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_image_gallery_controllers_outside'">Outside, center</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_left'">Outside, at right</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right'">Outside, at left</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Arrows" level="1">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'s_image_gallery_arrows_default'">Default</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_image_gallery_arrows_boxed'">Boxed</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_image_gallery_arrows_rounded'">Rounded</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_image_gallery_arrows_hidden'">Hidden</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Indicators" level="1">
+            <BuilderSelect action="'indicatorsStyle'">
+                <BuilderSelectItem actionParam="'s_image_gallery_indicators_bars'">Bars</BuilderSelectItem>
+                <BuilderSelectItem actionParam="'s_image_gallery_indicators_dots'">Dots</BuilderSelectItem>
+                <BuilderSelectItem actionParam="'s_image_gallery_indicators_numbers'">Numbers</BuilderSelectItem>
+                <BuilderSelectItem actionParam="'s_image_gallery_indicators_squared'" id="'indicators_squared_opt'">Squared Miniatures</BuilderSelectItem>
+                <BuilderSelectItem actionParam="'s_image_gallery_indicators_rounded'" id="'indicators_rounded_opt'">Rounded Miniatures</BuilderSelectItem>
+                <BuilderSelectItem actionParam="'s_image_gallery_indicators_hidden'">Hidden</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Outline" level="2" t-if="isActiveItem('indicators_squared_opt') || isActiveItem('indicators_rounded_opt')">
+            <BuilderCheckbox classAction="'s_image_gallery_indicators_outline'"/>
+        </BuilderRow>
+    </t>
+
+    <t t-call="website.ImagePopUpOption"/>
+
     <BuilderContext applyTo="'.carousel'">
         <BuilderRow label.translate="Transition">
             <BuilderSelect >
@@ -48,7 +93,7 @@
         </BuilderRow>
 
         <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
-            <BuilderRow label.translate="Speed" level="1">
+            <BuilderRow label.translate="Timespan" level="1">
                 <BuilderNumberInput dataAttributeAction="'bsInterval'"
                     default="10"
                     unit="'s'"
@@ -60,46 +105,6 @@
             </BuilderRow>
         </t>
     </BuilderContext>
-
-    <BuilderRow label.translate="Style" t-if="this.state.isSlideShow">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="''">Classic</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_controllers_indicators_outside'">Indicators outside</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside'">Outside, center</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_left'">Outside, at right</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right'">Outside, at left</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Invert colors" level="1" t-if="this.state.isSlideShow">
-        <BuilderCheckbox applyTo="'.carousel'" classAction="'carousel-dark'"/>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Arrows" level="1" t-if="this.state.isSlideShow">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="'s_image_gallery_arrows_default'">Default</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_arrows_boxed'">Boxed</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_arrows_rounded'">Rounded</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_arrows_hidden'">Hidden</BuilderSelectItem>
-        </BuilderSelect>
-     </BuilderRow>
-
-    <BuilderRow label.translate="Indicators" level="1" t-if="this.state.isSlideShow">
-        <BuilderSelect action="'indicatorsStyle'">
-            <BuilderSelectItem actionParam="'s_image_gallery_indicators_bars'">Bars</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'s_image_gallery_indicators_dots'">Dots</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'s_image_gallery_indicators_numbers'">Numbers</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'s_image_gallery_indicators_squared'" id="'indicators_squared_opt'">Squared Miniatures</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'s_image_gallery_indicators_rounded'" id="'indicators_rounded_opt'">Rounded Miniatures</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'s_image_gallery_indicators_hidden'">Hidden</BuilderSelectItem>
-        </BuilderSelect>
-     </BuilderRow>
-
-    <BuilderRow label.translate="Outline" level="2" t-if="isActiveItem('indicators_squared_opt') || isActiveItem('indicators_rounded_opt')">
-        <BuilderCheckbox classAction="'s_image_gallery_indicators_outline'"/>
-    </BuilderRow>
-
-    <t t-call="website.ImagePopUpOption"/>
 
     <BuilderContext applyTo="'img'">
         <BorderConfigurator label.translate="Border"/>

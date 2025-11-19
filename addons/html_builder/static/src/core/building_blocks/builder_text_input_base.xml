@@ -13,6 +13,7 @@
         t-att-data-attribute-action="info.attributeAction"
         t-att-data-attribute-action-value="info.attributeActionValue">
         <span t-if="props.prefix" class="o-hb-input-prefix" t-out="props.prefix"/>
+        <i t-if="props.prefixIcon" role="img" t-att-class="'o-hb-input-prefix ' + props.prefixIcon"/> 
         <input
             t-ref="inputRef"
             type="text"

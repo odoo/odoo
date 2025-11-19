@@ -19,6 +19,12 @@
     </BuilderRow>
 
     <t t-if="this.isActiveItem('scroll_button_opt')">
+        <BuilderRow label.translate="Animation" level="1" applyTo="':scope > .o_scroll_button'">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+                <BuilderSelectItem classAction="'anim-heartbeat'">Heartbeat</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
         <BuilderRow label.translate="Colors" level="1" applyTo="':scope > .o_scroll_button'">
             <BuilderColorPicker styleAction="'background-color'"/>
             <BuilderColorPicker styleAction="'color'"/>

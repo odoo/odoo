@@ -112,13 +112,13 @@ test("Test Carousel Option (s_carousel)", async () => {
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "10000");
 
-    // Editing the Speed
+    // Editing the Timespan
 
-    await contains(".hb-row[data-label='Speed'] input").edit("3");
+    await contains(".hb-row[data-label='Timespan'] input").edit("3");
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "3000");
 
-    await contains(".hb-row[data-label='Speed'] input").edit("0");
+    await contains(".hb-row[data-label='Timespan'] input").edit("0");
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "1000");
 
@@ -169,13 +169,13 @@ test("Test Carousel Option (s_image_gallery)", async () => {
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "10000");
 
-    // Editing the Speed
+    // Editing the Timespan
 
-    await contains(".hb-row[data-label='Speed'] input").edit("3");
+    await contains(".hb-row[data-label='Timespan'] input").edit("3");
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "3000");
 
-    await contains(".hb-row[data-label='Speed'] input").edit("0");
+    await contains(".hb-row[data-label='Timespan'] input").edit("0");
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "1000");
 

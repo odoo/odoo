@@ -63,7 +63,7 @@
             </BuilderSelect>
         </BuilderRow>
         <!-- Intensity -->
-        <BuilderRow label.translate="Intensity" level="1" t-if="state.showIntensity">
+        <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the animation effect is" level="1" t-if="state.showIntensity">
             <BuilderRange
                 action="'setAnimateIntensity'"
                 preview="false"
@@ -99,7 +99,7 @@
                     <BuilderSelectItem actionValue="'image_mirror_blur'" id="'hover_effect_mirror_blur_opt'">Mirror Blur</BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
-            <BuilderRow label.translate="Intensity" level="2">
+            <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the hover effect is" level="2">
                 <BuilderRange action="'setHoverEffectIntensity'"
                     t-if="this.isActiveItems(['hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_mirror_blur_opt', 'hover_effect_dolly_zoom_opt'])"
                     preview="false" min="1" max="100" step="1" displayRangeValue="true"/>

@@ -11,7 +11,7 @@ import { stepUtils } from "@web_tour/tour_utils";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 
 // Visibility possible values:
-const VISIBLE = "Always Visible";
+const VISIBLE = "None";
 const CONDITIONALVISIBILITY = "Visible only if";
 
 const NB_NON_ESSENTIAL_REQUIRED_FIELDS_IN_DEFAULT_FORM = 2;
@@ -109,7 +109,7 @@ const addField = function (
             content: "Wait for field to load",
             trigger: `:iframe .s_website_form_field[data-type="${name}"],:iframe .s_website_form_input[name="${name}"]`, //custom or existing field
         },
-        ...changeOptionInPopover("Field", "Visibility", display.visibility),
+        ...changeOptionInPopover("Field", "Visibility Rule", display.visibility),
     ];
     let testText = ":iframe .s_website_form_field";
     if (display.condition) {
@@ -246,11 +246,11 @@ registerWebsitePreviewTour(
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
         ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         ...selectButtonByData("Your Name", "[data-action-value='Conditional Visibility Check 1']"),
         ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
         ...selectFieldByLabel("Conditional Visibility Check 1"),
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         {
             content: "Open list of the visibility selector of Conditional Visibility Check 1",
             trigger: ".o_customize_tab button:contains('Your Name')",
@@ -264,7 +264,7 @@ registerWebsitePreviewTour(
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 3", false),
         ...addCustomField("char", "text", "Conditional Visibility Check 4", false),
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         ...selectButtonByData("Your Name", "[data-action-value='Conditional Visibility Check 3']"),
         {
             content:
@@ -275,11 +275,11 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the conditional visibility of the renamed field is removed",
-            trigger: ".o_customize_tab [data-label='Visibility'] button:contains('Always Visible')",
+            trigger: ".o_customize_tab [data-label='Visibility Rule'] button:contains('None')",
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 5", false),
         ...addCustomField("char", "text", "Conditional Visibility Check 6", false),
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         {
             content:
                 "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
@@ -319,7 +319,7 @@ registerWebsitePreviewTour(
         ...selectFieldByLabel("dependent"),
         {
             content: "Open the select",
-            trigger: ".o_customize_tab button:contains('Always Visible')",
+            trigger: ".o_customize_tab [data-label='Visibility Rule'] button:contains('None')",
             run: "click",
         },
         {
@@ -381,7 +381,7 @@ registerWebsitePreviewTour(
                 ":has(.checkbox:has(label:contains('Wiko Stairway')):has(input[type='checkbox'][required]))",
         },
         // Check conditional visibility for the relational fields
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         ...selectButtonByData("Your Name", "[data-action-value='recipient_ids']"),
         ...selectButtonByText("Is equal to", "Is not equal to"),
         {
@@ -640,7 +640,7 @@ registerWebsitePreviewTour(
         },
         ...addCustomField("char", "text", "field C", false),
         ...selectFieldByLabel("field B"),
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         {
             content: "Verify that the default comparator should be set",
             trigger: ".o_customize_tab #hidden_condition_opt:not(:empty)",
@@ -727,7 +727,7 @@ registerWebsitePreviewTour(
             trigger:
                 '.options-container-header span[title=\'The field "subject" is mandatory for the action "Send an E-mail".\'] > button.fa-trash[disabled]',
         },
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         ...selectButtonByData("Your Name", "[data-action-value='Philippe of Belgium']"),
         ...selectButtonByText("Is equal to", "Is set"),
         {
@@ -741,7 +741,7 @@ registerWebsitePreviewTour(
                 ':iframe .s_website_form_field.s_website_form_required:has(label:contains("Your Message"))',
             run: "click",
         },
-        ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         ...selectButtonByData("Your Name", "[data-action-value='Philippe of Belgium']"),
         ...selectButtonByText("Is equal to", "Is set"),
 
@@ -770,7 +770,7 @@ registerWebsitePreviewTour(
                 ':iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
             run: "click",
         },
-        ...changeOptionInPopover("Field", "Visibility", "Always Visible"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "None"),
         {
             content: "Empty the default value of the 'Subject' field",
             trigger: "[data-label='Default Value'] input",
@@ -782,7 +782,7 @@ registerWebsitePreviewTour(
                 ':iframe .s_website_form_field.s_website_form_required:has(label:contains("Your Message"))',
             run: "click",
         },
-        ...changeOptionInPopover("Field", "Visibility", "Always Visible"),
+        ...changeOptionInPopover("Field", "Visibility Rule", "None"),
         // This step is to ensure select fields are properly cleaned before
         // exiting edit mode
         {

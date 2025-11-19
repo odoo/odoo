@@ -87,17 +87,17 @@
 
 <t t-name="website.ThemeInputOption">
     <BuilderContext preview="false">
-        <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'"/>
-            <BuilderNumberInput title.translate="X" actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'"/>
+        <BuilderRow label.translate="Padding" tooltip.translate="Vertical and Horizontal padding" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+            <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
-                    <BuilderNumberInput title.translate="X" actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
+                <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
+                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
                 </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
-                    <BuilderNumberInput title.translate="X" actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
+                <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
+                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
                 </BuilderRow>
             </t>
         </BuilderRow>

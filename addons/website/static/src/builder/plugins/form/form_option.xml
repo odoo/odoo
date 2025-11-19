@@ -306,9 +306,9 @@
     <BuilderRow label.translate="Error Message" level="1" t-if="isActiveItem('error_message_opt')">
         <BuilderTextInput placeholder.translate="Write custom error message" id="'error_message_input_opt'" dataAttributeAction="'errorMessage'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Visibility">
+    <BuilderRow label.translate="Visibility Rule">
         <BuilderSelect preview="false" action="'setVisibility'">
-            <BuilderSelectItem actionValue="'visible'" classAction="''">Always Visible</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'visible'" classAction="''">None</BuilderSelectItem>
             <BuilderSelectItem actionValue="'hidden'" classAction="'s_website_form_field_hidden'">Hidden</BuilderSelectItem>
             <BuilderSelectItem id="'hidden_if_opt'" actionValue="'conditional'" classAction="'s_website_form_field_hidden_if d-none'">Visible only if</BuilderSelectItem>
         </BuilderSelect>

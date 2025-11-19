@@ -14,7 +14,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Quality" t-if="state.showQuality and state.formats.length" level="this.props.level">
+    <BuilderRow label.translate="Quality" tooltip.translate="Increase for more detail, decrease for speed" t-if="state.showQuality and state.formats.length" level="this.props.level">
         <BuilderRange
             action="'setImageQuality'"
             min="0"

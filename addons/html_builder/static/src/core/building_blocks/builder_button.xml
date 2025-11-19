@@ -13,7 +13,7 @@
             t-att-data-attribute-action="info.attributeAction"
             t-att-data-attribute-action-value="info.attributeActionValue"
             t-att-class="className"
-            t-att-title="props.title"
+            t-att-title="(state.isActive and props.titleActive) or props.title"
             t-att-aria-label="props.title"
             t-on-click="() => this.onClick()"
             t-on-pointerenter="() => this.onPointerEnter(props.id)"

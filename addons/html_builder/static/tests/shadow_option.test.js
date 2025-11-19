@@ -29,7 +29,7 @@ test("edit box-shadow with ShadowOption", async () => {
     expect(queryAllTexts(".hb-row .hb-row-label")).toEqual([
         "Shadow",
         "Color",
-        "Offset (X, Y)",
+        "Offset",
         "Blur",
         "Spread",
     ]);
@@ -59,7 +59,7 @@ test("edit box-shadow with ShadowOption", async () => {
     expect(queryAllTexts(".hb-row .hb-row-label")).toEqual([
         "Shadow",
         "Color",
-        "Offset (X, Y)",
+        "Offset",
         "Blur",
         "Spread",
     ]);
