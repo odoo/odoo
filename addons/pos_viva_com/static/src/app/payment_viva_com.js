@@ -49,9 +49,9 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 
     _viva_com_handle_response(response, paymentLine) {
-        paymentLine.setPaymentStatus("waitingCard");
         if (response.error) {
             this._show_error(response.error);
+            return false;
         }
         return this.waitForPaymentConfirmation(paymentLine);
     }
@@ -111,13 +111,7 @@ export class PaymentVivaCom extends PaymentInterface {
      * This method is called from pos_bus when the payment
      * confirmation from Viva.com is received via the webhook and confirmed in the retrieve_session_id.
      */
-    async handleVivaComStatusResponse(paymentLine) {
-        const notification = await this.env.services.orm.silent.call(
-            "pos.payment.method",
-            "get_latest_viva_com_status",
-            [[this.payment_method_id.id]]
-        );
-
+    handleVivaComStatusResponse(paymentLine, notification) {
         if (!notification) {
             this._handleOdooConnectionFailure(paymentLine);
             return;
@@ -182,9 +176,9 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 
     handleSuccessResponse(line, notification) {
-        line.transaction_id = notification.transactionId;
-        line.card_type = notification.applicationLabel;
-        line.cardholder_name = notification.FullName || "";
+        line.transaction_id = notification.transaction_id;
+        line.card_type = notification.card_type;
+        line.cardholder_name = notification.cardholder_name;
     }
 
     _show_error(msg, title) {
