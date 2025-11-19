@@ -381,7 +381,8 @@ export class WebsiteBuilderClientAction extends Component {
             this.websiteService.context.showResourceEditor = false;
         }
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
-        if (this.translation) {
+        const url = new URL(this.websiteService.contentWindow.location.href);
+        if (url.searchParams.has("edit_translations")) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
 
