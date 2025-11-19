@@ -26,16 +26,56 @@
                 class="d-flex justify-content-between align-items-center"
             >
                 <h3>Thank you for your order.</h3>
-                <a
-                    title="Print"
-                    role="button"
-                    class="d-none d-md-inline-block btn btn-light ms-auto"
-                    href="/shop/print"
-                    target="_blank"
-                    aria-label="Print"
-                >
-                    <i class="fa fa-print me-2"/>Print
-                </a>
+                <div t-if="not order.invoice_count">
+                    <a
+                        title="Download"
+                        role="button"
+                        class="d-none d-md-inline-block btn btn-light ms-auto"
+                        href="/shop/print"
+                        target="_blank"
+                        aria-label="Download"
+                    >
+                        <i class="fa fa-download me-2"/>Download
+                    </a>
+                </div>
+                <div t-else="">
+                    <div class="dropdown d-none d-md-inline-block ms-auto">
+                        <button
+                            class="btn btn-light dropdown-toggle"
+                            type="button"
+                            id="downloadDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Download"
+                        >
+                            <i class="fa fa-download me-2"/>Download
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="/shop/print"
+                                    target="_blank"
+                                    title="Download Sale Order"
+                                    aria-label="Download Sale Order"
+                                >
+                                    <i class="fa fa-cart-arrow-down me-2"/>Order
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="/shop/print/invoice"
+                                    target="_blank"
+                                    title="Download Invoice"
+                                    aria-label="Download Invoice"
+                                >
+                                    <i class="fa fa-file-text-o me-2"/>Invoice
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div id="order_name" class="mb-4">
                 <h5>
