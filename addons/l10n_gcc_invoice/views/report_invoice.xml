@@ -146,6 +146,18 @@
                 <span name="th_subtotal_en" t-if="display_in_en" t-translation="off">Amount<br/></span>
             </xpath>
             <!-- End Arabic & English table headers -->
+            <!-- Arabic & English table body -->
+            <xpath expr="//td[@name='account_invoice_line_name']/span" position="replace">
+                <t t-if="line.product_id and display_in_lang_sec">
+                    <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+                    <t t-set="arabic_name" t-value="line.with_context(lang=o.env['res.lang']._get_code('ar_001')).product_id.display_name"/>
+
+                    <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}" dir="rtl"/>
+                    <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+                </t>
+                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._get_data(code=lang).direction"/>
+            </xpath>
+            <!-- End Arabic & English table body -->
             <!-- Arabic & English payment terms -->
             <span id="payment_terms_note_id" position="before">
                 <span id="payment_terms_note_id_lang_sec"
