@@ -342,14 +342,14 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move_form.date = fields.Date.from_string('2016-01-01')
 
         # New line that should get 400.0 as debit.
-        with move_form.journal_line_ids.new() as line_form:
+        with move_form.line_ids.new() as line_form:
             line_form.name = 'debit_line'
             line_form.account_id = self.company_data['default_account_revenue']
             line_form.currency_id = self.other_currency
             line_form.amount_currency = 1200.0
 
         # New line that should get 400.0 as credit.
-        with move_form.journal_line_ids.new() as line_form:
+        with move_form.line_ids.new() as line_form:
             line_form.name = 'credit_line'
             line_form.account_id = self.company_data['default_account_revenue']
             line_form.currency_id = self.other_currency
@@ -397,9 +397,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         )
         # You can change the balance manually without changing the currency amount
         with Form(move) as move_form:
-            with move_form.journal_line_ids.edit(0) as line_form:
+            with move_form.line_ids.edit(0) as line_form:
                 line_form.debit = 200
-            with move_form.journal_line_ids.edit(1) as line_form:
+            with move_form.line_ids.edit(1) as line_form:
                 line_form.credit = 200
 
         self.assertRecordValues(
@@ -450,7 +450,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
 
         # Create a new account.move.line with debit amount.
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'debit_line_1'
             debit_line.account_id = self.account
             debit_line.debit = 1000
@@ -458,7 +458,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             debit_line.tax_ids.add(self.included_percent_tax)
 
         # Create a third account.move.line with credit amount.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'credit_line_1'
             credit_line.account_id = self.account
             credit_line.credit = 1200
@@ -931,12 +931,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         # Create a new account.move.line with debit amount.
         income_account = self.company_data['default_account_revenue']
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'debit'
             debit_line.account_id = income_account
             debit_line.debit = 120
 
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'credit'
             credit_line.account_id = income_account
             credit_line.credit = 100
@@ -962,12 +962,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         move_form = Form(self.env['account.move'])
 
-        with move_form.journal_line_ids.new() as debit_line_form:
+        with move_form.line_ids.new() as debit_line_form:
             debit_line_form.name = 'debit'
             debit_line_form.account_id = test_account
             debit_line_form.debit = 115
 
-        with move_form.journal_line_ids.new() as credit_line_form:
+        with move_form.line_ids.new() as credit_line_form:
             credit_line_form.name = 'credit'
             credit_line_form.account_id = test_account
             credit_line_form.credit = 100
@@ -990,12 +990,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         move_form = Form(self.env['account.move'])
 
-        with move_form.journal_line_ids.new() as credit_line_form:
+        with move_form.line_ids.new() as credit_line_form:
             credit_line_form.name = 'credit'
             credit_line_form.account_id = test_account
             credit_line_form.credit = 115
 
-        with move_form.journal_line_ids.new() as debit_line_form:
+        with move_form.line_ids.new() as debit_line_form:
             debit_line_form.name = 'debit'
             debit_line_form.account_id = test_account
             debit_line_form.debit = 100
@@ -1097,9 +1097,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         tax_line = move.line_ids.filtered('tax_repartition_line_id')
         self.assertEqual(tax_line.debit, 721.44)
         with Form(move) as move_form:
-            with move_form.journal_line_ids.edit(2) as line_form:
+            with move_form.line_ids.edit(2) as line_form:
                 line_form.debit = 721.43
-            move_form.journal_line_ids.remove(3)
+            move_form.line_ids.remove(3)
         move = move_form.save()
         tax_line = move.line_ids.filtered('tax_repartition_line_id')
         self.assertEqual(tax_line.debit, 721.43)
