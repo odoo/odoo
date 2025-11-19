@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.Meeting">
-        <div t-if="store.rtc.channel" class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'p-1': !ui.isSmall, 'pb-3': !ui.iSmall and !props.isPip}">
+        <div t-if="store.rtc.channel" class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'o-fullscreen': store.rtc.isFullscreen, 'p-1': !ui.isSmall, 'pb-3': !ui.iSmall and !props.isPip}">
             <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-1 position-relative">
                 <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 o-min-width-0" t-att-class="{'d-none': ui.isSmall and threadActions.activeAction?.actionPanelComponentCondition, 'pb-0': ui.isSmall}">
                     <Call hasOverlay="false" isPip="props.isPip"/>
