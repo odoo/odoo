@@ -151,7 +151,7 @@ export class ResPartner extends webModels.ResPartner {
         );
         const store = new mailDataHelpers.Store();
         const memberIds = DiscussChannelMember.search([
-            ["channel_id", "=", channel_id],
+            ["channel_id", "in", [channel.id, channel.parent_channel_id]],
             ["partner_id", "in", partners],
         ]);
         const users = ResUsers.search([["partner_id", "in", partners]]).reduce((map, userId) => {
@@ -220,11 +220,12 @@ export class ResPartner extends webModels.ResPartner {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         const ResUsers = this.env["res.users"];
 
+        const channel = this.env["discuss.channel"].browse(channel_id)[0];
         let partnerIds = [];
-        if (!domain?.length && channel_id) {
-            partnerIds = DiscussChannelMember.search([["channel_id", "=", channel_id]]).map(
-                (memberId) => DiscussChannelMember.browse(memberId)[0].partner_id
-            );
+        if (!domain?.length && channel) {
+            partnerIds = DiscussChannelMember.search([
+                ["channel_id", "in", [channel.id, channel.parent_channel_id]],
+            ]).map((memberId) => DiscussChannelMember.browse(memberId)[0].partner_id);
         } else {
             partnerIds = ResUsers.search(domain).map(
                 (userId) => ResUsers.browse(userId)[0].partner_id
