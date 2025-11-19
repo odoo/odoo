@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="website.GridColumnsOption">
-    <BuilderRow t-if="this.state.isGridMode" label.translate="Padding (Y, X)">
-        <BuilderNumberInput action="'setGridColumnsPadding'" actionParam="'--grid-item-padding-y'" unit="'px'"/>
-        <BuilderNumberInput action="'setGridColumnsPadding'" actionParam="'--grid-item-padding-x'" unit="'px'"/>
+    <BuilderRow t-if="this.state.isGridMode" label.translate="Padding" tooltip.translate="Vertical and Horizontal padding">
+        <BuilderNumberInput action="'setGridColumnsPadding'" actionParam="'--grid-item-padding-y'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
+        <BuilderNumberInput action="'setGridColumnsPadding'" actionParam="'--grid-item-padding-x'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
     </BuilderRow>
 </t>
 
