@@ -34,7 +34,7 @@ patch(Thread.prototype, {
                 }
             },
         });
-        this.shadowedBySelf = false;
+        this.shadowedBySelf = 0;
         this.wasLookingForHelp = false;
     },
     get canLeave() {
@@ -130,6 +130,9 @@ patch(Thread.prototype, {
         if (this.store.env.services.ui.isSmall && this.channel_type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
+    },
+    get shouldSubscribeToBusChannel() {
+        return super.shouldSubscribeToBusChannel || Boolean(this.shadowedBySelf);
     },
     async leaveChannel({ force = false } = {}) {
         if (

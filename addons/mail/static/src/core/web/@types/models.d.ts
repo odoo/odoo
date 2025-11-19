@@ -17,6 +17,8 @@ declare module "models" {
         activity_counter_bus_id: number;
         activityCounter: number;
         activityGroups: Object[];
+        computeGlobalCounter: () => number;
+        globalCounter: number;
         history: Thread;
         inbox: Thread;
         onLinkFollowed: (fromThread: Thread) => void;
@@ -24,6 +26,7 @@ declare module "models" {
         scheduleActivity: (resModel: string, resIds: number[], defaultActivityTypeId: number|undefined) => Promise<void>;
         starred: Thread;
         unstarAll: () => Promise<void>;
+        updateAppBadge: () => void;
     }
     export interface Thread {
         activities: Activity[];

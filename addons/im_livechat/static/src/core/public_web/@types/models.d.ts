@@ -19,6 +19,7 @@ declare module "models" {
         livechat_expertise_ids: LivechatExpertise[];
         livechat_status: "in_progress"|"waiting"|"need_help"|undefined;
         matchesSelfExpertise: Readonly<boolean>;
+        shadowedBySelf: number;
         wasLookingForHelp: boolean;
     }
 }

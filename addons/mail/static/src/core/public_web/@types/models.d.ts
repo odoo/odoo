@@ -13,6 +13,7 @@ declare module "models" {
         autoOpenChatWindowOnNewMessage: Readonly<boolean>;
         inChathubOnNewMessage: Readonly<boolean>;
         notifyMessageToUser: (message: Message) => Promise<void>;
+        notifyWhenOutOfFocus: Readonly<boolean>;
         setActiveURL: () => void;
         setAsDiscussThread: (pushState: boolean) => void;
         unpin: () => Promise<void>;
