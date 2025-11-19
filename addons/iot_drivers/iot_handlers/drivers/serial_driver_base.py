@@ -114,8 +114,9 @@ class SerialDriver(Driver):
                 self._connection = connection
 
         with self._device_lock:
-            super().action(data)
+            res = super().action(data)
             time.sleep(self._protocol.commandDelay)
+            return res
 
     def run(self):
         """Continuously gets new measures from the device."""
