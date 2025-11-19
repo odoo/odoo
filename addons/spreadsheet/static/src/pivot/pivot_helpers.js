@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 
-const { isDateOrDatetimeField } = helpers;
+const { isDateOrDatetimeField, parseDimension } = helpers;
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").Token} Token
@@ -90,4 +90,17 @@ export function parseGroupField(allFields, groupFieldString) {
 
 export function domainHasNoRecordAtThisPosition(domain) {
     return domain.some((node) => node.value === "NO_RECORD_AT_THIS_POSITION");
+}
+
+export function addEmptyGranularity(groupBys, fields) {
+    return groupBys.map((g) => {
+        const dimension = parseDimension(g);
+        if (isDateOrDatetimeField(fields[dimension.fieldName])) {
+            return {
+                granularity: "month",
+                ...dimension,
+            };
+        }
+        return dimension;
+    });
 }
