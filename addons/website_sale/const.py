@@ -336,7 +336,7 @@ SNIPPET_DEFAULTS = {
             "product-category-id": "all",
             "number-of-elements": "4",
             "number-of-elements-small-devices": "2",
-            "show-variants": "true",
+            "split-variants": "true",
         },
         "add_classes": [
             "o_wsale_products_opt_design_cards",

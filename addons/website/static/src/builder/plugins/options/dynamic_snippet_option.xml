@@ -23,6 +23,25 @@
         />
     </BuilderRow>
     <!-- Multi record & common options -->
+    <BuilderRow id="section_title" label.translate="Section Title" t-if="!isSingleMode">
+        <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
+            <BuilderButton
+                label.translate="Top"
+                classAction="this.dynamicOptionParams.getSnippetTitleClasses('top')"
+            />
+            <BuilderButton
+                label="this.env.langDir.content === 'ltr' ? left : right"
+                classAction="this.dynamicOptionParams.getSnippetTitleClasses('left')"
+            />
+            <BuilderButton
+                label.translate="None"
+                title.translate="No title"
+                classAction="this.dynamicOptionParams.getSnippetTitleClasses('none')"
+            />
+        </BuilderButtonGroup>
+    </BuilderRow>
     <BuilderRow id="this.filter_opt_row" label.translate="Filter" t-if="!!this.dynamicOptionParams.showFilterOption()">
         <BuilderSelect action="'dynamicFilter'" preview="false" id="'filter_opt'">
             <t t-foreach="dynamicFilters" t-as="filter" t-key="filter.id">
@@ -56,15 +75,6 @@
                 <BuilderSelectItem actionParam="value" t-out="value"/>
             </t>
         </BuilderSelect>
-    </BuilderRow>
-    <BuilderRow label.translate="Section Title" t-if="!isSingleMode">
-        <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
-            <t t-set="left">Left</t>
-            <t t-set="right">Right</t>
-            <BuilderButton label.translate="Top" classAction="this.dynamicOptionParams.getSnippetTitleClasses('top')"/>
-            <BuilderButton label="this.env.langDir.content === 'ltr' ? left : right" classAction="this.dynamicOptionParams.getSnippetTitleClasses('left')"/>
-            <BuilderButton label.translate="None" title.translate="No title" classAction="this.dynamicOptionParams.getSnippetTitleClasses('none')"/>
-        </BuilderButtonGroup>
     </BuilderRow>
 </t>
 

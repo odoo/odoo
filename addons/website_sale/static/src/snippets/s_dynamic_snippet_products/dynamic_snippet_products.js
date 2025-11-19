@@ -4,6 +4,15 @@ import { registry } from "@web/core/registry";
 export class DynamicSnippetProducts extends DynamicSnippetCarousel {
     static selector = ".s_dynamic_snippet_products";
 
+    setup() {
+        super.setup();
+        this.el.classList.add('o_carousel_multi_items'); // force default single mode
+        this.templateKey = (
+            this.el.dataset.orientation === 'grid'
+            ? 'website_sale.s_dynamic_snippet.grid.layout' : this.templateKey
+        );
+    }
+
     /**
      * Gets the category search domain
      */
@@ -92,10 +101,22 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
             }
             searchDomain.push(...nameDomain);
         }
-        if (!this.el.dataset.showVariants) {
+        if (!this.el.dataset.splitVariants) {
             searchDomain.push("hide_variants");
         }
         return searchDomain;
+    }
+
+    /**
+     * @override
+     */
+    getQWebRenderOptions() {
+        const dataset = this.el.dataset;
+        return Object.assign(super.getQWebRenderOptions(...arguments), {
+            gridColumns: parseInt(dataset.gridColumns) || 4,
+            gridGap: dataset.gridGap || '1rem',
+            mobileColumns: parseInt(dataset.mobileColumns) || 1,
+        });
     }
 
     /**

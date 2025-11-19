@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <template
+        id="website_sale.s_dynamic_snippet_products_template"
+        inherit_id="website.s_dynamic_snippet_template"
+        primary="True"
+    >
+        <section id="main_section" position="attributes">
+            <attribute name="t-att-data-grid-columns">'4'</attribute>
+            <attribute name="t-att-data-mobile-columns">'2'</attribute>
+        </section>
+    </template>
+
     <!-- Snippet -->
     <template id="website_sale.s_dynamic_snippet_products" name="Products">
         <t
@@ -30,7 +41,7 @@
             is a temporary solution to load the tracking utilities and will be removed once
             tracking utilities will be fully integrated into a service.
         -->
-        <t t-call="website.s_dynamic_snippet_template"
+        <t t-call="website_sale.s_dynamic_snippet_products_template"
             snippet_name.f="s_dynamic_snippet_products"
             snippet_classes="'oe_website_sale ' + default_design_classes"
             main_page_url.f="/shop">
