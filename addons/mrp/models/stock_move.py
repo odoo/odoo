@@ -315,9 +315,7 @@ class StockMove(models.Model):
                     and all(m.state == 'done' for m in move.move_orig_ids):
                 continue
             if move.product_uom.compare(move.product_uom_qty, 0) > 0:
-                if move._should_bypass_reservation() \
-                        or move.picking_type_id.reservation_method == 'at_confirm' \
-                        or (move.reservation_date and move.reservation_date <= fields.Date.today()):
+                if move._should_assign_at_confirm():
                     to_assign |= move
 
             if move.procure_method == 'make_to_order' or move.rule_id.procure_method == 'mts_else_mto':
