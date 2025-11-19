@@ -116,6 +116,7 @@ class Job(models.Model):
               AND act.date_deadline <= %(today)s::date AND app.active
               AND app.job_id IN %(job_ids)s
               AND sta.hired_stage IS NOT TRUE
+              AND act.active
             GROUP BY app.job_id, act_state
         """, {
             'today': fields.Date.context_today(self),
