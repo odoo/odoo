@@ -267,9 +267,6 @@ const threadPatch = {
             this.isLoadingAttachments = false;
         }
     },
-    get hasMemberList() {
-        return ["channel", "group"].includes(this.channel?.channel_type);
-    },
     get hasSelfAsMember() {
         return Boolean(this.self_member_id);
     },
