@@ -119,7 +119,12 @@ class HrJob(models.Model):
               AND act.date_deadline <= %(today)s::date AND app.active
               AND app.job_id IN %(job_ids)s
               AND sta.hired_stage IS NOT TRUE
+<<<<<<< d62bc15f2a150737b76e26a01571bad63083b855
               AND COALESCE(act.active, TRUE) = TRUE
+||||||| e68c23f13560a2cadd7219d29fbcbba4f0bcf64d
+=======
+              AND act.active
+>>>>>>> 5f0572df33b1f363996239be1efbc6f926ceda51
             GROUP BY app.job_id, act_state
         """, {
             'today': fields.Date.context_today(self),
