@@ -204,6 +204,25 @@ test("sendDraftOrderToServer", async () => {
     expect(store.models["pos.order"].length).toBe(1);
 });
 
+describe("setOrderPrices", () => {
+    test("Combo products order", async () => {
+        const store = await setupSelfPosEnv();
+        await addComboProduct(store);
+
+        store.currentOrder.setOrderPrices();
+        const [parentLine, comboLine1, comboLine2] = store.currentOrder.lines;
+
+        expect(parentLine.price_subtotal).toBe(0);
+        expect(parentLine.price_subtotal_incl).toBe(0);
+
+        expect(comboLine1.price_subtotal).toBe(200);
+        expect(comboLine1.price_subtotal_incl).toBe(250);
+
+        expect(comboLine2.price_subtotal).toBe(200);
+        expect(comboLine2.price_subtotal_incl).toBe(250);
+    });
+});
+
 describe("cancelOrder", () => {
     test("Normal cancel order", async () => {
         const store = await setupSelfPosEnv();
