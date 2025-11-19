@@ -248,10 +248,7 @@ export class MassMailingIframe extends Component {
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
         });
-        this.iframeLoaded.resolve({
-            iframe: this.iframeRef.el,
-            bundleControls: this.bundleControls,
-        });
+        this.iframeLoaded.resolve(this.iframeRef.el);
         this.props.onIframeLoad?.(this.iframeLoaded);
         this.state.ready = true;
     }
@@ -318,7 +315,7 @@ export class MassMailingIframe extends Component {
     getBuilderProps() {
         return {
             overlayRef: this.overlayRef,
-            iframeLoaded: this.iframeLoaded.then((iframeInfo) => iframeInfo.iframe),
+            iframeLoaded: this.iframeLoaded,
             snippetsName: "mass_mailing.email_designer_snippets",
             config: this.props.config,
             isMobile: this.state.isMobile,

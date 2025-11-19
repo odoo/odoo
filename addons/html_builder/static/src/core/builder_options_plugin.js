@@ -585,7 +585,7 @@ export class BuilderOptionsPlugin extends Plugin {
         const context = this.builderOptionsContext.get(OptionComponent);
         if (!context) {
             const deps = this.getBuilderDependencies(OptionComponent);
-            const context = this.__editor.getEditorContext(deps);
+            const context = this.__editor.getPluginContext(deps);
             this.builderOptionsContext.set(OptionComponent, context);
             return context;
         }

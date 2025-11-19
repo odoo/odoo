@@ -1,0 +1,32 @@
+<templates>
+    <t t-name="mail.EmailHtmlConverterReferenceIframe">
+        <!-- The iframe dimensions are set to trigger media queries 
+         for the "desktop" version of the email -->
+        <iframe t-att-sandbox="isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+            aria-hidden="true"
+            style="
+                visibility: hidden !important;
+                display: block !important;
+                pointer-events: none !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: -9999px !important;
+                width: 1320px !important;
+                min-width: 1320px !important;
+                height: 1000px !important;
+                min-height: 1000px !important;
+            "/>
+    </t>
+    <t t-name="mail.EmailHtmlConverterReference">
+        <div style="width: 100% !important"/>
+    </t>
+    <t t-name="mail.EmailHtmlConverterEditableIframe">
+        <iframe t-att-sandbox="isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+            style="width: 100% !important;"/>
+    </t>
+    <t t-name="mail.EmailHtmlConverterHead">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    </t>
+</templates>
