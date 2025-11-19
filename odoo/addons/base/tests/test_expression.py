@@ -1793,36 +1793,78 @@ class TestQueries(TransactionCase):
         ''']):
             Model.search([])
 
+    @mute_logger('odoo.models.unlink')
     def test_access_rules_active_test(self):
-        Model = self.env['res.partner'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].search([]).unlink()
+        PartnerCateg = self.env['res.partner.category']
+
+        model_id = self.env['ir.model']._get('res.partner.category').id
+        self.env['ir.rule'].search([('model_id', '=', model_id)]).unlink()
         self.env['ir.rule'].create([{
-            'name': 'partner users rule',
-            'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('user_ids.login', 'like', '%@%')]),
+            'name': 'categ childs rule',
+            'model_id': model_id,
+            'domain_force': str([('child_ids', 'not any', [('name', 'ilike', 'private')])]),
         }, {
-            'name': 'partners rule',
-            'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('commercial_partner_id.name', '=', 'John')]),
+            'name': 'categ rule',
+            'model_id': model_id,
+            'domain_force': str([('parent_id.name', 'ilike', 'public')]),
         }])
-        Model.search([])
+
+        pub_active, pub_inactive, pri_active, pri_inactive = PartnerCateg.create([
+            {'name': 'public active', 'active': True},
+            {'name': 'public inactive', 'active': False},
+            {'name': 'private active', 'active': True},
+            {'name': 'private inactive', 'active': False},
+        ])
+
+        accessible_records = PartnerCateg.create([
+            {'name': 'a1', 'parent_id': pub_active.id},
+            {'name': 'a2', 'parent_id': pub_inactive.id},
+            {'name': 'a3', 'parent_id': pub_active.id, 'child_ids': [Command.create({'name': 'not PRI'})]},
+        ])
+        inaccessible_records = PartnerCateg.create([
+            {'name': 'ua1'},  # No public parent
+            {'name': 'ua2', 'parent_id': pri_active.id},
+            {'name': 'ua3', 'parent_id': pub_active.id, 'child_ids': [Command.link(pri_active.id)]},
+            {'name': 'ua4', 'parent_id': pub_active.id, 'child_ids': [Command.link(pri_inactive.id)]},
+        ])
+        records = accessible_records + inaccessible_records
+        domain = [('id', 'in', records.ids)]
+
+        PartnerCateg = PartnerCateg.with_user(self.env.ref('base.user_admin'))
+        PartnerCateg.search(domain)  # warmup
 
         with self.assertQueries(['''
-            SELECT "res_partner"."id"
-            FROM "res_partner"
-            LEFT JOIN "res_partner" AS "res_partner__commercial_partner_id"
-            ON ("res_partner"."commercial_partner_id" = "res_partner__commercial_partner_id"."id")
-            WHERE "res_partner"."active" IS TRUE AND (
-            ("res_partner"."commercial_partner_id" IS NOT NULL AND "res_partner__commercial_partner_id"."name" IN %s)
-            AND EXISTS(SELECT FROM (
-                SELECT "res_users"."partner_id" AS __inverse
-                FROM "res_users"
-                WHERE "res_users"."login" LIKE %s
-            ) AS __sub WHERE __inverse = "res_partner"."id")
-            )
-            ORDER BY "res_partner"."complete_name" ASC, "res_partner"."id" DESC
+            SELECT "res_partner_category"."id"
+            FROM "res_partner_category"
+            LEFT JOIN "res_partner_category" AS "res_partner_category__parent_id" ON (
+                "res_partner_category"."parent_id" = "res_partner_category__parent_id"."id")
+            WHERE ("res_partner_category"."active" IS TRUE AND "res_partner_category"."id" IN %s)
+                AND (NOT EXISTS(
+                        SELECT FROM (
+                            SELECT "res_partner_category"."parent_id" AS __inverse
+                            FROM "res_partner_category"
+                            WHERE
+                                (
+                                    "res_partner_category"."name" ->> %s ILIKE %s
+                                    AND "res_partner_category"."parent_id" IS NOT NULL
+                                )
+                        ) AS __sub
+                        WHERE __inverse = "res_partner_category"."id"
+                    )
+                    AND (
+                        "res_partner_category"."parent_id" IS NOT NULL
+                        AND "res_partner_category__parent_id"."name" ->> %s ILIKE %s
+                    )
+                )
+            ORDER BY "res_partner_category"."name" ->> %s, "res_partner_category"."id"
         ''']):
-            Model.search([])
+            records_search = PartnerCateg.search(domain)
+
+        self.assertEqual(records_search, accessible_records)
+        self.assertEqual(
+            records.with_user(self.env.ref('base.user_admin'))._filtered_access('read'),
+            accessible_records,
+        )
 
     def test_access_rules_active_test_neg(self):
         Model = self.env['res.partner'].with_user(self.env.ref('base.user_admin'))
