@@ -7,7 +7,9 @@
         <section t-att-data-snippet="snippet_name"
             t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic o_dynamic_snippet_empty pt64 pb64"
             t-att-data-custom-template-data="custom_template_data or '{}'"
-            t-att-data-number-of-records="is_single_record and '1' or ''">
+            t-att-data-number-of-records="is_single_record and '1' or '8'"
+            id="website_dynamic_snippet"
+        >
             <div t-attf-class="s_dynamic_snippet_container {{container_classes or 'container'}}">
                 <div class="row s_nb_column_fixed">
                     <!-- Dynamic snippet loading effect -->

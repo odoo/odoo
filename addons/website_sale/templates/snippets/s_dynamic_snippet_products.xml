@@ -37,6 +37,16 @@
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>
     </template>
+
+    <template
+        id="website_sale.s_dynamic_snippet_template_inherit"
+        inherit_id="website.s_dynamic_snippet_template"
+    >
+        <xpath expr="//section[@id='website_dynamic_snippet']" position="attributes">
+            <attribute name="t-att-data-grid-columns">'4'</attribute>
+            <attribute name="t-att-data-mobile-columns">'2'</attribute>
+        </xpath>
+    </template>
     <!-- Multi record snippets (coming soon...) -->
     <!-- Single record snippets (coming soon...) -->
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- GRID LAYOUT -->
+    <t t-name="website_sale.s_dynamic_snippet.grid.layout">
+        <div 
+            t-attf-class="s_dynamic_snippet_grid_container {{ extraClasses }}"
+            t-att-data-grid-columns="gridColumns"
+            t-att-data-grid-mobile-columns="mobileColumns"
+            t-att-style="'--ds-grid-gap:' + gridGap"
+        >
+            <t t-foreach="data" t-as="data_entry" t-key="data_entry_index">
+                <div class="s_dynamic_snippet_grid_item">
+                    <t t-out="data_entry"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

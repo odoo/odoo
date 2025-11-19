@@ -40,4 +40,21 @@
             }
         }
     }
+
+    .s_dynamic_snippet_grid_container {
+        display: grid;
+        gap: var(--ds-grid-gap, 1rem);
+
+        grid-template-columns: repeat(
+            attr(data-grid-columns number),
+            minmax(0, 1fr)
+        );
+
+        @include media-breakpoint-down(md) {
+            grid-template-columns: repeat(
+                attr(data-grid-mobile-columns number),
+                minmax(0, 1fr)
+            );
+        }
+    }
 }
