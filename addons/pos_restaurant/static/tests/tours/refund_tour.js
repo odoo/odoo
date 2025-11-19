@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.clickDisplayedProduct("Water", true, "1"),
             ProductScreen.totalAmountIs("6.60"),
             ProductScreen.clickPayButton(false),
-            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.clickNextOrder(),

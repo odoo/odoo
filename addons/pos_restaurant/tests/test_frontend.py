@@ -281,6 +281,10 @@ class TestFrontend(TestFrontendCommon):
 
         order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000004')], limit=1, order='id desc')
         self.assertEqual(order4.customer_count, 2)
+        self.pos_config.write({
+            'preparation_printer_ids': False,
+            'other_devices': False,
+        })
         self.start_pos_tour('test_edit_payments_with_tip')
         edited_orders = self.env['pos.order'].search([], limit=2)
         # Tip from payment screen - tip should be the part of amount total and amount paid

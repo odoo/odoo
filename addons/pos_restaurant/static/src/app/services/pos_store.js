@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { isSamePosDevice } from "@point_of_sale/app/utils/devices_synchronisation";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
@@ -126,7 +126,14 @@ patch(PosStore.prototype, {
     },
     async ensureGuestCustomerCount(order, removeEmptyOrder = true) {
         const currentPreset = order.preset_id;
-        if (this.config.use_presets && currentPreset?.use_guest && !order.uiState.guestSetted) {
+        if (
+            !order.finalized &&
+            this.config.module_pos_restaurant &&
+            !order.isRefund &&
+            this.config.use_presets &&
+            currentPreset?.use_guest &&
+            !order.uiState.guestSetted
+        ) {
             await this.setCustomerCount(order, removeEmptyOrder);
             if (order.getCustomerCount() === 0 && order.table_id) {
                 order.setCustomerCount(order.table_id.seats);
@@ -539,38 +546,6 @@ patch(PosStore.prototype, {
         const order = this.getOrder();
         await this.sendOrderInPreparation(order, { explicitReprint: true });
         this.showDefault();
-    },
-    async _askForPreparation() {
-        const order = this.getOrder();
-        if (
-            !order.finalized &&
-            this.config.module_pos_restaurant &&
-            this.categoryCount.length &&
-            !order.isRefund
-        ) {
-            const confirmed = await ask(this.dialog, {
-                title: _t("Warning !"),
-                body: _t(
-                    "It seems that the order has not been sent. Would you like to send it to preparation?"
-                ),
-                confirmLabel: _t("Order"),
-                cancelLabel: _t("Discard"),
-            });
-            if (!confirmed) {
-                return;
-            }
-            try {
-                await this.ensureGuestCustomerCount(order);
-                this.env.services.ui.block();
-                await this.sendOrderInPreparationUpdateLastChange(order);
-            } finally {
-                this.env.services.ui.unblock();
-            }
-        }
-    },
-    async pay() {
-        await this._askForPreparation();
-        return super.pay(...arguments);
     },
     async getServerOrders() {
         if (this.config.module_pos_restaurant) {
@@ -1011,14 +986,6 @@ patch(PosStore.prototype, {
                 );
             }
         }
-    },
-    async validateOrderFast(paymentMethod) {
-        const currentOrder = this.getOrder();
-        if (!currentOrder) {
-            return false;
-        }
-        await this._askForPreparation();
-        await super.validateOrderFast(...arguments);
     },
     setPartnerToCurrentOrder(partner) {
         super.setPartnerToCurrentOrder(partner);

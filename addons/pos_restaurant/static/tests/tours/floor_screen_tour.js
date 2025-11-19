@@ -62,9 +62,9 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             Chrome.isTabActive("4 & 5"),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
             ProductScreen.clickPayButton(false),
-            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            Chrome.closePrintingWarning(),
             FeedbackScreen.clickNextOrder(),
             Utils.negateStep(FloorScreen.isChildTable("5")),
 

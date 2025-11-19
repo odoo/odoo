@@ -62,19 +62,18 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             FloorScreen.clickTable("5"),
             ProductScreen.checkTotalAmount(6.6),
             ProductScreen.clickPayButton(false),
-            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.clickNextOrder(),
+            Chrome.closePrintingWarning(),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             ProductScreen.checkTotalAmount(176.0),
             ProductScreen.clickPayButton(false),
-            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            Chrome.closePrintingWarning(),
             FeedbackScreen.clickNextOrder(),
-
             // product_screen
             // Check if creating an order one same table from two devices
             // is correctly handlded
