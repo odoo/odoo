@@ -119,7 +119,10 @@ class ResPartner(models.Model):
         channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             return []
-        domain = self._get_mention_suggestions_domain(search) & Domain("channel_ids", "in", channel.id)
+        domain = Domain([
+            self._get_mention_suggestions_domain(search),
+            ("channel_ids", "in", (channel.parent_channel_id | channel).ids)
+        ])
         extra_domain = Domain([
             ('user_ids', '!=', False),
             ('user_ids.active', '=', True),
@@ -129,7 +132,10 @@ class ResPartner(models.Model):
         if allowed_group:
             extra_domain &= Domain("user_ids.all_group_ids", "in", allowed_group.id)
         partners = self._search_mention_suggestions(domain, limit, extra_domain)
-        members_domain = [("channel_id", "=", channel.id), ("partner_id", "in", partners.ids)]
+        members_domain = [
+            ("channel_id", "in", (channel.parent_channel_id | channel).ids),
+            ("partner_id", "in", partners.ids)
+        ]
         members = self.env["discuss.channel.member"].search(members_domain)
         store = Store()
         member_fields = [

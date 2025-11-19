@@ -37,14 +37,19 @@ const suggestionServicePatch = {
             // would be notified to the mentioned partner, so this prevents
             // from inadvertently leaking the private message to the
             // mentioned partner.
-            let partners = (thread.channel?.channel_member_ids ?? [])
-                .filter((m) => m.partner_id)
-                .map((m) => m.partner_id);
+            const partnersById = new Map(
+                [
+                    ...(thread.channel?.channel_member_ids ?? []),
+                    ...(thread.parent_channel_id?.channel?.channel_member_ids ?? []),
+                ]
+                    .filter((m) => m.partner_id)
+                    .map((m) => [m.partner_id.id, m.partner_id])
+            );
             if (thread.channel?.channel_type === "channel") {
                 const group = (thread.parent_channel_id || thread).group_public_id;
-                partners = new Set([...partners, ...(group?.partners ?? [])]);
+                group.partners.forEach((partner) => partnersById.set(partner.id, partner));
             }
-            return partners;
+            return Array.from(partnersById.values());
         } else {
             return super.getPartnerSuggestions(...arguments);
         }
