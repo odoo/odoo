@@ -11,7 +11,7 @@ class SpreadsheetDashboard(models.Model):
     _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
-    dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True, index=True)
+    dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True, index=True, string="Section")
     sequence = fields.Integer()
     sample_dashboard_file_path = fields.Char(export_string_translation=False)
     is_published = fields.Boolean(default=True)
@@ -80,3 +80,14 @@ class SpreadsheetDashboard(models.Model):
             for dashboard, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", dashboard.name)
         return vals_list
+
+    def action_open_dashboard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.client",
+            "tag": "action_spreadsheet_dashboard",
+            "name": self.name,
+            "params": {
+                "dashboard_id": self.id,
+            },
+        }

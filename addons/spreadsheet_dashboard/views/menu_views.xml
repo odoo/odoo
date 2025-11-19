@@ -28,8 +28,15 @@
 
     <record id="spreadsheet_dashboard_action_configuration_dashboards" model="ir.actions.act_window">
         <field name="name">Dashboards</field>
-        <field name="res_model">spreadsheet.dashboard.group</field>
+        <field name="res_model">spreadsheet.dashboard</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{"search_default_groupby_dashboard_group_id" : True}</field>
+    </record>
+
+    <record id="spreadsheet_dashboard_group_action_configuration_sections" model="ir.actions.act_window">
+        <field name="name">Sections</field>
+        <field name="res_model">spreadsheet.dashboard.group</field>
+        <field name="view_mode">list</field>
     </record>
 
     <menuitem
@@ -39,6 +46,11 @@
         action="spreadsheet_dashboard_action_configuration_dashboards"
         sequence="10"/>
 
-
+    <menuitem
+        id="spreadsheet_dashboard_group_menu_configuration_sections"
+        name="Sections"
+        parent="spreadsheet_dashboard_menu_configuration"
+        action="spreadsheet_dashboard_group_action_configuration_sections"
+        sequence="20"/>
 
 </odoo>
