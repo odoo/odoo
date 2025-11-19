@@ -962,7 +962,7 @@ class AccountMoveLine(models.Model):
                 amount_currency = line.amount_currency
                 handle_price_include = False
                 quantity = 1
-            compute_all_currency = line.tax_ids.compute_all(
+            compute_all_currency = line.with_context(is_invoice=line.move_id.is_invoice(True)).tax_ids.compute_all(
                 amount_currency,
                 currency=line.currency_id,
                 quantity=quantity,
