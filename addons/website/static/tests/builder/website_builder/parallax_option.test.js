@@ -15,6 +15,23 @@ test("test parallax zoom", async () => {
     expect(":iframe section").not.toHaveStyle("background-image", { inline: true });
     expect("[data-label='Intensity'] input").toBeVisible();
 });
+
+test("add parallax keeps repeat pattern on background", async () => {
+    await setupWebsiteAndOpenParallaxOptions({}, { loadIframeBundles: true });
+    await contains("[data-label='Position'] .dropdown-toggle").click();
+    await contains("[data-action-value='repeat-pattern']").click();
+    expect(":iframe section").toHaveClass("o_bg_img_opt_repeat");
+    await contains("[data-label='Scroll Effect'] .dropdown-toggle").click();
+    await contains("[data-action-value='fixed']").click();
+    // Verify that the repeat pattern is still applied
+    expect(":iframe section").not.toHaveClass("o_bg_img_opt_repeat");
+    expect(":iframe section .s_parallax_bg").toHaveClass("o_bg_img_opt_repeat");
+    expect(":iframe section .s_parallax_bg").toHaveStyle("background-repeat: repeat");
+    // Check that the option is still selected in the dropdown
+    await contains("[data-label='Position'] .dropdown-toggle").click();
+    expect("[data-action-value='repeat-pattern']").toHaveClass("active");
+});
+
 test("add parallax changes editing element", async () => {
     await setupWebsiteAndOpenParallaxOptions({}, { loadIframeBundles: true });
     await contains("[data-action-value='fixed']").click();
