@@ -26,5 +26,8 @@ const discussChannelPatch = {
     get chatChannelTypes() {
         return [...super.chatChannelTypes, "livechat"];
     },
+    get memberListTypes() {
+        return [...super.memberListTypes, "livechat"];
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);
