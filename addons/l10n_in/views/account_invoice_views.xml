@@ -64,7 +64,7 @@
             <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='product_id']" position="after">
                 <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
             </xpath>
-            <xpath expr="//field[@name='journal_line_ids']/list//field[@name='name']" position="after">
+            <xpath expr="//field[@name='line_ids']/list//field[@name='name']" position="after">
                 <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
             </xpath>
             <xpath expr="//header" position="inside">
