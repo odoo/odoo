@@ -834,7 +834,8 @@ class Picking(models.Model):
                 else:
                     picking.state = 'done'
             else:
-                if picking.location_id.should_bypass_reservation() and all(m.procure_method == 'make_to_stock' for m in picking.move_ids):
+                if (picking.location_id and picking.location_id.should_bypass_reservation()) \
+                    and all(m.procure_method == 'make_to_stock' for m in picking.move_ids):
                     picking.state = 'assigned'
                 else:
                     relevant_move_state = self.env['stock.move'].browse(picking_move_lines[picking_id])._get_relevant_state_among_moves()
