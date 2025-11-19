@@ -373,7 +373,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.debit = 1000.0
@@ -382,7 +382,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'balance'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1100.0
@@ -401,7 +401,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1000.0
@@ -409,7 +409,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.add(sale_tax)
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'balance'
             debit_line.account_id = self.company_data['default_account_revenue']
             debit_line.debit = 1100.0
@@ -459,7 +459,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.debit = 1000.0
@@ -467,7 +467,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.add(purch_tax)
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'balance'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1100.0
@@ -486,7 +486,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1000.0
@@ -494,7 +494,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.add(purch_tax)
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'balance'
             debit_line.account_id = self.company_data['default_account_revenue']
             debit_line.debit = 1100.0
@@ -567,7 +567,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             with Form(self.env['account.move'], view='account.view_move_form') as move_form:
                 for line_field in ('debit', 'credit'):
                     line_amount = tax_field == line_field and 1000 or 1150
-                    with move_form.journal_line_ids.new() as line_form:
+                    with move_form.line_ids.new() as line_form:
                         line_form.name = '%s_line' % line_field
                         line_form.account_id = self.company_data['default_account_revenue']
                         line_form.debit = line_field == 'debit' and line_amount or 0
