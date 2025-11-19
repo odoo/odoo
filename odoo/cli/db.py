@@ -9,20 +9,27 @@ from pathlib import Path
 
 import requests
 
-from ..service.db import (
-    dump_db,
-    exp_create_database,
-    exp_db_exist,
-    exp_drop,
-    exp_duplicate_database,
-    exp_rename,
-    restore_db,
-)
+from ..modules import db
 from ..tools import config
 from . import Command
 from .server import report_configuration
 
 eprint = partial(print, file=sys.stderr, flush=True)
+
+
+_db_exist_error_message = """\
+Target database {db_name} exists, aborting.
+
+\tuse `--force` to delete the existing database anyway."""
+
+
+def _exit_if_exists(self, db_name, *, drop_instead):
+    if not db.exist(db_name):
+        pass
+    elif drop_instead:
+        db.drop(db.SKIP_ADMIN_PASSWORD, db_name)
+    else:
+        sys.exit(_db_exist_error_message.format(db_name=db_name))
 
 
 class Db(Command):
@@ -183,26 +190,23 @@ class Db(Command):
             if v is not None
             if k in ['config', 'data_dir', 'addons_path'] or k.startswith(('db_', 'pg_'))
             for val in [
-                '--data-dir' if k == 'data_dir'\
-                    else '--addons-path' if k == 'addons_path'\
+                '--data-dir' if k == 'data_dir'
+                    else '--addons-path' if k == 'addons_path'
                     else f'--{k}',
                 v,
             ]
         ], setup_logging=True)
-        # force db management active to bypass check when only a
-        # `check_db_management_enabled` version is available.
-        config['list_db'] = True
         report_configuration()
 
         args.func(args)
 
     def init(self, args):
-        self._check_target(args.database, delete_if_exists=args.force)
-        exp_create_database(
+        _exit_if_exists(args.database, drop_instead=args.force)
+        db.create(
             db_name=args.database,
             demo=args.with_demo,
             lang=args.language,
-            login=args.username,
+            user_login=args.username,
             user_password=args.password,
             country_code=args.country,
             phone=None,
@@ -210,7 +214,7 @@ class Db(Command):
 
     def load(self, args):
         db_name = args.database or Path(args.dump_file).stem
-        self._check_target(db_name, delete_if_exists=args.force)
+        _exit_if_exists(db_name, drop_instead=args.force)
 
         url = urllib.parse.urlparse(args.dump_file)
         if url.scheme:
@@ -229,31 +233,39 @@ class Db(Command):
             exit("Not a zipped dump file, use `pg_restore` to restore raw dumps,"
                  " and `psql` to execute sql dumps or scripts.")
 
-        restore_db(db=db_name, dump_file=dump_file, copy=True, neutralize_database=args.neutralize)
+        db.restore(
+            db_name,
+            dump_file,
+            copy=True,
+            neutralize_database=args.neutralize,
+        )
 
     def dump(self, args):
         if args.dump_path == '-':
-            dump_db(args.database, sys.stdout.buffer)
+            db.dump(args.database, sys.stdout.buffer)
         else:
-            with open(args.dump_path, 'wb') as f:
-                dump_db(args.database, f, args.dump_format, args.filestore)
+            with open(args.dump_path, 'wb') as dump_file:
+                db.dump(
+                    args.database,
+                    dump_file,
+                    backup_format=args.dump_format,
+                    with_filestore=args.filestore,
+                )
 
     def duplicate(self, args):
-        self._check_target(args.target, delete_if_exists=args.force)
-        exp_duplicate_database(args.source, args.target, neutralize_database=args.neutralize)
+        _exit_if_exists(args.target, drop_instead=args.force)
+        db.duplicate(
+            args.source,
+            args.target,
+            neutralize_database=args.neutralize,
+        )
 
     def rename(self, args):
-        self._check_target(args.target, delete_if_exists=args.force)
-        exp_rename(args.source, args.target)
+        _exit_if_exists(args.target, drop_instead=args.force)
+        db.rename(
+            args.source,
+            args.target,
+        )
 
     def drop(self, args):
-        if not exp_drop(args.database):
-            exit(f"Database {args.database} does not exist.")
-
-    def _check_target(self, target, *, delete_if_exists):
-        if exp_db_exist(target):
-            if delete_if_exists:
-                exp_drop(target)
-            else:
-                exit(f"Target database {target} exists, aborting.\n\n"
-                     f"\tuse `--force` to delete the existing database anyway.")
+        db.drop(args.database)

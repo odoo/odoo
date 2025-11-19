@@ -13,9 +13,9 @@ import traceback
 from datetime import datetime
 from glob import glob
 from pathlib import Path
-from xmlrpc import client as xmlrpclib
 
 import pexpect
+import requests
 
 #----------------------------------------------------------
 # Utils
@@ -58,19 +58,25 @@ def run_cmd(cmd, chdir=None, timeout=None):
     return subprocess.run(cmd, cwd=chdir, timeout=timeout)
 
 
+def _database_status(addr, port, dbname, *, state=None):
+    url = f'{addr}:{port}/web/database/status'
+    res = requests.post(url, data={'master_pwd': 'admin', 'name': dbname})
+    if res.status_code != 200:
+        exc = OdooTestError(f"{url} {res.status_code}")
+        exc.add_note(res.text)
+        raise exc
+    modules = res.json()
+    if state is None:
+        return modules
+    return [mod for mod in modules if mod['state'] == state]
+
+
 def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
     time.sleep(5)
-    uid = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/common' % (addr, port)).authenticate(
-        dbname, 'admin', 'admin', {}
-    )
-    modules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/object' % (addr, port)).execute(
-        dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
-    )
+    modules = _database_status(addr, port, dbname, state='installed')
     if len(modules) > 1:
         time.sleep(1)
-        toinstallmodules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/object' % (addr, port)).execute(
-            dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
-        )
+        toinstallmodules = _database_status(addr, port, dbname, 'to install')
         if toinstallmodules:
             logging.error("Package test: FAILED. Not able to install dependencies of base.")
             raise OdooTestError("Installation of package failed")

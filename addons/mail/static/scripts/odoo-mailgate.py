@@ -25,13 +25,19 @@ EX_NOPERM = 77
 EX_CONFIG = 78
 
 
-import sys
+import sys  # noqa: E402, I001
 try:
+    import json
     import traceback
     try:
         import xmlrpclib
     except ImportError:
         import xmlrpc.client as xmlrpclib
+    try:
+        from urllib2 import HTTPError, Request, urlopen
+    except ImportError:
+        from urllib.error import HTTPError
+        from urllib.request import Request, urlopen
     import socket
     from optparse import OptionParser as _OptionParser
 except ImportError as e:
@@ -53,17 +59,18 @@ def postfix_exit(exit_code=EX_SOFTWARE, message=None, debug=False):
             traceback.print_exc(None, sys.stderr)
         if message:
             sys.stderr.write(message)
-    except Exception:
+    except Exception:  # noqa: BLE001
         pass  # error handling failed, exit
     finally:
         sys.exit(exit_code)
 
 
 def main():
-    op = OptionParser(usage='usage: %prog [options]', version='%prog v1.3')
+    op = OptionParser(usage='usage: %prog [options]', version='%prog v1.4')
     op.add_option("-d", "--database", dest="database", help="Odoo database name (default: %default)", default='odoo')
-    op.add_option("-u", "--userid", dest="userid", help="Odoo user id to connect with (default: %default)", default=1, type=int)
-    op.add_option("-p", "--password", dest="password", help="Odoo user password (default: %default)", default='admin')
+    op.add_option("-u", "--userid", dest="userid", help="Odoo user id for Odoo<19.1 (default: %default)", default=1, type=int)
+    op.add_option("-p", "--password", dest="password", help="Odoo user password for Odoo<19.1 (default: %default)", default='admin')
+    op.add_option("--apikey", dest="apikey", help="Odoo API Key for Odoo>=19.1", default='')
     op.add_option("--host", dest="host", help="Odoo host (default: %default)", default='localhost')
     op.add_option("--port", dest="port", help="Odoo port (default: %default)", default=8069, type=int)
     op.add_option("--proto", dest="protocol", help="Protocol to use (default: %default), http or https", default='http')
@@ -81,8 +88,28 @@ def main():
 
     try:
         msg = sys.stdin.read()
-        if sys.version_info > (3,):
+        if sys.version_info >= (3,):  # noqa: UP036
             msg = msg.encode()
+        try:
+            via_xmlrpc(o, msg)
+        except xmlrpclib.ProtocolError as exc:
+            if exc.errcode != 404:
+                raise
+            if not o.apikey:
+                postfix_exit(EX_CONFIG, "Missing API Key", False)
+            via_controller(o, msg)
+    except (socket.error, socket.gaierror) as e:  # noqa: UP024
+        postfix_exit(
+            exit_code=EX_TEMPFAIL if o.retry else EX_NOHOST,
+            message="connection error: %s: %s (%s)\n" % (e.__class__.__name__, e, o.host),
+            debug=o.debug,
+        )
+    except Exception:  # noqa: BLE001
+        postfix_exit(EX_SOFTWARE, "", o.debug)
+
+
+def via_xmlrpc(o, msg):
+    try:
         models = xmlrpclib.ServerProxy('%s://%s:%s/xmlrpc/2/object' % (o.protocol, o.host, o.port), allow_none=True)
         models.execute_kw(o.database, o.userid, o.password, 'mail.thread', 'message_process', [False, xmlrpclib.Binary(msg)], {})
     except xmlrpclib.Fault as e:
@@ -94,19 +121,38 @@ def main():
             postfix_exit(EX_NOUSER, "alias does not exist in odoo\n", o.debug)
         else:
             postfix_exit(EX_SOFTWARE, "xmlrpclib.Fault\n", o.debug)
-    except (socket.error, socket.gaierror) as e:
-        postfix_exit(
-            exit_code=EX_TEMPFAIL if o.retry else EX_NOHOST,
-            message="connection error: %s: %s (%s)\n" % (e.__class__.__name__, e, o.host),
-            debug=o.debug,
-        )
-    except Exception:
-        postfix_exit(EX_SOFTWARE, "", o.debug)
+
+
+def via_controller(o, msg):
+    req = Request(
+        '%s://%s:%s/mail/mailgate' % (o.protocol, o.host, o.port),
+        msg,
+        {
+            'Authorization': 'Bearer ' + o.apikey,
+            'Content-Type': 'message/rfc822',
+            'X-Odoo-Database': o.database,
+        },
+    )
+    try:
+        urlopen(req)
+    except HTTPError as res:
+        res_error = json.load(res)
+        if hasattr(res, 'add_note'):
+            res.add_note("\nThe above HTTPError was caused by the following server-side exception:\n\n" + res_error['debug'])
+
+        if res.code in (401, 403):
+            postfix_exit(EX_NOPERM, res_error['message'], o.debug)
+        if res.code == 404:
+            postfix_exit(EX_CONFIG, "database does not exist: %s\n" % o.database, o.debug)
+        if u'No possible route' in res_error['message']:  # noqa: UP025
+            postfix_exit(EX_NOUSER, "alias does not exist in odoo\n", o.debug)
+        postfix_exit(EX_SOFTWARE, "server error\n", o.debug)
+
 
 try:
     if __name__ == '__main__':
         main()
-except Exception:
+except Exception:  # noqa: BLE001
     # Handle all unhandled exceptions to prevent postfix from sending
     # a bounce mail that includes the invoked command with args which
     # may include the password for the odoo user.

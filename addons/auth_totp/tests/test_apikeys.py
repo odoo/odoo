@@ -2,7 +2,6 @@ import logging
 
 from odoo import api
 from odoo.tests import HttpCase, get_db_name, tagged
-from odoo.tools import mute_logger
 
 from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
 
@@ -26,10 +25,6 @@ class TestAPIKeys(TestTOTPMixin, HttpCase):
         def remove_callback():
             del self.registry['ir.logging'].send_key
 
-        ml = mute_logger('odoo.addons.rpc.controllers.xmlrpc')
-        ml.__enter__()  # noqa: PLC2801
-        self.addCleanup(ml.__exit__)
-
     def test_addremove(self):
         db = get_db_name()
         self.start_tour('/odoo', 'apikeys_tour_setup', login=self.user_test.login)
@@ -37,11 +32,13 @@ class TestAPIKeys(TestTOTPMixin, HttpCase):
 
         [(_, [key], [])] = self.messages
 
-        uid = self.xmlrpc_common.authenticate(db, self.user_test.login, key, {})
-        [r] = self.xmlrpc_object.execute_kw(
-            db, uid, key,
-            'res.users', 'read', [uid, ['login']]
-        )
+        [r] = self.url_open(
+            '/json/2/res.users/read',
+            headers={'Authorization': f'Bearer {key}',
+                     'X-Odoo-Database': db},
+            json={'ids': [self.user_test.id],
+                  'fields': ['login']},
+        ).raise_for_status().json()
         self.assertEqual(
             r['login'], self.user_test.login,
             "the key should be usable as a way to perform RPC calls"
@@ -54,5 +51,10 @@ class TestAPIKeys(TestTOTPMixin, HttpCase):
         self.start_tour('/odoo', 'apikeys_tour_setup', login=self.user_test.login)
         self.start_tour('/odoo', 'totp_tour_setup', login=self.user_test.login)
         [(_, [key], [])] = self.messages  # pylint: disable=unbalanced-tuple-unpacking
-        uid = self.xmlrpc_common.authenticate(db, self.user_test.login, key, {})
+
+        uid = self.url_open(
+            '/json/2/res.users/context_get',
+            headers={'X-Odoo-Database': db, 'Authorization': f'Bearer {key}'},
+            json={'ids': []},  # post
+        ).raise_for_status().json()['uid']
         self.assertEqual(uid, self.user_test.id)

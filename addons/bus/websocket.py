@@ -5,35 +5,41 @@ import hashlib
 import json
 import logging
 import os
-import psycopg2
 import random
+import selectors
 import socket
 import struct
-import selectors
 import threading
 import time
 from collections import defaultdict, deque
 from contextlib import closing, suppress
 from enum import IntEnum
 from itertools import count
-from psycopg2.pool import PoolError
 from queue import PriorityQueue
 from urllib.parse import urlparse
 from weakref import WeakSet
 
-from werkzeug.local import LocalStack
+import psycopg2
+from psycopg2.pool import PoolError
 from werkzeug.datastructures import ImmutableMultiDict, MultiDict
 from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
+from werkzeug.local import LocalStack
 
 import odoo
 from odoo import api, modules
-from .models.bus import dispatch
-from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
+from odoo.http import (
+    Request,
+    Response,
+    SessionExpiredException,
+    get_default_session,
+    retrying,
+    root,
+)
 from odoo.modules.registry import Registry
-from odoo.service import model as service_model
-from odoo.service.server import CommonServer
-from odoo.service.security import check_session
+from odoo.server import CommonServer
 from odoo.tools import config
+
+from .models.bus import dispatch
 
 _logger = logging.getLogger(__name__)
 
@@ -700,7 +706,7 @@ class Websocket:
             env = self.new_env(cr, self._session, set_lang=True)
             for callback in self.__event_callbacks[event_type]:
                 try:
-                    service_model.retrying(functools.partial(callback, env, self), env)
+                    retrying(functools.partial(callback, env, self), env)
                 except Exception:
                     _logger.warning(
                         'Error during Websocket %s callback',
@@ -745,8 +751,8 @@ class Websocket:
         self._waiting_for_dispatch = False
         with acquire_cursor(session.db) as cr:
             env = self.new_env(cr, session)
-            if session.uid is not None and not check_session(session, env):
-                raise SessionExpiredException()
+            if session['uid'] is not None:
+                session._check(env)
             notifications = env["bus.bus"]._poll(
                 self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
             )
@@ -906,7 +912,7 @@ class WebsocketRequest:
 
         with closing(acquire_cursor(self.db)) as cr:
             self.env = self.ws.new_env(cr, self.session, set_lang=True)
-            service_model.retrying(
+            retrying(
                 functools.partial(self._serve_ir_websocket, event_name, data),
                 self.env,
             )

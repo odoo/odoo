@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
 import psycopg2
+from psycopg2.extensions import quote_ident
 
 from .misc import named_to_positional_printf
 
@@ -768,6 +769,15 @@ def make_identifier(identifier: str) -> str:
         # alias. The remaining space we can use to add a human readable prefix.
         return f"{identifier[:54]}_{crc32(identifier.encode()):08x}"
     return identifier
+
+
+def make_database_identifier(cr, name: str) -> SQL:
+    """Quote a database identifier.
+
+    Use instead of `SQL.identifier` to accept all kinds of identifiers.
+    """
+    name = quote_ident(name, cr._cnx)
+    return SQL(name)
 
 
 def make_index_name(table_name: str, column_name: str) -> str:

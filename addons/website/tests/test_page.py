@@ -1,15 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import html
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from odoo.addons.website.controllers.main import Website
-from odoo.addons.http_routing.tests.common import MockRequest
+from lxml import html
+
 from odoo.fields import Command
 from odoo.http import root
-from odoo.tests import common, HttpCase, tagged
-from odoo.tests.common import HOST
-from odoo.tools import config, mute_logger
+from odoo.tests import HttpCase, common, tagged
+from odoo.tools import mute_logger
+
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website.controllers.main import Website
 
 
 @tagged('-at_install', 'post_install')
@@ -243,20 +245,27 @@ class WithContext(HttpCase):
 
     @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
     def test_search(self):
-        dbname = common.get_db_name()
-        admin_uid = self.env.ref('base.user_admin').id
         website = self.env['website'].get_current_website()
+        ApiKey = self.env['res.users.apikeys'].with_user(self.env.ref('base.user_admin'))
+        headers = {
+            'X-Odoo-Database': common.get_db_name(),
+            'Authorization': 'Bearer ' + ApiKey._generate(
+                scope='rpc',
+                name='test_search',
+                expiration_date=datetime.now() + timedelta(minutes=15),
+            ),
+        }
 
-        robot = self.xmlrpc_object.execute(
-            dbname, admin_uid, 'admin',
-            'website', 'search_pages', [website.id], 'info'
-        )
+        robot = self.url_open('/json/2/website/search_pages', headers=headers, json={
+            'ids': [website.id],
+            'needle': 'info',
+        }).raise_for_status().json()
         self.assertIn({'loc': '/website/info'}, robot)
 
-        pages = self.xmlrpc_object.execute(
-            dbname, admin_uid, 'admin',
-            'website', 'search_pages', [website.id], 'page'
-        )
+        pages = self.url_open('/json/2/website/search_pages', headers=headers, json={
+            'ids': [website.id],
+            'needle': 'page',
+        }).raise_for_status().json()
         self.assertIn(
             '/page_1',
             [p['loc'] for p in pages],

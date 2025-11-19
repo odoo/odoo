@@ -9,8 +9,8 @@ from unittest.mock import patch
 import odoo
 from odoo.http import content_disposition, root
 from odoo.tests import tagged
-from odoo.tests.common import HOST, BaseCase, get_db_name, new_test_user
-from odoo.tools import config, file_path, mute_logger, parse_version
+from odoo.tests.common import HOST, BaseCase
+from odoo.tools import config, file_path, parse_version
 
 from .test_common import TestHttpBase
 from odoo.addons import test_http
@@ -84,26 +84,6 @@ class TestHttpMisc(TestHttpBase):
         self.assertIsNone(root.get_static_file(f'odoo.com/{uri}'), "No host allowed")
         self.assertIsNone(root.get_static_file(f'http://odoo.com/{uri}'), "No host allowed")
 
-    def test_misc4_rpc_qweb(self):
-        jack = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
-        milky_way = self.env.ref('test_http.milky_way')
-
-        payload = json.dumps({'jsonrpc': '2.0', 'method': 'call', 'id': None, 'params': {
-            'service': 'object', 'method': 'execute', 'args': [
-                get_db_name(), jack.id, 'jackoneill', 'test_http.galaxy', 'render', milky_way.id
-            ]
-        }})
-
-        for method in (self.db_url_open, self.nodb_url_open):
-            with self.subTest(method=method.__name__):
-                with mute_logger('odoo.addons.rpc.controllers.jsonrpc'):
-                    res = method('/jsonrpc', data=payload, headers=CT_JSON)
-                res.raise_for_status()
-
-                res_rpc = res.json()
-                self.assertNotIn('error', res_rpc.keys(), res_rpc.get('error', {}).get('data', {}).get('message'))
-                self.assertIn(milky_way.name, res_rpc['result'], "QWeb template was correctly rendered")
-
     def test_misc5_geoip(self):
         res = self.nodb_url_open('/test_http/geoip')
         res.raise_for_status()
@@ -149,7 +129,7 @@ class TestHttpMisc(TestHttpBase):
 
     def test_misc8_concurrency_error(self):
         with (
-            self.assertLogs('odoo.service.model') as log_catcher,
+            self.assertLogs('odoo.http') as log_catcher,
             patch.object(test_http.controllers, 'should_fail', True),
         ):
             self.url_open('/test_http/concurrency_error').raise_for_status()

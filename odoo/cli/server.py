@@ -19,7 +19,6 @@ from psycopg2.errors import InsufficientPrivilege
 
 from odoo.release import author as __author__  # noqa: F401
 from odoo.release import version as __version__  # noqa: F401
-from odoo.service import server
 from odoo.tools import config
 
 from . import Command
@@ -99,7 +98,7 @@ def main(args):
     report_configuration()
 
     for db_name in config['db_name']:
-        from odoo.service import db  # noqa: PLC0415
+        from odoo.modules import db  # noqa: PLC0415
         try:
             db._create_empty_database(db_name)
             config['init']['base'] = True
@@ -115,6 +114,8 @@ def main(args):
     stop = config["stop_after_init"]
 
     setup_pid_file()
+
+    from odoo import server  # noqa: PLC0415
     rc = server.start(preload=config['db_name'], stop=stop)
     sys.exit(rc)
 

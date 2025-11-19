@@ -380,3 +380,46 @@ class MailController(http.Controller):
         response.headers['Expires'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(time.time() + 604800 * 60))
 
         return response
+
+    @http.route('/mail/mailgate', type='http', auth='bearer', csrf=False, methods=['POST'])
+    def mailgate(self, file=None):
+        """
+        Post an email file (.eml) to mail.thread.message_process.
+
+        The eml file can be posted a multipart form (using name "file")
+        or raw (using content-type: message/rfc822).
+
+        >>> # HTTP Form (multipart)
+        >>> requests.post(
+        ...     f'https://{BASE_URL}/mail/mailgate',
+        ...     files={'file': open(EML_PATH, 'rb')},
+        ...     headers={
+        ...         'Authorization': 'Bearer ' + API_KEY,
+        ...         'X-Odoo-Database': DBNAME,  # if missing from BASE_URL
+        ...     }
+        ... )
+        <Response [200]>
+
+        >>> # HTTP Raw
+        >>> requests.post(
+        ...     f'https://{BASE_URL}/mail/mailgate',
+        ...     data=EML_CONTENT,
+        ...     headers={
+        ...         'Authorization': 'Bearer ' + API_KEY,
+        ...         'Content-Type': 'message/rfc822',
+        ...         'X-Odoo-Database': DBNAME,  # if missing from BASE_URL
+        ...     }
+        ... )
+        <Response [200]>
+        """
+        try:
+            thread_id = self.env['mail.thread'].message_process(
+                model=None,
+                message=file.read() if file else request.httprequest.get_data(),
+            )
+            return request.make_json_response(thread_id)
+        except Exception as exc:
+            # handle errors like json2 does, sensible http status and
+            # error serialized as json in the body
+            exc.error_response = http.Json2Dispatcher.handle_error(request.dispatcher, exc)
+            raise

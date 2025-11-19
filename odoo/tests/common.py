@@ -44,7 +44,6 @@ from typing import Optional, Iterable, cast
 from unittest import TestResult
 from unittest.mock import patch, _patch, Mock
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
-from xmlrpc import client as xmlrpclib
 from uuid import uuid4
 from werkzeug.exceptions import BadRequest
 
@@ -63,7 +62,6 @@ from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry, DummyRLock
-from odoo.service import security
 from odoo.sql_db import Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
@@ -2127,6 +2125,7 @@ def _find_executable():
 
     raise unittest.SkipTest("Chrome executable not found")
 
+
 class Opener(requests.Session):
     """
     Flushes and clears the current transaction when starting a request.
@@ -2145,21 +2144,30 @@ class Opener(requests.Session):
         self.cr.flush()
         self.cr.clear()
         with self.test_case.allow_requests():
-            return super().request(*args, **kwargs)
+            res = super().request(*args, **kwargs)
+            res.__class__ = Response
+            return res
 
 
-class Transport(xmlrpclib.Transport):
-    """ see :class:`Opener` """
-    def __init__(self, http_case: HttpCase):
-        self.test_case = http_case
-        self.cr = http_case.cr
-        super().__init__()
-
-    def request(self, *args, **kwargs):
-        self.cr.flush()
-        self.cr.clear()
-        with self.test_case.allow_requests(all_requests=True):
-            return super().request(*args, **kwargs)
+class Response(requests.Response):
+    def raise_for_status(self) -> Response:
+        try:
+            super().raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            is_html = self.headers.get('content-type', '').startswith('text/html')
+            is_website = is_html and b'<meta name="generator" content="Odoo"/>' in self.content
+            if is_website:
+                # The second container in <main> contains the error message
+                main = self.text.partition('<main>')[2].partition('</main>')[0]
+                c = '<div class="container">'
+                error = main[main.find(c) + len(c):].partition(c)[2].partition('</div>')[0]
+                exc.add_note(shorten(error, 150))
+            elif is_html:
+                exc.add_note(shorten(self.text.partition('</h1>')[2], 150))
+            else:
+                exc.add_note(shorten(self.text, 150))
+            raise
+        return self
 
 
 class JsonRpcException(Exception):
@@ -2187,8 +2195,6 @@ class HttpCase(TransactionCase):
         ICP = cls.env['ir.config_parameter']
         ICP.set_str('web.base.url', cls.base_url())
         ICP.env.flush_all()
-        # v8 api with correct xmlrpc exception handling.
-        cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
@@ -2197,18 +2203,15 @@ class HttpCase(TransactionCase):
 
     @classmethod
     def http_port(cls):
-        if odoo.service.server.server is None:
+        if odoo.server.server is None:
             return None
-        return odoo.service.server.server.httpd.server_port
+        return odoo.server.server.httpd.server_port
 
     def setUp(self):
         super().setUp()
 
         self._logger = self._logger.getChild(self._testMethodName)
 
-        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self))
-        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self))
-        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self), use_datetime=True)
         # setup an url opener helper
         self.opener = Opener(self)
         self.http_key_sequence = itertools.count()
@@ -2351,10 +2354,12 @@ class HttpCase(TransactionCase):
                 auth_info = self.env['res.users'].authenticate(credential, {'interactive': False})
             uid = auth_info['uid']
             env = api.Environment(self.cr, uid, {})
-            session.uid = uid
-            session.login = user
-            session.session_token = uid and security.compute_session_token(session, env)
-            session.context = dict(env['res.users'].context_get())
+            session['uid'] = uid
+            session['login'] = user
+            session['session_token'] = None
+            if uid:
+                session._update_session_token(env)
+            session['context'] = dict(env['res.users'].context_get())
 
         odoo.http.root.session_store.save(session)
         # Reset the opener: turns out when we set cookies['foo'] we're really

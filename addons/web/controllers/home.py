@@ -7,10 +7,10 @@ import psycopg2
 import odoo.api
 import odoo.exceptions
 import odoo.modules.registry
+import odoo.release
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.service import security
 from odoo.tools.misc import hmac
 from odoo.tools.translate import _, LazyTranslate
 from .utils import (
@@ -52,8 +52,7 @@ class Home(http.Controller):
             return request.redirect_query('/web/login', query={'redirect': request.httprequest.full_path}, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
-        if not security.check_session(request.session, request.env, request):
-            raise http.SessionExpiredException("Session expired")
+        request.session._check(request)
         if not is_user_internal(request.session.uid):
             return request.redirect('/web/login_successful', 303)
 
@@ -171,7 +170,7 @@ class Home(http.Controller):
             uid = request.session.uid = odoo.SUPERUSER_ID
             # invalidate session token cache as we've changed the uid
             request.env.registry.clear_cache()
-            request.session.session_token = security.compute_session_token(request.session, request.env)
+            request.sesssion._update_session_token(request.env)
 
         return request.redirect(self._login_redirect(uid))
 
@@ -191,6 +190,13 @@ class Home(http.Controller):
         headers = [('Content-Type', 'application/json'),
                    ('Cache-Control', 'no-store')]
         return request.make_response(data, headers, status=status)
+
+    @http.route(['/web/version', '/json/version'], type='http', auth='none', save_session=False, readonly=True)
+    def version(self):
+        return request.make_json_response({
+            'version_info': odoo.release.version_info,
+            'version': odoo.release.version,
+        })
 
     @http.route(['/robots.txt'], type='http', auth="none")
     def robots(self, **kwargs):
