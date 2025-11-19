@@ -1,16 +1,20 @@
-import { expect, test } from "@odoo/hoot";
-import { tick } from "@odoo/hoot-dom";
-import { Deferred, microTick } from "@odoo/hoot-mock";
+import { Deferred, describe, expect, microTick, test, tick } from "@odoo/hoot";
 import { RPCCache } from "@web/core/network/rpc_cache";
 
-const symbol = Symbol("Promise");
+const S_PENDING = Symbol("Promise");
 
+/**
+ * @param {Promise<any>} promise
+ */
 function promiseState(promise) {
-    return Promise.race([promise, Promise.resolve(symbol)]).then(
-        (value) => (value === symbol ? { status: "pending" } : { status: "fulfilled", value }),
+    return Promise.race([promise, Promise.resolve(S_PENDING)]).then(
+        (value) => (value === S_PENDING ? { status: "pending" } : { status: "fulfilled", value }),
         (reason) => ({ status: "rejected", reason })
     );
 }
+
+describe.current.tags("headless");
+
 test("RamCache: can cache a simple call", async () => {
     // The fist call to rpcCache.read saves the result on the RamCache.
     // Each next call will retrive the ram cache independently, without executing the fallback
