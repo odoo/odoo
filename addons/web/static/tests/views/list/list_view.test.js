@@ -19611,3 +19611,83 @@ test(`groupby use odoomark`, async () => {
     expect(`.o_group_name b`).toHaveCount(2);
     expect(`.o_group_name span.o_badge`).toHaveCount(2);
 });
+
+test.tags("desktop");
+test(`multi edition: edit date with operation`, async () => {
+    Foo._records[1].datetime = "2019-04-09 03:55:05";
+    Foo._records[2].datetime = "1987-11-13 13:13:13";
+    Foo._records[3].datetime = "2021-01-01 00:00:01";
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="datetime"/>
+            </list>`,
+    });
+
+    const operations = [
+        { op: "+=4w", text: "+ 4 weeks" },
+        { op: "-=1w", text: "- 1 weeks" },
+        { op: "+=1", text: "+ 1 days" },
+        { op: "-=3", text: "- 3 days" },
+        { op: "+=4m", text: "+ 4 months" },
+        { op: "+=1m", text: "+ 1 months" },
+        { op: "+=4y", text: "+ 4 years" },
+        { op: "-=1y", text: "- 1 years" },
+        { op: "+=199939S", text: "+ 199939 seconds" },
+        { op: "+=0M", text: "+ 0 minutes" },
+        { op: "-=9999999999999999999999999999M", text: "- 1e+28 minutes" },
+        { op: "+=4H", text: "+ 4 hours" },
+    ];
+
+    async function checkOperation(operation) {
+        await contains(`tr:eq(1) .o_data_cell[name=datetime]`).click();
+        await animationFrame();
+        await edit(operation.op, { confirm: "tab" });
+        await animationFrame();
+        expect(`.modal .o_modal_changes [name=datetime]`).toHaveText(`Datetime ${operation.text}`);
+        expect(`.modal .alert`).toHaveCount(1);
+        await contains(`.modal-dialog button:contains(cancel)`).click();
+    }
+
+    await contains(`th .o-checkbox`).click();
+    for (const operation of operations) {
+        await checkOperation(operation);
+    }
+
+    await contains(`tr:eq(1) .o_data_cell[name=datetime]`).click();
+    await animationFrame();
+    await edit("-=4d", { confirm: "tab" });
+    await animationFrame();
+    expect(`.modal .alert`)
+        .toHaveText(`Use the operators "+=", "-=" to update the current date by days (d), weeks (w), months (m), years (y), hours (H), minutes (M) and seconds (S).
+For example, if the date is Mar 11 and you enter "+=2d", it will be updated to Mar 13.`);
+    await contains(`.modal-dialog button:contains(update)`).click();
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "Dec 8, 2016, 11:55 AM",
+        "blip",
+        "Apr 5, 5:55 AM",
+        "gnap",
+        "Nov 9, 1987, 2:13 PM",
+        "blip",
+        "Dec 28, 2020, 1:00 AM",
+    ]);
+    await contains(`tr:eq(1) .o_data_cell[name=datetime]`).click();
+    await animationFrame();
+    await edit("+=4y", { confirm: "tab" });
+    await animationFrame();
+    await contains(`.modal-dialog button:contains(update)`).click();
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "Dec 8, 2020, 11:55 AM",
+        "blip",
+        "Apr 5, 2023, 5:55 AM",
+        "gnap",
+        "Nov 9, 1991, 2:13 PM",
+        "blip",
+        "Dec 28, 2024, 1:00 AM",
+    ]);
+});
