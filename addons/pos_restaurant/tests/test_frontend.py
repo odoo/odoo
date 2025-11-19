@@ -282,6 +282,10 @@ class TestFrontend(TestFrontendCommon):
 
         order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000004')], limit=1, order='id desc')
         self.assertEqual(order4.customer_count, 2)
+        self.pos_config.write({
+            'preparation_printer_ids': False,
+            'other_devices': False,
+        })
         self.start_pos_tour('test_edit_payments_with_tip')
         edited_orders = self.env['pos.order'].search([], limit=2)
         # Tip from payment screen - tip should be the part of amount total and amount paid
@@ -316,6 +320,10 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('SplitBillScreenTourPay')
 
     def test_08_refund_stay_current_table(self):
+        self.pos_config.write({
+            'preparation_printer_ids': False,
+            'other_devices': False,
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('RefundStayCurrentTableTour')
 

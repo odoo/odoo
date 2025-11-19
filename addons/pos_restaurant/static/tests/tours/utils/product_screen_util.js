@@ -132,21 +132,3 @@ export function transferCourseTo(destCourse) {
         },
     ];
 }
-
-export function discardOrderWarningDialog() {
-    return [
-        {
-            trigger: `.modal-dialog:contains("It seems that the order has not been sent. Would you like to send it to preparation?")`,
-        },
-        Dialog.discard({ title: `Warning !` }),
-    ];
-}
-
-export function confirmOrderWarningDialog() {
-    return [
-        {
-            trigger: `.modal-dialog:contains("It seems that the order has not been sent. Would you like to send it to preparation?")`,
-        },
-        Dialog.confirm(),
-    ];
-}
