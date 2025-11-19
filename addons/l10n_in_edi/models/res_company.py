@@ -58,6 +58,14 @@ class ResCompany(models.Model):
                 "/iap/l10n_in_edi/1/authenticate",
                 "l10n_in_edi.endpoint"
             )
+            self.env['ir.logging']._l10n_in_log_message(
+                func='_l10n_in_edi_authenticate',
+                name=f'{self._name}({self.id})',
+                path='/l10n_in_edi/1/authenticate',
+                request=params,
+                response=response,
+                error_found=bool(response.get('error')),
+            )
         except AccessError as e:
             return {
                 "error": [{

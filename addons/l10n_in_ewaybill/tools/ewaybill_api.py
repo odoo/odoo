@@ -103,6 +103,14 @@ class EWayBillApi:
                 fields.Datetime.now()
                 + timedelta(hours=6, minutes=00, seconds=00)
             )
+        self.env['ir.logging']._l10n_in_log_message(
+            func='_ewaybill_authenticate',
+            name=f'{self.company}',
+            path='/l10n_in_edi_ewaybill/1/authenticate',
+            request=params,
+            response=response,
+            error_found=bool(response and response.get("status_cd") == "1"),
+        )
 
     def _ewaybill_make_transaction(self, operation_type, json_payload):
         """

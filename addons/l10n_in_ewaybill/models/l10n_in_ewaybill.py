@@ -497,6 +497,14 @@ class L10nInEwaybill(models.Model):
         self._lock_ewaybill()
         try:
             response = ewb_api._ewaybill_cancel(cancel_json)
+            self.env['ir.logging']._l10n_in_log_message(
+                func='_ewaybill_cancel',
+                name=f'{self._name}({self.id})',
+                path='/l10n_in_edi_ewaybill/1/cancel',
+                request=cancel_json,
+                response=response,
+                error_found=bool(response.get('error')),
+            )
         except EWayBillError as error:
             self._handle_error(error)
             return False
@@ -519,9 +527,18 @@ class L10nInEwaybill(models.Model):
         self.ensure_one()
         self._log_retry_message_on_generate()
         ewb_api = EWayBillApi(self.company_id)
+        generate_json = self._ewaybill_generate_direct_json()
         self._lock_ewaybill()
         try:
-            response = ewb_api._ewaybill_generate(self._ewaybill_generate_direct_json())
+            response = ewb_api._ewaybill_generate(generate_json)
+            self.env['ir.logging']._l10n_in_log_message(
+                func='_generate_ewaybill',
+                name=f'{self._name}({self.id})',
+                path='/l10n_in_edi_ewaybill/1/generate',
+                request=generate_json,
+                response=response,
+                error_found=bool(response.get('error')),
+            )
         except EWayBillError as error:
             self._handle_error(error)
             return False
@@ -740,3 +757,17 @@ class L10nInEwaybill(models.Model):
     def _unlink_l10n_in_ewaybill_prevent(self):
         if self.filtered(lambda ewaybill: ewaybill.state != 'pending'):
             raise UserError(_("You cannot delete a generated E-waybill. Instead, you should cancel it."))
+
+    def action_view_l10n_in_ewaybill_logs(self):
+        log = f'{self._name}({self.id})'
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'E-waybill Logs',
+            'res_model': 'ir.logging',
+            'view_mode': 'list,form',
+            'domain': [
+                ('name', '=', log),
+            ],
+            'target': 'current',
+        }

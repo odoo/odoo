@@ -136,6 +136,14 @@ class ResPartner(models.Model):
                 '/iap/l10n_in_reports/1/public/search',
                 "l10n_in.endpoint"
             )
+            self.env['ir.logging']._l10n_in_log_message(
+                func='action_l10n_in_verify_gstin_status',
+                name=f'{self._name}({self.id})',
+                path='/l10n_in_reports/1/public/search',
+                request=params,
+                response=response,
+                error_found=bool(response.get('error')),
+            )
         except AccessError:
             raise UserError(_("Unable to connect with GST network"))
         if response.get('error') and any(e.get('code') == 'no-credit' for e in response['error']):

@@ -210,6 +210,7 @@ class AccountMove(models.Model):
             url_end_point='generate',
             json_payload=generate_json
         )
+        path = '/l10n_in_edi/1/generate'
         if error := response.get('error', {}):
             odoobot_id = self.env.ref('base.partner_root').id
             error_codes = [e.get("code") for e in error]
@@ -228,6 +229,7 @@ class AccountMove(models.Model):
                         "doc_date": self.invoice_date and self.invoice_date.strftime("%d/%m/%Y"),
                     }
                 )
+                path = '/l10n_in_edi/1/getirnbydocdetails'
                 mismatch_error = []
                 decoded_response = {}
                 if jwt:
@@ -289,6 +291,14 @@ class AccountMove(models.Model):
                     'messages': [msg],
                     'is_warning': is_warning
                 }
+        self.env['ir.logging']._l10n_in_log_message(
+            func='_l10n_in_edi_send_invoice',
+            name=f'{self._name}({self.id})',
+            path=path,
+            request=generate_json,
+            response=response,
+            error_found=bool(response.get('error')),
+        )
         data = response.get("data", {})
         json_dump = json.dumps(data)
         json_name = "%s_einvoice.json" % (self.name.replace("/", "_"))
@@ -328,6 +338,14 @@ class AccountMove(models.Model):
             "CnlRem": self.l10n_in_edi_cancel_remarks,
         }
         response = self._l10n_in_edi_connect_to_server(url_end_point='cancel', json_payload=cancel_json)
+        self.env['ir.logging']._l10n_in_log_message(
+            func='l10n_in_edi_cancel_invoice',
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi/1/cancel',
+            request=cancel_json,
+            response=response,
+            error_found=bool(response.get('error')),
+        )
         # Creating a lambda function so it fetches the odoobot id only when needed
         _get_odoobot_id = (
             lambda self: self.env.ref('base.partner_root').id
@@ -371,6 +389,7 @@ class AccountMove(models.Model):
                     'res_id': self.id,
                     'mimetype': 'application/json',
                 })
+
             self.message_post(author_id=_get_odoobot_id(self), body=_(
                 "E-Invoice has been cancelled successfully. "
                 "Cancellation Reason: %(reason)s and Cancellation Remark: %(remark)s",
@@ -767,3 +786,17 @@ class AccountMove(models.Model):
             else:
                 return authenticate_response
         return response
+
+    def action_view_l10n_in_edi_logs(self):
+        log = f'{self._name}({self.id})'
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'E-Invoice Logs',
+            'res_model': 'ir.logging',
+            'view_mode': 'list,form',
+            'domain': [
+                ('name', '=', log),
+            ],
+            'target': 'current',
+        }

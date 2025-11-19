@@ -153,4 +153,12 @@ class L10nInEwaybill(models.Model):
                 })
             if response.get('error'):
                 raise EWayBillError(response)
+        self.env['ir.logging']._l10n_in_log_message(
+            func='_ewaybill_generate_by_irn',
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi/1/get_ewaybill_by_irn',
+            request=json_payload,
+            response=response,
+            error_found=bool(response.get('error')),
+        )
         return response
