@@ -97,7 +97,7 @@
                         <td t-if="groupNameCellColspan > 0" t-att-colspan="groupNameCellColspan">
                             <button
                                 t-if="props.list.isGrouped and canCreateGroup and !state.showGroupInput"
-                                class="btn btn-link o_list_group_add"
+                                class="btn btn-link o_list_group_add d-print-none"
                                 t-on-click.stop.prevent="() => this.state.showGroupInput = true"
                             >
                                 Add a <t t-out="this.props.list.groupByField.string"/>
@@ -141,7 +141,7 @@
             <t t-foreach="list.records" t-as="record" t-key="record.id">
                 <t t-call="{{ constructor.recordRowTemplate }}"/>
             </t>
-            <tr t-if="displayRowCreates">
+            <tr t-if="displayRowCreates" class="d-print-none">
                 <td t-if="withHandleColumn"/>
                 <td t-att-colspan="withHandleColumn ? nbCols - 1 : nbCols"
                     class="o_field_x2many_list_row_add"
