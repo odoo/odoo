@@ -206,11 +206,15 @@ class Cart(PaymentPortal):
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
 
+        positive_added_qty_per_line = {
+            line_id: qty for line_id, qty in added_qty_per_line.items() if qty > 0
+        }
+
         return {
             'cart_quantity': order_sudo.cart_quantity,
             'notification_info': {
                 **self._get_cart_notification_information(
-                    order_sudo, added_qty_per_line
+                    order_sudo, positive_added_qty_per_line
                 ),
                 'warning': warning,
             },
