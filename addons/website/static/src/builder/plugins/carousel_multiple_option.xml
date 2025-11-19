@@ -30,6 +30,9 @@
                 <BuilderRange action="'setClassRange'" actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5']" max="5"/>
             </BuilderRow>
         </BuilderContext>
+        <BuilderRow label.translate="Infinite Sliding">
+            <BuilderCheckbox dataAttributeAction="'infiniteSliding'" dataAttributeActionValue="'true'" preview="false"/>
+        </BuilderRow>
     </xpath>
     <xpath expr="//BuilderRow[@label.translate=&quot;Transition&quot;]" position="replace"/>
     <xpath expr="//BuilderRow[@label.translate=&quot;Autoplay&quot;]" position="attributes">

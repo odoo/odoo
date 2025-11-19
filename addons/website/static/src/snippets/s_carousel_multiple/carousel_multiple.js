@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { CarouselSlider } from "@website/interactions/carousel/carousel_slider";
 
 export class CarouselMultiple extends CarouselSlider {
-    static selector = ".s_carousel_multiple";
+    static selector = ".s_carousel_multiple:not([data-infinite-sliding='true'])";
 
     dynamicContent = {
         _window: { "t-on-resize": this.debounced(this.onResize, 100) },

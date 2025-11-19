@@ -2,7 +2,7 @@ import { getCarouselCenteringIndex } from "@website/utils/misc";
 import { CarouselMultiple } from "./carousel_multiple";
 import { registry } from "@web/core/registry";
 
-const CarouselMultipleEdit = (I) =>
+export const CarouselMultipleEdit = (I) =>
     class extends I {
         dynamicContent = {
             ...this.dynamicContent,

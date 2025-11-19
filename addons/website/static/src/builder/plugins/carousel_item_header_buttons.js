@@ -27,7 +27,7 @@ export class CarouselItemHeaderMiddleButtons extends Component {
         const isMultipleCarousel = carouselEl.classList.contains("s_carousel_multiple");
         let nextTargetElement;
         if (isMultipleCarousel) {
-            const slideEls = carouselEl.querySelectorAll(".carousel-item");
+            const slideEls = carouselEl.querySelectorAll(".carousel-item:not(.carousel-item_copy)");
             const currentIndex = Array.from(slideEls).indexOf(currentEl);
             let newIndex;
             if (direction === "next") {

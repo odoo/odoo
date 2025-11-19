@@ -153,7 +153,11 @@ export class CarouselOptionPlugin extends Plugin {
     }
 
     getTitleExtraInfo(editingElement) {
-        const itemEls = [...editingElement.parentElement.children];
+        const itemEls = [
+            ...editingElement.parentElement.querySelectorAll(
+                "* > .carousel-item:not(.carousel-item_copy)"
+            ),
+        ];
         const activeIndex = itemEls.indexOf(editingElement);
         // Updates the slide counter.
         const updatedText = ` (${activeIndex + 1}/${itemEls.length})`;
