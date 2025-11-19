@@ -1587,7 +1587,7 @@ We can redirect you to the public employee list."""
             self.version_id.write(version_vals)
 
             for employee in self:
-                employee._track_set_log_message(Markup("<b>%s</b>") % self.env._("Modified on the Employee Record '%s'") % employee.version_id.display_name)
+                employee._track_set_log_message(Markup("<b>%s</b>") % self.env._("As of %s") % employee.version_id.display_name)
         if res and 'resource_calendar_id' in vals:
             resources_per_calendar_id = defaultdict(lambda: self.env['resource.resource'])
             for employee in self:
