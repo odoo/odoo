@@ -349,7 +349,7 @@
             <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
             <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
-                <small class="o_line_clamp" t-field="channel.description_short"/>
+                <div class="o_line_clamp small" t-field="channel.description_short"/>
                 <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
