@@ -287,6 +287,8 @@ pdfjs-editor-ink-opacity-input = Boullder
 pdfjs-editor-stamp-add-image-button =
     .title = Ouzhpennañ ur skeudenn
 pdfjs-editor-stamp-add-image-button-label = Ouzhpennañ ur skeudenn
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Tevded
 pdfjs-free-text =
     .aria-label = Aozer testennoù
 pdfjs-ink =
@@ -306,7 +308,33 @@ pdfjs-editor-alt-text-save-button = Enrollañ
 
 ## Color picker
 
+pdfjs-editor-colorpicker-button =
+    .title = Cheñch liv
+pdfjs-editor-colorpicker-yellow =
+    .title = Melen
+pdfjs-editor-colorpicker-blue =
+    .title = Glas
+pdfjs-editor-colorpicker-pink =
+    .title = Roz
+pdfjs-editor-colorpicker-red =
+    .title = Ruz
 
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
+pdfjs-editor-highlight-show-all-button-label = Diskouez pep tra
+pdfjs-editor-highlight-show-all-button =
+    .title = Diskouez pep tra
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Gouzout hiroc’h
+pdfjs-editor-new-alt-text-error-close-button = Serriñ
+
+## Image alt-text settings
+
+pdfjs-editor-alt-text-settings-delete-model-button = Dilemel
+pdfjs-editor-alt-text-settings-download-model-button = Pellgargañ
+pdfjs-editor-alt-text-settings-downloading-model-button = O pellgargañ…
+pdfjs-editor-alt-text-settings-close-button = Serriñ
