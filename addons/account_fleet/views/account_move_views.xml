@@ -11,7 +11,7 @@
                     <field name="service_count" widget="statinfo" string="Services"/>
                 </button>
             </xpath>
-            <xpath expr="//field[@name='journal_line_ids']//field[@name='account_id']" position="after">
+            <xpath expr="//field[@name='line_ids']//field[@name='account_id']" position="after">
                 <field name='need_vehicle' column_invisible="True"/>
                 <field name='vehicle_id' column_invisible="parent.move_type not in ('in_invoice', 'in_refund')" required="need_vehicle and parent.move_type in ('in_invoice', 'in_refund')" optional='hidden'/>
             </xpath>
