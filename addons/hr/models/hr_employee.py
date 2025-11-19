@@ -9,6 +9,7 @@ from datetime import datetime, time, timedelta, date
 from random import choice
 from string import digits
 from dateutil.relativedelta import relativedelta
+from dateutil.rrule import DAILY, rrule
 from markupsafe import Markup
 
 from odoo import api, fields, models, _, tools
@@ -476,40 +477,47 @@ class HrEmployee(models.Model):
             ('other', self.env._('Other')),
         ]
 
-    def _get_first_versions(self):
-        self.ensure_one()
-        versions = self.version_ids
-        if self.env.context.get('before_date'):
-            versions = versions.filtered(lambda c: c.date_start <= self.env.context['before_date'])
-        return versions
+    def _get_first_occupation_date(self, allowed_gap_size=0, versions_domain=Domain.TRUE):
+        """
+        Determine the first occupation date from an employee's contract versions, considering a maximum
+        allowed gap size between contract dates. This ensures that relevant HR users can fetch and identify
+        the first valid contract start date based on employee data.
 
-    def _get_first_version_date(self, no_gap=True):
+        :param allowed_gap_size: The maximum permitted gap size (days) between consecutive contract
+                                 dates to still consider them as continuous. Should be an integer.
+                                 `None`, will consider all gaps as continuous. Defaults to `0`.
+        :param versions_domain: A domain object used to filter employee contract versions based on
+                                specific conditions. Defaults to `Domain.TRUE`.
+        :return: Returns the earliest contract start date that fulfills the gap and domain criteria,
+                 or `False` if no valid data is found.
+        :rtype: datetime.date or bool
+        """
         self.ensure_one()
         if not self.env.user.has_group("hr.group_hr_user"):
-            raise AccessError(_("Only HR users can access first version date on an employee."))
+            raise AccessError(self.env._("Only HR users can access first version date on an employee."))
 
-        def remove_gap(versions):
-            # We do not consider a gap of more than 4 days to be a same occupation
-            # versions are considered to be ordered correctly
-            if not versions:
-                return self.env['hr.version']
-            if len(versions) == 1:
-                return versions
-            current_version = versions[0]
-            older_versions = versions[1:]
-            current_date = current_version.date_start
-            for i, other_version in enumerate(older_versions):
-                # Consider current_version.date_end being false as an error and cut the loop
-                gap = (current_date - (other_version.date_end or date(2100, 1, 1))).days
-                current_date = other_version.date_start
-                if gap >= 4:
-                    return older_versions[0:i] + current_version
-            return older_versions + current_version
-
-        versions = self._get_first_versions().sorted('date_start', reverse=True)
-        if no_gap:
-            versions = remove_gap(versions)
-        return min(versions.mapped('date_start')) if versions else False
+        versions_domain &= Domain("contract_date_start", "!=", False)
+        versions = self.version_ids.filtered_domain(versions_domain).sorted('contract_date_start', reverse=True)
+        if not versions:
+            return False
+        if len(versions) == 1:
+            return versions.contract_date_start
+        temp_contract_start_date = versions[0].contract_date_start
+        if allowed_gap_size >= 0:
+            for (contract_date_start, contract_date_end), contract_versions in versions.grouped(lambda v: (v.contract_date_start, v.contract_date_end)).items():
+                if contract_date_start == temp_contract_start_date:
+                    continue
+                if (temp_contract_start_date - contract_date_end + timedelta(days=allowed_gap_size)).days < 7:
+                    week_offset = list(rrule(DAILY, contract_date_end + timedelta(days=allowed_gap_size + 1), until=temp_contract_start_date + timedelta(days=-1)))
+                    should_work = True
+                    if contract_versions[0].resource_calendar_id:
+                        should_work = sum(contract_versions[0].resource_calendar_id._works_on_date(day) for day in week_offset)
+                    if should_work:
+                        return temp_contract_start_date
+                else:
+                    return temp_contract_start_date
+                temp_contract_start_date = contract_date_start
+        return versions[-1].contract_date_start
 
     @api.depends('name')
     def _compute_legal_name(self):
