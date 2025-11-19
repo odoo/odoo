@@ -46,30 +46,12 @@ export class AnchorSlide extends Interaction {
         hash = "#" + CSS.escape(hash.substring(1));
         const anchorEl = this.el.ownerDocument.querySelector(hash);
         const scrollValue = anchorEl?.dataset.anchor;
-        if (!anchorEl || !scrollValue) {
+        // No need to scroll when target is _blank as it should open a new tab
+        if (!anchorEl || !scrollValue || this.el.target === "_blank") {
             return;
         }
 
-        const offcanvasEl = this.el.closest(".offcanvas.o_navbar_mobile");
-        if (offcanvasEl && offcanvasEl.classList.contains("show")) {
-            // Special case for anchors in offcanvas in mobile: we can't just
-            // scrollTo() after preventDefault because preventDefault would
-            // prevent the offcanvas to be closed. The choice is then to close
-            // it ourselves manually and once it's fully closed, then start our
-            // own smooth scrolling.
-            ev.preventDefault();
-            Offcanvas.getInstance(offcanvasEl).hide();
-            this.addListener(
-                offcanvasEl,
-                "hidden.bs.offcanvas",
-                () => this.manageScroll(hash, anchorEl, scrollValue),
-                // the listener must be automatically removed when invoked
-                { once: true }
-            );
-        } else {
-            ev.preventDefault();
-            this.manageScroll(hash, anchorEl, scrollValue);
-        }
+        this.manageScroll(hash, anchorEl, scrollValue);
     }
 
     /**
