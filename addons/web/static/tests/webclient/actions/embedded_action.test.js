@@ -14,9 +14,10 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { mockTouch, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/browser/router";
+import { rpcBus } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -104,7 +105,7 @@ class Pony extends models.Model {
 
 defineModels([Partner, Pony, ResCompany, ResPartner, ResUsers]);
 
-defineActions([
+const actions = [
     {
         id: 1,
         xml_id: "action_1",
@@ -173,7 +174,9 @@ defineActions([
         parent_action_id: 4,
         action_id: 4,
     },
-]);
+];
+
+defineActions(actions);
 
 test("can display embedded actions linked to the current action", async () => {
     await mountWithCleanup(WebClient);
@@ -520,5 +523,52 @@ test("custom embedded action loaded first", async () => {
     );
     expect(".o_last_breadcrumb_item > span").toHaveText("Ponies", {
         message: "'Favorite Ponies' view should be loaded",
+    });
+});
+
+test("an action containing embedded actions should reload if the page is refreshed", async () => {
+    onRpc("create", ({ args }) => {
+        const values = args[0][0];
+        expect(values.name).toBe("Custom Partners Action 1");
+        expect(values.action_id).toBe(1);
+        // Add the created embedded action to the actions list so that the mock server knows it when reloading (/web/action/load)
+        defineActions([
+            ...actions,
+            {
+                id: 4,
+                name: "Custom Partners Action 1",
+                parent_res_model: values.parent_res_model,
+                type: "ir.embedded.actions",
+                parent_action_id: 1,
+                action_id: values.action_id,
+            },
+        ]);
+        return [4, values.name]; // Fake new embedded action id
+    });
+    onRpc(
+        "create_filter",
+        () => [5] // Fake new filter id
+    );
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    // First, we create a new (custom) embedded action based on the current one
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_embedded_actions .dropdown").click();
+    await contains(".o_save_current_view ").click();
+    await contains(".o_save_favorite ").click();
+    expect(".o_embedded_actions > button").toHaveCount(3, {
+        message: "Should have 2 embedded actions in the embedded + the dropdown button",
+    });
+
+    // Emulate a hard refresh of the page
+    rpcBus.trigger("CLEAR-CACHES", "/web/action/load");
+    routerBus.trigger("ROUTE_CHANGE");
+    await animationFrame();
+
+    // Check that the created embedded action is still there, as the reload should be done
+    expect(".o_embedded_actions > button").toHaveCount(3, {
+        message:
+            "After refresh, we should still have 2 embedded actions in the embedded + the dropdown button",
     });
 });
