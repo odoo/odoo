@@ -354,7 +354,7 @@ function info(msg) {
 }
 function warn(msg) {
   if (verbosity >= VerbosityLevel.WARNINGS) {
-    console.warn(`Warning: ${msg}`);
+    console.log(`Warning: ${msg}`);
   }
 }
 function unreachable(msg) {
@@ -500,13 +500,9 @@ function isLittleEndian() {
   const view32 = new Uint32Array(buffer8.buffer, 0, 1);
   return view32[0] === 1;
 }
+// Odoo: don't support scripting
 function isEvalSupported() {
-  try {
-    new Function("");
-    return true;
-  } catch {
-    return false;
-  }
+  return false;
 }
 class util_FeatureTest {
   static get isLittleEndian() {
@@ -15152,7 +15148,7 @@ class PDFWorker {
   static {
     if (isNodeJS) {
       this.#isWorkerDisabled = true;
-      GlobalWorkerOptions.workerSrc ||= "./pdf.worker.mjs";
+      GlobalWorkerOptions.workerSrc ||= "./pdf.worker.js";
     }
     this._isSameOrigin = (baseUrl, otherUrl) => {
       const base = URL.parse(baseUrl);
