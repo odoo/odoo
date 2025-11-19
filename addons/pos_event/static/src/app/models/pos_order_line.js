@@ -10,7 +10,7 @@ patch(PosOrderline.prototype, {
             super.can_be_merged_with(...arguments)
         );
     },
-    set_quantity(quantity, keep_price) {
+    set_quantity(quantity, keep_price, qty_by_price) {
         if (this.event_ticket_id && quantity !== "") {
             return {
                 title: _t("Ticket error"),
@@ -22,6 +22,6 @@ patch(PosOrderline.prototype, {
             }
         }
 
-        return super.set_quantity(quantity, keep_price);
+        return super.set_quantity(quantity, keep_price, qty_by_price);
     },
 });
