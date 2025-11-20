@@ -1,3 +1,5 @@
+from markupsafe import Markup
+
 from odoo import api, models
 from odoo.addons.iap import jsonrpc
 
@@ -28,3 +30,14 @@ class IapAccount(models.Model):
         endpoint = IrConfigParam.get_str(config_parameter) or default_endpoint
         url = "%s%s" % (endpoint, url_path)
         return jsonrpc(url, params=params, timeout=timeout)
+
+    @api.model
+    def _l10n_in_edi_get_iap_buy_credits_message(self):
+        _ = self.env._
+        url = self.get_credits_url(service_name=IAP_SERVICE_NAME)
+        return Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
+            _("You have insufficient credits to send this document!"),
+            _("Please buy more credits and retry: "),
+            url,
+            _("Buy Credits"),
+        )

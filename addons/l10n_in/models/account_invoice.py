@@ -4,15 +4,12 @@ import json
 import re
 
 from contextlib import contextmanager
-from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
-from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
 from odoo.tools import float_compare, SQL
 from odoo.tools.date_utils import get_month
-from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 
 EDI_CANCEL_REASON = {
     # Same for both e-way bill and IRN
@@ -636,49 +633,6 @@ class AccountMove(models.Model):
             "buyer_details": self.partner_id,
             "ship_to_details": self.partner_shipping_id or self.partner_id
         }
-
-    @api.model
-    def _l10n_in_extract_digits(self, string):
-        if not string:
-            return ""
-        matches = re.findall(r"\d+", string)
-        return "".join(matches)
-
-    @api.model
-    def _l10n_in_is_service_hsn(self, hsn_code):
-        return self._l10n_in_extract_digits(hsn_code).startswith('99')
-
-    @api.model
-    def _l10n_in_round_value(self, amount, precision_digits=2):
-        """
-            This method is call for rounding.
-            If anything is wrong with rounding then we quick fix in method
-        """
-        return json_float_round(amount, precision_digits)
-
-    @api.model
-    def _get_l10n_in_tax_details_by_line_code(self, tax_details):
-        l10n_in_tax_details = {}
-        for tax_detail in tax_details.values():
-            if tax_detail["tax"].l10n_in_reverse_charge:
-                l10n_in_tax_details.setdefault("is_reverse_charge", True)
-            line_code = tax_detail["line_code"]
-            l10n_in_tax_details.setdefault("%s_rate" % (line_code), tax_detail["tax"].amount)
-            l10n_in_tax_details.setdefault("%s_amount" % (line_code), 0.00)
-            l10n_in_tax_details.setdefault("%s_amount_currency" % (line_code), 0.00)
-            l10n_in_tax_details["%s_amount" % (line_code)] += tax_detail["tax_amount"]
-            l10n_in_tax_details["%s_amount_currency" % (line_code)] += tax_detail["tax_amount_currency"]
-        return l10n_in_tax_details
-
-    @api.model
-    def _l10n_in_edi_get_iap_buy_credits_message(self):
-        url = self.env['iap.account'].get_credits_url(service_name=IAP_SERVICE_NAME)
-        return Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
-            _("You have insufficient credits to send this document!"),
-            _("Please buy more credits and retry: "),
-            url,
-            _("Buy Credits")
-        )
 
     def _get_sync_stack(self, container):
         stack, update_containers = super()._get_sync_stack(container)

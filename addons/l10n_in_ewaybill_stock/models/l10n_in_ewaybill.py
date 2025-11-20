@@ -3,6 +3,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons.l10n_in.utils import l10n_in_extract_digits, l10n_in_round_value
 
 
 class L10nInEwaybill(models.Model):
@@ -146,11 +147,8 @@ class L10nInEwaybill(models.Model):
     def _check_lines(self):
         if self.picking_id:
             error_message = []
-            AccountMove = self.env['account.move']
             for line in self.move_ids:
-                hsn_code = AccountMove._l10n_in_extract_digits(
-                    line.product_id.l10n_in_hsn_code
-                )
+                hsn_code = l10n_in_extract_digits(line.product_id.l10n_in_hsn_code)
                 if not hsn_code:
                     error_message.append(_(
                         "HSN code is not set in product %s",
@@ -217,11 +215,10 @@ class L10nInEwaybill(models.Model):
 
     def _get_l10n_in_ewaybill_line_details(self, line, tax_details):
         if self.picking_id:
-            AccountMove = self.env['account.move']
             product = line.product_id
             line_details = {
                 'productName': product.name[:100],
-                'hsnCode': AccountMove._l10n_in_extract_digits(product.l10n_in_hsn_code),
+                'hsnCode': l10n_in_extract_digits(product.l10n_in_hsn_code),
                 'productDesc': line.description_picking[:100] if line.description_picking else "",
                 'quantity': line.quantity,
                 'qtyUnit': (
@@ -229,22 +226,18 @@ class L10nInEwaybill(models.Model):
                     and line.uom_id.l10n_in_code.split('-')[0]
                     or 'OTH'
                 ),
-                'taxableAmount': AccountMove._l10n_in_round_value(tax_details['total_excluded']),
+                'taxableAmount': l10n_in_round_value(tax_details['total_excluded']),
             }
             gst_types = ('sgst', 'cgst', 'igst')
             gst_tax_rates = {}
             for tax in tax_details.get('taxes'):
                 for gst_type in gst_types:
                     if tax_rate := tax.get(f'{gst_type}_rate'):
-                        gst_tax_rates.update({
-                            f"{gst_type}Rate": AccountMove._l10n_in_round_value(tax_rate)
-                        })
+                        gst_tax_rates.update({f"{gst_type}Rate": l10n_in_round_value(tax_rate)})
                 if cess_rate := tax.get("cess_rate"):
-                    line_details['cessRate'] = AccountMove._l10n_in_round_value(cess_rate)
+                    line_details['cessRate'] = l10n_in_round_value(cess_rate)
                 if cess_non_advol := tax.get("cess_non_advol_amount"):
-                    line_details['cessNonadvol'] = AccountMove._l10n_in_round_value(
-                        cess_non_advol
-                    )
+                    line_details['cessNonadvol'] = l10n_in_round_value(cess_non_advol)
             line_details.update(
                 gst_tax_rates
                 or dict.fromkeys(
@@ -258,7 +251,6 @@ class L10nInEwaybill(models.Model):
     def _prepare_ewaybill_tax_details_json_payload(self):
         if self.picking_id:
             tax_details = self._l10n_in_tax_details_for_stock()
-            round_value = self.env['account.move']._l10n_in_round_value
             return {
                 'itemList': [
                     self._get_l10n_in_ewaybill_line_details(
@@ -266,22 +258,16 @@ class L10nInEwaybill(models.Model):
                     )
                     for line in self.move_ids
                 ],
-                'totalValue': round_value(tax_details['tax_details'].get('total_excluded', 0.00)),
+                'totalValue': l10n_in_round_value(tax_details['tax_details'].get('total_excluded', 0.00)),
                 **{
-                    f'{tax_type}Value': round_value(
+                    f'{tax_type}Value': l10n_in_round_value(
                         tax_details.get('tax_details').get(f'{tax_type}_amount', 0.00)
                     )
                     for tax_type in ['cgst', 'sgst', 'igst', 'cess']
                 },
-                'cessNonAdvolValue': round_value(
-                    tax_details.get('cess_non_advol_amount', 0.00)
-                ),
-                'otherValue': round_value(
-                    tax_details.get('other_amount', 0.00)
-                ),
-                'totInvValue': round_value(
-                    tax_details['tax_details'].get('total_included', 0.00)
-                ),
+                'cessNonAdvolValue': l10n_in_round_value(tax_details.get('cess_non_advol_amount', 0.00)),
+                'otherValue': l10n_in_round_value(tax_details.get('other_amount', 0.00)),
+                'totInvValue': l10n_in_round_value(tax_details['tax_details'].get('total_included', 0.00)),
             }
         return super()._prepare_ewaybill_tax_details_json_payload()
 
