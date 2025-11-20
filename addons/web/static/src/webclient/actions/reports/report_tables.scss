@@ -132,6 +132,16 @@ div#total {
     }
 }
 
+.o_table_boxed table:not(.o_ignore_layout_styling) {
+    thead {
+        text-transform: uppercase;
+
+        th:not(:last-child) {
+            border-right: $border-width solid $gray-700;
+        }
+    }
+}
+
 .o_table_boxed, .o_table_boxed-rounded {
     table:not(.o_ignore_layout_styling) {
         position: relative;
@@ -147,16 +157,8 @@ div#total {
             border: $border-width solid $gray-700;
         }
 
-        thead {
-            text-transform: uppercase;
-
-            th:not(:last-child) {
-                border-right: $border-width solid $gray-700;
-            }
-
-            th {
-                border-bottom: $border-width solid $border-color;
-            }
+        thead th {
+            border-bottom: $border-width solid $border-color;
         }
 
         tbody {
@@ -184,7 +186,7 @@ div#total {
 
     .o_total_table:not(.o_ignore_layout_styling) {
         td {
-            border-right: none;
+            border-right: none !important;
         }
 
         &::before {
