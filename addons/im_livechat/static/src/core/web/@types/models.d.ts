@@ -1,4 +1,7 @@
 declare module "models" {
+    export interface DiscussChannel {
+        shadowedBySelf: number;
+    }
     export interface LivechatChannel {
         join: (param0: { notify: boolean }) => Promise<void>;
         joinTitle: Readonly<string>;

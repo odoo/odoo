@@ -1,5 +1,5 @@
-import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
+import { fields } from "@mail/model/export";
 import { useSequential } from "@mail/utils/common/hooks";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
@@ -151,6 +151,7 @@ const threadPatch = {
             inverse: "threadAsSelf",
         });
         this.scrollUnread = true;
+        // memberBusSubscription
         this.toggleBusSubscription = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
@@ -356,9 +357,6 @@ const threadPatch = {
     /** @override */
     open(options) {
         if (this.model === "discuss.channel") {
-            if (!this.self_member_id) {
-                this.store.env.services["bus_service"].addChannel(this.busChannel);
-            }
             const res = this.channel.openChannel();
             if (res) {
                 return res;
