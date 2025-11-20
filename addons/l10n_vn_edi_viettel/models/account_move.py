@@ -246,8 +246,6 @@ class AccountMove(models.Model):
                 'supplierTaxCode': self.company_id.vat,
                 'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_id.name,
                 'invoiceNo': self.l10n_vn_edi_invoice_number,
-                'strIssueDate': self._l10n_vn_edi_format_date(self.l10n_vn_edi_issue_date),
-                'transactionUuid': self.l10n_vn_edi_invoice_transaction_id,
                 'fileType': file_format,
             },
             cookies={'access_token': access_token},
