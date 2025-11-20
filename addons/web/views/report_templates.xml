@@ -762,6 +762,10 @@
                             background-color: mix(white, <t t-out='secondary'/>, 92%);
                         }
 
+                        table:not(.o_ignore_layout_styling)::before {
+                            border-color: <t t-out='primary'/> !important;
+                        }
+
                         thead th, #total .o_total td {
                             background-color: <t t-out='primary'/>;
                             color: preview-color-contrast(<t t-out='primary'/>);
