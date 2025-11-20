@@ -1,7 +1,6 @@
 import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 
-import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
 
@@ -56,34 +55,5 @@ patch(Thread.prototype, {
             return persona.user_livechat_username;
         }
         return super.getPersonaName(persona);
-    },
-    get displayName() {
-        if (
-            this.channel?.channel_type !== "livechat" ||
-            this.channel?.self_member_id?.custom_channel_name
-        ) {
-            return super.displayName;
-        }
-        const selfMemberType = this.self_member_id?.livechat_member_type;
-        let memberNames = this.correspondents
-            .filter((m) => {
-                if (selfMemberType === "visitor") {
-                    return m.livechat_member_type === "agent";
-                }
-                return m.livechat_member_type === "visitor";
-            })
-            .map((m) => m.name);
-        if (!memberNames.length) {
-            const histories =
-                selfMemberType === "visitor"
-                    ? this.channel.livechat_agent_history_ids
-                    : this.channel.livechat_customer_history_ids;
-            memberNames = histories
-                .map((h) => this.getPersonaName(h.partner_id || h.guest_id))
-                .filter(Boolean);
-        }
-        return memberNames.length
-            ? formatList(memberNames, { style: "standard-narrow" })
-            : super.displayName;
     },
 });
