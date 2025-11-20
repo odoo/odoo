@@ -3,7 +3,6 @@ import { ImgGroup } from "@html_builder/core/img_group";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { getShapeURL } from "../image/image_helpers";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class ShapeSelector extends BaseOptionComponent {
@@ -25,7 +24,6 @@ export class ShapeSelector extends BaseOptionComponent {
         this.tabsRef = useRef("tabs");
         this.state = useState({ activeGroup: "basic" });
         this.onScroll = useThrottleForAnimation(this._onScroll);
-        useHotkey("escape", () => this.props.onClose());
         useAutofocus({ refName: "backButton" });
     }
     getShapeUrl(shapePath) {

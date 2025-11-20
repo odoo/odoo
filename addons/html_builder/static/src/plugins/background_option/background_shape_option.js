@@ -2,10 +2,12 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
+import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 
 export class BackgroundShapeOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundShapeOption";
     static dependencies = ["backgroundShapeOption"];
+    static components = { ShapeSelector };
     setup() {
         super.setup();
         this.backgroundShapePlugin = this.dependencies.backgroundShapeOption;
@@ -14,17 +16,18 @@ export class BackgroundShapeOption extends BaseOptionComponent {
             const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);
             const shapeInfo = this.backgroundShapePlugin.getBackgroundShapes()[shapeData.shape];
             return {
+                hasShape: !!shapeInfo,
                 shapeName: shapeInfo?.selectLabel || _t("None"),
                 isAnimated: shapeInfo?.animated,
+                shapeColorNames: Object.keys(getDefaultColors(editingElement)),
             };
         });
     }
-    showBackgroundShapes() {
-        this.backgroundShapePlugin.showBackgroundShapes(this.env.getEditingElements());
+    getBackgroundShapeGroups() {
+        return this.backgroundShapePlugin.getBackgroundShapeGroups();
     }
-    getDefaultColorNames() {
-        const editingEl = this.env.getEditingElement();
-        return Object.keys(getDefaultColors(editingEl));
+    getShapeStyleUrl(shapeId) {
+        return this.backgroundShapePlugin.getShapeStyleUrl(shapeId);
     }
 }
 

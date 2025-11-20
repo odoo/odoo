@@ -15,17 +15,6 @@
                 className="'ms-auto fa fa-fw fa-camera px-2'"
                 id="'toggle_bg_image_id'"
             />
-            <t t-if="props.withShapes">
-                <BuilderButton
-                    action="'toggleBgShape'"
-                    title.translate="Add a background shape"
-                    titleActive.translate="Remove the background shape"
-                    preview="false"
-                    id="'toggle_bg_shape_id'"
-                    iconImg="'/html_builder/static/img/options/bg_shape.svg'"
-                    className="'px-2'"
-                />
-            </t>
         </t>
     </BuilderRow>
     <t t-if="props.withImages">

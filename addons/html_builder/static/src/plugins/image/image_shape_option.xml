@@ -4,42 +4,64 @@
 <t t-name="html_builder.ImageShapeOption">
     <BuilderRow label.translate="Shape">
         <div class="btn-group o-hb-button-group">
-            <div
-                class="o-hb-btn btn btn-secondary o-dropdown dropdown-toggle dropdown"
-                t-att-class="{'border-end-0 rounded-end-0': state.hasShape}"
-                role="button"
-                tabindex="0"
-                t-on-click="this.showImageShapes"
-                t-out="state.shapeLabel"
-            />
+            <BuilderSlidingPanel
+                t-slot-scope="panel"
+                label.translate="Shape"
+                fullHeight="true"
+                darkBackground="true"
+                textContent="state.shapeLabel">
+                <ShapeSelector
+                    onClose="panel.close"
+                    shapeActionId="'setImageShape'"
+                    buttonWrapperClassName="'o-hb-img-shape-btn'"
+                    selectorTitle.translate="Shapes"
+                    shapeGroups="getFilteredGroups()"
+                />
+            </BuilderSlidingPanel>
             <BuilderButton
+                title.translate="Remove the shape"
                 action="'setImageShape'"
                 actionValue=""
                 preview="false"
                 icon="'oi-close'"
-                className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'"
+                className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'"
                 t-if="state.hasShape"/>
         </div>
     </BuilderRow>
+
     <t t-if="this.state.hasShape">
-        <t t-set="enabledTabs" t-value="['solid', 'custom']" />
-        <BuilderRow label.translate="Colors" level="2">
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 0}" t-if="this.state.showImageShape0" enabledTabs="enabledTabs" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 1}" t-if="this.state.showImageShape1" enabledTabs="enabledTabs" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 2}" t-if="this.state.showImageShape2" enabledTabs="enabledTabs" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 3}" t-if="this.state.showImageShape3" enabledTabs="enabledTabs" />
-            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 4}" t-if="this.state.showImageShape4" enabledTabs="enabledTabs" />
+        <BuilderRow label.translate="Colors" level="1">
+            <t t-foreach="this.state.imageShapeColorNames" t-as="colorName" t-key="colorName_index">
+                <BuilderColorPicker
+                    t-if="colorName"
+                    action="'setImgShapeColor'"
+                    actionParam="{index: colorName_index}"
+                    enabledTabs="['solid', 'custom']"
+                />
+            </t>
         </BuilderRow>
 
         <BuilderRow label.translate="Transform" level="1" t-if="this.state.showImageShapeTransform" preview="false">
-            <BuilderButton title.translate="Horizontal mirror" icon="'oi-arrows-h'"
-                action="'flipImageShape'" actionParam="{axis: 'x'}"/>
-            <BuilderButton title.translate="Vertical mirror" icon="'oi-arrows-v'"
-                action="'flipImageShape'" actionParam="{axis: 'y'}"/>
-            <BuilderButton title.translate="Rotate left" icon="'fa-rotate-left'"
-                action="'rotateImageShape'" actionParam="{side: 'left'}" />
-            <BuilderButton title.translate="Rotate right" icon="'fa-rotate-right'"
-                action="'rotateImageShape'" actionParam="{side: 'right'}" />
+            <BuilderButton
+                title.translate="Horizontal flip"
+                icon="'oi-arrows-h'"
+                action="'flipImageShape'"
+                actionParam="{axis: 'x'}"/>
+            <BuilderButton
+                title.translate="Vertical flip"
+                icon="'oi-arrows-v'"
+                action="'flipImageShape'"
+                actionParam="{axis: 'y'}"/>
+            <BuilderButton
+                title.translate="Rotate left"
+                icon="'fa-rotate-left'"
+                action="'rotateImageShape'"
+                actionParam="{side: 'left'}"/>
+            <BuilderButton
+                title.translate="Rotate right"
+                icon="'fa-rotate-right'"
+                action="'rotateImageShape'"
+                actionParam="{side: 'right'}"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Speed" level="1" t-if="this.state.showImageShapeAnimation" preview="false">

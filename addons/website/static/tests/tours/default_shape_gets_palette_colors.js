@@ -1,8 +1,8 @@
 import {
-    changeOption,
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
+    changeBackgroundShape,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -21,7 +21,7 @@ registerWebsitePreviewTour(
             id: "s_text_image",
             name: "Text - Image",
         }),
-        changeOption("Text - Image", "toggleBgShape"),
+        ...changeBackgroundShape(),
         {
             content: "Check that shape does not have a background-image in its inline style",
             trigger: ":iframe #wrap .s_text_image .o_we_shape",
