@@ -201,3 +201,82 @@ export function addLoadingEffect(btnEl) {
         loaderEl.remove();
     };
 }
+
+/**
+ * Collapses the element with a slideup animation.
+ *
+ * @param {HTMLElement} el - element to hide
+ * @param {number} duration - animation duration in ms
+ */
+export function slideUp(el, duration) {
+    el.style.height = el.offsetHeight + "px";
+    el.style.transition = `height ${duration}ms ease, opacity ${duration}ms ease`;
+    el.offsetHeight;
+
+    el.style.overflow = "hidden";
+    el.style.height = "0";
+    el.style.opacity = "0";
+    el.style.paddingTop = "0";
+    el.style.paddingBottom = "0";
+    el.style.marginTop = "0";
+    el.style.marginBottom = "0";
+
+    setTimeout(() => {
+        el.style.display = "none";
+        el.style.removeProperty("height");
+        el.style.removeProperty("opacity");
+        el.style.removeProperty("overflow");
+        el.style.removeProperty("transition");
+        el.style.removeProperty("paddingTop");
+        el.style.removeProperty("paddingBottom");
+        el.style.removeProperty("marginTop");
+        el.style.removeProperty("marginBottom");
+    }, duration);
+}
+
+/**
+ * Expands the element with a slidedown animation.
+ *
+ * @param {HTMLElement} el - element to show
+ * @param {number} duration - animation duration in ms
+ */
+export function slideDown(el, duration) {
+    el.style.removeProperty("display");
+    let display = window.getComputedStyle(el).display;
+    if (display === "none") {
+        display = "block";
+    }
+    el.style.display = display;
+
+    const height = el.scrollHeight;
+    el.style.height = "0";
+    el.style.opacity = "0";
+    el.style.overflow = "hidden";
+    el.offsetHeight;
+
+    el.style.transition = `height ${duration}ms ease, opacity ${duration}ms ease`;
+    el.style.height = height + "px";
+    el.style.opacity = "1";
+
+    setTimeout(() => {
+        el.style.removeProperty("height");
+        el.style.removeProperty("opacity");
+        el.style.removeProperty("overflow");
+        el.style.removeProperty("transition");
+    }, duration);
+}
+
+/**
+ * Toggles the sliding animation depending on the element visibility.
+ *
+ * @param {HTMLElement} el - element to show or hide
+ * @param {number} duration - animation duration in ms
+ */
+export function slideToggle(el, duration) {
+    const isHidden = window.getComputedStyle(el).display === "none";
+    if (isHidden) {
+        this.slideDown(el, duration);
+    } else {
+        this.slideUp(el, duration);
+    }
+}
