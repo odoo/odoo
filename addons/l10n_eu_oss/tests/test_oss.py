@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import Command
+from odoo.exceptions import RedirectWarning
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_eu_oss.models.eu_tag_map import EU_TAG_MAP
 from odoo.tests import tagged
@@ -198,3 +199,17 @@ class TestOSSMap(AccountTestInvoicingCommon):
                 with self.subTest(chart_template=chart_template, tax_report_line_xml_id=tax_report_line_xml_id):
                     tag = self.env.ref(tax_report_line_xml_id, raise_if_not_found=False)
                     self.assertIsNotNone(tag, f"The following xml_id is incorrect in EU_TAG_MAP.py: {tax_report_line_xml_id}")
+
+    def test_oss_missing_account_in_tax_groups(self):
+        """ Checks that a warning is thrown in case of missing payable
+        and receivable accounts from all company's tax groups instead
+        of traceback error.
+        """
+        company = self.company_data['company']
+        TaxGroup = self.env['account.tax.group']
+        for tax_group in TaxGroup.search(TaxGroup._check_company_domain(company)):
+            tax_group.tax_payable_account_id = False
+            tax_group.tax_receivable_account_id = False
+
+        with self.assertRaises(RedirectWarning):
+            company._map_eu_taxes()
