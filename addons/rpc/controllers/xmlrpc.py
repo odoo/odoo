@@ -7,10 +7,13 @@ from datetime import date, datetime
 from types import MappingProxyType
 
 from markupsafe import Markup
+from werkzeug.exceptions import NotFound
 
 import odoo.exceptions
-from odoo.fields import Command, Domain, Date, Datetime
+from odoo import SUPERUSER_ID, api
+from odoo.fields import Command, Date, Datetime, Domain
 from odoo.http import Controller, Response, dispatch_rpc, request, route
+from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
 from . import RPC_DEPRECATION_NOTICE, _check_request
@@ -132,6 +135,12 @@ class XMLRPC(Controller):
         """Common method to handle an XML-RPC request."""
         data = request.httprequest.get_data()
         params, method = xmlrpc.client.loads(data, use_datetime=True)
+        if service == 'object' or (service == 'common' and method in ('login', 'authenticate')):
+            with Registry(params[0]).cursor(readonly=True) as cr:
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                if not env['ir.config_parameter'].get_bool('rpc.use_deprecated_services'):
+                    raise request.not_found()
+        logger.warning(RPC_DEPRECATION_NOTICE, __name__)
         result = dispatch_rpc(service, method, params)
         return dumps((result,))
 
@@ -142,7 +151,6 @@ class XMLRPC(Controller):
         This entrypoint is historical and non-compliant, but kept for
         backwards-compatibility.
         """
-        logger.warning(RPC_DEPRECATION_NOTICE, __name__)
         _check_request()
         try:
             response = self._xmlrpc(service)
@@ -157,10 +165,11 @@ class XMLRPC(Controller):
     @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
-        logger.warning(RPC_DEPRECATION_NOTICE, __name__)
         _check_request()
         try:
             response = self._xmlrpc(service)
+        except NotFound:
+            raise
         except Exception as error:
             error.error_response = Response(
                 response=xmlrpc_handle_exception_int(error),
