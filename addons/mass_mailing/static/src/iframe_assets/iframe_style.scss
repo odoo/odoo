@@ -52,6 +52,19 @@ html:has(.o_layout, .o_basic_theme) {
     }
 }
 
+:host(.o_mail_favorite_preview) {
+    .o_layout.o_basic_theme {
+        padding: 16px;
+    }
+    .o_layout .o_mail_wrapper {
+        max-width: unset;
+    }
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 html:has(.o_layout) {
     .editor_enable .o_mail_wrapper_td.oe_empty:empty {
         &:not(:focus) {

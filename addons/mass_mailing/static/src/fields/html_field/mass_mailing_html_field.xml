@@ -1,7 +1,7 @@
 <templates>
     <t t-name="mass_mailing.HtmlField">
         <t t-if="state.showThemeSelector">
-            <ThemeSelector config="this.getThemeSelectorConfig()"/>
+            <ThemeSelectorIframe config="this.getThemeSelectorConfig()"/>
         </t>
         <t t-if="state.showCodeView">
             <div class="d-flex">

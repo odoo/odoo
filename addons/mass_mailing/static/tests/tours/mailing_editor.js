@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: "click",
 }, {
     content: 'choose the theme "empty" to edit the mailing with snippets',
-    trigger: '[name="body_arch"] .o_mailing_template_preview_wrapper [data-name="empty"]',
+    trigger: '[name="body_arch"] :iframe .o_mailing_template_preview_wrapper [data-name="empty"]',
     run: "click",
 }, {
     content: 'wait for the editor to be rendered',

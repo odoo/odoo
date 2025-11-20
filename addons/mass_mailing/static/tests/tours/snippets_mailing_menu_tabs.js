@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     },
     {
         content: "Click on the 'Start From Scratch' template.",
-        trigger: '.o_mailing_template_preview_wrapper [data-name="empty"]',
+        trigger: ':iframe .o_mailing_template_preview_wrapper [data-name="empty"]',
         run: "click",
     },
     {

@@ -21,11 +21,11 @@ registry.category("web_tour.tours").add('mass_mailing_dynamic_placeholder_tour',
             run: "edit Test Dynamic Placeholder",
         },
         {
-            trigger: ".o_mailing_template_preview_wrapper",
+            trigger: ":iframe .o_mailing_template_preview_wrapper",
         },
         {
             content: "Pick the basic theme",
-            trigger: '.o_mailing_template_preview_wrapper [data-name="basic"]',
+            trigger: ':iframe .o_mailing_template_preview_wrapper [data-name="basic"]',
             run: "click",
         },
          {
