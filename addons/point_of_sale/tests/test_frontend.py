@@ -2302,6 +2302,11 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_orderline_merge_with_higher_price_precision', login="pos_user")
 
+    def test_receipt_screen_edit_payment_lines(self):
+        """ Test that adding a new payment line doesn't duplicate it on the receipt """
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_receipt_screen_edit_payment_lines', login="pos_admin")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
