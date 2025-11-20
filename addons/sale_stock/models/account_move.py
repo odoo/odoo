@@ -87,7 +87,7 @@ class AccountMove(models.Model):
                 'lot_name': lot.name,
                 # The lot id is needed by localizations to inherit the method and add custom fields on the invoice's report.
                 'lot_id': lot.id,
-            })
+            } | self._extract_extra_invoiced_lot_values(lot))
 
         return res
 

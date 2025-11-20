@@ -55,7 +55,7 @@ class AccountMove(models.Model):
                             'uom_name': line.product_uom_id.name,
                             'lot_name': lot.lot_name,
                             'pos_lot_id': lot.id,
-                        })
+                        } | self._extract_extra_invoiced_lot_values(lot))
 
         return lot_values
 
