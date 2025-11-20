@@ -1,7 +1,6 @@
 import asyncio
 import json
 import logging
-import pprint
 from threading import Thread
 import time
 from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
@@ -56,14 +55,16 @@ class WebRtcClient(Thread):
                 # Handle regular message
                 message = json.loads(message_str)
                 message_type = message["message_type"]
-                _logger.info("Received message of type %s:\n%s", message_type, pprint.pformat(message))
+                _logger.info("Received message of type %s", message_type)
                 if message_type == "iot_action":
                     device_identifier = message["device_identifier"]
                     data = message["data"]
                     data["session_id"] = message["session_id"]
                     if device_identifier in main.iot_devices:
-                        _logger.info("device '%s' action started with: %s", device_identifier, pprint.pformat(data))
+                        start_operation_time = time.perf_counter()
+                        _logger.info("device '%s' action started", device_identifier)
                         await self.event_loop.run_in_executor(None, lambda: main.iot_devices[device_identifier].action(data))
+                        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
                     else:
                         # Notify that the device is not connected
                         self.send({
