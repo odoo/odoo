@@ -185,6 +185,11 @@ class MailMessage(models.Model):
         groups="base.group_system",
         help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
+    tracking_value_formatted = fields.Text(
+        string="Description",
+        compute="_compute_tracking_value_formatted",
+        search="_search_tracking_value_formatted",
+    )
     # mail gateway
     reply_to_force_new = fields.Boolean(
         'No threading for answers',
@@ -307,11 +312,50 @@ class MailMessage(models.Model):
         for message in self:
             message.starred = message in starred
 
+    @api.depends('tracking_value_ids')
+    def _compute_tracking_value_formatted(self):
+        tracking_messages = self.filtered(lambda m: m.message_type == 'notification')
+        (self - tracking_messages).tracking_value_formatted = False
+        for message in tracking_messages:
+            title = message.subject or message.preview
+            tracking_value_ids = message.sudo().tracking_value_ids._filter_has_field_access(self.env)
+            if not title and message.subtype_id and not message.subtype_id.internal:
+                title = message.subtype_id.display_name
+            format_value = title + '\n' if title else ''
+            format_value += "\n".join(
+                "%(old_value)s ⇨ %(new_value)s (%(field)s)" % {
+                    'old_value': fmt_vals['oldValue'],
+                    'new_value': fmt_vals['newValue'],
+                    'field': fmt_vals['fieldInfo']['changedField'],
+                }
+                for fmt_vals in tracking_value_ids._tracking_value_format()
+            )
+            message.tracking_value_formatted = format_value
+
     @api.model
     def _search_starred(self, operator, operand):
         if operator != 'in':
             return NotImplemented
         return [('starred_partner_ids', 'in', self.env.user.partner_id.ids)]
+
+    @api.model
+    def _search_tracking_value_formatted(self, operator, value):
+        if operator not in ['=', 'like', '=like', 'ilike'] or not isinstance(value, str):
+            return NotImplemented
+
+        matched_message_ids = self.env['mail.tracking.value'].sudo().search(
+            Domain.OR([
+                [('old_value_char', operator, value)],
+                [('new_value_char', operator, value)],
+                [('old_value_text', operator, value)],
+                [('new_value_text', operator, value)],
+            ])
+        ).mapped('mail_message_id')
+
+        return Domain.AND([
+            [('message_type', '=', 'notification')],
+            [('id', 'in', matched_message_ids.ids)],
+        ])
 
     # ------------------------------------------------------
     # CRUD / ORM
