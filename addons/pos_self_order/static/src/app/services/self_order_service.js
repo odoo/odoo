@@ -511,6 +511,9 @@ export class SelfOrder extends Reactive {
                     },
                     preset_name: order.preset_id?.name || "",
                     preset_time: order.presetDateTime,
+                    config_name: this.config.name,
+                    table_number: this.currentTable?.table_number,
+                    floating_order_name: order.floating_order_name,
                 };
                 const receipt = renderToElement("pos_self_order.OrderChangeReceipt", {
                     changes: printingChanges,
