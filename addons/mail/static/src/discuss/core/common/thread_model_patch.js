@@ -3,7 +3,6 @@ import { fields } from "@mail/model/export";
 import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { createElementWithContent } from "@web/core/utils/html";
@@ -35,8 +34,6 @@ const threadPatch = {
         this.markReadSequential = useSequential();
         this.markedAsUnread = false;
         this.markingAsRead = false;
-        /** @type {string} name: only for channel. For generic thread, @see display_name */
-        this.name = undefined;
         this.channel_name_member_ids = fields.Many("discuss.channel.member");
         this.scrollUnread = true;
     },
@@ -62,29 +59,6 @@ const threadPatch = {
             return this.channel.channel_type;
         }
         return res;
-    },
-    get displayName() {
-        if (this.supportsCustomChannelName && this.channel?.self_member_id?.custom_channel_name) {
-            return this.channel.self_member_id.custom_channel_name;
-        }
-        if (this.channel?.channel_type === "chat" && this.channel?.correspondent) {
-            return this.channel?.correspondent.name;
-        }
-        if (this.channel_name_member_ids.length && !this.name) {
-            const nameParts = this.channel_name_member_ids
-                .sort((m1, m2) => m1.id - m2.id)
-                .slice(0, 3)
-                .map((member) => member.name);
-            if (this.channel?.member_count > 3) {
-                const remaining = this.channel.member_count - 3;
-                nameParts.push(remaining === 1 ? _t("1 other") : _t("%s others", remaining));
-            }
-            return formatList(nameParts);
-        }
-        if (this.channel && this.name) {
-            return this.name;
-        }
-        return super.displayName;
     },
     /** @override */
     get importantCounter() {

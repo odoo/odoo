@@ -478,10 +478,10 @@ export class Store extends BaseStore {
         validMentions.threads = mentionedChannels.filter((thread) => {
             if (thread.channel?.parent_channel_id) {
                 return body.includes(
-                    `#${thread.channel.parent_channel_id.displayName} > ${thread.displayName}`
+                    `#${thread.channel.parent_channel_id.channel.fullNameWithParent}`
                 );
             }
-            return body.includes(`#${thread.displayName}`);
+            return body.includes(`#${thread.channel?.displayName}`);
         });
         validMentions.partners = mentionedPartners.filter((partner) =>
             body.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)

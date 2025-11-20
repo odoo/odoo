@@ -71,16 +71,6 @@ patch(Thread.prototype, {
         }
         return super.avatarUrl;
     },
-    get displayName() {
-        if (
-            this.channel?.channel_type === "livechat" &&
-            this.isTransient &&
-            this.livechat_operator_id
-        ) {
-            return this.getPersonaName(this.livechat_operator_id);
-        }
-        return super.displayName;
-    },
     get hasWelcomeMessage() {
         return (
             this.channel?.channel_type === "livechat" &&

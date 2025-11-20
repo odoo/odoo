@@ -111,7 +111,7 @@ export class SubChannelList extends Component {
         this.state.subChannels = fuzzyLookup(
             this.state.searchTerm ?? "",
             this.props.thread.channel.sub_channel_ids,
-            (channel) => channel.displayName
+            ({ name }) => name
         );
     }
 }
