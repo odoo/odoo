@@ -952,14 +952,14 @@ class PosSession(models.Model):
                 partners = (order.partner_id | order.partner_id.commercial_partner_id)
                 partners._increase_rank('customer_rank')
 
-        if self.company_id.anglo_saxon_accounting:
+        if self.company_id.inventory_valuation == 'real_time':
             all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
             if all_picking_ids:
                 # Combine stock lines
                 stock_move_sudo = self.env['stock.move'].sudo()
                 stock_moves = stock_move_sudo.search([
                     ('picking_id', 'in', all_picking_ids),
-                    ('company_id.anglo_saxon_accounting', '=', True),
+                    ('company_id.inventory_valuation', '=', 'real_time'),
                     ('product_id.categ_id.property_valuation', '=', 'real_time'),
                     ('product_id.is_storable', '=', True),
                 ])
