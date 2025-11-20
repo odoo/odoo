@@ -1,0 +1,76 @@
+.hb-sliding-panel {
+    background-color: $o-we-bg-darker;
+    z-index: 10;
+
+    .hb-sliding-panel-header {
+        @include o-position-sticky(0px);
+        z-index: 11;
+
+        .hb-sliding-panel-label .btn {
+            font-size: inherit !important;
+            &:focus:not(:hover) {
+                background-color: transparent;
+            }
+        }
+    }
+
+    // Regular
+    &:not(.hb-sliding-panel-dark) {
+        .hb-sliding-panel-content {
+            background-color: $o-we-bg-lighter;
+
+            .hb-sliding-panel-header {
+                background-color: $o-we-bg-light;
+            }
+        }
+    }
+
+    // Dark
+    &.hb-sliding-panel-dark {
+        .hb-sliding-panel-content {
+            background-color: $o-we-bg-darker;
+        }
+    }
+    
+    @keyframes o_hb_sliding_panel_anim_show {
+        from {
+            transform: translate(100%);
+        } 
+    }
+    @keyframes o_hb_sliding_panel_anim_hide {
+        to {
+            transform: translate(100%);
+        } 
+    }
+
+    animation: 0.2s ease-in-out;
+
+    &.hb-panel-slide-in {
+        width: $o-we-sidebar-width;
+        position: absolute;
+        animation-name: o_hb_sliding_panel_anim_show;
+    }
+    &.hb-panel-slide-out {
+        width: $o-we-sidebar-width;
+        position: absolute;
+        animation-name: o_hb_sliding_panel_anim_hide;
+    }
+}
+
+// The .options-container elements are hidden when a .hb-sliding-panel is opened 
+// in order to prevent the user from accessing them with keyboard navigation.
+// It is also required since we only use "position: absolute" while sliding.
+.o_customize_tab:has(.hb-sliding-panel.d-block) {
+    .options-container {
+        display: none;
+    }
+}
+
+// This rule prevent any sidebar from hapening while the panel slide in or out 
+// of view.
+.o_builder_open:has(
+    .hb-sliding-panel.hb-panel-slide-in, 
+    .hb-sliding-panel.hb-panel-slide-out
+) {
+    overflow: hidden;
+}

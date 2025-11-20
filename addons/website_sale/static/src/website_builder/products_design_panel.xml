@@ -187,36 +187,11 @@
         <t t-call="website_sale.ProductsDesignPanelPresets">
             <t t-set="showImages" t-value="false"/>
         </t>
-
-        <button class="btn o-hb-btn btn-primary o-wsale-btn-overlay flex-grow-0" t-on-click="openDesignOverlay">
-            <i class="fa fa-paint-brush" role="presentation"/>
-        </button>
-    </BuilderRow>
-
-    <!-- Design Panel Overlay - Always rendered, visibility controlled by CSS -->
-    <div
-        class="o_wsale_editor_overlay position-absolute top-0 start-0 w-100 h-100"
-        t-att-class="state.overlayVisible ? 'd-block' : 'd-none'"
-        t-on-click="onBackdropClick"
-        tabindex="-1"
-        aria-label="Products Design"
-    >
-        <div class="o_wsale_design_panel pb-3">
-            <div
-                class="options-container-header d-flex align-items-center justify-content-between mb-2"
-            >
-                <div class="options-container-label d-flex flex-grow-1 align-items-center p-2">
-                    <div
-                        class="me-2 opacity-75 opacity-100-hover"
-                        t-on-click="closeDesignOverlay"
-                        aria-label="Close"
-                        role="button">
-                        <i class="oi oi-chevron-left" role="presentation"/>
-                    </div>
-                    <t t-out="props.label"/>
-                </div>
-            </div>
-
+        <BuilderSlidingPanel
+            class="'btn-primary'"
+            label.translate="Design"
+            openByDefault="props.openByDefault"
+        >
             <!-- Presets with images -->
             <BuilderRow
                 label.translate="Preset"
@@ -619,8 +594,8 @@
                     </BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
-        </div>
-    </div>
+        </BuilderSlidingPanel>    
+    </BuilderRow>
 </t>
 
 </templates>
