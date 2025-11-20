@@ -882,6 +882,23 @@ class TestProcRule(TransactionCase):
         self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 4 day(s)', 'In 8 day(s)', 'In 12 day(s)'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
+        late_out_move = self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 15.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'date': datetime.today() - timedelta(days=5),
+        })
+        late_out_move._action_confirm()
+        info._compute_json_replenishment_graph()
+        graph_data = loads(info.json_replenishment_graph)
+        self.assertEqual(graph_data['daily_demand'], 8.57)
+        self.assertEqual(graph_data['average_stock'], 30.0)
+        self.assertEqual(graph_data['ordering_period'], 2.0)
+        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 day(s)', 'In 4 day(s)', 'In 6 day(s)'])
+        self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProcRuleLoad(TransactionCase):
