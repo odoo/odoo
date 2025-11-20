@@ -2,7 +2,7 @@ import {
     changeBackground,
     changeBackgroundColor,
     changeImage,
-    changeOption,
+    changeBackgroundShape,
     changePaddingSize,
     clickOnSnippet,
     clickOnText,
@@ -39,7 +39,7 @@ registerThemeHomepageTour("configurator_tour", () => {
         if (!$(backgroundSelector).is($(shapeSelector))) {
             shapeStep.push(...clickOnSnippet(shapeSelector));
         }
-        shapeStep.push(changeOption("BackgroundShape", "we-toggler", _t("Background Shape")));
+        shapeStep.push(...changeBackgroundShape());
         shapeStep.push(
             selectNested(
                 "we-select-page",

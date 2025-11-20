@@ -1,6 +1,7 @@
 import {
     addMedia,
     changeOption,
+    changeImageShape,
     clickOnSave,
     clickOnSnippet,
     insertSnippet,
@@ -75,8 +76,7 @@ registerWebsitePreviewTour(
         {
             content:
                 "Check that the Snippet Editor of the clicked image has been loaded with its size",
-            trigger:
-                ".o-tab-content [data-container-title='Image']:has([title='Size']:text(.+ kB)",
+            trigger: ".o-tab-content [data-container-title='Image']:has([title='Size']:text(.+ kB)",
         },
         {
             content: "Click on Remove Block",
@@ -233,12 +233,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_image_gallery .carousel-control-next-icon",
             run: "click",
         },
-        changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
-        {
-            content: "Click on the first image shape",
-            trigger: "[data-action-id='setImageShape']",
-            run: "click",
-        },
+        ...changeImageShape(),
         {
             content: "Check that the thumbnail of the second image is an SVG",
             trigger:
