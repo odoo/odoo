@@ -93,6 +93,27 @@ test("show only video 'on'", async () => {
     expect(localStorage.getItem("mail_user_setting_show_only_video")).toBe(null);
 });
 
+test("voice activation threshold", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    localStorage.setItem("mail_user_setting_voice_threshold", "0.3");
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item", { text: "Call Settings" });
+    await contains(".o-discuss-CallSettings");
+    await contains(".o-Discuss-CallSettings-thresholdInput:value(0.3)");
+    const voiceActivationThresholdKey = makeRecordFieldLocalId(
+        Settings.localId(),
+        "voiceActivationThreshold"
+    );
+    expect(localStorage.getItem(voiceActivationThresholdKey)).toBe(toRawValue(0.3));
+    expect(localStorage.getItem("mail_user_setting_voice_threshold")).toBe(null);
+});
+
 test("member default open is 'off'", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
