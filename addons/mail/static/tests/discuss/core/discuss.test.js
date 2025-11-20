@@ -3,14 +3,12 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -52,38 +50,4 @@ test("subscribe to presence channels according to store data", async () => {
     await expect.waitForSteps([
         "subscribe - [odoo-presence-mail.guest_1-token,odoo-presence-res.partner_1,odoo-presence-res.partner_2]",
     ]);
-});
-
-test("bus subscription is refreshed when channel is joined", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
-    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
-    const later = luxon.DateTime.now().plus({ seconds: 2 });
-    mockDate(
-        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
-    );
-    await start();
-    await expect.waitForSteps(["subscribe"]);
-    await openDiscuss();
-    await expect.waitForSteps([]);
-    await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "new channel");
-    await expect.waitForSteps(["subscribe"]);
-});
-
-test("bus subscription is refreshed when channel is left", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
-    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
-    const later = luxon.DateTime.now().plus({ seconds: 2 });
-    mockDate(
-        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
-    );
-    await start();
-    await expect.waitForSteps(["subscribe"]);
-    await openDiscuss();
-    await expect.waitForSteps([]);
-    await click("[title='Channel Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
-    await expect.waitForSteps(["subscribe"]);
 });

@@ -7,7 +7,6 @@ declare module "models" {
         askLeaveConfirmation: (body: string) => Promise<void>;
         autoOpenChatWindowOnNewMessage: Readonly<boolean>;
         inChathubOnNewMessage: Readonly<boolean>;
-        notifyMessageToUser: (message: Message) => Promise<void>;
         setActiveURL: () => void;
         setAsDiscussThread: (pushState: boolean) => void;
         unpin: () => Promise<void>;

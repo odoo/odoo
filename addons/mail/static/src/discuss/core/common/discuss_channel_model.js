@@ -1,11 +1,33 @@
 import { fields, Record } from "@mail/model/export";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
+import { effectWithCleanup } from "@mail/utils/common/misc";
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
     static id = "id";
+
+    static new() {
+        const channel = super.new(...arguments);
+        // Handles subscriptions for non-members. Subscriptions for channels
+        // that the user is a member of are handled by
+        // `ir_websocket@_build_bus_channel_list`.
+        effectWithCleanup({
+            effect(busChannel, busService) {
+                if (busService && busChannel) {
+                    busService.addChannel(busChannel);
+                    return () => busService.deleteChannel(busChannel);
+                }
+            },
+            dependencies: (channel) => [
+                channel.shouldSubscribeToBusChannel && channel.busChannel,
+                channel.store.env.services.bus_service,
+            ],
+            reactiveTargets: [channel],
+        });
+        return channel;
+    }
 
     /**
      * Retrieve an existing channel from the store or fetch it if missing.
@@ -92,6 +114,13 @@ export class DiscussChannel extends Record {
     }
     /** @type {Number|undefined} */
     member_count;
+    get shouldSubscribeToBusChannel() {
+        return Boolean(
+            !this.isTransient &&
+                !this.self_member_id &&
+                (this.isLocallyPinned || this.chatWindow?.isOpen)
+        );
+    }
     get isChatChannel() {
         return this.chatChannelTypes.includes(this.channel?.channel_type);
     }

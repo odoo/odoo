@@ -1,5 +1,6 @@
 import { reactive } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
+import { effect } from "@web/core/utils/reactive";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -221,3 +222,31 @@ export const hasHardwareAcceleration = memoize(() => {
     }
     return true;
 });
+
+/**
+ * Runs a reactive effect whenever the dependencies change. The effect receives
+ * the current values returned by `dependencies`. If the effect returns a
+ * cleanup function, it is run before the next execution.
+ *
+ * @template {object[]} T
+ * @param {Object} options
+ * @param {(…dependencies: any[]) => void | (() => void)} options.effect The
+ *        effect callback. May return a cleanup function.
+ * @param {(…args: [...T]) => any[]} options.dependencies Returns an array of
+ *        values to track. The effect is called only if these values change.
+ * @param {[...T]} options.reactiveTargets Objects that the effect depends on.
+ */
+export function effectWithCleanup({ effect: effectFn, dependencies, reactiveTargets }) {
+    let cleanup;
+    let prevDependencies;
+    effect((...deps) => {
+        const nextDependencies = dependencies(...deps);
+        const changed =
+            !prevDependencies || nextDependencies.some((v, i) => v !== prevDependencies[i]);
+        if (changed) {
+            cleanup?.();
+            cleanup = effectFn(...nextDependencies);
+            prevDependencies = [...nextDependencies];
+        }
+    }, reactiveTargets);
+}

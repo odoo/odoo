@@ -5,6 +5,7 @@ declare module "models" {
 
     export interface DiscussChannel {
         discuss_category_id: DiscussCategory;
+        notifyMessageToUser: (message: Message) => Promise<void>;
     }
     export interface Message {
         linkedSubChannel: Thread;
@@ -24,7 +25,6 @@ declare module "models" {
         displayInSidebar: boolean;
         from_message_id: Message;
         hasSubChannelFeature: Readonly<boolean>;
-        isBusSubscribed: boolean;
         lastSubChannelLoaded: Thread|null;
         loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<Thread[]|undefined>;
         loadSubChannelsDone: boolean;
