@@ -31,6 +31,7 @@
     <record id="tax_tag_purchase_withholding_base_negative" model="account.account.tag">
         <field name="name">-QAPA</field>
         <field name="applicability">taxes</field>
+        <field name="tax_negate">True</field>
         <field name="country_id" ref="base.ph"/>
     </record>
     <record id="tax_tag_purchase_withholding_tax_positive" model="account.account.tag">
@@ -41,6 +42,7 @@
     <record id="tax_tag_purchase_withholding_tax_negative" model="account.account.tag">
         <field name="name">-QAPB</field>
         <field name="applicability">taxes</field>
+        <field name="tax_negate">True</field>
         <field name="country_id" ref="base.ph"/>
     </record>
     <record id="tax_tag_sale_withholding_base_positive" model="account.account.tag">
@@ -51,6 +53,7 @@
     <record id="tax_tag_sale_withholding_base_negative" model="account.account.tag">
         <field name="name">-SAWTA</field>
         <field name="applicability">taxes</field>
+        <field name="tax_negate">True</field>
         <field name="country_id" ref="base.ph"/>
     </record>
     <record id="tax_tag_sale_withholding_tax_positive" model="account.account.tag">
@@ -61,6 +64,7 @@
     <record id="tax_tag_sale_withholding_tax_negative" model="account.account.tag">
         <field name="name">-SAWTB</field>
         <field name="applicability">taxes</field>
+        <field name="tax_negate">True</field>
         <field name="country_id" ref="base.ph"/>
     </record>
 </odoo>
