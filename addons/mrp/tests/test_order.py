@@ -3409,6 +3409,45 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_1.date_start, datetime(2022, 10, 20, 12))
         self.assertTrue(op_2.show_json_popover)
 
+    @freeze_time('2025-10-01 08:00')
+    def test_replan_mo_after_updating_bom(self):
+        """
+        This test ensures that when BoM operation's field `time_cycle_manual` is changed,
+        clicking Update BoM in MO should update MO workorder planning accordingly.
+        """
+
+        self.bom_3.write({'product_uom_id': self.uom_unit.id})
+
+        # Create an MO.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_6
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        # Initial planning:  Gift Wrap Maching is at 8:00 (90 minutes),
+        # then Cutting Machine at 9:30 (90 minutes), then Weld Machine at 11:00.
+        self.assertRecordValues(mo.workorder_ids, [
+            {'date_start': datetime(2025, 10, 1, 8, 0)},
+            {'date_start': datetime(2025, 10, 1, 9, 30)},
+            {'date_start': datetime(2025, 10, 1, 11, 0)},
+        ])
+        # Update BoM: make Cutting Machine operation shorter (20 minutes instead of 90).
+        self.bom_3.operation_ids[0].write({'time_cycle_manual': 20})
+
+        # Update BoM in MO.
+        mo.action_update_bom()
+
+        # New planning: Gift Wrap Maching is at 8:00 (90 minutes),
+        # then Cutting Machine at 9:30 (40 minutes), then Weld Machine at 10:10.
+        self.assertRecordValues(mo.workorder_ids, [
+            {'date_start': datetime(2025, 10, 1, 8, 0)},
+            {'date_start': datetime(2025, 10, 1, 9, 30)},
+            {'date_start': datetime(2025, 10, 1, 10, 10)},
+        ])
+
     @freeze_time('2023-03-01 12:00')
     def test_planning_cancelled_workorder(self):
         """Test when plan start time for workorders, cancelled workorders won't be taken into account.
