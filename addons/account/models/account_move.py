@@ -1063,8 +1063,9 @@ class AccountMove(models.Model):
                     or move.bank_partner_id.property_inbound_payment_method_line_id
                 )
             ) and payment_method.journal_id:
-                move.partner_bank_id = payment_method.journal_id.bank_account_id
-                continue
+                if move.is_inbound():
+                    move.partner_bank_id = payment_method.journal_id.bank_account_id
+                    continue
 
             move.partner_bank_id = move.bank_partner_id.bank_ids.filtered(
                 lambda bank: not bank.company_id or bank.company_id == move.company_id
