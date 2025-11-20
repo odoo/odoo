@@ -24,7 +24,7 @@ class PortalTest(http.Controller):
     def test_portal_rating_record_page(self, res_id, **kwargs):
         record = request.env["mail.test.rating"]._get_thread_with_access(res_id, **kwargs)
         values = {
-            "display_rating": True,
+            "display_rating": kwargs.get("display_rating"),
             "hash": kwargs.get("hash"),
             "object": record,
             "pid": kwargs.get("pid"),
