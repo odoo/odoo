@@ -28,12 +28,12 @@
                     </tr>
                     <tr>
                         <td><p class="m-0" t-esc="sar_rate" t-options='{"widget": "float", "precision": 5}'/></td>
-                        <td><p class="m-0" t-esc="o.amount_untaxed_signed"
+                        <td><p class="m-0" t-esc="o.amount_untaxed"
                             t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
                         <td><p class="m-0"
                             t-esc="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, curr_date)"
                             t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
-                        <td><p class="m-0" t-esc="o.amount_total_signed"
+                        <td><p class="m-0" t-esc="o.amount_total"
                             t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
                     </tr>
                 </table>
