@@ -73,7 +73,7 @@ test("basic rendering", async () => {
 test("mobile UI", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    mockUserAgent("android");
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
@@ -241,7 +241,7 @@ test("switch front/back camera in mobile", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     // Switch camera action is only available for mobiles
-    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    mockUserAgent("android");
     expect(isMobileOS()).toBe(true);
     await start();
     await openDiscuss(channelId);
