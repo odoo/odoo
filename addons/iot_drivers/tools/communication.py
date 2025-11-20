@@ -1,5 +1,4 @@
 import logging
-import pprint
 import time
 
 from odoo.addons.iot_drivers import main
@@ -27,14 +26,18 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
         'time': time.time(),
     }
 
+    _logger.info("Received message of type %s", message_type)
+
     match message_type:
         case 'iot_action':
             if device_identifier not in main.iot_devices:
                 # Notify the controller that the device is not connected
                 _logger.warning("No IoT device with identifier '%s' found", device_identifier)
                 return {**base_response, 'status': 'disconnected'}
-            _logger.info("Received message of type %s:\n%s", message_type, pprint.pformat(kwargs))
+            start_operation_time = time.perf_counter()
+            _logger.info("device '%s' action started", device_identifier)
             main.iot_devices[device_identifier].action(kwargs)
+            _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
         case 'server_clear':
             helpers.disconnect_from_server()
             close_server_log_sender_handler()
