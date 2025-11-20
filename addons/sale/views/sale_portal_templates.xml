@@ -134,7 +134,7 @@
                 <t t-call="portal.portal_record_sidebar" id="sale_order_portal_sidebar">
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
                     <t t-set="title">
-                        <t t-if="sale_order.state in 'draft,sent' and sale_order.prepayment_percent != 1.0">
+                        <t t-if="sale_order._has_to_be_paid() and sale_order.prepayment_percent != 1.0">
                             <h4>Down payment</h4>
                             <h2>
                                 <t
