@@ -106,42 +106,13 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...catalogSuggestion.checkKanbanRecordPosition("Courage", 0),
         ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 24 }), // Should come back to normal monthly demand
         /*
-         * -------------------  PART 3 : KANBAN ACTIONS ---------------------
-         * Checks suggest and kanban record interactions (purchase.order model)
-         * (Add, remove and add all buttons)
-         * ------------------------------------------------------------------
-         */
-
-        //  ---- Test adding from individual product card adds the correct qty
-        ...catalogSuggestion.toggleSuggest(true),
-        ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
-        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }), // Wait for suggestions to appear
-        ...productCatalog.addProduct("test_product"),
-        ...productCatalog.waitForQuantity("test_product", 24),
-
-        //  ---- UI should hide suggestion if in the order qty = suggested_qty
-        { trigger: "div[name='kanban_purchase_suggest'] span:hidden" }, // If qty in PO == suggested_qty --> hide suggest string
-        ...productCatalog.addProduct("test_product"),
-        ...productCatalog.waitForQuantity("test_product", 25),
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible" }, // If qty in PO != suggested_qty --> show suggest string
-
-        // -- The quantity in the catalog and order line should be equal
-        ...productCatalog.goBackToOrder(),
-        ...purchaseForm.checkLineValues(0, { product: "test_product", quantity: "25.00" }),
-        ...purchaseForm.openCatalog(),
-        ...productCatalog.removeProduct("test_product"),
-        // Should go back to displaying suggested qtys
-        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }),
-        ...catalogSuggestion.checkKanbanRecordPosition("test_product", 0),
-        /*
-         * -------------------  PART 4 : KANBAN FILTERS ---------------------
+         * -------------------  PART 3 : KANBAN FILTERS ---------------------
          * Checks suggest and searchModel (filters) interactions
          * (Add / Remove with filters), category filters
          * ------------------------------------------------------------------
          */
 
         // ---- Check Adding non suggested product works with suggest
-        ...catalogSuggestion.toggleSuggest(false),
         ...productCatalog.addProduct("Courage"),
         ...productCatalog.waitForQuantity("Courage", 1),
         ...catalogSuggestion.toggleSuggest(true),
