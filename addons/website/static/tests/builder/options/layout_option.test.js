@@ -67,3 +67,16 @@ test("Adding columns does not introduce extra offset (offset class removed on cl
     await contains("[data-action-id='changeColumnCount'][data-action-value='5']").click();
     expect(":iframe .s_text_block .container > .row > .offset-lg-1").toHaveCount(1);
 });
+
+test("Changing the number of columns (base case)", async () => {
+    await setupWebsiteBuilderWithSnippet("s_kickoff");
+    expect(":iframe .s_kickoff > .container").toHaveClass("s_allow_columns");
+    expect(":iframe .s_kickoff .row > .col-lg-6").toHaveCount(0);
+    await contains(":iframe .s_kickoff").click();
+    await contains("[data-label='Layout'] .dropdown").click();
+    await contains("[data-action-id='changeColumnCount'][data-action-value='2']").click();
+    expect(":iframe .s_kickoff .row > .col-lg-6").toHaveCount(2);
+    await contains("[data-label='Layout'] .dropdown").click();
+    await contains("[data-action-id='changeColumnCount'][data-action-value='3']").click();
+    expect(":iframe .s_kickoff .row > .col-lg-4").toHaveCount(3);
+});
