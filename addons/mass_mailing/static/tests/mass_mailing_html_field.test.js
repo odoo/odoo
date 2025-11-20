@@ -227,7 +227,8 @@ describe("field HTML", () => {
         expect(queryOne(".o_mass_mailing_iframe_wrapper iframe")).toHaveClass("d-none");
         await click(
             waitFor(
-                ".o_mailing_template_preview_wrapper div[role='menuitem']:contains(Start From Scratch)"
+                ":iframe .o_mailing_template_preview_wrapper div[role='menuitem']:contains(Start From Scratch)",
+                { timeout: 1000 }
             )
         );
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
@@ -286,7 +287,7 @@ describe("field HTML", () => {
         });
         await contains(".o_data_cell").click();
         await waitFor(".o_dialog");
-        await contains(".o_dialog [data-name='event']").click();
+        await contains(".o_dialog :iframe [data-name='event']", { timeout: 1000 }).click();
         await waitFor(".o_dialog .o_mass_mailing-builder_sidebar", { timeout: 1000 });
         await contains(".o_dialog :iframe p", { timeout: 1000 }).click();
         await waitFor(
@@ -305,7 +306,7 @@ describe("field HTML", () => {
             resId: 1,
             arch: mailViewArch,
         });
-        await click(waitFor(".o_mailing_template_preview_wrapper [data-name='default']"));
+        await click(waitFor(":iframe .o_mailing_template_preview_wrapper [data-name='default']"));
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
         expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
             "o_default_theme"
@@ -383,7 +384,7 @@ describe("field HTML: with loaded assets", () => {
             resId: 1,
             arch: mailViewArch,
         });
-        await click(waitFor(".o_mailing_template_preview_wrapper [data-name='default']"));
+        await click(waitFor(":iframe .o_mailing_template_preview_wrapper [data-name='default']"));
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
         const { bundleControls } = await htmlField.ensureIframeLoaded();
 

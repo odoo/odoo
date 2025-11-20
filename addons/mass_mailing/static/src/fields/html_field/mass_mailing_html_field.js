@@ -4,7 +4,7 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
-import { ThemeSelector } from "@mass_mailing/themes/theme_selector/theme_selector";
+import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
@@ -21,7 +21,7 @@ export class MassMailingHtmlField extends HtmlField {
         ...HtmlField.components,
         LocalOverlayContainer,
         MassMailingIframe,
-        ThemeSelector,
+        ThemeSelectorIframe,
     };
     static props = {
         ...HtmlField.props,

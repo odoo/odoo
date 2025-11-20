@@ -1,0 +1,16 @@
+<templates>
+    <t t-name="mass_mailing.FavoritePreview">
+        <div class="o_mail_favorite_preview_wrapper mb-2">
+            <div t-ref="shadowRoot" class="o_mail_favorite_preview" inert="inert"/>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.FavoritePreviewBody">
+        <div class="o_favorite_template_preview">
+            <div class="o_mass_mailing_value o_readonly"
+                t-att-class="{'o_rtl': isRTL}">
+                <t t-out="bodyArch"/>
+            </div>
+        </div>
+    </t>
+</templates>

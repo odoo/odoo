@@ -83,11 +83,8 @@
             ('remove', 'web/static/fonts/fonts.scss'),
             'mass_mailing/static/src/builder/**/*',
         ],
-        'mass_mailing.assets_iframe_style': [
-            # minimal style assets required to view the mail content
-            # convert_inline ONLY uses this and inline styles.
-
-            # useful scss from /web web.assets_frontend
+        'mass_mailing.assets_iframe_helpers': [
+            # minimal assets for mass_mailing isolated iframes from web.
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/bootstrap_overridden.scss',
             ('include', 'web._assets_frontend_helpers'),
@@ -95,6 +92,21 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'web._assets_bootstrap_frontend'),
+            ('include', 'web.icons_fonts'),
+            'web/static/src/scss/animation.scss',
+            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/ui.scss',
+        ],
+        'mass_mailing.assets_iframe_theme_selector': [
+            # minimal assets for theme selector iframe
+            ('include', 'mass_mailing.assets_iframe_helpers'),
+            'mass_mailing/static/src/themes/iframe_assets/**/*',
+        ],
+        'mass_mailing.assets_iframe_style': [
+            # minimal style assets required to view the mail content
+            # convert_inline ONLY uses this and inline styles.
+
+            ('include', 'mass_mailing.assets_iframe_helpers'),
 
             # useful scss from /html_editor web.assets_frontend
             # TODO EGGMAIL: could improve load time by splitting scss from JS files
@@ -108,11 +120,6 @@
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
             'html_editor/static/src/scss/bootstrap_overridden.scss',
-
-            ('include', 'web.icons_fonts'),
-            'web/static/src/scss/animation.scss',
-            'web/static/src/scss/mimetypes.scss',
-            'web/static/src/scss/ui.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
@@ -140,7 +147,8 @@
         'web.assets_backend': [
             'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
-            'mass_mailing/static/src/themes/**/*',
+            'mass_mailing/static/src/themes/*',
+            'mass_mailing/static/src/themes/theme_selector/**/*',
             'mass_mailing/static/src/iframe/**/*',
             'mass_mailing/static/src/scss/mailing_filter_widget.scss',
             'mass_mailing/static/src/scss/mass_mailing.scss',
