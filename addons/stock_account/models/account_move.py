@@ -146,13 +146,14 @@ class AccountMove(models.Model):
                     'price_unit': price_unit,
                     'amount_currency': -amount_currency,
                     'account_id': debit_interim_account.id,
+                    'analytic_distribution': False,
                     'display_type': 'cogs',
                     'tax_ids': [],
                     'cogs_origin_id': line.id,
                 })
 
                 # Add expense account line.
-                lines_vals_list.append({
+                expense_line_vals = {
                     'name': line.name[:64] if line.name else '',
                     'move_id': move.id,
                     'partner_id': move.commercial_partner_id.id,
@@ -162,11 +163,13 @@ class AccountMove(models.Model):
                     'price_unit': -price_unit,
                     'amount_currency': amount_currency,
                     'account_id': credit_expense_account.id,
-                    'analytic_distribution': line.analytic_distribution,
                     'display_type': 'cogs',
                     'tax_ids': [],
                     'cogs_origin_id': line.id,
-                })
+                }
+                if line._force_analytic_distribution():
+                    expense_line_vals['analytic_distribution'] = line.analytic_distribution
+                lines_vals_list.append(expense_line_vals)
         return lines_vals_list
 
     def _get_anglo_saxon_price_ctx(self):

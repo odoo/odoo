@@ -73,3 +73,9 @@ class AccountMoveLine(models.Model):
         mapping_from_invoice = super()._sale_determine_order()
         mapping_from_invoice.update(self._get_so_mapping_from_project())
         return mapping_from_invoice
+
+    def _force_analytic_distribution(self):
+        self.ensure_one()
+        if self.env['sale.order'].search_count([('name', '=', self.move_id.invoice_origin), ('project_id', '!=', False)]):
+            return True
+        return super()._force_analytic_distribution()
