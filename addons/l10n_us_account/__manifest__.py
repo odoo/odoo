@@ -11,6 +11,7 @@
     'depends': ['l10n_us', 'account'],
     'data': [
         'views/res_bank_views.xml',
+        'views/res_config_settings_views.xml',
         'data/tax_report.xml',
         'data/uom_data.xml',
     ],
