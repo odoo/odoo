@@ -29,6 +29,9 @@ This module includes contact phone and mobile numbers validation.""",
         'web.assets_tests': [
             'website_crm/static/tests/**/*',
         ],
+        'web.assets_backend': [
+            'website_crm/static/src/**/*',
+        ]
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -270,7 +270,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <list string="Leads" sample="1" multi_edit="1">
+                <list string="Leads" sample="1" multi_edit="1" js_class="crm_list">
                     <header>
                         <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost"/>
                     </header>
@@ -679,7 +679,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <list string="Opportunities" sample="1" multi_edit="1"
+                <list string="Opportunities" sample="1" multi_edit="1" js_class="crm_list"
                     decoration-muted="won_status == 'lost'">
                     <header>
                         <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost" />

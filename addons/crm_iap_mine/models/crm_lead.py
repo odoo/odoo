@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class CrmLead(models.Model):
@@ -12,6 +12,7 @@ class CrmLead(models.Model):
     def _merge_get_fields(self):
         return super()._merge_get_fields() + ['lead_mining_request_id']
 
+    @api.model
     def action_generate_leads(self):
         return {
             "name": _("Need help reaching your target?"),

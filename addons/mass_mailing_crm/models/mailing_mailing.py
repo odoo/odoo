@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
-from odoo import fields, models, _, tools
+from odoo import api, fields, models, tools, _
 
 
 class MailingMailing(models.Model):
@@ -22,6 +22,21 @@ class MailingMailing(models.Model):
         mapped_data = {source.id: count for source, count in lead_data}
         for mass_mailing in self:
             mass_mailing.crm_lead_count = mapped_data.get(mass_mailing.source_id.id, 0)
+
+    @api.model
+    def action_create_mailing_template_with_leads(self):
+        reply_to = self.env.user.sale_team_id.alias_email or False
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'mailing.mailing',
+            'name': _('Lead Recall'),
+            'views': [(False, 'form')],
+            'context': {
+                'default_mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+                'default_reply_to': reply_to,
+                'default_reply_to_mode': 'new'
+            }
+        }
 
     def action_redirect_to_leads_and_opportunities(self):
         text = _("Leads") if self.use_leads else _("Opportunities")

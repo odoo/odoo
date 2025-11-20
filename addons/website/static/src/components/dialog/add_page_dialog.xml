@@ -87,12 +87,12 @@
                             t-on-click="() => this.onTabListBtnClick(page.id)"
                             t-on-keydown="onTabListBtnKeydown"
                             class="list-group-item list-group-item-action p-3"
-                            t-att-class="{active: page_first}"
+                            t-att-class="{active: state.activePageId === page.id}"
                             role="tab"
-                            t-att-tabindex="page_first ? 0 : -1"
-                            t-att-aria-selected="page_first ? 'true' : 'false'"
+                            t-att-tabindex="state.activePageId === page.id ? 0 : -1"
+                            t-att-aria-selected="state.activePageId === page.id ? 'true' : 'false'"
                             t-att-aria-controls="'pane_' + page.id"
-                            t-ref="{{page_first ? 'autofocus' : page.id}}"
+                            t-ref="{{state.activePageId === page.id ? 'autofocus' : page.id}}"
                         >
                             <span t-if="page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
                             <t t-out="page.title"/>
@@ -105,13 +105,13 @@
                     <div t-att-data-id="page.id"
                         t-att-id="'pane_' + page.id"
                         class="o_website_page_templates_pane position-absolute top-0 start-0 w-100 h-100 overflow-y-scroll bg-200"
-                        t-att-class="{active: page_first}"
+                        t-att-class="{active: state.activePageId === page.id}"
                         tabindex="-1"
                         role="tabpanel"
                         t-att-aria-label="page.id"
-                        t-att-inert="!page_first ? 'inert' : undefined"
+                        t-att-inert="state.activePageId === page.id ? undefined : 'inert'"
                     >
-                        <AddPageTemplatePreviews t-if="page_first or page.isAccessed"
+                        <AddPageTemplatePreviews t-if="page_first or state.activePageId === page.id"
                             templates="page.props.templates" isCustom="page.props.is_custom"
                         />
                     </div>
@@ -131,6 +131,7 @@
         close="props.close">
         <AddPageTemplates
             onTemplatePageChanged="name => this.onTemplatePageChanged(name)"
+            defaultTemplateId="props.defaultTemplateId"
         />
     </WebsiteDialog>
 </t>

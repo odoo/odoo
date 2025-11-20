@@ -264,7 +264,7 @@ export const websiteService = {
                 invalidateSnippetCache = value;
             },
 
-            goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+            async goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
                 this.websiteRootInstance = undefined;
                 if (lang) {
                     invalidateSnippetCache = true;
@@ -272,7 +272,7 @@ export const websiteService = {
                         path
                     )}`;
                 }
-                action.doAction("website.website_preview", {
+                await action.doAction("website.website_preview", {
                     clearBreadcrumbs: true,
                     props: {
                         websiteId: websiteId || currentWebsiteId || false,

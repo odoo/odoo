@@ -155,7 +155,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
             else:
                 rule = self.test_request_1
 
-            lead = self._new_leads.filtered(lambda lead: lead.name == '%s GmbH - %s' % (base_name, rule.suffix))
+            lead = self._new_leads.filtered(lambda lead: lead.name == f"{base_name} GmbH's opportunity - {rule.suffix}")
             self.assertTrue(bool(lead))
 
             # mine information

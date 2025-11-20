@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="crm.lead_generation_dropdown">
+        <Dropdown manual="true" state="dropdown" menuClass="'o_lead_mining_menu_choices d-grid grid column-gap-2 row-gap-0 px-2'">
+            <button t-on-click="toggleDropdown" accesskey="c" class="o-dropdown-caret btn-secondary btn">Generate Leads</button>
+            <t t-set-slot="content">
+                <t t-set="colClass" t-value="'g-col-' + (sortedDropdownContentElements.length > 3 ? 6 : 12)"/>
+                <t t-foreach="sortedDropdownContentElements" t-as="element" t-key="element.moduleXmlId">
+                    <DropdownItem tag="'button'"
+                                  class="`o_lead_mining_element rounded ${colClass} p-0`"
+                                  closingMode="'none'"
+                                  attrs="Object.assign({}, newPageAttrs, {
+                                    'aria-label': element.title,
+                                    'data-module-xml-id': element.moduleXmlId,
+                                  })"
+                                  onSelected="() => this.onClickAction(element)">
+
+                        <div class="w-100 h-100 d-flex gap-2 p-2 min-w-3"
+                                t-on-mouseenter="() => this.swapDescription(element)"
+                                t-on-mouseleave="() => this.resetDescription(element)">
+                            <div class="o_lead_mining_element_tile d-flex align-items-center justify-content-center border rounded">
+                                <i t-if="element.status === 'INSTALLING'" class="fa fa-spin fa-circle-o-notch"/>
+                                <img t-else="" t-att-src="element.icon"
+                                    t-att-class="(element.status === 'NOT_INSTALLED') || !element.hasAccess ? 'o_uninstalled_module' : ''"
+                                    alt=""/>
+                            </div>
+                            <div class="d-flex flex-column overflow-hidden">
+                                <span t-out="element.title" class="fw-bold text-truncate"/>
+                                <t t-if="element.swappedDescription">
+                                    <small t-if="element.hasAccess" class="text-muted text-truncate" t-out="`Install ${modulesInfo[element.moduleName].name}`"/>
+                                    <small t-else="" class="text-muted text-truncate">Ask your Team Leader to get access</small>
+                                </t>
+                                <small t-else="" class="text-muted text-truncate" t-out="element.description"/>
+                            </div>
+                        </div>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

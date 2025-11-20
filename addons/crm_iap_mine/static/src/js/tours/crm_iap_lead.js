@@ -22,10 +22,16 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
                  * This eases the on boarding for the Lead Generation process.
                  *
                  */
-                trigger: ".o_button_generate_leads",
+                trigger: ".o_control_panel_main_buttons .o-dropdown",
                 content: markup(_t("Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool.")),
                 tooltipPosition: "bottom",
-                run: "click .o_button_generate_leads",
+                run: "click .o_control_panel_main_buttons .o-dropdown",
+            },
+            {
+                trigger: '.o_lead_mining_element[data-module-xml-id="base.module_crm_iap_mine"]',
+                content: _t("Click here to generate some leads."),
+                tooltipPosition: "top",
+                run: "click",
             },
             {
                 trigger: ".modal-body .o_industry",
