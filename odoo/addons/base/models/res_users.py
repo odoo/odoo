@@ -265,7 +265,7 @@ class ResUsers(models.Model):
     def _default_view_group_hierarchy(self):
         return self.env['res.groups']._get_view_group_hierarchy()
 
-    view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, default=_default_view_group_hierarchy)
+    view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, copy=False, default=_default_view_group_hierarchy)
     role = fields.Selection([('group_user', 'Member'), ('group_system', 'Administrator')], compute='_compute_role', readonly=False, string="Role")
 
     _login_key = models.Constraint("UNIQUE (login)",
