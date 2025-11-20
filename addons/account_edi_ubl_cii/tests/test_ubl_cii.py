@@ -377,7 +377,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         invoice_us = self.init_invoice('out_invoice', partner=us_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
         res = [document for invoice in (invoice_de + invoice_be + invoice_us) for document in invoice._get_invoice_legal_documents('ubl', allow_fallback=True)]
         self.assertEqual(len(res), 2)
-        self.assertEqual(res[0].get('filename'), 'INV_2019_00001_ubl_de.xml')
+        self.assertEqual(res[0].get('filename'), 'INV_2019_00001_zugferd.xml')
         self.assertEqual(res[1].get('filename'), 'INV_2019_00002_ubl_bis3.xml')
         invoice_be_failing = self.init_invoice('out_invoice', partner=belgian_partner, amounts=[100], post=True)
         legal_documents = invoice_be_failing._get_invoice_legal_documents('ubl', allow_fallback=True)
