@@ -10,14 +10,14 @@ import { patch } from "@web/core/utils/patch";
 const livechatChannelInfoListPatch = {
     get recentConversations() {
         return (this.props.thread.livechat_visitor_id?.discuss_channel_ids ?? [])
-            .filter((channel) => channel.notEq(this.props.thread))
+            .filter((channel) => channel.notEq(this.props.thread.channel))
             .sort(
                 (t1, t2) =>
                     compareDatetime(t2.last_interest_dt, t1.last_interest_dt) || t2.id - t1.id
             );
     },
-    CLOSED_ON_TEXT(thread) {
-        return _t("(closed on: %(date)s)", { date: formatDateTime(thread.livechat_end_dt) });
+    CLOSED_ON_TEXT(channel) {
+        return _t("(closed on: %(date)s)", { date: formatDateTime(channel.livechat_end_dt) });
     },
     get countryLanguageLabel() {
         return _t("Country & Language");

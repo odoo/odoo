@@ -22,20 +22,20 @@
                 <h6 class="pt-3">Recent conversations</h6>
                 <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">
                     <a
-                        t-foreach="recentConversations" t-as="thread" t-key="thread.localId"
+                        t-foreach="recentConversations" t-as="channel" t-key="channel.localId"
                         class="o-livechat-LivechatChannelInfoList-recentConversation btn btn-sm btn-secondary btn-group-item d-flex align-items-center justify-content-start gap-1 w-100 m-0 px-3 py-1"
-                        t-attf-href="/odoo/discuss?active_id={{thread.model}}_{{thread.id}}"
+                        t-attf-href="/odoo/discuss?active_id=discuss.channel_{{channel.id}}"
                         target="_blank"
                         t-att-class="{
-                            'o-rounded-top-bubble': thread_first,
-                            'o-rounded-bottom-bubble': thread_last,
-                            'rounded-top-0': !thread_first,
-                            'rounded-bottom-0 border-bottom': !thread_last,
+                            'o-rounded-top-bubble': channel_first,
+                            'o-rounded-bottom-bubble': channel_last,
+                            'rounded-top-0': !channel_first,
+                            'rounded-bottom-0 border-bottom': !channel_last,
                         }"
                     >
                         <i class="fa fa-external-link opacity-75"/>
-                        <span class="ms-1 fw-bold" t-esc="thread.displayName"/>
-                        <span t-if="thread.livechat_end_dt" class="o-xsmaller text-muted" t-out="CLOSED_ON_TEXT(thread)"/>
+                        <span class="ms-1 fw-bold" t-esc="channel.displayName"/>
+                        <span t-if="channel.livechat_end_dt" class="o-xsmaller text-muted" t-out="CLOSED_ON_TEXT(channel)"/>
                     </a>
                 </div>
             </div>
