@@ -418,3 +418,59 @@ class TestSaleStockMargin(TestStockValuationCommon):
         delivery.move_ids.quantity = 10
         delivery.button_validate()
         self.assertEqual(sale_order.order_line.filtered(lambda sol: sol.product_id == product2).purchase_price, 10)
+
+    def test_avco_does_not_mix_products_on_compute_avg_price(self):
+        """
+        Ensure that when stock moves are duplicated and their product changed,
+        the sale line linkage is cleared correctly, preventing average price
+        computation from mixing valuation layers of different products.
+
+        This test verifies that:
+        - The duplicated delivery's moves lose the original sale_line_id when the product changes.
+        - A new sale order line is created for the new product, increasing the total order lines.
+        - Validations of deliveries and return pickings proceed without errors.
+        - The purchase price on the original sale line remains accurate (unchanged).
+        """
+        categ_average = self.env['product.category'].create({
+            'name': 'AVERAGE',
+            'property_cost_method': 'average'
+        })
+
+        self.product1.write({
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'categ_id': categ_average.id,
+            'standard_price': 20,
+        })
+        product2 = self.env['product.product'].create({
+            'name': 'product2',
+            'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'categ_id': categ_average.id,
+        })
+
+        sale_order = self._create_sale_order()
+        sale_order_line = self._create_sale_order_line(sale_order, self.product1, 1)
+        sale_order.action_confirm()
+
+        first_delivery = sale_order.picking_ids[0]
+        second_delivery = first_delivery.copy()
+        self.assertEqual(second_delivery.move_ids.sale_line_id, sale_order_line)
+        second_delivery.move_ids.product_id = product2
+        self.assertFalse(second_delivery.move_ids.sale_line_id)
+        self.assertTrue(len(sale_order.order_line), 2)
+        second_delivery.action_confirm()
+        second_delivery.move_ids.quantity = 1
+        second_delivery.button_validate()
+        self.assertEqual(second_delivery.move_ids.sale_line_id, sale_order.order_line - sale_order_line)
+        stock_picking_return = self.env['stock.return.picking'].create({
+            'picking_id': second_delivery.id,
+        })
+        stock_picking_return.product_return_moves.quantity = 1
+        return_picking = stock_picking_return._create_return()
+        return_picking.move_ids.quantity = 1
+        return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')
+
+        first_delivery.move_ids.quantity = 1
+        first_delivery.button_validate()
+        self.assertEqual(first_delivery.state, 'done')
+        self.assertEqual(sale_order_line.purchase_price, 20)
