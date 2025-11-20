@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="d-flex flex-column mt-4" t-if="leaveState.bankHolidays.length">
-                    <h5>Public Holidays</h5>
+                    <h5><span class="align-middle"><img src="/hr/static/src/img/icons/public_holiday.svg"/> Public Holidays</span></h5>
                     <ul class="ps-0">
                         <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled"
                             t-att-class="bankHoliday.end &lt; currentDateTime ? 'text-muted' : 'fw-bold'">

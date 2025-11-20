@@ -20,6 +20,10 @@
     'assets': {
         'web.assets_backend': [
             'l10n_in_hr_holidays/static/src/**/*',
+            ('remove', 'l10n_in_hr_holidays/static/src/**/*.dark.scss'),
+        ],
+        "web.assets_web_dark": [
+            'l10n_in_hr_holidays/static/src/**/*.dark.scss',
         ],
     },
 }
