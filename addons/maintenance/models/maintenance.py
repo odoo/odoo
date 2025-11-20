@@ -214,7 +214,8 @@ class MaintenanceRequest(models.Model):
     owner_user_id = fields.Many2one('res.users', string='Created by User', default=lambda s: s.env.uid)
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True, index='btree_not_null')
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
-                                   ondelete='restrict', index=True, check_company=True)
+                                   ondelete='restrict', index=True, check_company=True,
+                                   group_expand='_read_group_equipment_id')
     user_id = fields.Many2one('res.users', string='Technician', compute='_compute_user_id', store=True, readonly=False, tracking=True)
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True,
                                group_expand='_read_group_stage_ids', default=_default_stage, copy=False)
@@ -312,6 +313,12 @@ class MaintenanceRequest(models.Model):
         for request in self:
             if request.maintenance_type != 'preventive':
                 request.recurring_maintenance = False
+
+    def _read_group_equipment_id(self, records, domain):
+        """ Read group customization in order to display all the equipment in
+            the kanban view, even if they are empty.
+        """
+        return records + self.env['maintenance.equipment'].search([])
 
     @api.model_create_multi
     def create(self, vals_list):
