@@ -83,7 +83,7 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.show_ubl_company_warning = False
             wizard.ubl_partner_warning = False
-            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201', 'ubl_tr'}:
+            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'zugferd', 'oioubl_201', 'ubl_tr'}:
                 return
 
             wizard.show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
@@ -204,11 +204,11 @@ class AccountMoveSend(models.TransientModel):
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Add PDF to XML
-        if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
+        if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] not in ('facturx', 'zugferd'):
             self._postprocess_invoice_ubl_xml(invoice, invoice_data)
 
         # Always silently generate a Factur-X and embed it inside the PDF for inter-portability
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx':
+        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd'):
             xml_facturx = invoice_data['ubl_cii_xml_attachment_values']['raw']
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
@@ -232,11 +232,17 @@ class AccountMoveSend(models.TransientModel):
         writer = OdooPdfFileWriter()
         writer.cloneReaderDocumentRoot(reader)
 
-        writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
+        attachment_name = 'factur-x.xml'
+        if invoice.commercial_partner_id.country_code == 'DE' and invoice.commercial_partner_id.peppol_eas != '0204':
+            attachment_name = 'zugferd.xml'
+
+        writer.addAttachment(attachment_name, xml_facturx, subtype='text/xml')
 
         # PDF-A.
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \
-                and not writer.is_pdfa:
+        if (invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd')
+                and invoice.country_code in ('FR', 'DE')
+                and not writer.is_pdfa
+            ):
             try:
                 writer.convert_to_pdfa()
             except Exception as e:
