@@ -15,7 +15,8 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
-import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -141,4 +142,86 @@ test("call auto focus is 'off", async () => {
     const useCallAutoFocusKey = makeRecordFieldLocalId(Settings.localId(), "useCallAutoFocus");
     expect(localStorage.getItem(useCallAutoFocusKey)).toBe(toRawValue(false));
     expect(localStorage.getItem("mail_user_setting_disable_call_auto_focus")).toBe(null);
+});
+
+test("Renders the call settings", async () => {
+    patchWithCleanup(browser.navigator.mediaDevices, {
+        enumerateDevices: () =>
+            Promise.resolve([
+                {
+                    deviceId: "audio_input_1_id",
+                    kind: "audioinput",
+                    label: "audio_input_1_label",
+                },
+                {
+                    deviceId: "audio_input_2_id",
+                    kind: "audioinput",
+                    label: "audio_input_2_label",
+                },
+                {
+                    deviceId: "audio_input_3_id",
+                    kind: "audioinput",
+                    label: "audio_input_3_label",
+                },
+                {
+                    deviceId: "audio_output_1_id",
+                    kind: "audiooutput",
+                    label: "audio_output_1_label",
+                },
+                {
+                    deviceId: "audio_output_2_id",
+                    kind: "audiooutput",
+                    label: "audio_output_2_label",
+                },
+                {
+                    deviceId: "audio_output_3_id",
+                    kind: "audiooutput",
+                    label: "audio_output_3_label",
+                },
+                {
+                    deviceId: "video_input_1_id",
+                    kind: "videoinput",
+                    label: "video_input_1_label",
+                },
+                {
+                    deviceId: "video_input_2_id",
+                    kind: "videoinput",
+                    label: "video_input_2_label",
+                },
+                {
+                    deviceId: "video_input_3_id",
+                    kind: "videoinput",
+                    label: "video_input_3_label",
+                },
+            ]),
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    localStorage.setItem("mail_user_setting_audio_input_device_id", "audio_input_2_id");
+    localStorage.setItem("mail_user_setting_audio_output_device_id", "audio_output_2_id");
+    localStorage.setItem("mail_user_setting_camera_input_device_id", "video_input_2_id");
+    await start();
+    await openDiscuss(channelId);
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Call Settings')");
+    await contains(".o-discuss-CallSettings");
+    await contains("label[title='Microphone'] option[value=audio_input_2_id]");
+    await contains("label[title='Speakers'] option[value=audio_output_2_id]");
+    await contains("label[title='Camera'] option[value=video_input_2_id]");
+    // correct local storage values
+    const audioInputDeviceIdKey = makeRecordFieldLocalId(Settings.localId(), "audioInputDeviceId");
+    expect(localStorage.getItem(audioInputDeviceIdKey)).toBe(toRawValue("audio_input_2_id"));
+    const audioOutputDeviceIdKey = makeRecordFieldLocalId(
+        Settings.localId(),
+        "audioOutputDeviceId"
+    );
+    expect(localStorage.getItem(audioOutputDeviceIdKey)).toBe(toRawValue("audio_output_2_id"));
+    const videoInputDeviceIdKey = makeRecordFieldLocalId(Settings.localId(), "cameraInputDeviceId");
+    expect(localStorage.getItem(videoInputDeviceIdKey)).toBe(toRawValue("video_input_2_id"));
+    expect(localStorage.getItem("mail_user_setting_audio_input_device_id")).toBe(null);
+    expect(localStorage.getItem("mail_user_setting_audio_output_device_id")).toBe(null);
+    expect(localStorage.getItem("mail_user_setting_camera_input_device_id")).toBe(null);
 });
