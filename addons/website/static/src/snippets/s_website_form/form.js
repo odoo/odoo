@@ -17,7 +17,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import wUtils from "@website/js/utils";
+import { getParsedDataFor } from "@website/js/utils";
 
 const { DateTime } = luxon;
 
@@ -205,7 +205,7 @@ export class Form extends Interaction {
         // in edit mode to keep the form linked to its predefined server
         // values (e.g., the default `job_id` value on the application form
         // for a given job).
-        const dataForValues = wUtils.getParsedDataFor(this.el.id, document) || {};
+        const dataForValues = getParsedDataFor(this.el.id, document) || {};
         const initialValuesToReset = new Map(
             [...this.initialValues.entries()].filter(
                 ([input]) => !dataForValues[input.name] || input.name === "email_to"
@@ -259,7 +259,7 @@ export class Form extends Interaction {
         // Because, using t-att- inside form make it non-editable
         // Data-fill-with attribute is given during registry and is used by
         // to know which user data should be used to prfill fields.
-        let dataForValues = wUtils.getParsedDataFor(this.el.id, document);
+        let dataForValues = getParsedDataFor(this.el.id, document);
         // On the "edit_translations" mode, a <span/> with a translated term
         // will replace the attribute value, leading to some inconsistencies
         // (setting again the <span> on the attributes after the editor's
