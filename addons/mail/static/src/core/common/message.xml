@@ -20,18 +20,23 @@
                 <div t-if="props.asCard and isMobileOS" class="position-absolute end-0 z-1 m-n2"><t t-call="mail.Message.actions"/></div>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
-                        <t t-if="!props.squashed">
-                            <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="getAvatarContainerAttClass()">
-                                <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
-                            </div>
-                            <t t-if="message.starred" t-call="mail.Message.sidebarStarred"/>
-                        </t>
+                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="getAvatarContainerAttClass()">
+                            <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
+                        </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
-                        <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeShort">
+                        <t t-if="!message.isPending and !message.is_transient">
+                            <div t-if="!(env.inChatWindow and props.squashed and isActive and props.showDates)" class="d-flex flex-row lh-1 mt-1" t-att-class="{
+                                'flex-column-reverse': env.inChatWindow,
+                                'align-self-start align-items-start ms-1': isAlignedRight,
+                                'align-self-end align-items-end me-1': !isAlignedRight,
+                                'gap-1': !env.inChatWindow,
+                                'mt-2': props.squashed and !env.inChatWindow,
+                            }">
+                                <small t-if="message.starred" name="starred" class="o-opacity-35"><i class="fa fa-star o-mail-Message-starred"/></small>
+                            </div>
+                            <small t-if="props.squashed and isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-1 text-center lh-1" t-att-title="message.datetimeShort">
                                 <t t-esc="message.dateSimple"/>
                             </small>
-                            <t t-elif="message.starred" t-call="mail.Message.sidebarStarred"/>
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
@@ -94,7 +99,7 @@
                                                     'o-green': message.bubbleColor === 'green',
                                                     'o-orange': message.bubbleColor === 'orange',
                                                 }"/>
-                                                <MessageInReply t-if="message.parent_id" message="message" onClick="props.onParentMessageClick"/>
+                                                <MessageInReply t-if="showMessageInReply" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.isNote,
                                                             'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
@@ -217,12 +222,6 @@
 
 <t t-name="mail.Message.mentionedChannelIcon">
     <i t-att-class="icon"/>
-</t>
-
-<t t-name="mail.Message.sidebarStarred">
-    <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': isAlignedRight, 'align-self-end me-1': !isAlignedRight, 'mt-2': props.squashed, 'mt-1': !props.squashed }" title="Starred message">
-        <i class="fa fa-star o-mail-Message-starred"/>
-    </small>
 </t>
 
     <t t-name="mail.Message.messageLink">

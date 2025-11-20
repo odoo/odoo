@@ -488,6 +488,10 @@ export class Message extends Component {
             { context: this }
         );
     }
+
+    get showMessageInReply() {
+        return this.props.message.parent_id;
+    }
 }
 
 discussComponentRegistry.add("Message", Message);

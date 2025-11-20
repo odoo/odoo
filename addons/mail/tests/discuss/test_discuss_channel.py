@@ -93,6 +93,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                             "markup",
                                             f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
                                         ],
+                                        "child_ids_count": 0,
                                         "create_date": fields.Datetime.to_string(message.create_date),
                                         "date": "2020-03-22 10:42:06",
                                         "default_subject": "Group",

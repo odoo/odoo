@@ -17,6 +17,13 @@ export class MailMessage extends models.ServerModel {
 
     author_id = fields.Generic({ default: () => serverState.partnerId });
     pinned_at = fields.Generic({ default: false });
+    child_ids_count = fields.Integer({ compute: "_compute_child_ids_count" });
+
+    _compute_child_ids_count() {
+        for (const message of this) {
+            message.child_ids_count = message.child_ids.length;
+        }
+    }
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
@@ -181,6 +188,7 @@ export class MailMessage extends models.ServerModel {
                 })
             ),
             mailDataHelpers.Store.attr("body", (m) => ["markup", m.body]),
+            "child_ids_count",
             "create_date",
             "date",
             "message_type",

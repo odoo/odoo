@@ -9,6 +9,7 @@ class MailMessage(models.Model):
 
     call_history_ids = fields.One2many("discuss.call.history", "start_call_message_id")
     channel_id = fields.Many2one("discuss.channel", compute="_compute_channel_id")
+    child_ids_count = fields.Integer(compute="_compute_child_ids_count")
 
     @api.depends("model", "res_id")
     def _compute_channel_id(self):
@@ -18,6 +19,17 @@ class MailMessage(models.Model):
             else:
                 message.channel_id = False
 
+    @api.depends("child_ids")
+    def _compute_child_ids_count(self):
+        child_count_by_message_id = {
+            message.id: count
+            for message, count in self.env["mail.message"]._read_group(
+                [("parent_id", "in", self.ids)], ["parent_id"], ["__count"],
+            )
+        }
+        for message in self:
+            message.child_ids_count = child_count_by_message_id.get(message.id)
+
     def _to_store_defaults(self, target):
         return super()._to_store_defaults(target) + [
             Store.Many(
@@ -25,6 +37,7 @@ class MailMessage(models.Model):
                 ["duration_hour", "end_dt"],
                 predicate=lambda m: m.body and 'data-oe-type="call"' in m.body,
             ),
+            Store.Attr("child_ids_count", predicate=lambda m: m.model == "discuss.channel"),
         ]
 
     def _extras_to_store(self, store: Store, format_reply):

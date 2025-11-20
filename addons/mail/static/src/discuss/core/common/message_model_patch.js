@@ -12,6 +12,22 @@ const messagePatch = {
                 return this.thread?.channel;
             },
         });
+        this.parent_id = fields.One("mail.message");
+        this.child_ids = fields.Many("mail.message", { inverse: "parent_id" });
+        this.descendant_ids = fields.Many("mail.message", {
+            compute() {
+                return this.child_ids.flatMap((child) => [child, ...child.descendant_ids]);
+            },
+            sort: (a, b) => a.id - b.id,
+        });
+        this.descendants = fields.Attr(false, {
+            compute() {
+                return this.descendants
+                    ? this.descendants
+                    : this.store.makeCachedFetchData("message_descendants", { id: this.id });
+            },
+        });
+
         this.hasEveryoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {

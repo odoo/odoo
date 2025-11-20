@@ -23,6 +23,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {(action: Action) => void} [actionPanelClose]
  * @property {Component} [actionPanelComponent]
  * @property {(action: Action) => Object} [actionPanelComponentProps]
+ * @property {boolean|(action: Action) => boolean} [actionPanelComponentCondition]
  * @property {(action: Action) => void} [actionPanelOpen]
  * @property {(action: Action) => string} [actionPanelOuterClass]
  * @property {boolean|(action: Action) => boolean} [badge]
@@ -116,7 +117,12 @@ export class Action {
 
     /** Condition to display the action panel component of this action. */
     get actionPanelComponentCondition() {
-        return this.isActive && this.actionPanelComponent && this.condition && !this.popover;
+        return (
+            (typeof this.definition.actionPanelComponentCondition === "function"
+                ? this.definition.actionPanelComponentCondition?.call(this, this.params)
+                : this.definition.actionPanelComponentCondition) ??
+            (this.isActive && this.actionPanelComponent && this.condition && !this.popover)
+        );
     }
 
     /** Props to pass to the action panel component of this action. */

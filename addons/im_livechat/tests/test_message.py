@@ -84,6 +84,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "message": chatbot_message.id,
                         "scriptStep": self.step_email.id,
                     },
+                    "child_ids_count": 0,
                     "create_date": fields.Datetime.to_string(chatbot_message.create_date),
                     "date": fields.Datetime.to_string(chatbot_message.date),
                     "default_subject": "Testing Bot",
@@ -156,6 +157,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "author_guest_id": False,
                         "author_id": self.users[1].partner_id.id,
                         "body": ["markup", message.body],
+                        "child_ids_count": 0,
                         "date": fields.Datetime.to_string(message.date),
                         "write_date": fields.Datetime.to_string(message.write_date),
                         "create_date": fields.Datetime.to_string(message.create_date),
@@ -268,6 +270,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                             "markup",
                                             '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>\nGood service</div>',
                                         ],
+                                        "child_ids_count": 0,
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date
                                         ),

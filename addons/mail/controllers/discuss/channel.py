@@ -68,6 +68,12 @@ class DiscussChannelWebclientController(WebclientController):
                 params.get("name", ""),
             )
             store.add(channel).resolve_data_request(channel=Store.One(channel, []))
+        if name == "message_descendants":
+            message = request.env["mail.message"].search([("id", "=", params["id"])])
+            if not message:
+                return
+            descendants = request.env["mail.message"].search([("id", "child_of", message.id)], limit=50)
+            store.add(descendants)
 
 
 class ChannelController(http.Controller):

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageRepliesPanel">
+        <ActionPanel title.translate="Replies" minWidth="200" initialWidth="env.inMeetingView ? 400 : 500" icon="'fa fa-reply-all'">
+            <Message message="props.message" thread="props.thread"/>
+            <div class="d-flex align-items-center w-100 fw-bold z-1">
+                <hr class="o-discuss-separator flex-grow-1"/>
+                <span class="px-2 smaller text-muted opacity-50">
+                    <t t-if="state.showLoading"><i class="fa fa-spin fa-circle-o-notch"/> Loading</t>
+                    <t t-else="">Replies</t>
+                </span>
+                <hr class="o-discuss-separator flex-grow-1"/>
+            </div>
+            <div class="o-mail-MessageReplies-descendants mb-3" t-if="props.message.descendants.status === 'fetched'">
+                <t t-foreach="props.message.descendant_ids" t-as="msg" t-key="`${props.message.id}_${msg.id}`">
+                    <Message message="msg" thread="props.thread"/>
+                </t>
+                <div t-if="props.message.descendant_ids.length >= 50" class="alert alert-primary d-flex align-items-center gap-2 mt-3 py-2">
+                    <i class="fa fa-exclamation-circle"/> Showing up to 50 replies
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

@@ -2002,6 +2002,9 @@ class MailCommon(MailCase):
         if "rating.rating" not in self.env:
             for data in messages_data:
                 data.pop("rating_id", None)
+        if "discuss.channel" not in self.env:
+            for data in messages_data:
+                data.pop("child_ids", None)
         return list(messages_data)
 
     def _filter_partners_fields(self, /, *partners_data):

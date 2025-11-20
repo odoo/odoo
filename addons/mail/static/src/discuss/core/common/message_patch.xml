@@ -19,5 +19,10 @@
                 />
             </div>
         </xpath>
+        <xpath expr="(//*[@name='starred'])" position="after">
+            <small t-if="message.child_ids_count and env.messageReplies and (!env.inMessageRepliesPanel or env.messageReplies.message?.notEq(message))" class="cursor-pointer" t-on-click="() => this.env.messageReplies.message?.eq(message) ? this.env.messageReplies.close() : this.env.messageReplies.open(message)">
+                <small class="o-xsmaller text-muted text-nowrap" t-att-title="repliesIndicatorTitle"><t t-out="message.child_ids_count"/> <i class="fa fa-reply-all"/></small>
+            </small>
+        </xpath>
     </t>
 </templates>

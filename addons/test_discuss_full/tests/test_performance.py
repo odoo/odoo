@@ -131,9 +131,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch im_livechat_channel
     #       2: fetch livechat_expertise_ids
     #   1: _get_last_messages
-    #   20: message _to_store:
+    #   21: message _to_store:
     #       - search mail_message_schedule
     #       - fetch mail_message
+    #       - fetch child_ids_count (_read_group)
     #       - search mail_message_res_partner_starred_rel
     #       - search message_attachment_rel
     #       - search mail_link_preview
@@ -152,7 +153,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
@@ -1321,6 +1322,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "author_guest_id": False,
                 "author_id": user_0.partner_id.id,
                 "body": ["markup", "<p>test</p>"],
+                "child_ids_count": 0,
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "general",
@@ -1358,6 +1360,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "author_guest_id": False,
                 "author_id": user_2.partner_id.id,
                 "body": ["markup", "<p>test</p>"],
+                "child_ids_count": 0,
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "public channel 1",
@@ -1398,6 +1401,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "markup",
                     '<div class="o_mail_notification">created this channel.</div>',
                 ],
+                "child_ids_count": 0,
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "public channel 2",
@@ -1435,6 +1439,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     '<div data-oe-type=\"call\" class="o_mail_notification"></div>',
                 ],
                 "call_history_ids": [channel.call_history_ids[0].id],
+                "child_ids_count": 0,
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 1",
@@ -1471,6 +1476,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "markup",
                     '<div class="o_mail_notification">created this channel.</div>',
                 ],
+                "child_ids_count": 0,
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 2",
@@ -1504,6 +1510,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "author_guest_id": False,
                 "author_id": user_1.partner_id.id,
                 "body": ["markup", "<p>test</p>"],
+                "child_ids_count": 0,
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "test1 Ernest Employee",
@@ -1537,6 +1544,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "author_guest_id": guest.id,
                 "author_id": False,
                 "body": ["markup", "<p>test</p>"],
+                "child_ids_count": 0,
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "Visitor Ernest Employee",
