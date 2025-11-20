@@ -139,7 +139,7 @@ test("Toggle message translation on mobile", async () => {
         error: null,
     }));
     mockTouch(true);
-    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    mockUserAgent("android");
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message");
