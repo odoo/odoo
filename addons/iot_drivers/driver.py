@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import inspect
 import logging
 from threading import Thread, Event
 
-from odoo.addons.iot_drivers.main import drivers, iot_devices
 from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.tools.helpers import toggleable
 from odoo.tools.lru import LRU
@@ -87,3 +87,7 @@ class Driver(Thread):
     def disconnect(self):
         self._stopped.set()
         del iot_devices[self.device_identifier]
+
+
+drivers: list[type[Driver]] = []
+iot_devices: dict[str, Driver] = {}

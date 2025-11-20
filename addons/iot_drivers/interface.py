@@ -1,15 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from abc import ABC, abstractmethod
 import logging
 from threading import Thread
 import time
 
-from odoo.addons.iot_drivers.main import drivers, interfaces, iot_devices, unsupported_devices
+from odoo.addons.iot_drivers.driver import drivers, iot_devices
 
 _logger = logging.getLogger(__name__)
 
 
-class Interface(Thread):
+class Interface(Thread, ABC):
     _loop_delay = 3  # Delay (in seconds) between calls to get_devices or 0 if it should be called only once
     connection_type = ''
     allow_unsupported = False
@@ -40,8 +41,7 @@ class Interface(Thread):
         )
         if supported_driver:
             _logger.info('Device %s is now connected', identifier)
-            if identifier in unsupported_devices:
-                del unsupported_devices[identifier]
+            unsupported_devices.pop(identifier, None)
             d = supported_driver(identifier, device)
             iot_devices[identifier] = d
             # Start the thread after creating the iot_devices entry so the
@@ -81,11 +81,16 @@ class Interface(Thread):
         for identifier in added | unsupported:
             self.add_device(identifier, devices[identifier])
 
+    @abstractmethod
     def get_devices(self):
-        raise NotImplementedError()
+        pass
 
     def start(self):
         try:
             super().start()
         except Exception:
             _logger.exception("Interface %s could not be started", str(self))
+
+
+interfaces: dict[str, type[Interface]] = {}
+unsupported_devices = {}

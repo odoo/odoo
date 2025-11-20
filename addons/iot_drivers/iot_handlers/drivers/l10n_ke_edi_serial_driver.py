@@ -9,7 +9,7 @@ from functools import reduce
 
 from odoo import http
 from odoo.addons.iot_drivers.iot_handlers.drivers.serial_driver_base import SerialDriver, SerialProtocol, serial_connection
-from odoo.addons.iot_drivers.main import iot_devices
+from odoo.addons.iot_drivers.driver import iot_devices
 from odoo.addons.iot_drivers.tools import route
 
 _logger = logging.getLogger(__name__)

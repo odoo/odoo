@@ -8,6 +8,8 @@ import subprocess
 from threading import Thread
 import time
 
+from odoo.addons.iot_drivers.driver import iot_devices
+from odoo.addons.iot_drivers.interface import unsupported_devices
 from odoo.addons.iot_drivers.tools import certificate, helpers, system, upgrade, wifi
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
@@ -16,11 +18,6 @@ if system.IS_RPI:
     DBusGMainLoop(set_as_default=True)  # Must be started from main thread
 
 _logger = logging.getLogger(__name__)
-
-drivers = []
-interfaces = {}
-iot_devices = {}
-unsupported_devices = {}
 
 
 class Manager(Thread):

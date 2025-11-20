@@ -14,7 +14,7 @@ from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
-from odoo.addons.iot_drivers.main import iot_devices
+from odoo.addons.iot_drivers.driver import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, route, system, wifi
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 

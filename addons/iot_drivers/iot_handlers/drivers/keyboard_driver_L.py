@@ -16,9 +16,8 @@ from usb import util
 
 from odoo import http
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
-from odoo.addons.iot_drivers.driver import Driver
+from odoo.addons.iot_drivers.driver import Driver, iot_devices
 from odoo.addons.iot_drivers.event_manager import event_manager
-from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, route, system
 
 _logger = logging.getLogger(__name__)
