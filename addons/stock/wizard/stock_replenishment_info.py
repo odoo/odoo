@@ -158,7 +158,7 @@ class StockReplenishmentInfo(models.TransientModel):
                 [('product_id', '=', replenishment_report.product_id.id)],
                 [('date', '>=', date_from)],
                 [('date', '<=', datetime.combine(date_to, time.max))],
-                [('state', '=', 'done')],
+                [('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done'])],
                 [('company_id', '=', replenishment_report.orderpoint_id.company_id.id)],
             ])
             quantity_out = self.env['stock.move']._read_group(
