@@ -70,7 +70,7 @@ export class DiscussContent extends Component {
 
     get isThreadAvatarEditable() {
         return (
-            !this.thread.parent_channel_id &&
+            !this.thread.channel?.parent_channel_id &&
             this.thread.is_editable &&
             ["channel", "group"].includes(this.thread.channel?.channel_type)
         );

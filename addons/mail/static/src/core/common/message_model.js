@@ -423,7 +423,7 @@ export class Message extends Record {
             if (this.notificationType === "channel_rename") {
                 const name = htmlToTextContentInline(this.body);
                 const params = { user: this.authorName, name: markup`<b>${name}</b>` };
-                return this.thread?.parent_channel_id
+                return this.thread?.channel?.parent_channel_id
                     ? _t("%(user)s changed the thread name to %(name)s", params)
                     : _t("%(user)s changed the channel name to %(name)s", params);
             }

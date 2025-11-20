@@ -323,8 +323,8 @@ export class Thread extends Record {
     }
 
     get fullNameWithParent() {
-        const text = this.parent_channel_id
-            ? `${this.parent_channel_id.displayName} > ${this.displayName}`
+        const text = this.channel.parent_channel_id
+            ? `${this.channel?.parent_channel_id.displayName} > ${this.displayName}`
             : this.displayName;
         return text;
     }

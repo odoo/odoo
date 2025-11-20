@@ -18,7 +18,7 @@ export class SubChannelList extends Component {
     static template = "mail.SubChannelList";
     static components = { ActionPanel, NotificationItem, SubChannelPreview };
 
-    static props = ["thread", "close?"];
+    static props = ["channel", "close?"];
 
     setup() {
         this.store = useService("mail.store");
@@ -27,14 +27,14 @@ export class SubChannelList extends Component {
             searchTerm: "",
             lastSearchTerm: "",
             searching: false,
-            subChannels: this.props.thread.sub_channel_ids,
+            subChannels: this.props.channel.sub_channel_ids,
         });
         this.searchRef = useRef("search");
         this.sequential = useSequential();
         useAutofocus({ refName: "search" });
         this.loadMoreState = useVisible("load-more", (isVisible) => {
             if (isVisible) {
-                this.props.thread.loadMoreSubChannels({
+                this.props.channel.loadMoreSubChannels({
                     searchTerm: this.state.searching ? this.state.searchTerm : undefined,
                 });
             }
@@ -71,7 +71,7 @@ export class SubChannelList extends Component {
         this.state.lastSearchTerm = "";
         this.state.searching = false;
         this.state.loading = false;
-        this.state.subChannels = this.props.thread.sub_channel_ids;
+        this.state.subChannels = this.props.channel.sub_channel_ids;
     }
 
     onKeydownSearch(ev) {
@@ -81,7 +81,7 @@ export class SubChannelList extends Component {
     }
 
     async onClickCreate() {
-        await this.props.thread.createSubChannel({ name: this.state.searchTerm });
+        await this.props.channel.createSubChannel({ name: this.state.searchTerm });
         this._refreshSubChannelList();
         this.props.close?.();
     }
@@ -94,7 +94,7 @@ export class SubChannelList extends Component {
             this.state.searching = true;
             this.state.loading = true;
             try {
-                await this.props.thread.loadMoreSubChannels({
+                await this.props.channel.loadMoreSubChannels({
                     searchTerm: this.state.searchTerm,
                 });
                 if (this.state.searching) {
@@ -110,7 +110,7 @@ export class SubChannelList extends Component {
     _refreshSubChannelList() {
         this.state.subChannels = fuzzyLookup(
             this.state.searchTerm ?? "",
-            this.props.thread.sub_channel_ids,
+            this.props.channel.sub_channel_ids,
             ({ name }) => name
         );
     }

@@ -19,7 +19,7 @@ export class DeleteThreadDialog extends Component {
     async onConfirmation() {
         let toOpenThread;
         const threadName = this.props.channel.name;
-        if (this.store.discuss?.thread?.eq(this.props.channel.thread) || this.env.inChatWindow) {
+        if (this.store.discuss?.thread?.channel.eq(this.props.channel) || this.env.inChatWindow) {
             toOpenThread = this.props.channel.parent_channel_id;
         }
         await rpc("/discuss/channel/sub_channel/delete", {

@@ -236,17 +236,17 @@ registerThreadAction("mark-read", {
     sequence: 10,
     sequenceGroup: 20,
 });
-registerThreadAction("delete-thread", {
+registerThreadAction("delete-sub-channel", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: DeleteThreadDialog,
     actionPanelComponentProps({ action, channel }) {
         return { channel, close: () => action.actionPanelClose() };
     },
     actionPanelOuterClass: "bg-100",
-    condition({ owner, store, thread }) {
+    condition({ owner, store, channel }) {
         return (
-            thread?.parent_channel_id &&
-            store.self_user?.eq(thread.create_uid) &&
+            channel?.parent_channel_id &&
+            store.self_user?.eq(channel.create_uid) &&
             !owner.isDiscussContent
         );
     },
