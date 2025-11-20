@@ -42,7 +42,6 @@ declare module "models" {
         allowDescription: Readonly<boolean>;
         allowedToLeaveChannelTypes: Readonly<string[]>;
         allowedToUnpinChannelTypes: Readonly<string[]>;
-        areAllMembersLoaded: Readonly<boolean>;
         avatar_cache_key: string;
         canLeave: Readonly<boolean>;
         canUnpin: Readonly<boolean>;
@@ -64,7 +63,6 @@ declare module "models" {
         hasSelfAsMember: Readonly<boolean>;
         invitationLink: Readonly<unknown|string>;
         invited_member_ids: ChannelMember[];
-        isChatChannel: Readonly<boolean>;
         last_interest_dt: import("luxon").DateTime;
         lastInterestDt: import("luxon").DateTime;
         lastMessageSeenByAllId: undefined|number;
