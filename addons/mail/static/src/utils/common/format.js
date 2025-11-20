@@ -181,6 +181,7 @@ function generateMentionElement({ className, id, model, text }) {
         class: className,
         "data-oe-id": id,
         "data-oe-model": model,
+        "data-oe-protected": "true",
         target: "_blank",
         contenteditable: "false",
     });
@@ -213,6 +214,7 @@ export function generateSpecialMentionElement(label) {
     const link = document.createElement("a");
     setAttributes(link, {
         class: "o-discuss-mention",
+        "data-oe-protected": "true",
         contenteditable: "false",
     });
     link.textContent = `@${label}`;

@@ -12,6 +12,7 @@ import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 
 import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
 import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
+import { ProtectedNodePlugin } from "@html_editor/core/protected_node_plugin";
 
 export const MAIL_CORE_PLUGINS = [
     ...CORE_PLUGINS,
@@ -24,6 +25,7 @@ export const MAIL_CORE_PLUGINS = [
     LinkPlugin,
     MailComposerPlugin,
     MentionPlugin,
+    ProtectedNodePlugin,
     ShortCutPlugin,
     TabulationPlugin,
 ];
