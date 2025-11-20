@@ -12,32 +12,6 @@ const SUPPORTED_DOMAINS = [
 ];
 
 /**
- * Escapes a string to HTML interpolation.
- * Remark: this function is already available in the codebase (see:
- * `web/.../core/utils/strings.js`), but we need to reimplement it
- * here for non-lazy code.
- *
- * @param {String} str The string to escape.
- * @returns {String}
- */
-export function escape(str) {
-    if (!str) {
-        return "";
-    }
-    for (const [unescaped, escaped] of [
-        ["&", "&amp;"],
-        ["<", "&lt;"],
-        [">", "&gt;"],
-        ["'", "&#x27;"],
-        ['"', "&quot;"],
-        ["`", "&#x60;"],
-    ]) {
-        str = str.replaceAll(unescaped, escaped);
-    }
-    return str;
-}
-
-/**
  * Builds a video iframe for a saved `src` and appends it to the DOM.
  *
  * @param {HTMLElement} parentEl The iframe container.
@@ -57,7 +31,7 @@ export function generateVideoIframe(parentEl) {
 
     // Rebuild the iframe. Depending on version / compatibility / instance, the
     // src is saved in the 'data-src' attribute or the 'data-oe-expression' one.
-    const src = escape(parentEl.dataset.oeExpression || parentEl.dataset.src);
+    const src = parentEl.dataset.oeExpression || parentEl.dataset.src;
     // Validate the src to only accept supported domains we can trust
     const m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
     if (!m) {
