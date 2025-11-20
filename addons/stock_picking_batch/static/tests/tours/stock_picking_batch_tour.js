@@ -37,16 +37,25 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
         },
         {
             trigger: ".modal:contains(detailed operations) .o_list_number[name=quantity] input",
-            run: "edit 2 && press Tab",
+            run: "edit 2",
         },
         {
             trigger:
-                ".modal:contains(detailed operations) .o_list_footer .o_list_number > span:contains('7')",
+                ".modal:contains(detailed operations) .o_list_footer .o_list_number",
+            run: "click"
+        },
+        {
+            trigger:
+                ".modal:contains(detailed operations) .o_list_footer .o_list_number > span:contains('2')",
         },
         {
             content: "Click Save",
             trigger: ".modal:contains(detailed operations) .o_form_button_save",
             run: "click",
+        },
+        {
+            content: "Click in cell to start edition",
+            trigger: ".modal:contains(open: transfers) .o_data_row > td:contains('Product A')",
         },
         {
             content: "Click in cell to start edition",
