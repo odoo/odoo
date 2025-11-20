@@ -2,7 +2,6 @@ import { hasHardwareAcceleration } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { fields, Record } from "@mail/model/export";
-import { debounce } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 
 export class Settings extends Record {
@@ -10,15 +9,8 @@ export class Settings extends Record {
 
     setup() {
         super.setup();
-        this.saveVoiceThresholdDebounce = debounce(() => {
-            browser.localStorage.setItem(
-                "mail_user_setting_voice_threshold",
-                this.voiceActivationThreshold.toString()
-            );
-        }, 2000);
         this.hasCanvasFilterSupport =
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
-        this._loadLocalSettings();
     }
 
     // Notification settings
@@ -48,7 +40,7 @@ export class Settings extends Record {
     volumes = fields.Many("Volume");
     volumeSettingsTimeouts = new Map();
     // Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
-    voiceActivationThreshold = 0.05;
+    voiceActivationThreshold = fields.Attr(0.05, { localStorage: true });
     // true if listening to keyboard input to register the push to talk key.
     isRegisteringKey = false;
     push_to_talk_key;
@@ -235,13 +227,6 @@ export class Settings extends Record {
             )
         );
     }
-    /**
-     * @param {float} voiceActivationThreshold
-     */
-    setThresholdValue(voiceActivationThreshold) {
-        this.voiceActivationThreshold = voiceActivationThreshold;
-        this.saveVoiceThresholdDebounce();
-    }
 
     // methods
 
@@ -286,17 +271,6 @@ export class Settings extends Record {
     setPushToTalk(value) {
         this.use_push_to_talk = value;
         this._saveSettings();
-    }
-    /**
-     * @private
-     */
-    _loadLocalSettings() {
-        const voiceActivationThresholdString = browser.localStorage.getItem(
-            "mail_user_setting_voice_threshold"
-        );
-        this.voiceActivationThreshold = voiceActivationThresholdString
-            ? parseFloat(voiceActivationThresholdString)
-            : this.voiceActivationThreshold;
     }
     /**
      * @private

@@ -58,3 +58,8 @@ upgrade_19_1.add("mail_user_setting_show_only_video", {
     key: "Settings,undefined:showOnlyVideo",
     value: true,
 });
+
+upgrade_19_1.add("mail_user_setting_voice_threshold", ({ value }) => ({
+    key: "Settings,undefined:voiceActivationThreshold",
+    value: parseFloat(value),
+}));

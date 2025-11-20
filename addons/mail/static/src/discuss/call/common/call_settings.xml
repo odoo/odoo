@@ -45,7 +45,7 @@
                             </div>
                         </button>
                         <label class="w-100 d-flex ms-2" title="Voice detection sensitivity" aria-label="Voice detection sensitivity">
-                            <input class="o-Discuss-CallSettings-thresholdInput form-range rounded" t-attf-style="--volume: {{microphoneVolume.value * 100}}%;" type="range" min="0.001" max="1" step="0.001" t-model="store.settings.voiceActivationThreshold" t-on-input="store.settings.saveVoiceThresholdDebounce"/>
+                            <input class="o-Discuss-CallSettings-thresholdInput form-range rounded" t-attf-style="--volume: {{microphoneVolume.value * 100}}%;" type="range" min="0.001" max="1" step="0.001" t-model="store.settings.voiceActivationThreshold"/>
                         </label>
                     </div>
                 </t>
