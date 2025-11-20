@@ -1511,7 +1511,7 @@ test("many2one field (readonly)", async () => {
         },
         {
             domain: `[("product_id", "=", 2)]`,
-            text: "Product = Inaccessible/missing record ID: 2",
+            text: "Product = Missing record",
         },
         {
             domain: `[("product_id", "!=", 37)]`,
@@ -1535,11 +1535,11 @@ test("many2one field (readonly)", async () => {
         },
         {
             domain: `[("product_id", "in", [1, 37])]`,
-            text: "Product = Inaccessible/missing record ID: 1 or xphone",
+            text: "Product = Missing record or xphone",
         },
         {
             domain: `[("product_id", "in", [1, uid, 37])]`,
-            text: 'Product = Inaccessible/missing record ID: 1 or uid or "xphone"',
+            text: 'Product = Missing record or uid or "xphone"',
         },
         {
             domain: `[("product_id", "in", ["abc"])]`,
@@ -1551,7 +1551,7 @@ test("many2one field (readonly)", async () => {
         },
         {
             domain: `[("product_id", "in", 2)]`,
-            text: "Product = Inaccessible/missing record ID: 2",
+            text: "Product = Missing record",
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -1879,6 +1879,25 @@ test("many2many field: operator set/not set (edit)", async () => {
     expect(getCurrentOperator()).toBe(label("set"));
     expect(".o_ds_value_cell").toHaveCount(0);
     expect.verifySteps([`[("product_ids", "!=", False)]`]);
+});
+
+test("many2many field: operation includes a missing record", async () => {
+    addProductIds();
+    await makeDomainSelector({
+        domain: `[("product_ids", "in", [1,41])]`,
+        isDebugMode: true,
+    });
+    expect(getCurrentOperator()).toBe(label("in", "many2many"));
+    expect(getCurrentValue()).toBe("1 xpad", {
+        message: "missing record tags only show the id of the record",
+    });
+    expect(".o_multi_record_selector .o_tag:first").toHaveClass("o_tag_color_1", {
+        message: "missing record tags are displayed in red",
+    });
+    expect(".o_multi_record_selector .o_tag:first").toHaveAttribute(
+        "data-tooltip",
+        "Missing record (ID: 1)"
+    );
 });
 
 test("Include archived button basic use", async () => {
