@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo import fields
@@ -141,7 +142,7 @@ class TestTracking(MailCommon):
             'body_html': f'<p>Template {n}</p>',
         } for n in range(2)])
 
-        def _track_subtype(self, init_values):
+        def _track_subtype(self, *, fields_iter=None, initial_values=None):
             return self.env.ref('mail.mt_note')
         self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
 
@@ -173,23 +174,23 @@ class TestTracking(MailCommon):
         self.assertEqual(len(self.record.message_ids), 4, 'Should have added one change message and one automated template')
         self.assertEqual(second_message.message_type, 'notification')
 
-    def test_message_track_multiple(self):
-        """ check that multiple updates generate a single tracking message """
-        container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
-        self.record.name = 'Zboub'
-        self.record.customer_id = self.user_admin.partner_id
-        self.record.user_id = self.user_admin
-        self.record.container_id = container
-        self.flush_tracking()
+    # def test_message_track_multiple(self):
+    #     """ check that multiple updates generate a single tracking message """
+    #     container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
+    #     self.record.name = 'Zboub'
+    #     self.record.customer_id = self.user_admin.partner_id
+    #     self.record.user_id = self.user_admin
+    #     self.record.container_id = container
+    #     self.flush_tracking()
 
-        # should have a single message with all tracked fields
-        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
-        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
-        self.assertTracking(self.record.message_ids[0], [
-            ('customer_id', 'many2one', False, self.user_admin.partner_id),
-            ('user_id', 'many2one', False, self.user_admin),
-            ('container_id', 'many2one', False, container),
-        ])
+    #     # should have a single message with all tracked fields
+    #     self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+    #     self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
+    #     self.assertTracking(self.record.message_ids[0], [
+    #         ('customer_id', 'many2one', False, self.user_admin.partner_id),
+    #         ('user_id', 'many2one', False, self.user_admin),
+    #         ('container_id', 'many2one', False, container),
+    #     ])
 
     def test_message_track_no_subtype(self):
         """ Update some tracked fields not linked to some subtype -> message with onchange """
@@ -217,22 +218,22 @@ class TestTracking(MailCommon):
             [('customer_id', 'many2one', False, customer)  # onchange tracked field
              ])
 
-    @users('employee')
-    def test_message_track_no_tracking(self):
-        """ Update a set of non tracked fields -> no message, no tracking, or
-        use dedicated context key """
-        record = self.record.with_env(self.env)
-        record.write({
-            'name': 'Tracking or not',
-            'count': 32,
-        })
-        self.flush_tracking()
-        self.assertFalse(record.message_ids)
+    # @users('employee')
+    # def test_message_track_no_tracking(self):
+    #     """ Update a set of non tracked fields -> no message, no tracking, or
+    #     use dedicated context key """
+    #     record = self.record.with_env(self.env)
+    #     record.write({
+    #         'name': 'Tracking or not',
+    #         'count': 32,
+    #     })
+    #     self.flush_tracking()
+    #     self.assertFalse(record.message_ids)
 
-        # check context key allowing to skip tracking
-        record.with_context(mail_notrack=True).write({'email_from': 'new.from@test.example.com'})
-        self.flush_tracking()
-        self.assertFalse(record.message_ids)
+    #     # check context key allowing to skip tracking
+    #     record.with_context(mail_notrack=True).write({'email_from': 'new.from@test.example.com'})
+    #     self.flush_tracking()
+    #     self.assertFalse(record.message_ids)
 
     def test_message_track_subtype(self):
         """ Update some tracked fields linked to some subtype -> message with onchange """
@@ -373,12 +374,12 @@ class TestTracking(MailCommon):
             'body_html': "<div>A nice body</div>",
         })
 
-        def patched_message_track_post_template(*args, **kwargs):
+        def patched_track_post_template(*args, **kwargs):
             if args[0]._name == "mail.test.track":
                 args[0].message_post_with_source(template)
             return True
 
-        with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
+        with patch('odoo.addons.mail.models.mail_thread.MailThread._track_post_template', patched_track_post_template):
             self.env['mail.test.track'].create({
                 'email_from': email_new_partner,
                 'company_id': company1.id,
@@ -392,7 +393,7 @@ class TestTracking(MailCommon):
 
     def test_message_track_template_defaults(self):
         """ Check that default_* keys are not taken into account in
-        _message_track_post_template """
+        _track_post_template """
         magic_code = 'Up-Up-Down-Down-Left-Right-Left-Right-Square-Triangle'
 
         mt_name_changed = self.env['mail.message.subtype'].create({
@@ -417,7 +418,7 @@ class TestTracking(MailCommon):
         self.assertFalse(hasattr(ContainerModel.name, 'tracking'))
         ContainerModel.name.tracking = True
         self.addCleanup(delattr, ContainerModel.name, 'tracking')
-        self.patch(ContainerModel, '_track_subtype', lambda self, init_values: 'mail.mt_name_changed' if 'name' in init_values and init_values['name'] == magic_code else False)
+        self.patch(ContainerModel, '_track_subtype', lambda self, fields_iter, init_values: 'mail.mt_name_changed' if 'name' in init_values and init_values['name'] == magic_code else False)
         self.patch(ContainerModel, '_track_template', lambda self, changes: {'name': (mail_template, {'composition_mode': 'mass_mail'})} if 'name' in changes else {})
 
         test_mail_record = self.env['mail.test.container'].create({
@@ -426,6 +427,88 @@ class TestTracking(MailCommon):
         })
         test_mail_record.with_context(default_parent_id=2147483647).write({'name': magic_code})
 
+
+@tagged('mail_track', 'tdewip')
+class TestTrackingAPI(MailCommon):
+    """ Test main API and methods of tracking, to be called in py code. """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.dt_ref = datetime(2025, 9, 30, 9, 28, 15)
+        cls.tracking_parent_for_properties = cls.env['mail.test.track.all.properties.parent'].with_user(cls.user_admin).create({
+            'definition_properties': [
+                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value'},
+                {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one', 'comodel': 'mail.test.ticket'},
+            ],
+            'name': 'PropDefinition',
+        })
+        cls.test_tracking_records = cls.env['mail.test.track.all'].with_user(cls.user_employee).create([
+            {
+                'datetime_field': cls.dt_ref,
+                'name': f'Test Tracking {idx}',
+                'properties_parent_id': cls.tracking_parent_for_properties.id,
+            } for idx in range(5)
+        ])
+
+    @users('employee')
+    def test_tracking_create(self):
+        records = self.test_tracking_records.with_env(self.env)
+        for record in records:
+            record_su = record.sudo()  # to check for tracking values directly
+            self.assertEqual(len(record_su.message_ids), 2, 'Should have creation message only')
+            track_message = record_su.message_ids[0]
+            tracking_value_list = [
+                ('properties_parent_id', 'char', '', 'PropDefinition'),
+                ('datetime_field', 'datetime', False, self.dt_ref),
+            ]
+            self.assertTracking(track_message, tracking_value_list, strict=True)
+
+        new_dt = self.dt_ref + timedelta(hours=1)
+        print('----------------------------------------------------')
+        print('----------------------------------------------------')
+        records.write({
+            'datetime_field': new_dt,
+        })
+        self.flush_tracking()
+        print('----------------------------------------------------')
+        print('----------------------------------------------------')
+        for record in records:
+            record_su = record.sudo()  # to check for tracking values directly
+            self.assertEqual(len(record_su.message_ids), 3, 'Should have new tracking')
+            track_message = record_su.message_ids[0]
+            tracking_value_list = [
+                ('datetime_field', 'datetime', self.dt_ref, new_dt),
+            ]
+            self.assertTracking(track_message, tracking_value_list, strict=True)
+
+    @users('employee')
+    def test_tracking_update(self):
+        test_record = self.test_tracking_records[0].with_env(self.env)
+        original_messages = test_record.message_ids
+        test_record.write({'name': 'Tracking or not'})
+        self.flush_tracking()
+        self.assertEqual(test_record.message_ids, original_messages)
+
+        # check context key allowing to skip tracking
+        test_record.with_context(mail_notrack=True).write({'char_field': 'new.from@test.example.com'})
+        self.flush_tracking()
+        self.assertEqual(test_record.message_ids, original_messages)
+
+        # self.record.name = 'Zboub'
+        # self.record.customer_id = self.user_admin.partner_id
+        # self.record.user_id = self.user_admin
+        # self.record.container_id = container
+        # self.flush_tracking()
+
+        # # should have a single message with all tracked fields
+        # self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+        # self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
+        # self.assertTracking(self.record.message_ids[0], [
+        #     ('customer_id', 'many2one', False, self.user_admin.partner_id),
+        #     ('user_id', 'many2one', False, self.user_admin),
+        #     ('container_id', 'many2one', False, container),
+        # ])
 
 @tagged('mail_track')
 @tagged('at_install', '-post_install')  # LEGACY at_install

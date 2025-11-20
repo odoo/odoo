@@ -502,7 +502,7 @@ export class MailThread extends models.ServerModel {
      * @param {string[]} fields_iter
      * @param {Object} initial_values_dict
      */
-    _message_track(fields_iter, initial_values_dict) {
+    _track_post_tracking(fields_iter, initial_values_dict) {
         const kwargs = getKwArgs(arguments, "fields_iter", "initial_values_dict");
         fields_iter = kwargs.fields_iter;
         initial_values_dict = kwargs.initial_values_dict;
@@ -533,7 +533,7 @@ export class MailThread extends models.ServerModel {
             for (const fname in changedFieldNames) {
                 changedFieldsInitialValues[fname] = initialFieldValues[fname];
             }
-            const subtype = MailThread._track_subtype.call(this, changedFieldsInitialValues);
+            const subtype = MailThread._track_subtype.call(this, changedFieldNames, changedFieldsInitialValues);
             MailThread.message_post.call(this, [record.id], subtype.id, trackingValueIds);
         }
         return tracking;
@@ -547,7 +547,7 @@ export class MailThread extends models.ServerModel {
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
 
-        MailThread._message_track.call(
+        MailThread._track_post_tracking.call(
             this,
             MailThread._track_get_fields.call(this),
             initial_values
@@ -583,7 +583,7 @@ export class MailThread extends models.ServerModel {
     }
 
     /** @param {Object} initial_values */
-    _track_subtype(initial_values) {
+    _track_subtype(fields_iter, initial_values) {
         return false;
     }
 

@@ -567,13 +567,13 @@ class EventTrack(models.Model):
             })
         return res
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'kanban_state' in init_values and self.kanban_state == 'blocked':
+        if 'kanban_state' in fields_iter and self.kanban_state == 'blocked':
             return self.env.ref('website_event_track.mt_track_blocked')
-        elif 'kanban_state' in init_values and self.kanban_state == 'done':
+        elif 'kanban_state' in fields_iter and self.kanban_state == 'done':
             return self.env.ref('website_event_track.mt_track_ready')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     # ------------------------------------------------------------
     # ACTION

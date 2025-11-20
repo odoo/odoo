@@ -465,13 +465,13 @@ class EventEvent(models.Model):
             return self.sudo().address_id.google_map_link(zoom=zoom)
         return None
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if init_values.keys() & {'is_published', 'website_published'}:
+        if set(fields_iter) & {'is_published', 'website_published'}:
             if self.is_published:
                 return self.env.ref('website_event.mt_event_published', raise_if_not_found=False)
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     def _get_event_resource_urls(self, slot=False):
         """ Prepare the Google and iCal urls for the event.
