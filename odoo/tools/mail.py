@@ -657,7 +657,8 @@ def plaintext2html(text: str, container_tag: str | None = None, with_paragraph: 
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return markupsafe.Markup(final)
 
-def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None):
+
+def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None, add_line_breaks=True):
     """ Append extra content at the end of an HTML snippet, trying
         to locate the end of the HTML document (</body>, </html>, or
         EOF), and converting the provided content in html unless ``plaintext``
@@ -683,12 +684,15 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         :rtype: markupsafe.Markup
     """
     if plaintext and preserve:
-        content = '\n<pre>%s</pre>\n' % misc.html_escape(content)
+        content = '<pre>%s</pre>' % misc.html_escape(content)
     elif plaintext:
-        content = '\n%s\n' % plaintext2html(content, container_tag)
+        content = '%s' % plaintext2html(content, container_tag)
     else:
         content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', content)
+        content = '%s' % content
+    if add_line_breaks:
         content = '\n%s\n' % content
+
     # Force all tags to lowercase
     html = re.sub(r'(</?)(\w+)([ >])',
         lambda m: '%s%s%s' % (m[1], m[2].lower(), m[3]), html)
