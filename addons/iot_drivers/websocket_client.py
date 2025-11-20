@@ -1,6 +1,5 @@
 import json
 import logging
-import pprint
 import requests
 import time
 import urllib.parse
@@ -54,7 +53,6 @@ class WebsocketClient(Thread):
     def on_message(self, ws, messages):
         """Synchronously handle messages received by the websocket."""
         for message in json.loads(messages):
-            _logger.debug("websocket received a message: %s", pprint.pformat(message))
             self.last_message_id = message["id"]
             payload = message['message']['payload']
             message_type = message['message']['type']
