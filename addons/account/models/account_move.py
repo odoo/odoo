@@ -6518,6 +6518,9 @@ class AccountMove(models.Model):
         This is necessary to avoid the re-generation of the PDF through the action_report.
         Indeed, once a legal PDF is generated, it should be used and not re-generated.
         """
+        report = self.env['ir.actions.report'].search([('report_name', '=', 'account.report_invoice_with_payments'), ('binding_model_id', '!=', False)], limit=1)
+        if report:
+            return []
         return [{
             'key': 'download_pdf',
             'description': _('PDF'),
