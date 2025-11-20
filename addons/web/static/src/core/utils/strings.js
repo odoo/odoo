@@ -1,117 +1,50 @@
 import { isObject } from "./objects";
 
+/**
+ * @template [T=unknown]
+ * @typedef {[Record<string, T>] | T[]} Substitutions
+ */
+
+/**
+ * @param {Substitutions} substitutions
+ */
+function hasSubstitutionDict(substitutions) {
+    return substitutions.length === 1 && isObject(substitutions[0]);
+}
+
+/**
+ * Based on:
+ * {@link http://stackoverflow.com/questions/46155/validate-email-address-in-javascript}
+ */
+const R_EMAIL =
+    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+const R_FALSY = /^false|0$/i;
+const R_KEYED_SUBSTITUTION = /%\((?<key>[^)]+)\)s/g;
+const R_NUMERIC = /^\d+$/;
+const R_REGEX_SPECIAL_CHARS = /[.*+?^${}()|[\]\\]/g;
+
 export const nbsp = "\u00a0";
-
-/**
- * Escapes a string to use as a RegExp.
- * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping
- *
- * @param {string} str
- * @returns {string} escaped string to use as a RegExp
- */
-export function escapeRegExp(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-/**
- * Intersperses ``separator`` in ``str`` at the positions indicated by
- * ``indices``.
- *
- * ``indices`` is an array of relative offsets (from the previous insertion
- * position, starting from the end of the string) at which to insert
- * ``separator``.
- *
- * There are two special values:
- *
- * ``-1``
- *   indicates the insertion should end now
- * ``0``
- *   indicates that the previous section pattern should be repeated (until all
- *   of ``str`` is consumed)
- *
- * @param {string} str
- * @param {number[]} indices
- * @param {string} separator
- * @returns {string}
- */
-export function intersperse(str, indices, separator = "") {
-    separator = separator || "";
-    const result = [];
-    let last = str.length;
-    for (let i = 0; i < indices.length; ++i) {
-        let section = indices[i];
-        if (section === -1 || last <= 0) {
-            // Done with string, or -1 (stops formatting string)
-            break;
-        } else if (section === 0 && i === 0) {
-            // repeats previous section, which there is none => stop
-            break;
-        } else if (section === 0) {
-            // repeat previous section forever
-            //noinspection AssignmentToForLoopParameterJS
-            section = indices[--i];
-        }
-        result.push(str.substring(last - section, last));
-        last -= section;
-    }
-    const s = str.substring(0, last);
-    if (s) {
-        result.push(s);
-    }
-    return result.reverse().join(separator);
-}
-
-/**
- * Returns a string formatted using given values.
- * If the value is an object, its keys will replace `%(key)s` expressions.
- * If the values are a set of strings, they will replace `%s` expressions.
- * If no value is given, the string will not be formatted.
- *
- * @param {string} s
- * @param {any[]} values
- * @returns {string}
- */
-export function sprintf(s, ...values) {
-    if (values.length === 1 && isObject(values[0])) {
-        const valuesDict = values[0];
-        s = s.replace(/%\(([^)]+)\)s/g, (match, value) => valuesDict[value]);
-    } else if (values.length > 0) {
-        s = s.replace(/%s/g, () => values.shift());
-    }
-    return s;
-}
 
 /**
  * Capitalizes a string: "abc def" => "Abc def"
  *
- * @param {string} s the input string
+ * @param {string} str the input string
  * @returns {string}
  */
-export function capitalize(s) {
-    return s ? s[0].toUpperCase() + s.slice(1) : "";
+export function capitalize(str) {
+    return str ? str[0].toUpperCase() + str.slice(1) : "";
 }
 
 /**
- * @param {string} value
- * @returns boolean
- */
-export function isEmail(value) {
-    // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-    const re =
-        // eslint-disable-next-line no-useless-escape
-        /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    return re.test(value);
-}
-
-/**
- * Return true if the string is composed of only digits
+ * Escapes a pattern to use as a RegExp.
  *
- * @param {string} value
- * @returns boolean
+ * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping}
+ *
+ * @param {string} pattern
+ * @returns {string} escaped string to use as a RegExp
  */
-
-export function isNumeric(value) {
-    return Boolean(value?.match(/^\d+$/));
+export function escapeRegExp(pattern) {
+    return pattern.replaceAll(R_REGEX_SPECIAL_CHARS, "\\$&");
 }
 
 /**
@@ -124,19 +57,7 @@ export function isNumeric(value) {
  * @returns {boolean}
  */
 export function exprToBoolean(str, trueIfEmpty = false) {
-    return str ? !/^false|0$/i.test(str) : trueIfEmpty;
-}
-
-/**
- * Generate a unique identifier (64 bits) in hexadecimal.
- *
- * @returns {string}
- */
-export function uuid() {
-    const array = new Uint8Array(8);
-    window.crypto.getRandomValues(array);
-    // Uint8Array to hex
-    return [...array].map((b) => b.toString(16).padStart(2, "0")).join("");
+    return str ? !R_FALSY.test(str) : trueIfEmpty;
 }
 
 /**
@@ -164,4 +85,163 @@ export function hashCode(...strings) {
     // Convert the possibly negative number hash code into an 8 character
     // hexadecimal string
     return (hash + 16 ** 8).toString(16).slice(-8);
+}
+
+/**
+ * Intersperses ``separator`` in ``str`` at the positions indicated by
+ * ``indices``.
+ *
+ * ``indices`` is an array of relative offsets (from the previous insertion
+ * position, starting from the end of the string) at which to insert
+ * ``separator``.
+ *
+ * There are two special values:
+ *
+ * ``-1``
+ *   indicates the insertion should end now
+ * ``0``
+ *   indicates that the previous section pattern should be repeated (until all
+ *   of ``str`` is consumed)
+ *
+ * @param {string} str
+ * @param {number[]} indices
+ * @param {string} [separator=""]
+ * @returns {string}
+ */
+export function intersperse(str, indices, separator) {
+    /** @type {string[]} */
+    const result = [];
+    let last = str.length;
+    for (let i = 0; i < indices.length; ++i) {
+        let section = indices[i];
+        if (section === -1 || last <= 0) {
+            // Done with string, or -1 (stops formatting string)
+            break;
+        } else if (section === 0 && i === 0) {
+            // repeats previous section, which there is none => stop
+            break;
+        } else if (section === 0) {
+            // repeat previous section forever
+            //noinspection AssignmentToForLoopParameterJS
+            section = indices[--i];
+        }
+        result.unshift(str.substring(last - section, last));
+        last -= section;
+    }
+    const substr = str.substring(0, last);
+    if (substr) {
+        result.unshift(substr);
+    }
+    return result.join(separator || "");
+}
+
+/**
+ * @param {string} value
+ * @returns {boolean}
+ */
+export function isEmail(value) {
+    return R_EMAIL.test(value);
+}
+
+/**
+ * Return true if the string is composed of only digits
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+export function isNumeric(value) {
+    return R_NUMERIC.test(value);
+}
+
+/**
+ * @template T, M
+ * @param {Substitutions<T>} substitutions
+ * @param {(value: T) => M} mapFn
+ * @returns {Substitutions<M>}
+ */
+export function mapSubstitutions(substitutions, mapFn) {
+    if (hasSubstitutionDict(substitutions)) {
+        const substitutionDict = {};
+        for (const [key, value] of Object.entries(substitutions[0])) {
+            substitutionDict[key] = mapFn(value);
+        }
+        return [substitutionDict];
+    } else {
+        return substitutions.map(mapFn);
+    }
+}
+
+/**
+ * Returns a string formatted using given values.
+ *
+ * If the value is an object:
+ *  - its keys will replace `%(key)s` expressions;
+ *  - these expressions CANNOT be escaped (e.g. '%%(key)s');
+ *  - missing keys will yield empty strings.
+ *
+ * If the value(s) is a list of string(s):
+ *  - they will replace `%s` expressions;
+ *  - these expressions CAN be escaped by adding another '%';
+ *  - surplus of "%s" expressions will be replaced by empty strings.
+ *
+ * If no value is given, the string will not be formatted at all.
+ *
+ * @template T
+ * @param {string} str
+ * @param {Substitutions<T>} substitutions
+ * @returns {string}
+ * @example
+ *  // Generic substitutions
+ *  sprintf("Hello %s!", "world"); // "Hello world!"
+ *  sprintf("Hello %%s!", "world"); // "Hello %s!"
+ *  // Keyed substitutions
+ *  sprintf("Hello %(place)s!", { place: "world" }); // "Hello world!"
+ *  sprintf("Hello %(missing)s!", { place: "world" }); // "Hello !"
+ *  sprintf("Hello %%(place)s!", { place: "world" }); // "Hello %world!"
+ *  // Unchanged because no substitutions
+ *  sprintf("Hello %s!"); // "Hello %s!"
+ */
+export function sprintf(str, ...substitutions) {
+    if (!substitutions.length) {
+        // No substitutions => leave the string as is
+        return str;
+    }
+    if (hasSubstitutionDict(substitutions)) {
+        // Keyed (%(key)s) substitutions
+        const dict = substitutions[0];
+        return str.replaceAll(R_KEYED_SUBSTITUTION, (_match, key) => dict[key] ?? "");
+    } else {
+        // Generic (%s) substitutions
+        const raw = [""];
+        for (let i = 0; i < str.length; i++) {
+            if (str[i] === "%") {
+                if (str[i + 1] === "%") {
+                    // Escaped "%" character: => single "%"
+                    raw[raw.length - 1] += str[++i];
+                    continue;
+                }
+                if (str[i + 1] === "s") {
+                    // Substitution (ignore "%s" in final string)
+                    i++;
+                    raw.push("");
+                    continue;
+                }
+            }
+            raw[raw.length - 1] += str[i];
+        }
+        return String.raw({ raw }, ...substitutions);
+    }
+}
+
+/**
+ * Generate a unique identifier (64 bits) in hexadecimal.
+ *
+ * @returns {string}
+ */
+export function uuid() {
+    let id = "";
+    for (const b of crypto.getRandomValues(new Uint8Array(8))) {
+        id += b.toString(16).padStart(2, "0");
+    }
+    return id;
 }

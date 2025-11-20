@@ -70,6 +70,7 @@ describe("sprintf", () => {
         expect(sprintf("Hello!")).toBe("Hello!");
         expect(sprintf("Hello %s!")).toBe("Hello %s!");
         expect(sprintf("Hello %(value)s!")).toBe("Hello %(value)s!");
+        expect(sprintf("Hello %(value)s!", {})).toBe("Hello !");
     });
 
     test("properly formats numbers", () => {
@@ -93,6 +94,16 @@ describe("sprintf", () => {
 
         const vals = { one: _t("one"), two: _t("two") };
         expect(sprintf("Hello %(two)s %(one)s", vals)).toBe("Hello två en");
+    });
+
+    test("supports escaped '%' signs", () => {
+        expect(sprintf("Escape %s", "%s")).toBe("Escape %s");
+        expect(sprintf("Escape %%s", "this!")).toBe("Escape %s");
+        expect(sprintf("Escape %%%s", "this!")).toBe("Escape %this!");
+        expect(sprintf("Escape %%%%s!", "this")).toBe("Escape %%s!");
+        expect(sprintf("Escape %s%s", "this!")).toBe("Escape this!");
+        expect(sprintf("Escape %%s%s", "this!")).toBe("Escape %sthis!");
+        expect(sprintf("Escape %foo!", "this")).toBe("Escape %foo!");
     });
 });
 
