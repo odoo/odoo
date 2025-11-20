@@ -63,7 +63,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_gstin_status_feature',
         readonly=False
     )
-    l10n_in_gst_efiling_feature = fields.Boolean(string="GST E-Filing & Matching Feature")
+    l10n_in_gst_efiling_feature = fields.Boolean(string="GST Reports & E-Filing")
     l10n_in_fetch_vendor_edi_feature = fields.Boolean(string="Fetch Vendor E-Invoiced Document")
     l10n_in_enet_vendor_batch_payment_feature = fields.Boolean(string="ENet Vendor Batch Payment")
 
