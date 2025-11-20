@@ -122,9 +122,3 @@ class ChooseDeliveryCarrier(models.TransientModel):
                 pickup_delivery_carrier_id=self.carrier_id.id,
             )
             self.partner_shipping_id = address
-        # When opening a dialog from another dialog, the first one gets closed
-        # We need to return an action to open the first dialog again
-        action = self.order_id.action_open_delivery_wizard()
-        del action['context']
-        action['res_id'] = self.id
-        return action

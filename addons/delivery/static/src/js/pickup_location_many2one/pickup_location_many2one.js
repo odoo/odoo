@@ -12,7 +12,6 @@ export class PickupLocationMany2OneField extends Many2OneField {
         super.setup();
         this.orm = useService('orm');
         this.dialog = useService('dialog');
-        this.action = useService('action');
         const partnerRecord = this.props.record.data[this.props.name];
         this.selectedLocationId = partnerRecord.pickup_location_data?.id.toString();
         if (!this.props.record.resId) {
@@ -31,14 +30,9 @@ export class PickupLocationMany2OneField extends Many2OneField {
             selectedLocationId: this.selectedLocationId,
             save: async location => {
                 const jsonLocation = JSON.stringify(location);
-                let action = await this.orm.call(this.parentModel, 'set_pickup_location', [this.parentId], {
+                await this.orm.call(this.parentModel, 'set_pickup_location', [this.parentId], {
                     pickup_location_data: jsonLocation,
                 });
-                if (action) {
-                    this.action.doAction(action);
-                } else {
-                    this.action.loadState();
-                }
             },
         });
     }
