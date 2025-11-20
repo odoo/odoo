@@ -595,6 +595,20 @@ test("should keep font element on top of underline/strike (2)", async () => {
     });
 });
 
+test("should not apply color on an invisible text node", async () => {
+    await testEditor({
+        contentBefore: `
+            <p>[a</p>
+            <p>c]</p>
+        `,
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter: `
+            <p><font style="color: rgb(255, 0, 0);">[a</font></p>
+            <p><font style="color: rgb(255, 0, 0);">c]</font></p>
+        `,
+    });
+});
+
 describe("colorElement", () => {
     test("should apply o_cc1 class to the element when a color wasn't defined", async () => {
         await testEditor({
