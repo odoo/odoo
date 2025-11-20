@@ -2,24 +2,30 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_self_order.OrderChangeReceipt">
-        <div class="pos-receipt">
-            <div class="pos-receipt-title" t-if="changes.preset_name">
-                    <t t-esc="changes.preset_name"/> <t t-if="changes.preset_time">(<t t-esc="changes.preset_time"/>)</t>
-            </div>
-            <div class="pos-receipt-order-data"><t t-esc="changes.name"/></div>
-            <t t-if="changes.tracker || changes.trackingNumber">
-                <br />
-                <div class="pos-receipt-title">
-                    <t t-esc="changes.trackingNumber"/>
-                    <t t-if="changes.tracker">
-                        / Tracker number: <t t-esc="changes.tracker"/>
-                    </t>
+        <div class="pos-receipt m-0 p-0 pt-5">
+            <div class="receipt-header text-center">
+                <div class="pos-receipt-title" t-if="changes.preset_name">
+                    <t t-esc="changes.preset_name"/>
+                    <br/>
+                    <t t-if="changes.preset_time">(<t t-esc="changes.preset_time"/>)</t>
                 </div>
-            </t>
-            <br />
+                <div style="font-size: 78%;">
+                    <t t-out="changes.config_name + ' : ' + changes.time.hours + ':' + changes.time.minutes"/>
+                    <br/>
+                </div>
+                <span class="my-4" style="font-size: 150%;">
+                    <strong t-if="changes.table_number">Self-Order T <t t-esc="changes.table_number"/></strong>
+                    <strong t-elif="changes.tracker">Kiosk T <t t-esc="changes.tracker"/></strong>
+                    <strong t-else=""> Order <t t-if="changes.floating_order_name" t-esc="changes.floating_order_name"/></strong>
+                    <strong t-if="changes.trackingNumber" class="fw-light my-3">
+                        # <t t-esc="changes.trackingNumber"/>
+                    </strong>
+                </span>
+                <div class="pos-receipt-order-data" t-esc="changes.name"/>
+            </div>
+            <hr style="border: none; border-top: 4px dashed black;"/>
             <div class="pos-receipt-title">
                 NEW
-                <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
             </div>
             <br />
             <t t-foreach="changes.new" t-as="change" t-key="change_index">
