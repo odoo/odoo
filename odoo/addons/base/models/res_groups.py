@@ -346,7 +346,7 @@ class ResGroups(models.Model):
         self.view_group_hierarchy = self._get_view_group_hierarchy()
 
     @api.model
-    @tools.ormcache(cache='groups')
+    @tools.ormcache('self.env.lang', cache='groups')
     def _get_view_group_hierarchy(self):
         return {
             'groups': {
