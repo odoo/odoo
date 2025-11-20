@@ -12,7 +12,7 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _export_invoice_filename(self, invoice):
-        return f"{invoice.name.replace('/', '_')}_ubl_de.xml"
+        return f"{invoice.name.replace('/', '_')}_xrechnung.xml"
 
     def _export_invoice_ecosio_schematrons(self):
         return {

@@ -24,6 +24,8 @@ class AccountEdiXmlCII(models.AbstractModel):
     _description = "Factur-x/XRechnung CII 2.2.0"
 
     def _export_invoice_filename(self, invoice):
+        if invoice.commercial_partner_id.country_code == 'DE':
+            return f"{invoice.name.replace('/', '_')}_zugferd.xml"
         return f"{invoice.name.replace('/', '_')}_factur_x.xml"
 
     def _export_invoice_ecosio_schematrons(self):
@@ -182,8 +184,13 @@ class AccountEdiXmlCII(models.AbstractModel):
             'purchase_order_reference': invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields
                 and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else '',
-            'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
         }
+
+        # Change the document context based on the country of the partner, the default value is France (factur-X)
+        if invoice.commercial_partner_id.country_code == 'DE':
+            template_values['document_context_id'] = "urn:cen.eu:en16931:2017#conformant#urn:zugferd.de:2p2:extended"
+        else:
+            template_values['document_context_id'] = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
 
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
         for line_vals in template_values['invoice_line_vals_list']:
