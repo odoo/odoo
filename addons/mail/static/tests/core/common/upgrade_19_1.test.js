@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     contains,
@@ -15,15 +15,11 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
-import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();
-
-beforeEach(() => {
-    serverState.serverVersion = [99, 9]; // high version so following upgrades keep good working of feature
-});
 
 test("message sound is 'off'", async () => {
     localStorage.setItem("mail.user_setting.message_sound", "false");

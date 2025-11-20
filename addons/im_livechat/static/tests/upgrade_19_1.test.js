@@ -5,16 +5,12 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
-
-beforeEach(() => {
-    serverState.serverVersion = [99, 9]; // high version so following upgrades keep good working of feature
-});
 
 test("category 'Livechat' is folded", async () => {
     const pyEnv = await startServer();
