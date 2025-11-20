@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -25,7 +25,7 @@ export class Sidebar extends Interaction {
     setDelayLabel() {
         const timeagoEls = this.el.querySelectorAll(".o_portal_sidebar_timeago");
         for (const timeagoEl of timeagoEls) {
-            const dateTime = deserializeDateTime(timeagoEl.getAttribute("datetime")).startOf("day");
+            const dateTime = deserializeDate(timeagoEl.getAttribute("datetime")).startOf("day");
             const today = DateTime.now().startOf("day");
             const diff = dateTime.diff(today).as("days");
             if (diff === 0) {
