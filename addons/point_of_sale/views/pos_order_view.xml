@@ -272,7 +272,7 @@
         <field name="name">Orders</field>
         <field name="res_model">pos.order</field>
         <field name="view_mode">graph,list,form,kanban,pivot</field>
-        <field name="domain">[('state', 'not in', ['draft', 'cancel']), ('account_move', '!=', False)]</field>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel']), ('account_move', '=', False)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet!
