@@ -1,6 +1,5 @@
 import json
 import logging
-import pprint
 import requests
 import time
 import urllib.parse
@@ -55,9 +54,9 @@ class WebsocketClient(Thread):
     def on_message(self, ws, messages):
         """Synchronously handle messages received by the websocket."""
         for message in json.loads(messages):
-            _logger.debug("websocket received a message: %s", pprint.pformat(message))
             self.last_message_id = message['id']
             payload = message['message']['payload']
+            _logger.info("Received message of type %s", message['message']['type'])
 
             if not helpers.get_identifier() in payload.get('iot_identifiers', []):
                 continue
@@ -66,8 +65,10 @@ class WebsocketClient(Thread):
                 case 'iot_action':
                     for device_identifier in payload['device_identifiers']:
                         if device_identifier in main.iot_devices:
-                            _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
+                            start_operation_time = time.perf_counter()
+                            _logger.info("device '%s' action started", device_identifier)
                             main.iot_devices[device_identifier].action(payload)
+                            _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
                         else:
                             # Notify the controller that the device is not connected
                             send_to_controller({
