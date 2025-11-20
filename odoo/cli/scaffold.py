@@ -33,21 +33,10 @@ class Scaffold(Command):
             sys.exit(parser.print_help())
         args = parser.parse_args(args=cmdargs)
 
-        if args.template.id == 'l10n_payroll':
-            name_split = args.name.split('-')
-            params = {
-                'name': name_split[0],
-                'code': name_split[1]
-            }
-        else:
-            params = {'name': args.name}
-
         args.template.render_to(
             snake(args.name),
             directory(args.dest, create=True),
-            params=params,
-        )
-
+            {'name': args.name})
 
 builtins = lambda *args: os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -121,8 +110,6 @@ class template(object):
             root, ext = os.path.splitext(local)
             if ext == '.template':
                 local = root
-            if self.id == "l10n_payroll":
-                modname = f"l10n_{params['code']}_hr_payroll"
             dest = os.path.join(directory, modname, local)
             destdir = os.path.dirname(dest)
             if not os.path.exists(destdir):
