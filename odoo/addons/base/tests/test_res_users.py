@@ -443,6 +443,28 @@ class TestUsers2(UsersCommonCase):
             with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['Membre', 'Portal', 'Foo / Small user group']"):
                 user_form.save()
 
+    def test_view_group_hierarchy(self):
+        """Test that the group hierarchy shows up in the correct language of the user."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        group_system = self.env.ref('base.group_system')
+        group_system.with_context(lang='fr_FR').name = 'Administrateur'
+
+        view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
+        view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
+        self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')
+        self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
+
+        # Should work the other way around too
+        self.env.registry.clear_cache('groups')
+        view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
+        view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
+        self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')
+        self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
+
+        with patch('odoo.addons.base.models.res_groups.ResGroups._get_view_group_hierarchy') as mock:
+            self.user_portal_1.copy_data()
+            self.assertFalse(mock.called)
+
     @users('user_internal', 'portal_1')
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_user_writeable_fields(self):
