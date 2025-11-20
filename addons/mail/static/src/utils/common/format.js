@@ -229,7 +229,7 @@ export function generateThreadMentionElement(thread) {
         }`,
         id: thread.id,
         model: "discuss.channel",
-        text: `#${thread.fullNameWithParent}`,
+        text: `#${thread.channel.fullNameWithParent}`,
     });
 }
 
@@ -255,7 +255,7 @@ function generateMentionsLinks(
     }
     for (const thread of threads) {
         const placeholder = `#-mention-channel-${thread.id}`;
-        const text = `#${thread.fullNameWithParent}`;
+        const text = `#${thread.channel.fullNameWithParent}`;
         mentions.push({
             link: generateThreadMentionElement(thread),
             placeholder,

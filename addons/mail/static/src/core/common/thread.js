@@ -250,6 +250,10 @@ export class Thread extends Component {
         });
     }
 
+    get channel() {
+        return this.props.thread.channel;
+    }
+
     computeJumpPresentPosition() {
         if (!this.viewportEl || !this.jumpPresentRef.el) {
             return;
@@ -666,23 +670,23 @@ export class Thread extends Component {
     get showStartMessage() {
         return (
             this.state.mountedAndLoaded &&
-            ["channel", "group", "chat"].includes(this.props.thread.channel?.channel_type)
+            ["channel", "group", "chat"].includes(this.channel?.channel_type)
         );
     }
 
     get startMessageTitle() {
-        const channelName = this.props.thread.name;
-        if (this.props.thread.channel?.parent_channel_id) {
+        const channelName = this.channel?.displayName;
+        if (this.channel.parent_channel_id) {
             return channelName;
         }
-        if (this.props.thread.channel?.channel_type === "channel") {
+        if (this.channel?.channel_type === "channel") {
             return _t("Welcome to #%(channelName)s!", { channelName });
         }
-        return this.props.thread.displayName;
+        return this.channel.displayName;
     }
 
     get startMessageSubtitle() {
-        if (this.props.thread.channel?.parent_channel_id) {
+        if (this.channel?.parent_channel_id) {
             const authorName = Object.values(this.store["res.partner"].records).find((partner) =>
                 partner.main_user_id?.eq(this.props.thread.create_uid)
             )?.name;
@@ -690,18 +694,18 @@ export class Thread extends Component {
                 return _t("Started by %(authorName)s", { authorName });
             }
         }
-        if (this.props.thread.channel?.channel_type === "channel") {
+        if (this.channel?.channel_type === "channel") {
             return _t("This is the start of the #%(channelName)s channel", {
-                channelName: this.props.thread.name,
+                channelName: this.channel.name,
             });
         }
-        if (this.props.thread.channel?.channel_type === "group") {
+        if (this.channel?.channel_type === "group") {
             return _t("This is the start of %(conversationName)s group", {
-                conversationName: this.props.thread.displayName,
+                conversationName: this.channel.displayName,
             });
         }
         return _t("This is the start of your direct chat with %(userName)s", {
-            userName: this.props.thread.displayName,
+            userName: this.channel.displayName,
         });
     }
 }

@@ -21,7 +21,7 @@ patch(Store.prototype, {
                         (thread.channel?.self_member_id?.is_pinned ||
                             (thread.needactionMessages.length > 0 &&
                                 thread.model !== "mail.box")) &&
-                        cleanTerm(thread.displayName).includes(searchTerm)
+                        cleanTerm(thread.channel?.displayName).includes(searchTerm)
                 );
                 const tab = this.discuss.activeTab;
                 if (tab === "inbox") {

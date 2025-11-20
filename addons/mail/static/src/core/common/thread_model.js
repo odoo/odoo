@@ -303,6 +303,9 @@ export class Thread extends Record {
     }
 
     get displayName() {
+        if (this.channel) {
+            return this.channel.displayName;
+        }
         return this.display_name;
     }
 
@@ -312,13 +315,6 @@ export class Thread extends Record {
 
     get avatarUrl() {
         return this.module_icon ?? this.store.DEFAULT_AVATAR;
-    }
-
-    get fullNameWithParent() {
-        const text = this.channel?.parent_channel_id
-            ? `${this.channel.parent_channel_id.displayName} > ${this.displayName}`
-            : this.displayName;
-        return text;
     }
 
     get isTransient() {

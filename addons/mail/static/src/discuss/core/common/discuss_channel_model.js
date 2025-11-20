@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { compareDatetime, effectWithCleanup } from "@mail/utils/common/misc";
+import { formatList } from "@web/core/l10n/utils";
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
 
@@ -132,11 +133,37 @@ export class DiscussChannel extends Record {
     get chatChannelTypes() {
         return ["chat", "group"];
     }
+    get displayName() {
+        if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
+            return this.self_member_id.custom_channel_name;
+        }
+        if (this.channel_type === "chat" && this.correspondent) {
+            return this.correspondent.name;
+        }
+        if (this.channel_name_member_ids.length && !this.name) {
+            const nameParts = this.channel_name_member_ids
+                .sort((m1, m2) => m1.id - m2.id)
+                .slice(0, 3)
+                .map((member) => member.name);
+            if (this.member_count > 3) {
+                const remaining = this.member_count - 3;
+                nameParts.push(remaining === 1 ? _t("1 other") : _t("%s others", remaining));
+            }
+            return formatList(nameParts);
+        }
+        return this.name;
+    }
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     /** @type {"not_fetched"|"fetching"|"fetched"} */
     fetchChannelInfoState = "not_fetched";
     from_message_id = fields.One("mail.message", { inverse: "linkedSubChannel" });
+    get fullNameWithParent() {
+        const text = this.parent_channel_id
+            ? `${this.parent_channel_id.displayName} > ${this.displayName}`
+            : this.displayName;
+        return text;
+    }
     get memberListTypes() {
         return ["channel", "group"];
     }
@@ -244,6 +271,8 @@ export class DiscussChannel extends Record {
     }
     /** @type {Number|undefined} */
     member_count;
+    /** @type {string} */
+    name;
     /** ⚠️ {@link AwaitChatHubInit} */
     get shouldSubscribeToBusChannel() {
         return this.chatWindow?.isOpen;

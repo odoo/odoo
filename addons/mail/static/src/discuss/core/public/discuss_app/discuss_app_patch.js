@@ -13,7 +13,7 @@ patch(Discuss.prototype, {
                     this.title.setParts({ action: threadName });
                 }
             },
-            () => [this.thread?.displayName]
+            () => [this.thread?.channel?.displayName || this.thread?.displayName]
         );
     },
 });

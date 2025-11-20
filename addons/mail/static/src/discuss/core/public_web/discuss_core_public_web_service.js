@@ -34,7 +34,7 @@ export class DiscussCorePublicWeb {
                 !invite_to_rtc_call
             ) {
                 this.notificationService.add(
-                    _t("You have been invited to #%s", thread.displayName),
+                    _t("You have been invited to #%s", thread.channel.displayName),
                     { type: "info" }
                 );
             }

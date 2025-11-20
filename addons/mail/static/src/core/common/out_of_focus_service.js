@@ -45,7 +45,7 @@ export class OutOfFocusService {
             if (message.thread?.channel?.channel_type === "channel") {
                 notificationTitle = _t("%(author name)s from %(channel name)s", {
                     "author name": message.authorName,
-                    "channel name": message.thread.displayName,
+                    "channel name": message.channel_id.displayName,
                 });
             } else {
                 notificationTitle = message.authorName;
