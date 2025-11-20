@@ -38,6 +38,9 @@ class PurchaseOrderLine(models.Model):
     price_unit = fields.Float(
         string='Unit Price', required=True, digits='Product Price', aggregator='avg',
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
+    price_unit_product_uom = fields.Float(
+        string='Unit Price Product UoM', digits='Product Price', compute="_compute_price_unit_product_uom",
+        help="The Price of one unit of the product's Unit of Measure")
     price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
@@ -150,6 +153,11 @@ class PurchaseOrderLine(models.Model):
     def _compute_price_unit_discounted(self):
         for line in self:
             line.price_unit_discounted = line.price_unit * (1 - line.discount / 100)
+
+    @api.depends('product_uom_id', 'price_unit')
+    def _compute_price_unit_product_uom(self):
+        for line in self:
+            line.price_unit_product_uom = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_id)
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
