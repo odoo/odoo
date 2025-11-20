@@ -867,7 +867,7 @@ test("display names in facets", async () => {
 
     expect(getFacetTexts()).toEqual([
         "Bar = John",
-        "Bar = David or Inaccessible/missing record ID: 5555",
+        "Bar = David or Missing record",
         `Bar ${label("set")}`,
         "Id = 2",
     ]);

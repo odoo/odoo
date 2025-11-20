@@ -8,7 +8,7 @@
                     <AvatarTag imageUrl="tag.img" onDelete="tag.onDelete" text="tag.text"/>
                 </t>
                 <t t-else="">
-                    <BadgeTag onDelete="tag.onDelete" text="tag.text"/>
+                    <BadgeTag onDelete="tag.onDelete" text="tag.text" color="tag.color" tooltip="tag.tooltip"/>
                 </t>
             </t>
             <RecordAutocomplete

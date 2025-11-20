@@ -29,7 +29,7 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         if (typeof displayNames[val] === "string") {
             val = displayNames[val];
         } else {
-            return _t("Inaccessible/missing record ID: %s", val);
+            return _t("Missing record");
         }
     }
     if (fieldDef?.type === "selection") {
