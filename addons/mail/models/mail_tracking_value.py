@@ -98,6 +98,8 @@ class MailTrackingValue(models.Model):
                 'new_value_float': new_value
             })
         elif col_info['type'] == 'date':
+            old_value = (initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time()))) or False
+            new_value = (new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time()))) or False
             values.update({
                 'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
                 'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
@@ -108,9 +110,11 @@ class MailTrackingValue(models.Model):
                 'new_value_integer': new_value
             })
         elif col_info['type'] == 'selection':
+            old_value = (initial_value and dict(col_info['selection']).get(initial_value, initial_value)) or ''
+            new_value = (new_value and dict(col_info['selection'])[new_value]) or ''
             values.update({
-                'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
-                'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
+                'old_value_char': old_value,
+                'new_value_char': new_value,
             })
         elif col_info['type'] == 'many2one':
             # Can be:
@@ -131,7 +135,7 @@ class MailTrackingValue(models.Model):
                 'old_value_integer': initial_value[0],
                 'new_value_integer': new_value[0],
                 'old_value_char': initial_value[1],
-                'new_value_char': new_value[1]
+                'new_value_char': new_value[1],
             })
         elif col_info['type'] in {'one2many', 'many2many', 'tags'}:
             # Can be:
