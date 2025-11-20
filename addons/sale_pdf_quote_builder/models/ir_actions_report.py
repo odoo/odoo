@@ -28,7 +28,6 @@ class IrActionsReport(models.Model):
 
         for order in orders:
             if (
-                order.state == 'sale'
                 or order.id not in result
                 or 'stream' not in result[order.id]
             ):
