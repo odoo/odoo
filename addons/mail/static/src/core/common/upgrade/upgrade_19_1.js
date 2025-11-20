@@ -53,3 +53,8 @@ upgrade_19_1.add("mail_user_setting_edge_blur_amount", ({ value }) => ({
     key: "Settings,undefined:edgeBlurAmount",
     value: parseInt(value),
 }));
+
+upgrade_19_1.add("mail_user_setting_show_only_video", {
+    key: "Settings,undefined:showOnlyVideo",
+    value: true,
+});

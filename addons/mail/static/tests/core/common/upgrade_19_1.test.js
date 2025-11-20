@@ -75,6 +75,24 @@ test("use blur is 'on'", async () => {
     expect(localStorage.getItem("mail_user_setting_edge_blur_amount")).toBe(null);
 });
 
+test("show only video 'on'", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    localStorage.setItem("mail_user_setting_show_only_video", "true");
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item", { text: "Call Settings" });
+    await contains(".o-discuss-CallSettings");
+    await contains("input[title='Show video participants only']:checked");
+    const showOnlyVideoKey = makeRecordFieldLocalId(Settings.localId(), "showOnlyVideo");
+    expect(localStorage.getItem(showOnlyVideoKey)).toBe(toRawValue(true));
+    expect(localStorage.getItem("mail_user_setting_show_only_video")).toBe(null);
+});
+
 test("member default open is 'off'", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });

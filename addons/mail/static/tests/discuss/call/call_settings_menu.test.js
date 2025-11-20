@@ -101,7 +101,8 @@ test("local storage for call settings", async () => {
     localStorage.setItem(backgroundBlurAmountKey, toRawValue(3));
     const edgeBlurAmountKey = makeRecordFieldLocalId(Settings.localId(), "edgeBlurAmount");
     localStorage.setItem(edgeBlurAmountKey, toRawValue(5));
-    localStorage.setItem("mail_user_setting_show_only_video", "true");
+    const showOnlyVideoKey = makeRecordFieldLocalId(Settings.localId(), "showOnlyVideo");
+    localStorage.setItem(showOnlyVideoKey, toRawValue(true));
     const useBlurLocalStorageKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
     localStorage.setItem(useBlurLocalStorageKey, toRawValue(true));
     patchWithCleanup(localStorage, {
@@ -111,6 +112,7 @@ test("local storage for call settings", async () => {
                 [
                     "Settings,undefined:backgroundBlurAmount",
                     "Settings,undefined:edgeBlurAmount",
+                    "Settings,undefined:showOnlyVideo",
                 ].includes(key)
             ) {
                 expect.step(`${key}: ${value}`);
@@ -133,7 +135,7 @@ test("local storage for call settings", async () => {
 
     // testing save to local storage
     await click("input[title='Show video participants only']");
-    await expect.waitForSteps(["mail_user_setting_show_only_video: false"]);
+    await expect.waitForSteps(["Settings,undefined:showOnlyVideo: false"]);
     await click("input[title='Blur video background']");
     expect(localStorage.getItem(useBlurLocalStorageKey)).toBe(null);
     await editInput(document.body, ".o-Discuss-CallSettings-thresholdInput", 0.3);
