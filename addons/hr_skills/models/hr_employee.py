@@ -43,14 +43,14 @@ class HrEmployee(models.Model):
         for vals in vals_list:
             vals_emp_skill = vals.pop('current_employee_skill_ids', [])\
                 + vals.pop('certification_ids', []) + vals.get('employee_skill_ids', [])
-            vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(vals_emp_skill, self)
+            vals['employee_skill_ids'] = vals_emp_skill
         return super().create(vals_list)
 
     def write(self, vals):
         if 'current_employee_skill_ids' in vals or 'certification_ids' in vals or 'employee_skill_ids' in vals:
             vals_emp_skill = vals.pop('current_employee_skill_ids', []) + vals.pop('certification_ids', [])\
                 + vals.get('employee_skill_ids', [])
-            vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(vals_emp_skill, self)
+            vals['employee_skill_ids'] = vals_emp_skill
         return super().write(vals)
 
     @api.model
