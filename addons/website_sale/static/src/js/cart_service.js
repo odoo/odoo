@@ -1,4 +1,4 @@
-import { reactive } from '@odoo/owl';
+import { EventBus, reactive } from '@odoo/owl';
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -16,6 +16,7 @@ import { session } from '@web/session';
 import {
     CartNotificationContainer
 } from '@website_sale/js/cart_notification/cart_notification_container/cart_notification_container';
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 const { DateTime } = luxon;
 const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
@@ -69,6 +70,7 @@ export class CartService {
         this.dialog = services.dialog;
         this.rpc = rpc;  // To be overridable in tests.
         this.notifications = reactive(new Set());
+        this.bus = new EventBus();
 
         // Register the notification container
         registry.category('main_components').add('CartNotificationContainer',
@@ -78,9 +80,10 @@ export class CartService {
             }
         );
 
-        // Only expose `add` in the service registry.
         return {
+            bus: this.bus,
             add: (...args) => this.add(...args),
+            update: (...args) => this.update(...args),
             showWarning: (...args) => this.showWarning(...args),
         };
     }
@@ -238,6 +241,26 @@ export class CartService {
             shouldRedirectToCart: isBuyNow,
             ...rest
         });
+    }
+
+    async update(
+        lineId,
+        productId=undefined,
+        quantity
+    ) {
+        const data = await this.rpc('/shop/cart/update', {
+            line_id: lineId,
+            product_id: productId,
+            quantity: quantity,
+        });
+
+        this._updateCartIcon(data.cart_quantity);
+        this.bus.trigger('cart_update');
+        this.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
+
+        // Why are you making cart_service ugly? :(
+        wSaleUtils.updateQuickReorderSidebar(data);
+        wSaleUtils.showWarning(data.warning);
     }
 
     /**
@@ -561,7 +584,7 @@ export class CartService {
 
 export const cartService = {
     dependencies: CartService.dependencies,
-    async: ['add'],
+    async: ['add', 'update'],
     start(env, dependencies) {
         return new CartService(env, dependencies);
     },

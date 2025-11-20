@@ -18,10 +18,6 @@ export class ExpressCheckout extends Interaction {
     }
 
     start() {
-        // Monitor updates of the amount on eCommerce's cart pages.
-        this.env.bus.addEventListener('cart_amount_changed', (ev) =>
-            this._updateAmount(...ev.detail)
-        );
         // Monitor when the page is restored from the bfcache.
         this.addListener(window, 'pageshow', this._onNavigationBack);
     }

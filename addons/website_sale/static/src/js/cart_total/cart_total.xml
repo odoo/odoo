@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website_sale.CartTotal">
+        <t t-set="showTaxLines" t-value="True"/>
+        <table class="table mb-0">
+            <tr
+                t-if="state.has_deliverable_products"
+                name="o_order_delivery"
+            >
+                <td class="ps-0 pt-0 pb-2 border-0 text-muted" colspan="2">
+                    Delivery
+                </td>
+                <td class="text-end pe-0 pt-0 pb-2 border-0">
+                    <span
+                        name="o_message_no_dm_set"
+                        t-att-class="state.has_carrier ? 'd-none' : ''"
+                        title="Price will be updated after choosing a delivery method"
+                    >
+                        -
+                    </span>
+                    <span
+                        t-out="formatPrice(state.amount_delivery)"
+                        t-att-class="'monetary_field' + (state.has_carrier ? '' : ' d-none')"
+                        style="white-space: nowrap;"
+                    />
+                </td>
+            </tr>
+            <tr name="o_order_total_untaxed">
+                <td
+                    class="border-0 pb-2 ps-0 pt-0 text-start text-muted"
+                    colspan="2">
+                    Subtotal
+                </td>
+                <td class="text-end border-0 pb-2 pe-0 pt-0">
+                    <span
+                        t-out="formatPrice(state.amount_untaxed)"
+                        class="monetary_field"
+                        style="white-space: nowrap;"
+                    />
+                </td>
+            </tr>
+            <t t-if="showTaxLines" t-call="website_sale.OrderTaxLines"/>
+            <tr name="o_order_total" class="border-top">
+                <td colspan="2" class="border-0 p-0 pe-3 pb-2 fw-bold">Total</td>
+                <td class="text-end border-0 ps-3 pb-2">
+                    <span
+                        t-out="formatPrice(state.amount_total)"
+                        class="monetary_field fw-bold"
+                        style="white-space: nowrap;"
+                    />
+                </td>
+            </tr>
+        </table>
+    </t>
+
+    <t t-name="website_sale.OrderTaxLines">
+        <tbody id="order_tax_lines_container">
+            <t t-if="state.tax_subtotals">
+                <t t-foreach="state.tax_subtotals" t-as="line" t-key="line.id">
+                    <t t-foreach="line['tax_groups']" t-as="tax_line" t-key="tax_line.id">
+                        <tr name="o_order_total_taxes">
+                            <td colspan="2" class="text-muted border-0 p-0 pe-3 pb-2">
+                                <t t-out="tax_line['group_name']"/>
+                            </td>
+                            <td class="text-end border-0 p-0 ps-3 pb-2">
+                                <span
+                                    t-out="formatPrice(tax_line['tax_amount_currency'])"
+                                    class="monetary_field"
+                                    style="white-space: nowrap;"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+        </tbody>
+    </t>
+</templates>

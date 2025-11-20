@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website_sale.CartLines">
+        <div t-if="state.shopWarning" class="alert alert-warning" role="alert">
+            <strong>Warning!</strong>
+            <div t-out="state.shopWarning" class="text-prewrap"/>
+        </div>
+
+        <div class="d-flex flex-column mb32">
+            <t t-foreach="state.cartLines" t-as="line" t-key="line.id">
+                <CartLine t-props="getLineProps(line)"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

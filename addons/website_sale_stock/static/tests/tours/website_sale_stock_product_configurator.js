@@ -45,7 +45,7 @@ registry
             },
             {
                 content: "Verify the quantity in the cart",
-                trigger: 'div.o_cart_product input.quantity[value="10"]',
+                trigger: 'div.o_cart_product input.quantity:value(10)',
             },
         ],
     });

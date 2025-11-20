@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-inherit="website_sale.CartTotal" t-inherit-mode="extension">
+        <t t-set="showTaxLines" position="after">
+            <t t-if="state.country_code == 'BR'" t-set="showTaxLines" t-value="False"/>
+        </t>
+        <tr name="o_order_total_untaxed" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="#{ state.country_code == 'BR' ? 'd-none' : ''}"
+                separator=" "
+            />
+        </tr>
+        <tr name="o_order_total" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="#{ state.country_code != 'BR' ? 'border-top' : ''}"
+                separator=" "
+            />
+        </tr>
+    </t>
+
+</templates>

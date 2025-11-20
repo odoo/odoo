@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-inherit="website_sale.CartLinesQuantity" t-inherit-mode="extension">
+        <a name="add_quantity" position="attributes">
+            <attribute name="t-on-click">
+                props.maxQuantity == props.displayedQuantity ? () => {} : () => props.update(props.id, props.productId, props.displayedQuantity + 1)
+            </attribute>
+        </a>
+    </t>
+</templates>

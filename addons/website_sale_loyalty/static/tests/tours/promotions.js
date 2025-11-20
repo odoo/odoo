@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         },
         {
             content: "remove one cabinet from cart",
-            trigger: '#cart_products input.js_quantity[value="4"]',
+            trigger: '#cart_products input.js_quantity:value(4)',
             run: "edit 3 && click body",
         },
         {
