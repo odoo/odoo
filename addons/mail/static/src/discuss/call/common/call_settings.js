@@ -91,7 +91,7 @@ export class CallSettings extends Component {
     }
 
     onChangeSelectAudioInput(ev) {
-        this.store.settings.setAudioInputDevice(ev.target.value);
+        this.store.settings.audioInputDeviceId = ev.target.value;
     }
 
     onClickDownloadLogs() {

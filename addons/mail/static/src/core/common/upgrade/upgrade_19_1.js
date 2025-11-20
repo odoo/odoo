@@ -28,3 +28,18 @@ upgrade_19_1.add("mail_user_setting_use_blur", {
     key: "Settings,undefined:useBlur",
     value: true,
 });
+
+upgrade_19_1.add("mail_user_setting_audio_input_device_id", ({ value }) => ({
+    key: "Settings,undefined:audioInputDeviceId",
+    value,
+}));
+
+upgrade_19_1.add("mail_user_setting_audio_output_device_id", ({ value }) => ({
+    key: "Settings,undefined:audioOutputDeviceId",
+    value,
+}));
+
+upgrade_19_1.add("mail_user_setting_camera_input_device_id", ({ value }) => ({
+    key: "Settings,undefined:cameraInputDeviceId",
+    value,
+}));

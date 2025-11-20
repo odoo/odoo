@@ -75,13 +75,13 @@ export class DeviceSelect extends Component {
     onChangeSelectAudioInput(ev) {
         switch (this.props.kind) {
             case "audioinput":
-                this.store.settings.setAudioInputDevice(ev.target.value);
+                this.store.settings.audioInputDeviceId = ev.target.value;
                 return;
             case "videoinput":
-                this.store.settings.setCameraInputDevice(ev.target.value);
+                this.store.settings.cameraInputDeviceId = ev.target.value;
                 return;
             case "audiooutput":
-                this.store.settings.setAudioOutputDevice(ev.target.value);
+                this.store.settings.audioOutputDeviceId = ev.target.value;
                 return;
         }
     }
