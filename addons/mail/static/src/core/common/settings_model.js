@@ -54,8 +54,8 @@ export class Settings extends Record {
     push_to_talk_key;
 
     // Video settings
-    backgroundBlurAmount = 10;
-    edgeBlurAmount = 10;
+    backgroundBlurAmount = fields.Attr(10, { localStorage: true });
+    edgeBlurAmount = fields.Attr(10, { localStorage: true });
     showOnlyVideo = false;
     useBlur = fields.Attr(false, { localStorage: true });
     blurPerformanceWarning = fields.Attr(false, {
@@ -299,12 +299,6 @@ export class Settings extends Record {
             : this.voiceActivationThreshold;
         this.showOnlyVideo =
             browser.localStorage.getItem("mail_user_setting_show_only_video") === "true";
-        const backgroundBlurAmount = browser.localStorage.getItem(
-            "mail_user_setting_background_blur_amount"
-        );
-        this.backgroundBlurAmount = backgroundBlurAmount ? parseInt(backgroundBlurAmount) : 10;
-        const edgeBlurAmount = browser.localStorage.getItem("mail_user_setting_edge_blur_amount");
-        this.edgeBlurAmount = edgeBlurAmount ? parseInt(edgeBlurAmount) : 10;
     }
     /**
      * @private

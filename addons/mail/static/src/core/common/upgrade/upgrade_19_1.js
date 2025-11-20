@@ -43,3 +43,13 @@ upgrade_19_1.add("mail_user_setting_camera_input_device_id", ({ value }) => ({
     key: "Settings,undefined:cameraInputDeviceId",
     value,
 }));
+
+upgrade_19_1.add("mail_user_setting_background_blur_amount", ({ value }) => ({
+    key: "Settings,undefined:backgroundBlurAmount",
+    value: parseInt(value),
+}));
+
+upgrade_19_1.add("mail_user_setting_edge_blur_amount", ({ value }) => ({
+    key: "Settings,undefined:edgeBlurAmount",
+    value: parseInt(value),
+}));

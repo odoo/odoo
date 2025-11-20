@@ -2,7 +2,6 @@ import { Component, onWillStart, useExternalListener, useState, xml } from "@odo
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { debounce } from "@web/core/utils/timing";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 import { useMicrophoneVolume } from "@mail/utils/common/hooks";
@@ -28,18 +27,6 @@ export class CallSettings extends Component {
             userDevices: [],
         });
         this.pttExtService = useService("discuss.ptt_extension");
-        this.saveBackgroundBlurAmount = debounce(() => {
-            browser.localStorage.setItem(
-                "mail_user_setting_background_blur_amount",
-                this.store.settings.backgroundBlurAmount.toString()
-            );
-        }, 2000);
-        this.saveEdgeBlurAmount = debounce(() => {
-            browser.localStorage.setItem(
-                "mail_user_setting_edge_blur_amount",
-                this.store.settings.edgeBlurAmount.toString()
-            );
-        }, 2000);
         useExternalListener(browser, "keydown", this._onKeyDown, { capture: true });
         useExternalListener(browser, "keyup", this._onKeyUp, { capture: true });
         onWillStart(async () => {
@@ -138,12 +125,10 @@ export class CallSettings extends Component {
 
     onChangeBackgroundBlurAmount(ev) {
         this.store.settings.backgroundBlurAmount = Number(ev.target.value);
-        this.saveBackgroundBlurAmount();
     }
 
     onChangeEdgeBlurAmount(ev) {
         this.store.settings.edgeBlurAmount = Number(ev.target.value);
-        this.saveEdgeBlurAmount();
     }
 }
 
