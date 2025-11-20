@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { generateThreadMentionElement } from "@mail/utils/common/format";
 
 export class MentionPlugin extends Plugin {
@@ -6,12 +7,44 @@ export class MentionPlugin extends Plugin {
     static dependencies = ["selection", "history"];
     resources = {
         selectionchange_handlers: this.detectMentions.bind(this),
+        is_node_editable_predicates: (node) => {
+            for (const { selector } of this.MENTION_SELECTORS) {
+                if (closestElement(node, selector)) {
+                    return true;
+                }
+            }
+        },
+        select_all_overrides: this.selectAll.bind(this),
     };
 
     setup() {
         super.setup();
         /** @type {import("models").Store} */
         this.store = this.services["mail.store"];
+    }
+
+    /**
+     * Extend the selection to include whole mention elements at the borders
+     * so that it doesn't get stuck into the contenteditable=false
+     */
+    selectAll({ anchorNode, anchorOffset, focusNode, focusOffset }) {
+        const SELECTOR = this.MENTION_SELECTORS.map(({ selector }) => selector).join(", ");
+        if (closestElement(anchorNode, SELECTOR)) {
+            const startMention = closestElement(anchorNode, SELECTOR);
+            anchorNode = startMention.parentNode;
+            anchorOffset = Array.prototype.indexOf.call(anchorNode.childNodes, startMention);
+        }
+        if (closestElement(focusNode, SELECTOR)) {
+            const endMention = closestElement(focusNode, SELECTOR);
+            focusNode = endMention.parentNode;
+            focusOffset = Array.prototype.indexOf.call(focusNode.childNodes, endMention) + 1;
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode,
+            anchorOffset,
+            focusNode,
+            focusOffset,
+        });
     }
 
     get MENTION_SELECTORS() {
@@ -23,6 +56,14 @@ export class MentionPlugin extends Plugin {
                     this.store.handleValidChannelMention(channelLinks);
                     this.dependencies.history.addStep();
                 },
+            },
+            {
+                selector: "a.o_mail_redirect",
+                checker: (el) => true,
+            },
+            {
+                selector: "a.o-discuss-mention",
+                checker: (el) => true,
             },
         ];
     }
