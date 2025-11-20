@@ -1,8 +1,42 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { sendRequest } from "@website/js/utils";
+export function sendRequest(route, params) {
+    function _addInput(form, name, value) {
+        const param = document.createElement("input");
+        param.setAttribute("type", "hidden");
+        param.setAttribute("name", name);
+        param.setAttribute("value", value);
+        form.appendChild(param);
+    }
 
+    const form = document.createElement("form");
+    form.setAttribute("action", route);
+    form.setAttribute("method", params.method || "POST");
+    // This is an exception for the 404 page create page button, in backend we
+    // want to open the response in the top window not in the iframe.
+    if (params.forceTopWindow) {
+        form.setAttribute("target", "_top");
+    }
+
+    if (odoo.csrf_token) {
+        _addInput(form, "csrf_token", odoo.csrf_token);
+    }
+
+    for (const key in params) {
+        const value = params[key];
+        if (Array.isArray(value) && value.length) {
+            for (const val of value) {
+                _addInput(form, key, val);
+            }
+        } else {
+            _addInput(form, key, value);
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
 export class PostLink extends Interaction {
     static selector = ".post_link";
     dynamicSelectors = {

@@ -1,8 +1,9 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { getModelName, getParsedDataFor } from "./utils";
+import { getModelName } from "./utils";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { getParsedDataFor } from "@website/js/utils";
 
 export class FormOption extends BaseOptionComponent {
     static template = "website.s_website_form_form_option";

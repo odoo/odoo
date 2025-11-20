@@ -31,7 +31,6 @@ import {
     replaceFieldElement,
     setActiveProperties,
     setVisibilityDependency,
-    getParsedDataFor,
     rerenderField,
     getFormCacheKey,
 } from "./utils";
@@ -45,6 +44,7 @@ import { isSmallInteger } from "@html_builder/utils/utils";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { getParsedDataFor } from "@website/js/utils";
 
 /**
  * @typedef { Object } FormOptionShared
