@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDate } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -28,7 +28,7 @@ var PortalSidebar = publicWidget.Widget.extend({
     _setDelayLabel: function () {
         var $sidebarTimeago = this.$el.find('.o_portal_sidebar_timeago').toArray();
         $sidebarTimeago.forEach((el) => {
-            var dateTime = deserializeDateTime($(el).attr('datetime')).startOf('day'),
+            var dateTime = deserializeDate($(el).attr('datetime')).startOf('day'),
                 today = DateTime.now().startOf('day'),
                 diff = dateTime.diff(today).as("days"),
                 displayStr;
