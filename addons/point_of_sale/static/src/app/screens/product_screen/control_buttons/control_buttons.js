@@ -21,7 +21,6 @@ export class ControlButtons extends Component {
     static props = {
         showRemainingButtons: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },
-        close: { type: Function, optional: true },
     };
     static defaultProps = {
         showRemainingButtons: false,
@@ -156,7 +155,4 @@ export class ControlButtons extends Component {
 export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
     static template = "point_of_sale.ControlButtonsPopup";
-    static props = {
-        close: Function,
-    };
 }

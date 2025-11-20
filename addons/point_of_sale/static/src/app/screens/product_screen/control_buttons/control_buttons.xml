@@ -48,14 +48,14 @@
                     <i class="fa fa-outdent" role="img" aria-label="Break combo" title="Brean combo" /> Break combo
                 </button>
                 <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())">
-                    <i class="fa fa-trash me-1" role="img" /> Cancel Order 
+                    <i class="fa fa-trash me-1" role="img" /> Cancel Order
                 </button>
             </div>
         </t>
     </t>
     <t t-name="point_of_sale.ControlButtonsPopup">
-        <Dialog bodyClass="'d-flex flex-column'" footer="false" title.translate="Actions" t-on-click="props.close">
-            <ControlButtons showRemainingButtons="true" close="props.close"/>
+        <Dialog bodyClass="'d-flex flex-column'" footer="false" title.translate="Actions" backdrop="true" closeOnBodyButtonClick="true">
+            <ControlButtons showRemainingButtons="true" />
         </Dialog>
     </t>
 </templates>
