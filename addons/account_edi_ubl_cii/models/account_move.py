@@ -81,7 +81,7 @@ class AccountMove(models.Model):
                 return self.env['account.edi.xml.ubl_20']
             if ubl_version.text in ('2.1', '2.2', '2.3'):
                 return self.env['account.edi.xml.ubl_21']
-        if customization_id is not None:
+        if customization_id is not None and customization_id.text:
             if 'xrechnung' in customization_id.text:
                 return self.env['account.edi.xml.ubl_de']
             if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
