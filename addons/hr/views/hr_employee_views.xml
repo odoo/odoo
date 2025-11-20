@@ -585,7 +585,10 @@
             <field name="model">hr.employee</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban" sample="1" duplicate="false">
+                <kanban class="o_hr_employee_kanban" sample="1" duplicate="false" js_class="hr_employee_kanban">
+                    <header>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
+                    </header>
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
                     <field name="company_id"/>

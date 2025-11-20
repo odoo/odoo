@@ -80,7 +80,6 @@ class HrEmployee(models.Model):
         server_action_xmlids = [
             'action_hr_employee_presence_present',
             'action_hr_employee_presence_absent',
-            'action_hr_employee_presence_log',
             'action_hr_employee_presence_sms',
             'action_hr_employee_presence_time_off',
         ]
@@ -158,16 +157,6 @@ Thank you for your prompt attention to this matter.""")
             "name": self.env._("Send SMS"),
             "target": "new",
         }
-
-    def action_send_log(self):
-        if not self.env.user.has_group('hr.group_hr_manager'):
-            raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-
-        for employee in self:
-            employee.message_post(body=_(
-                "%(name)s has been noted as %(state)s today",
-                name=employee.name,
-                state=employee.hr_presence_state_display))
 
     @api.depends("user_id.im_status", "hr_presence_state_display")
     def _compute_presence_state(self):
