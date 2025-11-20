@@ -19,7 +19,7 @@ class TestWebsiteSitemap(TransactionCase):
             'arch': '<t t-call="website.layout"/>',
             'is_published': True,
         })
-        View = self.env['ir.ui.view']
+        View = self.env['ir.qweb']
 
         def set_write_dates(page_date, view_date):
             self.env.cr.execute(
@@ -27,7 +27,7 @@ class TestWebsiteSitemap(TransactionCase):
                 (page_date, page.id)
             )
             self.env.cr.execute(
-                "UPDATE ir_ui_view SET write_date = %s WHERE id = %s",
+                "UPDATE ir_qweb SET write_date = %s WHERE id = %s",
                 (view_date, page.view_id.id)
             )
             View.invalidate_model(['write_date'])

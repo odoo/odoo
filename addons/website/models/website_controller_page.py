@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 class WebsiteControllerPage(models.Model):
     _name = 'website.controller.page'
-    _inherits = {'ir.ui.view': 'view_id'}
+    _inherits = {'ir.qweb': 'view_id'}
     _inherit = [
         'website.published.multi.mixin',
         'website.searchable.mixin',
@@ -17,8 +17,8 @@ class WebsiteControllerPage(models.Model):
         'url should be unique',
     )
 
-    view_id = fields.Many2one('ir.ui.view', string='Listing view', required=True, index=True, ondelete="cascade")
-    record_view_id = fields.Many2one('ir.ui.view', string='Record view', ondelete="cascade")
+    view_id = fields.Many2one('ir.qweb', string='Listing view', required=True, index=True, ondelete="cascade")
+    record_view_id = fields.Many2one('ir.qweb', string='Record view', ondelete="cascade")
     menu_ids = fields.One2many('website.menu', 'controller_page_id', 'Related Menus')
 
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
@@ -107,8 +107,8 @@ class WebsiteControllerPage(models.Model):
 
     def unlink(self):
         # When a website_controller_page is deleted, the ORM does not delete its
-        # ir_ui_view. So we got to delete it ourself, but only if the
-        # ir_ui_view is not used by another website_page.
+        # ir.qweb. So we got to delete it ourself, but only if the
+        # ir.qweb is not used by another website_page.
         views_to_delete = self.view_id.filtered(
             lambda v: v.controller_page_ids <= self and not v.inherit_children_ids
         )

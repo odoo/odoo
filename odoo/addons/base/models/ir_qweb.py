@@ -365,6 +365,7 @@ import time
 import token
 import tokenize
 import traceback
+import uuid
 import warnings
 import werkzeug
 
@@ -378,13 +379,14 @@ from dateutil.relativedelta import relativedelta
 from pathlib import Path
 from psycopg2.extensions import TransactionRollbackError
 from psycopg2.errors import ReadOnlySqlTransaction
-from typing import NamedTuple, Literal
+from typing import NamedTuple, Literal, Self
 from types import FunctionType
 
-from odoo import api, models, tools
+from odoo import api, models, tools, fields
+from odoo.fields import Domain
 from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import config, safe_eval, OrderedSet, frozendict, json
+from odoo.tools import config, safe_eval, OrderedSet, frozendict, json, partition
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.lru import LRU
@@ -399,6 +401,7 @@ from odoo.exceptions import UserError, MissingError
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS, FONT_EXTENSIONS
+
 
 _logger = logging.getLogger(__name__)
 
@@ -663,7 +666,7 @@ class QwebJSON(json.JSON):
 qwebJSON = QwebJSON()
 
 
-class IrQweb(models.AbstractModel):
+class IrQweb(models.Model):
     """ Base QWeb rendering engine
     * to customize ``t-field`` rendering, subclass ``ir.qweb.field`` and
       create new models called :samp:`ir.qweb.field.{widget}`
@@ -672,7 +675,337 @@ class IrQweb(models.AbstractModel):
     inheriting from ``ir.qweb`` and customize that.
     """
     _name = 'ir.qweb'
-    _description = 'Qweb'
+    _description = 'Templates'
+    _inherit = ['ir.ui.view']
+
+    type = fields.Selection([('qweb', 'Qweb')], string='View Type', default="qweb")
+
+    key = fields.Char(string="Identifier",
+            help="Used to render a template and for the t-call directive. For some applications, such as websites, there may be several templates with the same key. The template used will depend on the order and filters applied by the application.",
+            index='btree_not_null', required=True)
+    inherit_id = fields.Many2one('ir.qweb', string='Inherited View', ondelete='restrict', index=True)
+    inherit_children_ids = fields.One2many('ir.qweb', 'inherit_id', string='Views which inherit from this one')
+
+    group_ids = fields.Many2many('res.groups', 'ir_qweb_group_rel', 'qweb_id', 'group_id', string='Groups')  # TODO: move to website
+
+    # inherit_id = fields.Many2one(string="Inherited View", related='inherit_qweb_id.view_id')
+    # inherit_qweb_id = fields.Many2one('ir.qweb', string='Inherited Template', ondelete='restrict', index=True)
+    # inherit_qweb_children_ids = fields.One2many('ir.qweb', 'inherit_qweb_id', string='Templates which inherit from this one')
+
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get('key'):
+                values['key'] = "gen_key.%s" % str(uuid.uuid4())[:6]
+        return super().create(vals_list)
+
+    def copy_data(self, default=None):
+        has_default_without_key = default and 'key' not in default
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for view, vals in zip(self, vals_list):
+            if view.key and has_default_without_key:
+                vals['key'] = default.get('key', view.key + '_%s' % str(uuid.uuid4())[:6])
+        return vals_list
+
+    # ------------------------------------------------------
+    # Get template and cache
+    # ------------------------------------------------------
+
+    @api.model
+    def _get_cached_template_prefetched_keys(self):
+        return ['id', 'key', 'active']
+
+    def _get_template_minimal_cache_keys(self):
+        return (bool(self.env.context.get('active_test', True)),)
+
+    # assume cache will be invalidated by third party on write to ir.qweb
+    def _get_template_cache_keys(self):
+        """ Return the list of context keys to use for caching ``_compile``. """
+        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile']
+
+    @api.model
+    @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
+    def _get_cached_template_info(self, id_or_xmlid, _view=None) -> dict[str, str]:
+        """ Return the ir.qweb id from the xml id, use `_preload_views`.
+
+            :returns: dictionary of the record value for each key defined in
+            `_get_cached_template_prefetched_keys`
+        """
+        record = None
+        error = False
+        if _view is not None:
+            record = _view
+        elif isinstance(id_or_xmlid, int):
+            record = self.env['ir.qweb'].sudo().browse(id_or_xmlid)
+            try:
+                record.key
+            except MissingError:
+                record = None
+                error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
+            except UserError as e:
+                record = None
+                error = e
+        else:
+            preload = self.sudo()._preload_views([id_or_xmlid])
+            if id_or_xmlid in preload:
+                info = preload[id_or_xmlid]
+                record = info['view']
+                error = info['error']
+            else:
+                error = SyntaxError('Error compiling template')
+        info = {
+            f: record[f] if record else None
+            for f in self._get_cached_template_prefetched_keys()}
+        info['error'] = error
+        return info
+
+    def _get_template_info(self, template):
+        return self.env['ir.qweb']._get_cached_template_info(template)
+
+    @api.model
+    def _get_template_view(self, id_or_xmlid: int | str, raise_if_not_found=True) -> models.BaseModel:
+        info = self._get_cached_template_info(id_or_xmlid)
+        if info['error'] and raise_if_not_found:
+            raise info['error']
+        return self.browse(info['id'])
+
+    @api.model
+    def _get_template_domain(self, xmlids: list[str]) -> Domain:
+        return Domain('key', 'in', xmlids)
+
+    @api.model
+    def _get_template_order(self) -> str:
+        return "priority, id"
+
+    @api.model
+    def _fetch_template_views(self, ids_or_xmlids: Sequence[int | str]) -> dict[int | str, models.BaseModel | Exception]:
+        """ Return the view corresponding to ``template``, which may be a
+            view ID or an XML ID. Note that this method may be overridden for other
+            kinds of template values.
+        """
+        IrUiView = self.env['ir.qweb'].sudo().with_context(load_all_views=True, raise_if_not_found=True)
+
+        ids, xmlids = partition(lambda v: isinstance(v, int), ids_or_xmlids)
+
+        # search view in ir.qweb
+        view_by_id = {}
+        field_names = [f.name for f in IrUiView._fields.values() if f.prefetch is True]
+        if xmlids:
+            domain = Domain('id', 'in', ids) | Domain(self._get_template_domain(xmlids))
+            views = IrUiView.search_fetch(domain, field_names, order=self._get_template_order())
+        else:
+            views = IrUiView.browse(ids)
+
+        for view in views:
+            try:
+                if view.key in view_by_id:
+                    # keeps views according to their priority order
+                    continue
+            except MissingError:
+                continue
+            view_by_id[view.id] = view
+            if view.key:
+                view_by_id[view.key] = view
+
+        # search missing view from xmlid in ir.model.data
+        missing_xmlid_views = [xmlid for xmlid in xmlids if '.' in xmlid and xmlid not in view_by_id]
+        if missing_xmlid_views:
+            domain = Domain.OR(
+                Domain('model', '=', 'ir.qweb') & Domain('module', '=', res[0]) & Domain('name', '=', res[1])
+                for xmlid in missing_xmlid_views
+                if (res := xmlid.split('.', 1))
+            )
+
+            for model_data in self.env['ir.model.data'].sudo().search(domain):
+                view = IrUiView.browse(model_data.res_id)
+                if view.exists():
+                    view_by_id[view.id] = view
+                    xmlid = f"{model_data.module}.{model_data.name}"
+                    view_by_id[xmlid] = view
+                    if view.key:
+                        view_by_id[view.key] = view
+
+        for key, view in view_by_id.items():
+            # push information in cache
+            self._get_cached_template_info(key, _view=view)
+
+        # create data and errors
+        for view_id in ids:
+            if view_id not in view_by_id:
+                # push information in cache
+                self._get_cached_template_info(view_id, _view=False)
+                view_by_id[view_id] = MissingError(self.env._("Template does not exist or has been deleted: %s", view_id))
+        for xmlid in xmlids:
+            if xmlid not in view_by_id:
+                # push information in cache
+                self._get_cached_template_info(xmlid, _view=False)
+                view_by_id[xmlid] = MissingError(self.env._("Template not found: '%s'", xmlid))
+        return view_by_id
+
+    @tools.ormcache(cache='templates')
+    def _clear_preload_views_cache_if_needed(self):
+        """ Invalidate the local cache when the orm cache is cleared
+        """
+        self.env.cr.cache.pop('_compile_batch_', None)
+
+    def _preload_views(self, refs: Sequence[int | str]) -> dict[int | str, dict]:
+        """
+        Return self's arch combined with its inherited views archs.
+
+        :param refs: list of id or xmlid
+        :return: dictionary of preloaded information {id or xmlid: {xmlid, ref, view, error}}
+        """
+        self._clear_preload_views_cache_if_needed()
+
+        context = {k: self.env.context.get(k) for k in self.env['ir.qweb']._get_template_cache_keys()}
+        cache_key = tuple(context.values())
+
+        compile_batch = self.env.cr.cache.setdefault('_compile_batch_', {}).setdefault(cache_key, {})
+
+        refs = [int(ref) if isinstance(ref, int) or ref.isdigit() else ref for ref in refs]
+        missing_refs = [ref for ref in refs if ref and ref not in compile_batch]
+        if not missing_refs:
+            return compile_batch
+
+        unknown_views = self._fetch_template_views(missing_refs)
+
+        # add in cache
+        for id_or_xmlid, view in unknown_views.items():
+            if isinstance(view, models.BaseModel):
+                compile_batch[view.id] = compile_batch[id_or_xmlid] = {
+                    'xmlid': view.key or id_or_xmlid,
+                    'ref': view.id,
+                    'view': view,
+                    'error': False,
+                }
+            else:
+                compile_batch[id_or_xmlid] = {
+                    'xmlid': id_or_xmlid,
+                    'view': None,
+                    'ref': None,
+                    'error': view,  # MissingError
+                }
+
+        return compile_batch
+
+    @api.model
+    def _get_preload_attribute_xmlids(self):
+        return ['t-call']
+
+    def _get_view_etrees(self):
+        if not self:
+            return []
+        arch_trees = self._get_combined_archs()
+        for arch_tree in arch_trees:
+            self.env['ir.ui.view'].distribute_branding(arch_tree)  # TODO move it
+        return arch_trees
+
+    def _preload_trees(self, refs: Sequence[int | str]):
+        """ Preload all tree and subtree (from t-call and other '_get_preload_attribute_xmlids' values).
+
+            Returns::
+
+                {
+                    id or xmlId/key: {
+                        'xmlid': str | None,
+                        'ref': int | None,
+                        'tree': etree | None,
+                        'template': str | None,
+                        'error': None | MissingError
+                    }
+                }
+        """
+        compile_batch = self.env['ir.qweb']._preload_views(refs)
+
+        refs = list(map(_id_or_xmlid, refs))
+        missing_refs = {ref: compile_batch[ref] for ref in refs if 'template' not in compile_batch[ref] and not compile_batch[ref]['error']}
+        if not missing_refs:
+            return compile_batch
+
+        xmlids = list(missing_refs)
+        missing_refs_values = list(missing_refs.values())
+        views = self.env['ir.qweb'].sudo().union(*[data['view'] for data in missing_refs_values])
+
+        trees = views._get_view_etrees()
+
+        # add in cache
+        for xmlid, view, tree in zip(xmlids, views, trees):
+            data = {
+                'tree': tree,
+                'template': etree.tostring(tree, encoding='unicode'),
+            }
+            compile_batch[view.id].update(data)
+            compile_batch[xmlid].update(data)
+
+        # preload sub template
+        ref_names = self._get_preload_attribute_xmlids()
+        sub_refs = OrderedSet()
+        for tree in trees:
+            sub_refs.update(
+                el.get(ref_name)
+                for ref_name in ref_names
+                for el in tree.xpath(f'//*[@{ref_name}]')
+                if not any(att.startswith('t-options-') or att == 't-options' or att == 't-lang' for att in el.attrib)
+                if '{' not in el.get(ref_name) and '<' not in el.get(ref_name) and '/' not in el.get(ref_name)
+            )
+        assert not any(not f for f in sub_refs), "template is required"
+        self._preload_trees(list(sub_refs))
+
+        # not found template
+        for ref in missing_refs:
+            if ref not in compile_batch:
+                compile_batch[ref] = {
+                    'xmlid': ref,
+                    'ref': ref,
+                    'error': MissingError(self.env._("External ID can not be loaded: %s", ref)),
+                }
+
+        return compile_batch
+
+    def _get_template(self, template):
+        """ Retrieve the given template, and return it as a tuple ``(etree,
+        xml, ref)``, where ``element`` is an etree, ``document`` is the
+        string document that contains ``element``, and ``ref`` if the uniq
+        reference of the template (id, t-name or template).
+
+        :param template: template identifier or etree
+        """
+        assert template not in (False, None, ""), "template is required"
+
+        # template is an xml etree already
+        if isinstance(template, etree._Element):
+            element = template
+            document = etree.tostring(template, encoding='unicode')
+
+            # <templates>
+            #   <template t-name=... /> <!-- return ONLY this element -->
+            #   <template t-name=... />
+            # </templates>
+            for node in element.iter():
+                ref = node.get('t-name')
+                if ref:
+                    return (node, document, _id_or_xmlid(ref))
+
+            return (element, document, 'etree._Element')
+
+        # template is xml as string
+        if isinstance(template, str) and '<' in template:
+            raise ValueError('Inline templates must be passed as `etree` documents')
+
+        # template is (id or ref) to a database stored template
+        id_or_xmlid = _id_or_xmlid(template)  # e.g. <t t-call="33"/> or <t t-call="web.layout"/>
+        value = self._preload_trees([id_or_xmlid]).get(id_or_xmlid)
+        if value.get('error'):
+            raise value['error']
+
+        # In dev mode `_generate_code_cached` is not cached and the tree can be processed several times
+        value_tree = deepcopy(value['tree']) if 'xml' in tools.config['dev_mode'] else value['tree']
+        # return etree, document and ref
+        return (value_tree, value['template'], value['ref'])
+
+    # ------------------------------------------------------
+    # Render template
+    # ------------------------------------------------------
 
     @api.model
     def _render(self, template: int | str | etree._Element, values: dict | None = None, **options) -> Markup:
@@ -919,13 +1252,9 @@ class IrQweb(models.AbstractModel):
 
         return QWebErrorInfo(f'{error.__class__.__name__}: {error}', ref if ref_name is None else ref_name, ref, path, html, source)
 
-    # assume cache will be invalidated by third party on write to ir.ui.view
-    def _get_template_cache_keys(self):
-        """ Return the list of context keys to use for caching ``_compile``. """
-        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile']
-
-    def _get_template_info(self, template):
-        return self.env['ir.ui.view']._get_cached_template_info(template)
+    # ------------------------------------------------------
+    # Compile template before rendering
+    # ------------------------------------------------------
 
     def _compile(self, template):
         ref = None
@@ -1126,115 +1455,6 @@ class IrQweb(models.AbstractModel):
         compile_context['_qweb_error_path_xml'][2] = None
 
         return (code, options, def_name)
-
-    # read and load input template
-
-    def _get_template(self, template):
-        """ Retrieve the given template, and return it as a tuple ``(etree,
-        xml, ref)``, where ``element`` is an etree, ``document`` is the
-        string document that contains ``element``, and ``ref`` if the uniq
-        reference of the template (id, t-name or template).
-
-        :param template: template identifier or etree
-        """
-        assert template not in (False, None, ""), "template is required"
-
-        # template is an xml etree already
-        if isinstance(template, etree._Element):
-            element = template
-            document = etree.tostring(template, encoding='unicode')
-
-            # <templates>
-            #   <template t-name=... /> <!-- return ONLY this element -->
-            #   <template t-name=... />
-            # </templates>
-            for node in element.iter():
-                ref = node.get('t-name')
-                if ref:
-                    return (node, document, _id_or_xmlid(ref))
-
-            return (element, document, 'etree._Element')
-
-        # template is xml as string
-        if isinstance(template, str) and '<' in template:
-            raise ValueError('Inline templates must be passed as `etree` documents')
-
-        # template is (id or ref) to a database stored template
-        id_or_xmlid = _id_or_xmlid(template)  # e.g. <t t-call="33"/> or <t t-call="web.layout"/>
-        value = self._preload_trees([id_or_xmlid]).get(id_or_xmlid)
-        if value.get('error'):
-            raise value['error']
-
-        # In dev mode `_generate_code_cached` is not cached and the tree can be processed several times
-        value_tree = deepcopy(value['tree']) if 'xml' in tools.config['dev_mode'] else value['tree']
-        # return etree, document and ref
-        return (value_tree, value['template'], value['ref'])
-
-    @api.model
-    def _get_preload_attribute_xmlids(self):
-        return ['t-call']
-
-    def _preload_trees(self, refs: Sequence[int | str]):
-        """ Preload all tree and subtree (from t-call and other '_get_preload_attribute_xmlids' values).
-
-            Returns::
-
-                {
-                    id or xmlId/key: {
-                        'xmlid': str | None,
-                        'ref': int | None,
-                        'tree': etree | None,
-                        'template': str | None,
-                        'error': None | MissingError
-                    }
-                }
-        """
-        compile_batch = self.env['ir.ui.view']._preload_views(refs)
-
-        refs = list(map(_id_or_xmlid, refs))
-        missing_refs = {ref: compile_batch[ref] for ref in refs if 'template' not in compile_batch[ref] and not compile_batch[ref]['error']}
-        if not missing_refs:
-            return compile_batch
-
-        xmlids = list(missing_refs)
-        missing_refs_values = list(missing_refs.values())
-        views = self.env['ir.ui.view'].sudo().union(*[data['view'] for data in missing_refs_values])
-
-        trees = views._get_view_etrees()
-
-        # add in cache
-        for xmlid, view, tree in zip(xmlids, views, trees):
-            data = {
-                'tree': tree,
-                'template': etree.tostring(tree, encoding='unicode'),
-            }
-            compile_batch[view.id].update(data)
-            compile_batch[xmlid].update(data)
-
-        # preload sub template
-        ref_names = self._get_preload_attribute_xmlids()
-        sub_refs = OrderedSet()
-        for tree in trees:
-            sub_refs.update(
-                el.get(ref_name)
-                for ref_name in ref_names
-                for el in tree.xpath(f'//*[@{ref_name}]')
-                if not any(att.startswith('t-options-') or att == 't-options' or att == 't-lang' for att in el.attrib)
-                if '{' not in el.get(ref_name) and '<' not in el.get(ref_name) and '/' not in el.get(ref_name)
-            )
-        assert not any(not f for f in sub_refs), "template is required"
-        self._preload_trees(list(sub_refs))
-
-        # not found template
-        for ref in missing_refs:
-            if ref not in compile_batch:
-                compile_batch[ref] = {
-                    'xmlid': ref,
-                    'ref': ref,
-                    'error': MissingError(self.env._("External ID can not be loaded: %s", ref)),
-                }
-
-        return compile_batch
 
     # values for running time
 
@@ -2946,7 +3166,7 @@ class IrQweb(models.AbstractModel):
         Returns the list of bundles to pregenerate.
         """
 
-        views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
+        views = self.env['ir.qweb'].search([('arch_db', 'like', 't-call-assets')])
         js_bundles = set()
         css_bundles = set()
         for view in views:
@@ -2959,6 +3179,12 @@ class IrQweb(models.AbstractModel):
                 if css:
                     css_bundles.add(asset)
         return (js_bundles, css_bundles)
+
+    @api.readonly
+    @api.model
+    def render_public_asset(self, template, values=None):
+        self._get_template_view(template).sudo()._check_view_access()
+        return self.sudo()._render(template, values)
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.

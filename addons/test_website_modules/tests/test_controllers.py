@@ -19,7 +19,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'mimetype': 'image/gif',
             'datas': gif_base64,
             'public': True,
-            'res_model': 'ir.ui.view',
+            'res_model': 'ir.qweb',
             'res_id': 0,
         })
 

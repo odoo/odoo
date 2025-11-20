@@ -19,7 +19,7 @@ class TestModifyImageNoData(HttpCase):
         attachment = self.env['ir.attachment'].create({
             'name': 'test_image.gif',
             'datas': self.pixel,
-            'res_model': 'ir.ui.view',
+            'res_model': 'ir.qweb',
             'res_id': 0,
         })
 
@@ -28,7 +28,7 @@ class TestModifyImageNoData(HttpCase):
             f'/html_editor/modify_image/{attachment.id}',
             headers={'Content-Type': 'application/json'},
             data=json_safe.dumps({'params': {
-                'res_model': 'ir.ui.view',
+                'res_model': 'ir.qweb',
                 'res_id': 0,
                 'name': 'modified_image.gif',
             }})

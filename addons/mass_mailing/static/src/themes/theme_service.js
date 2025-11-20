@@ -86,7 +86,7 @@ export class ThemeModel extends Reactive {
     async load(asset = "mass_mailing.email_designer_themes") {
         if (!this.loadedAssets.has(asset)) {
             const themesHTML = await this.orm.silent.call(
-                "ir.ui.view",
+                "ir.qweb",
                 "render_public_asset",
                 [asset, {}],
                 {}

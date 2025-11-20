@@ -174,7 +174,7 @@ class EventCase(common.TransactionCase):
 
     @classmethod
     def _setup_test_reports(cls):
-        cls.test_report_view = cls.env["ir.ui.view"].create({
+        cls.test_report_view = cls.env["ir.qweb"].create({
             "arch_db": """
 <t t-call="web.html_container">
     <t t-foreach="docs" t-as="registration">
@@ -187,10 +187,9 @@ class EventCase(common.TransactionCase):
 </t>""",
             "key": "event_registration_test_report",
             "name": "event_registration_test_report",
-            "type": "qweb",
         })
         cls.env["ir.model.data"].create({
-            "model": "ir.ui.view",
+            "model": "ir.qweb",
             "module": "event",
             "name": "event_registration_test_report",
             "res_id": cls.test_report_view.id,

@@ -126,9 +126,8 @@ class TestWebsiteForm(TransactionCase):
         """
         Test that deleting a field used in a website form raises a ValidationError.
         """
-        self.env['ir.ui.view'].create({
+        self.env['ir.qweb'].create({
             'name': 'Test Form for Deletion Constraint',
-            'type': 'qweb',
             'arch_db': f'''
                 <template id="test_form_template_for_deletion">
                     <form action="/website/form/" data-model_name="res.partner">

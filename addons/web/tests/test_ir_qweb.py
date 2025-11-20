@@ -8,9 +8,8 @@ from odoo.tools.mimetypes import guess_mimetype
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrQweb(TransactionCase):
     def test_image_field(self):
-        view = self.env["ir.ui.view"].create({
+        qweb = self.env["ir.qweb"].create({
             "key": "web.test_qweb",
-            "type": "qweb",
             "arch": """<t t-name="test_qweb">
                 <span t-field="record.avatar_128" t-options-widget="'image'" t-options-qweb_img_raw_data="is_raw_image" />
             </t>"""
@@ -20,14 +19,14 @@ class TestIrQweb(TransactionCase):
             "image_1920": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAF0lEQVR4nGJxKFrEwMDAxAAGgAAAAP//D+IBWx9K7TUAAAAASUVORK5CYII=",
         })
 
-        html = view._render_template(view.id, {"is_raw_image": True, "record": partner})
+        html = qweb._render_template(qweb.id, {"is_raw_image": True, "record": partner})
         tree = etree.fromstring(html)
         img = tree.find("img")
         self.assertTrue(img.get("src").startswith("data:image/png;base64"))
         self.assertEqual(img.get("class"), "img img-fluid")
         self.assertEqual(img.get("alt"), "test image partner")
 
-        html = view._render_template(view.id, {"is_raw_image": False, "record": partner})
+        html = qweb._render_template(qweb.id, {"is_raw_image": False, "record": partner})
         tree = etree.fromstring(html)
         img = tree.find("img")
         self.assertTrue(img.get("src").startswith("/web/image"))
@@ -39,9 +38,8 @@ class TestIrQweb(TransactionCase):
         webp_decoded = base64.b64decode(webp)
         self.assertEqual(guess_mimetype(webp_decoded), "image/webp")
 
-        view = self.env["ir.ui.view"].create({
+        qweb = self.env["ir.qweb"].create({
             "key": "web.test_qweb",
-            "type": "qweb",
             "arch": """<t t-name="test_qweb">
                 <span t-field="record.flag_image" t-options-widget="'image'" t-options-qweb_img_raw_data="is_raw_image" />
             </t>"""
@@ -65,12 +63,12 @@ class TestIrQweb(TransactionCase):
         })
         jpeg_datas = jpeg_attach.datas
 
-        html = view.with_context(webp_as_jpg=False)._render_template(view.id, {"is_raw_image": True, "record": lang_record})
+        html = qweb.with_context(webp_as_jpg=False)._render_template(qweb.id, {"is_raw_image": True, "record": lang_record})
         tree = etree.fromstring(html)
         img = tree.find("img")
         self.assertEqual(img.get("src"), "data:image/webp;base64,%s" % webp)
 
-        html = view.with_context(webp_as_jpg=True)._render_template(view.id, {"is_raw_image": True, "record": lang_record})
+        html = qweb.with_context(webp_as_jpg=True)._render_template(qweb.id, {"is_raw_image": True, "record": lang_record})
         tree = etree.fromstring(html)
         img = tree.find("img")
         self.assertEqual(img.get("src"), "data:image/png;base64,%s" % jpeg_datas.decode())
@@ -83,9 +81,8 @@ class TestIrQweb(TransactionCase):
         </svg>"""
 
         b64_image = base64.b64encode(image.encode()).decode()
-        view = self.env["ir.ui.view"].create({
+        qweb = self.env["ir.qweb"].create({
             "key": "web.test_qweb",
-            "type": "qweb",
             "arch": """<t t-name="test_qweb">
                 <span t-field="record.flag_image" t-options-widget="'image'" t-options-qweb_img_raw_data="True" />
             </t>"""
@@ -96,7 +93,7 @@ class TestIrQweb(TransactionCase):
             "code": "TEST"
         })
 
-        html = view._render_template(view.id, {"record": partner})
+        html = qweb._render_template(qweb.id, {"record": partner})
         tree = etree.fromstring(html)
         img = tree.find("img")
         self.assertEqual(img.get("src"), f"data:image/svg+xml;base64,{b64_image}")

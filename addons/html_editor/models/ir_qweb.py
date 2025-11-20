@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrUiView(models.Model):
-    _inherit = 'ir.ui.view'
+    _inherit = 'ir.qweb'
 
     @api.model
     def _view_get_inherited_children(self, view):
@@ -30,7 +30,7 @@ class IrUiView(models.Model):
                   - but not the optional children of a non-enabled child
                 * all views called from it (via t-call)
 
-            :returns: recordset of ir.ui.view
+            :returns: recordset of ir.qweb
         """
         try:
             if isinstance(view_id, models.BaseModel):
@@ -39,7 +39,7 @@ class IrUiView(models.Model):
                 view = self._get_template_view(view_id)
         except MissingError:
             _logger.warning("Could not find view object with view_id '%s'", view_id)
-            return self.env['ir.ui.view']
+            return self.env['ir.qweb']
 
         if visited is None:
             visited = []

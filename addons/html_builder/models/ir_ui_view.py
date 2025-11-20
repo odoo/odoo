@@ -13,8 +13,8 @@ EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
 ]
 
 
-class IrUiView(models.Model):
-    _inherit = "ir.ui.view"
+class IrQweb(models.Model):
+    _inherit = "ir.qweb"
 
     @api.model
     def delete_snippet(self, view_id, template_key):
@@ -55,7 +55,7 @@ class IrUiView(models.Model):
         snippet_key = '%s_%s' % (snippet_key, uuid.uuid4().hex)
         full_snippet_key = '%s.%s' % (app_name, snippet_key)
 
-        used_names = self.env['ir.ui.view'].search(self._get_used_names_domain(name, technical_usage)).mapped("name")
+        used_names = self.env['ir.qweb'].search(self._get_used_names_domain(name, technical_usage)).mapped("name")
         name = self._find_available_name(name, used_names)
 
         # html to xml to add '/' at the end of self closing tags like br, ...
@@ -70,7 +70,6 @@ class IrUiView(models.Model):
         new_snippet_view_values = {
             'name': name,
             'key': full_snippet_key,
-            'type': 'qweb',
             'arch': xml_arch,
             'technical_usage': technical_usage,
         }
@@ -100,7 +99,6 @@ class IrUiView(models.Model):
             'key': self._get_snippet_addition_view_key(template_key, snippet_key),
             'inherit_id': custom_section.id,
             'technical_usage': technical_usage,
-            'type': 'qweb',
             'arch': """
                 <data inherit_id="%s">
                     <xpath expr="//snippets[@id='snippet_custom']" position="inside">
@@ -121,7 +119,7 @@ class IrUiView(models.Model):
         one in the current language).
 
         For instance, copy the translations of a
-        ``product.template.html_description`` field to a ``ir.ui.view.arch_db``
+        ``product.template.html_description`` field to a ``ir.qweb.arch_db``
         field.
 
         The method takes care of read and write access of both records/fields.

@@ -216,32 +216,14 @@
     name="Pages"
     action="action_website_pages_list"/>
 
-<!-- Extension of views for ir.ui.view and link with the page manager -->
+<!-- Extension of views for ir.qweb and link with the page manager -->
 
-<record id="view_view_form_extend" model="ir.ui.view">
-    <field name="model">ir.ui.view</field>
-    <field name="inherit_id" ref="base.view_view_form"/>
+<record id="qweb_view_form_extend" model="ir.ui.view">
+    <field name="model">ir.qweb</field>
+    <field name="inherit_id" ref="base.qweb_view_form"/>
     <field name="arch" type="xml">
         <field name="inherit_id" position="attributes">
             <attribute name="context">{'display_website': True}</attribute>
-        </field>
-        <field name="model_id" position="before">
-            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-            <label for="key"/>
-            <div class='o_row'>
-                <field name="key"/>
-                <button title="Show site map" invisible="type != 'qweb'" name="website.action_website_view_hierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
-            </div>
-            <field name="first_page_id" invisible="not page_ids" />
-            <label for="visibility"/>
-            <div>
-                <field name="visibility" invisible="type != 'qweb'" />
-                <span class="o_wrap_label" invisible="visibility != 'restricted_group'"/>
-                <div class="oe_edit_only alert alert-info" role="alert" invisible="visibility != 'restricted_group'">
-                    Add groups in the "Access Rights" tab below.
-                </div>
-            </div>
-            <field name="visibility_password_display" invisible="visibility != 'password'" password="True" string="Visibility Password" />
         </field>
         <sheet position="before">
             <header>
@@ -249,24 +231,33 @@
                     string="Go to Page Manager" invisible="not page_ids"/>
             </header>
         </sheet>
-        <field name="active" position="after">
-            <field name="track" invisible="type != 'qweb'" widget="boolean_toggle"/>
+        <field name="key" position="after">
+            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+            <field name="track" widget="boolean_toggle" invisible="mode == 'extension'"/>
+            <field name="first_page_id" invisible="not page_ids or mode == 'extension'"/>
+            <field name="visibility" invisible="mode == 'extension'"/>
+            <field name="group_ids" invisible="visibility != 'restricted_group' or mode == 'extension'" widget="many2many_tags"/>
+            <field name="visibility_password_display" invisible="visibility != 'password' or mode == 'extension'" password="True" string="Visibility Password"/>
+        </field>
+        <field name="key" position="replace">
+            <label for="key"/>
+            <div class='o_row'>
+                <field name="key" readonly="id"/>
+                <button title="Show site map" name="website.action_website_view_hierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
+            </div>
         </field>
     </field>
 </record>
 
-<record id="view_view_tree_inherit_website" model="ir.ui.view">
-    <field name="model">ir.ui.view</field>
-    <field name="inherit_id" ref="base.view_view_tree"/>
+<record id="qweb_view_tree_inherit_website" model="ir.ui.view">
+    <field name="model">ir.qweb</field>
+    <field name="inherit_id" ref="base.qweb_view_tree"/>
     <field name="arch" type="xml">
         <list position="attributes">
             <attribute name="decoration-muted">not active</attribute>
         </list>
         <field name="name" position="after">
             <field name="website_id" groups="website.group_multi_website"/>
-        </field>
-        <field name="xml_id" position="before">
-            <field name="key" groups="website.group_multi_website"/>
         </field>
     </field>
 </record>

@@ -74,7 +74,6 @@
             <field name="arch" type="xml">
                 <search string="Views">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
-                    <field name="key"/>
                     <field name="model"/>
                     <field name="inherit_id"/>
                     <field name="type"/>
@@ -83,7 +82,6 @@
                     <filter string="List" name="list" domain="[('type', '=', 'list')]"/>
                     <filter string="Kanban" name="kanban" domain="[('type', '=', 'kanban')]"/>
                     <filter string="Search" name="search" domain="[('type', '=', 'search')]"/>
-                    <filter string="QWeb" name="qweb" domain="[('type', '=', 'qweb')]"/>
                     <separator/>
                     <filter string="Modified Architecture" name="arch_updated" domain="[('arch_updated', '=',True)]"/>
                     <separator/>

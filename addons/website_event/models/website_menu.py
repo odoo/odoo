@@ -25,7 +25,7 @@ class WebsiteMenu(models.Model):
             # Manually remove website_event_menus to call their ``unlink`` method. Otherwise
             # super unlinks at db level and skip model-specific behavior.
             # Since website.event.menu unlink removes:
-            # - the related ir.ui.view records
+            # - the related ir.qweb records
             # - which cascade deletes the website.page records
             # - which cascade deletes the website.menu records
             # -> we only call super unlink on the remaining website.menu records

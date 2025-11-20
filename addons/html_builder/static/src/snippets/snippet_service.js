@@ -150,7 +150,7 @@ export class SnippetModel extends Reactive {
                     context.snippet_lang = this.context.lang;
                 }
                 const html = await this.orm.silent.call(
-                    "ir.ui.view",
+                    "ir.qweb",
                     "render_public_asset",
                     [this.snippetsName, {}],
                     { context }
@@ -365,7 +365,7 @@ export class SnippetModel extends Reactive {
 
         const context = this.getContext(snippetEl);
 
-        const savedName = await this.orm.call("ir.ui.view", "save_snippet", [], {
+        const savedName = await this.orm.call("ir.qweb", "save_snippet", [], {
             name: defaultSnippetName,
             arch: snippetCopyEl.outerHTML,
             template_key: this.snippetsName,

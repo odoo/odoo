@@ -72,8 +72,7 @@ class TestReports(odoo.tests.TransactionCase):
             'model': 'res.partner',
         })
 
-        self.env['ir.ui.view'].create({
-            'type': 'qweb',
+        self.env['ir.qweb'].create({
             'name': 'base.test_report',
             'key': 'base.test_report',
             'arch': '''
@@ -194,8 +193,7 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
             'name': f'Report record {i}',
         } for i in range(2)])
 
-        self.report_view = self.env['ir.ui.view'].create({
-            'type': 'qweb',
+        self.report_view = self.env['ir.qweb'].create({
             'name': 'test_report_partner',
             'key': 'test_report.test_report_partner',
             'arch': "<t></t>",
@@ -657,8 +655,7 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
         the middle that had an attachment, and 'Reload from attachment' was enabled for the report. The misbehavior was
         caused by an indexing issue.
         """
-        self.env["ir.ui.view"].create({
-            "type": "qweb",
+        self.env["ir.qweb"].create({
             "name": "base.test_report",
             "key": "base.test_report",
             "arch": """
@@ -678,8 +675,7 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
         Same as @test_report_with_some_resources_reloaded_from_attachment, but tests the behavior for reports that
         span multiple pages per record.
         """
-        self.env["ir.ui.view"].create({
-            "type": "qweb",
+        self.env["ir.qweb"].create({
             "name": "base.test_report",
             "key": "base.test_report",
             "arch": """

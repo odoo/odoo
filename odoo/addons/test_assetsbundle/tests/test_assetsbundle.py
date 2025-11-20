@@ -632,7 +632,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
                          "there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets")
 
     def test_20_external_lib_assets(self):
-        html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2')
+        html = self.env['ir.qweb']._render_template('test_assetsbundle.template2')
 
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.bundle4')
         links = bundle.get_links()
@@ -654,7 +654,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 </html>"""))
 
     def test_21_external_lib_assets_debug_mode(self):
-        html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2', {"debug": "assets"})
+        html = self.env['ir.qweb']._render_template('test_assetsbundle.template2', {"debug": "assets"})
         self.assertEqual(str(html.strip()), ("""<!DOCTYPE html>
 <html>
     <head>
@@ -747,9 +747,8 @@ class TestAssetsBundleInBrowser(HttpCase):
             </xpath>
         </data>
         """
-        self.env['ir.ui.view'].create({
+        self.env['ir.qweb'].create({
             'name': 'test bundle inheritance inline js',
-            'type': 'qweb',
             'arch': view_arch,
             'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
         })
@@ -881,10 +880,9 @@ class TestAssetsManifest(AddonManifestPatched):
             'attrs': attrs
         }
 
-        view = self.env['ir.ui.view'].create({
+        view = self.env['ir.qweb'].create({
             'name': 'test asset',
             'arch': arch,
-            'type': 'qweb',
         })
         return view
 

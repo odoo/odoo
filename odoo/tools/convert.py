@@ -497,9 +497,9 @@ form: module.record_id""" % (xml_id,)
         attrib.pop('id', None)
 
         if self.module.startswith('theme_'):
-            model = 'theme.ir.ui.view'
+            model = 'theme.ir.qweb'
         else:
-            model = 'ir.ui.view'
+            model = 'ir.qweb'
 
         record_attrs = {
             'id': tpl_id,
@@ -583,7 +583,7 @@ form: module.record_id""" % (xml_id,)
         # E.g. <path>website/static/src/snippets/s_share/000.scss</path>
         record.append(Field(el.find('path').text, name='path'))
 
-        # Same as <template> for ir.ui.view:
+        # Same as <template> for ir.qweb:
         # If the "active" value is set on the root node (instead of an inner
         # <field>), it is treated as the value for the "active" field but only
         # when *not updating*. This allows to update the record in a more recent
@@ -629,6 +629,7 @@ form: module.record_id""" % (xml_id,)
                     err=err.args[0],
                 )
                 _logger.debug(msg, exc_info=True)
+                raise
                 raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
             except Exception as e:
                 raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (

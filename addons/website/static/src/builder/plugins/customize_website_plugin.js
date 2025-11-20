@@ -338,7 +338,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             // TODO: make a python method that can return several templates at
             // once and batch the ORM call.
             this.activeTemplateViews[key] = await this.services.orm.call(
-                "ir.ui.view",
+                "ir.qweb",
                 "render_public_asset",
                 [`${key}`, {}]
             );

@@ -285,7 +285,7 @@ class Website(models.CachedModel):
             for menu, child_items in children.items():
                 menu._fields['child_id']._update_cache(menu, child_items)
 
-            # prefetch every website.page and ir.ui.view at once
+            # prefetch every website.page and ir.qweb at once
             menus.mapped('is_visible')
 
             top_menus = menus.filtered(lambda m: not m.parent_id)
@@ -784,12 +784,11 @@ class Website(models.CachedModel):
         if cta_data['cta_btn_text']:
             xpath_view = 'website.snippets'
             parent_view = self.env['website'].with_context(website_id=website.id).viewref(xpath_view)
-            self.env['ir.ui.view'].create({
+            self.env['ir.qweb'].create({
                 'name': parent_view.key + ' CTA',
                 'key': parent_view.key + "_cta",
                 'inherit_id': parent_view.id,
                 'website_id': website.id,
-                'type': 'qweb',
                 'priority': 32,
                 'arch_db': """
                     <data>
@@ -967,7 +966,7 @@ class Website(models.CachedModel):
             if page_code == 'homepage':
                 page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
-                page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
+                page_view_id = self.env['ir.qweb'].browse(pages_views[page_code])
             rendered_snippets = []
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
@@ -1020,7 +1019,7 @@ class Website(models.CachedModel):
         # Configure the footers
         for key in footer_ids:
             generic_view = self.env['website'].viewref(key)
-            current_website_footer_view = self.env['ir.ui.view'].with_context(active_test=False).search(
+            current_website_footer_view = self.env['ir.qweb'].with_context(active_test=False).search(
                 [('key', '=', key), ('website_id', '=', website.id)], limit=1
             )
             # Use the website-specific view if exists, otherwise use the generic
@@ -1327,7 +1326,7 @@ class Website(models.CachedModel):
         website_id = self.env.context.get('website_id', False)
         if website_id:
             domain_static = [('website_id', 'in', (False, website_id))]
-        while self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
+        while self.env['ir.qweb'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
             inc += 1
             key_copy = string + (inc and "-%s" % inc or "")
         return key_copy
@@ -1380,7 +1379,7 @@ class Website(models.CachedModel):
 
             # sudo() to bypass the field level access rights. i.e: robots_txt
             dependency_records = Model.sudo().search(Domain.OR(domains))
-            if model_name == 'ir.ui.view':
+            if model_name == 'ir.qweb':
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:
                 model_name = self.env['ir.model']._display_name_for([model_name])[0]['display_name']
@@ -1535,20 +1534,20 @@ class Website(models.CachedModel):
         if not isinstance(view_id, (int, str)):
             raise ValueError('Expecting a string or an integer, not a %s.' % (type(view_id)))
 
-        return self.env['ir.ui.view'].sudo().with_context(active_test=False)._get_template_view(view_id, raise_if_not_found=raise_if_not_found)
+        return self.env['ir.qweb'].sudo().with_context(active_test=False)._get_template_view(view_id, raise_if_not_found=raise_if_not_found)
 
     @api.model
     def is_view_active(self, key):
         """
             Return True if active, False if not active, None if not found
         """
-        return self.env['ir.ui.view'].with_context(active_test=False)._get_cached_template_info(key).get('active')
+        return self.env['ir.qweb'].with_context(active_test=False)._get_cached_template_info(key).get('active')
 
     @api.model
     def get_template(self, template):
         if isinstance(template, str) and '.' not in template:
             template = 'website.%s' % template
-        return self.env['ir.ui.view']._get_template_view(template).sudo()
+        return self.env['ir.qweb']._get_template_view(template).sudo()
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
@@ -1844,7 +1843,7 @@ class Website(models.CachedModel):
         )
 
     def _get_html_fields(self):
-        html_fields = [('ir.ui.view', 'arch_db')]
+        html_fields = [('ir.qweb', 'arch_db')]
         cr = self.env.cr
         cr.execute("""
             SELECT f.model,

@@ -195,7 +195,7 @@ class IrHttp(models.AbstractModel):
             if isinstance(template, str) and '.' not in template:
                 template = 'website.%s' % template
 
-        if template and not request.env.cr.readonly and request.env['ir.ui.view']._get_cached_template_info(template)['track']:
+        if template and not request.env.cr.readonly and request.env['ir.qweb']._get_cached_template_info(template)['track']:
             request.env['website.visitor']._handle_webpage_dispatch(website_page)
 
         return False
@@ -373,8 +373,8 @@ class IrHttp(models.AbstractModel):
         if hasattr(exception, 'qweb'):
             qweb_error = exception.qweb
             exception_template = qweb_error.ref
-            View = env["ir.ui.view"].sudo()
-            view = exception_template and View._get_template_view(exception_template)
+            IrQweb = env["ir.qweb"].sudo()
+            view = exception_template and IrQweb._get_template_view(exception_template)
             if not view or qweb_error.element and qweb_error.element in view.arch:
                 values['view'] = view
             else:
@@ -385,7 +385,7 @@ class IrHttp(models.AbstractModel):
                 node = et.xpath(qweb_error.path) if qweb_error.path else et
                 line = node is not None and len(node) > 0 and etree.tostring(node[0], encoding='unicode')
                 if line:
-                    values['view'] = View._views_get(view.id).filtered(
+                    values['view'] = IrQweb._views_get(view.id).filtered(
                         lambda v: line in v.arch
                     )
                     values['view'] = values['view'] and values['view'][0]
@@ -396,7 +396,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _get_error_html(cls, env, code, values):
         if code in ('page_404', 'protected_403'):
-            return code.split('_')[1], env['ir.ui.view']._render_template('website.%s' % code, values)
+            return code.split('_')[1], env['ir.qweb']._render_template('website.%s' % code, values)
         return super()._get_error_html(env, code, values)
 
     @api.model

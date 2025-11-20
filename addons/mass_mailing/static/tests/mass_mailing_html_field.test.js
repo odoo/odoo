@@ -135,9 +135,9 @@ class Mailing extends models.Model {
     ];
 }
 
-class IrUiView extends models.Model {
+class IrQweb extends models.Model {
     async render_public_asset(template, values) {
-        return unmockedOrm("ir.ui.view", "render_public_asset", [template, values], {});
+        return unmockedOrm("ir.qweb", "render_public_asset", [template, values], {});
     }
 }
 
@@ -168,7 +168,7 @@ class Event extends models.Model {
 }
 
 defineMailModels();
-defineModels([IrModel, IrUiView, Mailing, Event]);
+defineModels([IrModel, IrQweb, Mailing, Event]);
 
 const mailViewArch = `
 <form>

@@ -21,7 +21,7 @@ class TestTheme(common.TransactionCase):
         ThemeUtils._reset_default_config()
 
         def _get_header_template_key():
-            return self.env['ir.ui.view'].search([
+            return self.env['ir.qweb'].search([
                 ('key', 'in', ThemeUtils._header_templates),
                 ('website_id', '=', website_id.id),
             ]).key

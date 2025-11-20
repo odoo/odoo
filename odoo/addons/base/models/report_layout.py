@@ -9,7 +9,7 @@ class ReportLayout(models.Model):
     _description = 'Report Layout'
     _order = 'sequence, id'
 
-    view_id = fields.Many2one('ir.ui.view', 'Document Template', required=True)
+    view_id = fields.Many2one('ir.qweb', 'Document Template', required=True)
     image = fields.Char(string="Preview image src")
     pdf = fields.Char(string="Preview pdf src")
 

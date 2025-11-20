@@ -920,7 +920,7 @@ class ProductTemplate(models.Model):
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and categ_ids:
-                data['category'] = self.env['ir.ui.view'].sudo()._render_template(
+                data['category'] = self.env['ir.qweb'].sudo()._render_template(
                     "website_sale.product_category_extra_link",
                     {
                         'categories': categ_ids,

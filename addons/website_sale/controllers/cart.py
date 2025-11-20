@@ -235,7 +235,7 @@ class Cart(PaymentPortal):
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
-        IrUiView = request.env['ir.ui.view']
+        IrUiView = request.env['ir.qweb']
         order_sudo = request.cart
         values['website_sale.cart_lines'] = IrUiView._render_template(
             'website_sale.cart_lines', {
@@ -309,7 +309,7 @@ class Cart(PaymentPortal):
         """
         order_sudo = request.cart
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
-        IrUiView = request.env['ir.ui.view']
+        IrUiView = request.env['ir.qweb']
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.

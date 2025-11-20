@@ -10,4 +10,4 @@ class AccountAnalyticLine(models.Model):
         Determine if we show timesheet information in the portal.
         """
         domain = [("key", "=", "hr_timesheet.portal_my_home_timesheet")]
-        return self.env["ir.ui.view"].sudo().with_context(active_test=False).search(domain).filter_duplicate().active
+        return self.env["ir.qweb"].sudo().with_context(active_test=False).search(domain).filter_duplicate().active

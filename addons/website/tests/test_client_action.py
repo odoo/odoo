@@ -10,7 +10,6 @@ class TestClientAction(HttpCaseWithWebsiteUser):
     def test_01_client_action_redirect(self):
         page = self.env['website.page'].create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': """
                 <t t-call="website.layout">
                     <a id="test_contact_BE" href="/@/contactus?enable_editor=1">Contact</a>

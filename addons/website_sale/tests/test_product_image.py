@@ -200,7 +200,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # self.env.cr.commit()  # uncomment to save the product to test in browser
 
         # Make sure we have zoom on click
-        self.env['ir.ui.view'].with_context(active_test=False).search(
+        self.env['ir.qweb'].with_context(active_test=False).search(
             [('key', '=', 'website_sale.product_picture_magnify_click')]
         ).write({'active': True})
 

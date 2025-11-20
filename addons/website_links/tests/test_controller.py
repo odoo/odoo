@@ -51,9 +51,8 @@ class TestWebsiteLinksRussian(HttpCase):
         # This generate a new unused link
         no_link_code = self.env['link.tracker.code']._get_random_code_strings()[0]
 
-        view = self.env['ir.ui.view'].create({
+        view = self.env['ir.qweb'].create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>Welcome to this webpage!</div>',
             'key': 'test.base_view',
         })

@@ -64,7 +64,7 @@ class TestController(HttpCase):
                 'mimetype': 'image/svg+xml',
                 'datas': binascii.b2a_base64(svg, newline=False),
                 'public': True,
-                'res_model': 'ir.ui.view',
+                'res_model': 'ir.qweb',
                 'res_id': 0,
             })
             # Shape illustration with slug.

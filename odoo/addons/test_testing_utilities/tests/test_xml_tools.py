@@ -12,8 +12,7 @@ class TestXMLTools(common.TransactionCase):
 
     def setUp(self):
         super(TestXMLTools, self).setUp()
-        self.qweb_poor = self.env()['ir.ui.view'].create({
-            'type': 'qweb',
+        self.qweb_poor = self.env()['ir.qweb'].create({
             'arch_db': """
     <h1>
             <h2/>
@@ -76,15 +75,13 @@ _</h1>
 
     def test_cleanup_xml_t_call_indent(self):
         # Indentation is fixed after t-call (which keeps indentation of called template)
-        template_1 = self.env['ir.ui.view'].create({
-            'type': 'qweb',
+        template_1 = self.env['ir.qweb'].create({
             'arch_db': '''<h1>
     <content>This is content!</content>
 </h1>
 '''})
-        template_2 = self.env['ir.ui.view'].create({
+        template_2 = self.env['ir.qweb'].create({
             'name': 'test',
-            'type': 'qweb',
             'arch_db': f'''<odoo>
     <data>
         <t t-call="{template_1.id}"/>
@@ -104,16 +101,14 @@ _</h1>
 
     def test_qweb_render_values_empty_nodes(self):
         # Indentation is fixed and empty nodes are removed after conditional rendering
-        template_addresses = self.env['ir.ui.view'].create({
-            'type': 'qweb',
+        template_addresses = self.env['ir.qweb'].create({
             'arch_db': '''<t>
     <street t-out="address.get('street')"/>
     <number t-out="address.get('number')"/>
     <city t-out="address.get('city')"/>
 </t>
 '''})
-        template_main = self.env['ir.ui.view'].create({
-            'type': 'qweb',
+        template_main = self.env['ir.qweb'].create({
             'arch_db': f'''<data>
     <item t-foreach="items" t-as="item" t-out="item"/>
     <addressSender><t t-call='{template_addresses.id}' address="addressSender"/></addressSender>

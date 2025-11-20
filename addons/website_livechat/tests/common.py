@@ -56,13 +56,11 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
             [
                 {
                     "name": "Test Page 1",
-                    "type": "qweb",
                     "url": "/page_1",
                     "website_id": self.env.ref("website.default_website").id,
                 },
                 {
                     "name": "Test Page 2",
-                    "type": "qweb",
                     "url": "/page_2",
                     "website_id": self.env.ref("website.default_website").id,
                 },

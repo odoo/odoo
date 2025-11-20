@@ -244,7 +244,7 @@ class Website(Home):
     def sitemap_xml_index(self, **kwargs):
         current_website = request.website
         Attachment = request.env['ir.attachment'].sudo()
-        View = request.env['ir.ui.view'].sudo()
+        IrQweb = request.env['ir.qweb'].sudo()
         mimetype = 'application/xml;charset=utf-8'
         content = None
         url_root = request.httprequest.url_root
@@ -283,9 +283,9 @@ class Website(Home):
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': url_root[:-1],
                 }
-                urls = View._render_template('website.sitemap_locs', values)
+                urls = IrQweb._render_template('website.sitemap_locs', values)
                 if urls.strip():
-                    content = View._render_template('website.sitemap_xml', {'content': urls})
+                    content = IrQweb._render_template('website.sitemap_xml', {'content': urls})
                     pages += 1
                     last_sitemap = create_sitemap('%s-%d.xml' % (sitemap_base_url, pages), content)
                 else:
@@ -304,7 +304,7 @@ class Website(Home):
                 pages_with_website = ["%d-%s-%d" % (current_website.id, hashed_url_root, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = View._render_template('website.sitemap_index_xml', {
+                content = IrQweb._render_template('website.sitemap_index_xml', {
                     'pages': pages_with_website,
                     # URLs inside the sitemap index have to be on the same
                     # domain as the sitemap index itself
@@ -433,10 +433,10 @@ class Website(Home):
 
     @http.route('/website/snippet/filter_templates', type='jsonrpc', auth='public', website=True, readonly=True)
     def get_dynamic_snippet_templates(self, filter_name=False):
-        domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
+        domain = [['key', 'ilike', '.dynamic_filter_template_']]
         if filter_name:
             domain.append(['key', 'ilike', escape_psql('_%s_' % filter_name)])
-        templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name', 'arch_db'])
+        templates = request.env['ir.qweb'].sudo().search_read(domain, ['key', 'name', 'arch_db'])
 
         for t in templates:
             attribs = etree.fromstring(t.pop('arch_db')).attrib or {}
@@ -545,7 +545,7 @@ class Website(Home):
                         if pattern:
                             parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
                             if len(parts) > 1:
-                                value = request.env['ir.ui.view'].sudo()._render_template(
+                                value = request.env['ir.qweb'].sudo()._render_template(
                                     "website.search_text_with_highlight",
                                     {'parts': parts}
                                 )
@@ -691,7 +691,7 @@ class Website(Home):
 
         if redirect:
             if ext_special_case:  # redirect non html pages to backend to edit
-                return request.redirect(f"/odoo/ir.ui.view/{page.get('view_id')}")
+                return request.redirect(f"/odoo/ir.qweb/{page.get('view_id')}")
             return request.redirect(request.env['website'].get_client_action_url(url, True))
 
         if ext_special_case:
@@ -700,9 +700,9 @@ class Website(Home):
 
     @http.route('/website/get_new_page_templates', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_new_page_templates(self, **kw):
-        View = request.env['ir.ui.view']
+        IrQweb = request.env['ir.qweb']
         result = []
-        groups_html = View._render_template("website.new_page_template_groups")
+        groups_html = IrQweb._render_template("website.new_page_template_groups")
         groups_el = etree.fromstring(f'<data>{groups_html}</data>')
         for group_el in groups_el.getchildren():
             group = {
@@ -712,7 +712,7 @@ class Website(Home):
             }
             if group_el.attrib['id'] == 'custom':
                 for page in request.website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
-                    html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
+                    html_tree = html.fromstring(IrQweb.with_context(inherit_branding=False)._render_template(
                         page.key,
                     ))
                     wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
@@ -724,7 +724,7 @@ class Website(Home):
                 group['is_custom'] = True
                 result.append(group)
                 continue
-            for template in View.search([
+            for template in IrQweb.search([
                 ('mode', '=', 'primary'),
                 '|',
                 ('key', 'like', escape_psql(f'new_page_template_sections_{group["id"]}_')),
@@ -732,7 +732,7 @@ class Website(Home):
                 request.website.website_domain(),
             ], order='key'):
                 try:
-                    html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
+                    html_tree = html.fromstring(IrQweb.with_context(inherit_branding=False)._render_template(
                         template.key,
                     ))
                     for section_el in html_tree.xpath("//section[@data-snippet]"):
@@ -764,14 +764,14 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
-        request.env['ir.ui.view'].browse(view_id).with_context(
+        request.env['ir.qweb'].browse(view_id).with_context(
             lang=request.website.default_lang_id.code,
             delay_translations=True,
         ).arch = arch
 
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        views = request.env["ir.qweb"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 
@@ -783,7 +783,7 @@ class Website(Home):
         - Hard reset: it will read the original `arch` from the XML file if the
         view comes from an XML file (arch_fs).
         """
-        view = request.env['ir.ui.view'].browse(int(view_id))
+        view = request.env['ir.qweb'].browse(int(view_id))
         # Deactivate COW to not fix a generic view by creating a specific
         view.with_context(website_id=None).reset_arch(mode)
         return True
@@ -934,7 +934,7 @@ class Website(Home):
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image
 
-        if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
+        if res_model not in ('website.page', 'ir.qweb') and 'seo_name' in record:  # allow custom slugify
             res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name or '')  # default slug, if seo_name become empty
             res['seo_name'] = record.seo_name and request.env['ir.http']._slugify(record.seo_name) or ''
 
@@ -1012,7 +1012,7 @@ class Website(Home):
         return json.loads(metadata.raw)
 
     def _get_customize_data(self, keys, is_view_data):
-        model = 'ir.ui.view' if is_view_data else 'ir.asset'
+        model = 'ir.qweb' if is_view_data else 'ir.asset'
         Model = request.env[model].with_context(active_test=False)
         domain = Domain("key", "in", keys) & request.website.website_domain()
         return Model.search(domain).filter_duplicate()
@@ -1027,7 +1027,7 @@ class Website(Home):
         """
         Enables and/or disables views/assets according to list of keys.
 
-        :param is_view_data: True = "ir.ui.view", False = "ir.asset"
+        :param is_view_data: True = "ir.qweb", False = "ir.asset"
         :param enable: list of views/assets keys to enable
         :param disable: list of views/assets keys to disable
         :param reset_view_arch: restore the default template after disabling
@@ -1241,7 +1241,7 @@ class Website(Home):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
+        views = request.env["ir.qweb"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []

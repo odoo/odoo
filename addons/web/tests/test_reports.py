@@ -30,8 +30,7 @@ class TestReports(odoo.tests.HttpCase):
             'report_name': 'base.test_report',
             'model': 'res.partner',
         })
-        self.env['ir.ui.view'].create({
-            'type': 'qweb',
+        self.env['ir.qweb'].create({
             'name': 'base.test_report',
             'key': 'base.test_report',
             'arch': f'''
@@ -96,8 +95,7 @@ class TestReports(odoo.tests.HttpCase):
     @mute_logger('odoo.addons.base.models.ir_actions_report')
     def test_report_error_cleanup(self):
         admin = self.env.ref('base.user_admin')
-        self.env['ir.ui.view'].create({
-            'type': 'qweb',
+        self.env['ir.qweb'].create({
             'name': 'base.test_report',
             'key': 'base.test_report',
             'arch': '''

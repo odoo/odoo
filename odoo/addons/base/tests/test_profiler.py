@@ -461,9 +461,8 @@ class TestProfiling(TransactionCase):
         self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}),))
 
     def test_qweb_recorder(self):
-        template = self.env['ir.ui.view'].create({
+        template = self.env['ir.qweb'].create({
             'name': 'test',
-            'type': 'qweb',
             'key': 'root',
             'arch_db': '''<t t-name="root">
                 <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
@@ -471,16 +470,15 @@ class TestProfiling(TransactionCase):
                     <b t-out="add_one_query()"/></t>
             </t>'''
         })
-        child_template = self.env['ir.ui.view'].create({
+        child_template = self.env['ir.qweb'].create({
             'name': 'test',
-            'type': 'qweb',
             'key': 'dummy',
             'arch_db': '<t t-name="dummy"><span t-attf-class="myclass"><t t-out="record"/> <t t-out="add_one_query()"/></span></t>'
         })
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
-                            "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [child_template.id])
+                            "VALUES ('dummy', 'ir.qweb', %s, 'base')", [child_template.id])
 
-        values = {'add_one_query': lambda: self.env.cr.execute('SELECT id FROM ir_ui_view LIMIT 1') or 'query'}
+        values = {'add_one_query': lambda: self.env.cr.execute('SELECT id FROM ir_qweb LIMIT 1') or 'query'}
         result = u"""
                     [0: <span class="myclass">a query</span> 3]
                     <b>query</b>
@@ -523,7 +521,7 @@ class TestProfiling(TransactionCase):
             # first pass in the loop
             {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-out='item_index'", 'query': 0},
             {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-set='record' t-value='item'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-call='base.dummy'", 'query': 0}, # 0 because the template is in ir.ui.view cache
+            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-call='base.dummy'", 'query': 0}, # 0 because the template is in ir.qweb cache
             # first pass in the loop: content of the child template
             {'view_id': child_template.id, 'xpath': '/t/span',      'directive': "t-attf-class='myclass'", 'query': 0},
             {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-out='record'", 'query': 0},

@@ -180,7 +180,7 @@ class ProductFeed(models.Model):
             'items': self._prepare_gmc_items(),
         }
 
-        return self.env['ir.ui.view'].sudo()._render_template(
+        return self.env['ir.qweb'].sudo()._render_template(
             'website_sale.gmc_xml', gmc_data,
         )
 

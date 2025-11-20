@@ -21,10 +21,9 @@ class TestSystray(HttpCase):
         other_website = cls.env['website'].create({
             'name': 'Other',
         })
-        cls.env['ir.ui.view'].create({
+        cls.env['ir.qweb'].create({
             'name': "Patch to recognize other website",
             'website_id': other_website.id,
-            'type': 'qweb',
             'inherit_id': cls.env.ref('test_website.test_model_page_layout').id,
             'arch': """
                 <xpath expr="//span" position="after">

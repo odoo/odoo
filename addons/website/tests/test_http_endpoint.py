@@ -12,13 +12,12 @@ class TestHttpEndPoint(HttpCase):
         which causes a cache clearing.
         This test ensures that the rendering still works, even in this case.
         """
-        homepage_view = self.env['ir.ui.view'].search([
+        homepage_view = self.env['ir.qweb'].search([
             ('website_id', '=', self.env.ref('website.default_website').id),
             ('key', '=', 'website.homepage'),
         ])
-        self.env['ir.ui.view'].create({
+        self.env['ir.qweb'].create({
             'name': 'Add cache clear to Home',
-            'type': 'qweb',
             'mode': 'extension',
             'inherit_id': homepage_view.id,
             'arch_db': """

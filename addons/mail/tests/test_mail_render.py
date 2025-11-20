@@ -71,9 +71,8 @@ class TestMailRenderCommon(common.MailCommon):
     <span t-else="">Autre Narrateur</span>
 </p>"""
         ]
-        cls.base_qweb_templates = cls.env['ir.ui.view'].create([
+        cls.base_qweb_templates = cls.env['ir.qweb'].create([
             {'name': 'TestRender%d' % index,
-             'type': 'qweb',
              'arch': qweb_content,
             } for index, qweb_content in enumerate(cls.base_qweb_bits)
         ])

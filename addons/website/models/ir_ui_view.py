@@ -11,14 +11,13 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.addons.base.models.ir_qweb import MOVABLE_BRANDING
 
-_logger = logging.getLogger(__name__)
 
+class IrQweb(models.Model):
+    _name = 'ir.qweb'
 
-class IrUiView(models.Model):
-    _name = 'ir.ui.view'
-
-    _inherit = ["ir.ui.view", "website.seo.metadata"]
+    _inherit = ["ir.qweb", "website.seo.metadata"]
 
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
@@ -45,9 +44,8 @@ class IrUiView(models.Model):
     def _set_pwd(self):
         crypt_context = self.env.user._crypt_context()
         for r in self:
-            if r.type == 'qweb':
-                r.sudo().visibility_password = (r.visibility_password_display and crypt_context.hash(r.visibility_password_display)) or ''
-                r.visibility = r.visibility  # double check access
+            r.sudo().visibility_password = (r.visibility_password_display and crypt_context.hash(r.visibility_password_display)) or ''
+            r.visibility = r.visibility  # double check access
 
     def _compute_first_page_id(self):
         for view in self:
@@ -56,7 +54,7 @@ class IrUiView(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """
-        SOC for ir.ui.view creation. If a view is created without a website_id,
+        SOC for ir.qweb creation. If a view is created without a website_id,
         it should get one if one is present in the context. Also check that
         an explicit website_id in create values matches the one in the context.
         """
@@ -94,7 +92,7 @@ class IrUiView(models.Model):
             view.display_name = view_name
 
     def write(self, vals):
-        '''COW for ir.ui.view. This way editing websites does not impact other
+        '''COW for ir.qweb. This way editing websites does not impact other
         websites. Also this way newly created websites will only
         contain the default views.
         '''
@@ -118,7 +116,7 @@ class IrUiView(models.Model):
 
             # No need of COW if the view is already specific
             if view.website_id:
-                super(IrUiView, view).write(vals)
+                super(IrQweb, view).write(vals)
                 continue
 
             # Ensure the cache of the pages stay consistent when doing COW.
@@ -136,7 +134,7 @@ class IrUiView(models.Model):
                 ('website_id', '=', current_website_id)
             ], limit=1)
             if website_specific_view:
-                super(IrUiView, website_specific_view).write(vals)
+                super(IrQweb, website_specific_view).write(vals)
                 continue
 
             # Set key to avoid copy() to generate an unique key as we want the
@@ -166,7 +164,7 @@ class IrUiView(models.Model):
                     # Trigger COW on inheriting views
                     inherit_child.write({'inherit_id': website_specific_view.id})
 
-            super(IrUiView, website_specific_view).write(vals)
+            super(IrQweb, website_specific_view).write(vals)
 
         return True
 
@@ -191,12 +189,11 @@ class IrUiView(models.Model):
         # specific view parent id and their website id in one query
         query = """
             SELECT generic.id, ARRAY[array_agg(spec_parent.id), array_agg(spec_parent.website_id)]
-              FROM ir_ui_view generic
-        INNER JOIN ir_ui_view generic_parent ON generic_parent.id = generic.inherit_id
-        INNER JOIN ir_ui_view spec_parent ON spec_parent.key = generic_parent.key
-         LEFT JOIN ir_ui_view specific ON specific.key = generic.key AND specific.website_id = spec_parent.website_id
-             WHERE generic.type='qweb'
-               AND generic.website_id IS NULL
+              FROM ir_qweb generic
+        INNER JOIN ir_qweb generic_parent ON generic_parent.id = generic.inherit_id
+        INNER JOIN ir_qweb spec_parent ON spec_parent.key = generic_parent.key
+         LEFT JOIN ir_qweb specific ON specific.key = generic.key AND specific.website_id = spec_parent.website_id
+             WHERE generic.website_id IS NULL
                AND generic.key ~ %s
                AND spec_parent.website_id IS NOT NULL
                AND specific.id IS NULL
@@ -228,12 +225,12 @@ class IrUiView(models.Model):
                     # care of creating pages and menus.
                     view.with_context(website_id=w.id).write({'name': view.name})
 
-        specific_views = self.env['ir.ui.view']
+        specific_views = self.env['ir.qweb']
         if self and self.pool._init:
             for view in self.filtered(lambda view: not view.website_id):
                 specific_views += view._get_specific_views()
 
-        result = super(IrUiView, self + specific_views).unlink()
+        result = super(IrQweb, self + specific_views).unlink()
         self.env.registry.clear_cache('templates')
         return result
 
@@ -282,7 +279,7 @@ class IrUiView(models.Model):
         # method should never be called in a generic context, even for
         # tests)
         current_website = self.env['website'].get_current_website()
-        return super(IrUiView, self.with_context(
+        return super(IrQweb, self.with_context(
             website_id=current_website.id
         )).get_related_views(key, bundles=bundles).with_context(
             lang=current_website.default_lang_id.code,
@@ -334,7 +331,7 @@ class IrUiView(models.Model):
         if not self.env.context.get('website_id'):
             return super()._get_inheriting_views()
 
-        views = super(IrUiView, self.with_context(active_test=False))._get_inheriting_views()
+        views = super(IrQweb, self.with_context(active_test=False))._get_inheriting_views()
         # prefer inactive website-specific views over active generic ones
         return views.filter_duplicate().filtered('active')
 
@@ -348,15 +345,15 @@ class IrUiView(models.Model):
             return """SELECT res_id
                     FROM   ir_model_data
                     WHERE  res_id IN %(res_ids)s
-                        AND model = 'ir.ui.view'
+                        AND model = 'ir.qweb'
                         AND module  IN %(modules)s
                     UNION
                     SELECT sview.id
-                    FROM   ir_ui_view sview
-                        INNER JOIN ir_ui_view oview USING (key)
+                    FROM   ir_qweb sview
+                        INNER JOIN ir_qweb oview USING (key)
                         INNER JOIN ir_model_data d
                                 ON oview.id = d.res_id
-                                    AND d.model = 'ir.ui.view'
+                                    AND d.model = 'ir.qweb'
                                     AND d.module  IN %(modules)s
                     WHERE  sview.id IN %(res_ids)s
                         AND sview.website_id IS NOT NULL
@@ -445,7 +442,7 @@ class IrUiView(models.Model):
     def render_public_asset(self, template, values=None):
         # to get the specific asset for access checking
         if request and hasattr(request, 'website'):
-            return super(IrUiView, self.with_context(website_id=request.website.id)).render_public_asset(template, values=values)
+            return super(IrQweb, self.with_context(website_id=request.website.id)).render_public_asset(template, values=values)
         return super().render_public_asset(template, values=values)
 
     def _render_template(self, template, values=None):
@@ -467,16 +464,13 @@ class IrUiView(models.Model):
         else:
             return False
 
-    def _read_template_keys(self):
-        return super()._read_template_keys() + ['website_id']
-
     # ------------------------------------------------------
     # Save from html
     # ------------------------------------------------------
 
     @api.model
     def extract_embedded_fields(self, arch):
-        return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
+        return arch.xpath('//*[@data-oe-model != "ir.qweb"]')
 
     @api.model
     def extract_oe_structures(self, arch):
@@ -532,11 +526,10 @@ class IrUiView(models.Model):
             'name': '%s (%s)' % (self.name, el.get('id')),
             'arch': etree.tostring(arch, encoding='unicode'),
             'key': '%s_%s' % (self.key, el.get('id')),
-            'type': 'qweb',
             'mode': 'extension',
         }
         vals.update(self._save_oe_structure_hook())
-        oe_structure_view = self.env['ir.ui.view'].create(vals)
+        oe_structure_view = self.env['ir.qweb'].create(vals)
         self._copy_custom_snippet_translations(oe_structure_view, 'arch_db')
 
         return True
@@ -656,7 +649,7 @@ class IrUiView(models.Model):
             # were edited at the same time, multiple call to this method will be
             # done but the first one may create a website specific view. So if there
             # already is a website specific view, we need to divert the super to it.
-            website_specific_view = self.env['ir.ui.view'].search([
+            website_specific_view = self.env['ir.qweb'].search([
                 ('key', '=', self.key),
                 ('website_id', '=', current_website.id)
             ], limit=1)
@@ -730,7 +723,7 @@ class IrUiView(models.Model):
     # --------------------------------------------------------------------------
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
-        return super(IrUiView, self.with_context(no_cow=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
+        return super(IrQweb, self.with_context(no_cow=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
 
     def _get_base_lang(self):
         """ Returns the default language of the website as the base language if the record is bound to it """

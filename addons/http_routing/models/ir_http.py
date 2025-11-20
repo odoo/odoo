@@ -554,16 +554,16 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_values_500_error(cls, env, values, exception):
-        values['view'] = env["ir.ui.view"]
+        values['view'] = env["ir.qweb"]
         return values
 
     @classmethod
     def _get_error_html(cls, env, code, values):
         try:
-            return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
+            return code, env['ir.qweb']._render_template('http_routing.%s' % code, values)
         except MissingError:
             if str(code)[0] == '4':
-                return code, env['ir.ui.view']._render_template('http_routing.4xx', values)
+                return code, env['ir.qweb']._render_template('http_routing.4xx', values)
             raise
 
     @classmethod
@@ -600,7 +600,7 @@ class IrHttp(models.AbstractModel):
             code, html = cls._get_error_html(request.env, code, values)
         except Exception:
             _logger.exception("Couldn't render a template for http status %s", code)
-            code, html = 418, request.env['ir.ui.view']._render_template('http_routing.http_error', values)
+            code, html = 418, request.env['ir.qweb']._render_template('http_routing.http_error', values)
 
         response = Response(html, status=code, content_type='text/html;charset=utf-8')
         cls._post_dispatch(response)

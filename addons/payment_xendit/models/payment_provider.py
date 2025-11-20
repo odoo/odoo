@@ -73,7 +73,7 @@ class PaymentProvider(models.Model):
 
         :param bool is_validation: Whether the operation is a validation.
         :return: The view of the redirect form template or None.
-        :rtype: ir.ui.view | None
+        :rtype: ir.qweb | None
         """
         self.ensure_one()
 

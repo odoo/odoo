@@ -14,7 +14,7 @@ class WebsiteEventMenu(models.Model):
 
     menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
     event_id = fields.Many2one('event.event', string='Event', index='btree_not_null', ondelete='cascade')
-    view_id = fields.Many2one('ir.ui.view', string='View', ondelete='cascade', help='Used when not being an url based menu')
+    view_id = fields.Many2one('ir.qweb', string='View', ondelete='cascade', help='Used when not being an url based menu')
     menu_type = fields.Selection(
         [('community', 'Community Menu'),
          ('introduction', 'Home'),
@@ -29,7 +29,7 @@ class WebsiteEventMenu(models.Model):
                 continue
             # Get the last view modified based on the key and the website of the event
             # as multiple views with the same key can exist with different website.
-            view = self.env['ir.ui.view'].sudo().search([
+            view = self.env['ir.qweb'].sudo().search([
                 ('key', '=', old_menu.view_id.key),
                 ('website_id', '=?', old_menu.event_id.website_id.id)
             ], order='write_date DESC', limit=1)
@@ -63,7 +63,7 @@ class WebsiteEventMenu(models.Model):
         for child_view in children_views:
             view_info = child_view.key.split('.')
             # Get the last view modified based on the key and the website of the event
-            view = self.env['ir.ui.view'].sudo().search([
+            view = self.env['ir.qweb'].sudo().search([
                 ('key', '=', child_view.key),
                 ('website_id', '=?', website_id)
             ], order='write_date DESC', limit=1)

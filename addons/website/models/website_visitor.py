@@ -289,7 +289,7 @@ class WebsiteVisitor(models.Model):
 
     def _handle_webpage_dispatch(self, website_page):
         """ Create a website.visitor if the http request object is a tracked
-        website.page or a tracked ir.ui.view.
+        website.page or a tracked ir.qweb.
         Since this method is only called on tracked elements, the
         last_connection_datetime might not be accurate as the visitor could have
         been visiting only untracked page during his last visit."""

@@ -77,7 +77,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
     await animationFrame();
 
     // Throw if any render_public_asset RPC happens during rename
-    onRpc("ir.ui.view", "render_public_asset", () => {
+    onRpc("ir.qweb", "render_public_asset", () => {
         throw new Error("shouldn't make an rpc call on snippet rename");
     });
 
@@ -113,13 +113,13 @@ test("thumbnails are displayed on custom inner snippets even if they have the sa
         snippet_content: [getInnerContent(innerContentDesc)],
         snippet_custom: [],
     };
-    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+    onRpc("ir.qweb", "save_snippet", ({ kwargs }) => {
         const { name, arch, thumbnail_url } = kwargs;
         const customSnippet = `<div name="${name}" data-oe-type="snippet" data-oe-snippet-id="123" data-o-image-preview="" data-oe-thumbnail="${thumbnail_url}" data-oe-keywords="">${arch}</div>`;
         snippets.snippet_custom.push(customSnippet);
         return name;
     });
-    onRpc("ir.ui.view", "render_public_asset", (args) => getSnippetView(snippets));
+    onRpc("ir.qweb", "render_public_asset", (args) => getSnippetView(snippets));
     await setupWebsiteBuilder(
         `<div class="container">
             <p>test</p>

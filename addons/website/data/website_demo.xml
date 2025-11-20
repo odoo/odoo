@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="bs_debug_view" model="ir.ui.view">
+        <record id="bs_debug_view" model="ir.qweb">
             <field name="name">BS Debug</field>
-            <field name="type">qweb</field>
             <field name="key">website.bs_debug_page_view</field>
             <field name="arch" type="xml">
                 <t name="Debug" t-name="website.bs_debug_page_view">
@@ -464,9 +463,8 @@
             </field>
         </record>
 
-        <record id="color_combinations_debug_view" model="ir.ui.view">
+        <record id="color_combinations_debug_view" model="ir.qweb">
             <field name="name">Color Combinations Debug</field>
-            <field name="type">qweb</field>
             <field name="key">website.color_combinations_debug_page_view</field>
             <field name="arch" type="xml">
                 <t name="Debug" t-name="website.color_combinations_debug_page_view">
@@ -585,9 +583,8 @@
             </field>
         </record>
 
-        <record id="snippets_debug_view" model="ir.ui.view">
+        <record id="snippets_debug_view" model="ir.qweb">
             <field name="name">Snippet Debug</field>
-            <field name="type">qweb</field>
             <field name="key">website.snippets_debug_page_view</field>
             <field name="arch" type="xml">
                 <t name="Debug" t-name="website.snippets_debug_page_view">

@@ -38,6 +38,7 @@ The kernel of Odoo, needed for all installation.
         'views/ir_attachment_views.xml',
         'views/ir_rule_views.xml',
         'views/ir_sequence_views.xml',
+        'views/ir_qweb_views.xml',
         'views/ir_ui_menu_views.xml',
         'views/ir_ui_view_views.xml',
         'views/ir_default_views.xml',

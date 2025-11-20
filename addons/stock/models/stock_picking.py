@@ -432,7 +432,7 @@ class StockPickingType(models.Model):
         action['context'] = context
         action['domain'] = [('picking_type_id', '=', self.id)]
 
-        action['help'] = self.env['ir.ui.view']._render_template(
+        action['help'] = self.env['ir.qweb']._render_template(
             'stock.help_message_template', {
                 'picking_type_code': context.get('restricted_picking_type_code') or self.code,
             }
@@ -1068,7 +1068,7 @@ class StockPicking(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        return self.env['ir.ui.view']._render_template(
+        return self.env['ir.qweb']._render_template(
             'stock.help_message_template', {
                 'picking_type_code': self.env.context.get('restricted_picking_type_code') or self.picking_type_code,
             }
@@ -1755,7 +1755,7 @@ class StockPicking(models.Model):
         context.update(literal_eval(action['context']))
         action['context'] = context
 
-        action['help'] = self.env['ir.ui.view']._render_template(
+        action['help'] = self.env['ir.qweb']._render_template(
             'stock.help_message_template', {
                 'picking_type_code': context.get('restricted_picking_type_code') or self.picking_type_code,
             }

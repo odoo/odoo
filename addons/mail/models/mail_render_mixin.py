@@ -443,15 +443,15 @@ class MailRenderMixin(models.AbstractModel):
     @api.model
     def _render_template_qweb_view(self, view_ref, model, res_ids,
                                    add_context=None, options=None):
-        """ Render a QWeb template based on an ir.ui.view content.
+        """ Render a QWeb template based on an ir.qweb content.
 
         In addition to the generic evaluation context available, some other
         variables are added:
           * ``object``: record based on which the template is rendered;
 
         :param str/int/record view_ref: source QWeb template. It should be an
-          XmlID allowing to fetch an ``ir.ui.view``, or an ID of a view or
-          an ``ir.ui.view`` record;
+          XmlID allowing to fetch an ``ir.qweb``, or an ID of a view or
+          an ``ir.qweb`` record;
         :param str model: see ``MailRenderMixin._render_template()``;
         :param list res_ids: see ``MailRenderMixin._render_template()``;
 

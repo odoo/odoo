@@ -272,7 +272,7 @@ class ForumForum(models.Model):
 
     def _set_default_faq(self):
         for forum in self:
-            forum.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": forum})
+            forum.faq = self.env['ir.qweb']._render_template('website_forum.faq_accordion', {"forum": forum})
 
     # ----------------------------------------------------------------------
     # TOOLS

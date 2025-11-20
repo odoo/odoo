@@ -120,7 +120,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         self.assertFalse(self.env['mail.blacklist'].search([('email', '=', self.test_email_normalized)]))
 
-    @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
+    @mute_logger('odoo.http', 'odoo.addons.website.models.ir_qweb')
     def test_mailing_report_unsubscribe(self):
         """ Test deactivation of mailing report sending. It requires usage of
         a hash token. """
@@ -582,7 +582,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])])
         self.assertEqual(msg_bl.body, Markup('<p>Blocklist request from portal</p>'))
 
-    @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
+    @mute_logger('odoo.http', 'odoo.addons.website.models.ir_qweb')
     def test_mailing_view(self):
         """ Test preview of mailing. It requires either a token, either being
         mailing user. """

@@ -179,7 +179,6 @@ class TestWebsitePerformanceCommon(UtilPerf):
         page = self.env['website.page'].create({
             'url': url,
             'name': name,
-            'type': 'qweb',
             'arch': '<t name="%s" t-name="website.page_test_%s"> \
                        <t t-call="website.layout"> \
                          <div id="wrap"><div class="oe_structure"/></div> \
@@ -231,7 +230,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website': 1,
                     # menu and layout
                     'website_menu': 1,
-                    'ir_ui_view': 1,
+                    'ir_qweb': 1,
                 }
                 expected_query_count = 7
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
@@ -256,7 +255,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website': 1,
                     # menu and layout
                     'website_menu': 1,
-                    'ir_ui_view': 1,
+                    'ir_qweb': 1,
                 }
                 expected_query_count = 2 if cache else 7
                 insert_tables_perf = {}
@@ -300,7 +299,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # 2. find page matching the `/` url
                     'website': 1,
                     # layout
-                    'ir_ui_view': 1,
+                    'ir_qweb': 1,
                 }
                 expected_query_count = 6
                 insert_tables_perf = {}
@@ -332,7 +331,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website_page': 1,
             # 1. `_serve_page` search page matching URL..
             # 2. ..then reads it (`is_visible`)
-            'ir_ui_view': 1,
+            'ir_qweb': 1,
             # Check if `view.track` to track visitor or not
         }
         self._check_url_hot_query(self.page.url, 4, select_tables_perf, nocache=True)
@@ -365,7 +364,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             # 2. ..then reads it (`is_visible`)
             'website': 1,
             'website_menu': 1,
-            'ir_ui_view': 1,
+            'ir_qweb': 1,
         }
         self._check_url_hot_query(self.page.url, 7, select_tables_perf, nocache=True)
         self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 7)

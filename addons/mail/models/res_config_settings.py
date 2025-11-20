@@ -78,7 +78,7 @@ class ResConfigSettings(models.TransientModel):
             'name': _('Mail Layout'),
             'view_mode': 'form',
             'res_id': layout.id,
-            'res_model': 'ir.ui.view',
+            'res_model': 'ir.qweb',
         }
 
     def open_mail_templates(self):

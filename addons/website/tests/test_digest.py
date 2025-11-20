@@ -25,7 +25,6 @@ class TestWebsiteDigest(TestDigestCommon):
                 'is_published': True,
                 'key': 'test.homepage_url_test',
                 'name': 'HomepageUrlTest',
-                'type': 'qweb',
                 'url': f'/website_{website_idx}/homepage_url_test',
                 'website_id': website.id,
             })

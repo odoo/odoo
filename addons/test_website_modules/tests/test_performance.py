@@ -319,7 +319,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'ir_attachment': 4,
             'product_image': 3,
             'product_template_attribute_value': 1,
-            'ir_ui_view': 2,
+            'ir.qweb': 2,
             'website_menu': 1,
             'website_page': 1,
         }

@@ -121,7 +121,7 @@ class BaseDocumentLayout(models.TransientModel):
                     # guarantees that bin_size is always set to False,
                     # so the logo always contains the bin data instead of the binary size
                     wizard = wizard.with_context(bin_size=False)
-                wizard.preview = wizard.env['ir.ui.view']._render_template(
+                wizard.preview = wizard.env['ir.qweb']._render_template(
                     wizard._get_preview_template(),
                     wizard._get_render_information(styles),
                 )

@@ -37,7 +37,7 @@ class ProjectProject(models.Model):
             'view_mode': view_mode,
             'domain': domain,
             'context': context,
-            'help': self.env['ir.ui.view']._render_template(
+            'help': self.env['ir.qweb']._render_template(
                 'stock.help_message_template', {
                     'picking_type_code': picking_type,
                 }

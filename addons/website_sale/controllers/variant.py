@@ -46,7 +46,7 @@ class WebsiteSaleVariantController(Controller):
         if request.website.product_page_image_width != 'none' and not request.env.context.get('website_sale_no_images', False):
             product_or_template = product or product_template
             combination_info['display_image'] = bool(product_or_template.image_128)
-            combination_info['carousel'] = request.env['ir.ui.view']._render_template(
+            combination_info['carousel'] = request.env['ir.qweb']._render_template(
                 'website_sale.shop_product_images',
                 values={
                     'product': product_template,
@@ -57,7 +57,7 @@ class WebsiteSaleVariantController(Controller):
 
         if request.website.is_view_active('website_sale.product_tags'):
             all_tags = product.all_product_tag_ids if product else product_template.product_tag_ids
-            combination_info['product_tags'] = request.env['ir.ui.view']._render_template(
+            combination_info['product_tags'] = request.env['ir.qweb']._render_template(
                 'website_sale.product_tags', values={
                     'all_product_tags': all_tags.filtered('visible_to_customers'),
                 }

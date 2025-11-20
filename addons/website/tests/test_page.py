@@ -16,18 +16,17 @@ from odoo.tools import config, mute_logger
 class TestPage(common.TransactionCase):
     def setUp(self):
         super(TestPage, self).setUp()
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Page = self.env['website.page']
         Menu = self.env['website.menu']
 
-        self.base_view = View.create({
+        self.base_view = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>content</div>',
             'key': 'test.base_view',
         })
 
-        self.extension_view = View.create({
+        self.extension_view = Qweb.create({
             'name': 'Extension',
             'mode': 'extension',
             'inherit_id': self.base_view.id,
@@ -47,13 +46,12 @@ class TestPage(common.TransactionCase):
         })
 
     def test_copy_page(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Page = self.env['website.page']
         Menu = self.env['website.menu']
         # Specific page
-        self.specific_view = View.create({
+        self.specific_view = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>Specific View</div>',
             'key': 'test.specific_view',
         })
@@ -106,7 +104,7 @@ class TestPage(common.TransactionCase):
     def test_cow_page(self):
         Menu = self.env['website.menu']
         Page = self.env['website.page']
-        View = self.env['ir.ui.view']
+        View = self.env['ir.qweb']
 
         # backend write, no COW
         total_pages = Page.search_count([])
@@ -141,7 +139,7 @@ class TestPage(common.TransactionCase):
         ''' test cow on extension view itself (like web_editor would do in the frontend) '''
         Menu = self.env['website.menu']
         Page = self.env['website.page']
-        View = self.env['ir.ui.view']
+        View = self.env['ir.qweb']
 
         # nothing special should happen when editing through the backend
         total_pages = Page.search_count([])
@@ -171,7 +169,7 @@ class TestPage(common.TransactionCase):
 
     def test_cou_page_backend(self):
         Page = self.env['website.page']
-        View = self.env['ir.ui.view']
+        View = self.env['ir.qweb']
 
         # currently the view unlink of website.page can't handle views with inherited views
         self.extension_view.unlink()
@@ -182,7 +180,7 @@ class TestPage(common.TransactionCase):
 
     def test_cou_page_frontend(self):
         Page = self.env['website.page']
-        View = self.env['ir.ui.view']
+        View = self.env['ir.qweb']
         Website = self.env['website']
 
         self.env['website'].create({
@@ -211,10 +209,9 @@ class WithContext(HttpCase):
     def setUp(self):
         super().setUp()
         Page = self.env['website.page']
-        View = self.env['ir.ui.view']
-        self.base_view = View.create({
+        Qweb = self.env['ir.qweb']
+        self.base_view = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '''<t name="Homepage" t-name="test.base_view">
                         <t t-call="website.layout">
                             I am a generic page
@@ -307,7 +304,6 @@ class WithContext(HttpCase):
 
         test_page = self.env['website.page'].with_context(website_id=website.id).create({
             'name': 'HomepageUrlTest',
-            'type': 'qweb',
             'arch': '<div>HomepageUrlTest</div>',
             'key': 'test.homepage_url_test',
             'url': '/homepage_url_test',

@@ -33,36 +33,36 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     def setUp(self):
         super(TestWebsiteResetViews, self).setUp()
         self.Website = self.env['website']
-        self.View = self.env['ir.ui.view']
+        self.Qweb = self.env['ir.qweb']
         self.test_view = self.Website.viewref('test_website.test_view')
 
     @mute_logger('odoo.http')
     def test_01_reset_specific_page_view(self):
         self.test_page_view = self.Website.viewref('test_website.test_page_view')
-        total_views = self.View.search_count([('type', '=', 'qweb')])
+        total_views = self.Qweb.search_count([])
         # Trigger COW then break the QWEB XML on it
         break_view(self.test_page_view.with_context(website_id=1))
-        self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
+        self.assertEqual(total_views + 1, self.Qweb.search_count([]), "Missing COW view")
         self.fix_it('/test_page_view')
 
     @mute_logger('odoo.http')
     def test_02_reset_specific_view_controller(self):
-        total_views = self.View.search_count([('type', '=', 'qweb')])
+        total_views = self.Qweb.search_count([])
         # Trigger COW then break the QWEB XML on it
         # `t-att-data="no_record.exist"` will test the case where exception.html contains branding
         break_view(self.test_view.with_context(website_id=1), to='<p t-att-data="no_record.exist" />')
-        self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
+        self.assertEqual(total_views + 1, self.Qweb.search_count([]), "Missing COW view")
         self.fix_it('/test_view')
 
     @mute_logger('odoo.http')
     def test_03_reset_specific_view_controller_t_called(self):
         self.test_view_to_be_t_called = self.Website.viewref('test_website.test_view_to_be_t_called')
 
-        total_views = self.View.search_count([('type', '=', 'qweb')])
+        total_views = self.Qweb.search_count([])
         # Trigger COW then break the QWEB XML on it
         break_view(self.test_view_to_be_t_called.with_context(website_id=1))
         break_view(self.test_view, to='<t t-call="test_website.test_view_to_be_t_called"/>')
-        self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
+        self.assertEqual(total_views + 1, self.Qweb.search_count([]), "Missing COW view")
         self.fix_it('/test_view')
 
     @mute_logger('odoo.http')
@@ -76,21 +76,21 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         self.fix_it('/test_view')
 
     # This test work in real life, but not in test mode since we cannot rollback savepoint.
-    # @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
+    # @mute_logger('odoo.http', 'odoo.addons.website.models.ir_qweb')
     # def test_05_reset_specific_view_controller_broken_request(self):
-    #     total_views = self.View.search_count([('type', '=', 'qweb')])
+    #     total_views = self.View.search_count([])
     #     # Trigger COW then break the QWEB XML on it
     #     break_view(self.test_view.with_context(website_id=1), to='<t t-out="request.env[\'website\'].browse(\'a\').name" />')
-    #     self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (1)")
+    #     self.assertEqual(total_views + 1, self.View.search_count([]), "Missing COW view (1)")
     #     self.fix_it('/test_view')
 
-    # also mute ir.ui.view as `_get_view_id()` will raise "Could not find view object with xml_id 'no_record.exist'""
-    @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
+    # also mute ir.qweb as `_get_view_id()` will raise "Could not find view object with xml_id 'no_record.exist'""
+    @mute_logger('odoo.http', 'odoo.addons.website.models.ir_qweb')
     def test_06_reset_specific_view_controller_inexisting_template(self):
-        total_views = self.View.search_count([('type', '=', 'qweb')])
+        total_views = self.Qweb.search_count([])
         # Trigger COW then break the QWEB XML on it
         break_view(self.test_view.with_context(website_id=1), to='<t t-call="no_record.exist"/>')
-        self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (2)")
+        self.assertEqual(total_views + 1, self.Qweb.search_count([]), "Missing COW view (2)")
         self.fix_it('/test_view')
 
     @mute_logger('odoo.http')
@@ -103,12 +103,12 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     @mute_logger('odoo.http')
     def test_08_reset_specific_page_view_hard_mode(self):
         self.test_page_view = self.Website.viewref('test_website.test_page_view')
-        total_views = self.View.search_count([('type', '=', 'qweb')])
+        total_views = self.Qweb.search_count([])
         # Trigger COW then break the QWEB XML on it
         break_view(self.test_page_view.with_context(website_id=1))
         # Break it again to have a previous arch different than file arch
         break_view(self.test_page_view.with_context(website_id=1))
-        self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
+        self.assertEqual(total_views + 1, self.Qweb.search_count([]), "Missing COW view")
 
         with self.assertRaises(AssertionError):
             # soft reset should not be able to reset the view as previous

@@ -160,8 +160,8 @@ class BuilderContainer extends Component {
     }
 }
 
-class IrUiView extends models.Model {
-    _name = "ir.ui.view";
+class IrQweb extends models.Model {
+    _name = "ir.qweb";
     render_public_asset() {
         throw new Error("This should be implemented by some helper");
     }
@@ -198,7 +198,7 @@ export async function setupHTMLBuilder(
     } = {}
 ) {
     defineMailModels();
-    defineModels([IrUiView]);
+    defineModels([IrQweb]);
 
     patchWithCleanupImg();
 
@@ -225,7 +225,7 @@ export async function setupHTMLBuilder(
         };
     }
 
-    patchWithCleanup(IrUiView.prototype, {
+    patchWithCleanup(IrQweb.prototype, {
         render_public_asset: () => getSnippetView(snippets),
     });
 

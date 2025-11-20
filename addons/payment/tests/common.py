@@ -54,9 +54,8 @@ class PaymentCommon(BaseCommon):
             <input type="hidden" name="user_id" t-att-value="user_id.id"/>
         </form>
         """  # We exploit the default values `viewid` and `user_id` from QWeb's rendering context
-        redirect_form = cls.env['ir.ui.view'].create({
+        redirect_form = cls.env['ir.qweb'].create({
             'name': "Dummy Redirect Form",
-            'type': 'qweb',
             'arch': arch,
         })
 

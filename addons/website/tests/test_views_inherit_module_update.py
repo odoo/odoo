@@ -22,7 +22,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     #   D   D'                             D   D'
 
     # 1. Setup hierarchy as comment above
-    View = env['ir.ui.view']
+    View = env['ir.qweb']
     View.with_context(_force_unlink=True, active_test=False).search([('website_id', '=', 1)]).unlink()
     child_view = env.ref('portal.footer_language_selector')
     parent_view = env.ref('portal.portal_back_in_edit_mode')
@@ -57,7 +57,7 @@ def test_02_cow_views_inherit_on_module_update(env):
     #   D   D'                               D   D'
 
     # 1. Setup hierarchy as comment above
-    View = env['ir.ui.view']
+    View = env['ir.qweb']
     View.with_context(_force_unlink=True, active_test=False).search([('website_id', '=', 1)]).unlink()
     view_D = env.ref('portal.my_account_link')
     view_A = env.ref('portal.message_thread')

@@ -3,7 +3,7 @@ UPDATE website
    SET domain = NULL;
 
 -- activate neutralization watermarks
-UPDATE ir_ui_view
+UPDATE ir_qweb
    SET active = true
  WHERE key = 'website.neutralize_ribbon';
 

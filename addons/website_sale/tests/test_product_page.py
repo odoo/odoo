@@ -37,7 +37,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         manager = self.env.ref("base.user_admin")
         manager.write({"password": password})
 
-        self.env["ir.ui.view"].with_context(active_test=False).search([
+        self.env["ir.qweb"].with_context(active_test=False).search([
             ("key", "=", "website_sale.product_comment")
         ]).write({"active": True})
 

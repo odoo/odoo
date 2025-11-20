@@ -25,7 +25,7 @@ class Delivery(WebsiteSale):
             'order': order_sudo,  # Needed for accessing default values for pickup points.
         }
         values |= self._get_additional_delivery_context()
-        return request.env['ir.ui.view']._render_template('website_sale.delivery_form', values)
+        return request.env['ir.qweb']._render_template('website_sale.delivery_form', values)
 
     def _get_additional_delivery_context(self):
         """ Hook to update values used for rendering the website_sale.delivery_form template. """

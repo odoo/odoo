@@ -698,7 +698,7 @@ class CrmTeam(models.Model):
         rcontext = {
             'team': self,
         }
-        action['help'] = self.env['ir.ui.view']._render_template('crm.crm_action_helper', values=rcontext)
+        action['help'] = self.env['ir.qweb']._render_template('crm.crm_action_helper', values=rcontext)
         return action
 
     def action_open_unassigned_leads(self):

@@ -23,7 +23,7 @@ class PageCannotBeCached(Exception):
 
 class WebsitePage(models.Model):
     _name = 'website.page'
-    _inherits = {'ir.ui.view': 'view_id'}
+    _inherits = {'ir.qweb': 'view_id'}
     _inherit = [
         'website.published.multi.mixin',
         'website.searchable.mixin',
@@ -36,7 +36,7 @@ class WebsitePage(models.Model):
     _CACHE_DURATION = 3600
 
     url = fields.Char('Page URL', required=True)
-    view_id = fields.Many2one('ir.ui.view', string='View', required=True, index=True, ondelete="cascade")
+    view_id = fields.Many2one('ir.qweb', string='View', required=True, index=True, ondelete="cascade")
 
     view_write_uid = fields.Many2one('res.users', "Last Content Update by",
         related='view_id.write_uid')
@@ -52,7 +52,7 @@ class WebsitePage(models.Model):
     parent_id = fields.Many2one('website.page', string="Parent Page")
     parent_ids = fields.Many2many('website.page', compute='_compute_parent_ids')
 
-    # don't use mixin website_id but use website_id on ir.ui.view instead
+    # don't use mixin website_id but use website_id on ir.qweb instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
     arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
@@ -155,8 +155,8 @@ class WebsitePage(models.Model):
 
     def unlink(self):
         # When a website_page is deleted, the ORM does not delete its
-        # ir_ui_view. So we got to delete it ourself, but only if the
-        # ir_ui_view is not used by another website_page.
+        # ir.qweb. So we got to delete it ourself, but only if the
+        # ir.qweb is not used by another website_page.
         views_to_delete = self.view_id.filtered(
             lambda v: v.page_ids <= self and not v.inherit_children_ids
         )
@@ -281,7 +281,7 @@ class WebsitePage(models.Model):
             Rule = page.env['ir.rule'].sudo(False)
             if not page.filtered_domain(Rule._compute_domain('website.page', 'read')):
                 return False
-            if not page.view_id.filtered_domain(Rule._compute_domain('ir.ui.view', 'read')):
+            if not page.view_id.filtered_domain(Rule._compute_domain('ir.qweb', 'read')):
                 return False
             if search and with_description:
                 # Search might have matched words in the xml tags and parameters therefore we make
@@ -296,7 +296,7 @@ class WebsitePage(models.Model):
     def action_page_debug_view(self):
         return {
             'type': 'ir.actions.act_window',
-            'res_model': 'ir.ui.view',
+            'res_model': 'ir.qweb',
             'res_id': self.view_id.id,
             'view_mode': 'form',
             'view_id': self.env.ref('website.view_view_form_extend').id,
@@ -441,7 +441,7 @@ class WebsitePage(models.Model):
                 # page received a URL change, it should not let you access the
                 # generic page anymore, despite having a different URL.
                 self.website_id
-                or self.view_id.id == self.env['ir.ui.view'].with_context(website_id=request.website.id)._get_cached_template_info(self.view_id.key)['id']
+                or self.view_id.id == self.env['ir.qweb'].with_context(website_id=request.website.id)._get_cached_template_info(self.view_id.key)['id']
             )
         ):
             _, ext = os.path.splitext(req_page)

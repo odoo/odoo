@@ -2852,8 +2852,8 @@ class MailThread(models.AbstractModel):
         body using QWeb.
 
         :param str/int/record view_ref: source QWeb template. It should be an
-          XmlID allowing to fetch an ``ir.ui.view``, or an ID of a view or
-          an ``ir.ui.view`` record;
+          XmlID allowing to fetch an ``ir.qweb``, or an ID of a view or
+          an ``ir.qweb`` record;
         :param dict render_values: additional rendering values for qweb context;
         :param str message_type: one of 'notification' or 'comment';
         :param kwargs: additional values propagated to ``_message_log``;
@@ -3102,7 +3102,7 @@ class MailThread(models.AbstractModel):
 
     def _get_source_from_ref(self, source_ref):
         """ From a source_reference, return either a mail template, either
-        an ir ui view.
+        an ir.qweb.
 
         :return: a 2-items tuple ``(template, view)`` where one is a recordset
           (may be void if ``source_ref`` is a void recordset, or a singleton)
@@ -3114,7 +3114,7 @@ class MailThread(models.AbstractModel):
         if isinstance(source_ref, models.BaseModel):
             if source_ref._name == 'mail.template':
                 template = source_ref
-            elif source_ref._name == 'ir.ui.view':
+            elif source_ref._name == 'ir.qweb':
                 view = source_ref
             else:
                 raise ValueError(
@@ -3140,8 +3140,8 @@ class MailThread(models.AbstractModel):
                 ) from e
             if res_model == 'mail.template':
                 template = self.env['mail.template'].browse(res_id)
-            elif res_model == 'ir.ui.view':
-                view = self.env['ir.ui.view'].browse(res_id)
+            elif res_model == 'ir.qweb':
+                view = self.env['ir.qweb'].browse(res_id)
             else:
                 raise ValueError(
                     _('Invalid template or view source reference %(svalue)s, is %(model)s instead',

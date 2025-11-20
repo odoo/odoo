@@ -22,14 +22,14 @@ class IrModuleModule(models.Model):
 
     # The order is important because of dependencies (page need view, menu need page)
     _theme_model_names = OrderedDict([
-        ('ir.ui.view', 'theme.ir.ui.view'),
+        ('ir.qweb', 'theme.ir.qweb'),
         ('ir.asset', 'theme.ir.asset'),
         ('website.page', 'theme.website.page'),
         ('website.menu', 'theme.website.menu'),
         ('ir.attachment', 'theme.ir.attachment'),
     ])
     _theme_translated_fields = {
-        'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
+        'theme.ir.qweb': [('theme.ir.qweb,arch', 'ir.qweb,arch_db')],
         'theme.website.menu': [('theme.website.menu,name', 'website.menu,name')],
     }
 
@@ -175,7 +175,7 @@ class IrModuleModule(models.Model):
                         # at update, ignore active field
                         if 'active' in rec_data:
                             rec_data.pop('active')
-                        if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
+                        if model_name == 'ir.qweb' and (find.arch_updated or find.arch == rec_data['arch']):
                             rec_data.pop('arch')
                         find.update(rec_data)
                         self._post_copy(rec, find)
@@ -484,7 +484,7 @@ class IrModuleModule(models.Model):
 
     def _check(self):
         super()._check()
-        View = self.env['ir.ui.view']
+        View = self.env['ir.qweb']
         website_views_to_adapt = getattr(self.pool, 'website_views_to_adapt', [])
         if website_views_to_adapt:
             for view_replay in website_views_to_adapt:
@@ -504,14 +504,14 @@ class IrModuleModule(models.Model):
 
         # use the translation dic of the generic to translate the specific
         self.env.cr.flush()
-        View = self.env['ir.ui.view']
-        field = self.env['ir.ui.view']._fields['arch_db']
+        View = self.env['ir.qweb']
+        field = self.env['ir.qweb']._fields['arch_db']
         batch_size = PREFETCH_MAX // 10
         self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
-                                          FROM ir_ui_view generic
-                                         INNER JOIN ir_ui_view specific
+                                          FROM ir_qweb generic
+                                         INNER JOIN ir_qweb specific
                                             ON generic.key = specific.key
-                                         WHERE generic.website_id IS NULL AND generic.type = 'qweb'
+                                         WHERE generic.website_id IS NULL
                                          AND specific.website_id IS NOT NULL
                                          AND generic.arch_db IS NOT NULL
                                          AND specific.arch_db IS NOT NULL
@@ -584,7 +584,7 @@ class IrModuleModule(models.Model):
         self.env['ir.model.data'].create([{
             'name': view.key.split('.')[1],
             'module': view.key.split('.')[0],
-            'model': 'ir.ui.view',
+            'model': 'ir.qweb',
             'res_id': view.id,
             'noupdate': True,
         } for view in views])
@@ -613,11 +613,11 @@ class IrModuleModule(models.Model):
             create_values = [values for values in create_values if values]
 
             keys = [values['key'] for values in create_values]
-            existing_primary_template_keys = self.env['ir.ui.view'].with_context(active_test=False).search_fetch([
+            existing_primary_template_keys = self.env['ir.qweb'].with_context(active_test=False).search_fetch([
                 ('mode', '=', 'primary'), ('key', 'in', keys),
             ], ['key']).mapped('key')
             missing_create_values = [values for values in create_values if values['key'] not in existing_primary_template_keys]
-            missing_records = self.env['ir.ui.view'].with_context(no_cow=True).create(missing_create_values)
+            missing_records = self.env['ir.qweb'].with_context(no_cow=True).create(missing_create_values)
             self._create_model_data(missing_records)
             return len(missing_records)
 
@@ -648,7 +648,6 @@ class IrModuleModule(models.Model):
                 'key': f'{module}.{new_wrap % xmlid}',
                 'inherit_id': parent_id[1],
                 'mode': 'primary',
-                'type': 'qweb',
                 'arch': '<t/>',
             }
 
@@ -751,7 +750,7 @@ class IrModuleModule(models.Model):
 
     def _generate_primary_page_templates(self):
         """ Generates page templates based on manifest entries. """
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         manifest = Manifest.for_addon(self.name)
         templates = manifest['new_page_templates']
 
@@ -768,25 +767,24 @@ class IrModuleModule(models.Model):
                 ])
                 create_values.append({
                     'name': f"New page template: {template_name!r} in {group!r}",
-                    'type': 'qweb',
                     'key': xmlid,
                     'arch': f'<div id="wrap">\n    {calls}\n</div>',
                 })
         keys = [values['key'] for values in create_values]
-        existing_primary_templates = View.search_read([('mode', '=', 'primary'), ('key', 'in', keys)], ['key'])
+        existing_primary_templates = Qweb.search_read([('mode', '=', 'primary'), ('key', 'in', keys)], ['key'])
         existing_primary_template_keys = {data['key']: data['id'] for data in existing_primary_templates}
         missing_create_values = []
         update_count = 0
         for create_value in create_values:
             if create_value['key'] in existing_primary_template_keys:
-                View.browse(existing_primary_template_keys[create_value['key']]).with_context(no_cow=True).write({
+                Qweb.browse(existing_primary_template_keys[create_value['key']]).with_context(no_cow=True).write({
                     'arch': create_value['arch'],
                 })
                 update_count += 1
             else:
                 missing_create_values.append(create_value)
         if missing_create_values:
-            missing_records = View.create(missing_create_values)
+            missing_records = Qweb.create(missing_create_values)
             self._create_model_data(missing_records)
             _logger.info('Generated %s primary page templates for %r', len(missing_create_values), self.name)
         if update_count:

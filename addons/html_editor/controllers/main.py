@@ -221,7 +221,7 @@ class HTML_Editor(http.Controller):
         """
         self._clean_context()
         Attachment = attachments_to_remove = request.env['ir.attachment']
-        Views = request.env['ir.ui.view']
+        Views = request.env['ir.qweb']
 
         # views blocking removal of the attachment
         removal_blocked_by = {}
@@ -250,7 +250,7 @@ class HTML_Editor(http.Controller):
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.qweb'):
         """Create and return a new attachment."""
         IrAttachment = request.env['ir.attachment']
 
@@ -261,14 +261,14 @@ class HTML_Editor(http.Controller):
         if not name and url:
             name = url.split("/").pop()
 
-        if res_model != 'ir.ui.view' and res_id:
+        if res_model != 'ir.qweb' and res_id:
             res_id = int(res_id)
         else:
             res_id = False
 
         attachment_data = {
             'name': name,
-            'public': res_model == 'ir.ui.view',
+            'public': res_model == 'ir.qweb',
             'res_id': res_id,
             'res_model': res_model,
         }
@@ -360,7 +360,7 @@ class HTML_Editor(http.Controller):
         )
 
     @http.route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='jsonrpc', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.qweb', **kwargs):
         data = b64decode(data)
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
@@ -385,7 +385,7 @@ class HTML_Editor(http.Controller):
         return attachment._get_media_info()
 
     @http.route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
-    def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
+    def add_url(self, url, res_id=False, res_model='ir.qweb', **kwargs):
         self._clean_context()
         attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
@@ -405,12 +405,12 @@ class HTML_Editor(http.Controller):
             'original_id': attachment.id,
             'datas': data,
             'type': 'binary',
-            'res_model': res_model or 'ir.ui.view',
+            'res_model': res_model or 'ir.qweb',
             'mimetype': mimetype or attachment.mimetype,
             'name': name or attachment.name,
             'res_id': 0,
         }
-        if fields['res_model'] == 'ir.ui.view':
+        if fields['res_model'] == 'ir.qweb':
             fields['res_id'] = 0
         elif res_id:
             fields['res_id'] = res_id
@@ -515,7 +515,7 @@ class HTML_Editor(http.Controller):
                 'mimetype': req.headers['content-type'],
                 'public': True,
                 'raw': req.content,
-                'res_model': 'ir.ui.view',
+                'res_model': 'ir.qweb',
                 'res_id': 0,
             }
             attachment = get_existing_attachment(IrAttachment, attachment_data)

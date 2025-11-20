@@ -8,7 +8,7 @@ from odoo.tests import HttpCase, TransactionCase, tagged
 class TestCustomSnippet(TransactionCase):
     def test_translations_custom_snippet(self):
         ResLang = self.env['res.lang']
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
         # 1. Setup website and languages
         parseltongue = ResLang.create({
@@ -38,9 +38,8 @@ class TestCustomSnippet(TransactionCase):
         """
 
         # 2. Create a view containing a snippet and translate it
-        view1 = View.create({
+        view1 = Qweb.create({
             'name': 'Specific View Test Translation 1',
-            'type': 'qweb',
             'arch': f'''
                 <body><p>Hello</p><div>{snippet_arch}</div><h1>World</h1><div>{snippet_arch2}</div></body>
             ''',
@@ -57,7 +56,7 @@ class TestCustomSnippet(TransactionCase):
         self.assertIn('Texte Francais', view1.with_context(lang=parseltongue.code).arch)
 
         # 3. Save the snippet as custom snippet and ensure it is translated
-        self.env['ir.ui.view'].with_context(
+        self.env['ir.qweb'].with_context(
             website_id=website.id,
             model=view1._name,
             # `arch` is not the field in DB (it's a compute), this is also
@@ -71,12 +70,12 @@ class TestCustomSnippet(TransactionCase):
             snippet_key='s_text_block',
             template_key='website.snippets'
         )
-        custom_snippet_view = View.search([('name', '=', data_name_attr)], limit=1)
+        custom_snippet_view = Qweb.search([('name', '=', data_name_attr)], limit=1)
         self.assertIn(
             'Texte Francais',
             custom_snippet_view.with_context(lang=parseltongue.code).arch)
 
-        self.env['ir.ui.view'].with_context(
+        self.env['ir.qweb'].with_context(
             website_id=website.id,
             model=view1._name,
             # `arch` is not the field in DB (it's a compute), this is also
@@ -90,16 +89,15 @@ class TestCustomSnippet(TransactionCase):
             snippet_key='s_text_block',
             template_key='website.snippets'
         )
-        custom_snippet_view = View.search([('name', '=', data_name_attr2)], limit=1)
+        custom_snippet_view = Qweb.search([('name', '=', data_name_attr2)], limit=1)
         self.assertIn(
             'Titre Francais',
             custom_snippet_view.with_context(lang=parseltongue.code).arch)
 
         # 4. Simulate snippet being dropped in another page/view and ensure
         #    it is translated
-        view2 = View.create({
+        view2 = Qweb.create({
             'name': 'Specific View Test Translation 2',
-            'type': 'qweb',
             'arch': '<body><div/><div/></body>',
             'key': 'test.specific_view_test_translation_2',
             'website_id': website.id,
@@ -131,7 +129,7 @@ class TestCustomSnippet(TransactionCase):
             mega_menu.mega_menu_content)
 
         # Side test: this is testing that saving a custom snippet from a record
-        # which is not an ir.ui.view works fine.
+        # which is not an ir.qweb works fine.
         # Indeed, it's a more complexe case as it's basically copying
         # translations from Model1.Field1 to Model2.Field2 -> different model
         # and different field.
@@ -142,7 +140,7 @@ class TestCustomSnippet(TransactionCase):
             }
         })
 
-        self.env['ir.ui.view'].with_context(
+        self.env['ir.qweb'].with_context(
             website_id=website.id,
             model=mega_menu._name,
             field='mega_menu_content',
@@ -154,7 +152,7 @@ class TestCustomSnippet(TransactionCase):
             snippet_key='s_text_block',
             template_key='website.snippets'
         )
-        custom_snippet_view = View.search([('name', '=', 'Test Translation MegaMenu')], limit=1)
+        custom_snippet_view = Qweb.search([('name', '=', 'Test Translation MegaMenu')], limit=1)
         self.assertIn(
             'Texte Francais',
             custom_snippet_view.with_context(lang=parseltongue.code).arch)
@@ -162,9 +160,8 @@ class TestCustomSnippet(TransactionCase):
         # Check that a translated page/view with a custom snippet won't copy
         # the translation from the saved custom view for the terms that are
         # "already translated".
-        view = View.create({
+        view = Qweb.create({
             'name': 'Custom Snippet Test View',
-            'type': 'qweb',
             'arch': """
                 <body>
                     <section class="s_title">
@@ -196,12 +193,11 @@ class TestCustomSnippet(TransactionCase):
 class TestHttpCustomSnippet(HttpCase):
 
     def test_editable_root_as_custom_snippet(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Page = self.env['website.page']
 
-        custom_page_view = View.create({
+        custom_page_view = Qweb.create({
             'name': 'Custom Page View',
-            'type': 'qweb',
             'key': 'test.custom_page_view',
             'arch': """
                 <t t-call="website.layout">

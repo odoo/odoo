@@ -7,14 +7,13 @@ from unittest.mock import patch
 class TestDisableSnippetsAssets(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.View = self.env['ir.ui.view']
+        self.Qweb = self.env['ir.qweb']
         self.WebsiteMenu = self.env['website.menu']
         self.Website = self.env['website']
         self.IrAsset = self.env['ir.asset']
 
-        self.homepage = self.View.create({
+        self.homepage = self.Qweb.create({
             'name': 'Home',
-            'type': 'qweb',
             'arch_db': HOMEPAGE_OUTDATED,
             'key': 'website.homepage',
         })

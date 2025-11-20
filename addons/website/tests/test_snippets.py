@@ -28,7 +28,7 @@ class TestSnippets(HttpCase):
 
     def test_03_snippets_all_drag_and_drop(self):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
-            snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
+            snippets_template = self.env['ir.qweb'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
         data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]")
 

@@ -320,9 +320,8 @@ class TestMenuHttp(common.HttpCase):
         self.page = self.env['website.page'].create({
             'url': self.page_url,
             'website_id': 1,
-            # ir.ui.view properties
+            # ir.qweb properties
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>Specific View</div>',
             'key': 'test.specific_view',
         })

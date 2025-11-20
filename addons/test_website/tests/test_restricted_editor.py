@@ -45,7 +45,7 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_03_restricted_editor_tester(self):
         """
-        Tests that restricted users cannot edit ir.ui.view records despite being
+        Tests that restricted users cannot edit ir.qweb records despite being
         on a page of a record (main_object) they can edit.
         """
         self.user_website_user.group_ids += self.env.ref("test_website.group_test_website_tester")

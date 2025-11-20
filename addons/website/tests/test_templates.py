@@ -18,13 +18,13 @@ def attrs(**kwargs):
 
 
 class TestViewSavingCommon(common.TransactionCase):
-    def _create_imd(self, view):
-        xml_id = view.key.split('.')
+    def _create_imd(self, Qweb):
+        xml_id = Qweb.key.split('.')
         return self.env['ir.model.data'].create({
             'module': xml_id[0],
             'name': xml_id[1],
-            'model': view._name,
-            'res_id': view.id,
+            'model': Qweb._name,
+            'res_id': Qweb.id,
         })
 
 
@@ -39,23 +39,20 @@ class TestCustomizeView(common.HttpCase):
 
     def test_disabled_optional_template_t_call(self):
         website = self.env['website'].search([], limit=1)
-        View = self.env['ir.ui.view']
-        default = View.create({
+        Qweb = self.env['ir.qweb']
+        default = Qweb.create({
             'name': 'test_view',
-            'type': 'qweb',
             'key': 'website.test_view',
             'arch_db': '<span>Default</span>'
         })
-        custo = View.create({
+        custo = Qweb.create({
             'name': 'test_view',
-            'type': 'qweb',
             'key': 'website.test_view',
             'website_id': website.id,
             'arch_db': '<span>Customized</span>'
         })
-        template = View.create({
+        template = Qweb.create({
             'name': 'test_root',
-            'type': 'qweb',
             'key': 'website.test_root',
             'arch_db': '''<div><t t-if="is_view_active('website.test_view')"> is active </t><t t-call="website.test_view"/></div>'''
         })
@@ -90,9 +87,9 @@ class TestCustomizeView(common.HttpCase):
         custo.unlink()
         self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Default</span></div>')
 
-        # theme_customize_data will clone the default view to save the configuration
+        # theme_customize_data will clone the default Qweb to save the configuration
         self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
-        new_custo = View.with_context(active_test=False).search([('key', '=', 'website.test_view'), ('website_id', '=', website.id)])
+        new_custo = Qweb.with_context(active_test=False).search([('key', '=', 'website.test_view'), ('website_id', '=', website.id)])
         self.assertEqual(bool(new_custo), True)
         self.assertNotEqual(custo.id, new_custo.id)
         self.assertEqual([new_custo.active, default.active], [False, True])
@@ -100,22 +97,21 @@ class TestCustomizeView(common.HttpCase):
 
     def test_disabled_optional_template_xpath(self):
         website = self.env.ref('website.default_website')
-        View = self.env['ir.ui.view']
-        template = View.create({
+        Qweb = self.env['ir.qweb']
+        template = Qweb.create({
             'name': 'test_root',
-            'type': 'qweb',
             'key': 'website.test_root',
             'arch_db': '''<div><t t-if="is_view_active('website.test_view')"> is active </t></div>'''
         })
 
-        default = View.create({
+        default = Qweb.create({
             'name': 'test_view',
             'mode': 'extension',
             'inherit_id': template.id,
             'arch_db': '<div position="inside"><span>Default</span></div>',
             'key': 'website.test_view',
         })
-        custo = View.create({
+        custo = Qweb.create({
             'name': 'test_view',
             'mode': 'extension',
             'inherit_id': template.id,
@@ -154,31 +150,29 @@ class TestCustomizeView(common.HttpCase):
         custo.unlink()
         self.assertEqual(self.url_open(page.url).text, '<div> is active <span>Default</span></div>')
 
-        # theme_customize_data will clone the default view to save the configuration
+        # theme_customize_data will clone the default Qweb to save the configuration
         self.url_open_authenticate('/website/theme_customize_data', {'enable': [], 'disable': ['website.test_view']})
-        new_custo = View.with_context(active_test=False).search([('key', '=', 'website.test_view'), ('website_id', '=', website.id)])
+        new_custo = Qweb.with_context(active_test=False).search([('key', '=', 'website.test_view'), ('website_id', '=', website.id)])
         self.assertEqual(bool(new_custo), True)
         self.assertNotEqual(custo.id, new_custo.id)
         self.assertEqual([new_custo.active, default.active], [False, True])
         self.assertEqual(self.url_open(page.url).text, '<div></div>')
 
     def test_enabling_optional_template_with_editor(self):
-        """ Ensure that a non-admin editor can enable a view """
+        """ Ensure that a non-admin editor can enable a Qweb """
         website = self.env['website'].search([], limit=1)
         auth = {'login': 'test', 'password': 'testtest'}
         user = self.env['res.users'].create({'name': 'test', **auth})
         user.group_ids += self.env.ref('website.group_website_designer')
-        View = self.env['ir.ui.view']
-        default = View.create({
+        Qweb = self.env['ir.qweb']
+        default = Qweb.create({
             'name': 'test_view',
-            'type': 'qweb',
             'key': 'website.test_view',
             'arch_db': '<span>Default</span>'
         })
-        custo = View.create({
+        custo = Qweb.create({
             'active': False,
             'name': 'test_view',
-            'type': 'qweb',
             'key': 'website.test_view',
             'website_id': website.id,
             'arch_db': '<span>Customized</span>'
@@ -193,16 +187,16 @@ class TestCustomizeView(common.HttpCase):
         self.assertEqual([custo.active, default.active], [True, True])
 
     def test_find_available_name(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         used_names = ['Unrelated name']
         initial_name = "Test name"
-        name = View._find_available_name(initial_name, used_names)
+        name = Qweb._find_available_name(initial_name, used_names)
         self.assertEqual(initial_name, name)
         used_names.append(name)
-        name = View._find_available_name(initial_name, used_names)
+        name = Qweb._find_available_name(initial_name, used_names)
         self.assertEqual('Test name (2)', name)
         used_names.append(name)
-        name = View._find_available_name(initial_name, used_names)
+        name = Qweb._find_available_name(initial_name, used_names)
         self.assertEqual('Test name (3)', name)
 
 
@@ -234,15 +228,14 @@ class TestViewSaving(TestViewSavingCommon):
                     h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')))
                 ))
         )
-        self.view_id = self.env['ir.ui.view'].create({
-            'name': "Test View",
-            'type': 'qweb',
+        self.view_id = self.env['ir.qweb'].create({
+            'name': "Test Qweb",
             'key': 'website.test_view',
             'arch': ET.tostring(self.arch, encoding='unicode')
         })
 
     def test_embedded_extraction(self):
-        fields = self.env['ir.ui.view'].extract_embedded_fields(self.arch)
+        fields = self.env['ir.qweb'].extract_embedded_fields(self.arch)
 
         expect = [
             h.SPAN("My Company", attrs(model='res.company', id=1, field='name', type='char')),
@@ -255,7 +248,7 @@ class TestViewSaving(TestViewSavingCommon):
         embedded = h.SPAN("+00 00 000 00 0 000", attrs(
             model='res.company', id=1, field='phone', type='char'))
 
-        self.env['ir.ui.view'].save_embedded_field(embedded)
+        self.env['ir.qweb'].save_embedded_field(embedded)
 
         company = self.env['res.company'].browse(1)
         self.assertEqual(company.phone, "+00 00 000 00 0 000")
@@ -265,30 +258,30 @@ class TestViewSaving(TestViewSavingCommon):
         e1 = h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))
         e2 = h.SPAN("Leeroy Jenkins", attrs(model='res.company', id=1, field='name'))
 
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
-        View.save_embedded_field(e1)
+        Qweb.save_embedded_field(e1)
         # FIXME: more precise exception
         with self.assertRaises(Exception):
-            View.save_embedded_field(e2)
+            Qweb.save_embedded_field(e2)
 
     def test_embedded_to_field_ref(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         embedded = h.SPAN("My Company", attrs(expression="bob"))
         self.eq(
-            View.to_field_ref(embedded),
+            Qweb.to_field_ref(embedded),
             h.SPAN({'t-field': 'bob'})
         )
 
     def test_to_field_ref_keep_attributes(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
         att = attrs(expression="bob", model="res.company", id=1, field="name")
         att['id'] = "whop"
         att['class'] = "foo bar"
         embedded = h.SPAN("My Company", att)
 
-        self.eq(View.to_field_ref(embedded), h.SPAN({'t-field': 'bob', 'class': 'foo bar', 'id': 'whop'}))
+        self.eq(Qweb.to_field_ref(embedded), h.SPAN({'t-field': 'bob', 'class': 'foo bar', 'id': 'whop'}))
 
     def test_replace_arch(self):
         replacement = h.P("Wheee")
@@ -332,7 +325,7 @@ class TestViewSaving(TestViewSavingCommon):
     def test_save(self):
         Company = self.env['res.company']
 
-        # create an xmlid for the view
+        # create an xmlid for the Qweb
         imd = self._create_imd(self.view_id)
         self.assertEqual(self.view_id.model_data_id, imd)
         self.assertFalse(imd.noupdate)
@@ -347,13 +340,13 @@ class TestViewSaving(TestViewSavingCommon):
         ), encoding='unicode')
 
         self.view_id.with_context(website_id=1).save(value=replacement, xpath='/div/div[2]')
-        self.assertFalse(imd.noupdate, "view's xml_id shouldn't be set to 'noupdate' in a website context as `save` method will COW")
-        # remove newly created COW view so next `save()`` wont be redirected to COW view
+        self.assertFalse(imd.noupdate, "Qweb's xml_id shouldn't be set to 'noupdate' in a website context as `save` method will COW")
+        # remove newly created COW Qweb so next `save()`` wont be redirected to COW Qweb
         self.env['website'].with_context(website_id=1).viewref(self.view_id.key).unlink()
 
         self.view_id.save(value=replacement, xpath='/div/div[2]')
 
-        # the xml_id of the view should be flagged as 'noupdate'
+        # the xml_id of the Qweb should be flagged as 'noupdate'
         self.assertTrue(imd.noupdate)
 
         company = Company.browse(1)
@@ -380,51 +373,47 @@ class TestViewSaving(TestViewSavingCommon):
 
     def test_save_escaped_text(self):
         """ Test saving html special chars in text nodes """
-        view = self.env['ir.ui.view'].create({
+        Qweb = self.env['ir.qweb'].create({
             'arch': u'<t t-name="dummy"><p><h1>hello world</h1></p></t>',
-            'type': 'qweb'
         })
         # script and style text nodes should not escaped client side
         replacement = u'<script>1 && "hello & world"</script>'
-        view.save(replacement, xpath='/t/p/h1')
+        Qweb.save(replacement, xpath='/t/p/h1')
         self.assertIn(
             replacement.replace(u'&', u'&amp;'),
-            view.arch,
+            Qweb.arch,
             'inline script should be escaped server side'
         )
         self.assertIn(
             replacement,
-            self.env['ir.qweb']._render(view.id),
+            self.env['ir.qweb']._render(Qweb.id),
             'inline script should not be escaped when rendering'
         )
         # common text nodes should be be escaped client side
         replacement = u'world &amp;amp; &amp;lt;b&amp;gt;cie'
-        view.save(replacement, xpath='/t/p')
-        self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
+        Qweb.save(replacement, xpath='/t/p')
+        self.assertIn(replacement, Qweb.arch, 'common text node should not be escaped server side')
         self.assertIn(
             replacement,
-            str(self.env['ir.qweb']._render(view.id)).replace(u'&', u'&amp;'),
+            str(self.env['ir.qweb']._render(Qweb.id)).replace(u'&', u'&amp;'),
             'text node characters wrongly unescaped when rendering'
         )
 
     def test_oe_structure_as_inherited_view(self):
-        View = self.env['ir.ui.view']
-        View.create({
-            'name': 'Test View 1',
-            'type': 'qweb',
+        Qweb = self.env['ir.qweb']
+        Qweb.create({
+            'name': 'Test Qweb 1',
             'arch': '<div>Hello World</div>',
             'key': 'website.test_first_view',
         })
-        second_view = View.create({
-            'name': 'Test View 2',
-            'type': 'qweb',
+        second_view = Qweb.create({
+            'name': 'Test Qweb 2',
             'arch': '<div><t t-call="website.test_first_view"/></div>',
             'key': 'website.test_second_view',
         })
 
-        base = View.create({
-            'name': 'Test View oe_structure',
-            'type': 'qweb',
+        base = Qweb.create({
+            'name': 'Test Qweb oe_structure',
             'arch': """<xpath expr='//t[@t-call="website.test_first_view"]' position='after'>
                         <div class="oe_structure" id='oe_structure_test_view_oe_structure'/>
                     </xpath>""",
@@ -432,12 +421,12 @@ class TestViewSaving(TestViewSavingCommon):
             'inherit_id': second_view.id
         })
 
-        # check view mode
+        # check Qweb mode
         self.assertEqual(base.mode, 'extension')
 
         # update content of the oe_structure
         value = '''<div class="oe_structure" id="oe_structure_test_view_oe_structure" data-oe-id="%s"
-                         data-oe-xpath="/div" data-oe-model="ir.ui.view" data-oe-field="arch">
+                         data-oe-xpath="/div" data-oe-model="ir.qweb" data-oe-field="arch">
                         <p>Hello World!</p>
                    </div>''' % base.id
 
@@ -452,16 +441,15 @@ class TestViewSaving(TestViewSavingCommon):
 
     def test_save_oe_structure_with_attr(self):
         """ Test saving oe_structure with attributes """
-        view = self.env['ir.ui.view'].create({
+        Qweb = self.env['ir.qweb'].create({
             'arch': u'<t t-name="dummy"><div class="oe_structure" t-att-test="1" data-test="1" id="oe_structure_test"/></t>',
-            'type': 'qweb'
         }).with_context(website_id=1, load_all_views=True)
         replacement = u'<div class="oe_structure" data-test="1" id="oe_structure_test" data-oe-id="55" test="2">hello</div>'
-        view.save(replacement, xpath='/t/div')
+        Qweb.save(replacement, xpath='/t/div')
         # branding data-oe-* should be stripped
         self.assertIn(
             '<div class="oe_structure" data-test="1" id="oe_structure_test" test="2">hello</div>',
-            view.get_combined_arch(),
+            Qweb.get_combined_arch(),
             'saved element attributes are saved excluding branding ones'
         )
 
@@ -475,8 +463,8 @@ class TestViewSaving(TestViewSavingCommon):
             "Acme Corporation",
             attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')),
             encoding='unicode')
-        View = self.env['ir.ui.view']
-        View.browse(company_id).save(value=node)
+        Qweb = self.env['ir.qweb']
+        Qweb.browse(company_id).save(value=node)
         self.assertEqual(company.name, "Acme Corporation")
 
     def test_field_tail(self):
@@ -512,16 +500,15 @@ class TestViewSaving(TestViewSavingCommon):
 class TestCowViewSaving(TestViewSavingCommon, HttpCase):
     def setUp(self):
         super(TestCowViewSaving, self).setUp()
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
-        self.base_view = View.create({
+        self.base_view = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>base content</div>',
             'key': 'website.base_view',
         }).with_context(load_all_views=True)
 
-        self.inherit_view = View.create({
+        self.inherit_view = Qweb.create({
             'name': 'Extension',
             'mode': 'extension',
             'inherit_id': self.base_view.id,
@@ -531,11 +518,11 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.headers = {"Content-Type": "application/json"}
 
     def test_cow_on_base_after_extension(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         self.inherit_view.with_context(website_id=1).write({'name': 'Extension Specific'})
         v1 = self.base_view
         v2 = self.inherit_view
-        v3 = View.search([('website_id', '=', 1), ('name', '=', 'Extension Specific')])
+        v3 = Qweb.search([('website_id', '=', 1), ('name', '=', 'Extension Specific')])
         v4 = self.inherit_view.copy({'name': 'Second Extension'})
         v5 = self.inherit_view.copy({'name': 'Third Extension (Specific)'})
         v5.write({'website_id': 1})
@@ -548,11 +535,11 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # 4  | Second Extension            |     /      |     1    |  website.extension_view_a5f579d5 (generated hash)
         # 5  | Third Extension (Specific)  |     1      |     1    |  website.extension_view_5gr87e6c (another generated hash)
 
-        self.assertEqual(v2.key == v3.key, True, "Making specific a generic inherited view should copy it's key (just change the website_id)")
-        self.assertEqual(v3.key != v4.key != v5.key, True, "Copying a view should generate a new key for the new view (not the case when triggering COW)")
-        self.assertEqual('website.extension_view' in v3.key and 'website.extension_view' in v4.key and 'website.extension_view' in v5.key, True, "The copied views should have the key from the view it was copied from but with an unique suffix")
+        self.assertEqual(v2.key == v3.key, True, "Making specific a generic inherited Qweb should copy it's key (just change the website_id)")
+        self.assertEqual(v3.key != v4.key != v5.key, True, "Copying a Qweb should generate a new key for the new Qweb (not the case when triggering COW)")
+        self.assertEqual('website.extension_view' in v3.key and 'website.extension_view' in v4.key and 'website.extension_view' in v5.key, True, "The copied views should have the key from the Qweb it was copied from but with an unique suffix")
 
-        total_views = View.search_count([])
+        total_views = Qweb.search_count([])
         v1.with_context(website_id=1).write({'name': 'Base Specific'})
 
         # id | name                        | website_id | inherit  | key
@@ -567,12 +554,12 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # 8  | Second Extension            |     1      |     6    |  website.extension_view_a5f579d5
         # 9  | Third Extension (Specific)  |     1      |     6    |  website.extension_view_5gr87e6c
 
-        v6 = View.search([('website_id', '=', 1), ('name', '=', 'Base Specific')])
-        v7 = View.search([('website_id', '=', 1), ('name', '=', 'Extension Specific')])
-        v8 = View.search([('website_id', '=', 1), ('name', '=', 'Second Extension')])
-        v9 = View.search([('website_id', '=', 1), ('name', '=', 'Third Extension (Specific)')])
+        v6 = Qweb.search([('website_id', '=', 1), ('name', '=', 'Base Specific')])
+        v7 = Qweb.search([('website_id', '=', 1), ('name', '=', 'Extension Specific')])
+        v8 = Qweb.search([('website_id', '=', 1), ('name', '=', 'Second Extension')])
+        v9 = Qweb.search([('website_id', '=', 1), ('name', '=', 'Third Extension (Specific)')])
 
-        self.assertEqual(total_views + 4 - 2, View.search_count([]), "It should have duplicated the view tree with a website_id, taking only most specific (only specific `b` key), and removing website_specific from generic tree")
+        self.assertEqual(total_views + 4 - 2, Qweb.search_count([]), "It should have duplicated the Qweb tree with a website_id, taking only most specific (only specific `b` key), and removing website_specific from generic tree")
         self.assertEqual(len((v3 + v5).exists()), 0, "v3 and v5 should have been deleted as they were already specific and copied to the new specific base")
         # Check generic tree
         self.assertEqual((v1 + v2 + v4).mapped('website_id').ids, [])
@@ -584,23 +571,23 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertEqual(v6.key == v1.key, True)
         self.assertEqual(v7.key == v2.key, True)
         self.assertEqual(v4.key == v8.key, True)
-        self.assertEqual(View.search_count([('key', '=', v9.key)]), 1)
+        self.assertEqual(Qweb.search_count([('key', '=', v9.key)]), 1)
 
     def test_cow_leaf(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
         # edit on backend, regular write
         self.inherit_view.write({'arch': '<div position="replace"><div>modified content</div></div>'})
-        self.assertEqual(View.search_count([('key', '=', 'website.base_view')]), 1)
-        self.assertEqual(View.search_count([('key', '=', 'website.extension_view')]), 1)
+        self.assertEqual(Qweb.search_count([('key', '=', 'website.base_view')]), 1)
+        self.assertEqual(Qweb.search_count([('key', '=', 'website.extension_view')]), 1)
 
         arch = self.base_view.get_combined_arch()
         self.assertEqual(arch, '<div>modified content</div>')
 
         # edit on frontend, copy just the leaf
         self.inherit_view.with_context(website_id=1).write({'arch': '<div position="replace"><div>website 1 content</div></div>'})
-        inherit_views = View.search([('key', '=', 'website.extension_view')])
-        self.assertEqual(View.search_count([('key', '=', 'website.base_view')]), 1)
+        inherit_views = Qweb.search([('key', '=', 'website.extension_view')])
+        self.assertEqual(Qweb.search_count([('key', '=', 'website.base_view')]), 1)
         self.assertEqual(len(inherit_views), 2)
         self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
 
@@ -611,29 +598,29 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         arch = self.base_view.with_context(website_id=1).get_combined_arch()
         self.assertEqual(arch, '<div>website 1 content</div>')
 
-        # website-specific inactive view should take preference over active generic one when viewing the website
+        # website-specific inactive Qweb should take preference over active generic one when viewing the website
         # this is necessary to make customize_show=True templates work correctly
         inherit_views.filtered(lambda v: v.website_id.id == 1).write({'active': False})
         arch = self.base_view.with_context(website_id=1).get_combined_arch()
         self.assertEqual(arch, '<div>base content</div>')
 
     def test_cow_root(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
         # edit on backend, regular write
         self.base_view.write({'arch': '<div>modified base content</div>'})
-        self.assertEqual(View.search_count([('key', '=', 'website.base_view')]), 1)
-        self.assertEqual(View.search_count([('key', '=', 'website.extension_view')]), 1)
+        self.assertEqual(Qweb.search_count([('key', '=', 'website.base_view')]), 1)
+        self.assertEqual(Qweb.search_count([('key', '=', 'website.extension_view')]), 1)
 
         # edit on frontend, copy the entire tree
         self.base_view.with_context(website_id=1).write({'arch': '<div>website 1 content</div>'})
 
-        generic_base_view = View.search([('key', '=', 'website.base_view'), ('website_id', '=', False)])
-        website_specific_base_view = View.search([('key', '=', 'website.base_view'), ('website_id', '=', 1)])
+        generic_base_view = Qweb.search([('key', '=', 'website.base_view'), ('website_id', '=', False)])
+        website_specific_base_view = Qweb.search([('key', '=', 'website.base_view'), ('website_id', '=', 1)])
         self.assertEqual(len(generic_base_view), 1)
         self.assertEqual(len(website_specific_base_view), 1)
 
-        inherit_views = View.search([('key', '=', 'website.extension_view')])
+        inherit_views = Qweb.search([('key', '=', 'website.extension_view')])
         self.assertEqual(len(inherit_views), 2)
         self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
 
@@ -648,68 +635,66 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
     #     # Remove key for this test
     #     self.base_view.key = False
     #
-    #     View = self.env['ir.ui.view']
+    #     Qweb = self.env['ir.qweb']
     #
     #     # edit on backend, regular write
     #     self.base_view.write({'arch': '<div>modified base content</div>'})
-    #     self.assertEqual(self.base_view.key, False, "Writing on a keyless view should not set a key on it if there is no website in context")
+    #     self.assertEqual(self.base_view.key, False, "Writing on a keyless Qweb should not set a key on it if there is no website in context")
     #
     #     # edit on frontend, copy just the leaf
     #     self.base_view.with_context(website_id=1).write({'arch': '<div position="replace"><div>website 1 content</div></div>'})
-    #     self.assertEqual('website.key_' in self.base_view.key, True, "Writing on a keyless view should set a key on it if there is a website in context")
-    #     total_views_with_key = View.search_count([('key', '=', self.base_view.key)])
-    #     self.assertEqual(total_views_with_key, 2, "It should have set the key on generic view then copy to specific view (with they key)")
+    #     self.assertEqual('website.key_' in self.base_view.key, True, "Writing on a keyless Qweb should set a key on it if there is a website in context")
+    #     total_views_with_key = QwebView.search_count([('key', '=', self.base_view.key)])
+    #     self.assertEqual(total_views_with_key, 2, "It should have set the key on generic Qweb then copy to specific Qweb (with they key)")
 
     def test_cow_generic_view_with_already_existing_specific(self):
-        """ Writing on a generic view should check if a website specific view already exists
-            (The flow of this test will happen when editing a generic view in the front end and changing more than one element)
+        """ Writing on a generic Qweb should check if a website specific Qweb already exists
+            (The flow of this test will happen when editing a generic Qweb in the front end and changing more than one element)
         """
         # 1. Test with calling write directly
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
-        base_view = View.create({
+        base_view = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>content</div>',
         })
 
-        total_views = View.with_context(active_test=False).search_count([])
-        base_view.with_context(website_id=1).write({'name': 'New Name'})  # This will not write on `base_view` but will copy it to a specific view on which the `name` change will be applied
-        specific_view = View.search([['name', '=', 'New Name'], ['website_id', '=', 1]])
+        total_views = Qweb.with_context(active_test=False).search_count([])
+        base_view.with_context(website_id=1).write({'name': 'New Name'})  # This will not write on `base_view` but will copy it to a specific Qweb on which the `name` change will be applied
+        specific_view = Qweb.search([['name', '=', 'New Name'], ['website_id', '=', 1]])
         base_view.with_context(website_id=1).write({'name': 'Another New Name'})
         specific_view.active = False
         base_view.with_context(website_id=1).write({'name': 'Yet Another New Name'})
-        self.assertEqual(total_views + 1, View.with_context(active_test=False).search_count([]), "Subsequent writes should have written on the view copied during first write")
+        self.assertEqual(total_views + 1, Qweb.with_context(active_test=False).search_count([]), "Subsequent writes should have written on the Qweb copied during first write")
 
-        # 2. Test with calling save() from ir.ui.view
-        view_arch = '''<t name="Second View" t-name="website.second_view">
+        # 2. Test with calling save() from ir.qweb
+        view_arch = '''<t name="Second Qweb" t-name="website.second_view">
                           <t t-call="website.layout">
                             <div id="wrap">
                               <div class="editable_part"/>
                               <div class="container">
-                                  <h1>Second View</h1>
+                                  <h1>Second Qweb</h1>
                               </div>
                               <div class="editable_part"/>
                             </div>
                           </t>
                        </t>'''
-        second_view = View.create({
+        second_view = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': view_arch,
         })
 
-        total_views = View.with_context(active_test=False).search_count([])
-        second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[1]" data-oe-field="arch" data-oe-model="ir.ui.view">First editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[1]")
-        second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[3]" data-oe-field="arch" data-oe-model="ir.ui.view">Second editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[3]")
-        self.assertEqual(total_views + 1, View.with_context(active_test=False).search_count([]), "Second save should have written on the view copied during first save")
+        total_views = Qweb.with_context(active_test=False).search_count([])
+        second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[1]" data-oe-field="arch" data-oe-model="ir.qweb">First editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[1]")
+        second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[3]" data-oe-field="arch" data-oe-model="ir.qweb">Second editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[3]")
+        self.assertEqual(total_views + 1, Qweb.with_context(active_test=False).search_count([]), "Second save should have written on the Qweb copied during first save")
 
-        total_specific_view = View.with_context(active_test=False).search_count([('arch_db', 'like', 'First editable_part'), ('arch_db', 'like', 'Second editable_part')])
-        self.assertEqual(total_specific_view, 1, "both editable_part should have been replaced on a created specific view")
+        total_specific_view = Qweb.with_context(active_test=False).search_count([('arch_db', 'like', 'First editable_part'), ('arch_db', 'like', 'Second editable_part')])
+        self.assertEqual(total_specific_view, 1, "both editable_part should have been replaced on a created specific Qweb")
 
     def test_cow_complete_flow(self):
-        View = self.env['ir.ui.view']
-        total_views = View.search_count([])
+        Qweb = self.env['ir.qweb']
+        total_views = Qweb.search_count([])
 
         self.base_view.write({'arch': '<div>Hi</div>'})
         self.inherit_view.write({'arch': '<div position="inside"> World</div>'})
@@ -741,9 +726,9 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # 2  | Extension |  World  |     /      |     1    |  website.extension_view
         # 4  | Extension |  World  |     1      |     3    |  website.extension_view
 
-        base_specific = View.search([('key', '=', self.base_view.key), ('website_id', '=', 1)]).with_context(load_all_views=True)
-        extend_specific = View.search([('key', '=', self.inherit_view.key), ('website_id', '=', 1)])
-        self.assertEqual(total_views + 2, View.search_count([]), "Should have copied Base & Extension with a website_id")
+        base_specific = Qweb.search([('key', '=', self.base_view.key), ('website_id', '=', 1)]).with_context(load_all_views=True)
+        extend_specific = Qweb.search([('key', '=', self.inherit_view.key), ('website_id', '=', 1)])
+        self.assertEqual(total_views + 2, Qweb.search_count([]), "Should have copied Base & Extension with a website_id")
         self.assertEqual(self.base_view.key, base_specific.key)
         self.assertEqual(self.inherit_view.key, extend_specific.key)
 
@@ -769,34 +754,33 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # 4  | Extension |  Nobody |     1      |     3    |  website.extension_view
 
         arch = base_specific.with_context(website_id=1).get_combined_arch()
-        self.assertEqual('Bye Nobody' in arch, True, "Write on generic `inherit_view` should have been diverted to already existing specific view")
+        self.assertEqual('Bye Nobody' in arch, True, "Write on generic `inherit_view` should have been diverted to already existing specific Qweb")
 
         base_arch = self.base_view.get_combined_arch()
         base_arch_w1 = self.base_view.with_context(website_id=1).get_combined_arch()
         self.assertEqual('Hello World' in base_arch, True)
-        self.assertEqual(base_arch, base_arch_w1, "Reading a top level view with or without a website_id in the context should render that exact view..")  # ..even if there is a specific view for that one, as get_combined_arch is supposed to render specific inherited view over generic but not specific top level instead of generic top level
+        self.assertEqual(base_arch, base_arch_w1, "Reading a top level Qweb with or without a website_id in the context should render that exact Qweb..")  # ..even if there is a specific Qweb for that one, as get_combined_arch is supposed to render specific inherited Qweb over generic but not specific top level instead of generic top level
 
     def test_cow_cross_inherit(self):
-        View = self.env['ir.ui.view']
-        total_views = View.search_count([])
+        Qweb = self.env['ir.qweb']
+        total_views = Qweb.search_count([])
 
-        main_view = View.create({
-            'name': 'Main View',
-            'type': 'qweb',
+        main_view = Qweb.create({
+            'name': 'Main Qweb',
             'arch': '<body>GENERIC<div>A</div></body>',
             'key': 'website.main_view',
         }).with_context(load_all_views=True)
 
-        View.create({
-            'name': 'Child View',
+        Qweb.create({
+            'name': 'Child Qweb',
             'mode': 'extension',
             'inherit_id': main_view.id,
-            'arch': '<xpath expr="//div" position="replace"><div>VIEW<p>B</p></div></xpath>',
+            'arch': '<xpath expr="//div" position="replace"><div>Qweb<p>B</p></div></xpath>',
             'key': 'website.child_view',
         })
 
-        child_view_2 = View.with_context(load_all_views=True).create({
-            'name': 'Child View 2',
+        child_view_2 = Qweb.with_context(load_all_views=True).create({
+            'name': 'Child Qweb 2',
             'mode': 'extension',
             'inherit_id': main_view.id,
             'arch': '<xpath expr="//p" position="replace"><span>C</span></xpath>',
@@ -805,50 +789,50 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
         # These line doing `write()` are the real tests, it should not be changed and should not crash on xpath.
         child_view_2.with_context(website_id=1).write({'arch': '<xpath expr="//p" position="replace"><span>D</span></xpath>'})
-        self.assertEqual(total_views + 3 + 1, View.search_count([]), "It should have created the 3 initial generic views and created a child_view_2 specific view")
+        self.assertEqual(total_views + 3 + 1, Qweb.search_count([]), "It should have created the 3 initial generic views and created a child_view_2 specific Qweb")
         main_view.with_context(website_id=1).write({'arch': '<body>SPECIFIC<div>Z</div></body>'})
-        self.assertEqual(total_views + 3 + 3, View.search_count([]), "It should have duplicated the Main View tree as a specific tree and then removed the specific view from the generic tree as no more needed")
+        self.assertEqual(total_views + 3 + 3, Qweb.search_count([]), "It should have duplicated the Main Qweb tree as a specific tree and then removed the specific Qweb from the generic tree as no more needed")
 
-        generic_view = View.with_context(website_id=None)._get_template_view("website.main_view")
-        specific_view = View.with_context(website_id=1)._get_template_view("website.main_view")
+        generic_view = Qweb.with_context(website_id=None)._get_template_view("website.main_view")
+        specific_view = Qweb.with_context(website_id=1)._get_template_view("website.main_view")
         generic_view_arch = generic_view.with_context(load_all_views=True).get_combined_arch()
         specific_view_arch = specific_view.with_context(load_all_views=True, website_id=1).get_combined_arch()
-        self.assertEqual(generic_view_arch, '<body>GENERIC<div>VIEW<span>C</span></div></body>')
-        self.assertEqual(specific_view_arch, '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
+        self.assertEqual(generic_view_arch, '<body>GENERIC<div>Qweb<span>C</span></div></body>')
+        self.assertEqual(specific_view_arch, '<body>SPECIFIC<div>Qweb<span>D</span></div></body>', "Writing on top level Qweb hierarchy with a website in context should write on the Qweb and clone it's inherited views")
 
     def test_multi_website_view_active(self):
         ''' With the following structure:
-            * A generic active parent view
-            * A generic active child view, that is inactive on website 1
+            * A generic active parent Qweb
+            * A generic active child Qweb, that is inactive on website 1
             The methods to retrieve views should return the specific inactive
             child over the generic active one.
         '''
-        View = self.env['ir.ui.view'].with_context(active_test=False)
+        Qweb = self.env['ir.qweb'].with_context(active_test=False)
         self.inherit_view.with_context(website_id=1).write({'active': False})
 
         # Test _get_template_view() return the inactive specific over active generic
-        inherit_view = View._get_template_view(self.inherit_view.key)
+        inherit_view = Qweb._get_template_view(self.inherit_view.key)
         self.assertEqual(inherit_view.active, True, "_get_template_view should return the generic one")
-        inherit_view = View.with_context(website_id=1)._get_template_view(self.inherit_view.key)
+        inherit_view = Qweb.with_context(website_id=1)._get_template_view(self.inherit_view.key)
         self.assertEqual(inherit_view.active, False, "_get_template_view should return the specific one")
 
         # Test get_related_views() return the inactive specific over active generic
         # Note that we cannot test get_related_views without a website in context as it will fallback on a website with get_current_website()
-        views = View.with_context(website_id=1).get_related_views(self.base_view.key)
+        views = Qweb.with_context(website_id=1).get_related_views(self.base_view.key)
         self.assertEqual(views.mapped('active'), [True, False], "get_related_views should return the specific child")
 
         # Test filter_duplicate() return the inactive specific over active generic
-        view = View.with_context(active_test=False).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
-        self.assertEqual(view.active, True, "filter_duplicate should return the generic one")
-        view = View.with_context(active_test=False, website_id=1).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
-        self.assertEqual(view.active, False, "filter_duplicate should return the specific one")
+        Qweb = Qweb.with_context(active_test=False).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
+        self.assertEqual(Qweb.active, True, "filter_duplicate should return the generic one")
+        Qweb = Qweb.with_context(active_test=False, website_id=1).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
+        self.assertEqual(Qweb.active, False, "filter_duplicate should return the specific one")
 
     def test_get_related_views_tree(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
         self.base_view.write({'name': 'B', 'key': 'B'})
         self.inherit_view.write({'name': 'I', 'key': 'I'})
-        View.create({
+        Qweb.create({
             'name': 'II',
             'mode': 'extension',
             'inherit_id': self.inherit_view.id,
@@ -864,13 +848,13 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
         # First, test that children of inactive children are not returned (not multiwebsite related)
         self.inherit_view.active = False
-        views = View.get_related_views('B')
+        views = Qweb.get_related_views('B')
         self.assertEqual(views.mapped('key'), ['B', 'I'], "As 'I' is inactive, 'II' (its own child) should not be returned.")
         self.inherit_view.active = True
 
         # Second, test multi-website
         self.inherit_view.with_context(website_id=1).write({'name': 'Extension'})  # Trigger cow on hierarchy
-        View.create({
+        Qweb.create({
             'name': 'II2',
             'mode': 'extension',
             'inherit_id': self.inherit_view.id,
@@ -885,14 +869,14 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         #   / \     |
         # II  II2   II'
 
-        views = View.with_context(website_id=1).get_related_views('B')
+        views = Qweb.with_context(website_id=1).get_related_views('B')
         self.assertEqual(views.mapped('key'), ['B', 'I', 'II'], "Should only return the specific tree")
 
     def test_get_related_views_tree_recursive_t_call_and_inherit_inactive(self):
-        """ If a view A was doing a t-call on a view B and view B had view C as child.
-            And view A had view D as child.
-            And view D also t-call view B (that as mentionned above has view C as child).
-            And view D was inactive (`d` in bellow schema).
+        """ If a Qweb A was doing a t-call on a Qweb B and Qweb B had Qweb C as child.
+            And Qweb A had Qweb D as child.
+            And Qweb D also t-call Qweb B (that as mentionned above has Qweb C as child).
+            And Qweb D was inactive (`d` in bellow schema).
 
             Then COWing C to set it as inactive would make `get_related_views()` on A to return
             both generic active C and COW inactive C.
@@ -904,12 +888,11 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # |    |  C
         # d ___|
 
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Website = self.env['website']
 
-        products = View.create({
+        products = Qweb.create({
             'name': 'Products',
-            'type': 'qweb',
             'key': '_website_sale.products',
             'arch': '''
                 <div id="products_grid">
@@ -918,16 +901,15 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         ''',
         })
 
-        products_item = View.create({
+        products_item = Qweb.create({
             'name': 'Products item',
-            'type': 'qweb',
             'key': '_website_sale.products_item',
             'arch': '''
                 <div class="product_price"/>
             ''',
         })
 
-        add_to_wishlist = View.create({
+        add_to_wishlist = Qweb.create({
             'name': 'Wishlist',
             'active': True,
             'customize_show': True,
@@ -938,8 +920,8 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             ''',
         })
 
-        products_list_view = View.create({
-            'name': 'List View',
+        products_list_view = Qweb.create({
+            'name': 'List Qweb',
             'active': False,  # <- That's the reason of why this behavior needed a fix
             'customize_show': True,
             'inherit_id': products.id,
@@ -951,19 +933,19 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             ''',
         })
 
-        views = View.with_context(website_id=1).get_related_views('_website_sale.products')
+        views = Qweb.with_context(website_id=1).get_related_views('_website_sale.products')
         self.assertEqual(views, products + products_item + add_to_wishlist + products_list_view, "The four views should be returned.")
         add_to_wishlist.with_context(website_id=1).write({'active': False})  # Trigger cow on hierarchy
         add_to_wishlist_cow = Website.with_context(website_id=1).viewref(add_to_wishlist.key)
-        views = View.with_context(website_id=1).get_related_views('_website_sale.products')
-        self.assertEqual(views, products + products_item + add_to_wishlist_cow + products_list_view, "The generic wishlist view should have been replaced by the COW one.")
+        views = Qweb.with_context(website_id=1).get_related_views('_website_sale.products')
+        self.assertEqual(views, products + products_item + add_to_wishlist_cow + products_list_view, "The generic wishlist Qweb should have been replaced by the COW one.")
 
     def test_cow_inherit_children_order(self):
         """ COW method should loop on inherit_children_ids in correct order
             when copying them on the new specific tree.
-            Correct order is the same as the one when applying view arch:
+            Correct order is the same as the one when applying Qweb arch:
             PRIORITY, ID
-            And not the default one from ir.ui.view (NAME, PRIORITY, ID).
+            And not the default one from ir.qweb (NAME, PRIORITY, ID).
         """
         self.inherit_view.copy({
             'name': 'alphabetically before "Extension"',
@@ -974,17 +956,17 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
 
     def test_write_order_vs_cow_inherit_children_order(self):
-        """ When both a specific inheriting view and a non-specific base view
-            are written simultaneously, the specific inheriting base view
+        """ When both a specific inheriting Qweb and a non-specific base Qweb
+            are written simultaneously, the specific inheriting base Qweb
             must be updated even though its id will change during the COW of
-            the base view.
+            the base Qweb.
         """
-        View = self.env['ir.ui.view']
-        self.inherit_view.with_context(website_id=1).write({'name': 'Specific Inherited View Changed First'})
-        specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
-        views = View.browse([self.base_view.id, specific_view.id])
+        Qweb = self.env['ir.qweb']
+        self.inherit_view.with_context(website_id=1).write({'name': 'Specific Inherited Qweb Changed First'})
+        specific_view = Qweb.search([('name', '=', 'Specific Inherited Qweb Changed First')])
+        views = Qweb.browse([self.base_view.id, specific_view.id])
         views.with_context(website_id=1).write({'active': False})
-        new_specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
+        new_specific_view = Qweb.search([('name', '=', 'Specific Inherited Qweb Changed First')])
         self.assertTrue(specific_view.id != new_specific_view.id, "Should have a new id")
         self.assertFalse(new_specific_view.active, "Should have been deactivated")
 
@@ -992,21 +974,21 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         """ Same as the previous test, but requesting the update in the
             opposite order.
         """
-        View = self.env['ir.ui.view']
-        self.inherit_view.with_context(website_id=1).write({'name': 'Specific Inherited View Changed First'})
-        specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
-        views = View.browse([specific_view.id, self.base_view.id])
+        Qweb = self.env['ir.qweb']
+        self.inherit_view.with_context(website_id=1).write({'name': 'Specific Inherited Qweb Changed First'})
+        specific_view = Qweb.search([('name', '=', 'Specific Inherited Qweb Changed First')])
+        views = Qweb.browse([specific_view.id, self.base_view.id])
         views.with_context(website_id=1).write({'active': False})
-        new_specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
+        new_specific_view = Qweb.search([('name', '=', 'Specific Inherited Qweb Changed First')])
         self.assertTrue(specific_view.id != new_specific_view.id, "Should have a new id")
         self.assertFalse(new_specific_view.active, "Should have been deactivated")
 
     def test_module_new_inherit_view_on_parent_already_forked(self):
-        """ If a generic parent view is copied (COW) and that another module
-            creates a child view for that generic parent, all the COW views
-            should also get a copy of that new child view.
+        """ If a generic parent Qweb is copied (COW) and that another module
+            creates a child Qweb for that generic parent, all the COW views
+            should also get a copy of that new child Qweb.
 
-            Typically, a parent view (website_sale.product) is copied (COW)
+            Typically, a parent Qweb (website_sale.product) is copied (COW)
             and then wishlist module is installed.
             Wishlist views inhering from website_sale.product are added to the
             generic `website_sale.product`. But it should also be added to the
@@ -1014,42 +996,42 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             website.
         """
         Website = self.env['website']
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
-        # Simulate website_sale product view
+        # Simulate website_sale product Qweb
         self.base_view.write({'name': 'Product', 'key': '_website_sale.product'})
         # Trigger cow on website_sale hierarchy for website 1
         self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
 
         # Simulate website_sale_comparison install
-        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+        Qweb._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'name': 'Add to comparison in product page',
             'mode': 'extension',
             'inherit_id': self.base_view.id,
             'arch': '<div position="replace"><p>COMPARE</p></div>',
             'key': '_website_sale_comparison.product_add_to_compare',
         })])
-        View.invalidate_model()
+        Qweb.invalidate_model()
 
         # Simulate end of installation/update
-        View._create_all_specific_views(['_website_sale_comparison'])
+        Qweb._create_all_specific_views(['_website_sale_comparison'])
 
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
         self.assertEqual(self.base_view.key, specific_view.key, "Ensure it is equal as it should be for the rest of the test so we test the expected behaviors")
         specific_view_arch = specific_view.get_combined_arch()
-        self.assertEqual(specific_view.website_id.id, 1, "Ensure we got specific view to perform the checks against")
-        self.assertEqual(specific_view_arch, '<p>COMPARE</p>', "When a module creates an inherited view (on a generic tree), it should also create that view in the specific COW'd tree.")
+        self.assertEqual(specific_view.website_id.id, 1, "Ensure we got specific Qweb to perform the checks against")
+        self.assertEqual(specific_view_arch, '<p>COMPARE</p>', "When a module creates an inherited Qweb (on a generic tree), it should also create that Qweb in the specific COW'd tree.")
 
         # Simulate website_sale_comparison update
-        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+        Qweb._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'arch': '<div position="replace"><p>COMPARE EDITED</p></div>',
         })])
         specific_view_arch = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product').get_combined_arch()
-        self.assertEqual(specific_view_arch, '<p>COMPARE EDITED</p>', "When a module updates an inherited view (on a generic tree), it should also update the copies of that view (COW).")
+        self.assertEqual(specific_view_arch, '<p>COMPARE EDITED</p>', "When a module updates an inherited Qweb (on a generic tree), it should also update the copies of that Qweb (COW).")
 
         # Test fields that should not be COW'd
         random_views = self.env.ref('website.s_accordion_image') + self.env.ref('website.s_accordion')
-        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+        Qweb._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'website_id': None,
             'inherit_id': random_views[0].id,
         })])
@@ -1057,41 +1039,41 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         w1_specific_child_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale_comparison.product_add_to_compare')
         generic_child_view = Website.with_context(load_all_views=True).viewref('_website_sale_comparison.product_add_to_compare')
         self.assertEqual(w1_specific_child_view.website_id.id, 1, "website_id is a prohibited field when COWing views during _load_records")
-        self.assertEqual(generic_child_view.inherit_id, random_views[0], "prohibited fields only concerned write on COW'd view. Generic should still considere these fields")
+        self.assertEqual(generic_child_view.inherit_id, random_views[0], "prohibited fields only concerned write on COW'd Qweb. Generic should still considere these fields")
         self.assertEqual(w1_specific_child_view.inherit_id, random_views[0], "inherit_id update should be repliacated on cow views during _load_records")
 
-        # Set back the generic view as parent for the rest of the test
+        # Set back the generic Qweb as parent for the rest of the test
         generic_child_view.inherit_id = self.base_view
         w1_specific_child_view.inherit_id = specific_view
 
         # Don't update inherit_id if it was anually updated
         w1_specific_child_view.inherit_id = random_views[1].id
-        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+        Qweb._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'inherit_id': random_views[0].id,
         })])
         self.assertEqual(w1_specific_child_view.inherit_id, random_views[1],
                          "inherit_id update should not be repliacated on cow views during _load_records if it was manually updated before")
 
-        # Set back the generic view as parent for the rest of the test
+        # Set back the generic Qweb as parent for the rest of the test
         generic_child_view.inherit_id = self.base_view
         w1_specific_child_view.inherit_id = specific_view
 
-        # Don't update fields from COW'd view if these fields have been modified from original view
+        # Don't update fields from COW'd Qweb if these fields have been modified from original Qweb
         new_website = Website.create({'name': 'New Website'})
         self.base_view.with_context(website_id=new_website.id).write({'name': 'Product (new_website)'})
         new_website_specific_child_view = Website.with_context(load_all_views=True, website_id=new_website.id).viewref('_website_sale_comparison.product_add_to_compare')
         new_website_specific_child_view.priority = 6
-        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+        Qweb._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'priority': 3,
         })])
-        self.assertEqual(generic_child_view.priority, 3, "XML update should be written on the Generic View")
-        self.assertEqual(w1_specific_child_view.priority, 3, "XML update should be written on the specific view if the fields have not been modified on that specific view")
-        self.assertEqual(new_website_specific_child_view.priority, 6, "XML update should NOT be written on the specific view if the fields have been modified on that specific view")
+        self.assertEqual(generic_child_view.priority, 3, "XML update should be written on the Generic Qweb")
+        self.assertEqual(w1_specific_child_view.priority, 3, "XML update should be written on the specific Qweb if the fields have not been modified on that specific Qweb")
+        self.assertEqual(new_website_specific_child_view.priority, 6, "XML update should NOT be written on the specific Qweb if the fields have been modified on that specific Qweb")
 
-        # Simulate website_sale update on top level view
+        # Simulate website_sale update on top level Qweb
         self._create_imd(self.base_view)
         self.base_view.invalidate_model()
-        View._load_records([dict(xml_id='_website_sale.product', values={
+        Qweb._load_records([dict(xml_id='_website_sale.product', values={
             'website_meta_title': 'A bug got fixed by updating this field',
         })])
         all_title_updated = specific_view.website_meta_title == self.base_view.website_meta_title == "A bug got fixed by updating this field"
@@ -1099,21 +1081,20 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
     def test_module_new_inherit_view_on_parent_already_forked_xpath_replace(self):
         """ Deeper, more specific test of above behavior.
-            A module install should add/update the COW view (if allowed fields,
+            A module install should add/update the COW Qweb (if allowed fields,
             eg not modified or prohibited (website_id, inherit_id..)).
-            This test ensure it does not crash if the child view is a primary view.
+            This test ensure it does not crash if the child Qweb is a primary Qweb.
         """
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
         # Simulate layout views
-        base_view = View.create({
+        base_view = Qweb.create({
             'name': 'Main Frontend Layout',
-            'type': 'qweb',
             'arch': '<t t-call="web.layout"><t t-set="head_website"/></t>',
             'key': '_portal.frontend_layout',
         }).with_context(load_all_views=True)
 
-        inherit_view = View.create({
+        inherit_view = Qweb.create({
             'name': 'Main layout',
             'mode': 'extension',
             'inherit_id': base_view.id,
@@ -1126,7 +1107,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
         # Simulate website_sale_comparison install, that's the real test, it
         # should not crash.
-        View._load_records([dict(xml_id='_website_forum.layout', values={
+        Qweb._load_records([dict(xml_id='_website_forum.layout', values={
             'name': 'Forum Layout',
             'mode': 'primary',
             'inherit_id': inherit_view.id,
@@ -1142,10 +1123,10 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
                 |
                 ---> Extension 2 (Website-specific)
         """
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
         self.inherit_view.website_id = 1
-        inherit_view_2 = View.create({
+        inherit_view_2 = Qweb.create({
             'name': 'Extension 2',
             'mode': 'extension',
             'inherit_id': self.inherit_view.id,
@@ -1154,7 +1135,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             'website_id': 1,
         })
 
-        total_views = View.search_count([])
+        total_views = Qweb.search_count([])
 
         # id | name        | content               | website_id | inherit  | key
         # --------------------------------------------------------------------------------------------
@@ -1165,13 +1146,13 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.base_view.with_context(website_id=1).write({'arch': '<div>modified content</div>'})
 
         # 2 views are created, one is deleted
-        self.assertEqual(View.search_count([]), total_views + 1)
+        self.assertEqual(Qweb.search_count([]), total_views + 1)
         self.assertFalse(self.inherit_view.exists())
         self.assertTrue(inherit_view_2.exists())
 
         # Verify the inheritance
-        base_specific = View.search([('key', '=', self.base_view.key), ('website_id', '=', 1)]).with_context(load_all_views=True)
-        extend_specific = View.search([('key', '=', 'website.extension_view'), ('website_id', '=', 1)])
+        base_specific = Qweb.search([('key', '=', self.base_view.key), ('website_id', '=', 1)]).with_context(load_all_views=True)
+        extend_specific = Qweb.search([('key', '=', 'website.extension_view'), ('website_id', '=', 1)])
         self.assertEqual(extend_specific.inherit_id, base_specific)
         self.assertEqual(inherit_view_2.inherit_id, extend_specific)
 
@@ -1183,18 +1164,17 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # 3  | Extension 2 |  , extended content 2 |     1      |     5    |  website.extension_view_2
 
     def test_cow_extension_with_install(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         # Base
-        v1 = View.create({
+        v1 = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>base content</div>',
             'key': 'website.base_view_v1',
         }).with_context(load_all_views=True)
         self._create_imd(v1)
 
         # Extension
-        v2 = View.create({
+        v2 = Qweb.create({
             'name': 'Extension',
             'mode': 'extension',
             'inherit_id': v1.id,
@@ -1206,12 +1186,12 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # multiwebsite specific
         v1.with_context(website_id=1).write({'name': 'Extension Specific'})
 
-        original_pool_init = View.pool._init
-        View.pool._init = True
+        original_pool_init = Qweb.pool._init
+        Qweb.pool._init = True
 
         try:
             # Simulate module install
-            View._load_records([dict(xml_id='website.extension2_view', values={
+            Qweb._load_records([dict(xml_id='website.extension2_view', values={
                 'name': ' ---',
                 'mode': 'extension',
                 'inherit_id': v1.id,
@@ -1219,7 +1199,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
                 'key': 'website.extension2_view',
             })])
         finally:
-            View.pool._init = original_pool_init
+            Qweb.pool._init = original_pool_init
 
     def test_specific_view_translation(self):
         self.env['res.lang']._activate_lang('fr_BE')
@@ -1235,7 +1215,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'salut'}})
         self.assertEqual(self.base_view.with_context(lang='fr_BE').arch, '<div>salut</div>')
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
-                         "updating translation of base view doesn't update specific view")
+                         "updating translation of base Qweb doesn't update specific Qweb")
 
         self.env['res.lang']._activate_lang('es_ES')
         # Translate specific 'arch_db' while the generic value has no content for the
@@ -1247,10 +1227,10 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
         specific_view.invalidate_model(['arch_db', 'arch'])
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
-                         "loading module translation copy translation from base to specific view")
+                         "loading module translation copy translation from base to specific Qweb")
 
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
-                         "loading module translation should not remove specific translations that are not available on base view")
+                         "loading module translation should not remove specific translations that are not available on base Qweb")
 
         # Make sure updating a short list of languages does not destroy existing translations.
         self.env['res.lang']._activate_lang('nl_NL')
@@ -1273,21 +1253,21 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.base_view.with_context(website_id=1).write({'active': True})
         specific_view = self.base_view._get_specific_views() - self.base_view
 
-        # generic view without website_id but with website for request
+        # generic Qweb without website_id but with website for request
         with patch('odoo.addons.website.models.ir_http.get_request_website', lambda: website):
             self.base_view.invalidate_recordset()
             self.assertIn('to_translate', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
             self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
             self.base_view.invalidate_recordset()
 
-        # generic view without website_id
+        # generic Qweb without website_id
         self.assertIn('translated', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('to_translate', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
         self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
         self.assertIn('translated', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
 
-        # specific view with website_id
+        # specific Qweb with website_id
         self.assertIn('to_translate', specific_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('translated', specific_view.with_context(lang='fr_BE', edit_translations=True).arch)
 
@@ -1295,33 +1275,30 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         """
         Check the creation of views from specific-website environments.
         """
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
-        View.with_context(website_id=1).create({
+        Qweb.with_context(website_id=1).create({
             'name': 'Name',
             'key': 'website.no_website_id',
-            'type': 'qweb',
             'arch': '<data></data>',
         })
         # Get created views by searching to consider potential unwanted COW
-        created_views = View.search([('key', '=', 'website.no_website_id')])
-        self.assertEqual(len(created_views), 1, "Should only have created one view")
-        self.assertEqual(created_views.website_id.id, 1, "The created view should be specific to website 1")
+        created_views = Qweb.search([('key', '=', 'website.no_website_id')])
+        self.assertEqual(len(created_views), 1, "Should only have created one Qweb")
+        self.assertEqual(created_views.website_id.id, 1, "The created Qweb should be specific to website 1")
 
-        with self.assertRaises(ValueError, msg="Should not allow to create generic view explicitely from website 1 specific context"):
-            View.with_context(website_id=1).create({
+        with self.assertRaises(ValueError, msg="Should not allow to create generic Qweb explicitely from website 1 specific context"):
+            Qweb.with_context(website_id=1).create({
                 'name': 'Name',
                 'key': 'website.explicit_no_website_id',
-                'type': 'qweb',
                 'arch': '<data></data>',
                 'website_id': False,
             })
 
-        with self.assertRaises(ValueError, msg="Should not allow to create specific view for website 2 from website 1 specific context"):
-            View.with_context(website_id=1).create({
+        with self.assertRaises(ValueError, msg="Should not allow to create specific Qweb for website 2 from website 1 specific context"):
+            Qweb.with_context(website_id=1).create({
                 'name': 'Name',
                 'key': 'website.different_website_id',
-                'type': 'qweb',
                 'arch': '<data></data>',
                 'website_id': 2,
             })
@@ -1350,11 +1327,11 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         #    / \                   =>            |   |
         #   D   D'                               D   D'
 
-        # 1. Setup following view trees
+        # 1. Setup following Qweb trees
         #   A    A'   B
         #   |    |
         #   D    D'
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Website = self.env['website']
         self._create_imd(self.inherit_view)
         # invalidate cache to recompute xml_id, or it will still be empty
@@ -1364,22 +1341,22 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref(self.base_view.key)
         specific_view.inherit_children_ids.with_context(website_id=1).write({'arch': '<div position="inside">, extended content website 1</div>'})
         specific_child_view = Website.with_context(load_all_views=True, website_id=1).viewref(self.inherit_view.key)
-        # 2. Ensure view trees are as expected
+        # 2. Ensure Qweb trees are as expected
         self.assertEqual(self.base_view.inherit_children_ids, self.inherit_view, "D should be under A")
         self.assertEqual(specific_view.inherit_children_ids, specific_child_view, "D' should be under A'")
         self.assertFalse(base_view_2.inherit_children_ids, "B should have no child")
 
         # 3. Simulate module update, D.inherit_id is now B instead of A
-        View._load_records([dict(xml_id=self.inherit_view.key, values={
+        Qweb._load_records([dict(xml_id=self.inherit_view.key, values={
             'inherit_id': base_view_2.id,
         })])
 
-        # 4. Ensure view trees is now
+        # 4. Ensure Qweb trees is now
         #   A    A'   B
         #            / \
         #           D   D'
         self.assertTrue(len(self.base_view.inherit_children_ids) == len(specific_view.inherit_children_ids) == 0,
-                        "Child views should now be under view B")
+                        "Child views should now be under Qweb B")
         self.assertEqual(len(base_view_2.inherit_children_ids), 2, "D and D' should be under B")
         self.assertTrue(self.inherit_view in base_view_2.inherit_children_ids, "D should be under B")
         self.assertTrue(specific_child_view in base_view_2.inherit_children_ids, "D' should be under B")
@@ -1391,39 +1368,38 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # Make sure res.lang.get_installed is recomputed
         self.env.registry.clear_cache()
 
-        View = self.env['ir.ui.view'].with_context(lang=french.code, website_id=1)
-        old_specific_views = View.search([('website_id', '!=', None)])
-        view = self.base_view.with_context(lang=french.code, website_id=1)
+        Qweb = self.env['ir.qweb'].with_context(lang=french.code, website_id=1)
+        old_specific_views = Qweb.search([('website_id', '!=', None)])
+        Qweb = self.base_view.with_context(lang=french.code, website_id=1)
 
         root = html.fromstring(self.base_view.arch, parser=html.HTMLParser(encoding="utf-8"))
         to_translate = root.text_content()
         sha = sha256(to_translate.encode()).hexdigest()
         payload = self.build_rpc_payload({
-            'model': view._name,
-            'record_id': view.id,
+            'model': Qweb._name,
+            'record_id': Qweb.id,
             'field_name': 'arch_db',
             'translations': {french.code: {sha: 'contenu de base'}},
         })
         self.url_open('/website/field/translation/update', data=json.dumps(payload), headers=self.headers)
-        new_specific_views = View.search([('website_id', '!=', None)])
-        self.assertEqual(len(old_specific_views), len(new_specific_views), "No additional specific view must have been created")
-        self.assertTrue(view.arch.index('contenu de base') > 0, "New translation must appear in view")
+        new_specific_views = Qweb.search([('website_id', '!=', None)])
+        self.assertEqual(len(old_specific_views), len(new_specific_views), "No additional specific Qweb must have been created")
+        self.assertTrue(Qweb.arch.index('contenu de base') > 0, "New translation must appear in Qweb")
 
 
 @tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def setUp(self):
         super(Crawler, self).setUp()
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
 
-        self.base_view = View.create({
+        self.base_view = Qweb.create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div>base content</div>',
             'key': 'website.base_view',
         }).with_context(load_all_views=True)
 
-        self.inherit_view = View.create({
+        self.inherit_view = Qweb.create({
             'name': 'Extension',
             'mode': 'extension',
             'inherit_id': self.base_view.id,
@@ -1536,12 +1512,12 @@ class Crawler(HttpCase):
         self.assertEqual(
             [v['name'] for v in res],
             ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
-            "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last)",
+            "multi-website COW should not impact customize views order (COW Qweb will have a bigger ID and should not be last)",
         )
         self.assertEqual(
             [v['inherit_id'][1] for v in res],
             ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
-            "multi-website COW should not impact customize views menu header position or split (COW view will have a bigger ID and should not be last)",
+            "multi-website COW should not impact customize views menu header position or split (COW Qweb will have a bigger ID and should not be last)",
         )
 
         # Trigger COW
@@ -1571,30 +1547,29 @@ class Crawler(HttpCase):
         self.assertEqual(
             [v['name'] for v in res],
             ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
-            "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last) (2)",
+            "multi-website COW should not impact customize views order (COW Qweb will have a bigger ID and should not be last) (2)",
         )
         self.assertEqual(
             [v['inherit_id'][1] for v in res],
             ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
-            "multi-website COW should not impact customize views menu header position or split (COW view will have a bigger ID and should not be last) (2)",
+            "multi-website COW should not impact customize views menu header position or split (COW Qweb will have a bigger ID and should not be last) (2)",
         )
 
     def test_multi_website_views_retrieving(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Website = self.env['website']
 
         website_1 = Website.create({'name': 'Website 1'})
         website_2 = Website.create({'name': 'Website 2'})
 
-        main_view = View.create({
+        main_view = Qweb.create({
             'name': 'Products',
-            'type': 'qweb',
             'arch': '<body>Arch is not relevant for this test</body>',
             'key': '_website_sale.products',
         }).with_context(load_all_views=True)
 
-        View.with_context(load_all_views=True).create({
-            'name': 'Child View W1',
+        Qweb.with_context(load_all_views=True).create({
+            'name': 'Child Qweb W1',
             'mode': 'extension',
             'inherit_id': main_view.id,
             'arch': '<xpath expr="//body" position="replace">It is really not relevant!</xpath>',
@@ -1604,15 +1579,15 @@ class Crawler(HttpCase):
             'customize_show': True,
         })
 
-        # Simulate theme view instal + load on website
-        theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
+        # Simulate theme Qweb instal + load on website
+        theme_view = self.env['theme.ir.qweb'].with_context(install_filename='/testviews').create({
             'name': 'Products Theme Kea',
             'mode': 'extension',
             'inherit_id': main_view,
             'arch': '<xpath expr="//p" position="replace"><span>C</span></xpath>',
             'key': '_theme_kea_sale.products',
         })
-        view_from_theme_view_on_w2 = View.with_context(load_all_views=True).create({
+        view_from_theme_view_on_w2 = Qweb.with_context(load_all_views=True).create({
             'name': 'Products Theme Kea',
             'mode': 'extension',
             'inherit_id': main_view.id,
@@ -1624,43 +1599,42 @@ class Crawler(HttpCase):
         self.env['ir.model.data'].create({
             'module': '_theme_kea_sale',
             'name': 'products',
-            'model': 'theme.ir.ui.view',
+            'model': 'theme.ir.qweb',
             'res_id': theme_view.id,
         })
 
-        # ##################################################### ir.ui.view ###############################################
+        # ##################################################### ir.qweb ###############################################
         # id |        name        | website_id | inherit |             key               |          xml_id               |
         # ----------------------------------------------------------------------------------------------------------------
         #  1 | Products           |      /     |    /    | _website_sale.products        |            /                  |
-        #  2 | Child View W1      |      1     |    1    | _website_sale.child_view_w1   |            /                  |
+        #  2 | Child Qweb W1      |      1     |    1    | _website_sale.child_view_w1   |            /                  |
         #  3 | Products Theme Kea |      2     |    1    | _theme_kea_sale.products      |            /                  |
 
-        # ################################################# theme.ir.ui.view #############################################
+        # ################################################# theme.ir.qweb #############################################
         # id |               name              | inherit |             key               |         xml_id                |
         # ----------------------------------------------------------------------------------------------------------------
         #  1 | Products Theme Kea              |    1    | _theme_kea_sale.products      | _theme_kea_sale.products      |
 
         with self.assertRaises(MissingError):
-            # It should crash as it should not find a view on website 1 for '_theme_kea_sale.products', !!and certainly not a theme.ir.ui.view!!.
-            view = View.with_context(website_id=website_1.id)._get_template_view('_theme_kea_sale.products')
-        view = View.with_context(website_id=website_2.id)._get_template_view('_theme_kea_sale.products')
-        self.assertEqual(len(view), 1, "It should find the ir.ui.view with key '_theme_kea_sale.products' on website 2..")
-        self.assertEqual(view._name, 'ir.ui.view', "..and not a theme.ir.ui.view")
+            # It should crash as it should not find a Qweb on website 1 for '_theme_kea_sale.products', !!and certainly not a theme.ir.qweb!!.
+            Qweb = Qweb.with_context(website_id=website_1.id)._get_template_view('_theme_kea_sale.products')
+        Qweb = Qweb.with_context(website_id=website_2.id)._get_template_view('_theme_kea_sale.products')
+        self.assertEqual(len(Qweb), 1, "It should find the ir.qweb with key '_theme_kea_sale.products' on website 2..")
+        self.assertEqual(Qweb._name, 'ir.qweb', "..and not a theme.ir.qweb")
 
-        views = View.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
-        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned")
-        views = View.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
-        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products'] should be returned")
+        views = Qweb.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.qweb ['_website_sale.products', '_website_sale.child_view_w1'] should be returned")
+        views = Qweb.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.qweb ['_website_sale.products', '_theme_kea_sale.products'] should be returned")
 
         # Part 2 of the test, it test the same stuff but from a higher level (get_related_views ends up calling _view_obj)
-        called_theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
-            'name': 'Called View Kea',
+        called_theme_view = self.env['theme.ir.qweb'].with_context(install_filename='/testviews').create({
+            'name': 'Called Qweb Kea',
             'arch': '<div></div>',
             'key': '_theme_kea_sale.t_called_view',
         })
-        View.create({
-            'name': 'Called View Kea',
-            'type': 'qweb',
+        Qweb.create({
+            'name': 'Called Qweb Kea',
             'arch': '<div></div>',
             'key': '_theme_kea_sale.t_called_view',
             'website_id': website_2.id,
@@ -1668,30 +1642,30 @@ class Crawler(HttpCase):
         self.env['ir.model.data'].create({
             'module': '_theme_kea_sale',
             'name': 't_called_view',
-            'model': 'theme.ir.ui.view',
+            'model': 'theme.ir.qweb',
             'res_id': called_theme_view.id,
         })
         view_from_theme_view_on_w2.write({'arch': '<t t-call="_theme_kea_sale.t_called_view"/>'})
 
-        # ##################################################### ir.ui.view ###############################################
+        # ##################################################### ir.qweb ###############################################
         # id |        name        | website_id | inherit |             key               |          xml_id               |
         # ----------------------------------------------------------------------------------------------------------------
         #  1 | Products           |      /     |    /    | _website_sale.products        |            /                  |
-        #  2 | Child View W1      |      1     |    1    | _website_sale.child_view_w1   |            /                  |
+        #  2 | Child Qweb W1      |      1     |    1    | _website_sale.child_view_w1   |            /                  |
         #  3 | Products Theme Kea |      2     |    1    | _theme_kea_sale.products      |            /                  |
-        #  4 | Called View Kea    |      2     |    /    | _theme_kea_sale.t_called_view |            /                  |
+        #  4 | Called Qweb Kea    |      2     |    /    | _theme_kea_sale.t_called_view |            /                  |
 
-        # ################################################# theme.ir.ui.view #############################################
+        # ################################################# theme.ir.qweb #############################################
         # id |               name              | inherit |             key               |         xml_id                |
         # ----------------------------------------------------------------------------------------------------------------
         #  1 | Products Theme Kea              |    1    | _theme_kea_sale.products      | _theme_kea_sale.products      |
-        #  1 | Called View Kea                 |    /    | _theme_kea_sale.t_called_view | _theme_kea_sale.t_called_view |
+        #  1 | Called Qweb Kea                 |    /    | _theme_kea_sale.t_called_view | _theme_kea_sale.t_called_view |
 
-        # Next line should not crash (was mixing apples and oranges - ir.ui.view and theme.ir.ui.view)
-        views = View.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
-        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_website_sale.child_view_w1'] should be returned (2)")
-        views = View.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
-        self.assertEqual(len(views), 3, "It should not mix apples and oranges, only ir.ui.view ['_website_sale.products', '_theme_kea_sale.products', '_theme_kea_sale.t_called_view'] should be returned")
+        # Next line should not crash (was mixing apples and oranges - ir.qweb and theme.ir.qweb)
+        views = Qweb.with_context(website_id=website_1.id).get_related_views('_website_sale.products')
+        self.assertEqual(len(views), 2, "It should not mix apples and oranges, only ir.qweb ['_website_sale.products', '_website_sale.child_view_w1'] should be returned (2)")
+        views = Qweb.with_context(website_id=website_2.id).get_related_views('_website_sale.products')
+        self.assertEqual(len(views), 3, "It should not mix apples and oranges, only ir.qweb ['_website_sale.products', '_theme_kea_sale.products', '_theme_kea_sale.t_called_view'] should be returned")
 
         # ########################################################
         # Test the controller (which is calling get_related_views)
@@ -1706,7 +1680,7 @@ class Crawler(HttpCase):
         json = {'params': {'key': '_website_sale.products'}}
         response = self.url_open(url=url, json=json)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['result']), 1, "Only '_theme_kea_sale.products' should be returned as it is the only customize_show related view in website 2 context")
+        self.assertEqual(len(response.json()['result']), 1, "Only '_theme_kea_sale.products' should be returned as it is the only customize_show related Qweb in website 2 context")
         self.assertEqual(response.json()['result'][0]['key'], '_theme_kea_sale.products', "Only '_theme_kea_sale.products' should be returned")
 
         # Simulate website 1
@@ -1717,29 +1691,28 @@ class Crawler(HttpCase):
         json = {'params': {'key': '_website_sale.products'}}
         response = self.url_open(url=url, json=json)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['result']), 1, "Only '_website_sale.child_view_w1' should be returned as it is the only customize_show related view in website 1 context")
+        self.assertEqual(len(response.json()['result']), 1, "Only '_website_sale.child_view_w1' should be returned as it is the only customize_show related Qweb in website 1 context")
         self.assertEqual(response.json()['result'][0]['key'], '_website_sale.child_view_w1', "Only '_website_sale.child_view_w1' should be returned")
 
 
 @tagged('post_install', '-at_install')
 class TestThemeViews(common.TransactionCase):
     def test_inherit_specific(self):
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Website = self.env['website']
 
         website_1 = Website.create({'name': 'Website 1'})
 
         # 1. Simulate COW structure
-        main_view = View.create({
-            'name': 'Test Main View',
-            'type': 'qweb',
+        main_view = Qweb.create({
+            'name': 'Test Main Qweb',
             'arch': '<body>Arch is not relevant for this test</body>',
             'key': '_test.main_view',
         }).with_context(load_all_views=True)
         # Trigger COW
         main_view.with_context(website_id=website_1.id).arch = '<body>specific</body>'
 
-        # 2. Simulate a theme install with a child view of `main_view`
+        # 2. Simulate a theme install with a child Qweb of `main_view`
         patcher = patch('odoo.modules.Manifest.for_addon', return_value=Manifest(path='/dummy/test_theme', manifest_content=_DEFAULT_MANIFEST))
         self.startPatcher(patcher)
         test_theme_module = self.env['ir.module.module'].create({'name': 'test_theme'})
@@ -1749,44 +1722,44 @@ class TestThemeViews(common.TransactionCase):
             'model': 'ir.module.module',
             'res_id': test_theme_module.id,
         })
-        theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
-            'name': 'Test Child View',
+        theme_view = self.env['theme.ir.qweb'].with_context(install_filename='/testviews').create({
+            'name': 'Test Child Qweb',
             'mode': 'extension',
-            'inherit_id': 'ir.ui.view,%s' % main_view.id,
+            'inherit_id': 'ir.qweb,%s' % main_view.id,
             'arch': '<xpath expr="//body" position="replace"><span>C</span></xpath>',
             'key': 'test_theme.test_child_view',
         })
         self.env['ir.model.data'].create({
             'module': 'test_theme',
             'name': 'products',
-            'model': 'theme.ir.ui.view',
+            'model': 'theme.ir.qweb',
             'res_id': theme_view.id,
         })
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
 
         # 3. Ensure everything went correctly
-        main_views = View.search([('key', '=', '_test.main_view')])
-        self.assertEqual(len(main_views), 2, "View should have been COWd when writing on its arch in a website context")
+        main_views = Qweb.search([('key', '=', '_test.main_view')])
+        self.assertEqual(len(main_views), 2, "Qweb should have been COWd when writing on its arch in a website context")
         specific_main_view = main_views.filtered(lambda v: v.website_id == website_1)
         specific_main_view_children = specific_main_view.inherit_children_ids
-        self.assertEqual(specific_main_view_children.name, 'Test Child View', "Ensure theme.ir.ui.view has been loaded as an ir.ui.view into the website..")
+        self.assertEqual(specific_main_view_children.name, 'Test Child Qweb', "Ensure theme.ir.qweb has been loaded as an ir.qweb into the website..")
         self.assertEqual(specific_main_view_children.website_id, website_1, "..and the website is the correct one.")
 
         # 4. Simulate theme update. Do it 2 time to make sure it was not interpreted as a user change the first time.
         new_arch = '<xpath expr="//body" position="replace"><span>Odoo Change01</span></xpath>'
         theme_view.arch = new_arch
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
-        self.assertEqual(specific_main_view_children.arch, new_arch, "First time: View arch should receive theme updates.")
+        self.assertEqual(specific_main_view_children.arch, new_arch, "First time: Qweb arch should receive theme updates.")
         self.assertFalse(specific_main_view_children.arch_updated)
         new_arch = '<xpath expr="//body" position="replace"><span>Odoo Change02</span></xpath>'
         theme_view.arch = new_arch
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
-        self.assertEqual(specific_main_view_children.arch, new_arch, "Second time: View arch should still receive theme updates.")
+        self.assertEqual(specific_main_view_children.arch, new_arch, "Second time: Qweb arch should still receive theme updates.")
 
         # 5. Keep User arch changes
         new_arch = '<xpath expr="//body" position="replace"><span>Odoo</span></xpath>'
         specific_main_view_children.arch = new_arch
-        theme_view.name = 'Test Child View modified'
+        theme_view.name = 'Test Child Qweb modified'
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
-        self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
-        self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
+        self.assertEqual(specific_main_view_children.arch, new_arch, "Qweb arch shouldn't have been overrided on theme update as it was modified by user.")
+        self.assertEqual(specific_main_view_children.name, 'Test Child Qweb modified', "Qweb should receive modification on theme update.")

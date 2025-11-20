@@ -47,7 +47,7 @@ class IrQweb(models.AbstractModel):
             add_form_signature(element, self.sudo().env)
         return element, document, ref
 
-    # assume cache will be invalidated by third party on write to ir.ui.view
+    # assume cache will be invalidated by third party on write to ir.qweb
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
@@ -106,7 +106,7 @@ class IrQweb(models.AbstractModel):
         irQweb = irQweb.with_context(website_id=current_website.id)
         if 'inherit_branding' not in irQweb.env.context and not self.env.context.get('rendering_bundle'):
             if editable:
-                # in edit mode add branding on ir.ui.view tag nodes
+                # in edit mode add branding on ir.qweb tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
             elif has_group_restricted_editor:
                 # will add the branding on fields (into values)

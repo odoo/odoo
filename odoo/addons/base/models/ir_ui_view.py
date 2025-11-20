@@ -7,7 +7,6 @@ import inspect
 import logging
 import pprint
 import re
-import uuid
 
 from lxml import etree
 from lxml.etree import LxmlError
@@ -145,7 +144,6 @@ class IrUiView(models.Model):
 
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
-    key = fields.Char(index='btree_not_null')
     priority = fields.Integer(string='Sequence', default=16, required=True)
     type = fields.Selection([('list', 'List'),
                              ('form', 'Form'),
@@ -153,8 +151,7 @@ class IrUiView(models.Model):
                              ('pivot', 'Pivot'),
                              ('calendar', 'Calendar'),
                              ('kanban', 'Kanban'),
-                             ('search', 'Search'),
-                             ('qweb', 'QWeb')], string='View Type')
+                             ('search', 'Search')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
                        help="""This field should be used when accessing view arch. It will use translation.
                                Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""")
@@ -227,8 +224,8 @@ actual arch.
             arch_fs = None
             read_file = self.env.context.get('read_arch_from_file') or \
                 ('xml' in config['dev_mode'] and not view.arch_updated)
-            if read_file and view.arch_fs and (view.xml_id or view.key):
-                xml_id = view.xml_id or view.key
+            if read_file and view.arch_fs and view.xml_id:
+                xml_id = view.xml_id
                 try:
                     # reading the file will raise an OSError if it is unreadable
                     arch_fs = get_view_arch_from_file(file_path(view.arch_fs, check_exists=False), xml_id)
@@ -447,7 +444,7 @@ actual arch.
                     root = view
                     while root.inherit_id and root.mode != 'primary':
                         root = root.inherit_id
-                    sibling_primary_views = self.env['ir.ui.view']
+                    sibling_primary_views = self.browse()
                     stack = [root]
                     while stack:
                         root = stack.pop()
@@ -479,7 +476,7 @@ actual arch.
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=e,
-                    view=view.key or view.id,
+                    view=view.xml_id or view.id,
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
                 raise err from None
@@ -522,13 +519,13 @@ actual arch.
                     raise err.with_traceback(e.__traceback__) from None
                 elif e.__context__:
                     err = ValidationError(_(
-                        "Error while validating view (%(view)s):\n\n%(error)s", view=view.key or view.id, error=e.__context__,
+                        "Error while validating view (%(view)s):\n\n%(error)s", view=view.xml_id or view.id, error=e.__context__,
                     ))
                     err.context = {'name': 'invalid view'}
                     raise err.with_traceback(e.__context__.__traceback__) from None
                 else:
                     raise ValidationError(_(
-                        "Error while validating view (%(view)s):\n\n%(error)s", view=view.key or view.id, error=e,
+                        "Error while validating view (%(view)s):\n\n%(error)s", view=view.xml_id or view.id, error=e,
                     ))
 
         return True
@@ -551,10 +548,6 @@ actual arch.
     _inheritance_mode = models.Constraint(
         "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
         "Invalid inheritance mode: if the mode is 'extension', the view must extend an other view",
-    )
-    _qweb_required_key = models.Constraint(
-        "CHECK (type != 'qweb' OR key IS NOT NULL)",
-        "Invalid key: QWeb view should have a key",
     )
     _model_type_inherit_id = models.Index('(model, inherit_id)')
 
@@ -597,7 +590,7 @@ actual arch.
 
             if values.get('arch_base'):
                 self._validate_xml_encoding(values['arch_base'])
-            if not values.get('type'):
+            if not values.get('type') and self._name != 'ir.qweb':
                 if values.get('inherit_id'):
                     values['type'] = self.browse(values['inherit_id']).type
                 else:
@@ -617,8 +610,6 @@ actual arch.
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.
                         pass
-            if not values.get('key') and values.get('type') == 'qweb':
-                values['key'] = "gen_key.%s" % str(uuid.uuid4())[:6]
             if not values.get('name'):
                 values['name'] = "%s %s" % (values.get('model'), values['type'])
             # Create might be called with either `arch` (xml files), `arch_base` (form view) or `arch_db`.
@@ -673,15 +664,6 @@ actual arch.
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
         return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
 
-    def copy_data(self, default=None):
-        has_default_without_key = default and 'key' not in default
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        for view, vals in zip(self, vals_list):
-            if view.key and has_default_without_key:
-                vals['key'] = default.get('key', view.key + '_%s' % str(uuid.uuid4())[:6])
-        return vals_list
-
     # default view selection
     @api.model
     def default_view(self, model, view_type):
@@ -732,27 +714,28 @@ actual arch.
             for name in field_names
         )
 
-        assert query.from_clause == SQL.identifier('ir_ui_view'), f"Unexpected from clause: {query.from_clause}"
+        assert query.from_clause == SQL.identifier(self._table), f"Unexpected from clause: {query.from_clause}"
         where_clause = query.where_clause
 
         query = SQL("""
-            WITH RECURSIVE ir_ui_view_inherits AS (
-                SELECT ir_ui_view.id, %(aliased_names)s
-                FROM ir_ui_view
+            WITH RECURSIVE view_inherits AS (
+                SELECT %(table)s.id, %(aliased_names)s
+                FROM %(table)s
                 WHERE id IN %(ids)s AND (%(where_clause)s)
             UNION
-                SELECT ir_ui_view.id, %(aliased_names)s
-                FROM ir_ui_view
-                INNER JOIN ir_ui_view_inherits parent ON parent.id = ir_ui_view.inherit_id
-                WHERE coalesce(ir_ui_view.model, '') = coalesce(parent.model, '')
-                      AND ir_ui_view.mode = 'extension'
+                SELECT %(table)s.id, %(aliased_names)s
+                FROM %(table)s
+                INNER JOIN view_inherits parent ON parent.id = %(table)s.inherit_id
+                WHERE coalesce(%(table)s.model, '') = coalesce(parent.model, '')
+                      AND %(table)s.mode = 'extension'
                       AND (%(where_clause)s)
             )
             SELECT
                 v.id, %(field_names)s
-            FROM ir_ui_view_inherits as v
+            FROM view_inherits as v
             ORDER BY v.priority, v.id
         """,
+            table=SQL(self._table),
             aliased_names=aliased_names,
             field_names=SQL(', ').join(SQL.identifier('v', f) for f in field_names),
             ids=tuple(self.ids), where_clause=where_clause)
@@ -807,11 +790,11 @@ actual arch.
         if self.group_ids:
             error = _(
                 "View '%(name)s' accessible only to groups %(groups)s ",
-                name=self.key,
+                name=self.xml_id or self.id,
                 groups=", ".join([g.name for g in self.group_ids]
             ))
         else:
-            error = _("View '%(name)s' is private", name=self.key)
+            error = _("View '%(name)s' is private", name=self.xml_id or self.id)
         raise AccessError(error)
 
     def _raise_view_error(self, message, node=None, *, from_exception=None, from_traceback=None):
@@ -1047,7 +1030,7 @@ actual arch.
     def _get_combined_archs(self):
         """ Return the arch of ``self`` (as an etree) combined with its inherited views. """
         parented = []
-        roots = self.env['ir.ui.view']
+        roots = self.browse()
         for root in self:
             parented.append(view_ids := [])
             while True:
@@ -1056,7 +1039,7 @@ actual arch.
                     roots += root
                     break
                 root = root.inherit_id
-        views = self.env['ir.ui.view'].browse(unique(view_id for view_ids in parented for view_id in view_ids))
+        views = self.browse(unique(view_id for view_ids in parented for view_id in view_ids))
 
         # Add inherited views to the list of loading forced views
         # Otherwise, inherited views could not find elements created in
@@ -1109,176 +1092,6 @@ actual arch.
             m.group('view_type'): m.group('view_id')
             for m in ref_re.finditer(node.get('context'))
         }
-
-    # ------------------------------------------------------
-    # Get views and cache
-    # ------------------------------------------------------
-
-    @api.model
-    def _get_cached_template_prefetched_keys(self):
-        return ['id', 'key', 'active']
-
-    def _get_template_minimal_cache_keys(self):
-        return (bool(self.env.context.get('active_test', True)),)
-
-    @api.model
-    @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
-    def _get_cached_template_info(self, id_or_xmlid, _view=None):
-        """ Return the ir.ui.view id from the xml id, use `_preload_views`.
-        """
-        view = None
-        error = False
-        if _view is not None:
-            view = _view
-        elif isinstance(id_or_xmlid, int):
-            view = self.env['ir.ui.view'].sudo().browse(id_or_xmlid)
-            try:
-                view.key
-            except MissingError:
-                view = None
-                error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
-            except UserError as e:
-                view = None
-                error = e
-        else:
-            preload = self.sudo()._preload_views([id_or_xmlid])
-            if id_or_xmlid in preload:
-                info = preload[id_or_xmlid]
-                view = info['view']
-                error = info['error']
-            else:
-                error = SyntaxError('Error compiling template')
-        info = {
-            f: view[f] if view else None
-            for f in self._get_cached_template_prefetched_keys()}
-        info['error'] = error
-        return info
-
-    @api.model
-    def _get_template_view(self, id_or_xmlid: int | str, raise_if_not_found=True) -> models.BaseModel:
-        info = self._get_cached_template_info(id_or_xmlid)
-        if info['error'] and raise_if_not_found:
-            raise info['error']
-        return self.env['ir.ui.view'].browse(info['id'])
-
-    @api.model
-    def _get_template_domain(self, xmlids: list[str]) -> Domain:
-        return Domain('key', 'in', xmlids)
-
-    @api.model
-    def _get_template_order(self) -> str:
-        return "priority, id"
-
-    @api.model
-    def _fetch_template_views(self, ids_or_xmlids: Sequence[int | str]) -> dict[int | str, models.BaseModel | Exception]:
-        """ Return the view corresponding to ``template``, which may be a
-            view ID or an XML ID. Note that this method may be overridden for other
-            kinds of template values.
-        """
-        IrUiView = self.env['ir.ui.view'].sudo().with_context(load_all_views=True, raise_if_not_found=True)
-
-        ids, xmlids = partition(lambda v: isinstance(v, int), ids_or_xmlids)
-
-        # search view in ir.ui.view
-        view_by_id = {}
-        field_names = [f.name for f in IrUiView._fields.values() if f.prefetch is True]
-        if xmlids:
-            domain = Domain('id', 'in', ids) | Domain(self._get_template_domain(xmlids))
-            views = IrUiView.search_fetch(domain, field_names, order=self._get_template_order())
-        else:
-            views = IrUiView.browse(ids)
-
-        for view in views:
-            try:
-                if view.key in view_by_id:
-                    # keeps views according to their priority order
-                    continue
-            except MissingError:
-                continue
-            view_by_id[view.id] = view
-            if view.key:
-                view_by_id[view.key] = view
-
-        # search missing view from xmlid in ir.model.data
-        missing_xmlid_views = [xmlid for xmlid in xmlids if '.' in xmlid and xmlid not in view_by_id]
-        if missing_xmlid_views:
-            domain = Domain.OR(
-                Domain('model', '=', 'ir.ui.view') & Domain('module', '=', res[0]) & Domain('name', '=', res[1])
-                for xmlid in missing_xmlid_views
-                if (res := xmlid.split('.', 1))
-            )
-
-            for model_data in self.env['ir.model.data'].sudo().search(domain):
-                view = IrUiView.browse(model_data.res_id)
-                if view.exists():
-                    view_by_id[view.id] = view
-                    xmlid = f"{model_data.module}.{model_data.name}"
-                    view_by_id[xmlid] = view
-                    if view.key:
-                        view_by_id[view.key] = view
-
-        for key, view in view_by_id.items():
-            # push information in cache
-            self._get_cached_template_info(key, _view=view)
-
-        # create data and errors
-        for view_id in ids:
-            if view_id not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(view_id, _view=False)
-                view_by_id[view_id] = MissingError(self.env._("Template does not exist or has been deleted: %s", view_id))
-        for xmlid in xmlids:
-            if xmlid not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(xmlid, _view=False)
-                view_by_id[xmlid] = MissingError(self.env._("Template not found: '%s'", xmlid))
-        return view_by_id
-
-    @tools.ormcache(cache='templates')
-    def _clear_preload_views_cache_if_needed(self):
-        """ Invalidate the local cache when the orm cache is cleared
-        """
-        self.env.cr.cache.pop('_compile_batch_', None)
-
-    def _preload_views(self, refs: Sequence[int | str]) -> dict[int | str, dict]:
-        """
-        Return self's arch combined with its inherited views archs.
-
-        :param refs: list of id or xmlid
-        :return: dictionary of preloaded information {id or xmlid: {xmlid, ref, view, error}}
-        """
-        self._clear_preload_views_cache_if_needed()
-
-        context = {k: self.env.context.get(k) for k in self.env['ir.qweb']._get_template_cache_keys()}
-        cache_key = tuple(context.values())
-
-        compile_batch = self.env.cr.cache.setdefault('_compile_batch_', {}).setdefault(cache_key, {})
-
-        refs = [int(ref) if isinstance(ref, int) or ref.isdigit() else ref for ref in refs]
-        missing_refs = [ref for ref in refs if ref and ref not in compile_batch]
-        if not missing_refs:
-            return compile_batch
-
-        unknown_views = self._fetch_template_views(missing_refs)
-
-        # add in cache
-        for id_or_xmlid, view in unknown_views.items():
-            if isinstance(view, models.BaseModel):
-                compile_batch[view.id] = compile_batch[id_or_xmlid] = {
-                    'xmlid': view.key or id_or_xmlid,
-                    'ref': view.id,
-                    'view': view,
-                    'error': False,
-                }
-            else:
-                compile_batch[id_or_xmlid] = {
-                    'xmlid': id_or_xmlid,
-                    'view': None,
-                    'ref': None,
-                    'error': view,  # MissingError
-                }
-
-        return compile_batch
 
     #------------------------------------------------------
     # Postprocessing: translation, groups and modifiers
@@ -2412,18 +2225,6 @@ actual arch.
     # QWeb template views
     #------------------------------------------------------
 
-    def _read_template_keys(self):
-        """ Return the list of context keys to use for caching ``_read_template``. """
-        return ['lang', 'inherit_branding', 'edit_translations']
-
-    def _get_view_etrees(self):
-        if not self:
-            return []
-        arch_trees = self._get_combined_archs()
-        for arch_tree in arch_trees:
-            self.distribute_branding(arch_tree)
-        return arch_trees
-
     def _contains_branded(self, node):
         return node.tag == 't'\
             or node.get('t-out') == '0'\
@@ -2517,12 +2318,6 @@ actual arch.
             node.tag is etree.ProcessingInstruction
             and node.target == 'apply-inheritance-specs-node-removal'
         )
-
-    @api.readonly
-    @api.model
-    def render_public_asset(self, template, values=None):
-        self._get_template_view(template).sudo()._check_view_access()
-        return self.env['ir.qweb'].sudo()._render(template, values)
 
     def _render_template(self, template, values=None):
         return self.env['ir.qweb']._render(template, values)

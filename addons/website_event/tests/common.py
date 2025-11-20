@@ -47,7 +47,7 @@ class OnlineEventCase(EventCase):
         if menus_out:
             self.assertTrue(all(menu_name not in menus.mapped('name') for menu_name in menus_out))
 
-        home_view = self.env['ir.ui.view'].search([('name', '=', f'Home {event.name}')])
+        home_view = self.env['ir.qweb'].search([('name', '=', f'Home {event.name}')])
         if 'Home' in menus_in:
             self.assertTrue(bool(home_view))
         else:

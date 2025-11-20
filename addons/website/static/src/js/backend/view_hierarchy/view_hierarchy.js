@@ -20,7 +20,7 @@ export class ViewHierarchy extends Component {
 
         onWillStart(async () => {
             ({ sibling_views: this.siblingViews, hierarchy: this.state.viewTree } =
-                await this.orm.call("ir.ui.view", "get_view_hierarchy", [this.viewId], {}));
+                await this.orm.call("ir.qweb", "get_view_hierarchy", [this.viewId], {}));
 
             this.setupWebsiteNames();
             this.setupHideGenericViewByWebsite();

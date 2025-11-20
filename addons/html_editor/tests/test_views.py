@@ -8,23 +8,21 @@ class TestViews(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        View = self.env['ir.ui.view']
-        self.first_view = View.create({
+        Qweb = self.env['ir.qweb']
+        self.first_view = Qweb.create({
             'name': 'Test View 1',
-            'type': 'qweb',
             'arch': '<div>Hello World</div>',
             'key': 'html_editor.test_first_view',
         })
-        self.second_view = View.create({
+        self.second_view = Qweb.create({
             'name': 'Test View 2',
-            'type': 'qweb',
             'arch': '<div><t t-call="html_editor.test_first_view"/></div>',
             'key': 'html_editor.test_second_view',
         })
 
     def test_infinite_inherit_loop(self):
         # Creates an infinite loop: A t-call B and A inherit from B
-        View = self.env['ir.ui.view']
+        View = self.env['ir.qweb']
 
         self.second_view.write({
             'inherit_id': self.first_view.id,

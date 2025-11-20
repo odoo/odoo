@@ -21,8 +21,7 @@ class TestWebsiteControllerPage(HttpCase):
             "perm_read": True,
         })
 
-        cls.listing_view = cls.env["ir.ui.view"].create({
-            "type": "qweb",
+        cls.listing_view = cls.env["ir.qweb"].create({
             "model": cls.model.model,
             "arch": """<t t-call="website.layout">
                 <t t-set="_activeClasses" t-translation="off">border-primary</t>
@@ -45,8 +44,7 @@ class TestWebsiteControllerPage(HttpCase):
             </t> """
         })
 
-        cls.single_view = cls.env["ir.ui.view"].create({
-            "type": "qweb",
+        cls.single_view = cls.env["ir.qweb"].create({
             "model": cls.model.model,
             "arch": """<t t-call="website.layout">
                 <div class="test_record" t-out="record.display_name" />

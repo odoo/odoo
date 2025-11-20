@@ -18,7 +18,7 @@ let websiteSnippetsPromise;
 export const getWebsiteSnippets = async () => {
     if (!websiteSnippetsPromise) {
         websiteSnippetsPromise = unmockedOrm(
-            "ir.ui.view",
+            "ir.qweb",
             "render_public_asset",
             ["website.snippets"],
             {}

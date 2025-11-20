@@ -30,7 +30,7 @@ class TestWebsiteSaleComparison(TransactionCase):
         # the key, but we want to test also for `MODULE_UNINSTALL_FLAG`.
         product_attributes_body = Website0.viewref('website_sale_comparison.product_attributes_body')
         test_view_key = 'my_test.my_key'
-        self.env['ir.ui.view'].with_context(website_id=None).create({
+        self.env['ir.qweb'].with_context(website_id=None).create({
             'name': 'test inherited view',
             'key': test_view_key,
             'inherit_id': product_attributes_body.id,

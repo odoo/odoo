@@ -182,13 +182,13 @@ test("pasted/dropped images are converted to attachments on snippet save", async
         };
     });
 
-    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+    onRpc("ir.qweb", "save_snippet", ({ kwargs }) => {
         expect.step("save snippet");
         expect(kwargs.arch).toInclude('src="/url_image-1.png?access_token=1234"');
         return "Custom Cover";
     });
 
-    onRpc("ir.ui.view", "save", ({ args }) => {
+    onRpc("ir.qweb", "save", ({ args }) => {
         expect.step("save");
         expect(args[1]).toInclude('src="/url_image-1.png?access_token=1234"');
         expect(args[1]).toInclude('src="/url_image-2.png?access_token=1234"');

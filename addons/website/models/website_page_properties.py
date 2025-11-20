@@ -126,10 +126,10 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _compute_can_publish(self):
         for record in self:
             target = record.target_model_id
-            if target._name == 'ir.ui.view':
+            if target._name == 'ir.qweb':
                 # Check we are in a non-custom state to avoid messing with
                 # manually set values.
-                record.can_publish = self._is_ir_ui_view_published(target) or self._is_ir_ui_view_unpublished(target)
+                record.can_publish = self._is_ir_qweb_published(target) or self._is_ir_qweb_unpublished(target)
 
                 # FIXME disabled for the moment because it does not hide the url
                 # in the sitemap and it is difficult to find a fix that would be
@@ -144,8 +144,8 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _compute_is_published(self):
         for record in self:
             target = record.target_model_id
-            if target._name == 'ir.ui.view':
-                record.is_published = self._is_ir_ui_view_published(target)
+            if target._name == 'ir.qweb':
+                record.is_published = self._is_ir_qweb_published(target)
             elif 'is_published' in target._fields:
                 record.is_published = target.is_published
             else:
@@ -154,28 +154,28 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _inverse_is_published(self):
         self.ensure_one()
         target = self.target_model_id
-        if target._name == 'ir.ui.view':
+        if target._name == 'ir.qweb':
             if self.can_publish:
                 if self.is_published:
                     # Publish
                     target.visibility = ''
-                    target.group_ids -= self._get_ir_ui_view_unpublish_group()
+                    target.group_ids -= self._get_ir_qweb_unpublish_group()
                 else:
                     # Unpublish
                     target.visibility = 'restricted_group'
-                    target.group_ids += self._get_ir_ui_view_unpublish_group()
+                    target.group_ids += self._get_ir_qweb_unpublish_group()
         elif 'is_published' in target._fields:
             target.is_published = self.is_published
 
-    def _get_ir_ui_view_unpublish_group(self):
+    def _get_ir_qweb_unpublish_group(self):
         return self.env.ref('base.group_user')
 
-    def _is_ir_ui_view_unpublished(self, view):
+    def _is_ir_qweb_unpublished(self, view):
         view.ensure_one()
         return (view.visibility == 'restricted_group' and
-                self._get_ir_ui_view_unpublish_group() in view.group_ids.all_implied_ids)
+                self._get_ir_qweb_unpublish_group() in view.group_ids.all_implied_ids)
 
-    def _is_ir_ui_view_published(self, view):
+    def _is_ir_qweb_published(self, view):
         view.ensure_one()
         return not view.visibility
 

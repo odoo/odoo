@@ -137,7 +137,6 @@ class TestAutoComplete(TransactionCase):
     def _create_page(cls, name, content, url):
         cls.env['website.page'].create({
             'name': name,
-            'type': 'qweb',
             'arch': f'<div>{content}</div>',
             'url': url,
             'is_published': True,

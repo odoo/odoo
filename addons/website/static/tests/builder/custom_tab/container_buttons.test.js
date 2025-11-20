@@ -120,7 +120,7 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     };
     await setupWebsiteBuilder(dummySnippet, { snippets });
 
-    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+    onRpc("ir.qweb", "save_snippet", ({ kwargs }) => {
         let { name, arch, snippet_key, thumbnail_url } = kwargs;
         // Add `data-snippet` if it is missing.
         if (!arch.includes("data-snippet")) {
@@ -134,7 +134,7 @@ test("Use the sidebar 'save snippet' buttons", async () => {
         snippets.snippet_custom.push(customSnippet);
         return name;
     });
-    onRpc("ir.ui.view", "render_public_asset", (args) => getSnippetView(snippets));
+    onRpc("ir.qweb", "render_public_asset", (args) => getSnippetView(snippets));
 
     const saveSectionSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_save";

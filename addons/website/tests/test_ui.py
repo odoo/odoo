@@ -89,7 +89,6 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
         page = Page.create({
             'name': 'Test page',
-            'type': 'qweb',
             'arch': '''
                 <t t-call="website.layout">
                     <div>rumbler</div>
@@ -113,12 +112,11 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']
-        View = self.env['ir.ui.view']
+        Qweb = self.env['ir.qweb']
         Page = self.env['website.page']
 
-        self.generic_view = View.create({
+        self.generic_view = Qweb.create({
             'name': 'Generic',
-            'type': 'qweb',
             'arch': '''
                 <div>content</div>
             ''',
@@ -142,7 +140,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         generic_page.arch = oe_structure_layout
         oe_structure_layout = generic_page.arch
         self.start_tour(self.env['website'].get_client_action_url('/generic'), 'html_editor_multiple_templates', login='admin')
-        self.assertEqual(View.search_count([('key', '=', 'test.generic_view')]), 2, "homepage view should have been COW'd")
+        self.assertEqual(Qweb.search_count([('key', '=', 'test.generic_view')]), 2, "homepage view should have been COW'd")
         self.assertTrue(generic_page.arch == oe_structure_layout, "Generic homepage view should be untouched")
         self.assertEqual(len(generic_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 0, "oe_structure view should have been deleted when aboutus was COW")
         specific_page = Website.with_context(website_id=1).viewref('test.generic_view')
@@ -366,9 +364,8 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_07_snippet_version(self):
         website_snippets = self.env.ref('website.snippets')
-        self.env['ir.ui.view'].create([{
+        self.env['ir.qweb'].create([{
             'name': 'Test snip',
-            'type': 'qweb',
             'key': 'website.s_test_snip',
             'arch': """
                 <section class="s_test_snip">
@@ -376,7 +373,6 @@ class TestUi(HttpCaseWithWebsiteUser):
                 </section>
             """,
         }, {
-            'type': 'qweb',
             'inherit_id': website_snippets.id,
             'arch': """
                 <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">
@@ -451,7 +447,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             'domain': '',
             'sequence': 20
         })
-        self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
+        self.env['ir.qweb'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
                 <section class="s_text_block" data-snippet="s_text_block">
@@ -583,9 +579,8 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_drop_404_ir_attachment_url(self):
         website_snippets = self.env.ref('website.snippets')
-        self.env['ir.ui.view'].create([{
+        self.env['ir.qweb'].create([{
             'name': '404 Snippet',
-            'type': 'qweb',
             'key': 'website.s_404_snippet',
             'arch': """
                 <section class="s_404_snippet">
@@ -595,7 +590,6 @@ class TestUi(HttpCaseWithWebsiteUser):
                 </section>
             """,
         }, {
-            'type': 'qweb',
             'inherit_id': website_snippets.id,
             'arch': """
                 <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">

@@ -75,7 +75,7 @@ class ResCompany(models.CachedModel):
     company_registry = fields.Char(related='partner_id.company_registry', string="Company ID", readonly=False)
     company_registry_placeholder = fields.Char(related='partner_id.company_registry_placeholder')
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
-    external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
+    external_report_layout_id = fields.Many2one('ir.qweb', 'Document Template')
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway"), ('Tajawal', 'Tajawal'), ('Noto_Sans_Mono', 'Noto Sans Mono')], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()

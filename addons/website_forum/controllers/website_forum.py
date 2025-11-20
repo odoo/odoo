@@ -628,7 +628,7 @@ class WebsiteForum(WebsiteProfile):
         if not post.can_moderate:
             raise AccessError(_('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
         values = self._prepare_mark_as_offensive_values(post, **kwargs)
-        return request.env['ir.ui.view']._render_template('website_forum.mark_as_offensive', values)
+        return request.env['ir.qweb']._render_template('website_forum.mark_as_offensive', values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
     def post_http_ask_for_mark_as_offensive(self, forum, post, **kwargs):

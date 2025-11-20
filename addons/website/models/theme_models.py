@@ -49,7 +49,7 @@ class ThemeIrAsset(models.Model):
 
 
 class ThemeIrUiView(models.Model):
-    _name = 'theme.ir.ui.view'
+    _name = 'theme.ir.qweb'
     _description = 'Theme UI View'
 
     def compute_arch_fs(self):
@@ -67,21 +67,21 @@ class ThemeIrUiView(models.Model):
     active = fields.Boolean(default=True)
     arch = fields.Text(translate=xml_translate)
     arch_fs = fields.Char(default=compute_arch_fs)
-    inherit_id = fields.Reference(selection=[('ir.ui.view', 'ir.ui.view'), ('theme.ir.ui.view', 'theme.ir.ui.view')])
-    copy_ids = fields.One2many('ir.ui.view', 'theme_template_id', 'Views using a copy of me', copy=False, readonly=True)
+    inherit_id = fields.Reference(selection=[('ir.qweb', 'ir.qweb'), ('theme.ir.qweb', 'theme.ir.qweb')])
+    copy_ids = fields.One2many('ir.qweb', 'theme_template_id', 'Views using a copy of me', copy=False, readonly=True)
     customize_show = fields.Boolean()
 
     def _convert_to_base_model(self, website, **kwargs):
         self.ensure_one()
         inherit = self.inherit_id
-        if self.inherit_id and self.inherit_id._name == 'theme.ir.ui.view':
+        if self.inherit_id and self.inherit_id._name == 'theme.ir.qweb':
             inherit = self.inherit_id.with_context(active_test=False).copy_ids.filtered(lambda x: x.website_id == website)
             if not inherit:
                 # inherit_id not yet created, add to the queue
                 return False
 
         if inherit and inherit.website_id != website:
-            website_specific_inherit = self.env['ir.ui.view'].with_context(active_test=False).search([
+            website_specific_inherit = self.env['ir.qweb'].with_context(active_test=False).search([
                 ('key', '=', inherit.key),
                 ('website_id', '=', website.id)
             ], limit=1)
@@ -89,7 +89,6 @@ class ThemeIrUiView(models.Model):
                 inherit = website_specific_inherit
 
         new_view = {
-            'type': self.type or 'qweb',
             'name': self.name,
             'arch': self.arch,
             'key': self.key,
@@ -122,7 +121,7 @@ class ThemeIrAttachment(models.Model):
         new_attach = {
             'key': self.key,
             'public': True,
-            'res_model': 'ir.ui.view',
+            'res_model': 'ir.qweb',
             'type': 'url',
             'name': self.name,
             'url': self.url,
@@ -181,7 +180,7 @@ class ThemeWebsitePage(models.Model):
     ]
 
     url = fields.Char()
-    view_id = fields.Many2one('theme.ir.ui.view', required=True, index=True, ondelete="cascade")
+    view_id = fields.Many2one('theme.ir.qweb', required=True, index=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
     is_published = fields.Boolean()
     is_new_page_template = fields.Boolean(string="New Page Template")
@@ -313,7 +312,7 @@ class ThemeUtils(models.AbstractModel):
     def _toggle_view(self, xml_id, active):
         obj = self.env.ref(xml_id)
         website = self.env['website'].get_current_website()
-        if obj._name == 'theme.ir.ui.view':
+        if obj._name == 'theme.ir.qweb':
             obj = obj.with_context(active_test=False)
             obj = obj.copy_ids.filtered(lambda x: x.website_id == website)
         else:
@@ -322,7 +321,7 @@ class ThemeUtils(models.AbstractModel):
             # by default. So if a post copy asks to enable/disable a view which
             # is already enabled/disabled, we would not consider it otherwise it
             # would COW the view for nothing.
-            View = self.env['ir.ui.view'].with_context(active_test=False)
+            View = self.env['ir.qweb'].with_context(active_test=False)
             has_specific = obj.key and View.search_count([
                 ('key', '=', obj.key),
                 ('website_id', '=', website.id)
@@ -355,9 +354,9 @@ class ThemeUtils(models.AbstractModel):
 
 
 class IrUiView(models.Model):
-    _inherit = 'ir.ui.view'
+    _inherit = 'ir.qweb'
 
-    theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False, index='btree_not_null')
+    theme_template_id = fields.Many2one('theme.ir.qweb', copy=False, index='btree_not_null')
 
     def write(self, vals):
         # During a theme module update, theme views' copies receiving an arch
@@ -366,7 +365,7 @@ class IrUiView(models.Model):
         test_mode = modules.module.current_test
         if not (test_mode or self.pool._init):
             return super().write(vals)
-        no_arch_updated_views = other_views = self.env['ir.ui.view']
+        no_arch_updated_views = other_views = self.env['ir.qweb']
         for record in self:
             # Do not mark the view as user updated if original view arch is similar
             arch = vals.get('arch', vals.get('arch_base'))

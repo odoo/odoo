@@ -67,15 +67,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
         self.company_imgs = frozendict(_file_cache)
 
     def _set_templates_and_layouts(self):
-        self.layout_template1 = self.env['ir.ui.view'].create({
+        self.layout_template1 = self.env['ir.qweb'].create({
             'name': 'layout_template1',
             'key': 'web.layout_template1',
-            'type': 'qweb',
             'arch': '''<div></div>''',
         })
         self.env['ir.model.data'].create({
             'name': self.layout_template1.name,
-            'model': 'ir.ui.view',
+            'model': 'ir.qweb',
             'module': 'web',
             'res_id': self.layout_template1.id,
         })
@@ -87,15 +86,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
             'view_id': self.layout_template1.id,
             'name': 'report_%s' % self.layout_template1.name,
         })
-        self.layout_template2 = self.env['ir.ui.view'].create({
+        self.layout_template2 = self.env['ir.qweb'].create({
             'name': 'layout_template2',
             'key': 'web.layout_template2',
-            'type': 'qweb',
             'arch': '''<div></div>''',
         })
         self.env['ir.model.data'].create({
             'name': self.layout_template2.name,
-            'model': 'ir.ui.view',
+            'model': 'ir.qweb',
             'module': 'web',
             'res_id': self.layout_template2.id,
         })

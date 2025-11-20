@@ -363,7 +363,7 @@ class EventEvent(models.Model):
         for event in self:
             if event.menu_id and not event.website_menu:
                 # do not rely on cascade, as it is done in SQL -> not calling override and
-                # letting some ir.ui.views in DB
+                # letting some ir.qwebs in DB
                 (event.menu_id + event.menu_id.child_id).sudo().unlink()
             elif event.website_menu and not event.menu_id:
                 root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
@@ -422,13 +422,13 @@ class EventEvent(models.Model):
         self.browse().check_access('write')
         view_id = False
         if not url:
-            # add_menu=False, ispage=False -> simply create a new ir.ui.view with name
+            # add_menu=False, ispage=False -> simply create a new ir.qweb with name
             # and template
             page_result = self.env['website'].sudo().new_page(
                 name=f'{name} {self.name}', template=xml_id,
                 add_menu=False, ispage=False)
             view_id = page_result['view_id']
-            view = self.env["ir.ui.view"].browse(view_id)
+            view = self.env["ir.qweb"].browse(view_id)
             url = f"/event/{self.env['ir.http']._slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
 
         parent_id = self.menu_id.id

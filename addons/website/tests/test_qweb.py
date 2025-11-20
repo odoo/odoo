@@ -18,9 +18,8 @@ class TestQweb(TransactionCaseWithUserDemo):
 
     def test_qweb_post_processing_att(self):
         website = self.env.ref('website.default_website')
-        t = self.env['ir.ui.view'].create({
+        t = self.env['ir.qweb'].create({
             'name': 'test',
-            'type': 'qweb',
             'arch_db': '''<t t-name="attr-escaping">
                 <img src="http://test.external.img/img.png"/>
                 <img t-att-src="url"/>
@@ -34,15 +33,13 @@ class TestQweb(TransactionCaseWithUserDemo):
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_render_context_website(self):
-        self.env['ir.ui.view'].create({
+        self.env['ir.qweb'].create({
             'name': 'test',
-            'type': 'qweb',
             'key': 'website.dummy',
             'arch_db': '<t t-name="dummy"><span>Stuff</span></t>'
         })
-        template = self.env['ir.ui.view'].create({
+        template = self.env['ir.qweb'].create({
             'name': 'test',
-            'type': 'qweb',
             'key': 'root',
             'arch_db': '''<t t-name="root"><div><t t-call="website.dummy"/></div></t>'''
         })
@@ -65,34 +62,29 @@ class TestQweb(TransactionCaseWithUserDemo):
         """
         see also test_call_query_count test in base/tests/test_queb.py
         """
-        IrUiView = self.env['ir.ui.view']
-        IrUiView.create({
+        Qweb = self.env['ir.qweb']
+        Qweb.create({
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_unused',
             'arch_db': '''<span>unused</span>''',
         })
-        header_0 = IrUiView.create({
+        header_0 = Qweb.create({
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_header_0',
             'arch_db': '''<span>0</span>''',
         })
-        IrUiView.create([{  # website_id=1
+        Qweb.create([{  # website_id=1
             'name': 'test',
-            'type': 'qweb',
             'website_id': 1,
             'key': 'base.testing_header_1',
             'arch_db': '''<span>WITH WEBSITE</span>''',
         }, {  # same key but website_id=False
             'name': 'test',
-            'type': 'qweb',
             'website_id': False,
             'key': 'base.testing_header_1',
             'arch_db': '''<span>NO WEBSITE</span>''',
         }, {
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_header',
             'arch_db': f'''<t t-name="base.testing_header">
                 <t t-call="{header_0.id}"/>
@@ -101,17 +93,14 @@ class TestQweb(TransactionCaseWithUserDemo):
             </t>''',
         }, {
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_footer_0',
             'arch_db': '''<span>0</span>''',
         }, {
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_footer_1',
             'arch_db': '''<span>1</span>''',
         }, {  # website_id=False
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_footer',
             'arch_db': '''<t t-name="base.testing_footer">
                 <t t-call="base.testing_footer_0"/>
@@ -120,7 +109,6 @@ class TestQweb(TransactionCaseWithUserDemo):
             </t>''',
         }, {  # website_id=1
             'name': 'test',
-            'type': 'qweb',
             'website_id': 1,
             'key': 'base.testing_footer',
             'arch_db': '''<t t-name="base.testing_footer">
@@ -130,7 +118,6 @@ class TestQweb(TransactionCaseWithUserDemo):
             </t>''',
         }, {
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_layout',
             'arch_db': '''<t t-name="base.testing_layout">
                 <section>
@@ -140,9 +127,8 @@ class TestQweb(TransactionCaseWithUserDemo):
                 </section>
             </t>''',
         }])
-        view = IrUiView.create({
+        view = Qweb.create({
             'name': 'test',
-            'type': 'qweb',
             'key': 'base.testing_content',
             'arch_db': '''<t t-call="base.testing_layout"><div><t t-call="base.testing_header_0"/><t t-out="doc"/></div></t>''',
         })
@@ -192,7 +178,7 @@ class TestQweb(TransactionCaseWithUserDemo):
             if 'templates' in args:
                 env.registry.clear_cache('templates')
             if 'view' in args:
-                IrUiView.invalidate_model()
+                Qweb.invalidate_model()
 
         def check(template, name, queries):
             init = env.cr.sql_log_count
@@ -392,9 +378,8 @@ class TestQwebDataSnippet(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.ui.view'].create({
+        cls.env['ir.qweb'].create({
             'name': 'some_html',
-            'type': 'qweb',
             'key': 'website.some_html',
             'arch': '''
                 <t t-name="some_html">
@@ -406,9 +391,8 @@ class TestQwebDataSnippet(TransactionCase):
             '''
         })
 
-        cls.env['ir.ui.view'].create({
+        cls.env['ir.qweb'].create({
             'name': 's_a',
-            'type': 'qweb',
             'key': 'website.s_a',
             'arch': '''
                 <t t-name="s_a">
@@ -419,9 +403,8 @@ class TestQwebDataSnippet(TransactionCase):
                 </t>
             '''
         })
-        cls.env['ir.ui.view'].create({
+        cls.env['ir.qweb'].create({
             'name': 's_b',
-            'type': 'qweb',
             'key': 'website.s_b',
             'arch': '''
                 <t t-name="s_b">
@@ -431,9 +414,8 @@ class TestQwebDataSnippet(TransactionCase):
                 </t>
             '''
         })
-        cls.env['ir.ui.view'].create({
+        cls.env['ir.qweb'].create({
             'name': 's_c',
-            'type': 'qweb',
             'key': 'website.s_c',
             'arch': '''
                 <t t-name="s_c">
@@ -443,9 +425,8 @@ class TestQwebDataSnippet(TransactionCase):
                 </t>
             '''
         })
-        cls.env['ir.ui.view'].create({
+        cls.env['ir.qweb'].create({
             'name': 's_d',
-            'type': 'qweb',
             'key': 'website.s_d',
             'arch_db': '''
                 <t t-name="s_d">
@@ -462,9 +443,8 @@ class TestQwebDataSnippet(TransactionCase):
     )
 
     def _render_snippet(self, snippet):
-        render_template = self.env['ir.ui.view'].create({
+        render_template = self.env['ir.qweb'].create({
             'name': f't-snippet-call_{snippet}',
-            'type': 'qweb',
             'arch': f'''
                 <t t-snippet-call="{snippet}"/>
             '''
@@ -521,11 +501,11 @@ class TestQwebDataSnippet(TransactionCase):
         actual_queries = []
         with contextmanager(lambda: self._patchExecute(actual_queries))():
             with MockRequest(self.env, website=self.env['website'].browse(1)):
-                render = self.env['ir.ui.view'].render_public_asset('website.snippets')
+                render = self.env['ir.qweb'].render_public_asset('website.snippets')
                 self.assertTrue('name="Blockquote"' in render)
 
-        re_sql = re.compile(r'\bir_ui_view\b', re.IGNORECASE)
-        ir_ui_view_queries = [q for q in actual_queries if re_sql.search(q)]
+        re_sql = re.compile(r'\bir_qweb\b', re.IGNORECASE)
+        ir_qweb_queries = [q for q in actual_queries if re_sql.search(q)]
 
         # nb_snippets = 156
         first_search = 1  # for key & website
@@ -534,8 +514,8 @@ class TestQwebDataSnippet(TransactionCase):
         get_root_view = 1  # determine the root views
         combine_views = 3  # Queries performed to execute the read combine
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9
-        self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
+        all_ir_qweb_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9
+        self.assertEqual(len(ir_qweb_queries), all_ir_qweb_queries, f'ir_qweb queries: {all_ir_qweb_queries}')
 
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
         website_queries = [q for q in actual_queries if re_sql.search(q)]

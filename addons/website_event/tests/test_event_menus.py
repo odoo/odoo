@@ -24,7 +24,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         })
         self.assertTrue(event.website_menu)
         self.assertTrue(event.introduction_menu)
-        self.env['ir.ui.view'].create({
+        self.env['ir.qweb'].create({
             'arch_db': '<xpath expr="//div[@id=\'oe_structure_website_event_intro_2\']" position="replace"><p>This is an intro</p></xpath>',
             'inherit_id': event.introduction_menu_ids.view_id.id,
             'key': 'website_event.intro-test-child',
@@ -226,7 +226,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
             end_url_1 = event_1_menu.url.split("/")[-1]
             end_url_2 = event_2_menu.url.split("/")[-1]
             self.assertNotEqual(end_url_1, end_url_2)
-            IrUiView = self.env["ir.ui.view"]
+            IrUiView = self.env["ir.qweb"]
             self.assertEqual(
                 IrUiView.search_count([("key", "=", "website_event.%s" % end_url_1)]),
                 1,

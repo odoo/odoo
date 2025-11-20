@@ -26,7 +26,6 @@ class TestControllers(tests.HttpCase):
         for i in range(0, 10):
             new_page = Page.create({
                 'name': 'Generic',
-                'type': 'qweb',
                 'arch': '''
                     <div>content</div>
                 ''',
@@ -196,9 +195,8 @@ class TestControllers(tests.HttpCase):
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
 
     def test_07_get_alt_images(self):
-        test_view = self.env["ir.ui.view"].create({
+        test_view = self.env["ir.qweb"].create({
             "name": "Image Template Test View",
-            "type": "qweb",
             "arch_db": """
                 <template>
                     <div>
@@ -213,7 +211,7 @@ class TestControllers(tests.HttpCase):
                 </template>
             """,
         })
-        models = [{"model": "ir.ui.view", "id": test_view.id, "field": "arch"}]
+        models = [{"model": "ir.qweb", "id": test_view.id, "field": "arch"}]
 
         with MockRequest(self.env, website=self.env.ref('website.default_website')):
             result = Website().get_alt_images(models)

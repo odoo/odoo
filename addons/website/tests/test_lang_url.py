@@ -91,9 +91,8 @@ class TestLangUrl(TestLangUrlCommon):
             raise ValueError('Session info not found in web page')
 
     def test_05_invalid_ipv6_url(self):
-        view = self.env['ir.ui.view'].create({
+        view = self.env['ir.qweb'].create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<a id="foo" href="http://]">Invalid IP V6</a>',
             'key': 'test.invalid_ipv6_view',
         })
@@ -127,7 +126,6 @@ class TestControllerRedirect(TestLangUrlCommon):
     def setUp(self):
         self.page = self.env['website.page'].create({
             'name': 'Test View',
-            'type': 'qweb',
             'arch': '''<t t-call="website.layout">Test View Page</t>''',
             'key': 'test.test_view',
             'url': '/page_1',

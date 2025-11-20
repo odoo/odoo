@@ -41,7 +41,6 @@ export function openViewItem({ env }) {
                 title: _t("Select a view"),
                 multiSelect: false,
                 domain: [
-                    ["type", "!=", "qweb"],
                     ["type", "!=", "search"],
                 ],
                 onSelected,

@@ -223,12 +223,12 @@ class IrActionsReport(models.Model):
             "domain",
         }
 
-    def associated_view(self):
+    def associated_template(self):
         """Used in the ir.actions.report form view in order to search naively after the view(s)
         used in the rendering.
         """
         self.ensure_one()
-        action_ref = self.env.ref('base.action_ui_view')
+        action_ref = self.env.ref('base.action_qweb')
         if not action_ref or len(self.report_name.split('.')) < 2:
             return False
         action_data = action_ref.read()[0]
@@ -774,7 +774,7 @@ class IrActionsReport(models.Model):
 
         # Browse the user instead of using the sudo self.env.user
         user = self.env['res.users'].browse(self.env.uid)
-        view_obj = self.env['ir.ui.view'].with_context(inherit_branding=False)
+        qweb_obj = self.env['ir.qweb'].with_context(inherit_branding=False)
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
@@ -782,7 +782,7 @@ class IrActionsReport(models.Model):
             res_company=self.env.company,
             web_base_url=self.env['ir.config_parameter'].sudo().get_str('web.base.url'),
         )
-        return view_obj._render_template(template, values).encode()
+        return qweb_obj._render_template(template, values).encode()
 
     def _handle_merge_pdfs_error(self, error=None, error_stream=None):
         raise UserError(_("Odoo is unable to merge the generated PDFs."))

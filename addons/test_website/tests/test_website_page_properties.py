@@ -17,7 +17,6 @@ class TestWebsitePageProperties(HttpCase):
         # tracking
         self.env['website.page'].create({
             'name': 'Base',
-            'type': 'qweb',
             'arch': '<div><a href="/cool-page">Cool page</a></div>',
             'key': 'test.cool_page',
             'url': '/dependency_page',

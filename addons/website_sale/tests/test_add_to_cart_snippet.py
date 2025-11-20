@@ -21,9 +21,8 @@ class TestAddToCartSnippet(HttpCase):
             <input type="hidden" name="user_id" t-att-value="user_id.id"/>
         </form>
         """
-        redirect_form = cls.env['ir.ui.view'].create({
+        redirect_form = cls.env['ir.qweb'].create({
             'name': "Dummy Redirect Form",
-            'type': 'qweb',
             'arch': arch,
         })
         cls.dummy_provider = cls.env['payment.provider'].create({

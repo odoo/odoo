@@ -46,8 +46,8 @@ class Website extends models.Model {
     }
 }
 
-class IrUiView extends models.Model {
-    _name = "ir.ui.view";
+class IrQweb extends models.Model {
+    _name = "ir.qweb";
     render_public_asset() {
         return getWebsiteSnippets();
     }
@@ -61,7 +61,7 @@ export const invisibleEl =
 export function defineWebsiteModels() {
     describe.current.tags("desktop");
     defineMailModels();
-    defineModels([Website, IrUiView]);
+    defineModels([Website, IrQweb]);
     onRpc("/website/theme_customize_data_get", () => []);
     onRpc("website", "web_search_read", () => ({
         length: 1,
@@ -246,7 +246,7 @@ export async function setupWebsiteBuilder(
     });
 
     if (snippets) {
-        patchWithCleanup(IrUiView.prototype, {
+        patchWithCleanup(IrQweb.prototype, {
             render_public_asset: () => getSnippetView(snippets),
         });
     }
