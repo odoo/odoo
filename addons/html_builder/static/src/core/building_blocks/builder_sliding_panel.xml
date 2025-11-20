@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderSlidingPanel">
+    <button t-ref="openButton"
+        class="o-hb-btn btn"
+        t-on-click="showSlidingPanel"
+        t-att-class="props.class + (props.textContent ? '' : ' fa ' + props.icon)"
+    >
+        <t t-out="props.textContent"/>
+    </button>
+    <div t-ref="slidingPanel"
+        class="hb-sliding-panel mb-1 h-100 d-none"
+        t-on-click="onBackdropClick"
+        t-att-class="{'hb-sliding-panel-dark': props.darkBackground}"
+    >
+        <div class="hb-sliding-panel-content d-flex flex-column" t-att-class="props.fullHeight ? 'h-100' : 'pb-3'">
+            <div class="hb-sliding-panel-header">
+                <div class="hb-sliding-panel-label d-flex align-items-center p-2">
+                    <button class="btn p-1" t-on-click="hideSlidingPanel" aria-label="close" tabindex="0" >
+                        <i class="oi oi-chevron-left me-1" role="presentation"/>
+                        <t t-out="state.optionContainerName + ' / ' + props.label"/>
+                    </button>
+                </div>
+            </div>
+            <t t-slot="default" close="this.hideSlidingPanel.bind(this)"/>
+        </div>
+    </div>
+</t>
+
+</templates>
