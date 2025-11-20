@@ -709,3 +709,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_header_color_and_undo_redo_issues(self):
         self.start_tour("/", "undo_redo_header_oriented_issue", login="admin")
+
+    def test_website_custom_colors_picking(self):
+        self.start_tour('/', 'website_custom_colors_picking', login='admin')

@@ -1077,7 +1077,8 @@ registry.anchorSlide = publicWidget.Widget.extend({
         hash = '#' + $.escapeSelector(hash.substring(1));
         var $anchor = $(hash);
         const scrollValue = $anchor.attr('data-anchor');
-        if (!$anchor.length || !scrollValue) {
+        // No need to scroll when target is _blank as it should open in new tab
+        if (!$anchor.length || !scrollValue || this.el.target === "_blank") {
             return;
         }
 
