@@ -46,7 +46,30 @@ class TestUIPortal(TestPortal):
 
     def test_rating_record_portal(self):
         record_rating = self.env["mail.test.rating"].create({"name": "Test rating record"})
+        # To check if there is no message with rating, there is no rating cards feature.
+        record_rating.message_post(
+            body="Message without rating",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
         self.start_tour(
-            f"/my/test_portal_rating_records/{record_rating.id}?token={record_rating._portal_ensure_token()}",
-            "portal_rating_tour",
+            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=True&token={record_rating._portal_ensure_token()}",
+            "portal_rating_tour"
+        )
+
+    def test_display_rating_portal(self):
+        record_rating = self.env["mail.test.rating"].create({"name": "Test rating record"})
+        record_rating.message_post(
+            body="Message with rating",
+            message_type="comment",
+            rating_value="5",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.start_tour(
+            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=True&token={record_rating._portal_ensure_token()}",
+            "portal_display_rating_tour",
+        )
+        self.start_tour(
+            f"/my/test_portal_rating_records/{record_rating.id}?display_rating=False&token={record_rating._portal_ensure_token()}",
+            "portal_not_display_rating_tour",
         )
