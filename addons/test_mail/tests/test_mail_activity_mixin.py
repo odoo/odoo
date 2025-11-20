@@ -397,6 +397,19 @@ class TestActivityMixin(TestActivityCommon):
         })
         self.assertEqual(MailTestActivity.search([('activity_user_id', '!=', True)]), self.test_record_2)
 
+    def test_mail_activity_mixin_search_exception_decoration(self):
+        """Test the search on "activity_exception_decoration".
+
+        Domain ('activity_exception_decoration', '!=', False) should only return
+        records that have at least one warning/danger activity.
+        """
+        record_warning, record_normal, _ = self.test_record, self.test_record_2, self.env['mail.test.activity'].create({'name': 'No activities'})
+        record_warning.activity_schedule('mail.mail_activity_data_warning', user_id=self.env.user.id)
+        record_normal.activity_schedule('test_mail.mail_act_test_todo', user_id=self.env.user.id)
+
+        records = self.env['mail.test.activity'].search([('activity_exception_decoration', '!=', False)])
+        self.assertEqual(records, record_warning)
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_basic(self):
         """Test the search method on the "activity_state".
