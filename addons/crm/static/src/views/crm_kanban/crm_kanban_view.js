@@ -3,12 +3,17 @@ import { CrmKanbanModel } from "@crm/views/crm_kanban/crm_kanban_model";
 import { CrmKanbanArchParser } from "@crm/views/crm_kanban/crm_kanban_arch_parser";
 import { CrmKanbanRenderer } from "@crm/views/crm_kanban/crm_kanban_renderer";
 import { rottingKanbanView } from "@mail/js/rotting_mixin/rotting_kanban_view";
+import { LeadGenerationDropdown } from "../../components/lead_generation_dropdown/lead_generation_dropdown";
 
 export const crmKanbanView = {
     ...rottingKanbanView,
     ArchParser: CrmKanbanArchParser,
     // Makes it easier to patch
     Controller: class extends rottingKanbanView.Controller {
+        static components = {
+            ...rottingKanbanView.Controller.components,
+            LeadGenerationDropdown,
+        }
         get progressBarAggregateFields() {
             const res = super.progressBarAggregateFields;
             const progressAttributes = this.props.archInfo.progressAttributes;
@@ -20,6 +25,7 @@ export const crmKanbanView = {
     },
     Model: CrmKanbanModel,
     Renderer: CrmKanbanRenderer,
+    buttonTemplate: "crm.Kanban.Buttons",
 };
 
 registry.category("views").add("crm_kanban", crmKanbanView);

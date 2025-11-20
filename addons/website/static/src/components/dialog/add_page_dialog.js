@@ -317,6 +317,7 @@ class AddPageTemplates extends Component {
     static template = "website.AddPageTemplates";
     static props = {
         onTemplatePageChanged: Function,
+        defaultTemplateId: { type: String, optional: true },
     };
     static components = {
         AddPageTemplatePreviews,
@@ -343,12 +344,21 @@ class AddPageTemplates extends Component {
                     },
                 },
             ],
+            activePageId: "basic",
         });
         this.pages = undefined;
 
         onWillStart(() => {
             this.preparePages().then((pages) => {
                 this.state.pages = pages;
+                if (
+                    this.props.defaultTemplateId &&
+                    this.state.pages.some((page) => page.id === this.props.defaultTemplateId)
+                ) {
+                    this.state.activePageId = this.props.defaultTemplateId;
+                } else {
+                    this.state.activePageId = this.state.pages[0]?.props.id;
+                }
             });
         });
     }
@@ -392,23 +402,8 @@ class AddPageTemplates extends Component {
     }
 
     onTabListBtnClick(id) {
-        for (const page of this.state.pages) {
-            if (page.id === id) {
-                page.isAccessed = true;
-            }
-        }
-        const activeTabEl = this.tabsRef.el.querySelector(".active");
-        const activePaneEl = this.panesRef.el.querySelector(".active");
-        activeTabEl?.classList?.remove("active");
-        activeTabEl?.setAttribute("tabIndex", "-1");
-        activePaneEl?.classList?.remove("active");
-        activePaneEl?.setAttribute("inert", "inert"); // Make sure trapFocus() works.
+        this.state.activePageId = id;
         const tabEl = this.tabsRef.el.querySelector(`[data-id=${id}]`);
-        const paneEl = this.panesRef.el.querySelector(`[data-id=${id}]`);
-        tabEl.classList.add("active");
-        tabEl.tabIndex = 0;
-        paneEl.classList.add("active");
-        paneEl.removeAttribute("inert");
         this.props.onTemplatePageChanged(tabEl.dataset.id === "basic" ? "" : tabEl.textContent);
     }
 
@@ -446,6 +441,10 @@ export class AddPageDialog extends Component {
             optional: true,
         },
         pageTitle: {
+            type: String,
+            optional: true,
+        },
+        defaultTemplateId: {
             type: String,
             optional: true,
         },

@@ -1,0 +1,19 @@
+.o_lead_mining_menu_choices {
+    grid-auto-flow: row;
+    grid-template-rows: repeat(3, auto);
+
+    .o_lead_mining_element_tile {
+        background: $popover-bg;
+        width: 2.5rem;
+        min-width: 2.5rem;
+        aspect-ratio: 1;
+
+        img {
+            width: 1.5rem;
+        }
+    }
+
+    .o_lead_mining_element:where(:not(:hover, :focus)) .o_uninstalled_module {
+        filter: grayscale(1);
+    }
+}

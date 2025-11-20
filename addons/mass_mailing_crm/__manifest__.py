@@ -12,6 +12,11 @@
     'demo': [
         'demo/mailing_mailing.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'mass_mailing_crm/static/src/**/*',
+        ],
+    },
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
