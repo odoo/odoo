@@ -1079,25 +1079,43 @@ class AccountMove(models.Model):
         # Quantity.
         move_line.quantity = float(get_text(element, './/Quantita') or '1')
 
-        # Taxes
-        percentage = None
+        percentages = []
         if not extra_info['simplified']:
-            percentage = get_float(element, './/AliquotaIVA')
+            percentages = [
+                float(node.text)
+                for node in element.xpath('.//AliquotaIVA')
+                if node.text not in (None, '')
+            ]
             if price_unit := get_float(element, './/PrezzoUnitario'):
                 move_line.price_unit = price_unit
         elif amount := get_float(element, './/Importo'):
-            percentage = get_float(element, './/Aliquota')
-            if not percentage and (tax_amount := get_float(element, './/Imposta')):
-                percentage = round(tax_amount / (amount - tax_amount) * 100)
-            move_line.price_unit = amount / (1 + percentage / 100)
+            percentages = [
+                float(node.text)
+                for node in element.xpath('.//Aliquota')
+                if node.text not in (None, '')
+            ]
+            if not percentages and (tax_amount := get_float(element, './/Imposta')):
+                percentages.append(round(tax_amount / (amount - tax_amount) * 100))
+            move_line.price_unit = amount / (1 + sum(p / 100 for p in percentages))
 
         move_line.tax_ids = []
-        if percentage is not None:
-            l10n_it_exempt_reason = get_text(element, './/Natura').upper() or False
+        if percentages:
+            tax_not_found = False
+            l10n_it_exempt_reason = (get_text(element, './/Natura') or '').upper() or False
             extra_domain = extra_info.get('type_tax_use_domain', [('type_tax_use', '=', 'purchase')])
-            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
-                move_line.tax_ids += tax
-            else:
+            if move_line.product_id:
+                extra_domain = list(extra_domain)
+                tax_scope = 'service' if move_line.product_id.type == 'service' else 'consu'
+                extra_domain += [('tax_scope', 'in', [tax_scope, False])]
+
+            for percentage in percentages:
+                if percentage is not None:
+                    if (tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason)):
+                        move_line.tax_ids |= tax
+                    else:
+                        tax_not_found = True
+
+            if tax_not_found:
                 message = Markup("<br/>").join((
                     _("Tax not found for line with description '%s'", move_line.name),
                     self._compose_info_message(element, '.')
