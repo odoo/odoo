@@ -1,6 +1,5 @@
 import json
 import logging
-import pprint
 import time
 import urllib.parse
 import urllib3
@@ -44,10 +43,10 @@ def on_message(ws, messages):
         Synchronously handle messages received by the websocket.
     """
     messages = json.loads(messages)
-    _logger.debug("websocket received a message: %s", pprint.pformat(messages))
     iot_mac = helpers.get_mac_address()
     for message in messages:
         message_type = message['message']['type']
+        _logger.info("Received message of type %s", message_type)
         if message_type == 'iot_action':
             payload = message['message']['payload']
             if iot_mac in payload['iotDevice']['iotIdentifiers']:
@@ -55,7 +54,7 @@ def on_message(ws, messages):
                     device_identifier = device['identifier']
                     if device_identifier in main.iot_devices:
                         start_operation_time = time.perf_counter()
-                        _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
+                        _logger.info("device '%s' action started", device_identifier)
                         main.iot_devices[device_identifier].action(payload)
                         _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
             else:
