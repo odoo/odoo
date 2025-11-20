@@ -168,3 +168,12 @@ class AccountMove(models.Model):
 
     def _get_invoiced_lot_values(self):
         return []
+
+    def _extract_extra_invoiced_lot_values(self, lot):
+        lot.ensure_one()
+        # Compute lot properties
+        lot_properties = lot.product_id.lot_properties_definition
+        # Store the value of each property
+        for prop in lot_properties:
+            prop['value'] = lot.lot_properties.get(prop['name'])
+        return {'lot_properties': lot_properties}
