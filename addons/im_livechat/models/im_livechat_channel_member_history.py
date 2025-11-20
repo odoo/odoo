@@ -68,7 +68,6 @@ class ImLivechatChannelMemberHistory(models.Model):
             ("none", "No Help"),
         ],
         compute="_compute_help_status",
-        search="_search_help_status",
         store=True,
     )
     response_time_hour = fields.Float("Response Time", aggregator="avg")
