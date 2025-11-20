@@ -121,6 +121,14 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'product_id' in vals:
+            for move in self:
+                if move.sale_line_id and move.product_id != move.sale_line_id.product_id:
+                    move.sale_line_id = False
+        return res
+
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
         # to pass sale_line_id fom SO to MO in mto
