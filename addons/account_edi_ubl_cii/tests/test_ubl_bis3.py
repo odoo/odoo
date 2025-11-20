@@ -645,3 +645,13 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_unit_price_precision')
+
+    def test_import_vendor_bill_empty_description(self):
+        with misc.file_open(f'{self.test_module}/tests/test_files/bis3/test_vendor_bill_empty_description.xml', 'rb') as file:
+            file_read = file.read()
+        attachment_id = self.env['ir.attachment'].create({
+            'name': 'test_file_no_item_description.xml',
+            'raw': file_read,
+        }).id
+        imported_bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment_id)
+        self.assertTrue(imported_bill)
