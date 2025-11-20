@@ -75,9 +75,8 @@ class ProductReplenish(models.TransientModel):
             res['warehouse_id'] = warehouse.id
         if 'route_id' in fields and 'route_id' not in res and product_tmpl_id:
             res['route_id'] = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1).id
-            if not res['route_id']:
-                if product_tmpl_id.route_ids:
-                    res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
+            if not res['route_id'] and product_tmpl_id.route_ids:
+                res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
         return res
 
     def _get_date_planned(self, route_id, **kwargs):
@@ -114,17 +113,6 @@ class ProductReplenish(models.TransientModel):
             return act_window_close
         except UserError as error:
             raise UserError(error)
-
-    # TODO: to remove in master
-    def _prepare_orderpoint_values(self):
-        values = {
-            'location_id': self.warehouse_id.lot_stock_id.id,
-            'product_id': self.product_id.id,
-            'qty_to_order': self.quantity,
-        }
-        if self.route_id:
-            values['route_id'] = self.route_id.id
-        return values
 
     def _prepare_run_values(self):
         values = {

@@ -7,6 +7,8 @@ from odoo.fields import Domain
 class ProductReplenish(models.TransientModel):
     _inherit = 'product.replenish'
 
+    partner_id = fields.Many2one('res.partner', string='Supplier')
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -22,28 +24,27 @@ class ProductReplenish(models.TransientModel):
             if orderpoint.route_id:
                 res['route_id'] = orderpoint.route_id.id
             if orderpoint.supplier_id:
-                res['supplier_id'] = orderpoint.supplier_id.id
+                res['partner_id'] = orderpoint.supplier_id.partner_id.id
         return res
 
     @api.onchange('route_id')
-    def _onchange_supplier_id(self):
-        if self.show_vendor and not self.supplier_id and self.product_tmpl_id.seller_ids:
-            self.supplier_id = self.product_tmpl_id.seller_ids[0].id
+    def _onchange_route_id(self):
+        if self.show_vendor:
+            self.partner_id = self._resolve_supplier_id().partner_id
         elif not self.show_vendor:
-            self.supplier_id = False
+            self.partner_id = False
 
-    @api.depends('route_id', 'supplier_id')
+    @api.depends('route_id', 'partner_id', 'quantity', 'product_uom_id')
     def _compute_date_planned(self):
         super()._compute_date_planned()
         for rec in self:
             if 'buy' in rec.route_id.rule_ids.mapped('action'):
-                rec.date_planned = rec._get_date_planned(rec.route_id, supplier=rec.supplier_id, show_vendor=rec.show_vendor)
+                rec.date_planned = rec._get_date_planned(rec.route_id, supplier=rec._resolve_supplier_id(), show_vendor=rec.show_vendor)
 
     def _prepare_run_values(self):
         res = super()._prepare_run_values()
-        if self.supplier_id:
-            res['supplierinfo_id'] = self.supplier_id
-            # res['partner_id'] = self.supplier_id.partner_id
+        if self.partner_id:
+            res['procurement_partner'] = self.partner_id
         return res
 
     def action_stock_replenishment_info(self):
@@ -94,3 +95,15 @@ class ProductReplenish(models.TransientModel):
         if buy_route and not product_tmpl_id.seller_ids:
             domain = Domain.AND([domain, Domain('id', '!=', buy_route.id)])
         return domain
+
+    def _resolve_supplier_id(self):
+        """ Return the seller, forcing the partner if it is set manually. Uses same function
+            as the buy rule ensuring wizard and procurement logic is consistent. """
+        return self.env['stock.rule']._pick_supplier(
+            self.env.company,
+            self.product_id,
+            partner=self.partner_id,
+            qty=self.quantity,
+            uom=self.product_uom_id,
+            params={"force_uom": True},
+        )

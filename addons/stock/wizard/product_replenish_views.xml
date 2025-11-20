@@ -28,10 +28,10 @@
                                 widget="many2one_uom"
                                 options="{'no_open': 1, 'no_create': 1, 'quantity_field': 'quantity'}"/>
                         </div>
-                        <field name="date_planned"/>
                         <field name="warehouse_id"
                             groups="stock.group_stock_multi_warehouses"/>
                         <field name="route_id" domain="[('id', 'in', allowed_route_ids)]"/>
+                        <field name="date_planned"/>
                     </group>
                 </group>
                 <footer>
