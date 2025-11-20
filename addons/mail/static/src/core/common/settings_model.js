@@ -56,7 +56,7 @@ export class Settings extends Record {
     // Video settings
     backgroundBlurAmount = fields.Attr(10, { localStorage: true });
     edgeBlurAmount = fields.Attr(10, { localStorage: true });
-    showOnlyVideo = false;
+    showOnlyVideo = fields.Attr(false, { localStorage: true });
     useBlur = fields.Attr(false, { localStorage: true });
     blurPerformanceWarning = fields.Attr(false, {
         compute() {
@@ -297,8 +297,6 @@ export class Settings extends Record {
         this.voiceActivationThreshold = voiceActivationThresholdString
             ? parseFloat(voiceActivationThresholdString)
             : this.voiceActivationThreshold;
-        this.showOnlyVideo =
-            browser.localStorage.getItem("mail_user_setting_show_only_video") === "true";
     }
     /**
      * @private

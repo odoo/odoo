@@ -108,11 +108,7 @@ export class CallSettings extends Component {
 
     onChangeShowOnlyVideo(ev) {
         const showOnlyVideo = ev.target.checked;
-        this.store.settings.showOnlyVideo = showOnlyVideo;
-        browser.localStorage.setItem(
-            "mail_user_setting_show_only_video",
-            this.store.settings.showOnlyVideo
-        );
+        this.store.settings.showOnlyVideo = Boolean(showOnlyVideo);
         const activeRtcSessions = this.store.allActiveRtcSessions;
         if (showOnlyVideo && activeRtcSessions) {
             activeRtcSessions
