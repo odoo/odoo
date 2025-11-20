@@ -9,7 +9,9 @@ from markupsafe import Markup
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError, LockError, UserError
 from odoo.tools import float_is_zero, float_compare
+from odoo.tools.float_utils import json_float_round
 
+from odoo.addons.l10n_in import utils
 from odoo.addons.l10n_in.models.account_invoice import EDI_CANCEL_REASON
 
 _logger = logging.getLogger(__name__)
@@ -211,7 +213,7 @@ class AccountMove(models.Model):
             message.append(_("- Email: invalid or longer than 100 characters."))
         if partner.phone and not re.match(
             r"^[0-9]{10,12}$",
-            partner.env['account.move']._l10n_in_extract_digits(partner.phone)
+            utils.l10n_in_extract_digits(partner.phone)
         ):
             message.append(_("- Phone number: must be 10–12 digits."))
         if partner.street2 and not re.match(r"^.{3,100}$", partner.street2):
@@ -307,7 +309,7 @@ class AccountMove(models.Model):
                 )
                 is_warning = any(warning_code in error_codes for warning_code in ('404', 'timeout'))
                 self.l10n_in_edi_error = (
-                    self._l10n_in_edi_get_iap_buy_credits_message()
+                    self.env['iap.account']._l10n_in_edi_get_iap_buy_credits_message()
                     if no_credit else msg
                 )
                 # avoid return `l10n_in_edi_error` because as a html field
@@ -390,7 +392,7 @@ class AccountMove(models.Model):
                     )
                 )
             if "no-credit" in error_codes:
-                self.l10n_in_edi_error = self._l10n_in_edi_get_iap_buy_credits_message()
+                self.l10n_in_edi_error = self.env['iap.account']._l10n_in_edi_get_iap_buy_credits_message()
                 return
             if error:
                 self.l10n_in_edi_error = (
@@ -449,7 +451,7 @@ class AccountMove(models.Model):
             if is_overseas is true then pin is 999999 and GSTIN(vat) is URP and Stcd is .
             if pos_state_id is passed then we use set POS
         """
-        zip_digits = self._l10n_in_extract_digits(partner.zip)
+        zip_digits = utils.l10n_in_extract_digits(partner.zip)
         partner_details = {
             'Addr1': partner.street or '',
             'Loc': partner.city or '',
@@ -467,9 +469,9 @@ class AccountMove(models.Model):
                 partner_details['Em'] = partner.email
             if (
                 partner.phone
-                and re.match(r"^[0-9]{10,12}$", self._l10n_in_extract_digits(partner.phone))
+                and re.match(r"^[0-9]{10,12}$", utils.l10n_in_extract_digits(partner.phone))
             ):
-                partner_details['Ph'] = self._l10n_in_extract_digits(partner.phone)
+                partner_details['Ph'] = utils.l10n_in_extract_digits(partner.phone)
         if pos_state_id:
             partner_details['POS'] = pos_state_id.l10n_in_tin or ''
         if set_vat:
@@ -494,7 +496,7 @@ class AccountMove(models.Model):
         Create the dictionary with line details
         """
         sign = self.is_inbound() and -1 or 1
-        tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details['tax_details'])
+        tax_details_by_code = utils.l10n_in_get_tax_details_by_line_code(line_tax_details['tax_details'])
         quantity = line.quantity
         if line.discount == 100.00 or float_is_zero(quantity, 3):
             # Full discount or zero quantity
@@ -513,43 +515,42 @@ class AccountMove(models.Model):
             # government does not accept negative in qty or unit price
             unit_price_in_inr = -unit_price_in_inr
             quantity = -quantity
-        in_round = self._l10n_in_round_value
         line_details = {
             'SlNo': str(index),
-            'IsServc': self._l10n_in_is_service_hsn(line.l10n_in_hsn_code) and 'Y' or 'N',
-            'HsnCd': self._l10n_in_extract_digits(line.l10n_in_hsn_code),
-            'Qty': in_round(quantity or 0.0, 3),
+            'IsServc': utils.l10n_in_is_service_hsn(line.l10n_in_hsn_code) and 'Y' or 'N',
+            'HsnCd': utils.l10n_in_extract_digits(line.l10n_in_hsn_code),
+            'Qty': json_float_round(quantity or 0.0, 3),
             'Unit': (
                 line.product_uom_id.l10n_in_code
                 and line.product_uom_id.l10n_in_code.split('-')[0]
                 or 'OTH'
             ),
             # Unit price in company currency and tax excluded so its different then price_unit
-            'UnitPrice': in_round(unit_price_in_inr, 3),
+            'UnitPrice': json_float_round(unit_price_in_inr, 3),
             # total amount is before discount
-            'TotAmt': in_round(unit_price_in_inr * quantity),
-            'Discount': in_round((unit_price_in_inr * quantity) * (line.discount / 100)),
-            'AssAmt': in_round(sign * line.balance),
-            'GstRt': in_round(
+            'TotAmt': json_float_round(unit_price_in_inr * quantity),
+            'Discount': json_float_round((unit_price_in_inr * quantity) * (line.discount / 100)),
+            'AssAmt': json_float_round(sign * line.balance),
+            'GstRt': json_float_round(
                 (tax_details_by_code.get('igst_rate', 0.00)
                 or (tax_details_by_code.get('cgst_rate', 0.00) + tax_details_by_code.get('sgst_rate', 0.00))),
                 3
             ),
-            'IgstAmt': in_round(tax_details_by_code.get('igst_amount', 0.00)),
-            'CgstAmt': in_round(tax_details_by_code.get('cgst_amount', 0.00)),
-            'SgstAmt': in_round(tax_details_by_code.get('sgst_amount', 0.00)),
-            'CesRt': in_round(tax_details_by_code.get('cess_rate', 0.00), 3),
-            'CesAmt': in_round(tax_details_by_code.get('cess_amount', 0.00)),
-            'CesNonAdvlAmt': in_round(
+            'IgstAmt': json_float_round(tax_details_by_code.get('igst_amount', 0.00)),
+            'CgstAmt': json_float_round(tax_details_by_code.get('cgst_amount', 0.00)),
+            'SgstAmt': json_float_round(tax_details_by_code.get('sgst_amount', 0.00)),
+            'CesRt': json_float_round(tax_details_by_code.get('cess_rate', 0.00), 3),
+            'CesAmt': json_float_round(tax_details_by_code.get('cess_amount', 0.00)),
+            'CesNonAdvlAmt': json_float_round(
                 tax_details_by_code.get('cess_non_advol_amount', 0.00)
             ),
-            'StateCesRt': in_round(tax_details_by_code.get('state_cess_rate_amount', 0.00), 3),
-            'StateCesAmt': in_round(tax_details_by_code.get('state_cess_amount', 0.00)),
-            'StateCesNonAdvlAmt': in_round(
+            'StateCesRt': json_float_round(tax_details_by_code.get('state_cess_rate_amount', 0.00), 3),
+            'StateCesAmt': json_float_round(tax_details_by_code.get('state_cess_amount', 0.00)),
+            'StateCesNonAdvlAmt': json_float_round(
                 tax_details_by_code.get('state_cess_non_advol_amount', 0.00)
             ),
-            'OthChrg': in_round(tax_details_by_code.get('other_amount', 0.00)),
-            'TotItemVal': in_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
+            'OthChrg': json_float_round(tax_details_by_code.get('other_amount', 0.00)),
+            'TotItemVal': json_float_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
         }
         if line.name:
             line_details['PrdDesc'] = line.name.replace("\n", "")[:300]
@@ -576,7 +577,6 @@ class AccountMove(models.Model):
         def put_discount_on(discount_line_vals, other_line_vals):
             discount = -discount_line_vals['AssAmt']
             discount_to_allow = other_line_vals['AssAmt']
-            in_round = self._l10n_in_round_value
             amount_keys = (
                 'AssAmt', 'IgstAmt', 'CgstAmt', 'SgstAmt', 'CesAmt',
                 'CesNonAdvlAmt', 'StateCesAmt', 'StateCesNonAdvlAmt',
@@ -585,15 +585,15 @@ class AccountMove(models.Model):
             if float_compare(discount_to_allow, discount, precision_rounding=self.currency_id.rounding) < 0:
                 # Update discount line, needed when discount is more then max line, in short remaining_discount is not zero
                 discount_line_vals.update({
-                    key: in_round(discount_line_vals[key] + other_line_vals[key])
+                    key: json_float_round(discount_line_vals[key] + other_line_vals[key])
                     for key in amount_keys
                 })
-                other_line_vals['Discount'] = in_round(other_line_vals['Discount'] + discount_to_allow)
+                other_line_vals['Discount'] = json_float_round(other_line_vals['Discount'] + discount_to_allow)
                 other_line_vals.update(dict.fromkeys(amount_keys, 0.00))
                 return False
-            other_line_vals['Discount'] = in_round(other_line_vals['Discount'] + discount)
+            other_line_vals['Discount'] = json_float_round(other_line_vals['Discount'] + discount)
             other_line_vals.update({
-                key: in_round(other_line_vals[key] + discount_line_vals[key])
+                key: json_float_round(other_line_vals[key] + discount_line_vals[key])
                 for key in amount_keys
             })
             return True
@@ -624,7 +624,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         tax_details = self._l10n_in_prepare_tax_details()
         seller_buyer = self._get_l10n_in_seller_buyer_party()
-        tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details['tax_details'])
+        tax_details_by_code = utils.l10n_in_get_tax_details_by_line_code(tax_details['tax_details'])
         is_intra_state = self.l10n_in_state_id == self.company_id.state_id
         is_overseas = self.l10n_in_gst_treatment == "overseas"
         line_ids = []
@@ -639,7 +639,6 @@ class AccountMove(models.Model):
         sign = self.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in self.line_ids if line.display_type == 'rounding') * sign
         global_discount_amount = sum(line.balance for line in global_discount_line) * -sign
-        in_round = self._l10n_in_round_value
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -675,21 +674,21 @@ class AccountMove(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": in_round(tax_details['base_amount']),
-                "CgstVal": in_round(tax_details_by_code.get("cgst_amount", 0.00)),
-                "SgstVal": in_round(tax_details_by_code.get("sgst_amount", 0.00)),
-                "IgstVal": in_round(tax_details_by_code.get("igst_amount", 0.00)),
-                "CesVal": in_round((
+                "AssVal": json_float_round(tax_details['base_amount']),
+                "CgstVal": json_float_round(tax_details_by_code.get("cgst_amount", 0.00)),
+                "SgstVal": json_float_round(tax_details_by_code.get("sgst_amount", 0.00)),
+                "IgstVal": json_float_round(tax_details_by_code.get("igst_amount", 0.00)),
+                "CesVal": json_float_round((
                     tax_details_by_code.get("cess_amount", 0.00)
                     + tax_details_by_code.get("cess_non_advol_amount", 0.00)),
                 ),
-                "StCesVal": in_round((
+                "StCesVal": json_float_round((
                     tax_details_by_code.get("state_cess_amount", 0.00)
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)), # clean this up =p
                 ),
-                "Discount": in_round(global_discount_amount),
-                "RndOffAmt": in_round(rounding_amount),
-                "TotInvVal": in_round(
+                "Discount": json_float_round(global_discount_amount),
+                "RndOffAmt": json_float_round(rounding_amount),
+                "TotInvVal": json_float_round(
                     tax_details["base_amount"]
                     + tax_details["tax_amount"]
                     + rounding_amount
@@ -699,7 +698,7 @@ class AccountMove(models.Model):
         }
         if self.company_currency_id != self.currency_id:
             json_payload["ValDtls"].update({
-                "TotInvValFc": in_round(
+                "TotInvValFc": json_float_round(
                     tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency"))
             })
         if seller_buyer['seller_details'] != seller_buyer['dispatch_details']:
@@ -729,7 +728,7 @@ class AccountMove(models.Model):
             base_and_tax_amount = tax_details.get("base_amount") + tax_details.get("tax_amount")
             # For Export If with payment of Tax then we need to include Tax in Total Invoice Value
             if json_payload['TranDtls']['SupTyp'] == 'EXPWP' and json_valdtls['AssVal'] == base_and_tax_amount:
-                json_payload["ValDtls"]["TotInvVal"] = self._l10n_in_round_value(sum([
+                json_payload["ValDtls"]["TotInvVal"] = json_float_round(sum([
                     json_valdtls['TotInvVal'],
                     json_valdtls['IgstVal'],
                     json_valdtls['CgstVal'],
@@ -738,7 +737,7 @@ class AccountMove(models.Model):
                     json_valdtls['StCesVal'],
                 ]))
                 for line in json_payload["ItemList"]:
-                    line["TotItemVal"] = self._l10n_in_round_value(sum([
+                    line["TotItemVal"] = json_float_round(sum([
                         line["TotItemVal"],
                         line["IgstAmt"],
                         line["CgstAmt"],

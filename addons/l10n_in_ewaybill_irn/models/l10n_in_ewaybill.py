@@ -133,7 +133,7 @@ class L10nInEwaybill(models.Model):
             error_codes = [error.get('code') for error in response.get('error')]
             if 'no-credit' in error_codes:
                 response['odoo_warning'].append({
-                    'message': self.env['account.move']._l10n_in_edi_get_iap_buy_credits_message()
+                    'message': self.env['iap.account']._l10n_in_edi_get_iap_buy_credits_message()
                 })
             if '4002' in error_codes or '4026' in error_codes:
                 # Get E-waybill by details in case of IRN is already generated

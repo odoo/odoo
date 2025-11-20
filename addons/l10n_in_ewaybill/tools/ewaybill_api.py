@@ -123,7 +123,7 @@ class EWayBillApi:
         except EWayBillError as e:
             if "no-credit" in e.error_codes:
                 e.error_json['odoo_warning'].append({
-                    'message': self.env['account.move']._l10n_in_edi_get_iap_buy_credits_message()
+                    'message': self.env['iap.account']._l10n_in_edi_get_iap_buy_credits_message()
                 })
                 raise
 
