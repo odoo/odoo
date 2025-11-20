@@ -222,7 +222,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                 self.assertMessageFields(
                     msg_fb, {
                         'body': Markup(f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>'),
-                        'tracking_values': [],
+                        'tracking_values_fmt': [],
                     }
                 )
 
@@ -236,7 +236,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                         'body': Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
                                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
                                        f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>'),
-                        'tracking_values': [('active', 'boolean', False, True)],
+                        'tracking_values_fmt': [('active', 'boolean', 'False', 'True')],
                     }
                 )
                 self.assertMessageFields(
@@ -244,13 +244,13 @@ class TestMailingControllers(TestMailingControllersCommon):
                         'body': Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
                                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
                                        f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>'),
-                        'tracking_values': [('active', 'boolean', True, False)],
+                        'tracking_values_fmt': [('active', 'boolean', 'True', 'False')],
                     }
                 )
                 self.assertMessageFields(
                     msg_fb, {
                         'body': Markup(f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>'),
-                        'tracking_values': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[-1])],
+                        'tracking_values_fmt': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[-1])],
                     }
                 )
                 self.assertMessageFields(
@@ -258,13 +258,13 @@ class TestMailingControllers(TestMailingControllersCommon):
                         'body': Markup(f'<p>Blocklist request from unsubscribe link of mailing <a href="#" data-oe-model="{test_mailing._name}" '
                                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
                                        f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>'),
-                        'tracking_values': [],
+                        'tracking_values_fmt': [],
                     }
                 )
                 self.assertMessageFields(
                     msg_create, {
                         'body': Markup('<p>Mail Blacklist created</p>'),
-                        'tracking_values': [],
+                        'tracking_values_fmt': [],
                     }
                 )
 
@@ -429,14 +429,14 @@ class TestMailingControllers(TestMailingControllersCommon):
             message_update, {
                 'body': Markup(f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p>'
                                f'<ul><li>{self.mailing_list_2.name}</li></ul>'),
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
         message_feedback = contact_l1.message_ids[1]
         self.assertMessageFields(
             message_feedback, {
                 'body': Markup(f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>'),
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
         message_unsub = contact_l1.message_ids[2]
@@ -444,7 +444,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             message_unsub, {
                 'body': Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p>'
                                f'<ul><li>{self.mailing_list_1.name}</li></ul>'),
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
 
@@ -454,7 +454,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             message_sub, {
                 'body': Markup(f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p>'
                                f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>'),
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
 
@@ -466,16 +466,15 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertMessageFields(
             msg_fb, {
                 'body': '',
-                'tracking_values': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])],
+                'tracking_values_fmt': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])],
             }
         )
-        self.assertFalse(msg_fb.body)
         self.assertMessageFields(
             msg_bl2, {
                 'body': Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
                                f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>'),
-                'tracking_values': [('active', 'boolean', False, True)],
+                'tracking_values_fmt': [('active', 'boolean', 'False', 'True')],
             }
         )
         self.assertMessageFields(
@@ -483,7 +482,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                 'body': Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
                                f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>'),
-                'tracking_values': [('active', 'boolean', True, False)],
+                'tracking_values_fmt': [('active', 'boolean', 'True', 'False')],
             }
         )
         self.assertMessageFields(
@@ -491,13 +490,13 @@ class TestMailingControllers(TestMailingControllersCommon):
                 'body': Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
                                f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>'),
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
         self.assertMessageFields(
             msg_create, {
                 'body': Markup('<p>Mail Blacklist created</p>'),
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
 
@@ -619,7 +618,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         msg_fb, msg_bl, _msg_create = bl_record.message_ids
         self.assertMessageFields(
             msg_fb, {
-                'tracking_values': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])],
+                'tracking_values_fmt': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])],
             }
         )
         self.assertEqual(msg_bl.body, Markup('<p>Blocklist request from portal</p>'))

@@ -345,12 +345,12 @@ class ResPartnerBank(models.Model):
 
         # Log changes to move lines on each move
         for account, initial_values in account_initial_values.items():
-            tracking_value_ids = account._mail_track(fields_definition, initial_values)[1]
-            if tracking_value_ids:
+            tracking_values = account._mail_track(fields_definition, initial_values)[1]
+            if tracking_values:
                 msg = _("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
-                account.partner_id._message_log(body=msg, tracking_value_ids=tracking_value_ids)
+                account.partner_id._message_log(body=msg, tracking_value_ids=[(0, 0, values) for values in tracking_values])
                 if 'partner_id' in initial_values:  # notify previous partner as well
-                    initial_values['partner_id']._message_log(body=msg, tracking_value_ids=tracking_value_ids)
+                    initial_values['partner_id']._message_log(body=msg, tracking_value_ids=[(0, 0, values) for values in tracking_values])
         return res
 
     def unlink(self):

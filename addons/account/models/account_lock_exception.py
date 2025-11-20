@@ -255,6 +255,7 @@ class AccountLock_Exception(models.Model):
         )
 
     def _get_audit_trail_during_exception_domain(self):
+        # TDE check this
         self.ensure_one()
 
         common_message_domain = [

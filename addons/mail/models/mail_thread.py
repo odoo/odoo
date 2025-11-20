@@ -594,7 +594,7 @@ class MailThread(models.AbstractModel):
         records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
         tracking = records_su._message_track(fnames, initial_values)
         for record_su in records_su:
-            changes, _tracking_value_ids = tracking.get(record_su.id, (None, None))
+            changes, _tracking_values = tracking.get(record_su.id, (None, None))
             record_su._message_track_post_template(changes)
         # this method is called after the main flush() and just before commit();
         # we have to flush() again in case we triggered some recomputations
@@ -675,7 +675,7 @@ class MailThread(models.AbstractModel):
         :param dict initial_values: mapping {record_id: initial_values}
           where initial_values is a dict {field_name: value, ... }
 
-        :return: mapping {record_id: (changed_field_names, tracking_value_ids)}
+        :return: mapping {record_id: (changed_field_names, tracking_values)}
             Missing / unlinked records are removed from returned results.
         """
         if not field_names:
@@ -693,7 +693,7 @@ class MailThread(models.AbstractModel):
         bodies = self.env.cr.precommit.data.pop(f'mail.tracking.message.{self._name}', {})
         authors = self.env.cr.precommit.data.pop(f'mail.tracking.author.{self._name}', {})
         for record in self:
-            changes, tracking_value_ids = tracking.get(record.id, (None, None))
+            changes, tracking_values = tracking.get(record.id, (None, None))
             if not changes:
                 continue
 
@@ -713,13 +713,13 @@ class MailThread(models.AbstractModel):
                     body=body,
                     author_id=author_id,
                     subtype_id=subtype.id,
-                    tracking_value_ids=tracking_value_ids
+                    tracking_value_ids=[(0, 0, values) for values in tracking_values],
                 )
-            elif tracking_value_ids:
+            elif tracking_values:
                 record._message_log(
                     body=body,
                     author_id=author_id,
-                    tracking_value_ids=tracking_value_ids
+                    tracking_value_ids=[(0, 0, values) for values in tracking_values],
                 )
 
         return tracking

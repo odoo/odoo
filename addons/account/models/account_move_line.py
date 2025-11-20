@@ -1666,10 +1666,10 @@ class AccountMoveLine(models.Model):
                 if not move_id.posted_before:
                     continue
                 for line in modified_lines:
-                    if tracking_value_ids := line._mail_track(ref_fields, empty_values)[1]:
+                    if tracking_values := line._mail_track(ref_fields, empty_values)[1]:
                         line.move_id._message_log(
                             body=_("Journal Item %s created", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=tracking_value_ids
+                            tracking_value_ids=[(0, 0, values) for values in tracking_values],
                         )
 
         lines.move_id._synchronize_business_models(['line_ids'])
@@ -1791,12 +1791,12 @@ class AccountMoveLine(models.Model):
                 # Log changes to move lines on each move
                 for move_id, modified_lines in move_initial_values.items():
                     for line in self.filtered(lambda l: l.move_id.id == move_id):
-                        tracking_value_ids = line._mail_track(ref_fields, modified_lines)[1]
-                        if tracking_value_ids:
+                        tracking_values = line._mail_track(ref_fields, modified_lines)[1]
+                        if tracking_values:
                             msg = _("Journal Item %s updated", line._get_html_link(title=f"#{line.id}"))
                             line.move_id._message_log(
                                 body=msg,
-                                tracking_value_ids=tracking_value_ids
+                                tracking_value_ids=[(0, 0, values) for values in tracking_values],
                             )
             if 'analytic_line_ids' in vals:
                 self.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
@@ -1869,10 +1869,10 @@ class AccountMoveLine(models.Model):
                 if not move_id.posted_before:
                     continue
                 for line in modified_lines:
-                    if tracking_value_ids := empty_line._mail_track(ref_fields, line)[1]:
+                    if tracking_values := empty_line._mail_track(ref_fields, line)[1]:
                         line.move_id._message_log(
                             body=_("Journal Item %s deleted", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=tracking_value_ids
+                            tracking_value_ids=[(0, 0, values) for values in tracking_values],
                         )
 
         move_container = {'records': self.move_id}

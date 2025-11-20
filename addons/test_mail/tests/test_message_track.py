@@ -77,7 +77,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 'notified_partner_ids': self.env['res.partner'],
                 'partner_ids': self.env['res.partner'],  # no sepcific recipients except those following notes
                 'subtype_id': self.env.ref('mail.mt_note'),
-                'tracking_values': [('customer_id', 'many2one', False, customer)],  # onchange tracked field
+                'tracking_values_fmt': [('customer_id', 'many2one', self.env['res.partner'], customer)],  # onchange tracked field
             }
         )
         # no specific recipients except those following notes, no email
@@ -101,9 +101,9 @@ class TestTrackingAPI(TestTrackingCommon):
                 'notified_partner_ids': self.partner_admin,
                 'partner_ids': self.env['res.partner'],  # no sepcific recipients except those following subtype
                 'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
-                'tracking_values': [
-                    ('email_from', 'char', False, 'noone@example.com'),
-                    ('container_id', 'many2one', False, container),
+                'tracking_values_fmt': [
+                    ('email_from', 'char', 'None', 'noone@example.com'),
+                    ('container_id', 'many2one', self.env['mail.test.container'], container),
                 ],
             }
         )
@@ -123,7 +123,7 @@ class TestTrackingAPI(TestTrackingCommon):
         self.assertMessageFields(
             track_msg, {
                 'author_id': self.partner_admin,
-                'tracking_values': [('many2one_field_id', 'many2one', False, self.partner_employee)],
+                'tracking_values_fmt': [('many2one_field_id', 'many2one', False, self.partner_employee)],
             }
         )
 
@@ -148,7 +148,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 'author_id': self.partner_employee,
                 # default message should be used
                 'body': '<p>There was a change on Test for fields "user_id"</p>',
-                'tracking_values': [('user_id', 'many2one', False, self.user_admin)],
+                'tracking_values_fmt': [('user_id', 'many2one', self.env['res.users'], self.user_admin)],
             }
         )
 
@@ -163,7 +163,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 'author_id': self.partner_employee,
                 # _track_set_log_message should take priority over default message
                 'body': '<p>Hi</p>',
-                'tracking_values': [('user_id', 'many2one', self.user_admin, False)],
+                'tracking_values_fmt': [('user_id', 'many2one', self.user_admin, self.env['res.users'])],
             }
         )
 
@@ -192,7 +192,7 @@ class TestTrackingAPI(TestTrackingCommon):
             self.assertEqual(len(record.message_ids), 2, 'Should be a creation message and a tracking message')
             self.assertMessageFields(
                 record.message_ids[0], {
-                    'tracking_values': [('user_id', 'many2one', original_user, new_user)],
+                    'tracking_values_fmt': [('user_id', 'many2one', original_user, new_user)],
                 }
             )
         # first record: tracking value should be hidden
@@ -248,9 +248,9 @@ class TestTrackingAPI(TestTrackingCommon):
             self._new_msgs, {
                 'author_id': self.partner_employee,
                 'subtype_id': self.env.ref('mail.mt_note'),  # by default, trackings are notes
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('many2one_field_id', 'many2one', False, self.partner_admin),
-                    ('float_field_with_digits', 'float', False, 15.285),
+                    ('float_field_with_digits', 'float', '0.0', 15.285),
                     ('selection_field', 'selection', '', 'FIRST'),
                 ],
             }
@@ -296,7 +296,7 @@ class TestTrackingTemplate(TestTrackingCommon):
                 'notified_partner_ids': self.partner_admin,
                 'subject': 'Test Template',
                 'subtype_id': self.env['mail.message.subtype'],  # tde: to check ?
-                'tracking_values': [],  # no tracking sent with template
+                'tracking_values_fmt': [],  # no tracking sent with template
             }
         )
         self.assertMessageFields(
@@ -306,7 +306,7 @@ class TestTrackingTemplate(TestTrackingCommon):
                 'notified_partner_ids': self.env['res.partner'],
                 'subject': False,
                 'subtype_id': self.env.ref('mail.mt_note'),
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('customer_id', 'many2one', False, self.user_admin.partner_id),
                 ],
             }
@@ -487,7 +487,7 @@ class TestTrackingTemplate(TestTrackingCommon):
                 'message_type': 'notification',
                 'subject': False,
                 'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('container_id', 'many2one', False, container),
                 ],
             }
@@ -560,7 +560,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             last_message, {
                 'message_type': 'notification',
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
 
@@ -572,7 +572,7 @@ class TestTrackingInternals(MailCommon):
         last_message = test_record.message_ids[0]
         self.assertMessageFields(
             last_message, {
-                'tracking_values': [('many2many_field', 'many2many', '', ', '.join(test_tags[:2].mapped('name')))],
+                'tracking_values_fmt': [('many2many_field', 'many2many', '', ', '.join(test_tags[:2].mapped('name')))],
             }
         )
 
@@ -591,7 +591,7 @@ class TestTrackingInternals(MailCommon):
         last_message = test_record.message_ids[0]
         self.assertMessageFields(
             last_message, {
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('many2many_field', 'many2many', ', '.join(test_tags[:2].mapped('name')), ', '.join((test_tags[1] + test_tags[2]).mapped('name'))),
                     ('one2many_field', 'one2many', '', f'Child1, Child2, Child3, {child4_tracking}'),
                 ],
@@ -604,7 +604,7 @@ class TestTrackingInternals(MailCommon):
         last_message = test_record.message_ids[0]
         self.assertMessageFields(
             last_message, {
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('one2many_field', 'one2many', f'Child1, Child2, Child3, {child4_tracking}', f'Child2, Child3, {child4_tracking}')
                 ],
             }
@@ -619,7 +619,6 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(test_record.currency_id, self.env.ref('base.USD'))
         messages = test_record.message_ids
         today = fields.Date.today()
-        today_dt = fields.Datetime.to_datetime(today)
         now = fields.Datetime.now()
 
         test_record.write({
@@ -641,21 +640,21 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(len(new_message), 1,
                          'Should have generated a tracking value')
         tracking_value_list = [
-            ('boolean_field', 'boolean', 0, 1),
+            ('boolean_field', 'boolean', 'False', 'True'),
             ('char_field', 'char', False, 'char_value'),
-            ('date_field', 'date', False, today_dt),
+            ('date_field', 'date', False, today),
             ('datetime_field', 'datetime', False, now),
-            ('float_field', 'float', 0, 3.22),
-            ('float_field_with_digits', 'float', 0, 3.00001),
+            ('float_field', 'float', '0.0', '3.22'),
+            ('float_field_with_digits', 'float', '0.0', '3.00001'),
             ('integer_field', 'integer', 0, 42),
             ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
-            ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
+            ('monetary_field', 'monetary', (0, self.env.ref('base.USD')), (42.42, self.env.ref('base.USD'))),
             ('selection_field', 'selection', '', 'FIRST'),
             ('text_field', 'text', False, 'text_value'),
         ]
         self.assertMessageFields(
             new_message, {
-                'tracking_values': tracking_value_list,
+                'tracking_values_fmt': tracking_value_list,
             }
         )
         # check formatting for all field types
@@ -678,7 +677,7 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(len(test_record.message_ids), 3)
         self.assertMessageFields(
             test_record.message_ids[0], {
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('monetary_field', 'monetary', 42.42, (200.25, self.company_2.currency_id)),
                 ],
             }
@@ -694,7 +693,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             compute_record.message_ids, {
                 'author_id': self.partner_employee,
-                'tracking_values': [],
+                'tracking_values_fmt': [],
             }
         )
 
@@ -711,7 +710,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             compute_record.message_ids[0], {
                 'author_id': self.partner_employee,
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('partner_id', 'many2one', False, partner_su),
                     ('partner_name', 'char', False, 'Foo'),
                     ('partner_email', 'char', False, 'foo@example.com'),
@@ -728,7 +727,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             compute_record.message_ids[0], {
                 'author_id': self.partner_employee,
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('partner_name', 'char', 'Foo', 'Fool'),
                 ],
             }
@@ -749,7 +748,7 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             compute_record.message_ids[0], {
                 'author_id': self.partner_employee,
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('partner_name', 'char', 'Fool', 'Bar'),
                     ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
                 ],
@@ -768,12 +767,12 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             self._new_msgs, {
                 'author_id': self.partner_employee,
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', ('properties', 'Properties: Property Date', 'date'), datetime(2024, 1, 3, 0, 0, 0), False),
-                    ('properties', ('properties', 'Properties: Property Datetime', 'datetime'), datetime(2024, 1, 2, 12, 59, 1), False),
-                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA, BB', ''),
-                    ('properties', ('properties', 'Properties: Property M2M', 'many2many'), 'Record 0, Record 1, Record 2', ''),
+                    ('properties', ('properties', 'Property Date', 'date'), datetime(2024, 1, 3, 0, 0, 0), False),
+                    ('properties', ('properties', 'Property Datetime', 'datetime'), datetime(2024, 1, 2, 12, 59, 1), False),
+                    ('properties', ('properties', 'Property Tags', 'tags'), 'AA, BB', 'None'),
+                    ('properties', ('properties', 'Property M2M', 'many2many'), 'Record 0, Record 1, Record 2', 'None'),
                 ],
             }
         )
@@ -800,11 +799,11 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             self._new_msgs, {
                 'author_id': self.partner_employee,
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('properties_parent_id', 'many2one', self.properties_parent_1, self.properties_parent_2),
-                    ('properties', ('properties', 'Properties: Property M2O', 'many2one'), self.properties_linked_records[0], False),
-                    ('properties', ('properties', 'Properties: Property Int', 'integer'), 1337, False),
-                    ('properties', ('properties', 'Properties: Property Char', 'char'), 'char value', False),
+                    ('properties', ('properties', 'Property M2O', 'many2one'), self.properties_linked_records[0], False),
+                    ('properties', ('properties', 'Property Int', 'integer'), 1337, False),
+                    ('properties', ('properties', 'Property Char', 'char'), 'char value', 'None'),
                 ],
             }
         )
@@ -849,9 +848,9 @@ class TestTrackingInternals(MailCommon):
         self.assertMessageFields(
             self._new_msgs, {
                 'author_id': self.partner_employee,
-                'tracking_values': [
+                'tracking_values_fmt': [
                     ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
-                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA', ''),
+                    ('properties', ('properties', 'Property Tags', 'tags'), 'AA', 'None'),
                 ],
             }
         )
@@ -885,7 +884,7 @@ class TestTrackingInternals(MailCommon):
             record.selection_type = "second"
             self.flush_tracking()
         self.assertMessageFields(
-            self._new_msgs, {'tracking_values': [
+            self._new_msgs, {'tracking_values_fmt': [
                 ('selection_type', 'char', invalid_value, 'Second'),
             ]}
         )
@@ -1005,6 +1004,8 @@ class TestTrackingInternals(MailCommon):
                     'field_id': False,
                     'new_value_integer': self.env.uid,
                     'old_value_integer': False,
+                    'new_value': 'Employee User',
+                    'old_value': False,
                 }),
                 (0, 0, {
                     'field_id': False,
@@ -1016,6 +1017,8 @@ class TestTrackingInternals(MailCommon):
                     },
                     'new_value_integer': 35,
                     'old_value_integer': 30,
+                    'new_value': 35,
+                    'old_value': 30,
                 }),
             ],
         )
@@ -1144,7 +1147,7 @@ class TestTrackingInternals(MailCommon):
         record.write({'email_from': 'new_value'})  # create a tracking value
         self.flush_tracking()
         self.assertMessageFields(
-            record.message_ids[0], {'tracking_values': [('email_from', 'char', False, 'new_value')]},
+            record.message_ids[0], {'tracking_values_fmt': [('email_from', 'char', False, 'new_value')]},
         )
 
         fields_to_remove = self.env['ir.model.fields'].sudo().search([
@@ -1178,17 +1181,17 @@ class TestTrackingInternals(MailCommon):
         self.flush_tracking()
 
         self.assertMessageFields(
-            record.message_ids[0], {'tracking_values': [('email_from', 'char', False, 'new_value')]}
+            record.message_ids[0], {'tracking_values_fmt': [('email_from', 'char', False, 'new_value')]}
         )
         self.assertMessageFields(
-            record_other.message_ids[0], {'tracking_values': [
+            record_other.message_ids[0], {'tracking_values_fmt': [
                 ('customer_id', 'many2one', False, self.test_partner),
                 ('email_from', 'char', 'email.from.1@example.com', 'email.from.2@example.com'),
                 ('user_id', 'many2one', False, self.env.user)
             ]}
         )
         self.assertMessageFields(
-            record_other.message_ids[1], {'tracking_values': [('email_from', 'char', False, 'email.from.1@example.com')]}
+            record_other.message_ids[1], {'tracking_values_fmt': [('email_from', 'char', False, 'email.from.1@example.com')]}
         )
 
         # check display / format

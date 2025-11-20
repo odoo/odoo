@@ -84,30 +84,42 @@ class MailTrackingValue(models.Model):
         if not field:
             raise ValueError(f'Unknown field {col_name} on model {record._name}')
 
-        values = {'field_id': field.id}
+        values = {
+            'field_id': field.id,
+            'field_name': col_info['string'],
+            'field_type': col_info['type'],
+        }
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
                 f'old_value_{col_info["type"]}': initial_value,
-                f'new_value_{col_info["type"]}': new_value
+                f'new_value_{col_info["type"]}': new_value,
+                'old_value': initial_value,
+                'new_value': new_value,
             })
         elif col_info['type'] == 'monetary':
             values.update({
                 'currency_id': record[col_info['currency_field']].id,
                 'old_value_float': initial_value,
-                'new_value_float': new_value
+                'new_value_float': new_value,
+                'old_value': initial_value,
+                'new_value': new_value,
             })
         elif col_info['type'] == 'date':
             old_value = (initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time()))) or False
             new_value = (new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time()))) or False
             values.update({
-                'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
-                'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
+                'old_value_datetime': old_value,
+                'new_value_datetime': new_value,
+                'old_value': initial_value,
+                'new_value': new_value,
             })
         elif col_info['type'] == 'boolean':
             values.update({
                 'old_value_integer': initial_value,
-                'new_value_integer': new_value
+                'new_value_integer': new_value,
+                'old_value': initial_value,
+                'new_value': new_value,
             })
         elif col_info['type'] == 'selection':
             old_value = (initial_value and dict(col_info['selection']).get(initial_value, initial_value)) or ''
@@ -180,20 +192,22 @@ class MailTrackingValue(models.Model):
     @api.model
     def _create_tracking_values_property(self, initial_value, col_name, col_info, record):
         """Generate the values for the <mail.tracking.values> corresponding to a property."""
-        col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
+        property_col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
 
         field_info = {
             'desc': f"{col_info['string']}: {initial_value['string']}",
             'name': col_name,
-            'type': initial_value['type'],
+            'property_string': initial_value['string'],
+            'property_type': initial_value['type'],
+            'type': property_col_info['type'],
         }
         value = initial_value.get('value', False)
         if value and initial_value['type'] == 'tags':
             value = [t for t in initial_value.get('tags', []) if t[0] in value]
 
         tracking_values = self.env['mail.tracking.value']._create_tracking_values(
-            value, False, col_name, col_info, record)
-        return {**tracking_values, 'field_info': field_info}
+            value, False, col_name, property_col_info, record)
+        return {**tracking_values, 'field_type': col_info['type'], 'field_info': field_info}
 
     def _tracking_value_format(self):
         """ Return structure and formatted data structure to be used by chatter

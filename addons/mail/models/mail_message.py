@@ -5,15 +5,18 @@ import contextlib
 import logging
 import re
 import textwrap
+
 from binascii import Error as binascii_error
 from collections import defaultdict
 from lxml import html
+from markupsafe import Markup
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Command, Domain
 from odoo.tools import clean_context, groupby, SQL
-from odoo.tools.misc import OrderedSet
+from odoo.tools.mail import append_content_to_html
+from odoo.tools.misc import format_amount, OrderedSet
 from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
@@ -714,6 +717,18 @@ class MailMessage(models.Model):
                     return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
                 values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
 
+            # generate tracking content, append to html content
+            if values.get('tracking_value_ids'):
+                track_vals_lst = [dict(cmd[2]) for cmd in values['tracking_value_ids'] if len(cmd) == 3 and cmd[0] == 0]
+                if track_vals_lst:
+                    tracking_html = self._format_tracking_values(track_vals_lst)
+                    original_body = values.get('body', '')
+                    values['body'] = append_content_to_html(
+                        original_body, tracking_html,
+                        plaintext=False,
+                        add_line_breaks=False,
+                    )
+
             # delegate creation of tracking after the create as sudo to avoid access rights issues
             tracking_values_list.append(values.pop('tracking_value_ids', False))
 
@@ -759,10 +774,13 @@ class MailMessage(models.Model):
 
         for message, values, tracking_values_cmd in zip(messages, vals_list, tracking_values_list):
             if tracking_values_cmd:
-                vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
+                track_vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
                 other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
-                if vals_lst:
-                    self.env['mail.tracking.value'].sudo().create(vals_lst)
+                if track_vals_lst:
+                    for track_values in track_vals_lst:
+                        for key in (k for k in ('old_value', 'new_value', 'field_name', 'field_type') if k in track_values):
+                            track_values.pop(key)
+                    self.env['mail.tracking.value'].sudo().create(track_vals_lst)
                 if other_cmd:
                     message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
@@ -1371,6 +1389,41 @@ class MailMessage(models.Model):
             )
             and not self.has_poll
         )
+
+    def _format_tracking_values(self, tracking_values):
+        lines = []
+        for tracking_value in tracking_values:
+            field_info = tracking_value.get('field_info', {})
+            field_type = tracking_value.get('field_type', 'char')
+            old_value = tracking_value.get('old_value', tracking_value.get('old_value_char'))
+            new_value = tracking_value.get('new_value', tracking_value.get('new_value_char'))
+            prop_string, prop_type = field_info.get('property_string'), field_info.get('property_type')
+
+            lines.append(_(
+                '%(old)s ➜ %(new)s %(fname)s',
+                old=self._format_tracking_value(prop_type or field_type, old_value, tracking_value),
+                new=Markup('<b>%s</b>') % self._format_tracking_value(prop_type or field_type, new_value, tracking_value),
+                fname=Markup('<i>%s</i>') % (prop_string or tracking_value.get('field_name', _("Unknown"))),
+            ))
+        return Markup('<div class="o-track">%s</div>') % Markup('<br />').join(lines)
+
+    def _format_tracking_value(self, field_type, field_value, tracking_info):
+        if field_type == 'integer' and not field_value and field_value is not False:
+            return '0'
+        elif field_type == 'monetary' and field_value is not False:
+            currency_id = tracking_info.get('currency_id')
+            currency = self.env['res.currency'].browse(currency_id) or self.env.company.currency_id
+            return format_amount(self.env, field_value or 0, currency, trailing_zeroes=False)
+        elif field_type in ('float', 'monetary') and not field_value and field_value is not False:
+            return '0.0'
+        elif field_type == 'boolean':
+            return str(field_value)
+        elif field_type == 'date' and field_value:
+            # TDE removes me when removing / cleaning tracking value file
+            return fields.Date.to_string(fields.Datetime.to_datetime(field_value))
+        if not field_value:
+            return _('None')
+        return field_value
 
     @api.model
     def _get_reply_to(self, values):

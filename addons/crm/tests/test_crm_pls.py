@@ -907,7 +907,7 @@ class TestLeadLost(TestCrmCommon):
                 'notified_partner_ids': self.env['res.partner'],
                 'partner_ids': self.env['res.partner'],
                 'subtype_id': self.env.ref('mail.mt_note'),
-                'tracking_values': [('user_id', 'many2one', self.user_sales_leads, self.user_sales_salesman)],
+                'tracking_values_fmt': [('user_id', 'many2one', self.user_sales_leads, self.user_sales_salesman)],
             }
         )
 
@@ -934,8 +934,8 @@ class TestLeadLost(TestCrmCommon):
                 'notified_partner_ids': self.env['res.partner'],
                 'partner_ids': self.env['res.partner'],
                 'subtype_id': self.env.ref('crm.mt_lead_lost'),
-                'tracking_values': [
-                    ('active', 'boolean', True, False),
+                'tracking_values_fmt': [
+                    ('active', 'boolean', 'True', 'False'),
                     ('lost_reason_id', 'many2one', False, self.lost_reason),
                     ('won_status', 'char', 'Pending', 'Lost'),
                 ],
@@ -972,8 +972,8 @@ class TestLeadLost(TestCrmCommon):
             self.assertMessageFields(
                 lost_message, {
                     'body': f'<div style="margin-bottom:4px"><p>Lost Comment:</p>{feedback_str}<br></div>',
-                    'tracking_values': [
-                        ('active', 'boolean', True, False),
+                    'tracking_values_fmt': [
+                        ('active', 'boolean', 'True', 'False'),
                         ('lost_reason_id', 'many2one', False, self.lost_reason),
                         ('won_status', 'selection', 'Pending', 'Lost'),
                     ],
