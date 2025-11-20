@@ -94,14 +94,25 @@ test("activate blur", async () => {
 test("local storage for call settings", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    localStorage.setItem("mail_user_setting_background_blur_amount", "3");
-    localStorage.setItem("mail_user_setting_edge_blur_amount", "5");
+    const backgroundBlurAmountKey = makeRecordFieldLocalId(
+        Settings.localId(),
+        "backgroundBlurAmount"
+    );
+    localStorage.setItem(backgroundBlurAmountKey, toRawValue(3));
+    const edgeBlurAmountKey = makeRecordFieldLocalId(Settings.localId(), "edgeBlurAmount");
+    localStorage.setItem(edgeBlurAmountKey, toRawValue(5));
     localStorage.setItem("mail_user_setting_show_only_video", "true");
     const useBlurLocalStorageKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
     localStorage.setItem(useBlurLocalStorageKey, toRawValue(true));
     patchWithCleanup(localStorage, {
         setItem(key, value) {
-            if (key.startsWith("mail_user_setting")) {
+            if (
+                key.startsWith("mail_user_setting") ||
+                [
+                    "Settings,undefined:backgroundBlurAmount",
+                    "Settings,undefined:edgeBlurAmount",
+                ].includes(key)
+            ) {
                 expect.step(`${key}: ${value}`);
             }
             return super.setItem(key, value);

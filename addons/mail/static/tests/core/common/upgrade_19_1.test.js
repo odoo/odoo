@@ -42,6 +42,8 @@ test("use blur is 'on'", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     localStorage.setItem("mail_user_setting_use_blur", "true");
+    localStorage.setItem("mail_user_setting_background_blur_amount", "2"); // range from 0-20, to percentage. 2 => 10%
+    localStorage.setItem("mail_user_setting_edge_blur_amount", "6"); // range from 0-20, to percentage. 6 => 30%
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
@@ -53,9 +55,24 @@ test("use blur is 'on'", async () => {
     await contains(
         ".o-discuss-CallSettings-item:has(label:contains('Blur video background')) input:checked"
     );
+    await contains(
+        "label[title='Background blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('10%')"
+    );
+    await contains(
+        "label[title='Edge blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('30%')"
+    );
     const useBlurKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
     expect(localStorage.getItem(useBlurKey)).toBe(toRawValue(true));
+    const backgroundBlurAmountKey = makeRecordFieldLocalId(
+        Settings.localId(),
+        "backgroundBlurAmount"
+    );
+    expect(localStorage.getItem(backgroundBlurAmountKey)).toBe(toRawValue(2));
+    const edgeBlurAmountKey = makeRecordFieldLocalId(Settings.localId(), "edgeBlurAmount");
+    expect(localStorage.getItem(edgeBlurAmountKey)).toBe(toRawValue(6));
     expect(localStorage.getItem("mail_user_setting_use_blur")).toBe(null);
+    expect(localStorage.getItem("mail_user_setting_background_blur_amount")).toBe(null);
+    expect(localStorage.getItem("mail_user_setting_edge_blur_amount")).toBe(null);
 });
 
 test("member default open is 'off'", async () => {
@@ -144,7 +161,7 @@ test("call auto focus is 'off", async () => {
     expect(localStorage.getItem("mail_user_setting_disable_call_auto_focus")).toBe(null);
 });
 
-test("Renders the call settings", async () => {
+test("device input/output id", async () => {
     patchWithCleanup(browser.navigator.mediaDevices, {
         enumerateDevices: () =>
             Promise.resolve([
