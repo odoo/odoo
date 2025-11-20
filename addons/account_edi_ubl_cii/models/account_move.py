@@ -86,6 +86,7 @@ class AccountMove(models.Model):
     # EDI
     # -------------------------------------------------------------------------
 
+<<<<<<< 2240c0603bfe22b626daacb0779d439852a0a528
     def _get_import_file_type(self, file_data):
         """ Identify UBL files. """
         # EXTENDS 'account'
@@ -139,6 +140,53 @@ class AccountMove(models.Model):
             embedded.extend(self._unwrap_attachments(embedded, recurse=True))
 
         return embedded
+||||||| 7680b83501cef18362be38f90715d824f2bf9cd6
+    @api.model
+    def _get_ubl_cii_builder_from_xml_tree(self, tree):
+        customization_id = tree.find('{*}CustomizationID')
+        if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
+            return self.env['account.edi.xml.cii']
+        ubl_version = tree.find('{*}UBLVersionID')
+        if ubl_version is not None:
+            if ubl_version.text == '2.0':
+                return self.env['account.edi.xml.ubl_20']
+            if ubl_version.text in ('2.1', '2.2', '2.3'):
+                return self.env['account.edi.xml.ubl_21']
+        if customization_id is not None:
+            if 'xrechnung' in customization_id.text:
+                return self.env['account.edi.xml.ubl_de']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
+                return self.env['account.edi.xml.ubl_nl']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0':
+                return self.env['account.edi.xml.ubl_a_nz']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
+                return self.env['account.edi.xml.ubl_sg']
+            if 'urn:cen.eu:en16931:2017' in customization_id.text:
+                return self.env['account.edi.xml.ubl_bis3']
+=======
+    @api.model
+    def _get_ubl_cii_builder_from_xml_tree(self, tree):
+        customization_id = tree.find('{*}CustomizationID')
+        if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
+            return self.env['account.edi.xml.cii']
+        ubl_version = tree.find('{*}UBLVersionID')
+        if ubl_version is not None:
+            if ubl_version.text == '2.0':
+                return self.env['account.edi.xml.ubl_20']
+            if ubl_version.text in ('2.1', '2.2', '2.3'):
+                return self.env['account.edi.xml.ubl_21']
+        if customization_id is not None and customization_id.text:
+            if 'xrechnung' in customization_id.text:
+                return self.env['account.edi.xml.ubl_de']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
+                return self.env['account.edi.xml.ubl_nl']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0':
+                return self.env['account.edi.xml.ubl_a_nz']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
+                return self.env['account.edi.xml.ubl_sg']
+            if 'urn:cen.eu:en16931:2017' in customization_id.text:
+                return self.env['account.edi.xml.ubl_bis3']
+>>>>>>> 6a6d6b366164869c0d14ae19e31b50e0498df5f9
 
     @api.model
     def _ubl_parse_attached_document(self, tree):
