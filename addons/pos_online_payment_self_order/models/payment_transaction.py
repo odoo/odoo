@@ -11,3 +11,20 @@ class PaymentTransaction(models.Model):
         for tx in self:
             if tx and tx.pos_order_id and tx.state in ('authorized', 'done'):
                 tx.pos_order_id._send_notification_online_payment_status('success')
+
+    def _handle_notification_data(self, provider_code, notification_data):
+        tx = super()._handle_notification_data(provider_code, notification_data)
+        if tx._is_self_order_payment_confirmed():
+            self.env.ref('payment.cron_post_process_payment_tx')._trigger()
+        return tx
+
+    def _is_self_order_payment_confirmed(self):
+        self.ensure_one()
+        return (
+            self.pos_order_id
+            and self.state in ('authorized', 'done')
+            and (
+                self.pos_order_id.pos_reference.startswith('Kiosk ')
+                or self.pos_order_id.pos_reference.startswith('Self-Order ')
+            )
+        )
