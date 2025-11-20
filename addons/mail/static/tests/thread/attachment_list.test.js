@@ -458,7 +458,7 @@ test("check actions in mobile view", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    mockUserAgent("android");
     expect(isMobileOS()).toBe(true);
     await click(".o-mail-AttachmentContainer [title='Actions']");
     await contains(".dropdown-item", { text: "Remove" });
