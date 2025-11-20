@@ -354,7 +354,9 @@ class HrAttendanceOvertimeRule(models.Model):
         ):
             period = rule.quantity_period
             for date in attendances_by[period]:
-                if rule.expected_hours_from_contract:
+                if attendances.employee_id.resource_calendar_id.flexible_hours:
+                    expected_hours = attendances.employee_id.resource_calendar_id.hours_per_day
+                elif rule.expected_hours_from_contract:
                     expected_hours = self._get_expected_hours_from_contract(date, version_map[employee][date], period)
                 else:
                     expected_hours = rule.expected_hours
@@ -370,8 +372,9 @@ class HrAttendanceOvertimeRule(models.Model):
                         hours=missing_hours,
                     )
                     for start, end, attendance in new_intervals:
-                        quantity_intervals_by_date[attendance.date].append((start, end, rule))
-                        undertime_flag[attendance.date, start, end, rule.id] = True
+                        date = attendance[0].date
+                        quantity_intervals_by_date[date].append((start, end, rule))
+                        undertime_flag[date, start, end] = True
 
                     continue
                 # Handle overtime: convert overtime hours into intervals to be added later
@@ -382,8 +385,9 @@ class HrAttendanceOvertimeRule(models.Model):
                         starting_intervals=overtimes_by[period][date],
                         hours=overtime_quantity,
                     ):
-                        quantity_intervals_by_date[attendance.date].append((start, end, rule))
-                        undertime_flag[attendance.date, start, end, rule.id] = False
+                        date = attendance[0].date
+                        quantity_intervals_by_date[date].append((start, end, rule))
+                        undertime_flag[date, start, end] = False
                 else:
                     new_intervals = _last_hours_as_intervals(
                         starting_intervals=attendances_by[period][date],
@@ -405,7 +409,7 @@ class HrAttendanceOvertimeRule(models.Model):
                     ):
                         date = attendance[0].date
                         quantity_intervals_by_date[date].append((start, end, rule))
-                        undertime_flag[date, start, end, rule.id] = False
+                        undertime_flag[date, start, end] = False
         intervals_by_date = {}
         for date in quantity_intervals_by_date.keys() | timing_intervals_by_date.keys():
             intervals_by_date[date] = _record_overlap_intervals([
@@ -427,7 +431,7 @@ class HrAttendanceOvertimeRule(models.Model):
         for date, intervals in interval_map.items():
             for start, stop, rules in intervals:
                 is_undertime = undertime_flag.get(
-                    (date, start, stop, rules.id),
+                    (date, start, stop),
                     False
                 )
                 duration = _time_delta_hours(stop - start)
