@@ -625,11 +625,12 @@ class HrVersion(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
+        if self.env.context.get('salary_simulation'):
+            return result
         if vals.get('contract_date_end') or vals.get('contract_date_start') or vals.get('date_version'):
             self.sudo()._remove_work_entries()
         dependent_fields = self._get_fields_that_recompute_we()
-        salary_simulation = self.env.context.get('salary_simulation')
-        if not salary_simulation and any(key in dependent_fields for key in vals):
+        if any(key in dependent_fields for key in vals):
             for version_sudo in self.sudo():
                 date_from = max(version_sudo.date_start, version_sudo.date_generated_from.date())
                 date_to = min(version_sudo.date_end or date.max, version_sudo.date_generated_to.date())
