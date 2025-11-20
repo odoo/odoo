@@ -1,11 +1,9 @@
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
-import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { getBgImageURLFromURL } from "@html_editor/utils/image";
@@ -23,7 +21,6 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             SetBackgroundShapeAction,
-            ToggleBgShapeAction,
             ShowOnMobileAction,
             FlipShapeAction,
             SetBgAnimationSpeedAction,
@@ -38,7 +35,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     static shared = [
         "getShapeStyleUrl",
         "getShapeData",
-        "showBackgroundShapes",
+        "getBackgroundShapeGroups",
         "getBackgroundShapes",
         "getImplicitColors",
         "applyShape",
@@ -110,8 +107,19 @@ export class BackgroundShapeOptionPlugin extends Plugin {
 
         shapeContainerEl.classList.toggle("o_we_animated", animated === "true");
 
+        // We need to check if the colors are the default ones because since we
+        // do not apply a shape by default anymore, "getDefaultColors" might
+        // return an empty object if its the first time a shape is added.
+        const defaultColors = getDefaultColors(editingElement);
+        const areCustomColors =
+            Boolean(colors) &&
+            !Object.entries(colors).every(
+                ([colorName, colorValue]) =>
+                    colorValue.toLowerCase() === defaultColors[colorName]?.toLowerCase()
+            );
+
         const shouldCustomize =
-            Boolean(colors) || flip.length > 0 || parseFloat(shapeAnimationSpeed) !== 0;
+            areCustomColors || flip.length > 0 || parseFloat(shapeAnimationSpeed) !== 0;
 
         if (shouldCustomize) {
             // Apply custom image, flip, speed
@@ -304,16 +312,6 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     removeShapeEl(shapeEl) {
         shapeEl.remove();
     }
-    showBackgroundShapes(editingElements) {
-        this.dependencies.customizeTab.openCustomizeComponent(ShapeSelector, editingElements, {
-            shapeActionId: "setBackgroundShape",
-            buttonWrapperClassName: "o-hb-bg-shape-btn",
-            selectorTitle: _t("Background Shapes"),
-            shapeGroups: this.getBackgroundShapeGroups(),
-            imgThroughDiv: true,
-            getShapeUrl: this.getShapeStyleUrl.bind(this),
-        });
-    }
     getBackgroundShapeGroups() {
         return backgroundShapesDefinition;
     }
@@ -341,7 +339,6 @@ class BaseAnimationAction extends BuilderAction {
         this.getImplicitColors = this.dependencies.backgroundShapeOption.getImplicitColors;
         this.getBackgroundShapes = this.dependencies.backgroundShapeOption.getBackgroundShapes;
         this.createShapeContainer = this.dependencies.backgroundShapeOption.createShapeContainer;
-        this.showBackgroundShapes = this.dependencies.backgroundShapeOption.showBackgroundShapes;
     }
 }
 class SetBackgroundShapeAction extends BaseAnimationAction {
@@ -361,44 +358,6 @@ class SetBackgroundShapeAction extends BaseAnimationAction {
     isApplied({ editingElement, value }) {
         const currentShapeApplied = this.getShapeData(editingElement).shape;
         return currentShapeApplied === value;
-    }
-}
-class ToggleBgShapeAction extends BaseAnimationAction {
-    static id = "toggleBgShape";
-    apply({ editingElement }) {
-        const previousSibling = editingElement.previousElementSibling;
-        let shapeToSelect;
-        const allPossiblesShapesUrl = Object.keys(this.getBackgroundShapes());
-        if (previousSibling) {
-            const previousShape = this.getShapeData(previousSibling).shape;
-            shapeToSelect = allPossiblesShapesUrl.find(
-                (shape, i) => allPossiblesShapesUrl[i - 1] === previousShape
-            );
-        }
-        // If there is no previous sibling, if the previous sibling
-        // had the last shape selected or if the previous shape
-        // could not be found in the possible shapes, default to the
-        // first shape.
-        if (!shapeToSelect) {
-            shapeToSelect = allPossiblesShapesUrl[0];
-        }
-        // Only show on mobile by default if toggled from mobile
-        // view.
-        const showOnMobile = this.config.isMobileView(editingElement);
-        this.createShapeContainer(editingElement, shapeToSelect);
-        const applyShapeParams = {
-            shape: shapeToSelect,
-            colors: this.getImplicitColors(editingElement, shapeToSelect),
-            showOnMobile,
-        };
-        this.applyShape(editingElement, () => applyShapeParams);
-        this.showBackgroundShapes([editingElement]);
-    }
-    clean({ editingElement }) {
-        this.applyShape(editingElement, () => ({ shape: "" }));
-    }
-    isApplied({ editingElement }) {
-        return !!this.getShapeData(editingElement).shape;
     }
 }
 class ShowOnMobileAction extends BaseAnimationAction {

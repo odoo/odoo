@@ -2,41 +2,79 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BackgroundShapeOption">
-    <BuilderRow label.translate="Shape" level="1" t-if="isActiveItem('toggle_bg_shape_id')">
-        <button class="o-hb-btn btn btn-secondary" t-on-click="this.showBackgroundShapes" t-out="state.shapeName"/>
-        <BuilderButton
-                title.translate="Show/Hide on Mobile"
+    <BuilderRow label.translate="Shape">
+        <div class="btn-group o-hb-button-group">
+            <BuilderSlidingPanel
+                t-slot-scope="panel"
+                label.translate="Shape"
+                fullHeight="true"
+                darkBackground="true"
+                textContent="state.shapeName">
+                <ShapeSelector
+                    onClose="panel.close"
+                    shapeActionId="'setBackgroundShape'"
+                    buttonWrapperClassName="'o-hb-bg-shape-btn'"
+                    selectorTitle.translate="Background Shapes"
+                    shapeGroups="getBackgroundShapeGroups()"
+                    imgThroughDiv="true"
+                    getShapeUrl="getShapeStyleUrl"
+                />
+            </BuilderSlidingPanel>
+            <BuilderButton 
+                title.translate="Remove the shape"
+                action="'setBackgroundShape'" 
+                actionValue="''" 
                 preview="false"
+                icon="'oi-close'"
+                className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'"
+                t-if="state.hasShape"/>
+            </div>
+            <BuilderButton
+                title.translate="Show/Hide on Mobile"
                 action="'showOnMobile'"
-                className="'o_hb_device btn-danger-color-active'">
-            <Img src="'/html_builder/static/img/options/mobile_invisible.svg'" style="'width: 12px'" />
-        </BuilderButton>
-        <BuilderButton action="'setBackgroundShape'" actionValue="''" preview="false" icon="'oi-close'"/>
+                preview="false"
+                className="'o-hb-btn-has-img-icon o_hb_device btn-danger-color-active'"
+                t-if="state.hasShape">
+                <Img src="'/html_builder/static/img/options/mobile_invisible.svg'" style="'width: 12px'" />
+            </BuilderButton>
     </BuilderRow>
 
-    <BuilderRow label.translate="Flip" level="2" t-if="isActiveItem('toggle_bg_shape_id')">
-        <BuilderButton icon="'oi-arrows-h'" preview="false" action="'flipShape'" actionParam="'x'"/>
-        <BuilderButton icon="'oi-arrows-v'" preview="false" action="'flipShape'" actionParam="'y'"/>
-    </BuilderRow>
+    <t t-if="this.state.hasShape">
+        <BuilderRow label.translate="Colors" level="1">
+            <t t-foreach="this.state.shapeColorNames" t-as="colorName" t-key="colorName">
+                <BuilderColorPicker
+                    action="'backgroundShapeColor'"
+                    actionParam="colorName"
+                    enabledTabs="['solid', 'custom']"
+                />
+            </t>
+            <!-- TODO handle all the attributes -->
+            <BuilderColorPicker title.translate="Background color" styleAction="'background-color'" applyTo="':scope > .o_we_shape'" enabledTabs="['solid', 'custom']"/>
+        </BuilderRow>
 
-    <BuilderRow label.translate="Colors" level="2">
-        <t t-foreach="getDefaultColorNames()" t-as="colorName" t-key="colorName_index">
-            <BuilderColorPicker action="'backgroundShapeColor'" actionParam="colorName" enabledTabs="['solid', 'custom']"/>
-        </t>
-        <!-- TODO handle all the attributes -->
-        <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'" enabledTabs="['solid', 'custom']"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Speed" level="2" t-if="state.isAnimated">
-        <BuilderRange
-            preview="false"
-            displayRangeValue="true"
-            max="2"
-            min="-2"
-            step="0.1"
-            action="'setBgAnimationSpeed'"
-            computedOutput="this.toRatio"
-        />
-    </BuilderRow>
+        <BuilderRow label.translate="Transform" level="1" preview="false">
+            <BuilderButton
+                title.translate="Horizontal flip"
+                icon="'oi-arrows-h'"
+                action="'flipShape'"
+                actionParam="'x'"/>
+            <BuilderButton
+                title.translate="Vertical flip"
+                icon="'oi-arrows-v'"
+                action="'flipShape'"
+                actionParam="'y'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Speed" level="1" t-if="state.isAnimated" preview="false">
+            <BuilderRange
+                action="'setBgAnimationSpeed'"
+                min="-2"
+                max="2"
+                step="0.1"
+                displayRangeValue="true"
+                computedOutput="this.toRatio"/>
+        </BuilderRow>
+    </t>
 </t>
 
 </templates>
