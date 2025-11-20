@@ -14,6 +14,7 @@ export class PickupLocationMany2OneField extends Many2OneField {
         this.dialog = useService('dialog');
         const partnerRecord = this.props.record.data[this.props.name];
         this.selectedLocationId = partnerRecord.pickup_location_data?.id.toString();
+        this.countryId = partnerRecord.country_id || this.props.context.partner_country_id;
         if (!this.props.record.resId) {
             await this.props.record.save();
         }
@@ -24,9 +25,9 @@ export class PickupLocationMany2OneField extends Many2OneField {
     async onSelectLocation(ev) {
         await this.props.record.save();
         this.dialog.add(LocationSelectorDialog, {
-            parentModel: this.parentModel,
-            parentId: this.parentId,
-            zipCode: this.props.context.partner_zip_code || '',
+            carrierId: this.props.record.data.carrier_id.id,
+            countryId: this.countryId,
+            zipCode: this.props.context.partner_zip_code,
             selectedLocationId: this.selectedLocationId,
             save: async location => {
                 const jsonLocation = JSON.stringify(location);
@@ -51,8 +52,11 @@ export class PickupLocationMany2OneField extends Many2OneField {
 
 export const pickupLocationMany2OneField = {
     ...buildM2OFieldDescription(PickupLocationMany2OneField),
-
+    fieldDependencies: [
+        { name: "carrier_id" },
+    ],
     relatedFields: [
+        { name: "country_id" },
         { name: "pickup_location_data" },
     ],
 };

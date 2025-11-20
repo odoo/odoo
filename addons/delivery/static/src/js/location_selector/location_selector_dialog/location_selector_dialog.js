@@ -4,17 +4,16 @@ import { Component, onMounted, onWillUnmount, useEffect, useState } from '@odoo/
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
-import { rpc } from '@web/core/network/rpc';
+import { useService } from '@web/core/utils/hooks';
 import { useDebounced } from '@web/core/utils/timing';
 
 export class LocationSelectorDialog extends Component {
     static components = { Dialog, LocationList, MapContainer };
     static template = 'delivery.locationSelector.dialog';
     static props = {
-        orderId: {type: Number, optional: true},
-        parentModel: {type: String, optional: true},
-        parentId: {type: Number, optional: true},
-        zipCode: String,
+        carrierId: Number,
+        countryId: Number,
+        zipCode: { type: String, optional: true},
         selectedLocationId: { type: String, optional: true},
         save: Function,
         close: Function, // This is the close from the env of the Dialog Component
@@ -34,7 +33,7 @@ export class LocationSelectorDialog extends Component {
             isSmall: this.env.isSmall,
         });
 
-        this.getLocationUrl = '/delivery/get_pickup_locations';
+        this.orm = useService('orm');
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
         this.debouncedSearchButton = useDebounced((zipCode) => {
@@ -68,14 +67,13 @@ export class LocationSelectorDialog extends Component {
      * Fetch the closest pickup locations based on the zip code.
      *
      * @private
-     * @param {String} zip - The zip code used to look for close locations.
+     * @param {String} zipCode - The zip code used to look for close locations.
      * @return {Object} The result values.
      */
-    async _getLocations(zip) {
-        return rpc(this.getLocationUrl, {
-            res_model: this.props.parentModel,
-            res_id: this.props.parentId,
-            zip_code: zip,
+    async _getLocations(zipCode) {
+        return await this.orm.call('delivery.carrier', 'get_pickup_locations', [this.props.carrierId], {
+            country_id: this.props.countryId,
+            zip_code: zipCode,
         });
     }
 

@@ -83,6 +83,7 @@ class SaleOrder(models.Model):
             'default_carrier_id': self.carrier_id.id,
             'default_total_weight': self._get_estimated_weight(),
             'partner_zip_code': self.partner_id.zip,
+            'partner_country_id': self.partner_id.country_id.id,
         }
         if self.carrier_id.is_pickup:
             context['default_partner_shipping_id'] = self.partner_shipping_id.id

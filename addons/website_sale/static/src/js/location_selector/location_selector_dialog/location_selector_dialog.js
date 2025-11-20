@@ -1,24 +1,29 @@
 import {
     LocationSelectorDialog
 } from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
-import { patch } from '@web/core/utils/patch';
 import { _t } from '@web/core/l10n/translation';
+import { patch } from '@web/core/utils/patch';
 
 patch(LocationSelectorDialog, {
     props: {
         ...LocationSelectorDialog.props,
-        orderId: { type: Number, optional: true },
         isFrontend: { type: Boolean, optional: true },
     },
 });
 
 patch(LocationSelectorDialog.prototype, {
-    setup() {
-        super.setup(...arguments);
-
+    /**
+     * Fetch the closest pickup locations based on the zip code.
+     *
+     * @private
+     * @param {String} zipCode - The zip code used to look for close locations.
+     * @return {Object} The result values.
+     */
+    async _getLocations(zipCode) {
         if (this.props.isFrontend) {
-            this.getLocationUrl = '/website_sale/get_pickup_locations';
+            return rpc('/website_sale/get_pickup_locations', { zip_code: zip });
         }
+        return super._getLocations(zipCode);
     },
 
     get title() {

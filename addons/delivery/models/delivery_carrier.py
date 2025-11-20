@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
 import psycopg2
+import re
 
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.exceptions import UserError
@@ -510,32 +509,23 @@ class DeliveryCarrier(models.Model):
 
         return price
 
-    def _get_pickup_locations(self, zip_code=None, country=None, partner_id=None, **kwargs):
+    def get_pickup_locations(self, country_id, zip_code=False, **kwargs):
         """
         Return the pickup locations of the delivery method close to a given zip code.
 
-        Use provided `zip_code` and `country` or the order's delivery address to determine the zip
-        code and the country to use.
-
         Note: self.ensure_one()
 
+        :param res.country country_id: The country to look up to.
         :param int zip_code: The zip code to look up to, optional.
-        :param res.country country: The country to look up to, required if `zip_code` is provided.
-        :param res.partner partner_id: The partner to use to get the address if no zip code is provided.
         :return: The close pickup locations data.
         :rtype: dict
         """
         self.ensure_one()
-        partner_address = self.env['res.partner']
-        if zip_code:
-            assert country  # country is required if zip_code is provided.
-            partner_address = self.env['res.partner'].new({
-                'active': False,
-                'country_id': country.id,
-                'zip': zip_code,
-            })
-        elif partner_id:
-            partner_address = partner_id
+        partner_address = self.env['res.partner'].new({
+            'active': False,
+            'country_id': country_id,
+            'zip': zip_code,
+        })
         try:
             error = {'error': _("No pick-up points are available for this delivery address.")}
             function_name = f'_{self.delivery_type}_get_close_locations'
