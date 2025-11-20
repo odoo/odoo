@@ -13,7 +13,7 @@ import { parseRawValue, toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, test, expect } from "@odoo/hoot";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
 
@@ -91,7 +91,6 @@ test("activate blur", async () => {
 });
 
 test("local storage for call settings", async () => {
-    serverState.serverVersion = [99, 9]; // HOOT uses 1.0 version by default
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const backgroundBlurAmountKey = makeRecordFieldLocalId(
