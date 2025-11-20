@@ -1151,7 +1151,14 @@ class MrpProduction(models.Model):
     def action_update_bom(self):
         for production in self:
             if production.bom_id:
+                old_durations = production.is_planned and production.workorder_ids.mapped('duration_expected')
                 production._link_bom(production.bom_id)
+
+                if production.is_planned:
+                    new_durations = production.workorder_ids.mapped('duration_expected')
+                    if old_durations != new_durations:
+                        production.button_unplan()
+                        production._plan_workorders()
         self.is_outdated_bom = False
 
     def _get_bom_values(self, ratio=1):
@@ -2558,7 +2565,7 @@ class MrpProduction(models.Model):
                    any(att_val.id in product_attribute_ids for att_val in record.bom_product_template_attribute_value_ids)
 
         ratio = self._get_ratio_between_mo_and_bom_quantities(bom)
-        _dummy, bom_lines = bom.explode(self.product_id, bom.product_qty)
+        all_boms, bom_lines = bom.explode(self.product_id, bom.product_qty)
         bom_lines_by_id = defaultdict(lambda: [None, 0])
         for line, exploded_values in bom_lines:
             if filter_by_attributes(line, exploded_values['product']):
@@ -2566,7 +2573,7 @@ class MrpProduction(models.Model):
                 bom_lines_by_id[key][0] = line
                 bom_lines_by_id[key][1] += exploded_values['qty'] / exploded_values['original_qty']
         bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
-        operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
+        operations_by_id = {op.id: op for bom, _ in all_boms for op in bom.operation_ids.filtered(filter_by_attributes)}
 
         # Compares the BoM's operations to the MO's workorders.
         for workorder in self.workorder_ids:
