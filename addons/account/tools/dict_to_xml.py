@@ -1,4 +1,5 @@
 from lxml import etree
+from odoo.tools.xml_utils import remove_control_characters
 
 
 def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=None, path=None):
@@ -66,7 +67,7 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
     # Add text content if present
     text = node.get('_text')
     if text is not None and text is not False:
-        element.text = str(text)
+        element.text = remove_control_characters(str(text).encode()).decode()
 
     # Add child nodes
     for child_tag, child in node.items():
