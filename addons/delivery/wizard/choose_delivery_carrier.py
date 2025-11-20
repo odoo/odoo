@@ -45,8 +45,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
             self.display_price = 0
             self.delivery_price = 0
 
-        if self.partner_shipping_id.pickup_delivery_carrier_id:
-            self.partner_shipping_id = self.partner_id
+        if self.partner_shipping_id.pickup_delivery_carrier_id != self.carrier_id:
+            self.partner_shipping_id = False
 
     @api.onchange('order_id')
     def _onchange_order_id(self):
@@ -119,9 +119,9 @@ class ChooseDeliveryCarrier(models.TransientModel):
             address = self.env['res.partner']._address_from_json(
                 pickup_location_data_json,
                 self.partner_id,
-                pickup_delivery_carrier_id=self.carrier_id.id
+                pickup_delivery_carrier_id=self.carrier_id.id,
             )
-            self.partner_shipping_id = address or self.partner_id
+            self.partner_shipping_id = address
         # When opening a dialog from another dialog, the first one gets closed
         # We need to return an action to open the first dialog again
         action = self.order_id.action_open_delivery_wizard()
