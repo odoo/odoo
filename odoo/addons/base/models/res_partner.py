@@ -179,6 +179,7 @@ class ResPartner(models.Model):
     _order = "complete_name ASC, id DESC"
     _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
     _allow_sudo_commands = False
+    _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
     # the partner types that must be added to a partner's complete name, like "Delivery"
