@@ -1169,7 +1169,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             invoice_values['ref'] = ref
         invoice_values['invoice_origin'] = (
             tree.findtext('./{*}OrderReference/{*}ID')
-            or ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description')])
+            or ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description') if desc.text])
             or None
         )
         invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
