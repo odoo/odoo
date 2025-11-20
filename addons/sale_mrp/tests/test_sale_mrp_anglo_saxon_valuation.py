@@ -49,6 +49,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         self.component_bb = self._create_product(name='Component BB', is_storable=False, standard_price=5.00)
         self.kit_a = self._create_product(name='Kit A', is_storable=True, standard_price=0.00)
         self.kit_b = self._create_product(name='Kit B', is_storable=False, standard_price=0.00)
+        pack_2 = self.env['uom.uom'].create({'name': 'Pack of 2', 'relative_factor': 2, 'relative_uom_id': self.kit_a.uom_id.id})
 
         self.kit_a.write({
             'property_account_expense_id': self.company_data['default_account_expense'].id,
@@ -87,7 +88,8 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 (0, 0, {
                     'name': self.kit_a.name,
                     'product_id': self.kit_a.id,
-                    'product_uom_qty': 1.0,
+                    'product_uom_qty': 0.5,
+                    'product_uom_id': pack_2.id,
                     'price_unit': 1,
                     'tax_ids': False,
                 })],

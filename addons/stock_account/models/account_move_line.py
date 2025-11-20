@@ -49,6 +49,8 @@ class AccountMoveLine(models.Model):
         return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
     def _get_cogs_value(self):
+        """ Get the COGS price unit in the product's default unit of measure.
+        """
         self.ensure_one()
 
         if not self.product_id:
