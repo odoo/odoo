@@ -33,14 +33,11 @@ export class Homepage extends Component {
         this.data = useState({});
         this.store.advanced = localStorage.getItem("showAdvanced") === "true";
         this.store.dev = new URLSearchParams(window.location.search).has("debug");
+        this.loadDataDelay = 10000;
 
         onWillStart(async () => {
             await this.loadInitialData();
         });
-
-        setInterval(() => {
-            this.loadInitialData();
-        }, 10000);
     }
 
     async loadInitialData() {
@@ -60,6 +57,10 @@ export class Homepage extends Component {
         } catch {
             console.warn("Error while fetching data");
         }
+        this.loadDataDelay *= 1.25;
+        setTimeout(async () => {
+            await this.loadInitialData();
+        }, Math.min(this.loadDataDelay, 30 * 60 * 1000));
     }
 
     async restartOdooService() {
