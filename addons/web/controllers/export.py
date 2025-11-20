@@ -564,7 +564,7 @@ class ExportFormat(object):
 
         groupby = params.get('groupby')
         if not import_compat and groupby:
-            groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
+            groupby_type = [Model._fields[x.split(':', 1)[0].split('.', 1)[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
             read_context = Model.env.context
             if ids:

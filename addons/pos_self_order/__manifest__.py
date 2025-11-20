@@ -40,6 +40,7 @@
             'web/static/src/core/currency.js',
             'barcodes/static/src/barcode_service.js',
             'point_of_sale/static/src/utils.js',
+            'point_of_sale/static/src/app/utils/init_lna.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
             'web/static/lib/bootstrap/js/dist/dom/event-handler.js',

@@ -283,6 +283,30 @@
                             </tr>
                             </tbody>
                         </table>
+                        <table class="table table-sm table-borderless w-50 ms-auto border-top">
+                            <tr class="fs-5">
+                                <th class="ps-2 fw-bolder">Total</th>
+                                <th class="text-end fw-bolder">
+                                    <t t-if="currency['position']">
+                                        <span t-out="currency['total_paid']" t-options="{'widget': 'float', 'precision': currency['precision']}">11.11</span><span t-out="currency['symbol']">$</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-out="currency['symbol']">$</span><span t-out="currency['total_paid']" t-options="{'widget': 'float', 'precision': currency['precision']}">11.11</span>
+                                    </t>
+                                </th>
+                            </tr>
+                            <tr t-if="show_payment_per_method" t-foreach="payments_per_method" t-as="ppm">
+                                <td class="ps-2 fw-bold" ><t t-out="ppm['name']"/></td>
+                                <td class="text-end">
+                                    <t t-if="currency['position']">
+                                        <span t-out="ppm['total']" t-options="{'widget': 'float', 'precision': currency['precision']}">38.83</span><span t-out="currency['symbol']">$</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-out="currency['symbol']">$</span><span t-out="ppm['total']" t-options="{'widget': 'float', 'precision': currency['precision']}">38.83</span>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
                         <div class="oe_structure"></div>
                     </t>
                 </div>

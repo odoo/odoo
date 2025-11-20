@@ -116,6 +116,12 @@
             &:hover {
                 --o-bg-opacity: 1;
             }
+
+            &.o_event_hatched:before {
+                --o-event-bg: var(--fc-event-text-color);
+
+                content: "\f1db"; // fa-circle-thin
+            }
         }
     }
 
