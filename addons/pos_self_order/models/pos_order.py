@@ -82,18 +82,11 @@ class PosOrder(models.Model):
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
             config._notify('ORDER_STATE_CHANGED', {})
 
+    # TODO: remove in master
     def _send_self_order_receipt(self):
+        """Hook for receipt processing extensions such as the blackbox module."""
         self.ensure_one()
-        if (
-            self.state not in ('paid', 'done')
-            or not self.email
-            or not self.preset_id.mail_template_id
-        ):
-            return
-        try:
-            self.action_send_self_order_receipt(self.email, self.preset_id.mail_template_id.id, False, False)
-        except UserError as e:
-            _logger.warning("Error while sending email: %s", e.args[0])
+        return
 
     def action_send_self_order_receipt(self, email, mail_template_id, ticket_image, basic_image):
         self.ensure_one()
@@ -102,7 +95,7 @@ class PosOrder(models.Model):
         if not mail_template:
             raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
         email_values = {'email_to': email}
-        if self.state == 'paid' and ticket_image:
+        if self.state in ('paid', 'done') and ticket_image:
             email_values['attachment_ids'] = self._get_mail_attachments(self.name, ticket_image, basic_image)
         mail_template.send_mail(self.id, force_send=True, email_values=email_values)
 
