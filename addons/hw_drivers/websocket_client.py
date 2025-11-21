@@ -53,6 +53,8 @@ def on_message(ws, messages):
                 for device in payload['iotDevice']['identifiers']:
                     device_identifier = device['identifier']
                     if device_identifier in main.iot_devices:
+                        if main.iot_devices[device_identifier]._check_idempotency(**payload):
+                            return
                         start_operation_time = time.perf_counter()
                         _logger.info("device '%s' action started", device_identifier)
                         main.iot_devices[device_identifier].action(payload)
