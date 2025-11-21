@@ -48,14 +48,14 @@
                     'name': obj().env.ref('product.product_product_25').partner_ref,
                     'price_unit': 286.80,
                     'product_qty': 20.0,
-                    'product_uom_id': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
                 (0, 0, {
                     'product_id': ref('product.product_product_20'),
                     'name': obj().env.ref('product.product_product_20').partner_ref,
                     'price_unit': 120.00,
                     'product_qty': 10.0,
-                    'product_uom_id': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
             ]"/>
         </record>
@@ -92,7 +92,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_8'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 3.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -100,7 +100,7 @@
                 }),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_01'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 6.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -118,7 +118,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_9'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 10.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -136,7 +136,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_8'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 3.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -144,7 +144,7 @@
                 }),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_01'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 12.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -152,7 +152,7 @@
                 }),
                 (0, 0, {
                     'product_id': ref('product.product_product_9'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 8.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -170,7 +170,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_8'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 2.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -178,7 +178,7 @@
                 }),
                 (0, 0, {
                     'product_id': ref('product.product_delivery_01'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 5.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -196,7 +196,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_9'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 4.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -214,7 +214,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 120.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -232,7 +232,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 130.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -250,7 +250,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 110.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -268,7 +268,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 100.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -286,7 +286,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 90.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -304,7 +304,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 140.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -322,7 +322,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 115.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -340,7 +340,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 120.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -358,7 +358,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 120.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -376,7 +376,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 100.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -394,7 +394,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 90.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -412,7 +412,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 125.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -430,7 +430,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 110.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -448,7 +448,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 120.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -466,7 +466,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 100.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -484,7 +484,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 90.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -502,7 +502,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 80.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -520,7 +520,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 130.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -538,7 +538,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 105.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -556,7 +556,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 110.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -574,7 +574,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 110.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -592,7 +592,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 90.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -610,7 +610,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 80.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -628,7 +628,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 115.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -646,7 +646,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 99.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -664,7 +664,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 80.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),
@@ -682,7 +682,7 @@
             <field name="move_ids" model="stock.move" eval="[
                 (0, 0, {
                     'product_id': ref('product.product_product_3'),
-                    'product_uom': ref('uom.product_uom_unit'),
+                    'uom_id': ref('uom.product_uom_unit'),
                     'product_uom_qty': 20.0,
                     'picking_type_id': ref('stock.picking_type_out'),
                     'location_id': ref('stock.stock_location_stock'),

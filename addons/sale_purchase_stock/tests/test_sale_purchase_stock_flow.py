@@ -89,7 +89,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
             'product_id': sm.product_id.id,
             'quantity': 12,
             'company_id': sm.company_id.id,
-            'product_uom_id': sm.product_uom.id,
+            'uom_id': sm.uom_id.id,
             'picking_id': delivery.id,
         })]
         delivery.button_validate()
@@ -305,7 +305,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         in_move = self.env['stock.move'].create({
             'product_id': product.id,
             'product_uom_qty': 2,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': wh.lot_stock_id.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
@@ -408,12 +408,12 @@ class TestSalePurchaseStockFlow(TransactionCase):
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'seller_ids': [Command.create({
                 'partner_id': self.vendor.id,
-                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                'uom_id': self.env.ref('uom.product_uom_unit').id,
                 'price': 1,
             }),
             Command.create({
                 'partner_id': self.vendor.id,
-                'product_uom_id': self.env.ref('uom.product_uom_pack_6').id,
+                'uom_id': self.env.ref('uom.product_uom_pack_6').id,
                 'min_qty': 2,
                 'price': 5,
             })],
@@ -429,7 +429,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         })
         so.action_confirm()
         po = so._get_purchase_orders()
-        self.assertEqual(po.order_line.product_uom_id, self.env.ref('uom.product_uom_unit'))
+        self.assertEqual(po.order_line.uom_id, self.env.ref('uom.product_uom_unit'))
         self.assertEqual(po.order_line.product_qty, 10)
         self.assertEqual(po.order_line.price_unit, 1)
         po.button_cancel()
@@ -444,7 +444,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         })
         so.action_confirm()
         po = so._get_purchase_orders()
-        self.assertEqual(po.order_line.product_uom_id, self.env.ref('uom.product_uom_pack_6'))
+        self.assertEqual(po.order_line.uom_id, self.env.ref('uom.product_uom_pack_6'))
         self.assertEqual(po.order_line.product_qty, 2.5)
         self.assertEqual(po.order_line.price_unit, 5)
 

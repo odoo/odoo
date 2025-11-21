@@ -76,7 +76,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
         # BoMs
         cls.bom_none = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.produced_none.product_tmpl_id.id,
-            'product_uom_id': cls.produced_none.uom_id.id,
+            'uom_id': cls.produced_none.uom_id.id,
             'consumption': 'flexible',
             'sequence': 1
         })
@@ -85,7 +85,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
 
         cls.bom_lot = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.produced_lot.product_tmpl_id.id,
-            'product_uom_id': cls.produced_lot.uom_id.id,
+            'uom_id': cls.produced_lot.uom_id.id,
             'consumption': 'flexible',
             'sequence': 2
         })
@@ -94,7 +94,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
 
         cls.bom_serial = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.produced_serial.product_tmpl_id.id,
-            'product_uom_id': cls.produced_serial.uom_id.id,
+            'uom_id': cls.produced_serial.uom_id.id,
             'consumption': 'flexible',
             'sequence': 1
         })
@@ -104,21 +104,21 @@ class TestConsumeComponentCommon(common.TransactionCase):
         # Manufacturing Orders
         cls.mo_none_tmpl = {
             'product_id': cls.produced_none.id,
-            'product_uom_id': cls.produced_none.uom_id.id,
+            'uom_id': cls.produced_none.uom_id.id,
             'product_qty': 1,
             'bom_id': cls.bom_none.id
         }
 
         cls.mo_lot_tmpl = {
             'product_id': cls.produced_lot.id,
-            'product_uom_id': cls.produced_lot.uom_id.id,
+            'uom_id': cls.produced_lot.uom_id.id,
             'product_qty': 1,
             'bom_id': cls.bom_lot.id
         }
 
         cls.mo_serial_tmpl = {
             'product_id': cls.produced_serial.id,
-            'product_uom_id': cls.produced_serial.uom_id.id,
+            'uom_id': cls.produced_serial.uom_id.id,
             'product_qty': 1,
             'bom_id': cls.bom_serial.id
         }
@@ -158,7 +158,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
             vals.append({
                 'product_id': product.id,
                 'product_qty': quantities[seq],
-                'product_uom_id': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'sequence': seq,
                 'bom_id': bom.id,
             })
@@ -413,7 +413,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': sfg_product.product_tmpl_id.id,
-            'product_uom_id': sfg_product.uom_id.id,
+            'uom_id': sfg_product.uom_id.id,
             'consumption': 'flexible',
             'sequence': 1
         })
@@ -421,7 +421,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
         mo = self.env['mrp.production'].create({
             'product_id': sfg_product.id,
-            'product_uom_id': sfg_product.uom_id.id,
+            'uom_id': sfg_product.uom_id.id,
             'product_qty': 1,
             'bom_id': bom.id
         })

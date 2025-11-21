@@ -45,7 +45,7 @@ class TestBatchPicking(TransactionCase):
         cls.env['stock.move'].create({
             'product_id': cls.productA.id,
             'product_uom_qty': 10,
-            'product_uom': cls.productA.uom_id.id,
+            'uom_id': cls.productA.uom_id.id,
             'picking_id': cls.picking_client_1.id,
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
@@ -63,7 +63,7 @@ class TestBatchPicking(TransactionCase):
         cls.env['stock.move'].create({
             'product_id': cls.productB.id,
             'product_uom_qty': 10,
-            'product_uom': cls.productA.uom_id.id,
+            'uom_id': cls.productA.uom_id.id,
             'picking_id': cls.picking_client_2.id,
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
@@ -79,7 +79,7 @@ class TestBatchPicking(TransactionCase):
         cls.env['stock.move'].create({
             'product_id': cls.productB.id,
             'product_uom_qty': 10,
-            'product_uom': cls.productA.uom_id.id,
+            'uom_id': cls.productA.uom_id.id,
             'picking_id': cls.picking_client_3.id,
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
@@ -411,7 +411,7 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_out_1.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -427,7 +427,7 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.move'].create({
             'product_id': self.productB.id,
             'product_uom_qty': 10,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': picking_out_2.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -443,7 +443,7 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.move'].create({
             'product_id': self.productB.id,
             'product_uom_qty': 10,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': picking_out_3.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -652,7 +652,7 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': to_loc.id,
             'move_ids': [(0, 0, {
                 'product_id': product.id,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_uom_qty': 1,
                 'location_id': from_loc.id,
                 'location_dest_id': to_loc.id,
@@ -688,7 +688,7 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'move_ids': [(0, 0, {
                 'product_id': self.productA.id,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'product_uom_qty': 1,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -787,13 +787,13 @@ class TestBatchPicking02(TransactionCase):
                 'location_id': loc1.id,
                 'location_dest_id': loc2.id,
                 'product_id': self.productA.id,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'product_uom_qty': qty,
             }), (0, 0, {
                 'location_id': loc1.id,
                 'location_dest_id': loc2.id,
                 'product_id': self.productB.id,
-                'product_uom': self.productB.uom_id.id,
+                'uom_id': self.productB.uom_id.id,
                 'product_uom_qty': qty,
             }) ]
         } for qty in (3, 7)])
@@ -836,7 +836,7 @@ class TestBatchPicking02(TransactionCase):
         self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_1.id,
             'location_id': loc1.id,
             'location_dest_id': loc2.id,
@@ -851,7 +851,7 @@ class TestBatchPicking02(TransactionCase):
         self.env['stock.move'].create({
             'product_id': self.productB.id,
             'product_uom_qty': 5,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': picking_2.id,
             'location_id': loc1.id,
             'location_dest_id': loc2.id,
@@ -912,7 +912,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': picking_1.id,
                 'location_id': picking_1.location_id.id,
                 'location_dest_id': picking_1.location_dest_id.id,
@@ -920,7 +920,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': picking_2.id,
                 'location_id': picking_2.location_id.id,
                 'location_dest_id': picking_2.location_dest_id.id,
@@ -928,7 +928,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productB.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productB.uom_id.id,
+                'uom_id': productB.uom_id.id,
                 'picking_id': picking_2.id,
                 'location_id': picking_2.location_id.id,
                 'location_dest_id': picking_2.location_dest_id.id,
@@ -965,7 +965,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 4.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': pickings[0].id,
                 'location_id': pickings[0].location_id.id,
                 'location_dest_id': pickings[0].location_dest_id.id,
@@ -973,7 +973,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productB.id,
                 'product_uom_qty': 4.0,
-                'product_uom': productB.uom_id.id,
+                'uom_id': productB.uom_id.id,
                 'picking_id': pickings[1].id,
                 'location_id': pickings[1].location_id.id,
                 'location_dest_id': pickings[1].location_dest_id.id,
@@ -981,7 +981,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': pickings[2].id,
                 'location_id': pickings[2].location_id.id,
                 'location_dest_id': pickings[2].location_dest_id.id,
@@ -1062,7 +1062,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': pickings[0].id,
                 'location_id': pickings[0].location_id.id,
                 'location_dest_id': pickings[0].location_dest_id.id,
@@ -1070,7 +1070,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productB.id,
                 'product_uom_qty': 4.0,
-                'product_uom': productB.uom_id.id,
+                'uom_id': productB.uom_id.id,
                 'picking_id': pickings[0].id,
                 'location_id': pickings[0].location_id.id,
                 'location_dest_id': pickings[0].location_dest_id.id,
@@ -1078,7 +1078,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': pickings[1].id,
                 'location_id': pickings[1].location_id.id,
                 'location_dest_id': pickings[1].location_dest_id.id,
@@ -1123,7 +1123,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': pickings[0].id,
                 'location_id': pickings[0].location_id.id,
                 'location_dest_id': pickings[0].location_dest_id.id,
@@ -1131,7 +1131,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productB.id,
                 'product_uom_qty': 4.0,
-                'product_uom': productB.uom_id.id,
+                'uom_id': productB.uom_id.id,
                 'picking_id': pickings[0].id,
                 'location_id': pickings[0].location_id.id,
                 'location_dest_id': pickings[0].location_dest_id.id,
@@ -1139,7 +1139,7 @@ class TestBatchPicking02(TransactionCase):
             {
                 'product_id': productA.id,
                 'product_uom_qty': 1.0,
-                'product_uom': productA.uom_id.id,
+                'uom_id': productA.uom_id.id,
                 'picking_id': pickings[1].id,
                 'location_id': pickings[1].location_id.id,
                 'location_dest_id': pickings[1].location_dest_id.id,
@@ -1198,7 +1198,7 @@ class TestBatchPickingSynchronization(HttpCase):
         self.env['stock.move'].create({
             'product_id': productA.id,
             'product_uom_qty': 1,
-            'product_uom': productA.uom_id.id,
+            'uom_id': productA.uom_id.id,
             'picking_id': picking_1.id,
             'location_id': loc1.id,
             'location_dest_id': loc2.id,

@@ -57,7 +57,7 @@
                             <field name="package_id" widget="package_m2o" context="{'show_src_package': 1}"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
                         </list>
                         <kanban class="o_kanban_mobile">
                             <templates>
@@ -66,7 +66,7 @@
                                     <field name="lot_id"/>
                                     <div class="d-flex">
                                         <field name="quantity"/>
-                                        <field class="mx-2" name="product_uom_id" groups="uom.group_uom"/>
+                                        <field class="mx-2" name="uom_id" groups="uom.group_uom"/>
                                     </div>
                                 </t>
                             </templates>

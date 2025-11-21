@@ -55,7 +55,7 @@ class ProductValue(models.Model):
                 continue
             move = product_value.move_id
             quantity = move.quantity
-            uom = move.product_uom.name
+            uom = move.uom_id.name
             price_unit = move.value / move.quantity
             product_value.current_value_details = _("For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
                 quantity=quantity, uom=uom, price_unit=price_unit)

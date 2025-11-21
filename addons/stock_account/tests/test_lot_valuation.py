@@ -357,7 +357,7 @@ class TestLotValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': c2_stock_loc.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 9.0,
             'price_unit': 6.0,
         })
@@ -477,7 +477,7 @@ class TestLotValuation(TestStockValuationCommon):
             Command.update(move.move_line_ids[1].id, {'quantity': 6}),
             Command.create({
                 'product_id': self.product1.id,
-                'product_uom_id': self.product1.uom_id.id,
+                'uom_id': self.product1.uom_id.id,
                 'quantity': 3,
                 'lot_id': self.lot3.id,
             }),

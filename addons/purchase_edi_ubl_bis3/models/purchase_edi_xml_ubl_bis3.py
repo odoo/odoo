@@ -360,6 +360,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         # adapt each line to purchase.order.line
         for line in lines_vals:
             line['product_qty'] = line.pop('quantity')
+            line['uom_id'] = line.pop('product_uom_id')
             # remove invoice line fields
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)

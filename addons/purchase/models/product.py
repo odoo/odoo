@@ -94,7 +94,7 @@ class ProductProduct(models.Model):
                 domain,
                 Domain('order_id.date_planned', '<=', self.env.context.get("to_date").date())
             ])
-        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id', 'product_uom_id'], ['product_uom_qty:sum', 'qty_received:sum'])
+        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id', 'uom_id'], ['product_uom_qty:sum', 'qty_received:sum'])
         for product, line_uom, qty_ordered, qty_received in order_lines:
             to_receive = (qty_ordered - qty_received) * line_uom.factor / product.uom_id.factor
             res[product.id]['incoming_qty'] += to_receive
@@ -137,7 +137,7 @@ class ProductProduct(models.Model):
     def _update_uom(self, to_uom_id):
         for uom, product, po_lines in self.env['purchase.order.line']._read_group(
             [('product_id', 'in', self.ids)],
-            ['product_uom_id', 'product_id'],
+            ['uom_id', 'product_id'],
             ['id:recordset'],
         ):
             if uom != product.product_tmpl_id.uom_id:
@@ -146,7 +146,7 @@ class ProductProduct(models.Model):
                     'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                     'If you want to change it, please archive the product and create a new one.',
                     problem_uom=uom.display_name, uom=product.product_tmpl_id.uom_id.display_name))
-            po_lines.product_uom_id = to_uom_id
+            po_lines.uom_id = to_uom_id
             po_lines.flush_recordset()
 
         return super()._update_uom(to_uom_id)

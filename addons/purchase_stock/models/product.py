@@ -164,7 +164,7 @@ class ProductProduct(models.Model):
         qty_by_product_location, qty_by_product_wh = super()._get_quantity_in_progress(location_ids, warehouse_ids)
         domain = self._get_lines_domain(location_ids, warehouse_ids)
         groups = self.env['purchase.order.line'].sudo()._read_group(domain,
-            ['order_id', 'product_id', 'product_uom_id', 'orderpoint_id', 'location_final_id'],
+            ['order_id', 'product_id', 'uom_id', 'orderpoint_id', 'location_final_id'],
             ['product_qty:sum'])
         for order, product, uom, orderpoint, location_final, product_qty_sum in groups:
             if orderpoint:
@@ -281,7 +281,7 @@ class ProductSupplierinfo(models.Model):
                 lambda s: s.id == orderpoint.supplier_id.id
             ).show_set_supplier_button = False
 
-    @api.depends('partner_id', 'min_qty', 'product_uom_id', 'currency_id', 'price')
+    @api.depends('partner_id', 'min_qty', 'uom_id', 'currency_id', 'price')
     @api.depends_context('use_simplified_supplier_name')
     def _compute_display_name(self):
         if self.env.context.get('use_simplified_supplier_name'):
@@ -289,7 +289,7 @@ class ProductSupplierinfo(models.Model):
         else:
             for supplier in self:
                 price_str = formatLang(self.env, supplier.price, currency_obj=supplier.currency_id)
-                supplier.display_name = f'{supplier.partner_id.display_name} ({supplier.min_qty} {supplier.product_uom_id.name} - {price_str})'
+                supplier.display_name = f'{supplier.partner_id.display_name} ({supplier.min_qty} {supplier.uom_id.name} - {price_str})'
 
     def action_set_supplier(self):
         self.ensure_one()
@@ -307,7 +307,7 @@ class ProductSupplierinfo(models.Model):
             ])
             orderpoint.route_id = self.env['stock.rule'].search(domain, limit=1).route_id.id
         orderpoint.supplier_id = self
-        supplier_min_qty = self.product_uom_id._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
+        supplier_min_qty = self.uom_id._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
         if orderpoint.qty_to_order < supplier_min_qty:
             orderpoint.qty_to_order = supplier_min_qty
         if self.env.context.get('replenish_id'):

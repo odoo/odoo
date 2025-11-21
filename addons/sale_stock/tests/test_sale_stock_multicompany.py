@@ -130,7 +130,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
             'location_dest_id': picking.location_dest_id.id,
             'product_id': self.product_b.id,
             'product_uom_qty': 1,
-            'product_uom': self.product_b.uom_id.id,
+            'uom_id': self.product_b.uom_id.id,
             'quantity': 1,
         })
 

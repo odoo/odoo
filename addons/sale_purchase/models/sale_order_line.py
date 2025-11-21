@@ -105,10 +105,10 @@ class SaleOrderLine(models.Model):
         for line in self:
             last_purchase_line = self.env['purchase.order.line'].search([('sale_line_id', '=', line.id)], order='create_date DESC', limit=1)
             if last_purchase_line.state in ['draft', 'sent', 'to approve']:  # update qty for draft PO lines
-                quantity = line.product_uom_id._compute_quantity(new_qty, last_purchase_line.product_uom_id)
+                quantity = line.product_uom_id._compute_quantity(new_qty, last_purchase_line.uom_id)
                 last_purchase_line.write({'product_qty': quantity})
             elif last_purchase_line.state in ['purchase', 'cancel']:  # create new PO, by forcing the quantity as the difference from SO line
-                quantity = line.product_uom_id._compute_quantity(new_qty - origin_values.get(line.id, 0.0), last_purchase_line.product_uom_id)
+                quantity = line.product_uom_id._compute_quantity(new_qty - origin_values.get(line.id, 0.0), last_purchase_line.uom_id)
                 line._purchase_service_create(quantity=quantity)
 
     def _purchase_get_date_order(self, supplierinfo):
@@ -193,8 +193,8 @@ class SaleOrderLine(models.Model):
             date=purchase_order.date_order and purchase_order.date_order.date(),  # and purchase_order.date_order[:10],
             uom_id=self.product_id.uom_id
         )
-        if supplierinfo and supplierinfo.product_uom_id != self.product_id.uom_id:
-            purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, supplierinfo.product_uom_id)
+        if supplierinfo and supplierinfo.uom_id != self.product_id.uom_id:
+            purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, supplierinfo.uom_id)
 
         price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(supplierinfo, purchase_order)
         name = self._purchase_service_get_product_name(supplierinfo, purchase_order, quantity)
@@ -207,7 +207,7 @@ class SaleOrderLine(models.Model):
             'name': name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
-            'product_uom_id': supplierinfo.product_uom_id.id or self.product_id.uom_id.id,
+            'uom_id': supplierinfo.uom_id.id or self.product_id.uom_id.id,
             'price_unit': price_unit,
             'date_planned': purchase_order.date_order + relativedelta(days=int(supplierinfo.delay)),
             'tax_ids': [(6, 0, taxes.ids)],

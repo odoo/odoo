@@ -34,7 +34,7 @@ class ProductProduct(models.Model):
     def _update_uom(self, to_uom_id):
         for uom, product, repairs in self.env['repair.order']._read_group(
             [('product_id', 'in', self.ids)],
-            ['product_uom', 'product_id'],
+            ['uom_id', 'product_id'],
             ['id:recordset'],
         ):
             if uom != product.product_tmpl_id.uom_id:
@@ -43,7 +43,7 @@ class ProductProduct(models.Model):
                 'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                 'If you want to change it, please archive the product and create a new one.',
                 problem_uom=uom.display_name, uom=product.product_tmpl_id.uom_id.display_name))
-            repairs.product_uom = to_uom_id
+            repairs.uom_id = to_uom_id
         return super()._update_uom(to_uom_id)
 
 class ProductTemplate(models.Model):

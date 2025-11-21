@@ -273,7 +273,7 @@ class StockMove(models.Model):
             if move.product_id.cost_method == 'fifo':
                 move.value = move.product_id._run_fifo(move._get_valued_qty())
             else:
-                qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+                qty = move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
                 move.value = move.product_id.standard_price * qty
 
         # Recompute the standard price
@@ -379,7 +379,7 @@ class StockMove(models.Model):
         if self.is_dropship:
             if lot:
                 return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
-            return self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
+            return self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
         return 0
 
     def _get_manual_value(self, quantity, at_date=None):
@@ -551,7 +551,7 @@ class StockMove(models.Model):
 
         if self.state != 'done':
             if self.picked:
-                unit_amount = self.product_uom._compute_quantity(
+                unit_amount = self.uom_id._compute_quantity(
                     self.quantity, self.product_id.uom_id)
                 # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
                 # we would have to recompute all the analytic estimation at each out.

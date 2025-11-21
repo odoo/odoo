@@ -803,7 +803,7 @@ class Picking(models.Model):
                         'codTarifar': (product.intrastat_code_id.code if 'intrastat_code_id' in product._fields else None) or '00000000',
                         'denumireMarfa': product.name,
                         'cantitate': move.product_qty,
-                        'codUnitateMasura': move.product_uom._get_unece_code(),
+                        'codUnitateMasura': move.uom_id._get_unece_code(),
                         'greutateNeta': move.weight,
                         'greutateBruta': self._l10n_ro_edi_stock_get_gross_weight(move),
                         'valoareLeiFaraTva': product.list_price,

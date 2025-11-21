@@ -166,7 +166,7 @@ class StockLandedCost(models.Model):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
             if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not move.quantity:
                 continue
-            qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+            qty = move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id)
 
             vals = {
                 'product_id': move.product_id.id,

@@ -131,7 +131,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
                 'name': 'test',
                 'product_id': self.product.id,
                 'product_qty': 1,
-                'product_uom_id': self.product.uom_id.id,
+                'uom_id': self.product.uom_id.id,
             })]
         })
         # This PO belongs to a different company, it should not be shown
@@ -142,7 +142,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
                 'name': 'test',
                 'product_id': self.product.id,
                 'product_qty': 2,
-                'product_uom_id': self.product.uom_id.id,
+                'uom_id': self.product.uom_id.id,
             })]
         })
         # (POs are not confirmed, to keep the lines in the 'draft' state)

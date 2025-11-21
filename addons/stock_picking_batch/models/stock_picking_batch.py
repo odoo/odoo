@@ -242,10 +242,10 @@ class StockPickingBatch(models.Model):
 
     def action_done(self):
         def has_no_quantity(picking):
-            return all(not m.picked or m.product_uom.is_zero(m.quantity) for m in picking.move_ids if m.state not in ('done', 'cancel'))
+            return all(not m.picked or m.uom_id.is_zero(m.quantity) for m in picking.move_ids if m.state not in ('done', 'cancel'))
 
         def is_empty(picking):
-            return all(m.product_uom.is_zero(m.quantity) for m in picking.move_ids if m.state not in ('done', 'cancel'))
+            return all(m.uom_id.is_zero(m.quantity) for m in picking.move_ids if m.state not in ('done', 'cancel'))
 
         self.ensure_one()
         self._check_company()

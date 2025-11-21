@@ -104,7 +104,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': 'finished',
                 'product_id': self.finished.id,
                 'product_qty': 1.0,
-                'product_uom_id': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 50.0}
             )],
         })
@@ -130,7 +130,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': 'finished',
                 'product_id': self.finished.id,
                 'product_qty': product_qty,
-                'product_uom_id': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 50.0}
             )],
         })
@@ -177,7 +177,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished2.name,
                 'product_id': self.finished2.id,
                 'product_uom_qty': 10,
-                'product_uom_id': self.finished2.uom_id.id,
+                'uom_id': self.finished2.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -219,7 +219,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished2.name,
                 'product_id': self.finished2.id,
                 'product_uom_qty': 10,
-                'product_uom_id': self.finished2.uom_id.id,
+                'uom_id': self.finished2.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -264,7 +264,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished2.name,
                 'product_id': self.finished2.id,
                 'product_uom_qty': 10,
-                'product_uom_id': self.finished2.uom_id.id,
+                'uom_id': self.finished2.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -456,14 +456,14 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                     'name': self.comp1.name,
                     'product_id': self.comp1.id,
                     'product_uom_qty': 1,
-                    'product_uom_id': self.finished.uom_id.id,
+                    'uom_id': self.finished.uom_id.id,
                     'price_unit': 10,
                 }),
                 Command.create({
                     'name': self.comp2.name,
                     'product_id': self.comp2.id,
                     'product_uom_qty': 1,
-                    'product_uom_id': self.finished.uom_id.id,
+                    'uom_id': self.finished.uom_id.id,
                     'price_unit': 10,
                 })
             ],
@@ -479,7 +479,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished.name,
                 'product_id': self.finished.id,
                 'product_uom_qty': 1,
-                'product_uom_id': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 100,
             })],
         })
@@ -521,7 +521,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished2.name,
                 'product_id': self.finished2.id,
                 'product_qty': 10,
-                'product_uom_id': self.finished2.uom_id.id,
+                'uom_id': self.finished2.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -685,7 +685,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': 'finished',
                 'product_id': self.finished.id,
                 'product_qty': 1.0,
-                'product_uom_id': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 50.0}
             )],
         })
@@ -732,7 +732,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'move_raw_ids': [(0, 0, {
                 'product_id': self.finished.id,
                 'product_uom_qty': 3.0,
-                'product_uom': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
             })]
         })
         mo.action_confirm()
@@ -888,7 +888,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished.name,
                 'product_id': self.finished.id,
                 'product_qty': 2.0,
-                'product_uom_id': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 1.0,
             })],
         })
@@ -932,7 +932,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished.name,
                 'product_id': self.finished.id,
                 'product_qty': 2.0,
-                'product_uom_id': self.finished.uom_id.id,
+                'uom_id': self.finished.uom_id.id,
                 'price_unit': 10.0,
             })],
         })
@@ -1002,7 +1002,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'name': self.finished2.name,
                 'product_id': self.finished2.id,
                 'product_qty': 10,
-                'product_uom_id': self.finished2.uom_id.id,
+                'uom_id': self.finished2.uom_id.id,
                 'price_unit': 1,
             })],
         })

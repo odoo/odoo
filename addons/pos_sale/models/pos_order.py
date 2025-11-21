@@ -106,7 +106,7 @@ class PosOrder(models.Model):
 
                     qty_delivered = max(so_line.qty_delivered, get_expected_qty_to_ship_later())
                     new_qty = so_line.product_uom_qty - qty_delivered
-                    if stock_move.product_uom.compare(new_qty, 0) <= 0:
+                    if stock_move.uom_id.compare(new_qty, 0) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
                     # If the product is delivered with more than one step, we need to update the quantity of the other steps
@@ -116,7 +116,7 @@ class PosOrder(models.Model):
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):
-                return move.product_uom.is_zero(move.product_uom_qty)
+                return move.uom_id.is_zero(move.product_uom_qty)
 
             # cancel the waiting pickings if each product_uom_qty of move is zero
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):

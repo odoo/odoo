@@ -244,7 +244,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': transit_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
         })
         move8._action_confirm()
@@ -476,14 +476,14 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product2.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'value_manual': 200.0,
             'move_line_ids': [(0, 0, {
                 'product_id': product2.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom.id,
+                'uom_id': self.uom.id,
                 'quantity': 10.0,
             })]
         })
@@ -772,7 +772,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 8.0,
             'price_unit': 1,
             'state': 'done',
@@ -780,7 +780,7 @@ class TestStockValuation(TestStockValuationCommon):
                 'product_id': product.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom.id,
+                'uom_id': self.uom.id,
                 'quantity': 8.0,
                 'state': 'done',
             })]
@@ -798,7 +798,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 60.0,
             'price_unit': 15,
         })
@@ -816,7 +816,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 140.0,
             'price_unit': 15.50,
         })
@@ -834,7 +834,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 190.0,
         })
         move3._action_confirm()
@@ -850,7 +850,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 70.0,
             'price_unit': 16.00,
         })
@@ -868,7 +868,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 30.0,
         })
         move5._action_confirm()
@@ -884,7 +884,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 99,
         })
@@ -903,7 +903,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 50.0,
         })
         move7._action_confirm()
@@ -946,7 +946,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
         })
@@ -965,7 +965,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 15,
         })
@@ -984,7 +984,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 15.0,
         })
         move3._action_confirm()
@@ -1001,7 +1001,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
         })
         move4._action_confirm()
@@ -1025,7 +1025,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
             'price_unit': 10,
         })
@@ -1040,7 +1040,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 3.0,
             'price_unit': 5,
         })
@@ -1062,7 +1062,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
             'price_unit': 10,
         })
@@ -1086,7 +1086,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
             'price_unit': 10,
         })
@@ -1099,7 +1099,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
             'price_unit': 5,
         })
@@ -1127,7 +1127,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 5,
             'price_unit': 10,
         })
@@ -1147,7 +1147,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10,
             'price_unit': 20,
         })
@@ -1179,7 +1179,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1,
             'price_unit': 10,
         })
@@ -1195,7 +1195,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1,
             'price_unit': 20,
         })
@@ -1210,7 +1210,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.customer_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1,
             'price_unit': 20,
         })
@@ -1231,7 +1231,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10,
             'price_unit': 10,
         })
@@ -1245,7 +1245,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 15.0,
         })
         move2._action_confirm()
@@ -1265,7 +1265,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10,
             'price_unit': 10,
         })
@@ -1278,7 +1278,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 15.0,
         })
         move2._action_confirm()
@@ -1295,7 +1295,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
         })
@@ -1312,7 +1312,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 20.0,
         })
         move2._action_confirm()
@@ -1401,7 +1401,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
         })
@@ -1422,7 +1422,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
         })
@@ -1441,7 +1441,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 20,
         })
@@ -1460,7 +1460,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 5.0,
         })
         move3._action_confirm()
@@ -1476,7 +1476,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 30.0,
         })
         move4._action_confirm()
@@ -1492,7 +1492,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 20.0,
             'price_unit': 20,
         })
@@ -1519,7 +1519,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 5.0,
         })
         move6._action_confirm()
@@ -1535,7 +1535,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
             'price_unit': 10,
         })
@@ -1576,7 +1576,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': inventory_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
         })
         move2._action_confirm()
@@ -1600,7 +1600,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
             'price_unit': 10,
         })
@@ -1623,7 +1623,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
             'price_unit': 10,
         })
@@ -1658,7 +1658,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
@@ -1678,7 +1678,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
@@ -1777,7 +1777,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -1789,14 +1789,14 @@ class TestStockValuation(TestStockValuationCommon):
                 'quantity': 1,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': subloc1.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
             (0, None, {
                 'product_id': product.id,
                 'quantity': 1,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': subloc2.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
         ]})
         move1.picked = True
@@ -1810,7 +1810,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 2.0,
         })
         move2._action_confirm()
@@ -1823,14 +1823,14 @@ class TestStockValuation(TestStockValuationCommon):
                 'quantity': 1,
                 'location_id': subloc1.id,
                 'location_dest_id': self.supplier_location.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
             (0, None, {
                 'product_id': product.id,
                 'quantity': 1,
                 'location_id': subloc2.id,
                 'location_dest_id': self.supplier_location.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
         ]})
         move2.picked = True
@@ -1858,7 +1858,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -1869,14 +1869,14 @@ class TestStockValuation(TestStockValuationCommon):
                 'quantity': 1,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
             (0, None, {
                 'product_id': product.id,
                 'quantity': 1,
                 'location_id': self.stock_location.id,
                 'location_dest_id': scrap.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
         ]})
         move1.picked = True
@@ -1898,7 +1898,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 2.0,
         })
         move2._action_confirm()
@@ -1909,14 +1909,14 @@ class TestStockValuation(TestStockValuationCommon):
                 'quantity': 1,
                 'location_id': customer1.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
             (0, None, {
                 'product_id': product.id,
                 'quantity': 1,
                 'location_id': self.stock_location.id,
                 'location_dest_id': customer1.id,
-                'product_uom_id': self.uom.id
+                'uom_id': self.uom.id
             }),
         ]})
         move2.picked = True
@@ -2101,7 +2101,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': inventory_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 12.0,
         })
         move1._action_confirm()
@@ -2121,7 +2121,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 12.0,
         })
         move2._action_confirm()
@@ -2152,7 +2152,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': inventory_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
@@ -2166,7 +2166,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': inventory_location.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 5.0,
         })
         move2._action_confirm()
@@ -2232,7 +2232,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': stock_1.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 5.0,
         })
         move_1._action_confirm()
@@ -2247,7 +2247,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': stock_2.id,
             'product_id': product.id,
-            'product_uom': self.uom.id,
+            'uom_id': self.uom.id,
             'product_uom_qty': 4.0,
         })
         move_2._action_confirm()
@@ -2351,7 +2351,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
-            'product_uom': uom_dozen.id,
+            'uom_id': uom_dozen.id,
             'product_uom_qty': 1.0,
             'price_unit': 10,
         })
@@ -2526,7 +2526,7 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.stock_location.id,
-            'product_uom': unit_uom.id,
+            'uom_id': unit_uom.id,
             'product_uom_qty': 12,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -2536,7 +2536,7 @@ class TestStockValuation(TestStockValuationCommon):
         move.move_line_ids = [
             Command.update(
                 move.move_line_ids[0].id,
-                {'quantity': 1, 'product_uom_id': dozen_uom.id}
+                {'quantity': 1, 'uom_id': dozen_uom.id}
             )
         ]
         move.picked = True
@@ -2692,7 +2692,7 @@ class TestStockValuation(TestStockValuationCommon):
             'location_dest_id': self.stock_location.id,
             'move_ids': [Command.create({
                 'product_id': product.id,
-                'product_uom': uom_g.id,
+                'uom_id': uom_g.id,
                 'product_uom_qty': 11,
                 'quantity': 11,
                 'location_id': self.supplier_location.id,
@@ -2936,7 +2936,7 @@ class TestStockValuation(TestStockValuationCommon):
         move = self.env['stock.move'].create({
             'product_id': self.product_avco_auto.id,
             'product_uom_qty': 1,
-            'product_uom': self.product_avco_auto.uom_id.id,
+            'uom_id': self.product_avco_auto.uom_id.id,
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
         })

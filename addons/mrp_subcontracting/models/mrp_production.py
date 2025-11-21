@@ -39,7 +39,7 @@ class MrpProduction(models.Model):
             for move in production.move_raw_ids:
                 move.move_line_ids = line_by_product.pop(move.product_id, self.env['stock.move.line'])
             for product_id, lines in line_by_product.items():
-                qty = sum(line.product_uom_id._compute_quantity(line.quantity, product_id.uom_id) for line in lines)
+                qty = sum(line.uom_id._compute_quantity(line.quantity, product_id.uom_id) for line in lines)
                 move = production._get_move_raw_values(product_id, qty, product_id.uom_id)
                 move['additional'] = True
                 production.move_raw_ids = [(0, 0, move)]

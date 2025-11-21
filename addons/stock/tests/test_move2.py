@@ -27,7 +27,7 @@ class TestPickShip(TestStockCommon):
         dest = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_client.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -45,7 +45,7 @@ class TestPickShip(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_pick.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
@@ -65,7 +65,7 @@ class TestPickShip(TestStockCommon):
         ship = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_ship.id,
             'location_id': self.output_location.id,
             'location_dest_id': self.customer_location.id,
@@ -81,7 +81,7 @@ class TestPickShip(TestStockCommon):
         pack = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_pack.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.output_location.id,
@@ -98,7 +98,7 @@ class TestPickShip(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_pick.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
@@ -118,7 +118,7 @@ class TestPickShip(TestStockCommon):
         move = self.MoveObj.create({
             'product_id': product_unreserve.id,
             'product_uom_qty': 3,
-            'product_uom': product_unreserve.uom_id.id,
+            'uom_id': product_unreserve.uom_id.id,
             'state': 'confirmed',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -129,7 +129,7 @@ class TestPickShip(TestStockCommon):
             'product_id': product_unreserve.id,
             'product_uom_qty': 2,
             'quantity': 2,
-            'product_uom': product_unreserve.uom_id.id,
+            'uom_id': product_unreserve.uom_id.id,
             'state': 'confirmed',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -496,7 +496,7 @@ class TestPickShip(TestStockCommon):
         dest = self.MoveObj.create({
             'product_id': self.gB.id,
             'product_uom_qty': 5,
-            'product_uom': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_client.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -513,7 +513,7 @@ class TestPickShip(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.gB.id,
             'product_uom_qty': 5,
-            'product_uom': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_pick.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
@@ -700,7 +700,7 @@ class TestPickShip(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 3,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_client.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -776,7 +776,7 @@ class TestPickShip(TestStockCommon):
             'move_ids': [Command.create({
                 'product_id': p.id,
                 'product_uom_qty': 10 + i,
-                'product_uom': p.uom_id.id,
+                'uom_id': p.uom_id.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
                 'state': 'waiting',
@@ -940,7 +940,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -980,7 +980,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1018,7 +1018,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1026,7 +1026,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 2,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1061,7 +1061,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1069,7 +1069,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 2,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1110,7 +1110,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 4,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1119,7 +1119,7 @@ class TestSinglePicking(TestStockCommon):
         move2 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 4,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1128,7 +1128,7 @@ class TestSinglePicking(TestStockCommon):
         move3 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1137,7 +1137,7 @@ class TestSinglePicking(TestStockCommon):
         move4 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1188,7 +1188,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1230,7 +1230,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1271,7 +1271,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1307,7 +1307,7 @@ class TestSinglePicking(TestStockCommon):
             'product_id': self.productA.id,
             'product_uom_qty': 5,
             'quantity': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1322,7 +1322,7 @@ class TestSinglePicking(TestStockCommon):
                 'product_uom_qty': 0,
                 'quantity': 10,
                 'state': 'assigned',
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'picking_id': delivery.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
@@ -1350,7 +1350,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1400,7 +1400,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1454,7 +1454,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1510,7 +1510,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1562,7 +1562,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.pack_location.id,
@@ -1594,7 +1594,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.pack_location.id,
@@ -1633,7 +1633,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.pack_location.id,
@@ -1672,7 +1672,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.pack_location.id,
@@ -1722,7 +1722,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
@@ -1754,7 +1754,7 @@ class TestSinglePicking(TestStockCommon):
         out_move = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1778,7 +1778,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 3,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1786,7 +1786,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 5,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1794,7 +1794,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1802,7 +1802,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 5,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1822,7 +1822,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 3,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1831,7 +1831,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 5,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1840,7 +1840,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 3,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1865,7 +1865,7 @@ class TestSinglePicking(TestStockCommon):
         move_1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 0,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1874,7 +1874,7 @@ class TestSinglePicking(TestStockCommon):
         move_2 = self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 0,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1914,7 +1914,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 3,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1923,7 +1923,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 5,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1932,7 +1932,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1941,7 +1941,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -1972,7 +1972,7 @@ class TestSinglePicking(TestStockCommon):
         move_receipt_1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 5,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt1.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
@@ -1986,7 +1986,7 @@ class TestSinglePicking(TestStockCommon):
         move_receipt_2 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 3,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt2.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
@@ -2035,7 +2035,7 @@ class TestSinglePicking(TestStockCommon):
         move_receipt_1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 5,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt1.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
@@ -2049,7 +2049,7 @@ class TestSinglePicking(TestStockCommon):
         move1_receipt_2 = self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 1,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': receipt2.id,
             'location_id': warehouse.wh_input_stock_loc_id.id,
             'location_dest_id':  warehouse.wh_qc_stock_loc_id.id,
@@ -2057,7 +2057,7 @@ class TestSinglePicking(TestStockCommon):
         move2_receipt_2 = self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 2,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': receipt2.id,
             'location_id': warehouse.wh_input_stock_loc_id.id,
             'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
@@ -2095,7 +2095,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 0,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2103,7 +2103,7 @@ class TestSinglePicking(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 0,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2128,7 +2128,7 @@ class TestSinglePicking(TestStockCommon):
         move_a = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 0,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2136,7 +2136,7 @@ class TestSinglePicking(TestStockCommon):
         move_b = self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 0,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2180,7 +2180,7 @@ class TestSinglePicking(TestStockCommon):
         move_1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2188,7 +2188,7 @@ class TestSinglePicking(TestStockCommon):
         move_2 = self.MoveObj.create({
             'product_id': self.productB.id,
             'product_uom_qty': 10,
-            'product_uom': self.productB.uom_id.id,
+            'uom_id': self.productB.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2212,7 +2212,7 @@ class TestSinglePicking(TestStockCommon):
         move_3 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_order.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2250,7 +2250,7 @@ class TestSinglePicking(TestStockCommon):
             'picking_type_id': self.picking_type_out.id,
             'move_ids': [Command.create({
                 'product_id': self.productA.id,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
                 'quantity': 5,
@@ -2281,7 +2281,7 @@ class TestSinglePicking(TestStockCommon):
         move1 = self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': receipt.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2348,7 +2348,7 @@ class TestSinglePicking(TestStockCommon):
             'move_ids': [Command.create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 10,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_id': self.pack_location.id,
                 'location_dest_id': self.customer_location.id,
             })]
@@ -2372,7 +2372,7 @@ class TestSinglePicking(TestStockCommon):
             'move_line_ids': [Command.create({
                 'product_id': self.productA.id,
                 'quantity': 10,
-                'product_uom_id': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_id': self.pack_location.id,
                 'location_dest_id': self.customer_location.id,
             })]
@@ -2392,7 +2392,7 @@ class TestSinglePicking(TestStockCommon):
             'picking_type_id': self.picking_type_in.id,
             'move_line_ids': [Command.create({
                 'product_id': self.productA.id,
-                'product_uom_id': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'quantity': 1,
@@ -2418,7 +2418,7 @@ class TestSinglePicking(TestStockCommon):
             'move_ids': [Command.create({
                 'product_id': product.id,
                 'product_uom_qty': 10,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
             })],
@@ -2445,7 +2445,7 @@ class TestSinglePicking(TestStockCommon):
             'move_ids': [Command.create({
                 'product_id': product.id,
                 'product_uom_qty': 10,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
             })],
@@ -2506,7 +2506,7 @@ class TestSinglePicking(TestStockCommon):
                     'product_uom_qty': 50,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
-                    'product_uom': tracked_product.uom_id.id,
+                    'uom_id': tracked_product.uom_id.id,
                 })
             ]
         })
@@ -2562,7 +2562,7 @@ class TestSinglePicking(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out.id,
@@ -2589,7 +2589,7 @@ class TestSinglePicking(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out.id,
@@ -2645,7 +2645,7 @@ class TestSinglePicking(TestStockCommon):
                     'product_uom_qty': 50,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
-                    'product_uom': self.productA.uom_id.id,
+                    'uom_id': self.productA.uom_id.id,
                 }),
             ],
         })
@@ -2697,7 +2697,7 @@ class TestStockUOM(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': T_TEST.id,
             'product_uom_qty': 60,
-            'product_uom': T_GT.id,
+            'uom_id': T_GT.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2712,7 +2712,7 @@ class TestStockUOM(TestStockCommon):
         self.env['stock.move.line'].create({
             'move_id': move.id,
             'product_id': T_TEST.id,
-            'product_uom_id': T_LBS.id,
+            'uom_id': T_LBS.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'quantity': 42760.00,
@@ -2763,11 +2763,11 @@ class TestStockUOM(TestStockCommon):
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
             'product_id': product_G.id,
-            'product_uom': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'product_uom_qty': 1,
         })
 
-        self.assertEqual(move.product_uom.id, self.uom_kg.id)
+        self.assertEqual(move.uom_id.id, self.uom_kg.id)
         self.assertEqual(move.product_uom_qty, 1.0)
 
         picking.action_confirm()
@@ -2816,7 +2816,7 @@ class TestRoutes(TestStockCommon):
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': self.product_uom_qty,
             'warehouse_id': self.warehouse_1.id,
         })
@@ -2933,7 +2933,7 @@ class TestRoutes(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'route_ids': [Command.link(route.id)],
         })
@@ -2984,10 +2984,10 @@ class TestRoutes(TestStockCommon):
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,
             'product_uom_qty': 1.0,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'move_line_ids': [Command.create({
                 'product_id': product.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'quantity': 1.00,
@@ -3027,7 +3027,7 @@ class TestRoutes(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(product_B, warehouse.lot_stock_id, 3.0)
 
         move_tmpl = {
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 4.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.partner.property_stock_customer.id,
@@ -3066,7 +3066,7 @@ class TestAutoAssign(TestStockCommon):
         dest = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_client.id,
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -3084,7 +3084,7 @@ class TestAutoAssign(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_pick.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
@@ -3111,7 +3111,7 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'product_uom_qty': 10.0,
             'picking_id': customer_picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -3132,7 +3132,7 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'product_uom_qty': 10.0,
             'picking_id': supplier_picking.id,
         })
@@ -3166,7 +3166,7 @@ class TestAutoAssign(TestStockCommon):
         self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': picking_pick_2.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
@@ -3276,7 +3276,7 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'product_uom_qty': 50.0,
             'picking_id': supplier_picking.id,
         })
@@ -3305,7 +3305,7 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'picking_type_id': self.picking_type_in.id,
         })
         self.assertEqual(move.state, 'draft')
@@ -3332,7 +3332,7 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'picking_type_id': self.picking_type_in.id,
         })
         move.lot_ids = [Command.link(lot1.id)]
@@ -3367,14 +3367,14 @@ class TestAutoAssign(TestStockCommon):
                 Command.create({
                     'product_id': self.productA.id,
                     'product_uom_qty': 2,
-                    'product_uom': self.productA.uom_id.id,
+                    'uom_id': self.productA.uom_id.id,
                     'location_dest_id': warehouse.wh_output_stock_loc_id.id,
                     'location_id': warehouse.lot_stock_id.id,
                 }),
                 Command.create({
                     'product_id': self.productB.id,
                     'product_uom_qty': 3,
-                    'product_uom': self.productB.uom_id.id,
+                    'uom_id': self.productB.uom_id.id,
                     'location_dest_id': warehouse.wh_output_stock_loc_id.id,
                     'location_id': warehouse.lot_stock_id.id,
                 }),
@@ -3397,7 +3397,7 @@ class TestAutoAssign(TestStockCommon):
             'move_ids': [Command.create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 1,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_dest_id': warehouse.wh_output_stock_loc_id.id,
                 'location_id': warehouse.lot_stock_id.id,
             })]

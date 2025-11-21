@@ -24,7 +24,7 @@ class StockPutInPack(models.TransientModel):
                 total_weight += wizard.result_package_id.shipping_weight
 
             for ml in wizard.move_line_ids:
-                qty = ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id)
+                qty = ml.uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id)
                 total_weight += qty * ml.product_id.weight
             for package in wizard.package_ids:
                 total_weight += package.shipping_weight

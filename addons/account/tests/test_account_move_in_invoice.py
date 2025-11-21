@@ -2796,7 +2796,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'standard_price': 110.0,
             'seller_ids': [Command.create({
                 'partner_id': self.partner_a.id,
-                'product_uom_id': uom_kgm.id,
+                'uom_id': uom_kgm.id,
             })]
         })
         # customer invoice should have sale uom
@@ -2823,17 +2823,17 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 Command.create({
                     'partner_id': self.partner_a.id,
                     'company_id': self.env.company.id,
-                    'product_uom_id': uom_unit.id,
+                    'uom_id': uom_unit.id,
                 }),
                 Command.create({
                     'partner_id': self.partner_a.id,
                     'company_id': self.env.company.id,
-                    'product_uom_id': uom_gram.id,
+                    'uom_id': uom_gram.id,
                 }),
                 Command.create({
                     'partner_id': self.partner_a.id,
                     'company_id': other_company.id,
-                    'product_uom_id': uom_kgm.id,
+                    'uom_id': uom_kgm.id,
                 }),
             ]
         })

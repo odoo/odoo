@@ -49,12 +49,12 @@ class TestWarehouseMrp(common.TestMrpCommon):
         cls.bom_laptop = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.laptop.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'consumption': 'flexible',
             'bom_line_ids': [Command.create({
                 'product_id': cls.graphics_card.id,
                 'product_qty': 1,
-                'product_uom_id': cls.uom_unit.id
+                'uom_id': cls.uom_unit.id
             })],
             'operation_ids': [Command.create({
                 'name': 'Cutting Machine',
@@ -234,7 +234,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = self.bom_3
         production_form.product_qty = 12
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production_3 = production_form.save()
         production_3.action_confirm()
         production_3.action_assign()
@@ -245,7 +245,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         location_id = production_3.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) and production_3.location_src_id.id or production_3.location_dest_id.id,
 
         # Scrap Product Wood with lot.
-        scrap_move_id = self.env['stock.move'].with_context(active_model='mrp.production', active_id=production_3.id).create({'is_scrap': True, 'product_id': self.product_2.id, 'quantity': 1.0, 'product_uom': self.product_2.uom_id.id, 'location_id': location_id, 'location_dest_id': self.scrap_location.id, 'lot_ids': lot_product_2.ids, 'production_id': production_3.id, 'company_id': self.env.company.id})
+        scrap_move_id = self.env['stock.move'].with_context(active_model='mrp.production', active_id=production_3.id).create({'is_scrap': True, 'product_id': self.product_2.id, 'quantity': 1.0, 'uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'location_dest_id': self.scrap_location.id, 'lot_ids': lot_product_2.ids, 'production_id': production_3.id, 'company_id': self.env.company.id})
         scrap_move_id._action_scrap()
 
         self.assertTrue(scrap_move_id.raw_material_production_id)
@@ -481,7 +481,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_id': self.kit_parent.id,
             'quantity': 3,
             'picked': True,
-            'product_uom': self.kit_parent.uom_id.id,
+            'uom_id': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_in.id,
             'location_id':  self.test_supplier.id,
@@ -508,7 +508,7 @@ class TestKitPicking(common.TestMrpCommon):
         move_receipt_1 = self.env['stock.move'].create({
             'product_id': self.kit_parent.id,
             'product_uom_qty': 3,
-            'product_uom': self.kit_parent.uom_id.id,
+            'uom_id': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_in.id,
             'location_id':  self.test_supplier.id,
@@ -537,7 +537,7 @@ class TestKitPicking(common.TestMrpCommon):
             'move_ids': [Command.create({
                 'product_id': product.id,
                 'product_uom_qty': 1,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'location_id': self.customer_location.id,
                 'location_dest_id': self.stock_location.id,
             })]
@@ -548,7 +548,7 @@ class TestKitPicking(common.TestMrpCommon):
         receipt.move_line_ids = [Command.create({
             'product_id': kit.id,
             'quantity': 1,
-            'product_uom_id': kit.uom_id.id,
+            'uom_id': kit.uom_id.id,
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
         })]
@@ -574,7 +574,7 @@ class TestKitPicking(common.TestMrpCommon):
 
         bom_kit = self.env['mrp.bom'].create({
             'product_tmpl_id': kit.product_tmpl_id.id,
-            'product_uom_id': kit.product_tmpl_id.uom_id.id,
+            'uom_id': kit.product_tmpl_id.uom_id.id,
             'product_id': kit.id,
             'product_qty': 1.0,
             'type': 'phantom',
@@ -635,7 +635,7 @@ class TestKitPicking(common.TestMrpCommon):
         kit.is_storable = True
         # product is in unit and bom in dozen
         kit.uom_id = self.uom_unit
-        bom.product_uom_id = self.uom_dozen
+        bom.uom_id = self.uom_dozen
         bom.product_qty = 1
         # create a packaging with 2 units
         packaging = self.env['uom.uom'].create({
@@ -646,7 +646,7 @@ class TestKitPicking(common.TestMrpCommon):
         # component is in Kg but bom_line in gram
         component = bom.bom_line_ids.product_id
         component.uom_id = self.uom_kg
-        bom.bom_line_ids.product_uom_id = self.uom_gram
+        bom.bom_line_ids.uom_id = self.uom_gram
         bom.bom_line_ids.product_qty = 10
 
         # create a delivery with 20 units of kit
@@ -660,7 +660,7 @@ class TestKitPicking(common.TestMrpCommon):
             'move_ids': [Command.create({
                 'product_id': kit.id,
                 'product_uom_qty': 12,
-                'product_uom': packaging.id,
+                'uom_id': packaging.id,
                 'location_id': stock_location.id,
                 'location_dest_id': self.customer_location.id,
             })],

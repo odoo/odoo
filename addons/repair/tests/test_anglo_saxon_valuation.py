@@ -37,7 +37,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
         })

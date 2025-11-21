@@ -46,7 +46,7 @@
                     <field name="quantity" string="Quantity" sum="Total Quantity" readonly="1"
                         decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
                         decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
-                    <field name="product_uom" readonly="1" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
+                    <field name="uom_id" readonly="1" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                     <field name="state" readonly="1" widget='badge' optional="show"
                            decoration-danger="state=='cancel'"
@@ -83,7 +83,7 @@
                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable"/>
                     <field name="picked"/>
-                    <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
+                    <field name="uom_id" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                 </list>
             </field>
         </record>
@@ -110,7 +110,7 @@
                             <span invisible="is_inventory">
                                 Quantity <field name="quantity"/> /
                                 <field name="product_uom_qty" readonly="state != 'draft'"/>
-                                <field name="product_uom" groups="uom.group_uom" class="ms-1"/>
+                                <field name="uom_id" groups="uom.group_uom" class="ms-1"/>
                             </span>
                         </t>
                     </templates>
@@ -147,7 +147,7 @@
                             <label for="product_uom_qty"/>
                             <div class="o_row">
                                 <span><field name="product_uom_qty" readonly="state != 'draft'" nolabel="1"/></span>
-                                <span><field name="product_uom" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
+                                <span><field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
                             </div>
                         </group>
                         <group/>
@@ -208,7 +208,7 @@
                     <field name="picking_code" column_invisible="True"/>
                     <field name="picked" column_invisible="True"/>
                     <field name="quantity" string="Quantity" readonly="state == 'done' and is_locked" sum="Quantity"/>
-                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"
                         readonly="state == 'done' and id"/>
                 </list>
             </field>
@@ -248,7 +248,7 @@
                     <field name="state" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
                     <field name="quantity" readonly="state in ('done', 'cancel') and is_locked" force_save="1"/>
-                    <field name="product_uom_id" force_save="1" readonly="state != 'draft' and id" groups="uom.group_uom" widget="many2one_uom"/>
+                    <field name="uom_id" force_save="1" readonly="state != 'draft' and id" groups="uom.group_uom" widget="many2one_uom"/>
                 </list>
             </field>
         </record>
@@ -279,7 +279,7 @@
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                    <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 </div>
                                 <field name="date" readonly="1" string="Scheduled Date" invisible="state == 'done'"
                                     help="Scheduled time for the first part of the shipment to be processed."/>
@@ -301,7 +301,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom"/>
+                                    <field name="uom_id"/>
                                     <field name="state"/>
                                 </list>
                             </field>
@@ -310,7 +310,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom"/>
+                                    <field name="uom_id"/>
                                     <field name="state"/>
                                 </list>
                             </field>
@@ -338,7 +338,7 @@
                                 <label for="quantity" readonly="state in ('done', 'cancel')"/>
                                 <div class="o_row">
                                     <field name="quantity" string="Quantity" readonly="state in ('done', 'cancel')"/>
-                                    <field name="product_uom" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state in ('done', 'cancel')"/>
+                                    <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state in ('done', 'cancel')"/>
                                 </div>
                                 <field name="lot_ids" widget="many2many_tags" string="Lot/Serial Numbers" invisible="not product_id or has_tracking == 'none'" readonly="state in ('done', 'cancel')" domain="[('product_id', '=', product_id), ('id', 'in', context.get('lot_ids'))] if context.get('lot_ids') else [('product_id', '=', product_id)]"/>
                                 <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state == 'cancel'"/>
@@ -369,7 +369,7 @@
                     <field name="date" string="Date"/>
                     <field name="product_id"/>
                     <field name="quantity"/>
-                    <field name="product_uom" groups="uom.group_uom"/>
+                    <field name="uom_id" groups="uom.group_uom"/>
                     <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" string="Scrap Location" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -542,7 +542,7 @@
                     <field name="origin" optional="show"/>
                     <field name="product_id" readonly="state == 'done'"/>
                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
                     <field name="location_id" options="{'no_create': True}" column_invisible="True"/>
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="state" optional="show"/>

@@ -194,7 +194,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env['stock.move'].create({
             'product_id': self.finished_product.id,
             'product_uom_qty': 2,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'picking_id': picking_customer.id,
             'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.customer_location.id,
@@ -273,7 +273,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_id': self.finished_product.id,
             'product_uom_qty': 2,
             'picking_id': picking_customer.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
@@ -384,16 +384,16 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': two_units_uom.id,
+            'uom_id': two_units_uom.id,
             'bom_line_ids': [(0, 0, {
                 'product_id': component.id,
                 'product_qty': 1,
-                'product_uom_id': one_unit_uom.id,
+                'uom_id': one_unit_uom.id,
             })],
             'byproduct_ids': [(0, 0, {
                 'product_id': secondary_product.id,
                 'product_qty': 1,
-                'product_uom_id': four_units_uom.id,
+                'uom_id': four_units_uom.id,
             })],
         })
 
@@ -495,7 +495,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
                 'picking_type_id': component_move.picking_type_id.id,
                 'product_id': self.product_2.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_2.uom_id.id,
+                'uom_id': self.product_2.uom_id.id,
                 'warehouse_id': component_move.warehouse_id.id,
                 'raw_material_production_id': mo.id,
             }]
@@ -591,13 +591,13 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': finished_product.uom_id.id,
+            'uom_id': finished_product.uom_id.id,
             'type': 'normal',
         })
         bom_2 = self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': finished_product.uom_id.id,
+            'uom_id': finished_product.uom_id.id,
             'type': 'normal',
         })
         self.env['stock.warehouse.orderpoint'].create({
@@ -668,7 +668,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     #         {
     #         'product_tmpl_id': products[2].product_tmpl_id.id,
     #         'product_qty': 1,
-    #         'product_uom_id': products[2].uom_id.id,
+    #         'uom_id': products[2].uom_id.id,
     #         'type': 'normal',
     #         'bom_line_ids': [
     #             Command.create({
@@ -679,7 +679,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     #         {
     #         'product_tmpl_id': products[3].product_tmpl_id.id,
     #         'product_qty': 1,
-    #         'product_uom_id': products[3].uom_id.id,
+    #         'uom_id': products[3].uom_id.id,
     #         'type': 'normal',
     #         'bom_line_ids': [
     #             Command.create({
@@ -690,7 +690,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     #         {
     #         'product_tmpl_id': products[4].product_tmpl_id.id,
     #         'product_qty': 1,
-    #         'product_uom_id': products[4].uom_id.id,
+    #         'uom_id': products[4].uom_id.id,
     #         'type': 'normal',
     #         'bom_line_ids': [
     #             Command.create({
@@ -701,7 +701,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     #         {
     #         'product_tmpl_id': products[0].product_tmpl_id.id,
     #         'product_qty': 1,
-    #         'product_uom_id': products[0].uom_id.id,
+    #         'uom_id': products[0].uom_id.id,
     #         'type': 'normal',
     #         'bom_line_ids': [
     #             Command.create({

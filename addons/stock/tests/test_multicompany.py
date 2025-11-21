@@ -198,7 +198,7 @@ class TestMultiCompany(TransactionCase):
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
             'company_id': picking.company_id.id,
@@ -380,7 +380,7 @@ class TestMultiCompany(TransactionCase):
             'location_id': self.stock_location_a.id,
             'location_dest_id': self.stock_location_a.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
         })
         with self.assertRaises(UserError):
             move._action_confirm()
@@ -402,7 +402,7 @@ class TestMultiCompany(TransactionCase):
             'location_id': self.stock_location_a.id,
             'location_dest_id': self.stock_location_b.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
         })
         with self.assertRaises(UserError):
             move._action_confirm()
@@ -425,7 +425,7 @@ class TestMultiCompany(TransactionCase):
             'location_id': self.stock_location_a.id,
             'location_dest_id': self.stock_location_a.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
         })
         with self.assertRaises(UserError):
             move._action_confirm()
@@ -481,7 +481,7 @@ class TestMultiCompany(TransactionCase):
             'location_id': supplier_location.id,
             'location_dest_id': self.stock_location_a.id,
             'product_id': product_lot.id,
-            'product_uom': product_lot.uom_id.id,
+            'uom_id': product_lot.uom_id.id,
             'product_uom_qty': 0.1,
             'picking_type_id': self.warehouse_a.in_type_id.id,
         })
@@ -498,7 +498,7 @@ class TestMultiCompany(TransactionCase):
             'location_id': self.stock_location_a.id,
             'location_dest_id': intercom_location.id,
             'product_id': product_lot.id,
-            'product_uom': product_lot.uom_id.id,
+            'uom_id': product_lot.uom_id.id,
             'product_uom_qty': 0.1,
             'picking_type_id': picking_type_to_transit.id,
             'route_ids': [(4, route.id)],
@@ -555,7 +555,7 @@ class TestMultiCompany(TransactionCase):
             'location_id': supplier_location.id,
             'location_dest_id': self.warehouse_b.lot_stock_id.id,
             'product_id': product_lot.id,
-            'product_uom': product_lot.uom_id.id,
+            'uom_id': product_lot.uom_id.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.warehouse_b.in_type_id.id,
         })
@@ -578,7 +578,7 @@ class TestMultiCompany(TransactionCase):
         move_wha_to_cus = self.env['stock.move'].create({
             'product_id': product_lot.id,
             'product_uom_qty': 1,
-            'product_uom': product_lot.uom_id.id,
+            'uom_id': product_lot.uom_id.id,
             'picking_id': picking_out.id,
             'location_id': self.stock_location_a.id,
             'location_dest_id': customer_location.id,

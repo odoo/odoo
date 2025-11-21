@@ -44,8 +44,8 @@ class MrpConsumptionWarning(models.TransientModel):
                 for move in production.move_raw_ids:
                     if line.product_id != move.product_id:
                         continue
-                    qty_expected = line.product_uom_id._compute_quantity(line.product_expected_qty_uom, move.product_uom)
-                    qty_compare_result = move.product_uom.compare(qty_expected, move.quantity)
+                    qty_expected = line.uom_id._compute_quantity(line.product_expected_qty_uom, move.uom_id)
+                    qty_compare_result = move.uom_id.compare(qty_expected, move.quantity)
                     if qty_compare_result != 0:
                         move.quantity = qty_expected
                     # move should be set to picked to correctly consume the product
@@ -53,10 +53,10 @@ class MrpConsumptionWarning(models.TransientModel):
                     # in case multiple lines with same product => set others to 0 since we have no way to know how to distribute the qty done
                     line.product_expected_qty_uom = 0
                 # move was deleted before confirming MO or force deleted somehow
-                if not line.product_uom_id.is_zero(line.product_expected_qty_uom):
+                if not line.uom_id.is_zero(line.product_expected_qty_uom):
                     missing_move_vals.append({
                         'product_id': line.product_id.id,
-                        'product_uom': line.product_uom_id.id,
+                        'uom_id': line.uom_id.id,
                         'product_uom_qty': line.product_expected_qty_uom,
                         'quantity': line.product_expected_qty_uom,
                         'raw_material_production_id': line.mrp_production_id.id,
@@ -95,6 +95,6 @@ class MrpConsumptionWarningLine(models.TransientModel):
     consumption = fields.Selection(related="mrp_production_id.consumption")
 
     product_id = fields.Many2one('product.product', "Product", readonly=True, required=True)
-    product_uom_id = fields.Many2one('uom.uom', "Unit", related="product_id.uom_id", readonly=True)
+    uom_id = fields.Many2one('uom.uom', "Unit", related="product_id.uom_id", readonly=True)
     product_consumed_qty_uom = fields.Float("Consumed", readonly=True)
     product_expected_qty_uom = fields.Float("To Consume", readonly=True)

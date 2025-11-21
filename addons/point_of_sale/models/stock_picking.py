@@ -76,7 +76,7 @@ class StockPicking(models.Model):
 
     def _prepare_stock_move_vals(self, first_line, order_lines):
         return {
-            'product_uom': first_line.product_id.uom_id.id,
+            'uom_id': first_line.product_id.uom_id.id,
             'picking_id': self.id,
             'picking_type_id': self.picking_type_id.id,
             'product_id': first_line.product_id.id,
@@ -218,15 +218,15 @@ class StockMove(models.Model):
 
         # Check for any conversion issues in the moves before setting quantities
         uoms_with_issues = set()
-        for move in moves_to_assign.filtered(lambda m: m.product_uom_qty and m.product_uom != m.product_id.uom_id):
-            converted_qty = move.product_uom._compute_quantity(
+        for move in moves_to_assign.filtered(lambda m: m.product_uom_qty and m.uom_id != m.product_id.uom_id):
+            converted_qty = move.uom_id._compute_quantity(
                 move.product_uom_qty,
                 move.product_id.uom_id,
                 rounding_method='HALF-UP'
             )
             if not converted_qty:
                 uoms_with_issues.add(
-                    (move.product_uom.name, move.product_id.uom_id.name)
+                    (move.uom_id.name, move.product_id.uom_id.name)
                 )
 
         if uoms_with_issues:

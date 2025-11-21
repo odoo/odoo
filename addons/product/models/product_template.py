@@ -26,11 +26,11 @@ class ProductTemplate(models.Model):
     def default_get(self, fields):
         res = super().default_get(fields)
         if ('uom_id' in fields and not res.get('uom_id')) or self.env.context.get('default_uom_id') is False:
-            res['uom_id'] = self._get_default_uom_id().id
+            res['uom_id'] = self._default_uom_id().id
         return res
 
     @tools.ormcache()
-    def _get_default_uom_id(self):
+    def _default_uom_id(self):
         # Deletion forbidden (at least through unlink)
         return self.env.ref('uom.product_uom_unit')
 
@@ -139,7 +139,7 @@ class ProductTemplate(models.Model):
     purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
     uom_id = fields.Many2one(
         'uom.uom', 'Unit', tracking=True,
-        default=_get_default_uom_id, required=True,
+        default=_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
     uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales", domain="[('id', '!=', uom_id)]")
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)

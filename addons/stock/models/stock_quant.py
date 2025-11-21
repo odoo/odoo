@@ -49,7 +49,7 @@ class StockQuant(models.Model):
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit',
         readonly=True, related='product_id.uom_id')
     is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite')
@@ -198,14 +198,14 @@ class StockQuant(models.Model):
     def _compute_is_outdated(self):
         self.is_outdated = False
         for quant in self:
-            if quant.product_id and quant.product_uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity) and quant.inventory_quantity_set:
+            if quant.product_id and quant.uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity) and quant.inventory_quantity_set:
                 quant.is_outdated = True
 
     def _search_is_outdated(self, operator, value):
         if operator != 'in':
             return NotImplemented
         quant_ids = self.search([('inventory_quantity_set', '=', True)])
-        quant_ids = quant_ids.filtered(lambda quant: quant.product_uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity)).ids
+        quant_ids = quant_ids.filtered(lambda quant: quant.uom_id.compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity)).ids
         return [('id', 'in', quant_ids)]
 
     @api.depends('quantity')
@@ -999,10 +999,10 @@ class StockQuant(models.Model):
         for quant in self:
             # if inventory applied from product's inverse_qty and the inventory_diff_quantity is 0,
             # we skip creating a move with 0 quantity.
-            if quant.env.context.get('from_inverse_qty') and quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) == 0:
+            if quant.env.context.get('from_inverse_qty') and quant.uom_id.compare(quant.inventory_diff_quantity, 0) == 0:
                 continue
             # Create and validate a move so that the quant matches its `inventory_quantity`.
-            if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
+            if quant.uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
@@ -1055,7 +1055,7 @@ class StockQuant(models.Model):
             incoming_dates = []
         else:
             incoming_dates = [quant.in_date for quant in quants if quant.in_date and
-                              quant.product_uom_id.compare(quant.quantity, 0) > 0]
+                              quant.uom_id.compare(quant.quantity, 0) > 0]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
@@ -1254,7 +1254,7 @@ class StockQuant(models.Model):
 
         res = {
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
+            'uom_id': self.uom_id.id,
             'product_uom_qty': qty,
             'company_id': self.company_id.id or self.env.company.id,
             'state': 'confirmed',
@@ -1265,7 +1265,7 @@ class StockQuant(models.Model):
             'picked': True,
             'move_line_ids': [(0, 0, {
                 'product_id': self.product_id.id,
-                'product_uom_id': self.product_uom_id.id,
+                'uom_id': self.uom_id.id,
                 'quantity': qty,
                 'location_id': location_id.id,
                 'location_dest_id': location_dest_id.id,
@@ -1356,9 +1356,9 @@ class StockQuant(models.Model):
 
         # Quantity part.
         if self.tracking != 'serial' or self.quantity > 1:
-            quantity_ai = gs1_quantity_rules_ai_by_uom.get(self.product_uom_id.id)
+            quantity_ai = gs1_quantity_rules_ai_by_uom.get(self.uom_id.id)
             if quantity_ai:
-                qty_str = str(int(self.quantity / self.product_uom_id.rounding))
+                qty_str = str(int(self.quantity / self.uom_id.rounding))
                 if len(qty_str) <= 6:
                     barcode += quantity_ai + '0' * (6 - len(qty_str)) + qty_str
             else:

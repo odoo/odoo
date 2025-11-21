@@ -449,10 +449,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         # the move should be 12 units
         # note: move.product_qty = computed field, always in the uom of the quant
-        #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
+        #       move.product_uom_qty = stored field representing the initial demand in move.uom_id
         move1 = so1.picking_ids.move_ids[0]
         self.assertEqual(move1.product_uom_qty, 12)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12)
 
         # edit the so line, sell 2 dozen, the move should now be 24 units
@@ -478,7 +478,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         # ```
         move1 = so1.picking_ids.move_ids[0]
         self.assertEqual(move1.product_uom_qty, 24)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)
 
         # force the propagation of the uom, sell 3 dozen
@@ -488,9 +488,9 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 Command.update(product_line.id, {'product_uom_qty': 3}),
             ]
         })
-        move2 = so1.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        move2 = so1.picking_ids.move_ids.filtered(lambda m: m.uom_id.id == uom_dozen.id)
         self.assertEqual(move2.product_uom_qty, 1)
-        self.assertEqual(move2.product_uom.id, uom_dozen.id)
+        self.assertEqual(move2.uom_id.id, uom_dozen.id)
         self.assertEqual(move2.product_qty, 12)
 
         # deliver everything
@@ -1129,7 +1129,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'location_dest_id': picking.location_dest_id.id,
             'product_id': self.product_b.id,
             'product_uom_qty': 1,
-            'product_uom': uom_km_id,
+            'uom_id': uom_km_id,
             'quantity': 1,
         })
         picking.button_validate()
@@ -2593,7 +2593,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'move_ids': [Command.create({
                 'product_id': self.product.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product.uom_id.id,
+                'uom_id': self.product.uom_id.id,
                 'location_id': warehouse.lot_stock_id.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],

@@ -132,7 +132,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             'location_dest_id': customer_location.id,
             'move_ids': [(0, 0, {
                 'product_id': kit.id,
-                'product_uom': kit.uom_id.id,
+                'uom_id': kit.uom_id.id,
                 'product_uom_qty': 1.0,
                 'location_id': stock_location.id,
                 'location_dest_id': customer_location.id,
@@ -494,7 +494,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         with self.assertRaises(UserError):
             self.env['mrp.bom'].create({
                 'product_tmpl_id': product_template.id,
-                'product_uom_id': product_template.uom_id.id,
+                'uom_id': product_template.uom_id.id,
                 'product_qty': 1.0,
                 'type': 'phantom',
                 'bom_line_ids': [
@@ -507,7 +507,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         with self.assertRaises(UserError):
             self.env['mrp.bom'].create({
                 'product_tmpl_id': product_template.id,
-                'product_uom_id': product_template.uom_id.id,
+                'uom_id': product_template.uom_id.id,
                 'product_qty': 1.0,
                 'type': 'phantom',
                 'bom_line_ids': [
@@ -520,7 +520,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         # Check that optional lines (with a product_qty of 0) are ignored -> Valid
         self.env['mrp.bom'].create({
             'product_tmpl_id': product_template.id,
-            'product_uom_id': product_template.uom_id.id,
+            'uom_id': product_template.uom_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
             'bom_line_ids': [
@@ -532,7 +532,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         # Variant with S attribute sum up to 100% others to 0% -> Valid
         self.env['mrp.bom'].create({
             'product_tmpl_id': product_template.id,
-            'product_uom_id': product_template.uom_id.id,
+            'uom_id': product_template.uom_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
             'bom_line_ids': [
@@ -545,7 +545,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         # All attribute values of a given attribute are equi-distributed -> Valid
         self.env['mrp.bom'].create({
             'product_tmpl_id': product_template.id,
-            'product_uom_id': product_template.uom_id.id,
+            'uom_id': product_template.uom_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
             'bom_line_ids': [
@@ -563,7 +563,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         # Set up is fine for S Blue and M Red but fails for other non existing combination -> Valid
         self.env['mrp.bom'].create({
             'product_tmpl_id': product_template.id,
-            'product_uom_id': product_template.uom_id.id,
+            'uom_id': product_template.uom_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
             'bom_line_ids': [
@@ -611,7 +611,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         ])
         self.env['mrp.bom'].create({
             'product_tmpl_id': product_template.id,
-            'product_uom_id': product_template.uom_id.id,
+            'uom_id': product_template.uom_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
             'bom_line_ids': [

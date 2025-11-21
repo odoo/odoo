@@ -39,14 +39,14 @@ class StockGenerateCommon(TransactionCase):
         product = product or self.product_serial
         move_lines_vals = [Command.create({
                 'product_id': product.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'quantity': 1,
                 'location_id': self.location.id,
                 'location_dest_id': self.location_dest.id,
             }) for i in range(nbre_of_lines)]
         return self.env['stock.move'].create({
             'product_id': product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.location.id,
             'location_dest_id': self.location_dest.id,
             'move_line_ids': move_lines_vals,
@@ -285,7 +285,7 @@ class StockGenerateCommon(TransactionCase):
         })
         move = self.env['stock.move'].create({
             'product_id': self.product_serial.id,
-            'product_uom': self.product_serial.uom_id.id,
+            'uom_id': self.product_serial.uom_id.id,
             'product_uom_qty': 2.0,
             'picking_id': receipt_picking.id,
             'location_id': receipt_picking.location_id.id,
@@ -329,7 +329,7 @@ class StockGenerateCommon(TransactionCase):
         })
         self.env['stock.move'].create({
             'product_id': product_lot.id,
-            'product_uom': product_lot.uom_id.id,
+            'uom_id': product_lot.uom_id.id,
             'product_uom_qty': 5.0,
             'picking_id': receipt_picking.id,
             'location_id': receipt_picking.location_id.id,
@@ -376,7 +376,7 @@ class StockGenerateCommon(TransactionCase):
         })
         move = self.env['stock.move'].create({
             'product_id': product_lot.id,
-            'product_uom': product_lot.uom_id.id,
+            'uom_id': product_lot.uom_id.id,
             'product_uom_qty': 5.0,
             'picking_id': receipt_picking.id,
             'location_id': receipt_picking.location_id.id,
