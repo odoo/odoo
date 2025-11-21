@@ -3,6 +3,7 @@ import { setupEditor } from "../_helpers/editor";
 import {
     cleanTextNode,
     fillEmpty,
+    makeContentsInline,
     splitTextNode,
     wrapInlinesInBlocks,
 } from "@html_editor/utils/dom";
@@ -205,6 +206,58 @@ describe("cleanTextNode", () => {
         cleanTextNode(el.querySelector("p").firstChild, "\uFEFF", cursors);
         cursors.restore();
         expect(getContent(el)).toBe("<p>te[]xt</p>");
+    });
+});
+
+describe("makeContentsInline", () => {
+    test("should unwrap P", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<p>text</p>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text");
+    });
+    test("should unwrap DIV", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<div>text</div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text");
+    });
+    test("should unwrap P in DIV", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<div><p>text</p></div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text");
+    });
+    test("should not unwrap inline", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<strong>text</strong>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("<strong>text</strong>");
+    });
+    test("should unwrap multiple Ps and insert BR between", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<p>text1</p><p>text2</p>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text1<br>text2");
+    });
+    test("should unwrap multiple Ps in multiple DIVs and insert BR between", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML =
+            "<div><p>text1</p><p>text2</p><div><div><p>text3</p><p>text4</p><div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text1<br>text2<br>text3<br>text4");
+    });
+    test("should preserve inline elements when unwrapping P", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<p><strong>text1</strong><u>text2</u></p>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("<strong>text1</strong><u>text2</u>");
+    });
+    test("should preserve inline elements when unwrapping P in DIV", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<div><p><strong>text1</strong><u>text2</u></p><div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("<strong>text1</strong><u>text2</u>");
     });
 });
 

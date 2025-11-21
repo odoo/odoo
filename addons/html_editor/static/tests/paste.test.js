@@ -3620,6 +3620,42 @@ describe("editable in iframe", () => {
     });
 });
 
+describe("paste in contenteditable span", () => {
+    test("should unwrap block when pasting inside a contenteditable span", async () => {
+        const { el, editor } = await setupEditor(
+            `<p contenteditable="false"><span contenteditable="true">[]</span></p>`
+        );
+        pasteOdooEditorHtml(editor, `<h1>text<b>bold text</b>more text</h1>`);
+        expect(getContent(el)).toBe(
+            `<p contenteditable="false"><span contenteditable="true">text<b>bold text</b>more text[]</span></p>`
+        );
+    });
+    test("should unwrap block with br between them when pasting inside a contenteditable span", async () => {
+        const { el, editor } = await setupEditor(
+            `<p contenteditable="false"><span contenteditable="true">[]</span></p>`
+        );
+        pasteOdooEditorHtml(
+            editor,
+            `<p>a paragraph</p><h1>text<b>bold text</b>more text</h1><p>another</p>`
+        );
+        expect(getContent(el)).toBe(
+            `<p contenteditable="false"><span contenteditable="true">a paragraph<br>text<b>bold text</b>more text<br>another[]</span></p>`
+        );
+    });
+    test("should unwrap block with br between them when pasting in text inside a contenteditable span", async () => {
+        const { el, editor } = await setupEditor(
+            `<p contenteditable="false"><span contenteditable="true">ab[]cd</span></p>`
+        );
+        pasteOdooEditorHtml(
+            editor,
+            `<p>a paragraph</p><h1>text<b>bold text</b>more text</h1><p>another</p>`
+        );
+        expect(getContent(el)).toBe(
+            `<p contenteditable="false"><span contenteditable="true">aba paragraph<br>text<b>bold text</b>more text<br>another[]cd</span></p>`
+        );
+    });
+});
+
 describe("Paste HTML tables", () => {
     // The tests below are very sensitive to whitespaces as they do represent actual
     // whitespace text nodes in the DOM. The tests will fail if those are removed.
