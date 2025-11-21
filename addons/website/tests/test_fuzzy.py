@@ -168,6 +168,53 @@ class TestAutoComplete(TransactionCase):
         self.assertTrue(f'<span class="text-primary-emphasis">{term}</span>' in value.lower(),
                         "Term must be highlighted")
 
+    def test_shorten_around_match(self):
+        shorten_around_match = self.WebsiteController._shorten_around_match
+
+        self.assertEqual(
+            shorten_around_match("hello world", "world", 100),
+            "hello world",
+            "Should return original text when it fits within max width"
+        )
+        self.assertEqual(
+            shorten_around_match("aaa bbb ccc", "zzz", 12),
+            "aaa bbb ccc",
+            "Should return original text when keyword not found and no shortening needed"
+        )
+        self.assertEqual(
+            shorten_around_match("AAA bbb CCC ddd", "ccc", 12),
+            "...bb CCC...",
+            "Should match keyword ignoring case and center around it"
+        )
+        self.assertEqual(
+            shorten_around_match("aaa bbb ccc ddd", "b c", 12, ",,,"),
+            ",,, bbb c,,,",
+            "Should use custom placeholder in returned shortened text"
+        )
+        self.assertEqual(
+            shorten_around_match("aaa bbb ccc ddd", "ddd", 12),
+            "...b ccc ddd",
+            "Should center around match near end while respecting max width"
+        )
+        self.assertEqual(
+            shorten_around_match("hello world", "hello", 8),
+            "hello...",
+            "Should shorten from end when match is at beginning and text is too long"
+        )
+        self.assertEqual(
+            shorten_around_match("aaa bbb ccc bbb ddd", "bbb", 14),
+            "aaa bbb ccc..."
+        )
+        self.assertEqual(
+            shorten_around_match(
+                "The quick brown fox jumps over the lazy dog and runs away",
+                "fox runs",
+                20
+            ),
+            "... brown fox jum...",
+            "Should center around first token 'fox' when exact phrase 'fox runs' not found"
+        )
+
     def test_01_few_results(self):
         """ Tests an autocomplete with exact match and less than the maximum number of results """
         suggestions = self._autocomplete("few")

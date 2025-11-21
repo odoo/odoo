@@ -480,6 +480,83 @@ class Website(Home):
     # Search Bar
     # --------------------------------------------------------------------------
 
+    def _shorten_around_match(self, text, keyword, width=80, placeholder="..."):
+        """
+        Return a shortened version of `text`, ensuring `keyword` stays visible
+        within the returned text. If truncation is necessary, the output is
+        centered around the match and uses `placeholder` to indicate omitted
+        content.
+
+        Handles multi-word keywords by finding the first token match.
+
+            >>> _shorten_around_match("aaa bbb ccc ddd", "ccc", 12)
+            "...bb ccc..."
+
+            >>> _shorten_around_match("aaa bbb ccc ddd eee fff", "ccc fff", 15)
+            "...bbb ccc d..."
+
+        :param text: Text to shorten
+        :param keyword: Substring or multi-word phrase that must remain visible
+        :param width: Maximum length of the returned text
+        :param placeholder: String used to indicate omitted content
+
+        :return: Shortened text ensuring `keyword` remains visible if possible
+        """
+        if not text or not keyword or len(text) <= width:
+            return text
+
+        lower_text = text.lower()
+        lower_keyword = keyword.lower()
+
+        # Try exact match first
+        match_pos = lower_text.find(lower_keyword)
+
+        # If no exact match, break keyword into tokens and find first match
+        if match_pos == -1:
+            tokens = lower_keyword.split()
+            for token in tokens:
+                match_pos = lower_text.find(token)
+                if match_pos != -1:
+                    keyword = text[match_pos:match_pos + len(token)]
+                    break
+
+        # Still no match found or match already within visible range, shorten
+        # normally
+        if match_pos == -1 or match_pos < (width // 2):
+            return shorten(text, width=width, placeholder=placeholder)
+
+        # Account for placeholder space when calculating text range
+        placeholder_len = len(placeholder)
+        available_chars = width - (2 * placeholder_len)
+
+        # Center the visible range around the matched keyword
+        half_range = available_chars // 2
+        match_end = match_pos + len(keyword)
+        start = max(match_pos - half_range, 0)
+        end = start + available_chars
+
+        # Move the range back if we went past the end of the text
+        if end >= len(text):
+            end = len(text)
+            # No trailing placeholder needed - extend range backward to use the
+            # extra space
+            start = max(end - available_chars - placeholder_len, 0)
+
+        # Extend range forward if it cuts off part of the match
+        elif end < match_end:
+            end = match_end
+            start = max(end - available_chars, 0)
+
+        truncated = text[start:end]
+
+        # Add placeholders where content was omitted
+        if start > 0:
+            truncated = placeholder + truncated
+        if end < len(text):
+            truncated += placeholder
+
+        return truncated
+
     def _get_search_order(self, order):
         # OrderBy will be parsed in orm and so no direct sql injection
         # id is added to be sure that order is a unique sort key
@@ -544,7 +621,7 @@ class Website(Home):
                 field_type = field_meta.get('type')
                 if field_type == 'text':
                     if value and field_meta.get('truncate', True):
-                        value = shorten(value, max_nb_chars, placeholder='...')
+                        value = self._shorten_around_match(value, term, max_nb_chars)
                     if field_meta.get('match') and value and term:
                         pattern = '|'.join(map(re.escape, term.split()))
                         if pattern:
