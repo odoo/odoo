@@ -63,16 +63,18 @@ function clickSomewhereElse() {
     ]
 }
 
-function checkSOLDescriptionContains(productName, text) {
+function checkSOLDescriptionContains(productName, text, { isReadonly = false } = {}) {
     // currently must be called after exiting the edit mode on the SOL
     // TODO in the future: handle edit mode and look directly into the textarea value
+    const productSelector = isReadonly
+        ? `a:contains("${productName}")` : `span:contains("${productName}")`;
     if (!text) {
         return {
-            trigger: `span:contains("${productName}")`,
+            trigger: productSelector,
         }
     }
     return {
-        trigger: `span:contains("${productName}") ~ textarea`,
+        trigger: `${productSelector} ~ textarea`,
     }
 }
 
