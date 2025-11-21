@@ -50,9 +50,9 @@ class EventEventTicket(models.Model):
     color = fields.Char('Color', default="#875A7B")
 
     @api.depends('company_id', 'product_id', 'event_id')
-    def create(self, vals):
-        res = super().create(vals)
-        if len(self.env.companies) > 1 and any(k in vals for k in ('company_id', 'product_id', 'event_id')):
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        if len(self.env.companies) > 1 and any(k in vals_list for k in ('company_id', 'product_id', 'event_id')):
             res.event_id._check_consistent_company_id()
         return res
 

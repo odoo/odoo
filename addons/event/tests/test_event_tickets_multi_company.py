@@ -27,7 +27,7 @@ class TestEventTicketsMultiCompany(EventCase):
             'list_price': 10,
             'company_id': company_eur.id,
         }])
-        test_event = self.env['event.event'].create({
+        event_us = self.env['event.event'].create({
             'date_begin': datetime.now() + relativedelta(days=-1),
             'date_end': datetime.now() + relativedelta(days=1),
             'name': 'Test Event',
@@ -35,19 +35,19 @@ class TestEventTicketsMultiCompany(EventCase):
         })
         self.env['event.event.ticket'].create({
             'name': 'US ticket',
-            'event_id': test_event.id,
+            'event_id': event_us.id,
             'product_id': product_us.id,
         })
         # include a eur ticket on us company
         with self.assertRaises(ValidationError):
             self.env['event.event.ticket'].create({
                 'name': 'EUR ticket',
-                'event_id': test_event.id,
+                'event_id': event_us.id,
                 'product_id': product_eur.id,
             })
         # attempt to change the company of the event to eur - should raise an error due to a us ticket already included on the event
         with self.assertRaises(ValidationError):
-            test_event.write({'company_id': company_eur})
+            event_us.write({'company_id': company_eur})
         # attempt to change the company of the us product
         with self.assertRaises(ValidationError):
             product_us.write({'company_id': company_eur.id})
