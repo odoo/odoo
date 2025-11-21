@@ -71,6 +71,7 @@ class PosOrder(models.Model):
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('login_number', 0))
             config._notify('ORDER_STATE_CHANGED', {})
 
+    # TODO: remove in master
     def _send_self_order_receipt(self):
         if self.email:
             try:
