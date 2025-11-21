@@ -213,7 +213,6 @@
             <field name="context">{}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
-        <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
 
         <!-- ir model fields -->
         <record id="view_model_fields_form" model="ir.ui.view">
@@ -411,7 +410,6 @@
             <field name="context">{}</field>
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
-        <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
 
         <!-- ir model fields selection -->
         <record id="view_model_fields_selection_form" model="ir.ui.view">
@@ -459,7 +457,6 @@
             <field name="res_model">ir.model.fields.selection</field>
             <field name="view_id" ref="view_model_fields_selection_tree"/>
         </record>
-        <menuitem action="action_model_fields_selection" id="ir_model_model_fields_selection" parent="base.next_id_9"/>
 
         <!-- ir model data -->
         <record model="ir.ui.view" id="view_model_data_form">
@@ -522,9 +519,6 @@
             <field name="res_model">ir.model.data</field>
             <field name="view_id" ref="view_model_data_list"/>
         </record>
-        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_custom" sequence="21" groups="base.group_no_one"/>
-        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
-                  groups="base.group_no_one"/>
 
         <!-- ir model contraints -->
         <record model="ir.ui.view" id="view_model_constraint_form">
@@ -579,8 +573,6 @@
             <field name="view_id" ref="view_model_constraint_list"/>
             <field name="search_view_id" ref="view_model_constraint_search"/>
         </record>
-        <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
-                  groups="base.group_no_one"/>
 
         <!-- ir model relations -->
         <record model="ir.ui.view" id="view_model_relation_form">
@@ -612,9 +604,6 @@
             <field name="res_model">ir.model.relation</field>
             <field name="view_id" ref="view_model_relation_list"/>
         </record>
-        <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
-                  groups="base.group_no_one"/>
-
         <!-- ir.model.access -->
         <record id="ir_access_view_tree" model="ir.ui.view">
             <field name="name">ir.model.access.view.list</field>
@@ -704,6 +693,4 @@
             <field name="view_id" ref="ir_access_view_tree_edition"/>
             <field name="search_view_id" ref="ir_access_view_search"/>
         </record>
-        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
-
 </odoo>

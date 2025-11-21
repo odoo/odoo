@@ -47,7 +47,6 @@
             <field name="name">Privileges</field>
             <field name="res_model">res.groups.privilege</field>
         </record>
-        <menuitem id="menu_action_res_groups_privilege"  action="action_res_groups_privilege" parent="base.menu_users" groups="base.group_no_one" sequence="5"/>
 
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">
@@ -151,7 +150,6 @@
             <field name="context">{'search_default_filter_no_share': 1}</field>
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one" sequence="3"/>
 
         <record id="view_default_groups_form" model="ir.ui.view">
             <field name="name">res.groups default groups form</field>

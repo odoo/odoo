@@ -42,33 +42,10 @@
             <field name="res_model">report.paperformat</field>
             <field name="view_mode">list,form</field>
         </record>
-        <record id='reports_action' model='ir.actions.act_window'>
+        <record id="reports_action" model='ir.actions.act_window'>
             <field name="name">Reports</field>
             <field name="res_model">ir.actions.report</field>
             <field name="view_mode">list,form</field>
         </record>
-        <menuitem
-            id="reporting_menuitem"
-            name="Reporting"
-            parent="base.menu_custom"
-            sequence="15"
-            groups="base.group_no_one"
-            />
-        <menuitem
-            id="paper_format_menuitem"
-            name="Paper Format"
-            parent="reporting_menuitem"
-            action="paper_format_action"
-            sequence="2"
-            groups="base.group_no_one"
-            />
-        <menuitem
-            id="reports_menuitem"
-            name="Reports"
-            parent="reporting_menuitem"
-            action="reports_action"
-            sequence="3"
-            groups="base.group_no_one"
-            />
     </data>
 </odoo>
