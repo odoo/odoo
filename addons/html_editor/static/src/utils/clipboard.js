@@ -19,12 +19,14 @@ function prependOriginToImages(doc, origin) {
  * @param {ClipboardEvent} ev copy event
  * @param {DocumentFragment} clonedContents
  */
-export function fillClipboardData(ev, clonedContents) {
+export function fillClipboardData(ev, clonedContents, { fillEditorClipboard = true } = {}) {
     const doc = ev.target.ownerDocument;
     const dataHtmlElement = doc.createElement("data");
     dataHtmlElement.append(clonedContents);
     prependOriginToImages(dataHtmlElement, doc.defaultView.location.origin);
     const htmlContent = dataHtmlElement.innerHTML;
     ev.clipboardData.setData("text/html", htmlContent);
-    ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
+    if (fillEditorClipboard) {
+        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
+    }
 }
