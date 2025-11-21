@@ -47,7 +47,7 @@
                     <t t-name="card">
                         <field name="name" class="fw-medium fs-5"/>
                         <div t-if="duration" class="d-flex"><field name="duration" widget="float_time"/>hours</div>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         <footer class="pt-0">
                             <div class="d-flex align-items-center">
                                 <field name="priority" widget="priority"/>
@@ -165,7 +165,7 @@
                         <group>
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <field name="event_id" placeholder="All Events"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <field name="color" widget="color_picker"/>
                         </group>
                     </group>

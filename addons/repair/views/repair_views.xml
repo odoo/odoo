@@ -122,7 +122,7 @@
                             <field name="schedule_date" readonly="state in ['done', 'cancel']"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                             <field name="parts_availability_state" invisible="True"/>
                             <field name="parts_availability"
                                 invisible="state not in ['confirmed', 'under_repair']"
@@ -207,7 +207,7 @@
                             <field name="state" class="col-6 text-end mb-1" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>
                             <div class="col-6 text-muted">
                                 <field name="product_id" />
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             </div>
                             <div class="col-6">
                                 <field name="partner_id" class="float-end"/>

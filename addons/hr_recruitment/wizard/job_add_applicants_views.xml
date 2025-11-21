@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Add Applicants to Pool">
                 <group>
-                    <field name="job_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Move to..."/>
+                    <field name="job_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" placeholder="Move to..."/>
                 </group>
                 <footer>
                     <button

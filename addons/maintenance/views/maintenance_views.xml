@@ -751,7 +751,7 @@
                 <group>
                     <group>
                         <field name="active" invisible="1"/>
-                        <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
+                        <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create': True}" domain="[('share', '=', False)]"/>
                     </group>
                     <group name="group_alias">
                         <label for="alias_name" string="Email Alias"/>
@@ -785,7 +785,7 @@
         <field name="arch" type="xml">
             <list string="Maintenance Team" editable="bottom">
                 <field name="name"/>
-                <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
+                <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create': True}" domain="[('share', '=', False)]"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
             </list>
         </field>

@@ -13,7 +13,7 @@
                         <field name="res_ids" invisible="1"/>
                         <field name="operation" widget="radio" options="{'horizontal': true}"/>
                         <field name="partner_ids" widget="many2many_tags_email"
-                                placeholder="Add contacts" options="{'warn_future': True, 'edit_tags': True}"
+                                placeholder="Add contacts" options="{'warn_future': True, 'on_tag_click': 'open_form'}"
                                 context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'force_email': True}"/>
                         <field name="notify" options="{'autosave': False}" invisible="operation == 'remove'" widget="boolean_toggle"/>
                     </group>

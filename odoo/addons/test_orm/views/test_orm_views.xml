@@ -47,7 +47,7 @@
                             <!--
                                 Bug if the view contains at least 5 fields.
                                 The order of the dic values changes and the _check_author constraint raise.
-                                <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="categories" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             -->
                             <field name="moderator"/>
                         </group>
@@ -118,7 +118,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="categories" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         </group>
                         <notebook>
                             <page string="Messages">

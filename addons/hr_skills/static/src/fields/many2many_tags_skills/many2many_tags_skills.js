@@ -9,7 +9,7 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 class SkillsTag extends Component {
     static template = "hr_skills.SkillsTag";
     static components = { BadgeTag };
-    static props = ["color?", "defaultLevel", "onDelete?", "text", "tooltip"];
+    static props = ["color?", "defaultLevel", "onDelete?", "text", "tooltip", "onClick"];
 }
 
 class SkillsMany2ManyTags extends Many2ManyTagsField {
@@ -22,12 +22,10 @@ class SkillsMany2ManyTags extends Many2ManyTagsField {
 export const skillsMany2ManyTags = {
     ...many2ManyTagsField,
     component: SkillsMany2ManyTags,
-    relatedFields: (fieldInfo) => {
-        return [
-            ...many2ManyTagsField.relatedFields(fieldInfo),
-            { name: "default_level", type: "boolean"},
-        ];
-    },
+    relatedFields: (fieldInfo) => [
+        ...many2ManyTagsField.relatedFields(fieldInfo),
+        { name: "default_level", type: "boolean" },
+    ],
 };
 
 registry.category("fields").add("many2many_tags_skills", skillsMany2ManyTags);

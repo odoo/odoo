@@ -13,7 +13,7 @@
                             <div invisible="is_note" class="d-flex gap-3">
                                 <field name="partner_ids" widget="many2many_tags_email" class="w-auto flex-grow-1"
                                     placeholder="Add contacts to notify..."
-                                    options="{'edit_tags': True}"
+                                    options="{'on_tag_click': 'open_form'}"
                                     context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                             </div>
                             <field name="subject" required="True"/>

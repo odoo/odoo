@@ -59,7 +59,7 @@
                                         invisible="type != 'combo'"
                                         options="{
                                             'no_quick_create': True,
-                                            'edit_tags': True,
+                                            'on_tag_click': 'open_form',
                                         }"
                                     />
                                     <field name="service_tracking" invisible="1 or type != 'service'"/>
@@ -144,7 +144,7 @@
                                     <field
                                         name="uom_ids"
                                         widget="many2many_uom_tags"
-                                        options="{'no_quick_create': True, 'edit_tags': True}"
+                                        options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
                                         groups="uom.group_uom"
                                         force_save="1"
                                         context="{'product_id': product_variant_id if product_variant_count == 1 else False, 'product_ids': product_variant_ids, 'show_variant_name': product_variant_count > 1}"/>
@@ -383,7 +383,7 @@
                                 <field
                                     name="uom_ids"
                                     widget="many2many_uom_tags"
-                                    options="{'no_quick_create': True, 'edit_tags': True}"
+                                    options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
                                     groups="uom.group_uom"
                                     force_save="1"
                                     context="{'product_id': id}"/>
@@ -689,7 +689,7 @@ action = {
                                         widget="many2many_tags"
                                         domain="[('id', 'in', parent.ids)]"
                                         groups="product.group_product_variant"
-                                        options="{'color_field': 'color'}"
+                                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                                         invisible="not product_template_attribute_value_ids"/>
                             </div>
                             <field

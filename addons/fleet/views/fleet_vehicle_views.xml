@@ -83,7 +83,7 @@
                             <field name="license_plate" class="oe_inline" placeholder="e.g. PAE 326"/>
                         </h2>
                         <label for="tag_ids" class="me-3"/>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                     </div>
                     <group col="2">
                         <group string="Driver">
@@ -275,7 +275,7 @@
                 <group>
                     <field name="model_id" placeholder="e.g. Model S"/>
                     <field name="license_plate" placeholder="e.g. PAE 326"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 </group>
             </form>
         </field>
@@ -302,7 +302,7 @@
                                 </t>
                                 <field class="fw-bolder fs-5" name="model_id"/>
                             </div>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <div class="d-flex gap-1" t-if="record.driver_id.raw_value">
                                 <field name="driver_id" widget="many2one_avatar"/>
                                 <field name="driver_id" class="small pt-1 pb-1"/>

@@ -33,7 +33,7 @@
                     <field name="mail_activity_type_id"/>
                     <field name="body" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="tag_ids" string="Lead Tags" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" string="Lead Tags" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 </list>
             </field>
         </record>

@@ -161,7 +161,7 @@
                             <page name="access_rights" string="Access Rights">
                                 <group string="Roles" invisible="share and companies_count &lt;= 1">
                                     <field name="role" invisible="share" widget="radio" options="{'horizontal': true}"/>
-                                    <field string="Companies" name="company_ids" invisible="companies_count &lt;= 1" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                    <field string="Companies" name="company_ids" invisible="companies_count &lt;= 1" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                                     <field string="Default Company" name="company_id" invisible="companies_count &lt;= 1" context="{'user_preference': 0}"/>
                                 </group>
                                 <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2" groups="base.group_no_one"/>

@@ -1,11 +1,11 @@
 import {
-    many2ManyTagsFieldColorEditable,
-    Many2ManyTagsFieldColorEditable,
+    many2ManyTagsField,
+    Many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsFieldColorEditable {
+export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsField {
     setup() {
         super.setup();
         this.actionService = useService("action");
@@ -43,7 +43,7 @@ export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsFieldColorEditabl
 }
 
 export const fieldMany2ManyTagsSalaryBank = {
-    ...many2ManyTagsFieldColorEditable,
+    ...many2ManyTagsField,
     component: FieldMany2ManyTagsSalaryBank,
     relatedFields: () => [
         { name: "employee_salary_amount" },
@@ -51,12 +51,12 @@ export const fieldMany2ManyTagsSalaryBank = {
         { name: "display_name" },
         { name: "currency_symbol" },
     ],
-    additionalClasses: [
-        ...(many2ManyTagsFieldColorEditable.additionalClasses || []),
-        "o_field_many2many_tags",
+    supportedOptions: [
+        ...many2ManyTagsField.supportedOptions.filter((option) => option.name !== "color_field"),
     ],
+    additionalClasses: [...(many2ManyTagsField.additionalClasses || []), "o_field_many2many_tags"],
     extractProps({ options, attrs, string, placeholder }, dynamicInfo) {
-        const props = many2ManyTagsFieldColorEditable.extractProps(
+        const props = many2ManyTagsField.extractProps(
             { options, attrs, string, placeholder },
             dynamicInfo
         );
