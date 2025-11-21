@@ -1,8 +1,16 @@
 import { Builder } from "@html_builder/builder";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
+<<<<<<< e9a888ce291599e58e599dd4f53469c50871a83d
 import { insertText, pasteText } from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+||||||| 13a27f31cef932850fa0db4b67664ba0a6e9426e
+import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+=======
+import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import { beforeEach, describe, expect, press, test } from "@odoo/hoot";
+>>>>>>> b03bd02a1c0ecec2a75a5a337b5125f25b008e15
 import {
     animationFrame,
     manuallyDispatchProgrammaticEvent,
@@ -292,11 +300,25 @@ test("test that powerbox should not open in translate mode", async () => {
     const textNode = editor.editable.querySelector("span").firstChild;
     expect(textNode.nodeType).toBe(Node.TEXT_NODE);
     setSelection({ anchorNode: textNode, anchorOffset: 0 });
-    await animationFrame();
     // Simulate typing `/`
     await insertText(editor, "/");
     await animationFrame();
     await expectElementCount(".o-we-powerbox", 0);
+});
+
+test("copy of a translated span should not copy branding attributes", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+    });
+    await contains(":iframe [contenteditable=true]").focus();
+    const editor = getEditor();
+    const textNode = editor.editable.querySelector("b").firstChild;
+    expect(textNode.nodeType).toBe(Node.TEXT_NODE);
+    setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 1 });
+    const clipboardData = new DataTransfer();
+    await press(["ctrl", "c"], { dataTransfer: clipboardData });
+    expect(clipboardData.getData("text/plain")).toBe("c");
+    expect(clipboardData.getData("text/html")).toBe(`<b>c</b>`);
 });
 
 describe("save translation", () => {
