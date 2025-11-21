@@ -66,6 +66,13 @@ export function addFieldDependencies(activeFields, fields, fieldDependencies = [
         if (!("readonly" in field)) {
             field.readonly = true;
         }
+        if (!("required" in field)) {
+            if (field.name in activeFields) {
+                field.required = activeFields[field.name].required; // field already in the view
+            } else if (field.name in fields) {
+                field.required = fields[field.name].required; // check in field definition (model)
+            }
+        }
         if (field.name in activeFields) {
             patchActiveFields(activeFields[field.name], makeActiveField(field));
         } else {

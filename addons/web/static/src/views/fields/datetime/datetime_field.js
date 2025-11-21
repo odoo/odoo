@@ -113,7 +113,12 @@ export class DateTimeField extends Component {
                 type: this.field.type,
                 range: this.isRange(value),
                 showRangeToggler:
-                    this.relatedField && !this.props.required && !this.props.alwaysRange,
+                    this.relatedField &&
+                    !evaluateBooleanExpr(
+                        this.props.record.activeFields[this.relatedField].required,
+                        this.props.record.evalContextWithVirtualIds
+                    ) &&
+                    !this.props.alwaysRange,
                 onToggleRange,
             };
             if (this.props.maxDate) {
@@ -287,7 +292,10 @@ export class DateTimeField extends Component {
         }
         return (
             this.props.alwaysRange ||
-            this.props.required ||
+            evaluateBooleanExpr(
+                this.props.record.activeFields[this.relatedField].required,
+                this.props.record.evalContextWithVirtualIds
+            ) ||
             ensureArray(value).filter(Boolean).length === 2
         );
     }
@@ -435,8 +443,7 @@ export const dateField = {
             deps.push({
                 name: options[START_DATE_FIELD_OPTION],
                 type,
-                readonly: false,
-                ...attrs,
+                readonly: attrs.readonly || false,
             });
             if (options[END_DATE_FIELD_OPTION]) {
                 console.warn(
@@ -447,8 +454,7 @@ export const dateField = {
             deps.push({
                 name: options[END_DATE_FIELD_OPTION],
                 type,
-                readonly: false,
-                ...attrs,
+                readonly: attrs.readonly || false,
             });
         }
         return deps;
