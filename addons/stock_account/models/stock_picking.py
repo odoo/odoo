@@ -12,6 +12,8 @@ class StockPicking(models.Model):
 
     @api.constrains("scheduled_date", "date_done")
     def _check_backdate_allowed(self):
+        if self.env['ir.config_parameter'].sudo().get_param('stock_account.skip_lock_date_check'):
+            return
         for picking in self:
             if picking._is_date_in_lock_period():
                 raise ValidationError(self.env._("You cannot modify the scheduled date of this operation because it falls within a locked fiscal period."))
