@@ -77,7 +77,8 @@ class SwedishBlackBoxDriver(SerialDriver):
         super().__init__(identifier, device)
 
         self.device_type = "fiscal_data_module"
-        self.data["value"] = device["UnitId"]
+        self.unit_id = device["unit_id"]
+        self.protocol_version = device["protocol_version"]
         self.serial_number = 0
         self._set_actions()
 
@@ -92,11 +93,15 @@ class SwedishBlackBoxDriver(SerialDriver):
 
         try:
             protocol = cls._protocol
-            packet = cls._wrap_message("SQX")
+            packet = cls._wrap_message("SIQ")
             with serial_connection(device["identifier"], protocol) as connection:
                 response = cls._send_to_blackbox(packet, connection, 2)
-                if len(response) > 1 and response[3] == "SRX":
-                    device["UnitId"] = cls._get_unit_id(connection)
+                if len(response) > 1 and response[3] == "SIR":
+                    identity = cls._get_identity(connection)
+                    if not identity:
+                        return False
+                    device["unit_id"] = identity["unit_id"]
+                    device["protocol_version"] = identity["protocol_version"]
                     if response[4] != "0":
                         _logger.warning(
                             ("Received error: %s - Severity: %s"),
@@ -113,15 +118,19 @@ class SwedishBlackBoxDriver(SerialDriver):
             )
 
     @classmethod
-    def _get_unit_id(cls, connection):
-        """ "Get UnitId of Swedish Black box
-        :return: UnitId
-        :rtype: string
+    def _get_identity(cls, connection):
+        """ "Get Identity of Swedish Black box
+        :return: dictionary containing unit_id, protocol_version, firmware_version
+        :rtype: dict
         """
         try:
             response = cls._request_action("IQ", connection)
             if response[3] == "IR":
-                return response[4]
+                return {
+                    "unit_id": response[4],
+                    "protocol_version": int(response[5]),
+                    "firmware_version": response[6],
+                }
             else:
                 _logger.error("Sent IQ request error")
                 return False
@@ -144,32 +153,67 @@ class SwedishBlackBoxDriver(SerialDriver):
 
         return f"{int(lrc):02X}"
 
+    def _check_error(self, request, response):
+        if len(response) <= 1:
+            _logger.error("Error request: %s", request)
+            _logger.error("Response received: %s", response)
+            self.data["status"] = ("Sent request: %s without receiving response.", request)
+            return False
+
+        if len(response) >= 4 and response[3] == "NAK":
+            _logger.error("Received error: %s", ErrorCode.get(response[4]))
+            _logger.error("Sent request: %s received NACK.", request)
+            self.data["status"] = ErrorCode.get(response[4])
+            return False
+
+        return True
+
     def _register_receipt(self, data):
-        """The register receipt message registers a receipt. CleanCash® responds with Register
-        Receipt Response if OK or Negative Acknowledge if error"""
+        if self.protocol_version >= 2:
+            self._register_receipt_v2(data)
+        else:
+            self._register_receipt_v1(data)
+        event_manager.device_changed(self)
+
+    def _register_receipt_v2(self, data):
+        """The register receipt message registers a receipt (CCSP v2 only).
+        CleanCash® responds with Register Receipt Response if OK or Negative Acknowledge if error"""
 
         self.serial_number += 1
         message = {"message_type": "RR", "serial_number": str(self.serial_number)}
         message.update(data.get("high_level_message"))
         request = "#".join(list(message.values()))
-        _logger.error(request)
         response = self._request_action(request, self._connection)
-        _logger.error(response)
-        if len(response) > 1:
-            if response[3] == "RRR":
-                self.data["signature_control"] = response[4]
-                self.data["unit_id"] = response[5]
-                self.data["storage_status"] = StorageStatus.get(response[7])
-                self.data["status"] = "ok"
-            elif response[3] == "NAK":
-                _logger.error("Received error: %s", ErrorCode.get(response[4]))
-                _logger.error("Sent request: %s received NACK.", request)
-                self.data["status"] = ErrorCode.get(response[4])
-        else:
-            _logger.error("Error request: %s", data)
-            _logger.error("Response received: %s", response)
-            self.data["status"] = ("Sent request: %s without receiving response.", data)
-        event_manager.device_changed(self)
+        if not self._check_error(request, response):
+            return
+
+        self.data["signature_control"] = response[4]
+        self.data["unit_id"] = response[5]
+        self.data["storage_status"] = StorageStatus.get(response[7])
+        self.data["status"] = "ok"
+
+    def _register_receipt_v1(self, data):
+        """CCSP v1 requires three commands to register a receipt:
+           ST (start receipt), RH (receipt header), SQ (signature request)"""
+
+        response = self._request_action("ST", self._connection)
+        if not self._check_error("ST", response):
+            return
+
+        message_fields = list(data.get("high_level_message").values())
+        request_fields = ["RH", *message_fields[0:2], " ", " ", *message_fields[2:]]
+        request = "#".join(request_fields)
+        response = self._request_action(request, self._connection)
+        if not self._check_error(request, response):
+            return
+
+        response = self._request_action("SQ", self._connection)
+        if not self._check_error("SQ", response):
+            return
+
+        self.data["signature_control"] = response[4]
+        self.data["unit_id"] = self.unit_id
+        self.data["status"] = "ok"
 
     @classmethod
     def _request_action(cls, data, connection):
@@ -189,6 +233,8 @@ class SwedishBlackBoxDriver(SerialDriver):
         :return: the response to the sent message
         :rtype: bytearray
         """
+        connection.reset_input_buffer()
+        connection.reset_output_buffer()
 
         ACK = ""
         retries = 0
