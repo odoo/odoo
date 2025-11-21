@@ -139,7 +139,7 @@
                 </field>
             </div>
             <page name="resume" position="after">
-                <page name="certification" string="Certifications">
+                <page name="certification" string="Certifications" invisible="not display_certification_page">
                     <field name="certification_ids" mode="list" widget="one2many" nolabel="1" context="{'form_view_ref': 'hr_skills.employee_skill_view_inherit_certificate_form', 'dialog_size': 'large', 'default_employee_id': id, 'certificate_skill': True}">
                         <list
                             decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')">
