@@ -222,10 +222,11 @@ def to_pdf_stream(attachment) -> io.BytesIO | None:
     if not attachment.raw:
         _logger.warning("%s has no raw data.", attachment)
         return None
+
+    if attachment_raw := attachment._get_pdf_raw():
+        return io.BytesIO(attachment_raw)
     stream = io.BytesIO(attachment.raw)
-    if attachment.mimetype.startswith('application/pdf'):
-        return stream
-    elif attachment.mimetype.startswith('image'):
+    if attachment.mimetype.startswith('image'):
         output_stream = io.BytesIO()
         Image.open(stream).convert("RGB").save(output_stream, format="pdf")
         return output_stream
