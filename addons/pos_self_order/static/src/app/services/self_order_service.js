@@ -314,6 +314,12 @@ export class SelfOrder extends Reactive {
             throw new Error("No access token provided for confirmation page");
         }
 
+        // If the order uses a preset with a mail template, send the receipt to the customer via email
+        const order = this.models["pos.order"].find((o) => o.access_token === access_token);
+        if (order.preset_id?.raw?.mail_template_id) {
+            await this.sendReceiptToCustomer(order);
+        }
+
         this.router.navigate("confirmation", {
             orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
@@ -816,6 +822,11 @@ export class SelfOrder extends Reactive {
                 openOrder.recomputeChanges();
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
+            const order = result["pos.order"]?.[0];
+            // If the order is paid and uses a preset with a mail template, send the receipt to the customer via email with attachment
+            if (order?.state === "paid" && order.preset_id?.raw?.mail_template_id) {
+                this.sendReceiptToCustomer(order);
+            }
         } catch (error) {
             this.handleErrorNotification(
                 error,
@@ -1011,6 +1022,40 @@ export class SelfOrder extends Reactive {
             return `url('/web/image/ir.attachment/${imageId}/raw')`;
         }
         return "none";
+    }
+
+    async generateTicketImage(order, basicReceipt = false) {
+        return await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                order: order,
+                basic_receipt: basicReceipt,
+            },
+            { addClass: "pos-receipt-print p-3" }
+        );
+    }
+
+    async sendReceiptToCustomer(order) {
+        if (!order?.preset_id?.raw?.mail_template_id) {
+            return;
+        }
+        const fullTicketImage = ["paid", "done"].includes(order.state)
+            ? await this.generateTicketImage(order)
+            : null;
+        const basicTicketImage = this.config.basic_receipt
+            ? await this.generateTicketImage(order, true)
+            : null;
+        try {
+            await rpc("/pos-self-order/send_self_order_receipt", {
+                access_token: this.access_token,
+                order_id: order.id,
+                order_access_token: order.access_token,
+                fullTicketImage,
+                basicTicketImage,
+            });
+        } catch (error) {
+            this.handleErrorNotification(error);
+        }
     }
 }
 

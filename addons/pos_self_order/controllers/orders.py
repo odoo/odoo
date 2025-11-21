@@ -92,6 +92,24 @@ class PosSelfOrderController(http.Controller):
 
         pos_order.remove_from_ui([pos_order.id])
 
+    @http.route('/pos-self-order/send_self_order_receipt', auth='public', type='jsonrpc', website=True)
+    def send_self_order_receipt(self, access_token, order_id, order_access_token, fullTicketImage=None, basicTicketImage=None):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(self.env._("Your order does not exist or has been removed"))
+
+        if not pos_order.email or not pos_order.preset_id.mail_template_id:
+            return
+
+        # Only send receipt attachment for paid/done orders; draft/unpaid get normal email without attachment
+        if pos_order.state not in ('paid', 'done'):
+            pos_order.action_send_self_order_receipt(pos_order.email, pos_order.preset_id.mail_template_id.id, False, False)
+            return
+
+        pos_order.action_send_self_order_receipt(pos_order.email, pos_order.preset_id.mail_template_id.id, fullTicketImage, basicTicketImage)
+
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
