@@ -69,7 +69,11 @@ class PosOrder(models.Model):
         ):
             return
         try:
-            self.action_send_self_order_receipt(self.email, self.preset_id.mail_template_id.id, False, False)
+            ticket_image = self.order_receipt_generate_image()
+            basic_image = False
+            if self.config_id.basic_receipt:
+                basic_image = self.order_receipt_generate_image(True)
+            self.action_send_self_order_receipt(self.email, self.preset_id.mail_template_id.id, ticket_image, basic_image)
         except UserError as e:
             _logger.warning("Error while sending email: %s", e.args[0])
 
@@ -80,7 +84,7 @@ class PosOrder(models.Model):
         if not mail_template:
             raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
         email_values = {'email_to': email}
-        if self.state == 'paid' and ticket_image:
+        if self.state in ('paid', 'done') and ticket_image:
             email_values['attachment_ids'] = self._get_mail_attachments(self.name, ticket_image, basic_image)
         mail_template.send_mail(self.id, force_send=True, email_values=email_values)
 
