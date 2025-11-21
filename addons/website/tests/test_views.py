@@ -1040,6 +1040,20 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
                          "loading module translation for a specific language should not remove existing translations for other languages")
 
+    def test_view_translation_without_website(self):
+        # When get_related_views is called with no website in the
+        # context, the returned views should not be translated.
+        # All get_related_views calls in website should have a website
+        # in the context, however this is tested to simulate the
+        # behavior when called by other modules.
+        fr_BE = self.env['res.lang']._activate_lang('fr_BE')
+        self.env['website'].browse(1).default_lang_id = fr_BE
+        self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+
+        views = self.env['ir.ui.view'].with_context(is_customization_code=False).get_related_views(self.base_view.key)
+        self.assertEqual(views.browse(self.base_view.id).arch, '<div>hello</div>')
+
     def test_view_to_translate_tag(self):
         fr_BE = self.env['res.lang']._activate_lang('fr_BE')
         self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
