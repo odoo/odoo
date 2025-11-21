@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ContactStatisticsField">
-        <div class="d-inline-flex flex-wrap gap-3">
+        <div class="d-inline-flex gap-3" t-att-class="list.length > 5 ? 'flex-wrap' : 'flex-md-wrap'">
             <span t-foreach="list" t-as="data" t-key="data_index" t-att-aria-label="data.label" t-att-title="data.label" t-att-data-tooltip="data.label">
                 <i t-attf-class="fa fa-fw me-1 pe-none {{data.iconClass}}" role="img"/>
                 <t t-out="data.value"/>

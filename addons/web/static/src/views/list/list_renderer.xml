@@ -312,7 +312,7 @@
                 </t>
                 <t t-if="column.type === 'button_group'">
                     <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell w-print-0 p-print-0 cursor-pointer" t-att-class="this.getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
-                        <div class="d-flex flex-wrap gap-1">
+                        <div class="d-flex flex-md-wrap gap-1">
                             <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                                 <ViewButton t-if="!evalInvisible(button.invisible, record)"
                                     className="button.className"

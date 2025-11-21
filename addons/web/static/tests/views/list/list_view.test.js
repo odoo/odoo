@@ -8593,14 +8593,14 @@ test(`invisible attrs in readonly and editable list`, async () => {
     });
     expect(`.o_field_cell:eq(2)`).toHaveInnerHTML("");
     expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML(
-        `<div class="d-flex flex-wrap gap-1"></div>`
+        `<div class="d-flex flex-md-wrap gap-1"></div>`
     );
 
     // edit first row
     await contains(`.o_field_cell`).click();
     expect(`.o_field_cell:eq(2)`).toHaveInnerHTML("");
     expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML(
-        `<div class="d-flex flex-wrap gap-1"></div>`
+        `<div class="d-flex flex-md-wrap gap-1"></div>`
     );
 
     await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
