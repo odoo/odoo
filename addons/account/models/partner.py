@@ -470,25 +470,56 @@ class ResPartner(models.Model):
         return self._asset_difference_search('liability_payable', operator, operand)
 
     def _invoice_total(self):
-        self.total_invoiced = 0
-        if not self.ids:
-            return True
+        """Compute the total amount invoiced to the partner. Multiple currencies may have been linked to the invoices, then it
+        is important to define a unique currency to compute the total amount otherwise this one is meaningless. This currency
+        is either the one of the partner's company if they have one or the currency of the environment's company."""
+        if self.ids:
+            query_res = self.env.execute_query(SQL(
+                """SELECT partner_id, SUM(amount_untaxed_signed_converted) amount_untaxed_signed_converted_sum
+                     FROM (
+                         /* Avoid computing amount_untaxed_signed_converted in the subquery as a lot of records are not used. */
+                         SELECT partner_id, amount_untaxed_signed * COALESCE(rate, 1) amount_untaxed_signed_converted
+                           FROM (
+                               SELECT *,
+                                      /* Must use the effective exchange rate when the invoice was created. */
+                                      ROW_NUMBER() OVER (PARTITION BY move_id ORDER BY dates_difference) rn
+                                 FROM (
+                                     SELECT move.id move_id,
+                                            move.partner_id,
+                                            move.amount_untaxed_signed,
+                                            currency_rate.rate,
+                                            move.date - currency_rate.name dates_difference
+                                       FROM account_move move
+                                       LEFT JOIN (
+                                           SELECT id, COALESCE(company_id, %(default_company_id)s) company_id
+                                             FROM res_partner
+                                       ) partner
+                                         ON move.partner_id = partner.id
+                                       LEFT JOIN res_company company
+                                         ON partner.company_id = company.id
+                                       LEFT JOIN res_currency_rate currency_rate
+                                         ON move.company_id = currency_rate.company_id
+                                        AND company.currency_id = currency_rate.currency_id
+                                        AND move.date > currency_rate.name
+                                      WHERE move.state NOT IN ('draft', 'cancel')
+                                        AND move.company_id IN %(company_ids)s
+                                        AND move.partner_id IN %(partner_ids)s
+                                        AND move.move_type IN ('out_invoice', 'out_refund')
+                                 )
+                           )
+                          WHERE rn = 1
+                     )
+                    GROUP BY partner_id""",
+                partner_ids=tuple(self.ids),
+                company_ids=tuple(self.env.companies.ids),
+                default_company_id=self.env.company.id,
+            ))
+            data_map = dict(query_res)
+        else:
+            data_map = {}
 
-        all_partners_and_children = {}
-        all_partner_ids = []
-        for partner in self.filtered('id'):
-            # price_total is in the company currency
-            all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
-            all_partner_ids += all_partners_and_children[partner]
-
-        domain = [
-            ('partner_id', 'in', all_partner_ids),
-            ('state', 'not in', ['draft', 'cancel']),
-            ('move_type', 'in', ('out_invoice', 'out_refund')),
-        ]
-        price_totals = self.env['account.invoice.report']._read_group(domain, ['partner_id'], ['price_subtotal:sum'])
-        for partner, child_ids in all_partners_and_children.items():
-            partner.total_invoiced = sum(price_subtotal_sum for partner, price_subtotal_sum in price_totals if partner.id in child_ids)
+        for partner in self:
+            partner.total_invoiced = data_map.get(partner.id, 0.0)
 
     @api.depends('credit')
     def _compute_days_sales_outstanding(self):

@@ -4,6 +4,7 @@
 from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class MailingMailing(models.Model):
@@ -24,16 +25,48 @@ class MailingMailing(models.Model):
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
-        domain = Domain.AND([
-            [('source_id', 'in', self.source_id.ids)],
-            [('state', 'not in', ['draft', 'cancel'])]
-        ])
-        moves_data = self.env['account.move'].sudo()._read_group(
-            domain, ['source_id'], ['amount_untaxed_signed:sum'],
-        )
-        mapped_data = {source.id: amount_untaxed_signed for source, amount_untaxed_signed in moves_data}
-        for mass_mailing in self:
-            mass_mailing.sale_invoiced_amount = mapped_data.get(mass_mailing.source_id.id, 0)
+        if self.source_id.ids:
+            query_res = self.env.execute_query(SQL(
+                """SELECT mailing_id, SUM(amount_untaxed_signed_converted) amount_untaxed_signed_converted_sum
+                     FROM (
+                         /* Avoid computing amount_untaxed_signed_converted in the subquery as a lot of records are not used. */
+                         SELECT mailing_id, amount_untaxed_signed * COALESCE(rate, 1) amount_untaxed_signed_converted
+                           FROM (
+                               SELECT *,
+                                      /* Must use the effective exchange rate when the invoice was created. */
+                                      ROW_NUMBER() OVER (PARTITION BY move_id ORDER BY dates_difference) rn
+                                 FROM (
+                                     SELECT move.id move_id,
+                                            move.amount_untaxed_signed,
+                                            mailing_mailing.id mailing_id,
+                                            currency_rate.rate,
+                                            move.date - currency_rate.name dates_difference
+                                       FROM account_move move
+                                       LEFT JOIN mailing_mailing
+                                         ON mailing_mailing.source_id = move.source_id
+                                       LEFT JOIN (
+                                           SELECT company_id, name, rate
+                                             FROM res_currency_rate
+                                            WHERE currency_id = %(currency_id)s
+                                       ) currency_rate
+                                         ON move.company_id = currency_rate.company_id
+                                        AND move.date > currency_rate.name
+                                      WHERE move.state NOT IN ('draft', 'cancel')
+                                        AND move.source_id IN %(source_ids)s
+                                 )
+                           )
+                           WHERE rn = 1
+                     )
+                    GROUP BY mailing_id""",
+                currency_id=self.env.company.currency_id.id,
+                source_ids=tuple(self.source_id.ids),
+            ))
+            data_map = dict(query_res)
+        else:
+            data_map = {}
+
+        for mailing in self:
+            mailing.sale_invoiced_amount = data_map.get(mailing.id, 0.0)
 
     def action_redirect_to_quotations(self):
         helper_header = _("No Quotations yet!")
