@@ -461,25 +461,43 @@ class ResPartner(models.Model):
         return self._asset_difference_search('liability_payable', operator, operand)
 
     def _invoice_total(self):
-        self.total_invoiced = 0
-        if not self.ids:
-            return True
+        """Compute the total amount invoiced to the partner. Multiple currencies may have been linked to the invoices, then it
+        is important to define a unique currency to compute the total amount otherwise this one is meaningless. This currency
+        is either the one of the partner's company if they have one or the currency of the environment's company."""
+        if self.ids:
+            query_res = self.env.execute_query(SQL(
+                """SELECT move.partner_id, SUM(move.amount_untaxed_signed * COALESCE(currency_rate.rate, 1))
+                     FROM account_move move
+                     LEFT JOIN res_partner partner
+                       ON partner.id = move.partner_id
+                     LEFT JOIN res_company company
+                       ON company.id = COALESCE(partner.company_id, %(default_company_id)s)
+                     /* To use the exchange rate effective at the creation of the invoice. */
+                     LEFT JOIN LATERAL (
+                         SELECT rate
+                           FROM res_currency_rate
+                          WHERE company_id = move.company_id
+                            AND currency_id = company.currency_id
+                            AND name < move.date
+                          ORDER BY name DESC
+                          LIMIT 1
+                     ) currency_rate
+                       ON TRUE
+                    WHERE move.state NOT IN ('draft', 'cancel')
+                      AND move.company_id IN %(company_ids)s
+                      AND move.partner_id IN %(partner_ids)s
+                      AND move.move_type IN ('out_invoice', 'out_refund')
+                    GROUP BY move.partner_id""",
+                partner_ids=tuple(self.ids),
+                company_ids=tuple(self.env.companies.ids),
+                default_company_id=self.env.company.id,
+            ))
+            data_map = dict(query_res)
+        else:
+            data_map = {}
 
-        all_partners_and_children = {}
-        all_partner_ids = []
-        for partner in self.filtered('id'):
-            # price_total is in the company currency
-            all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
-            all_partner_ids += all_partners_and_children[partner]
-
-        domain = [
-            ('partner_id', 'in', all_partner_ids),
-            ('state', 'not in', ['draft', 'cancel']),
-            ('move_type', 'in', ('out_invoice', 'out_refund')),
-        ]
-        price_totals = self.env['account.invoice.report']._read_group(domain, ['partner_id'], ['price_subtotal:sum'])
-        for partner, child_ids in all_partners_and_children.items():
-            partner.total_invoiced = sum(price_subtotal_sum for partner, price_subtotal_sum in price_totals if partner.id in child_ids)
+        for partner in self:
+            partner.total_invoiced = data_map.get(partner.id, 0.0)
 
     @api.depends('credit')
     def _compute_days_sales_outstanding(self):
