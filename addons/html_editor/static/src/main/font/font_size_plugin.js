@@ -77,6 +77,7 @@ export class FontSizePlugin extends Plugin {
                         this.dependencies.selection.focusEditable();
                     },
                     document: this.document,
+                    maxFontSize: this.config.maxFontSize,
                 },
                 isAvailable: isHtmlContentSupported,
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
@@ -153,7 +154,9 @@ export class FontSizePlugin extends Plugin {
      *  - If the value is outside that range (smaller than the smallest system
      *    size, or larger than the largest), a responsive `clamp()` expression
      *    is returned so the text scales gracefully with the viewport:
-     *      `clamp(8px, 1em + UIvalue*vw, MAX_FONT_SIZE)`
+     *      `clamp(8px, 1em + UIvalue*vw, this.config.maxFontSize || MAX_FONT_SIZE)`
+     *  - For frontend: `maxFontSize` comes from config (400), with fallback to
+     *    backend default MAX_FONT_SIZE (144)
      *    where `UIvalue` is derived from the difference between what the user
      *    wants and what the parent block already provides at the current viewport.
      *
@@ -185,7 +188,9 @@ export class FontSizePlugin extends Plugin {
             // existing inline override.
             return null;
         }
-        return `clamp(8px, 1em + ${uiValue.toFixed(4)}vw, ${MAX_FONT_SIZE}px)`;
+        return `clamp(8px, 1em + ${uiValue.toFixed(4)}vw, ${
+            this.config.maxFontSize || MAX_FONT_SIZE
+        }px)`;
     }
 
     updateFontSizeSelectorParams() {

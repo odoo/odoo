@@ -13,6 +13,7 @@ import {
     waitFor,
     queryOne,
     waitForNone,
+    advanceTime,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -349,4 +350,33 @@ test("should not insert block element at root editable span", async () => {
     setSelection({ anchorNode: queryOne(":iframe .test-target"), anchorOffset: 1 });
     pasteHtml(getEditor(), `!`);
     expect(":iframe .test-target").toHaveInnerHTML("Hello!");
+});
+
+describe("font size", () => {
+    test("should allow font size up to 400px in website", async () => {
+        const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
+        const editor = getEditor();
+        const p = editor.editable.querySelector("p");
+        setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar button[name='font_size'] iframe");
+
+        const iframeEl = queryOne(".o-we-toolbar button[name='font_size'] iframe");
+        const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+        await contains(inputEl).click();
+        await animationFrame();
+
+        // Simulate entering a font size greater than 400px (frontent limit)
+        inputEl.value = 450;
+        await manuallyDispatchProgrammaticEvent(inputEl, "input", {
+            inputType: "insertText",
+        });
+        await advanceTime(200);
+        // Displays correct input value entered by user
+        expect(inputEl).toHaveValue(450);
+
+        inputEl.blur();
+        await animationFrame();
+        // Value that clamped to the frontend limit after blur
+        expect(inputEl).toHaveValue(400);
+    });
 });
