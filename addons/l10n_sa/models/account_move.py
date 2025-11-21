@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-
+from datetime import datetime
 from odoo import api, fields, models
 from odoo.tools import float_repr, format_datetime
 
@@ -10,11 +10,10 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
-    l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date',
+    l10n_sa_confirmation_datetime = fields.Datetime(string='ZATCA Issue Date',
                                                     readonly=True,
                                                     copy=False,
-                                                    help="""Date when the invoice is confirmed and posted.
-                                                    In other words, it is the date on which the invoice is generated as final document (after securing all internal approvals).""")
+                                                    help="""Date on which the invoice is generated as final document (after securing all internal approvals).""")
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
@@ -23,6 +22,9 @@ class AccountMove(models.Model):
         for move in self:
             if move.country_code == 'SA':
                 move.show_delivery_date = move.is_sale_document()
+
+    def _l10n_sa_reset_confirmation_datetime(self):
+        self.filtered(lambda m: m.country_code == 'SA').l10n_sa_confirmation_datetime = False
 
     @api.depends('amount_total_signed', 'amount_tax_signed', 'l10n_sa_confirmation_datetime', 'company_id', 'company_id.vat')
     def _compute_qr_code_str(self):
@@ -54,10 +56,9 @@ class AccountMove(models.Model):
         res = super()._post(soft)
         for move in self:
             if move.country_code == 'SA' and move.is_sale_document():
+                vals = {}
                 if not move.l10n_sa_confirmation_datetime:
-                    vals = {'l10n_sa_confirmation_datetime': fields.Datetime.now()}
-                else:
-                    vals = {}
+                    vals['l10n_sa_confirmation_datetime'] = datetime.combine(move.invoice_date, fields.Datetime.now().time())
                 if not move.delivery_date:
                     vals['delivery_date'] = move.invoice_date
                 if vals:
@@ -68,16 +69,18 @@ class AccountMove(models.Model):
         self.ensure_one()
         return format_datetime(self.env, self.l10n_sa_confirmation_datetime, tz='Asia/Riyadh', dt_format='Y-MM-dd\nHH:mm:ss')
 
-    def _l10n_sa_reset_confirmation_datetime(self):
-        self.filtered(lambda m: m.country_code == 'SA').l10n_sa_confirmation_datetime = False
-
-    def button_draft(self):
-        self._l10n_sa_reset_confirmation_datetime()
-        super().button_draft()
-
     def _get_l10n_sa_totals(self):
         self.ensure_one()
         return {
             'total_amount': self.amount_total_signed,
             'total_tax': self.amount_tax_signed,
         }
+
+    def write(self, vals):
+        result = super().write(vals)
+        invoice_date = vals.get('invoice_date')
+        if not invoice_date:
+            return result
+        for move in self.filtered('l10n_sa_confirmation_datetime'):
+            move.l10n_sa_confirmation_datetime = datetime.combine(fields.Date.from_string(invoice_date), move.l10n_sa_confirmation_datetime.time())
+        return result
