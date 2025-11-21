@@ -12,17 +12,7 @@
             />
             <field name="domain_force">
                 [
-                    "|",
-                        "&amp;",
-                            ("channel_type", "!=", "channel"),
-                            "|",
-                                ("is_member", "=", True),
-                                ("parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_type", "=", "channel"),
-                            "|",
-                                ("group_public_id", "=", False),
-                                ("group_public_id", "in", user.all_group_ids.ids),
+                    ("is_all_member", "=", True),
                 ]
             </field>
         </record>
@@ -78,17 +68,7 @@
             />
             <field name="domain_force">
                 [
-                    "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                    ("channel_id.is_all_member", "=", True),
                 ]
             </field>
             <field name="perm_create" eval="False"/>
@@ -220,17 +200,7 @@
             />
             <field name="domain_force">
                 [
-                    "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                    ("channel_id.is_all_member", "=", True),
                 ]
             </field>
             <field name="perm_create" eval="False"/>

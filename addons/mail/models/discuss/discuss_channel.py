@@ -15,9 +15,10 @@ from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.addons.web.models.models import lazymapping
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.models import Query, TableSQL
 from odoo.tools import format_list, email_normalize, html_escape
 from odoo.tools.misc import hash_sign, OrderedSet
-from odoo.tools.sql import SQL
+from odoo.tools.sql import SQL, make_identifier
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
 <rect width="530.06" height="530.06" fill="#875a7b"/>
@@ -94,6 +95,7 @@ class DiscussChannel(models.Model):
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
     call_history_ids = fields.One2many("discuss.call.history", "channel_id")
     is_member = fields.Boolean("Is Member", compute="_compute_is_member", search="_search_is_member", compute_sudo=True)
+    is_all_member = fields.Boolean(compute="_compute_is_all_member", search="_search_is_all_member", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
     self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", search="_search_self_member_id", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
@@ -279,32 +281,235 @@ class DiscussChannel(models.Model):
             outdated.unlink()
 
     def _search_channel_partner_ids(self, operator, operand):
-        return [('channel_member_ids', 'any', [('partner_id', operator, operand)])]
+        return [("channel_member_ids", "any", [("partner_id", operator, operand)])]
 
-    @api.depends_context('uid', 'guest')
+    @api.depends_context("uid", "guest")
     @api.depends('channel_member_ids')
     def _compute_is_member(self):
         for channel in self:
             channel.is_member = bool(channel.self_member_id)
 
     def _search_is_member(self, operator, operand):
-        if operator != 'in':
+        # using _search instead of _compute_sql to avoid IS NULL IS TRUE which degrades performance
+        if operator != "in":
             return NotImplemented
-        # Separate query to fetch candidate channels because the sub-select that _search would
-        # generate leads psql query plan to take bad decisions. When candidate ids are explicitly
-        # given it doesn't need to make (incorrect) guess, at the cost of one extra but fast query.
-        # It is expected to return hundreds of channels, a thousand at most, which is acceptable.
-        # A "join" would be ideal, but the ORM is currently not able to generate it from the domain.
-        user, guest = self.env["res.users"]._get_current_persona()
+
+        def is_member_domain(table):
+            user, guest = self.env["res.users"]._get_current_persona()
+            if not guest and not user:
+                return SQL("FALSE")
+            guest_id = guest.id if guest else 0
+            partner_id = user.partner_id.id if user and user.partner_id else 0
+            channel_member_table = table._make_alias(
+                f"member_{guest_id}_{partner_id}", self.env["discuss.channel.member"]
+            )
+            base_conditions = {
+                "channel_id": channel_member_table["channel_id"],
+                "channel_id_value": table["id"],
+            }
+            if guest:
+                condition = SQL(
+                    "%(channel_id)s = %(channel_id_value)s AND %(guest_id)s = %(guest_id_value)s",
+                    **base_conditions,
+                    guest_id=channel_member_table["guest_id"],
+                    guest_id_value=guest.id,
+                )
+            else:
+                condition = SQL(
+                    "%(channel_id)s = %(channel_id_value)s "
+                    "AND %(partner_id)s = %(partner_id_value)s",
+                    **base_conditions,
+                    partner_id=channel_member_table["partner_id"],
+                    partner_id_value=user.partner_id.id,
+                )
+            table._query.add_join(
+                "LEFT JOIN",
+                channel_member_table,
+                None,
+                condition=condition,
+            )
+            return SQL(
+                "%(channel_id)s IS NOT NULL",
+                channel_id=channel_member_table["id"],
+            )
+
+        return Domain.custom(to_sql=is_member_domain)
+
+    @api.depends_context('uid', 'guest')
+    @api.depends("channel_member_ids", "parent_channel_id.channel_member_ids", "group_public_id")
+    def _compute_is_all_member(self):
+        for channel in self:
+            if channel.channel_type == "channel":
+                channel.is_all_member = not channel.group_public_id or (
+                    channel.group_public_id in self.env.user.all_group_ids
+                    if self.env.user
+                    else False
+                )
+            else:
+                channel.is_all_member = channel.is_member or (
+                    channel.parent_channel_id is not None and channel.parent_channel_id.is_member
+                )
+
+    def _prepare_subquery_for_membership(self, table, user, guest, channel_id_field=None):
+        if channel_id_field is None:
+            channel_id_field = "id"
+        guest_id = guest.id if guest else 0
+        partner_id = user.partner_id.id if user and user.partner_id else 0
+        discuss_channel_table = table._make_alias(
+            f"{channel_id_field}_{guest_id}_{partner_id}", self.env["discuss.channel"]
+        )
+        is_member_query = Query(self.env["discuss.channel"], alias=discuss_channel_table._alias)
+        channel_table = TableSQL(
+            discuss_channel_table._alias, self.env["discuss.channel"], is_member_query
+        )
+        channel_member_table = channel_table._make_alias(
+            "member", self.env["discuss.channel.member"]
+        )
+        base_conditions = {
+            "channel_id": channel_member_table["channel_id"],
+            "channel_id_value": channel_table[channel_id_field],
+        }
         if guest:
-            # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = guest.sudo().channel_ids
-        elif user:
-            # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = user.partner_id.sudo().channel_ids
+            condition = SQL(
+                "%(channel_id)s = %(channel_id_value)s AND %(guest_id)s = %(guest_id_value)s",
+                **base_conditions,
+                guest_id=channel_member_table["guest_id"],
+                guest_id_value=guest.id,
+            )
         else:
-            channels = self.env["discuss.channel"]
-        return [('id', 'in', channels.ids)]
+            condition = SQL(
+                "%(channel_id)s = %(channel_id_value)s AND %(partner_id)s = %(partner_id_value)s",
+                **base_conditions,
+                partner_id=channel_member_table["partner_id"],
+                partner_id_value=user.partner_id.id,
+            )
+        channel_table._query.add_join(
+            "LEFT JOIN",
+            channel_member_table,
+            None,
+            condition=condition,
+        )
+        channel_table._query.add_where(
+            SQL("%(channel_id)s IS NOT NULL", channel_id=channel_member_table["id"])
+        )
+        channel_table._query.add_where(
+            SQL(
+                "%(channel_type)s NOT IN ('channel')",
+                channel_type=channel_table["channel_type"],
+            )
+        )
+        return channel_table
+
+    def _search_is_all_member(self, operator, operand):
+        # using _search instead of _compute_sql to avoid IS NULL IS TRUE which degrades performance
+        if operator != "in":
+            return NotImplemented
+
+        def is_all_member_domain(table):
+            """This method creates two CTEs:
+            - one for the channel using the is_member logic
+              for reusability of the query/conditions
+            - one for membership to the channel and its parent (using the previous CTE)
+              and the group_public_id conditions"""
+            user, guest = self.env["res.users"]._get_current_persona()
+            if guest:
+                user = self.env.user
+            if user or guest:
+                # member of channel
+                channel_member_subquery = self._prepare_subquery_for_membership(
+                    table,
+                    user,
+                    guest,
+                )
+                # member of parent channel
+                channel_parent_member_subquery = self._prepare_subquery_for_membership(
+                    table,
+                    user,
+                    guest,
+                    channel_id_field="parent_channel_id",
+                )
+                union_member_query = SQL(
+                    "UNION %s",
+                    channel_member_subquery._query.subselect(channel_member_subquery["id"]),
+                )
+                union_member_parent_query = SQL(
+                    "UNION %s",
+                    channel_parent_member_subquery._query.subselect(
+                        channel_parent_member_subquery["id"]
+                    ),
+                )
+            else:
+                union_member_query = SQL("")
+                union_member_parent_query = SQL("")
+            # channel with no group restriction
+            guest_id = guest.id if guest else 0
+            partner_id = user.partner_id.id if user and user.partner_id else 0
+            discuss_channel_alias_no_group = table._make_alias(
+                f"no_group_{guest_id}_{partner_id}", self.env["discuss.channel"]
+            )
+            no_group_query = Query(
+                self.env["discuss.channel"], alias=discuss_channel_alias_no_group._alias
+            )
+            no_group_table = TableSQL(
+                discuss_channel_alias_no_group._alias, self.env["discuss.channel"], no_group_query
+            )
+            no_group_query.add_where(
+                SQL(
+                    "%(channel_type)s = 'channel' AND %(group_public_id)s IS NULL",
+                    channel_type=no_group_table["channel_type"],
+                    group_public_id=no_group_table["group_public_id"],
+                )
+            )
+            # channel with group restriction
+            groups = user.all_group_ids if user else self.env["res.groups"]
+            if groups:
+                discuss_channel_alias_groups = table._make_alias(
+                    f"no_group_{guest_id}_{partner_id}", self.env["discuss.channel"]
+                )
+                group_query = Query(
+                    self.env["discuss.channel"], alias=discuss_channel_alias_groups._alias
+                )
+                group_table = TableSQL(
+                    discuss_channel_alias_groups._alias, self.env["discuss.channel"], group_query
+                )
+                group_query.add_where(
+                    SQL(
+                        "%(channel_type)s = 'channel' "
+                        "AND %(group_public_id)s IS NOT NULL "
+                        "AND %(group_public_id)s IN %(group_ids)s",
+                        channel_type=group_table["channel_type"],
+                        group_public_id=group_table["group_public_id"],
+                        group_ids=SQL("%s", tuple(groups.ids)),
+                    )
+                )
+                union_group_query = SQL("UNION %s", group_table._query.select(group_table["id"]))
+            else:
+                union_group_query = SQL("")
+            union_table_alias = make_identifier(
+                f"{table._alias}__is_all_member_{guest_id}_{partner_id}"
+            )
+            table._query.add_join(
+                "LEFT JOIN",
+                union_table_alias,
+                SQL(
+                    "(%(no_group)s %(union_member)s %(union_member_parent)s %(union_group)s)",
+                    no_group=no_group_table._query.select(no_group_table["id"]),
+                    union_member=union_member_query,
+                    union_member_parent=union_member_parent_query,
+                    union_group=union_group_query,
+                ),
+                condition=SQL(
+                    '%(union_table)s."id" = %(table_id)s',
+                    union_table=SQL.identifier(union_table_alias),
+                    table_id=table["id"],
+                ),
+            )
+            return SQL(
+                '%(union_table)s."id" IS NOT NULL',
+                union_table=SQL.identifier(union_table_alias),
+            )
+
+        return Domain.custom(to_sql=is_all_member_domain)
 
     @api.depends_context("uid", "guest")
     @api.depends("channel_member_ids")
@@ -1379,15 +1584,18 @@ class DiscussChannel(models.Model):
         # In order to completely avoid any issues with concurrency, the very first thing we do on
         # the cursor needs to be a SELECT FOR UPDATE
         fetchable = self.filtered(lambda c: c.channel_type in ('chat', 'whatsapp'))
-        member_query = self.env['discuss.channel.member']._search([('channel_id', 'in', fetchable.ids), ('is_self', '=', True)]).subselect()
+        member_query = self.env['discuss.channel.member']._search([('channel_id', 'in', fetchable.ids), ('is_self', '=', True)])
         with self.env.registry.cursor() as cr:
             cursor_self = self.with_env(self.env(cr=cr))
-            to_update = cursor_self.env.execute_query(SQL("""
-                SELECT id
-                  FROM discuss_channel_member
-                 WHERE id IN (%s)
-                   FOR NO KEY UPDATE SKIP LOCKED
-            """, member_query))
+            member_to_update = Query(
+                model=cursor_self.env['discuss.channel.member'],
+            )
+            member_to_update.add_where(
+                SQL("id IN (%s)", member_query.subselect())
+            )
+            to_update = cursor_self.env.execute_query(
+                SQL("%s %s", member_to_update.select("id"), SQL("FOR NO KEY UPDATE SKIP LOCKED"))
+            )
             members = cursor_self.env['discuss.channel.member'].browse([r[0] for r in to_update])
             channel2message = members.channel_id._get_last_messages().grouped('channel_id')
             updated_members_by_channel = defaultdict(cursor_self.env["discuss.channel.member"].browse)
