@@ -11,7 +11,15 @@ class MailingMailing(models.Model):
     _inherit = 'mailing.mailing'
 
     sale_quotation_count = fields.Integer('Quotation Count', compute='_compute_sale_quotation_count')
-    sale_invoiced_amount = fields.Integer('Invoiced Amount', compute='_compute_sale_invoiced_amount')
+    sale_invoiced_amount = fields.Monetary('Invoiced Amount', compute='_compute_sale_invoiced_amount', currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency_id', compute_sql="_compute_sql_currency_id", compute_sudo=True)
+
+    @api.depends_context('company')
+    def _compute_currency_id(self):
+        self.currency_id = self.env.company.currency_id
+
+    def _compute_sql_currency_id(self, table):
+        return SQL("%s", self.env.company.currency_id.id)
 
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
