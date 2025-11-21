@@ -53,7 +53,10 @@ class IrModel(models.Model):
     def get_authorized_fields(self, model_name, property_origins):
         """ Return the fields of the given model name as a mapping like method `fields_get`. """
         model = self.env[model_name]
-        fields_get = model.fields_get()
+        fields_get = model.fields_get(attributes=[
+            'required', 'domain', 'readonly', 'type', 'relation',
+            'definition_record', 'definition_record_field', 'string',
+        ])
 
         for val in model._inherits.values():
             fields_get.pop(val, None)
