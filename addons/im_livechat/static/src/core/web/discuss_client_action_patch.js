@@ -7,9 +7,6 @@ patch(DiscussClientAction.prototype, {
         if (this.store.has_access_livechat) {
             this.store.livechatChannels.fetch();
         }
-        if (this.has_access_livechat && !this.discuss.livechatLookingForHelpCategory.hidden) {
-            this.livechatLookingForHelp.fetch();
-        }
         return super.restoreDiscussThread(...arguments);
     },
 });

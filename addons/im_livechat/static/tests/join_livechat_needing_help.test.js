@@ -1,6 +1,7 @@
 import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
+import { LFH_UNSUBSCRIBE_DELAY } from "@im_livechat/core/public_web/discuss_app_model_patch";
 
 import {
     click,
@@ -12,7 +13,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
 
 import {
@@ -47,8 +48,9 @@ test("Show looking for help in the sidebar while active or still seeking help", 
     });
     await start();
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
-    await waitForChannels([`discuss.channel_${bobChannelId}`]);
+    await waitForChannels(["im_livechat.looking_for_help"]);
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "in_progress",
@@ -60,14 +62,17 @@ test("Show looking for help in the sidebar while active or still seeking help", 
     });
     await click(".o-mail-DiscussSidebarChannel", { text: "bob" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "bob" });
+    await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "in_progress",
     });
     await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
+    await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
     await click(".o-mail-Mailbox[data-mailbox-id=starred");
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
+    await waitForChannels([`discuss.channel_${bobChannelId}`], { operation: "delete" });
 });
 
 test("Do not auto-open chat window on new message when locally pinned", async () => {
@@ -105,6 +110,7 @@ test("Do not auto-open chat window on new message when locally pinned", async ()
         expect.step("discuss.channel/new_message")
     );
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
     await click(".o-mail-DiscussSidebarChannel", { text: "bob" });
     await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await withUser(serverState.userId, async () => {
@@ -128,8 +134,62 @@ test("Do not auto-open chat window on new message when locally pinned", async ()
     await contains(".o-mail-ChatWindow", { count: 0, text: "bob" });
 });
 
+test("Enable/disable looking for help when category is opened/folded", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    localStorage.setItem("discuss_sidebar_category_im_livechat.category_need_help_open", false);
+    await start();
+    patchWithCleanup(getService("bus_service"), {
+        addChannel: (channelName) => {
+            if (channelName === "im_livechat.looking_for_help") {
+                expect.step(`addChannel - ${channelName}`);
+            }
+        },
+        deleteChannel: (channelName) => {
+            if (channelName === "im_livechat.looking_for_help") {
+                expect.step(`deleteChannel - ${channelName}`);
+            }
+        },
+    });
+    onRpc("/mail/data", async (req) => {
+        const { params } = await req.json();
+        if (params.fetch_params.includes("/im_livechat/looking_for_help")) {
+            expect.step("fetch looking_for_help");
+        }
+    });
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-right");
+    await expect.waitForSteps([]);
+    await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
+    await expect.waitForSteps([
+        "addChannel - im_livechat.looking_for_help",
+        "fetch looking_for_help",
+    ]);
+    await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-right");
+    await expect.waitForSteps([]);
+    await advanceTime(LFH_UNSUBSCRIBE_DELAY + 1000);
+    await expect.waitForSteps(["deleteChannel - im_livechat.looking_for_help"]);
+    await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
+    await expect.waitForSteps([
+        "addChannel - im_livechat.looking_for_help",
+        "fetch looking_for_help",
+    ]);
+});
+
 test("Show join button when help is required and self is not a member", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
     const bobPartnerId = pyEnv["res.partner"].create({
         name: "bob",
         user_ids: [Command.create({ name: "bob" })],
@@ -141,11 +201,12 @@ test("Show join button when help is required and self is not a member", async ()
     });
     await start();
     await openDiscuss(channel);
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-livechat-needing-help']");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "In progress" });
     await contains("button[name='join-livechat-needing-help']", { count: 0 });
-    await click("button", { text: "Looking for help" });
+    await click(".o-livechat-LivechatStatusSelection button", { text: "Looking for help" });
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     // Now that we are members, the button is not shown, even if help is required.
     await contains("button[name='join-livechat-needing-help']", { count: 0 });
