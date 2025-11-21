@@ -1217,6 +1217,7 @@ class PurchaseOrder(models.Model):
                 # The discounted price is expressed in the product's UoM, not in the vendor
                 # price's UoM, so we need to convert it into to match the displayed UoM.
                 price = product_uom._compute_price(price, seller.product_uom_id)
+                product_infos.update(uomFactor=seller.product_uom_id.factor / product_uom.factor)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,
