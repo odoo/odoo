@@ -149,6 +149,7 @@ class TestSaleMrpKitBom(BaseCommon):
         so.action_confirm()
         line = so.order_line
         purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
+        self.assertEqual(line.move_ids.mapped('description_picking'), ['Kit Product - 1/2', 'Kit Product - 2/2'])
         self.assertEqual(purchase_price, 92, "The purchase price must be the total cost of the components multiplied by their unit of measure")
 
     def test_sale_mrp_kit_sale_price(self):
