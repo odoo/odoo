@@ -5,7 +5,7 @@ import {
 } from '@website_sale/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ComparisonBottomBar extends Interaction {
-    static selector = '.o_wsale_product_page, .o_wsale_products_page, .o_wsale_wishlist_page';
+    static selector = 'main:has(.o_wsale_product_page, .o_wsale_products_page, .o_wsale_wishlist_page, .s_dynamic_snippet_products)';
 
     setup() {
         // Mount the ProductComparisonBottomBar on pages with comparison functionality.
