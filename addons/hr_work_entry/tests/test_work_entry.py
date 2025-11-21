@@ -60,15 +60,15 @@ class TestWorkEntry(TestWorkEntryBase):
 
     def test_outside_calendar(self):
         """ Test leave work entries outside schedule are conflicting """
-        work_entry_1, work_entry_2 = self.create_work_entries([
+        work_entries = self.create_work_entries([
             # Outside but not a leave
             (datetime(2018, 10, 13, 3, 0), datetime(2018, 10, 13, 4, 0)),
             # Outside and a leave
             (datetime(2018, 10, 13, 1, 0), datetime(2018, 10, 13, 2, 0), self.work_entry_type_leave),
         ])
-        (work_entry_1 | work_entry_2)._mark_leaves_outside_schedule()
-        self.assertEqual(work_entry_2.state, 'conflict', "It should conflict")
-        self.assertNotEqual(work_entry_1.state, 'conflict', "It should not conflict")
+        work_entries._mark_leaves_outside_schedule()
+        self.assertEqual(len(work_entries), 1, "The second work entry should not be generated. As it is a leave outside of the working schedule")
+        self.assertNotEqual(work_entries.state, 'conflict', "It should not conflict")
 
     def test_work_entry_timezone(self):
         """ Test work entries with different timezone """
