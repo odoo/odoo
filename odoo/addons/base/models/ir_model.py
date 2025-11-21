@@ -347,6 +347,8 @@ class IrModel(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_manual(self):
+        if self.env.context.get(MODULE_UNINSTALL_FLAG):
+            return
         # Prevent manual deletion of module tables
         for model in self:
             if model.state != 'manual':
@@ -376,7 +378,7 @@ class IrModel(models.Model):
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
-        if not self.env.context.get(MODULE_UNINSTALL_FLAG):
+        if not self.pool.uninstalling_modules:
             # setup models; this automatically removes model from registry
             self.env.flush_all()
             self.pool._setup_models__(self.env.cr)
@@ -959,7 +961,7 @@ class IrModelFields(models.Model):
                     ", ".join(str(f) for f in fields),
                     view.name)
         finally:
-            if not uninstalling:
+            if not self.pool.uninstalling_modules:
                 # the registry has been modified, restore it
                 self.pool._setup_models__(self.env.cr)
 
@@ -994,7 +996,13 @@ class IrModelFields(models.Model):
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
-        if not self.env.context.get(MODULE_UNINSTALL_FLAG):
+        # Beware: when renaming a field, method write() calls unlink() on the
+        # corresponding inherited fields with MODULE_UNINSTALL_FLAG, and
+        # method write() itself is in charge of cleaning up the registry. If
+        # done here, the field to be renamed regenerates an inherited field
+        # below, and we end up with two records for the inherited field: one
+        # with the old name, and one with the new name.
+        if not (self.env.context.get(MODULE_UNINSTALL_FLAG) or self.pool.uninstalling_modules):
             # setup models; this re-initializes models in registry
             self.env.flush_all()
             self.pool._setup_models__(self.env.cr, model_names)
@@ -1711,6 +1719,8 @@ class IrModelFieldsSelection(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_manual(self):
+        if self.env.context.get(MODULE_UNINSTALL_FLAG):
+            return
         # Prevent manual deletion of module columns
         if (
             self.pool.ready
@@ -1727,7 +1737,7 @@ class IrModelFieldsSelection(models.Model):
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
-        if not self.env.context.get(MODULE_UNINSTALL_FLAG):
+        if not self.pool.uninstalling_modules:
             # setup models; this re-initializes model in registry
             self.env.flush_all()
             self.pool._setup_models__(self.env.cr, model_names)

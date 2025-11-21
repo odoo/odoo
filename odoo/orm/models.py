@@ -3498,8 +3498,13 @@ class BaseModel(metaclass=MetaModel):
 
         from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
         for func in self._ondelete_methods:
-            # func._ondelete is True if it should be called during uninstallation
-            if func._ondelete or not self.env.context.get(MODULE_UNINSTALL_FLAG):
+            # func._ondelete is True => should be called during uninstallation
+            # func._ondelete is False => should be called unless its module is being uninstalled
+            if (
+                func._ondelete
+                or not self.pool.uninstalling_modules
+                or func.__module__.split('.')[2] not in self.pool.uninstalling_modules
+            ):
                 func(self)
 
         # TOFIX: this avoids an infinite loop when trying to recompute a
