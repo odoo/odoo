@@ -46,7 +46,7 @@ timesheets or check attendances for each employee. Get your analytic accounting
 posted automatically based on time spent on your projects.
 
 Time Off Management
------------------
+-------------------
 
 Keep track of the vacation days accrued by each employee. Employees enter their
 requests (paid time off, sick time off, etc), for managers to approve and
