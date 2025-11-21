@@ -18,7 +18,13 @@
                     icon="fa-dollar"
                     class="oe_stat_button"
                     invisible="state == 'draft'" >
-                    <field name="sale_invoiced_amount" string="Invoiced" widget="statinfo"/>
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="currency_id" invisible="1"/> <!-- Needed for the monetary widget of the sale_invoiced_amount field. -->
+                            <field name="sale_invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Invoiced</span>
+                    </div>
                 </button>
     		</xpath>
         </field>
