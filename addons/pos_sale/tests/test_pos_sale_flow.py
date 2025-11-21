@@ -307,6 +307,86 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
         self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel'])
 
+    def test_settle_order_with_products_using_different_uoms(self):
+        """Create a sale order containing two products that each use a different UoM,
+        then settle the order in the PoS and ensure the payment is properly validated.
+        """
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'name': self.product_a.name,
+                    'product_uom_qty': 1.0,
+                    'price_unit': self.product_a.lst_price,
+                }),
+                (0, 0, {
+                    'product_id': self.product_b.id,
+                    'name': self.product_b.name,
+                    'product_uom_qty': 1.0,
+                    'price_unit': self.product_b.lst_price,
+                })
+            ],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        pos_order = {
+        'amount_paid': 15.0,
+        'amount_return': 0.0,
+        'amount_tax': 0.0,
+        'amount_total': 15.0,
+        'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+        'to_invoice': True,
+        'partner_id': self.partner_a.id,
+        'lines': [
+            [0, 0, {
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': self.product_a.lst_price,
+                'product_id': self.product_a.id,
+                'price_subtotal': self.product_a.lst_price * 1.0,
+                'price_subtotal_incl': self.product_a.lst_price * 1.0,
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 1.0,
+                'product_uom_id': self.product_a.uom_id.id,
+                'tax_ids': []
+            }],
+            [0, 0, {
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': self.product_b.lst_price,
+                'product_id': self.product_b.id,
+                'price_subtotal': self.product_b.lst_price * 1.0,
+                'price_subtotal_incl': self.product_b.lst_price * 1.0,
+                'sale_order_line_id': sale_order.order_line[1].id,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 1.0,
+                'product_uom_id': self.product_b.uom_id.id,
+                'tax_ids': []
+            }],
+        ],
+        'name': 'Test POS Order Multi UoM',
+        'session_id': current_session.id,
+        'sequence_number': self.main_pos_config.journal_id.id,
+        'payment_ids': [[0, 0, {
+            'amount': 15.0,
+            'name': fields.Datetime.now(),
+            'payment_method_id': self.main_pos_config.payment_method_ids[0].id
+        }]],
+        'user_id': self.env.uid,
+        }
+
+        self.env['pos.order'].sync_from_ui([pos_order])
+        pos_order_rec = self.env['pos.order'].search([
+            ('session_id', '=', current_session.id),
+            ('partner_id', '=', self.partner_a.id)
+        ], order='id desc', limit=1)
+        self.assertTrue(pos_order_rec)
+        self.assertEqual(pos_order_rec.state,'done')
+
     def test_pos_not_groupable_product(self):
         #Create a UoM Category that is not pos_groupable
         uom = self.env['uom.uom'].create({
