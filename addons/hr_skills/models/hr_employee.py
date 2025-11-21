@@ -159,9 +159,9 @@ class HrEmployee(models.Model):
         if not self.env['hr.employee.public'].browse(res_id).has_access('read'):
             raise AccessError(self.env._("You cannot access the resume of this employee."))
         res = []
-        employee_versions = self.env['hr.employee'].sudo().browse(res_id).version_ids
-        if not employee_versions:
-            return res
+        employee_sudo = self.env['hr.employee'].sudo().browse(res_id)
+        # Fallback on current version if the employee is archived and all his versions are archived.
+        employee_versions = employee_sudo.version_ids or employee_sudo.current_version_id
         interval_date_start = False
         for i in range(len(employee_versions) - 1):
             current_version = employee_versions[i]
