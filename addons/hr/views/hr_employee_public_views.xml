@@ -71,7 +71,7 @@
                                 <div invisible="not user_id">
                                     <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                 </div>
-                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id or not active" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
