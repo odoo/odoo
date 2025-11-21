@@ -122,6 +122,7 @@ export class CartPage extends Component {
         }
     }
 
+    // TODO: remove in master
     generateTicketImage = async (basicReceipt = false) =>
         await this.renderer.toJpeg(
             OrderReceipt,
@@ -132,6 +133,7 @@ export class CartPage extends Component {
             { addClass: "pos-receipt-print p-3" }
         );
 
+    // TODO: remove in master
     async _sendReceiptToCustomer({ action, destination, mail_template_id }) {
         const order = this.selfOrder.currentOrder;
         const fullTicketImage = await this.generateTicketImage();
