@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductTemplateOption">
+    <BuilderRow label.translate="Tags">
+        <ModelMany2Many
+            baseModel="'product.template'"
+            createAction="'createTag'"
+            m2oField="'product_tag_ids'"
+            recordId="domState.templateId"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

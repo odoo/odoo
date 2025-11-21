@@ -96,6 +96,7 @@
                     <t t-set="text_color" t-value="ribbon.text_color"/>
                     <span
                         t-att-data-ribbon-id="ribbon.id"
+                        t-att-data-template-ribbon-id="product.sudo().website_ribbon_id.id"
                         t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()}"
                         t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
                         t-out="ribbon.name or ''"

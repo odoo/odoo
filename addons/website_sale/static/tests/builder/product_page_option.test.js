@@ -13,12 +13,20 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 
+class ProductTag extends models.Model {
+    _name = "product.tag";
+
+    name = fields.Char();
+}
+
 class ProductProduct extends models.Model {
     _name = "product.product";
 
     id = fields.Integer();
     name = fields.Char();
     image_1920 = fields.Image();
+    product_tag_ids = fields.Many2many({relation: "product.tag"});
+    additional_product_tag_ids = fields.Many2many({relation: "product.tag"});
 
     _records = [
         { id: 13, name: "Variant 1", image_1920: "/9j/4AAQSkL6D8wwP//Z" },
@@ -31,7 +39,7 @@ class ProductRibbon extends models.Model {
 }
 
 defineWebsiteModels();
-defineModels([ProductProduct, ProductRibbon]);
+defineModels([ProductTag, ProductProduct, ProductRibbon]);
 
 test("Product page options", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
@@ -55,7 +63,7 @@ test("Product page options", async () => {
                                         data-oe-xpath="/t[1]/div[2]/div[1]" data-oe-model="product.product" data-oe-id="13"
                                         data-oe-field="image_1920" data-oe-type="image"
                                         data-oe-expression="product_image.image_1920" contenteditable="false">
-                                        <img>
+                                        <img src="/web/image/test.png" class="product_detail_img">
                                     </div>
                                 </div>
                                 <div class="carousel-item h-100 text-center active o_colored_level" style="min-height: 693px;">
@@ -104,15 +112,22 @@ test("Product page options", async () => {
             original: { id: 1, image_src: "/web/image/hoot.png", mimetype: "image/png" },
         };
     });
+    onRpc("/html_editor/modify_image/1", async (request) => {
+        return {
+            image_src: "/web/image/hoot.png",
+            access_token: "1234",
+            public: false,
+        };
+    });
     onRpc("/web/image/hoot.png", () => {
         // converted image won't be used if original is not larger
         return dataURItoBlob(base64Image + "A".repeat(1000));
     });
 
-    await contains(":iframe .o_wsale_product_page").click();
-    await contains("[data-action-id=productReplaceMainImage]").click();
+    await contains(":iframe .product_detail_img").click();
+    await contains("[data-action-id=replaceMedia]").click();
     await contains(".o_select_media_dialog .o_existing_attachment_cell button").click();
-    await expect.waitForSteps(["theme_customize_data_get", "get_image_info", "product_write"]);
+    await expect.waitForSteps(["get_image_info", "theme_customize_data_get", "get_image_info"]);
     await waitForNone(".o_select_media_dialog");
 
     expect(":iframe #product_detail_main img[src^='data:image/webp;base64,']").toHaveCount(1);

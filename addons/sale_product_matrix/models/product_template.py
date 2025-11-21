@@ -8,13 +8,13 @@ class ProductTemplate(models.Model):
 
     product_add_mode = fields.Selection(
         selection=[
-            ('configurator', "Product Configurator"),
-            ('matrix', "Order Grid Entry"),
+            ('configurator', "Configurator"),
+            ('matrix', "Matrix"),
         ],
-        string="Add product mode",
+        string="Variant Selection",
         default='configurator',
         help="Configurator: choose attribute values to add the matching product variant to the order."
-             "\nGrid: add several variants at once from the grid of attribute values")
+             "\nMatrix: add several variants at once from the grid of attribute values")
 
     def get_single_product_variant(self):
         res = super().get_single_product_variant()
