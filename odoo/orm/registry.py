@@ -255,8 +255,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._reinit_modules: set[str] = set()  # modules to reinitialize
 
         # modules fully loaded (maintained during init phase by `loading` module)
-        self._init_modules: set[str] = set()       # modules have been initialized
-        self.updated_modules: list[str] = []       # installed/updated modules
+        self._init_modules: set[str] = set()         # modules have been initialized
+        self.updated_modules: list[str] = []         # installed/updated modules
+        self.uninstalling_modules: set[str] = set()  # modules being uninstalled
         self.loaded_xmlids: set[str] = set()
 
         self.db_name = db_name
