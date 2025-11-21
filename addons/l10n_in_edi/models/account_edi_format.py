@@ -390,6 +390,10 @@ class AccountEdiFormat(models.Model):
             "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
             "TotItemVal": self._l10n_in_round_value(((sign * line.balance) + line_tax_details.get("tax_amount", 0.00))),
         }
+        # Add igst amount to total item value for export invoices
+        is_overseas = line.move_id.l10n_in_gst_treatment == "overseas"
+        if is_overseas and tax_details_by_code.get("igst_amount"):
+            line_details["TotItemVal"] += self._l10n_in_round_value(tax_details_by_code.get("igst_amount"))
         if line.name:
             line_details['PrdDesc'] = line.name.replace("\n", "")[:300]
 
@@ -569,6 +573,10 @@ class AccountEdiFormat(models.Model):
                     "CntCode": saler_buyer.get("buyer_details").country_id.code or "",
                 }
             })
+            # Add igst amount to total invoice value for export invoices
+            igst_amount = tax_details_by_code.get("igst_amount")
+            if igst_amount:
+                json_payload["ValDtls"]["TotInvVal"] += self._l10n_in_round_value(igst_amount)
             if invoice.l10n_in_shipping_bill_number:
                 json_payload["ExpDtls"].update({
                     "ShipBNo": invoice.l10n_in_shipping_bill_number,
