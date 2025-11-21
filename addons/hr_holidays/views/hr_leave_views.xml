@@ -375,7 +375,7 @@
                                     readonly="state != 'confirm'"
                                     required="not date_from or not date_to"
                                     options="{'end_date_field': 'request_date_to', 'always_range': '1'}"/>
-                                <field name="request_date_to" invisible="1"/> <!-- For Form view test-->
+                                <field name="request_date_to" required="not date_from or not date_to" invisible="1"/> <!-- For Form view test-->
                                 <div>
                                     ( <field name="duration_display" readonly="1" class="w-auto"/> )
                                 </div>
