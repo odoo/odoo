@@ -136,10 +136,25 @@ class TestPartnerLeadPortal(TestCrmCommon):
 
     def test_partner_lead_decline(self):
         """ Test an integrating partner decline the lead """
+        # Add a child for the commercial partner of portal user
+        # because it will affect the message unsubscribe process.
+        self.env['res.partner'].create({
+            'name': 'Child Contact Name',
+            'parent_id': self.user_portal.partner_id.id,
+        })
         self.lead_portal.with_user(self.user_portal).partner_desinterested(comment="No thanks, I have enough leads !", contacted=True, spam=False)
 
         self.assertFalse(self.lead_portal.partner_assigned_id.id, 'The partner_assigned_id of the declined lead should be False.')
         self.assertTrue(self.user_portal.partner_id in self.lead_portal.sudo().partner_declined_ids, 'Partner who has declined the lead should be in the declined_partner_ids.')
+
+    def test_partner_lead_decline_spam(self):
+        """ Test an integrating partner decline the lead by mentioning that it is spam """
+        self.lead_portal.invalidate_recordset()
+        self.lead_portal.with_user(self.user_portal).partner_desinterested(comment="It is a spam !", contacted=True, spam=True)
+
+        self.assertFalse(self.lead_portal.partner_assigned_id.id, 'The partner_assigned_id of the declined lead should be False.')
+        self.assertTrue(self.user_portal.partner_id in self.lead_portal.sudo().partner_declined_ids, 'Partner who has declined the lead should be in the declined_partner_ids.')
+        self.assertIn(self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam'), self.lead_portal.tag_ids, 'The lead must be tagged as spam.')
 
     def test_lead_access_right(self):
         """ Test another portal user can not write on every leads """
