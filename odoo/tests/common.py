@@ -20,6 +20,8 @@ import os
 import pathlib
 import platform
 import pprint
+from abc import ABC, abstractmethod
+
 import psutil
 import re
 import shutil
@@ -1279,10 +1281,9 @@ class ChromeBrowser:
             raise unittest.SkipTest("websocket-client module is not installed")
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
 
+        self.processors: list[Processor] = []
         if scs := odoo.tools.config['screencasts']:
-            self.screencaster = Screencaster(self, scs)
-        else:
-            self.screencaster = NoScreencast()
+            self.processors.append(Screencaster(self, scs))
 
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
@@ -1312,7 +1313,6 @@ class ChromeBrowser:
             'Runtime.consoleAPICalled': self._handle_console,
             'Runtime.exceptionThrown': self._handle_exception,
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
-            'Page.screencastFrame': self.screencaster,
         }
         self._receiver = threading.Thread(
             target=self._receive,
@@ -1349,7 +1349,8 @@ class ChromeBrowser:
         # method may be called during `_open_websocket`
         if hasattr(self, 'ws'):
             try:
-                self.screencaster.stop()
+                for processor in reversed(self.processors):
+                    processor.stop()
 
                 self._websocket_request('Page.stopLoading')
                 self._websocket_request('Runtime.evaluate', params={'expression': """
@@ -1858,18 +1859,22 @@ which leads to stray network requests and inconsistencies."""
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
+                for processor in self.processors:
+                    processor.on_success()
                 return
         except CancelledError:
             # regular-ish shutdown
             return
         except ChromeBrowserException:
-            self.screencaster.save()
+            for processor in self.processors:
+                processor.on_error()
             raise
         except Exception as e:
             err = e
 
         self.take_screenshot()
-        self.screencaster.save()
+        for processor in self.processors:
+            processor.on_error()
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
@@ -1961,21 +1966,27 @@ which leads to stray network requests and inconsistencies."""
             return m[0]
         return replacer
 
-class NoScreencast:
+
+class Processor(ABC):
+    @abstractmethod
+    def __init__(self, browser: ChromeBrowser, directory: str):
+        pass
+
+    @abstractmethod
     def start(self):
         pass
 
+    @abstractmethod
     def stop(self):
         pass
 
-    def save(self):
+    def on_success(self):
         pass
 
-    def __call__(self, sessionId, data, metadata):
+    def on_error(self):
         pass
 
-
-class Screencaster:
+class Screencaster(Processor):
     def __init__(self, browser: ChromeBrowser, directory: str):
         self.stopped = False
         self.browser: ChromeBrowser = browser
@@ -1988,6 +1999,7 @@ class Screencaster:
 
     def start(self):
         self._logger.info('Starting screencast')
+        self.browser._handlers['Page.screencastFrame'] = self
         self.browser._websocket_send('Page.startScreencast')
 
     def __call__(self, sessionId, data, metadata):
@@ -2011,7 +2023,7 @@ class Screencaster:
         if self.frames_dir.is_dir():
             shutil.rmtree(self.frames_dir, ignore_errors=True)
 
-    def save(self):
+    def on_error(self):
         if self.stopped:
             return
         self.browser._websocket_send('Page.stopScreencast')
@@ -2444,7 +2456,8 @@ class HttpCase(TransactionCase):
                 url = urlunsplit(parsed._replace(query=urlencode(qs)))
             self._logger.info('Open "%s" in browser', url)
 
-            browser.screencaster.start()
+            for processor in browser.processors:
+                processor.start()
             if cookies:
                 for name, value in cookies.items():
                     browser.set_cookie(name, value, '/', HOST)
