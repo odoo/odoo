@@ -13,7 +13,7 @@ import {
 } from "@html_editor/toolbar_dropdown_hook";
 import { useChildRef } from "@web/core/utils/hooks";
 
-export const MAX_FONT_SIZE = 400;
+export const MAX_FONT_SIZE = 144;
 
 export class FontSizeSelector extends Component {
     static template = "html_editor.FontSizeSelector";
@@ -24,7 +24,11 @@ export class FontSizeSelector extends Component {
         onSelected: Function,
         onBlur: { type: Function, optional: true },
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
+        maxFontSize: { type: Number, optional: true },
         ...toolbarButtonProps,
+    };
+    static defaultProps = {
+        maxFontSize: MAX_FONT_SIZE,
     };
     static components = { Dropdown, DropdownItem };
 
@@ -62,21 +66,33 @@ export class FontSizeSelector extends Component {
                 );
                 const color = getCSSVariableValue("black", htmlStyle);
                 const fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
-                Object.assign(iframeDoc.body.style, {
-                    padding: "0",
-                    margin: "0",
-                });
-                Object.assign(this.fontSizeInput.style, {
-                    width: "100%",
-                    height: "100%",
-                    border: "none",
-                    outline: "none",
-                    textAlign: "center",
-                    backgroundColor: backgroundColor,
-                    color: color,
-                    fontFamily: fontFamily,
-                });
-                this.fontSizeInput.type = "text";
+
+                const style = iframeDoc.createElement("style");
+                style.textContent = `
+                    body {
+                        padding: 0;
+                        margin: 0;
+                    }
+                    input::-webkit-outer-spin-button,
+                    input::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+                    input[type=number] {
+                        -moz-appearance: textfield;
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        outline: none;
+                        text-align: center;
+                        background-color: ${backgroundColor};
+                        color: ${color};
+                        font-family: ${fontFamily};
+                    }
+                `;
+                iframeDoc.head.appendChild(style);
+                this.fontSizeInput.type = "number";
+                this.fontSizeInput.min = 0;
                 this.fontSizeInput.name = "font-size-input";
                 this.fontSizeInput.autocomplete = "off";
                 this.fontSizeInput.value = this.state.displayName;
@@ -128,7 +144,7 @@ export class FontSizeSelector extends Component {
     onCustomFontSizeInput(ev) {
         let fontSize = parseInt(ev.target.value, 10);
         if (fontSize > 0) {
-            fontSize = Math.min(fontSize, MAX_FONT_SIZE);
+            fontSize = Math.min(fontSize, this.props.maxFontSize);
             if (this.state.displayName !== fontSize) {
                 this.props.onFontSizeInput(`${fontSize}px`);
             } else {
