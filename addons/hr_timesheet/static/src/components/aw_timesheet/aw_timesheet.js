@@ -4,7 +4,9 @@ import { Component, onWillStart, useState, onMounted, onWillUnmount } from "@odo
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { formatFloatTime } from "@web/views/fields/formatters";
 import { TimesheetTimer } from "@timesheet_grid/components/static_timesheet_form/static_timesheet_timer";
 import { user } from "@web/core/user";
 import { incrementFrequency, loadFrequency } from "./aw_local_config";
@@ -166,7 +168,7 @@ export class ActivityWatchTimesheet extends Component {
     extractWatcherActivity(event) {
         let data = event.data.title;
         if (event.data.url) {
-            data += " " + event.data.url;
+            data += "|" + event.data.url;
         }
 
         for (const rule of this.awRules) {
@@ -183,6 +185,8 @@ export class ActivityWatchTimesheet extends Component {
 
                 if (rule.template != null) {
                     let name = rule.template;
+                    event.template = rule.template;
+                    event.matches = Array.from(match);
                     for (let i = 1; i < match.length; i++) {
                         name = name.replace(`$${i}`, match[i]);
                     }
@@ -543,9 +547,11 @@ export class ActivityWatchTimesheet extends Component {
             }
             const duration = (range.stop - range.start) / 1000;
 
+            /*
             if (duration < 60) {
                 continue;
             }
+            */
 
             if (!(projectTask in this.state.grouped)) {
                 this.state.grouped[projectTask] = {};
@@ -561,6 +567,9 @@ export class ActivityWatchTimesheet extends Component {
                     duration: 0.0,
                     type: range.type,
                     start: range.start,
+                    template: range.template,
+                    matches: range.matches,
+                    title: name,
                 };
             }
             this.state.grouped[projectTask][name].duration += duration;
@@ -744,7 +753,6 @@ export class ActivityWatchTimesheet extends Component {
 
         let project_id = false;
         let task_id = false;
-        let name = "";
         let total_amount = 0.0;
 
         for (const row of this.state.selectedRows) {
@@ -756,9 +764,10 @@ export class ActivityWatchTimesheet extends Component {
                 task_id = params.task_id || false;
             }
 
-            name += params.name + " ";
             total_amount += params.unit_amount;
         }
+
+        const name = this.getGroupedNames(Array.from(this.state.selectedRows));
 
         return {
             project_id,
@@ -768,6 +777,36 @@ export class ActivityWatchTimesheet extends Component {
             date: this.state.currentDate.toISO().split("T")[0],
             user_id: user.userId,
         };
+    }
+
+    getGroupedNames(selectedRows) {
+        if (!selectedRows.length) {
+            return "";
+        }
+        const selectedRecords = selectedRows.map((row) => {
+            const { groupKey, title } = JSON.parse(row);
+            return this.state.grouped[groupKey][title];
+        });
+        const recordsWithoutTemplate = selectedRecords.filter(
+            (record) => record.template === undefined
+        );
+        const groupedRecords = Object.groupBy(
+            selectedRecords.filter((record) => record.template !== undefined),
+            ({ template }) => template
+        );
+        const groupNames = [];
+        for (const [template, records] of Object.entries(groupedRecords)) {
+            let groupName = template;
+            for (let i = 1; i < records[0].matches.length; i++) {
+                groupName = groupName.replace(
+                    `$${i}`,
+                    formatList([...new Set(records.map((record) => record.matches[i]))])
+                );
+            }
+            groupNames.push(groupName);
+        }
+        groupNames.push(...recordsWithoutTemplate.map((record) => record.title));
+        return groupNames.join("; ");
     }
 
     onSaveTimesheetForm(project_id, task_id, billable) {
@@ -811,6 +850,10 @@ export class ActivityWatchTimesheet extends Component {
 
     onWriteTimesheet() {
         this.loadTimesheets(); // TODO: Avoid refetching all timesheets if possible?
+    }
+
+    formatDuration(duration) {
+        return formatFloatTime(duration);
     }
 }
 

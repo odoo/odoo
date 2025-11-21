@@ -82,7 +82,7 @@
               <table class="table table-sm table-borderless align-middle mb-0">
                 <tbody>
                   <t t-foreach="state.records" t-as="record" t-key="record.start">
-                    <tr t-if="record.duration >= 120"
+                    <tr t-if="record.duration >= 0"
                         t-att-class="{'table-danger': this.isSelected(record.groupKey, record.title)}"
                         t-on-mousedown.stop="(ev) => this.onMouseDown(record.groupKey, record.title, ev)"
                         t-on-mouseenter.stop="() => this.onMouseEnter(record.groupKey, record.title)"
@@ -150,8 +150,8 @@
                 >
                   <div class="fw-semibold"><t t-esc="tsh.name"/></div>
                   <small class="text-muted">
-                    <t t-esc="tsh.unit_amount"/>h —
-                    <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/> /
+                    <t t-esc="formatDuration(tsh.unit_amount)"/> —
+                    <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/>
                   </small>
                 </li>
               </t>
@@ -177,8 +177,8 @@
                 >
                   <div class="fw-semibold"><t t-esc="tsh.name"/></div>
                   <small class="text-muted">
-                    <t t-esc="tsh.unit_amount"/>h —
-                    <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/> /
+                    <t t-esc="formatDuration(tsh.unit_amount)"/> —
+                    <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/>
                   </small>
                 </li>
               </t>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="aw_rule_odoo_main" model="aw.rule">
+    <record id="aw_rule_github" model="aw.rule">
         <field name="sequence">10</field>
-        <field name="name">Odoo - Configuring DB</field>
-        <field name="regex">https:\/\/(?:www\.)?(?!www\.)([^\/.]+)\.odoo\.com(?:\/\S*)?</field>
-        <field name="type">odoo</field>
-        <field name="template">Configuring DB: $1</field>
+        <field name="name">Github Pull Request</field>
+        <field name="regex">Pull Request (#\d+) · (.*)\|https:\/\/github\.com</field>
+        <field name="type">communication</field>
+        <field name="template">Working on Pull Request $1 in repo $2</field>
         <field name="always_active" eval="0"/>
-        <field name="primary" eval="1"/>
+        <field name="primary" eval="0"/>
     </record>
 
     <record id="aw_rule_gmail_inbox" model="aw.rule">
@@ -20,12 +20,32 @@
         <field name="primary" eval="0"/>
     </record>
 
-    <record id="aw_rule_discord" model="aw.rule">
+    <record id="aw_rule_gdoc" model="aw.rule">
         <field name="sequence">30</field>
+        <field name="name">Drafting Document</field>
+        <field name="regex">(.*) - Google Docs\|https:\/\/docs\.google\.com</field>
+        <field name="type">word</field>
+        <field name="template">Drafting $1</field>
+        <field name="always_active" eval="0"/>
+        <field name="primary" eval="0"/>
+    </record>
+
+    <record id="aw_rule_discord" model="aw.rule">
+        <field name="sequence">40</field>
         <field name="name">Discord Communication</field>
         <field name="regex">(.*) - Discord</field>
         <field name="type">communication</field>
         <field name="template">Discussing with $1</field>
+        <field name="always_active" eval="0"/>
+        <field name="primary" eval="0"/>
+    </record>
+
+    <record id="aw_rule_odoo_main" model="aw.rule">
+        <field name="sequence">50</field>
+        <field name="name">Odoo - Configuring DB</field>
+        <field name="regex">https:\/\/(?:www\.)?(?!www\.)([^\/.]+)\.odoo\.com(?:\/\S*)?</field>
+        <field name="type">odoo</field>
+        <field name="template">Configuring DB: $1</field>
         <field name="always_active" eval="0"/>
         <field name="primary" eval="0"/>
     </record>

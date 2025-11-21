@@ -70,6 +70,11 @@
                       groups="hr_timesheet.group_hr_timesheet_approver"
             />
         </menuitem>
+        <menuitem id="menu_activitywatch_sync"
+            name="Timesheet Assistant"
+            action="action_activitywatch_sync"
+            sequence="85"
+        />
         <menuitem id="menu_timesheets_reports"
                   name="Reporting"
                   groups="group_hr_timesheet_approver"
@@ -99,25 +104,31 @@
         </menuitem>
         <menuitem id="hr_timesheet_menu_configuration"
                   name="Configuration"
+                  sequence="100"
+        >
+            <menuitem id="hr_timesheet_menu_configuration_settings"
+                  name="Settings"
                   action="hr_timesheet_config_settings_action"
                   groups="base.group_system"
-                  sequence="100"
-        />
-        <menuitem id="menu_activitywatch_sync"
-            name="ActivityWatch"
-            action="action_activitywatch_sync"
-            sequence="200"
-        />
-        <menuitem id="menu_activitywatch_browser_rule"
-            name="AW Rules"
-            groups="group_timesheet_manager"
-            action="action_activitywatch_browser_rule"
-            sequence="300"
-        />
-        <menuitem id="menu_aw_local_config"
-            name="Local Config"
-            action="action_aw_local_config"
-            sequence="400"
-        />
+                  sequence="5"
+            />
+            <menuitem id="hr_timesheet_menu_configuration_assistant"
+                name="Timesheet Assistant"
+                sequence="10"
+            >
+                <menuitem id="menu_activitywatch_browser_rule"
+                    name="Assistant Rules"
+                    groups="group_timesheet_manager"
+                    action="action_activitywatch_browser_rule"
+                    sequence="50"
+                />
+                <menuitem id="menu_aw_local_config"
+                    name="Local Assistant Rules"
+                    groups="base.group_no_one"
+                    action="action_aw_local_config"
+                    sequence="100"
+                />
+            </menuitem>
+        </menuitem>
     </menuitem>
 </odoo>
