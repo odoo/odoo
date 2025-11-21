@@ -5,7 +5,7 @@
         <field name="model">account.tax</field>
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='active']" position="after">
+            <xpath expr="//field[@name='description']" position="before">
                 <field name="l10n_my_tax_type" invisible="country_code != 'MY'"/>
                 <field name="l10n_my_tax_exemption_reason" invisible="l10n_my_tax_type != 'E'"/>
             </xpath>

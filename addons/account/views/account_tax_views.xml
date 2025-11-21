@@ -198,17 +198,15 @@
                         <group>
                             <field name="name"/>
                             <field name="amount_type"/>
-                            <field name="active" widget="boolean_toggle"/>
-                        </group>
-                        <group>
-                            <field name="is_used" invisible="1"/>
-                            <field name="type_tax_use"/>
-                            <field name="tax_scope"/>
                             <label for="amount" invisible="amount_type not in ('fixed', 'percent', 'division')"/>
                             <div invisible="amount_type not in ('fixed', 'percent', 'division')">
                                 <field name="amount" class="oe_inline" nolabel="1"/>
                                 <span class="o_form_label oe_inline" invisible="amount_type == 'fixed'">%</span>
                             </div>
+                            <field name="description"/>
+                        </group>
+                        <group>
+                            <field name="type_tax_use"/>
                             <field name="fiscal_position_ids" widget="many2many_tags" placeholder="all"/>
                             <field name="original_tax_ids"
                                    widget="many2many_tags"
@@ -241,7 +239,7 @@
                             <group>
                                 <group>
                                     <field name="invoice_label"/>
-                                    <field name="description"/>
+                                    <field name="tax_scope"/>
                                     <field name="tax_group_id" invisible="amount_type == 'group'" required="amount_type != 'group'"/>
                                     <field name="analytic" invisible="amount_type == 'group'" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -258,6 +256,7 @@
                                     <field name="is_base_affected"
                                            invisible="amount_type == 'group' or price_include"
                                            groups="base.group_no_one"/>
+                                    <field name="active" widget="boolean_toggle"/>
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" invisible="amount_type == 'group' or not hide_tax_exigibility"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" invisible="tax_exigibility == 'on_invoice'" required="tax_exigibility == 'on_payment'" groups="account.group_account_readonly"/>
