@@ -54,21 +54,33 @@ export class FontSizeSelector extends Component {
                 );
                 const color = getCSSVariableValue("black", htmlStyle);
                 const fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
-                Object.assign(iframeDoc.body.style, {
-                    padding: "0",
-                    margin: "0",
-                });
-                Object.assign(this.fontSizeInput.style, {
-                    width: "100%",
-                    height: "100%",
-                    border: "none",
-                    outline: "none",
-                    textAlign: "center",
-                    backgroundColor: backgroundColor,
-                    color: color,
-                    fontFamily: fontFamily,
-                });
-                this.fontSizeInput.type = "text";
+
+                const style = iframeDoc.createElement("style");
+                style.textContent = `
+                    body {
+                        padding: 0;
+                        margin: 0;
+                    }
+                    input::-webkit-outer-spin-button,
+                    input::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+                    input[type=number] {
+                        -moz-appearance: textfield;
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        outline: none;
+                        text-align: center;
+                        background-color: ${backgroundColor};
+                        color: ${color};
+                        font-family: ${fontFamily};
+                    }
+                `;
+                iframeDoc.head.appendChild(style);
+                this.fontSizeInput.type = "number";
+                this.fontSizeInput.min = 0;
                 this.fontSizeInput.name = "font-size-input";
                 this.fontSizeInput.autocomplete = "off";
                 this.fontSizeInput.value = this.state.displayName;
