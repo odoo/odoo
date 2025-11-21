@@ -15,15 +15,16 @@
         </div>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.base">
+        <t t-set="slideSize" t-value="rowSize * rowPerSlide"/>
+        <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(data.length/slideSize))"/>
         <div t-att-id="unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
              t-att-style="extraCarouselStyle"
-             t-att-data-bs-interval="interval" data-bs-ride="carousel">
+             t-att-data-bs-interval="slideIndexGenerator.length > minControlValue ? interval : 0"
+             t-att-data-bs-ride="slideIndexGenerator.length > minControlValue ? carousel : false">
             <!-- Content -->
-            <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
-            <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(data.length/slideSize))"/>
             <t t-set="rowIndexGenerator" t-value="Array(rowPerSlide)"/>
             <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
-            <div class="carousel-inner w-100 mx-auto" role="listbox"
+            <div id="s_dynamic_snippet_carousel" class="carousel-inner w-100 mx-auto" role="listbox"
                  aria-label="Carousel">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
                     <t t-set="slideOffset" t-value="slideIndex_index * slideSize"/>

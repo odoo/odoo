@@ -246,4 +246,19 @@
         </t>
     </template>
 
+    <!-- Comparison button -->
+    <template id="website_sale.comparison_button">
+        <button
+            t-if="product_template._can_be_added_to_comparison()"
+            class="btn o_add_compare"
+            title="Compare"
+            aria-label="Compare"
+            t-att-data-product-id="product_variant.id"
+            t-att-data-product-template-id="product_template.id"
+        >
+            <span class="fa fa-exchange fa-fw o_not-animable"/>
+            <span class="o_label small ms-2">Compare</span>
+        </button>
+    </template>
+
 </odoo>

@@ -10,50 +10,113 @@
             data-number-of-elements-sm="2"
         >
             <t t-foreach="records" t-as="data">
-                <t t-set="record" t-value="data['_record']"/>
-                <t t-set="product" t-value="record"/>
-                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
-                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <t t-set="product" t-value="data['_record']"/>
+                <t
+                    t-set="product_template"
+                    t-value="product if not product.is_product_variant else product.product_tmpl_id"
+                />
+                <t
+                    t-set="product_variant"
+                    t-value="product if product.is_product_variant else product_template._create_first_product_variant()"
+                />
+                <t t-if="data.get('hide_variants')">
+                    <t
+                        t-set="product_ptavs_data"
+                        t-value="product_template._get_previewed_attribute_values()[product_template.id]"
+                    />
+                    <t t-if="product_ptavs_data">
+                        <t
+                            t-set="product_ptavs"
+                            t-value="product_ptavs_data.get('ptavs_data')"
+                        />
+                        <t
+                            t-if="product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover'"
+                            t-set="ptavs_classes"
+                            t-value="'o_has_variations o_has_variations_onhover'"
+                        />
+                        <t
+                            t-else=""
+                            t-set="ptavs_classes"
+                            t-value="'o_has_variations o_has_variations_static'"
+                        />
+                    </t>
+                </t>
 
                 <div
-                    class="oe_product_cart o_carousel_product_card d-flex"
+                    t-attf-class="oe_product_cart o_carousel_product_card d-flex {{ptavs_classes}}"
                     role="article"
                     t-att-aria-label="product.display_name"
                     t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
                     t-att-data-publish="product.website_published and 'on' or 'off'"
                 >
+                    <t t-set="all_images_list" t-value="product_variant._get_images()"/>
+                    <!--
+                        Image holders are records of different types (`product.template`,
+                        `product.product` or `product.image`) and are returned as a list.
+                    -->
+                    <t
+                        t-set="primary_image_holder"
+                        t-value="all_images_list[0] if all_images_list else False"
+                    />
+                    <t
+                        t-set="secondary_image_holder"
+                        t-value="all_images_list[1] if len(all_images_list) > 1 else False"
+                    />
                     <!-- Image -->
                     <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
                         <a
                             t-att-href="product.website_url"
-                            t-attf-class="oe_product_image_link position-relative"
+                            t-attf-class="oe_product_image_link position-relative {{secondary_image_holder and 'oe_product_image_link_has_secondary'}}"
                             contenteditable="false"
                             t-att-title="product.display_name"
                             >
+                            <!-- Primary image -->
                             <span
-                                role="img"
-                                t-attf-alt="{{product.display_name}} image"
-                                class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center"
-                            >
-                                <span
-                                    class="oe_product_image_img h-100 w-100"
-                                    t-attf-style="background-image: url({{data['image_512']}});"
-                                />
-                            </span>
+                                t-field="primary_image_holder.image_1920"
+                                t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img h-100 w-100'}"
+                                class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
+                            />
+
+                            <!-- Secondary image -->
+                            <span
+                                t-if="secondary_image_holder"
+                                t-field="secondary_image_holder.image_1920"
+                                t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img_secondary h-100 w-100'}"
+                                class="oe_product_image_img_wrapper oe_product_image_img_wrapper_secondary h-100 justify-content-center align-items-center"
+                            />
+                            <t
+                                t-set="ribbon"
+                                t-value="product_template._get_ribbon(
+                                    price_vals=data,
+                                    variant=product_variant,
+                                )"
+                            />
+                            <t t-set="bg_color" t-value="ribbon.bg_color"/>
+                            <t t-set="text_color" t-value="ribbon.text_color"/>
+                            <span
+                                t-att-data-ribbon-id="ribbon.id"
+                                t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()}"
+                                t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
+                                t-out="ribbon.name"
+                            />
                         </a>
                         <div t-if="is_sample" class="o_ribbon_right small text-bg-primary">Sample</div>
                     </div>
                     <button t-if="data.get('_latest_viewed')"
                         class="btn o_carousel_product_remove js_remove rounded-pill lh-1"
-                        t-att-data-product-id="product_id"
-                        t-att-data-product-selected="record.is_product_variant"
-                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-id="product_variant.id"
+                        t-att-data-product-selected="product.is_product_variant"
+                        t-att-data-product-template-id="product_template.id"
                         title="Remove from recently viewed"
                     >
                         <i class="oi oi-close" role="presentation"/>
                     </button>
                     <div class="o_wsale_product_information flex-grow-1 flex-shrink-1">
                         <div class="o_wsale_product_info_attributes_wrapper">
+                            <t
+                                t-if="product_ptavs_data"
+                                t-call="website_sale.product_variant_preview"
+                            />
                             <div class="o_wsale_product_information_text">
                                 <!-- Product Name -->
                                 <h2 class="o_wsale_products_item_title h6 text-break">
@@ -80,8 +143,8 @@
                                     class="o_wsale_product_rating_wrapper"
                                 >
                                     <t t-call="portal_rating.rating_widget_stars_static"
-                                        rating_avg="record.rating_avg"
-                                        rating_count="record.rating_count"/>
+                                        rating_avg="product.rating_avg"
+                                        rating_count="product.rating_count"/>
                                 </div>
                             </div>
                         </div>
@@ -98,9 +161,9 @@
                                             name="add_to_cart"
                                             class="o_wsale_product_btn_primary btn"
                                             title="Add to Cart"
-                                            t-att-data-product-id="product.id if product.is_product_variant else product.product_variant_id.id"
+                                            t-att-data-product-id="product_variant.id"
                                             t-att-data-product-selected="product.is_product_variant"
-                                            t-att-data-product-template-id="product.id if not product.is_product_variant else product.product_tmpl_id.id"
+                                            t-att-data-product-template-id="product_template.id"
                                             t-att-data-product-type="product.type"
                                             t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                         >
@@ -119,7 +182,9 @@
                                             <span class="o_label small ms-1">Contact Us</span>
                                         </a>
                                     </t>
+                                    <t t-call="website_sale.comparison_button"/>
                                 </div>
+                                <t t-call="website_sale.wishlist_button"/>
                             </div>
                         </div>
                     </div>
@@ -141,6 +206,17 @@
                 >
                     <small
                         t-out="data['list_price']"
+                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                    />
+                </del>
+                <del
+                    t-if="data.get('compare_list_price') and (data['compare_list_price'] &gt; data['price'])"
+                    aria-label="Original price"
+                    t-attf-class="text-muted me-1 mb-0"
+                    style="white-space: nowrap;"
+                >
+                    <small
+                        t-out="data['compare_list_price']"
                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     />
                 </del>

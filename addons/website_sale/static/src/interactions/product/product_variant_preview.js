@@ -2,7 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 
 export class ProductVariantPreview extends Interaction {
-    static selector = "#o_wsale_products_grid";
+    static selector = "#o_wsale_products_grid, .s_dynamic_snippet_products #s_dynamic_snippet_carousel";
 
     dynamicContent = {
         _window: {
