@@ -955,6 +955,40 @@ test("delete all records in last page (in field o2m inline list view)", async ()
     expect(".o_x2m_control_panel .o_pager").toHaveText("1-2 / 3");
 });
 
+test("delete all records then repopulate", async () => {
+    Partner._records[0].turtles = [1];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list editable="bottom" default_order="turtle_int">
+                        <field name="turtle_int" widget="handle"/>
+                        <field name="turtle_foo"/>
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_list_record_remove").click();
+    expect(".o_data_row").toHaveCount(0);
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_one2many .o_list_renderer tbody input").edit("value 1", {
+        confirm: "blur",
+    });
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_one2many .o_list_renderer tbody input").edit("value 2", {
+        confirm: "blur",
+    });
+    expect(".o_data_row").toHaveCount(2);
+    await contains("tbody tr:eq(1) .o_handle_cell").dragAndDrop("tbody tr");
+    expect(".o_data_row").toHaveCount(2);
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["value 2", "value 1"]);
+});
+
 test.tags("desktop");
 test("nested x2manys with inline form, but not list", async () => {
     Turtle._views = { list: `<list><field name="turtle_foo"/></list>` };
