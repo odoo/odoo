@@ -5,7 +5,7 @@
         <field name="model">account.tax</field>
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='tax_scope']" position="after">
+            <xpath expr="//field[@name='type_tax_use']" position="after">
                 <field name="l10n_tr_tax_withholding_code_id" invisible="country_code != 'TR' or amount_type != 'percent' or amount &gt;= 0"/>
             </xpath>
         </field>
