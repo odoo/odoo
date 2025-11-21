@@ -12,27 +12,24 @@ import {
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
 /**
- * Take a node and unwrap all of its block contents recursively. All blocks
- * (except for firstChilds) are preceded by a <br> in order to preserve the line
- * breaks.
+ * Take a node and unwrap all of its block contents recursively. Paragraph
+ * related elements (except the first child) are preceded by a <br> in order to
+ * preserve the line breaks.
  *
  * @param {Node} node
  */
 export function makeContentsInline(node) {
     const document = node.ownerDocument;
-    let childIndex = 0;
-    for (const child of node.childNodes) {
-        if (isBlock(child)) {
-            if (childIndex && isParagraphRelatedElement(child)) {
-                child.before(document.createElement("br"));
+    let currentNode = node.firstChild;
+    while (currentNode) {
+        if (isBlock(currentNode)) {
+            if (currentNode.previousSibling && isParagraphRelatedElement(currentNode)) {
+                currentNode.before(document.createElement("br"));
             }
-            for (const grandChild of child.childNodes) {
-                child.before(grandChild);
-                makeContentsInline(grandChild);
-            }
-            child.remove();
+            currentNode = unwrapContents(currentNode)[0];
+        } else {
+            currentNode = currentNode.nextSibling;
         }
-        childIndex += 1;
     }
 }
 
