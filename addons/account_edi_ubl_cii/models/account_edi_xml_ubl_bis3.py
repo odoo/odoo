@@ -2,11 +2,13 @@
 from markupsafe import Markup
 from typing import Literal
 
-from odoo import models, _
+from odoo import _, api, models
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import FloatFmt, UBL_NAMESPACES
 
 from stdnum.no import mva
+
+CHORUS_PRO_PEPPOL_ID = "0009:11000201100044"
 
 
 class AccountEdiXmlUbl_Bis3(models.AbstractModel):
@@ -30,6 +32,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     To avoid multi-parental inheritance in case of UBL 4.0, we're adding the sale/purchase logic here.
     * Documentation for Peppol Order transaction 3.5: https://docs.peppol.eu/poacc/upgrade-3/syntax/Order/tree/
     """
+
+    @api.model
+    def _is_customer_behind_chorus_pro(self, customer):
+        return customer.peppol_eas and customer.peppol_endpoint and f"{customer.peppol_eas}:{customer.peppol_endpoint}" == CHORUS_PRO_PEPPOL_ID
 
     # -------------------------------------------------------------------------
     # EXPORT
