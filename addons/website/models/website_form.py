@@ -9,6 +9,8 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+
 
 class Website(models.Model):
     _inherit = 'website'
@@ -151,6 +153,8 @@ class IrModelFields(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _check_if_used_in_website_form(self):
+        if self.env.context.get(MODULE_UNINSTALL_FLAG):
+            return
         """Prevent field deletion if used in a website form."""
         for field in self:
             for model_name, field_name in self.env['website']._get_html_fields():
