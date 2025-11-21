@@ -34,11 +34,17 @@ export class VersionsTimeline extends StatusBarField {
                 domain = Domain.and([
                     [["employee_id", "=", props.record.evalContext.id]],
                     domain,
-                ]).toList();
-                if (domain.length && value) {
+                ]).toList(record.evalContext);
+                if (value) {
                     domain = Domain.or([[["id", "=", value.id]], domain]).toList(
                         record.evalContext
                     );
+                }
+                if ('active' in record.fields && !record.data.active) {
+                    domain = Domain.and([
+                        [['active', '=', false]],
+                        domain
+                    ]).toList(record.evalContext);
                 }
                 return orm.searchRead(
                     relation,
