@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
@@ -18,6 +19,23 @@ export class InlineCodePlugin extends Plugin {
             [...selectElements(root, ".o_inline_code")].flatMap((code) =>
                 this.dependencies.feff.surroundWithFeffs(code, cursors)
             ),
+        user_commands: [
+            {
+                id: "formatInlineCode",
+                description: _t("Inline Code"),
+                icon: "fa-code",
+                run: this.wrapInCode.bind(this),
+                isAvailable: (selection) => this.canWrapInCode(selection),
+            },
+        ],
+        toolbar_items: [
+            {
+                id: "inlineCode",
+                groupId: "decoration",
+                namespaces: ["expanded"],
+                commandId: "formatInlineCode",
+            },
+        ],
     };
 
     setup() {
@@ -30,13 +48,17 @@ export class InlineCodePlugin extends Plugin {
         }
     }
 
+    canWrapInCode(selection) {
+        return (
+            !selection.isCollapsed &&
+            !closestElement(selection.anchorNode, "code") &&
+            !closestElement(selection.focusNode, "code")
+        );
+    }
+
     onKeyDown() {
         const selection = this.dependencies.selection.getEditableSelection();
-        if (
-            selection.isCollapsed ||
-            closestElement(selection.anchorNode, "code") ||
-            closestElement(selection.focusNode, "code")
-        ) {
+        if (!this.canWrapInCode(selection)) {
             return;
         }
         const targetBlocks = this.dependencies.selection.getTargetedBlocks();
@@ -53,61 +75,7 @@ export class InlineCodePlugin extends Plugin {
         }
         if (this.historySavePointRestore) {
             this.historySavePointRestore();
-            let { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
-                this.dependencies.split.splitSelection();
-            const blockEl = closestBlock(anchorNode);
-            // Adjust if anchor/focus directly equals block element
-            const deepChild = (node, offset) => (node === blockEl ? node.childNodes[offset] : node);
-            anchorNode = deepChild(anchorNode, anchorOffset);
-            focusNode = deepChild(focusNode, focusOffset);
-            if (direction === DIRECTIONS.LEFT) {
-                // Swap anchorNode and focusNode
-                [anchorNode, anchorOffset, focusNode, focusOffset] = [
-                    focusNode,
-                    focusOffset,
-                    anchorNode,
-                    anchorOffset,
-                ];
-            }
-            const furthestAnchorElement = findFurthest(anchorNode, blockEl, (n) => !isBlock(n));
-            let start = this.dependencies.split.splitAroundUntil(anchorNode, furthestAnchorElement);
-            const furthestFocusElement = findFurthest(focusNode, blockEl, (n) => !isBlock(n));
-            const end = this.dependencies.split.splitAroundUntil(focusNode, furthestFocusElement);
-
-            let codeElement = this.document.createElement("code");
-            codeElement.classList.add("o_inline_code");
-            start.before(codeElement);
-            while (start) {
-                if (isElement(start)) {
-                    for (const code of selectElements(start, "code")) {
-                        start = unwrapContents(code)[0];
-                    }
-                }
-                const next = start.nextSibling;
-                if (start.nodeName === "IMG") {
-                    // Only create <code> if we still have nodes to process
-                    // after this one.
-                    if (start !== end && next) {
-                        codeElement = this.document.createElement("code");
-                        codeElement.classList.add("o_inline_code");
-                    }
-                } else {
-                    if (!codeElement.isConnected) {
-                        start.before(codeElement);
-                    }
-                    codeElement.appendChild(start);
-                }
-                if (start === end) {
-                    break;
-                }
-                start = next;
-            }
-            this.dispatchTo("to_inline_code_processors", codeElement);
-            this.dependencies.selection.setSelection({
-                anchorNode: codeElement,
-                anchorOffset: nodeSize(codeElement),
-            });
-            this.dependencies.history.addStep();
+            this.wrapInCode();
             delete this.historySavePointRestore;
             return;
         }
@@ -199,5 +167,63 @@ export class InlineCodePlugin extends Plugin {
                 });
             }
         }
+    }
+
+    wrapInCode() {
+        let { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
+            this.dependencies.split.splitSelection();
+        const blockEl = closestBlock(anchorNode);
+        // Adjust if anchor/focus directly equals block element
+        const deepChild = (node, offset) => (node === blockEl ? node.childNodes[offset] : node);
+        anchorNode = deepChild(anchorNode, anchorOffset);
+        focusNode = deepChild(focusNode, focusOffset);
+        if (direction === DIRECTIONS.LEFT) {
+            // Swap anchorNode and focusNode
+            [anchorNode, anchorOffset, focusNode, focusOffset] = [
+                focusNode,
+                focusOffset,
+                anchorNode,
+                anchorOffset,
+            ];
+        }
+        const furthestAnchorElement = findFurthest(anchorNode, blockEl, (n) => !isBlock(n));
+        let start = this.dependencies.split.splitAroundUntil(anchorNode, furthestAnchorElement);
+        const furthestFocusElement = findFurthest(focusNode, blockEl, (n) => !isBlock(n));
+        const end = this.dependencies.split.splitAroundUntil(focusNode, furthestFocusElement);
+
+        let codeElement = this.document.createElement("code");
+        codeElement.classList.add("o_inline_code");
+        start.before(codeElement);
+        while (start) {
+            if (isElement(start)) {
+                for (const code of selectElements(start, "code")) {
+                    start = unwrapContents(code)[0];
+                }
+            }
+            const next = start.nextSibling;
+            if (start.nodeName === "IMG") {
+                // Only create <code> if we still have nodes to process
+                // after this one.
+                if (start !== end && next) {
+                    codeElement = this.document.createElement("code");
+                    codeElement.classList.add("o_inline_code");
+                }
+            } else {
+                if (!codeElement.isConnected) {
+                    start.before(codeElement);
+                }
+                codeElement.appendChild(start);
+            }
+            if (start === end) {
+                break;
+            }
+            start = next;
+        }
+        this.dispatchTo("to_inline_code_processors", codeElement);
+        this.dependencies.selection.setSelection({
+            anchorNode: codeElement,
+            anchorOffset: nodeSize(codeElement),
+        });
+        this.dependencies.history.addStep();
     }
 }
