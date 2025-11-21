@@ -5,7 +5,7 @@ import { AttendeeCalendarRenderer } from "@calendar/views/attendee_calendar/atte
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { onPatched } from "@odoo/owl";
-import { renderToString } from "../../../../../web/static/src/core/utils/render";
+import { renderToString } from "@web/core/utils/render";
 
 const { DateTime } = luxon;
 
@@ -33,7 +33,6 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                     }
                 }
             },
-            dayCellDidMount: this.onDayCellDidMount,
             dayHeaderDidMount: this.onDayHeaderDidMount,
             dayCellContent: this.dayCellContent,
             dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
@@ -103,7 +102,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         const showLine = ["week", "month"].includes(this.props.model.scale);
         let worklocation = this.props.model.worklocations[parsedDate];
         if (!worklocation) {
-            return super.headerTemplateProps(date);
+            return { ...super.headerTemplateProps(date), showLine };
         }
         const workLocationSetForCurrentUser =
             multiCalendar ?

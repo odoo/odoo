@@ -315,8 +315,8 @@ QUnit.module("Homeworking Calendar", ({ beforeEach }) => {
         assert.equal(target.querySelector(".o_cw_popover div[name='employee_name']").textContent, "Aaron");
         assert.containsOnce(target, ".o_cw_popover .o_cw_popover_edit", "should show edit button");
         assert.containsOnce(target, ".o_cw_popover .o_cw_popover_delete", "should show delete button");
-
         await click(target.querySelector(".o_cw_popover_close"));
+        await click(workLocations.at(-2), '.o_worklocation_line');
         assert.verifySteps(["hr_homeworking_calendar.set_location_wizard_action", "2020-12-11"]);
         mockRegistry.add("get_worklocation", previousMock, { force: true });
     });
