@@ -1654,10 +1654,13 @@ class QuantPackage(models.Model):
         return super().write(vals)
 
     def unpack(self):
+        if not self.quant_ids:
+            return
+        quants = self.quant_ids
         self.quant_ids.move_quants(message=_("Quantities unpacked"), unpack=True)
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.quant_ids._quant_tasks()
+        quants._quant_tasks()
 
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
