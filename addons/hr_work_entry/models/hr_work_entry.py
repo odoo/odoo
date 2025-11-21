@@ -10,6 +10,7 @@ from psycopg2 import OperationalError
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import float_compare
 from odoo.tools.intervals import Intervals
 
 
@@ -53,6 +54,12 @@ class HrWorkEntry(models.Model):
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
+
+    @api.constrains('duration')
+    def _check_duration(self):
+        for work_entry in self:
+            if float_compare(work_entry.duration, 0, 3) <= 0 or float_compare(work_entry.duration, 24, 3) > 0:
+                raise ValidationError(self.env._("Duration must be positive and cannot exceed 24 hours."))
 
     @api.depends('display_code', 'duration')
     def _compute_display_name(self):
@@ -158,7 +165,7 @@ class HrWorkEntry(models.Model):
                   AND date BETWEEN %(start)s AND %(stop)s
                   AND employee_id IN %(employee_ids)s
                 GROUP BY employee_id, date
-                HAVING SUM(duration) > 1000
+                HAVING 0 >= SUM(duration) OR SUM(duration) > 24
             )
             SELECT we.id
             FROM hr_work_entry we
@@ -166,9 +173,7 @@ class HrWorkEntry(models.Model):
               ON we.employee_id = ed.employee_id
              AND we.date = ed.date
             WHERE we.active = TRUE
-        """.format(
-            ids_filter="AND id IN %(ids)s" if self.ids else ""
-        )
+        """
         self.env.cr.execute(query, {
             "start": start,
             "stop": stop,
@@ -249,7 +254,7 @@ class HrWorkEntry(models.Model):
         return True
 
     def write(self, vals):
-        skip_check = not bool({'date_start', 'date_stop', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
+        skip_check = not bool({'date', 'duration', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
         if 'state' in vals:
             if vals['state'] == 'draft':
                 vals['active'] = True
