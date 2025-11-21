@@ -45,6 +45,19 @@ class AccountMoveSend(models.AbstractModel):
                     'action_text': _("View Partner(s)"),
                     'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
                 }
+
+            if any(
+                    self.env['account.edi.xml.ubl_bis3']._is_customer_behind_chorus_pro(partner)
+                    for partner in peppol_format_moves.partner_id.commercial_partner_id
+                ):
+                chorus_pro = self.env['ir.module.module'].sudo().search([('name', '=', 'l10n_fr_facturx_chorus_pro')], limit=1)
+                if chorus_pro and chorus_pro.state != 'installed':
+                    alerts['account_edi_ubl_cii_chorus_pro_install'] = {
+                        'message': _("Please install the french Chorus pro module to have all the specific rules."),
+                        'level': 'info',
+                        'action': chorus_pro._get_records_action(),
+                        'action_text': _("Install Chorus Pro"),
+                    }
         return alerts
 
     # -------------------------------------------------------------------------

@@ -3,7 +3,7 @@ from lxml import etree
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.l10n_fr_facturx_chorus_pro.models.account_edi_xml_ubl_bis3 import CHORUS_PRO_PEPPOL_ID
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_bis3 import CHORUS_PRO_PEPPOL_ID
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
