@@ -29,10 +29,7 @@
             <field name="name">product.product.expense.form</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <form string="Expense Categories">
-                    <div class="alert alert-warning" role="alert" invisible="not standard_price_update_warning">
-                        <field name="standard_price_update_warning"/>
-                    </div>
+                <form string="Expense Categories" js_class="hr_expense_product_form">
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name='product_variant_count' invisible='1'/>
@@ -76,6 +73,18 @@
                             </group>
                         </group>
                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="mode">extension</field>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="js_class">hr_expense_product_form</attribute>
                 </form>
             </field>
         </record>
