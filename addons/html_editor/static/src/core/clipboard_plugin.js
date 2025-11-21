@@ -108,6 +108,7 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  *     selection: EditorSelection
  *   ) => void | clonedContents)[]} clipboard_content_processors
  * @typedef {((textContent: string) => string)[]} clipboard_text_processors
+ * @typedef {((clipboardElem: DocumentFragment) => void | clipboardElem)[]} pasted_html_processors
  */
 
 export class ClipboardPlugin extends Plugin {
@@ -221,7 +222,7 @@ export class ClipboardPlugin extends Plugin {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
-                this.dependencies.dom.insert(fragment);
+                this.insertPastedHtml(fragment);
             }
             return true;
         }
@@ -254,7 +255,7 @@ export class ClipboardPlugin extends Plugin {
                 if (closestElement(selection.anchorNode, "a")) {
                     this.dependencies.dom.insert(clipboardElem.textContent);
                 } else {
-                    this.dependencies.dom.insert(clipboardElem);
+                    this.insertPastedHtml(clipboardElem);
                 }
             }
             return true;
@@ -327,6 +328,13 @@ export class ClipboardPlugin extends Plugin {
             }
             textIndex++;
         }
+    }
+
+    insertPastedHtml(clipboardElem) {
+        for (const processor of this.getResource("pasted_html_processors")) {
+            clipboardElem = processor(clipboardElem) || clipboardElem;
+        }
+        this.dependencies.dom.insert(clipboardElem);
     }
 
     /**
@@ -661,7 +669,7 @@ export class ClipboardPlugin extends Plugin {
             this.dependencies.history.addStep();
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString((pastedText) => {
-                this.dependencies.dom.insert(this.prepareClipboardData(pastedText));
+                this.insertPastedHtml(this.prepareClipboardData(pastedText));
                 this.dependencies.history.addStep();
             });
         }

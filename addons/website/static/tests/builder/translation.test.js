@@ -1,7 +1,7 @@
 import { Builder } from "@html_builder/builder";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
-import { insertText, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, describe, expect, press, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -316,6 +316,19 @@ test("copy of a translated span should not copy branding attributes", async () =
     expect(clipboardData.getData("text/html")).toBe(
         `<p><span class="translate_branding"><b>c</b></span></p>`
     );
+});
+
+test("paste html in a translated span should not add blocks", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+    });
+    await contains(":iframe [contenteditable=true]").focus();
+    const editor = getEditor();
+    const textNode = editor.editable.querySelector("b").firstChild;
+    expect(textNode.nodeType).toBe(Node.TEXT_NODE);
+    setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 1 });
+    pasteHtml(editor, `<h1><u>hello</u></h1>`);
+    expect(":iframe [contenteditable=true]").toHaveInnerHTML(`a<b><u>hello</u></b>a`);
 });
 
 describe("save translation", () => {

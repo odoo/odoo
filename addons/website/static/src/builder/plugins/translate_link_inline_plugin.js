@@ -6,6 +6,11 @@ export class TranslateLinkInlinePlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         create_link_handlers: (linkEl) => linkEl.classList.add("o_translate_inline"),
+        pasted_html_processors: (fragment) => {
+            for (const linkEl of fragment.querySelectorAll("a")) {
+                linkEl.classList.add("o_translate_inline");
+            }
+        },
     };
 }
 

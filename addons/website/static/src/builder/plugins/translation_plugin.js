@@ -8,6 +8,7 @@ import {
     TranslatorInfoDialog,
 } from "../translation_components/translatorInfoDialog";
 import { withSequence } from "@html_editor/utils/resource";
+import { isBlock } from "@html_editor/utils/blocks";
 
 export const translationAttributeSelector =
     '[placeholder*="data-oe-translation-source-sha="], ' +
@@ -79,6 +80,35 @@ export class TranslationPlugin extends Plugin {
             this.prepareTranslation();
         }),
         system_classes: ["o_editable_attribute"],
+        pasted_html_processors: [
+            (fragment) => {
+                const whitelist = ["I", "B", "U", "S", "EM", "FONT", "STRONG", "BR", "A", "SPAN"];
+                const unwrapBlocks = (el) => {
+                    const newChildren = [];
+                    let prevChildWasBlock = false;
+                    for (const child of el.childNodes) {
+                        if (child.nodeType === Node.ELEMENT_NODE) {
+                            unwrapBlocks(child);
+                        }
+                        const currentChildIsBlock = isBlock(child);
+                        if (prevChildWasBlock && currentChildIsBlock) {
+                            newChildren.push(this.document.createElement("br"));
+                        }
+                        if (
+                            child.nodeType === Node.ELEMENT_NODE &&
+                            (currentChildIsBlock || !whitelist.includes(child.tagName))
+                        ) {
+                            newChildren.push(...child.childNodes);
+                        } else {
+                            newChildren.push(child);
+                        }
+                        prevChildWasBlock = currentChildIsBlock;
+                    }
+                    el.replaceChildren(...newChildren);
+                };
+                unwrapBlocks(fragment);
+            },
+        ],
     };
 
     setup() {

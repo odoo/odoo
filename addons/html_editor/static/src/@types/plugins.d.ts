@@ -3,7 +3,7 @@ declare module "plugins" {
     import { Plugin } from "@html_editor/plugin";
 
     import { BaseContainerShared, invalid_for_base_container_predicates } from "@html_editor/core/base_container_plugin";
-    import { after_paste_handlers, before_paste_handlers, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
+    import { after_paste_handlers, before_paste_handlers, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides, pasted_html_processors } from "@html_editor/core/clipboard_plugin";
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { before_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, delete_handlers, delete_range_overrides, DeleteShared, functional_empty_node_predicates, is_empty_predicates, removable_descendants_providers, unremovable_node_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
@@ -204,6 +204,7 @@ declare module "plugins" {
         clipboard_content_processors: clipboard_content_processors;
         clipboard_text_processors: clipboard_text_processors;
         node_to_insert_processors: node_to_insert_processors;
+        pasted_html_processors: pasted_html_processors;
         serializable_descendants_processors: serializable_descendants_processors;
         targeted_nodes_processors: targeted_nodes_processors;
 
