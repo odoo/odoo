@@ -270,6 +270,14 @@ class IrAttachment(models.Model):
             else:
                 attach.raw = attach.db_datas
 
+    def _get_pdf_raw(self):
+        self.ensure_one()
+        if self.type != 'binary':
+            return False
+        if self.mimetype != 'application/pdf':
+            return False
+        return self.raw
+
     def _inverse_raw(self):
         self._set_attachment_data(lambda a: a.raw or b'')
 
