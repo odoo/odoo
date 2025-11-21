@@ -168,6 +168,17 @@ class ResLang(models.Model):
             lang.active = True
         return lang
 
+    def _activate_and_update_lang(self, code):
+        """ Activate languages and update their translations
+        :param code: code of the language to activate
+        :return: the language matching 'code' activated
+        """
+        lang = self._activate_lang(code)
+        if lang:
+            mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
+            mods._update_translations(code)
+        return lang
+
     def _create_lang(self, lang, lang_name=None):
         """ Create the given language and make it active. """
         # create the language with locale information
