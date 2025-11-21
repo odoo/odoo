@@ -50,6 +50,48 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
         self.assertEqual(new_registration.utm_source_id, self.env.ref('utm.utm_source_newsletter'))
         self.assertEqual(new_registration.utm_medium_id, self.env.ref('utm.utm_medium_email'))
 
+    def test_event_registration_utm_unknown_values_visitor(self):
+        self.event_0.registration_ids.unlink()
+        self.event_0.write({
+            'event_ticket_ids': [
+                (5, 0),
+                (0, 0, {'name': 'Free Ticket'}),
+            ],
+            'is_published': True,
+        })
+
+        self.authenticate(None, None)
+        self.opener.cookies.update({
+            'odoo_utm_campaign': "unknown_campaign",
+            'odoo_utm_source': "unknown_source",
+            'odoo_utm_medium': "unknown_medium",
+        })
+        event_questions = self.event_0.question_ids
+        name_question = event_questions.filtered(lambda q: q.question_type == 'name')
+        email_question = event_questions.filtered(lambda q: q.question_type == 'email')
+        self.assertTrue(name_question and email_question)
+
+        campaign_count = self.env['utm.campaign'].search_count([])
+        source_count = self.env['utm.source'].search_count([])
+        medium_count = self.env['utm.medium'].search_count([])
+
+        self.url_open(f'/event/{self.event_0.id}/registration/confirm', data={
+            f'1-name-{name_question.id}': 'Bob',
+            f'1-email-{email_question.id}': 'bob@test.lan',
+            '1-event_ticket_id': self.event_0.event_ticket_ids[0].id,
+            'csrf_token': http.Request.csrf_token(self),
+        })
+        new_registration = self.event_0.registration_ids
+        self.assertEqual(len(new_registration), 1)
+        self.assertFalse(new_registration.utm_campaign_id)
+        self.assertFalse(new_registration.utm_source_id)
+        self.assertFalse(new_registration.utm_medium_id)
+
+        # ensure no new record created by the visitor
+        self.assertEqual(self.env['utm.campaign'].search_count([]), campaign_count)
+        self.assertEqual(self.env['utm.source'].search_count([]), source_count)
+        self.assertEqual(self.env['utm.medium'].search_count([]), medium_count)
+
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):

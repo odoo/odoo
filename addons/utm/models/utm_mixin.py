@@ -92,7 +92,7 @@ class UtmMixin(models.AbstractModel):
         if cleaned_name:
             record = Model.with_context(active_test=False).search([('name', '=ilike', cleaned_name)], limit=1)
 
-        if not record:
+        if not record and not self.env.user._is_public():
             # No record found, create a new one
             record_values = {'name': cleaned_name}
             if 'is_auto_campaign' in record._fields:
