@@ -49,11 +49,7 @@ const threadPatch = {
         });
         this.displayInSidebar = fields.Attr(false, {
             compute() {
-                return (
-                    this.displayToSelf ||
-                    this.isLocallyPinned ||
-                    this.sub_channel_ids.some((t) => t.displayInSidebar)
-                );
+                return this._computeDisplayInSidebar();
             },
         });
         this.loadSubChannelsDone = false;
@@ -62,6 +58,13 @@ const threadPatch = {
     },
     get canLeave() {
         return !this.parent_channel_id && super.canLeave;
+    },
+    _computeDisplayInSidebar() {
+        return (
+            this.displayToSelf ||
+            this.isLocallyPinned ||
+            this.sub_channel_ids.some((t) => t.displayInSidebar)
+        );
     },
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.channel?.channel_type)) {

@@ -190,20 +190,41 @@ class DiscussChannel(models.Model):
     )
 
     def write(self, vals):
-        if "livechat_status" not in vals:
+        if "livechat_status" not in vals and "livechat_expertise_ids" not in vals:
             return super().write(vals)
-        needing_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
+        need_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
         result = super().write(vals)
+<<<<<<< 74f09c9148b80fbd5202582ef90a0ced629afd03
         needing_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
         if needing_help_before != needing_help_after:
             self.env.ref("im_livechat.im_livechat_group_user")._bus_send(
+||||||| 2217d5220640531828eb5b2ae7a9d41ba9c97e78
+        needing_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
+        if needing_help_before != needing_help_after:
+            group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
+            Store(bus_channel=group_livechat_user).add(self).bus_send()
+            group_livechat_user._bus_send(
+=======
+        need_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
+        group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
+        store = Store(bus_channel=group_livechat_user, bus_subchannel="LOOKING_FOR_HELP")
+        added_need_help = need_help_after - need_help_before
+        removed_need_help = need_help_before - need_help_after
+        store.add(added_need_help)
+        store.add(removed_need_help, ["livechat_status"])
+        if "livechat_expertise_ids" in vals:
+            store.add(self, Store.Many("livechat_expertise_ids"))
+        if added_need_help or removed_need_help:
+            group_livechat_user._bus_send(
+>>>>>>> 4f65087f28f2ed781c78a11b2fb8c4e68d62a379
                 "im_livechat.looking_for_help/update",
                 {
-                    "added_channel_ids": (needing_help_after - needing_help_before).ids,
-                    "removed_channel_ids": (needing_help_before - needing_help_after).ids,
+                    "added_channel_ids": added_need_help.ids,
+                    "removed_channel_ids": removed_need_help.ids,
                 },
                 subchannel="LOOKING_FOR_HELP",
             )
+        store.bus_send()
         return result
 
     @api.depends("livechat_end_dt")
