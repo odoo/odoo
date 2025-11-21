@@ -20,12 +20,13 @@ import {
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
 import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
+    getMockEnv,
     mockService,
     onRpc,
     patchWithCleanup,
@@ -41,6 +42,15 @@ defineMailModels();
 let streams = [];
 beforeEach(() => {
     streams = mockGetMedia();
+});
+afterEach(() => {
+    const env = getMockEnv();
+    const rtcService = env?.services["discuss.rtc"];
+    const currentChannel = rtcService?.state.channel;
+    if (currentChannel) {
+        currentChannel.rtc_session_ids = [];
+        rtcService.endCall();
+    }
 });
 
 test("basic rendering", async () => {
