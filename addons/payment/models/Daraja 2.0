@@ -1,0 +1,416 @@
+/path/to/addons/payment_mpesa_daraja/
+# __manifest__.py
+{
+    "name": "Payment: M-Pesa Daraja (STK Push)",
+    "version": "19.0.1.0.0",
+    "summary": "Safaricom Daraja 2.0 (M-Pesa) STK Push integration for Odoo 19",
+    "description": """M-Pesa (Daraja 2.0) STK Push integration.
+Creates payment.transaction, initiates STK push and handles Daraja callbacks.
+Use sandbox credentials for testing and production credentials for live.""",
+    "category": "Accounting/Payment",
+    "author": "Your Company",
+    "license": "AGPL-3",
+    "depends": ["payment", "website"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/payment_provider_data.xml",
+        "views/payment_provider_views.xml",
+        "views/mpesa_templates.xml"
+    ],
+    "installable": True,
+    "application": False,
+    "auto_install": False,
+}
+# __init__.py
+from . import models
+from . import controllers
+# models/__init__.py
+from . import payment_provider
+# controllers/__init__.py
+from . import mpesa_controller
+# models/payment_provider.py
+import base64
+import json
+import logging
+import requests
+from datetime import timedelta
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
+
+
+class PaymentProviderMpesa(models.Model):
+    _inherit = "payment.provider"
+
+    # Add our provider code
+    code = fields.Selection(selection_add=[("mpesa_daraja", "M-Pesa (Daraja)")])
+
+    # Daraja-specific configuration
+    mpesa_environment = fields.Selection(
+        [("sandbox", "Sandbox"), ("production", "Production")],
+        default="sandbox",
+        string="Environment",
+    )
+    mpesa_consumer_key = fields.Char(string="Daraja Consumer Key")
+    mpesa_consumer_secret = fields.Char(string="Daraja Consumer Secret")
+    mpesa_shortcode = fields.Char(string="Business Shortcode / Paybill")
+    mpesa_passkey = fields.Char(string="Lipa Na Mpesa Passkey")
+    mpesa_callback_url = fields.Char(string="Callback URL", help="Public URL Daraja will call on STK result.")
+    mpesa_token = fields.Char(string="OAuth Token", readonly=True, groups="base.group_system")
+    mpesa_token_expires_at = fields.Datetime(string="OAuth Token Expires At", readonly=True, groups="base.group_system")
+
+    def _get_code(self):
+        """Return code value for this provider instance."""
+        self.ensure_one()
+        if self.code == "mpesa_daraja":
+            return "mpesa_daraja"
+        return super()._get_code()
+
+    # ---------------------------
+    # Daraja helper methods
+    # ---------------------------
+    def _daraja_base_url(self):
+        self.ensure_one()
+        if self.mpesa_environment == "production":
+            return "https://api.safaricom.co.ke"
+        return "https://sandbox.safaricom.co.ke"
+
+    def _daraja_oauth_url(self):
+        return f"{self._daraja_base_url()}/oauth/v1/generate?grant_type=client_credentials"
+
+    def _ensure_oauth_token(self, force=False):
+        """Ensure a valid Daraja OAuth token; store token and expiry on provider."""
+        self.ensure_one()
+        # If token exists and not expired, return it
+        if not force and self.mpesa_token and self.mpesa_token_expires_at:
+            try:
+                expiry = fields.Datetime.from_string(self.mpesa_token_expires_at)
+                if expiry and expiry > fields.Datetime.now():
+                    return self.mpesa_token
+            except Exception:
+                # if parsing fails, we will fetch a new token
+                _logger.exception("Failed parsing mpesa_token_expires_at; refreshing token")
+
+        if not (self.mpesa_consumer_key and self.mpesa_consumer_secret):
+            raise ValidationError(
+                _("Daraja consumer key and secret must be configured for provider %s.") % self.name
+            )
+
+        try:
+            resp = requests.get(self._daraja_oauth_url(), auth=(self.mpesa_consumer_key, self.mpesa_consumer_secret), timeout=10)
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception("Daraja OAuth connection error")
+            raise ValidationError(_("Could not connect to Daraja OAuth endpoint."))
+
+        if resp.status_code != 200:
+            _logger.error("Daraja OAuth failed: %s", resp.text)
+            raise ValidationError(_("Daraja OAuth failed: %s") % resp.text)
+
+        try:
+            data = resp.json()
+        except ValueError:
+            _logger.error("Daraja OAuth returned non-json: %s", resp.text)
+            raise ValidationError(_("Daraja OAuth returned unexpected response."))
+
+        token = data.get("access_token")
+        expires_in = int(data.get("expires_in", 3600))
+        if not token:
+            _logger.error("Daraja OAuth missing token: %s", resp.text)
+            raise ValidationError(_("Daraja did not return an access token. Response: %s") % resp.text)
+
+        expires_at = fields.Datetime.to_string(fields.Datetime.now() + timedelta(seconds=expires_in - 10))
+        # store token (only sysadmin group can see it)
+        self.write({"mpesa_token": token, "mpesa_token_expires_at": expires_at})
+        return token
+
+    def _daraja_headers(self):
+        token = self._ensure_oauth_token()
+        return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+    def _daraja_stk_push(self, tx, phone_number, account_reference=None, transaction_desc=None, callback_url=None):
+        """
+        Initiate an STK Push (Lipa Na M-Pesa) for an existing payment.transaction.
+        - tx: payment.transaction record
+        - phone_number: string ('2547XXXXXXXX')
+        - account_reference: string to identify transaction in callback (defaults to tx.reference)
+        - callback_url: overrides provider callback
+        Returns Daraja JSON response.
+        """
+        self.ensure_one()
+        if not callback_url:
+            callback_url = self.mpesa_callback_url
+        if not callback_url:
+            raise ValidationError(_("Callback URL must be configured on the provider."))
+
+        # Basic validations
+        if not phone_number or not phone_number.isdigit():
+            raise ValidationError(_("Phone number must be numeric in format 2547XXXXXXXX."))
+
+        shortcode = (self.mpesa_shortcode or "").strip()
+        passkey = (self.mpesa_passkey or "").strip()
+        if not shortcode or not passkey:
+            raise ValidationError(
+                _("Shortcode and passkey must be set for M-Pesa Daraja provider %s.") % self.name
+            )
+
+        # Timestamp format required by Daraja: YYYYMMDDHHMMSS in UTC
+        # Use server UTC timestamp to avoid timezone issues.
+        timestamp = fields.Datetime.context_timestamp(self, fields.Datetime.now()).strftime("%Y%m%d%H%M%S")
+        password_str = shortcode + passkey + timestamp
+        password = base64.b64encode(password_str.encode()).decode()
+
+        payload = {
+            "BusinessShortCode": shortcode,
+            "Password": password,
+            "Timestamp": timestamp,
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": int(round(tx.amount)),
+            "PartyA": phone_number,
+            "PartyB": shortcode,
+            "PhoneNumber": phone_number,
+            "CallBackURL": callback_url,
+            "AccountReference": account_reference or tx.reference,
+            "TransactionDesc": transaction_desc or ("Payment %s" % tx.reference),
+        }
+
+        url = self._daraja_base_url() + "/mpesa/stkpush/v1/processrequest"
+        headers = self._daraja_headers()
+
+        _logger.info("Daraja STK Push (tx=%s) payload: %s", tx.reference, json.dumps(payload))
+        try:
+            resp = requests.post(url, json=payload, headers=headers, timeout=15)
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception("Daraja STK Push connection error")
+            raise ValidationError(_("Could not send STK Push request to Daraja."))
+
+        _logger.info("Daraja STK response (tx=%s): %s", tx.reference, resp.text)
+        if resp.status_code >= 400:
+            try:
+                return resp.json()
+            except Exception:
+                raise ValidationError(_("Daraja STK Push failed: %s") % resp.text)
+        try:
+            return resp.json()
+        except ValueError:
+            raise ValidationError(_("Unexpected Daraja response: %s") % resp.text)
+
+    # Public helper used by website controller: create tx then call STK
+    def initiate_stk_from_website(self, amount, currency_id, partner_id, phone, return_url=None):
+        """
+        Create a payment.transaction, then call Daraja STK Push and return both objects.
+        Returns dict: {'tx': payment.transaction record, 'daraja_response': dict}
+        """
+        self.ensure_one()
+        # Create a new payment.transaction with minimal fields.
+        tx_ref = (
+            self.env["ir.sequence"].next_by_code("payment.transaction") or
+            f"MPESA-{self.env.uid}-{fields.Datetime.now().strftime('%Y%m%d%H%M%S')}"
+        )
+        tx_vals = {
+            "acquirer_name": self.name,
+            "amount": amount,
+            "currency_id": currency_id,
+            "partner_id": partner_id or False,
+            "reference": tx_ref,
+            "state": "pending",
+            "provider_id": self.id,
+        }
+        tx = self.env["payment.transaction"].sudo().create(tx_vals)
+
+        daraja_res = self._daraja_stk_push(tx=tx, phone_number=phone, account_reference=tx.reference, transaction_desc=f"Order {tx.reference}", callback_url=return_url or self.mpesa_callback_url)
+        return {"tx": tx, "daraja_response": daraja_res}
+# controllers/mpesa_controller.py
+import json
+import logging
+
+from odoo import http
+from odoo.http import request
+from werkzeug.exceptions import BadRequest
+
+_logger = logging.getLogger(__name__)
+
+
+class MpesaController(http.Controller):
+    @http.route(['/mpesa/stk/initiate'], type='json', auth='public', methods=['POST'], csrf=False)
+    def stk_initiate(self, **post):
+        """
+        JSON-RPC endpoint to create payment.transaction and initiate STK push.
+        Expected keys (POST/JSON):
+            provider_id: int
+            amount: float
+            currency_id: int
+            partner_id: int | None
+            phone: str (2547...)
+        Returns JSON: {'error': False, 'result': {...}} or {'error': True, 'message': '...'}
+        """
+        provider_id = post.get("provider_id")
+        amount = post.get("amount")
+        currency_id = post.get("currency_id")
+        partner_id = post.get("partner_id")
+        phone = post.get("phone")
+
+        if not provider_id or not amount or not phone:
+            return {"error": True, "message": "Missing provider_id, amount or phone."}
+
+        provider = request.env["payment.provider"].sudo().browse(int(provider_id))
+        if not provider.exists():
+            return {"error": True, "message": "Invalid provider."}
+
+        try:
+            res = provider.sudo().initiate_stk_from_website(
+                amount=float(amount),
+                currency_id=int(currency_id) if currency_id else request.env.company.currency_id.id,
+                partner_id=int(partner_id) if partner_id else False,
+                phone=phone,
+                return_url=provider.mpesa_callback_url,
+            )
+        except Exception as exc:
+            _logger.exception("STK initiation failed")
+            return {"error": True, "message": str(exc)}
+
+        tx = res.get("tx")
+        daraja = res.get("daraja_response")
+        return {"error": False, "result": {"daraja_response": daraja, "transaction_id": tx.id, "reference": tx.reference}}
+
+    @http.route(['/mpesa/callback'], type='json', auth='public', methods=['POST'], csrf=False)
+    def mpesa_callback(self, **post):
+        """
+        Endpoint that receives Daraja STK push callbacks.
+        Daraja sends JSON payload; we parse and mark payment.transaction state accordingly.
+        """
+        try:
+            payload = request.httprequest.get_json(force=True)
+        except Exception:
+            _logger.exception("Invalid JSON in Daraja callback")
+            raise BadRequest("Invalid JSON")
+
+        _logger.info("Daraja callback received: %s", json.dumps(payload))
+
+        body = payload.get("Body") or {}
+        stk = body.get("stkCallback") or {}
+        result_code = stk.get("ResultCode")
+        result_desc = stk.get("ResultDesc")
+        checkout_request_id = stk.get("CheckoutRequestID")
+        merchant_request_id = stk.get("MerchantRequestID")
+        callback_metadata = stk.get("CallbackMetadata") or {}
+        items = callback_metadata.get("Item") or []
+
+        # Extract commonly present values from CallbackMetadata
+        acct_ref = None
+        mpesa_receipt = None
+        amount = None
+        phone = None
+        for it in items:
+            name = it.get("Name")
+            if name == "AccountReference":
+                acct_ref = it.get("Value")
+            elif name == "MpesaReceiptNumber":
+                mpesa_receipt = it.get("Value")
+            elif name == "Amount":
+                amount = it.get("Value")
+            elif name == "PhoneNumber":
+                phone = it.get("Value")
+
+        _logger.info("Daraja callback parsed: acct_ref=%s checkout=%s result=%s", acct_ref, checkout_request_id, result_code)
+
+        if acct_ref:
+            tx = request.env["payment.transaction"].sudo().search([("reference", "=", acct_ref)], limit=1)
+            if tx:
+                # Successful payment
+                if result_code == 0:
+                    tx.sudo().write({"state": "done", "acquirer_reference": mpesa_receipt or checkout_request_id})
+                    _logger.info("Marked payment.transaction %s as done", tx.reference)
+                else:
+                    tx.sudo().write({"state": "error", "acquirer_reference": checkout_request_id})
+                    _logger.info("Marked payment.transaction %s as error (result_code=%s)", tx.reference, result_code)
+            else:
+                _logger.warning("Daraja callback: no payment.transaction found with reference %s", acct_ref)
+        else:
+            _logger.warning("Daraja callback: no AccountReference present to match transaction")
+
+        # Always reply HTTP 200 OK
+        return {}
+<!-- views/payment_provider_views.xml -->
+<odoo xmlns="http://www.w3.org/1999/xhtml">
+  <data>
+    <record id="view_payment_provider_mpesa_form" model="ir.ui.view">
+      <field name="name">payment.provider.mpesa.form</field>
+      <field name="model">payment.provider</field>
+      <field name="inherit_id" ref="payment.view_payment_provider_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//group[@name='credentials']" position="inside">
+          <group string="M-Pesa Daraja" name="mpesa_group">
+            <field name="mpesa_environment"/>
+            <field name="mpesa_consumer_key"/>
+            <field name="mpesa_consumer_secret"/>
+            <field name="mpesa_shortcode"/>
+            <field name="mpesa_passkey"/>
+            <field name="mpesa_callback_url"/>
+          </group>
+        </xpath>
+        <xpath expr="//group[@name='views']" position="inside">
+          <field name="inline_form_view_id"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
+<!-- views/mpesa_templates.xml -->
+<odoo xmlns="http://www.w3.org/1999/xhtml">
+  <template id="payment_mpesa_inline_form" name="M-Pesa STK Inline Form">
+    <t t-name="payment_mpesa.inline_form">
+      <form id="mpesa-stk-form" class="o_mpesa_stk_form">
+        <input type="hidden" name="provider_id" t-att-value="provider_id"/>
+        <div class="form-group">
+          <label>Phone (2547...)</label>
+          <input type="text" name="phone" class="form-control" placeholder="2547XXXXXXXX"/>
+        </div>
+        <div class="form-group">
+          <button type="button" id="mpesa-pay-button" class="btn btn-primary">Pay with M-Pesa</button>
+        </div>
+        <div id="mpesa-result" style="margin-top:10px;"></div>
+      </form>
+    </t>
+  </template>
+
+  <template id="assets_frontend" inherit_id="web.assets_frontend" name="payment_mpesa_assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript">
+        odoo.define('payment_mpesa.inline', function (require) {
+          "use strict";
+          var ajax = require('web.ajax');
+          $(document).on('click', '#mpesa-pay-button', function () {
+            var $form = $('#mpesa-stk-form');
+            var provider_id = $form.find('input[name="provider_id"]').val();
+            var phone = $form.find('input[name="phone"]').val();
+            var amount = window.odoo_mpesa_amount || 0;
+            var currency_id = window.odoo_mpesa_currency_id || null;
+            var partner_id = window.odoo_mpesa_partner_id || null;
+
+            $('#mpesa-result').text('Initiating STK...');
+
+            ajax.jsonRpc('/mpesa/stk/initiate', 'call', {
+              provider_id: provider_id,
+              amount: amount,
+              currency_id: currency_id,
+              partner_id: partner_id,
+              phone: phone
+            }).then(function (res) {
+              if (res.error) {
+                $('#mpesa-result').text('Error: ' + res.message);
+              } else {
+                var r = res.result;
+                $('#mpesa-result').text('STK triggered. Please complete on your phone. Reference: ' + r.reference);
+                // Optional: poll transaction status or redirect to pending page
+              }
+            }).guardedCatch(function (err) {
+              $('#mpesa-result').text('Request failed: ' + err);
+            });
+          });
+        });
+      </script>
+    </xpath>
+  </template>
+</odoo>
