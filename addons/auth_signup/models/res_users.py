@@ -252,6 +252,18 @@ class ResUsers(models.Model):
                     users_with_email.partner_id.with_context(create_user=True).signup_cancel()
         return users
 
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            self.partner_id.signup_cancel()
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _ondelete_signup_cancel(self):
+        # Cancel pending partner signup when the user is deleted.
+        for user in self:
+            if user.partner_id:
+                user.partner_id.signup_cancel()
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
