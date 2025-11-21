@@ -224,7 +224,7 @@ export class StaticList extends DataPoint {
             await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
             // All records of last page are deleted => reload the new last page
             if (this.count === this.offset) {
-                await this._load({ offset: this.offset - this.limit });
+                await this._load({ offset: Math.max(this.offset - this.limit, 0) });
             }
             await this._onUpdate();
         });
