@@ -42,7 +42,7 @@
                         <field class="text-break" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="name" invisible="1"/>
                         <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                     </group>
                     <notebook>
                     </notebook>
@@ -60,7 +60,7 @@
                 <field name="name" column_invisible="True"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="stage_id" decoration-bf="1"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
             </list>
         </field>
     </record>
@@ -75,7 +75,7 @@
                     <field name="name" invisible="1"/>
                     <field class="o_text_overflow" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                    <field name="tag_ids" widget="many2many_tags" class="o_field_highlight" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    <field name="tag_ids" widget="many2many_tags" class="o_field_highlight" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                 </group>
             </form>
         </field>
@@ -104,7 +104,7 @@
                     </t>
                     <t t-name="card">
                         <field name="title" class="fw-bold fs-5"/>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         <ul id="o_utm_actions" class="list-group list-group-horizontal my-0"/>
                         <footer class="mt-2 mb-0 pt-0">
                             <div class="py-auto"/>

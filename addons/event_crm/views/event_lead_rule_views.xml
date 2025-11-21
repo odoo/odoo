@@ -73,7 +73,7 @@
                             <field name="lead_user_id" widget="many2one_avatar_leader_user" teamField="lead_sales_team_id"/>
                         </group>
                         <group class="col">
-                            <field name="lead_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="lead_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         </group>
                     </group>
                 </sheet>

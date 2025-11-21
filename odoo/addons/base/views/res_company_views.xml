@@ -70,7 +70,7 @@
                     <field name="logo" invisible="not logo" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
                     <field name="name"/>
                     <field name="partner_id" required="0"/>
-                    <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 </list>
             </field>
         </record>

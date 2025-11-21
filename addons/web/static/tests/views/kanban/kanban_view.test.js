@@ -1775,7 +1775,7 @@ test("many2many_tags in kanban views", async () => {
             <kanban>
                 <templates>
                     <t t-name="card">
-                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         <field name="foo"/>
                         <field name="state" widget="priority"/>
                     </t>

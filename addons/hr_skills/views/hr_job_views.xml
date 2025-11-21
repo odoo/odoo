@@ -10,7 +10,7 @@
                     <field
                         name="current_job_skill_ids"
                         widget="many2many_tags"
-                        options="{'color_field': 'color'}"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                         readonly="True"
                         string="Expected Skills"
                         groups="!hr.group_hr_user"

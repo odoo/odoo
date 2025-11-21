@@ -26,7 +26,7 @@
                         <field name="parent_id" invisible="not parent_id"/>
                     </group>
                     <group name="post_details">
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         <field name="state"/>
                         <field name="closed_reason_id" invisible="not closed_reason_id"/>
                         <field name="closed_uid" invisible="not closed_uid"/>

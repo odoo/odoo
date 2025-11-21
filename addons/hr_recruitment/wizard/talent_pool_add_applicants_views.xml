@@ -9,18 +9,18 @@
                     <field
                         name="applicant_ids"
                         widget="many2many_tags"
-                        options="{'color_field': 'color'}"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                         invisible="context.get('default_applicant_ids')"
                     />
                     <field
                         name="talent_pool_ids"
                         widget="many2many_tags"
-                        options="{'color_field': 'color'}"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                         invisible="context.get('default_talent_pool_ids')"
                     />
                     <field
                         name="categ_ids"
-                        options="{'color_field': 'color'}"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                         widget="many2many_tags"
                     />
                 </group>

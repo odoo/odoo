@@ -78,7 +78,7 @@
                     </group>
                     <group>
                         <field name="user_id" widget="many2one_avatar"/>
-                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                     </group>
                 </group>
                 <notebook>
@@ -157,7 +157,7 @@
                 <templates>
                     <t t-name="card" class="o_marketing_card_campaign_kanban">
                         <field name="name" class="fw-bolder fs-5"/>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="mt-2"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" class="mt-2"/>
                         <footer class="pt-0">
                             <div>
                                 <a type="object" name="action_view_cards_shared" href="#" class="me-1">
@@ -191,7 +191,7 @@
                 <field name="user_id" widget="many2one_avatar"/>
                 <field name="res_model" optional="hide"/>
                 <field name="target_url" optional="hide"/>
-                <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
             </list>
         </field>
     </record>

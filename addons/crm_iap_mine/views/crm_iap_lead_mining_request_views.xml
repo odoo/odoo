@@ -82,7 +82,7 @@
                             <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" readonly="state == 'done'"/>
                             <field name="team_id" no_create="1" no_open="1" readonly="state == 'done'" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                             <field name="user_id" no_create="1" no_open="1" readonly="state == 'done'" widget="many2one_avatar_user"/>
-                            <field name="tag_ids" string="Default Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" readonly="state == 'done'"/>
+                            <field name="tag_ids" string="Default Tags" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" readonly="state == 'done'"/>
                         </group>
                     </group>
 
@@ -96,7 +96,7 @@
                         <group>
                             <field name="contact_filter_type" widget="radio" readonly="state == 'done'" options="{'horizontal': true}"/>
                             <field name="preferred_role_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" invisible="contact_filter_type != 'role'" readonly="state == 'done'" required="search_type == 'people' and contact_filter_type == 'role'"/>
-                            <field name="role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" invisible="not preferred_role_id or contact_filter_type != 'role'" readonly="state == 'done'"/>
+                            <field name="role_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True, 'no_quick_create': True}" invisible="not preferred_role_id or contact_filter_type != 'role'" readonly="state == 'done'"/>
                             <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" invisible="contact_filter_type != 'seniority'" readonly="state == 'done'" required="search_type == 'people' and contact_filter_type == 'seniority'"/>
                         </group>
                     </group>
@@ -121,7 +121,7 @@
                 <field name="industry_ids" widget="many2many_tags"/>
                 <field name="team_id" optional="hide"/>
                 <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                 <field name="state" readonly="1" decoration-info="state == 'draft'" decoration-success="state == 'done'" decoration-danger="state == 'error'" widget="badge"/>
             </list>
         </field>

@@ -447,11 +447,11 @@
                                 class="o_task_user_field"
                                 options="{'no_open': True}"
                                 widget="many2many_avatar_user"/>
-                            <field name="role_ids" invisible="not has_project_template or is_template" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
+                            <field name="role_ids" invisible="not has_project_template or is_template" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                             <field name="partner_id" nolabel="0" widget="res_partner_many2one" class="o_task_customer_field" invisible="not project_id or has_template_ancestor or has_project_template"/>
                             <label for="date_deadline"/>
                             <div id="date_deadline_and_recurring_task" class="d-inline-flex w-100">
@@ -525,7 +525,7 @@
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         class="fw-bold" widget="badge" optional="hide" invisible="rating_last_text == 'none'" column_invisible="True"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                                     <field name="create_date" optional="hide"/>
                                     <field name="stage_id" optional="hide" context="{'default_project_id': project_id}"/>
                                 </list>
@@ -572,7 +572,7 @@
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         class="fw-bold" widget="badge" optional="hide" invisible="rating_last_text == 'none'" column_invisible="True"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                                     <field name="create_date" optional="hide"/>
                                     <field name="stage_id" optional="hide"/>
                                 </list>
@@ -709,7 +709,7 @@
                                     <field name="partner_id" invisible="context.get('template_project')"/>
                                     <field t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" name="milestone_id" options="{'no_open': True}"/>
                                 </div>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                                 <field t-if="record.date_deadline.raw_value" invisible="state in ['1_done', '1_canceled']" name="date_deadline" widget="remaining_days"/>
                                 <field name="task_properties" widget="properties"/>
                                 <field name="displayed_image_id" widget="attachment_image"/>
@@ -778,7 +778,7 @@
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ['1_done', '1_canceled']"/>
                     <field name="priority" widget="priority" optional="show" width="70px"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="create_date" optional="hide"/>
                     <field name="date_last_stage_update" optional="hide" column_invisible="context.get('template_project')"/>
                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" options="{'is_toggle_mode': false}"/>
@@ -857,7 +857,7 @@
                     <field name="user_ids" widget="many2many_avatar_user" invisible="not user_ids"/>
                     <field name="partner_id" invisible="not partner_id"/>
                     <field name="priority" widget="priority" readonly="1"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not tag_ids"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" invisible="not tag_ids"/>
                     <field name="stage_id_color" invisible="1"/>
                     <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection" filters="1"/>
                     <field name="personal_stage_id" string="Personal Stage" options="{'no_open': True}" invisible="project_id or not personal_stage_id"/>
@@ -1354,7 +1354,7 @@
             </field>
             <field name="partner_id" position="replace"/>
             <field name="user_ids" position="after">
-                <field name="role_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" invisible="not has_project_template or is_template"/>
+                <field name="role_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" invisible="not has_project_template or is_template"/>
             </field>
         </field>
     </record>

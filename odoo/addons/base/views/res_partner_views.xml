@@ -28,7 +28,7 @@
                     <field name="state_id" optional="hide" readonly="1"/>
                     <field name="country_id" optional="show" readonly="1"/>
                     <field name="application_statistics" widget="contact_statistics" nolabel="1" optional="show" width="270"/>
-                    <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="properties" optional="hide"/>
                 </list>
@@ -187,7 +187,7 @@
                             <field name="vat" placeholder="e.g. BE0477472701"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"
+                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                         </group>
                     </group>

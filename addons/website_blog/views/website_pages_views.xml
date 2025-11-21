@@ -15,7 +15,7 @@
                     <field name="blog_id"/>
                     <field name="name" placeholder="Blog Post Title"/>
                     <field name="subtitle" placeholder="Blog Subtitle"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                 </group>
                 <group name="publishing_details" string="Publishing Options">

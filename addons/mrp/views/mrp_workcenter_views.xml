@@ -28,7 +28,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name" optional="show"/>
                     <field name="code" optional="show"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" optional="show"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="show"/>
                     <field name="alternative_workcenter_ids" widget="many2many_tags" optional="show"/>
                     <field name="productive_time" optional="hide"/>
                     <field name="costs_hour" optional="show"/>
@@ -298,7 +298,7 @@
                                 <field name="active" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                                 <field name="name" string="Work Center Name" required="True"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                                 <field
                                     name="alternative_workcenter_ids"
                                     widget="many2many_tags"

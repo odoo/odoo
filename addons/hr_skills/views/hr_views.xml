@@ -500,7 +500,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="display_name" string="Skill Types"/>
                 <field name="color" widget="color_picker" optional="show"/>
-                <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 <field name="skill_level_ids" widget="many2many_tags_skills"/>
             </list>
         </field>

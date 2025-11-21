@@ -238,7 +238,7 @@
                                     <field name="date_deadline" nolabel="1" class="oe_inline" placeholder="No closing estimate"/>
                                     <field name="priority" widget="priority" nolabel="1" class="oe_inline align-top"/>
                                 </div>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                             </group>
                             <group invisible="type == 'opportunity'">
                                 <field name="user_id" context="{'default_sales_team_id': team_id}"
@@ -247,7 +247,7 @@
                             </group>
                             <group name="lead_priority" invisible="type == 'opportunity'">
                                 <field name="priority" widget="priority"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                             </group>
                         </group>
                         <div class="d-flex">
@@ -370,7 +370,7 @@
                     <field name="source_id" optional="hide"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
                     <field name="message_needaction" column_invisible="True"/>
-                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="priority" optional="hide"/>
                 </list>
             </field>
@@ -387,7 +387,7 @@
                         <t t-name="card">
                             <field name="name" class="fw-bold fs-5"/>
                             <field name="contact_name"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <footer class="pt-1 mt-0">
                                 <div class="d-flex mt-auto">
                                     <field name="priority" widget="priority" class="me-2"/>
@@ -585,7 +585,7 @@
                             </div>
                             <field name="contact_name" invisible="partner_id"/>
                             <field name="partner_name" invisible="partner_id or contact_name"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <field name="lead_properties" widget="properties"/>
                             <footer class="pt-1">
                                 <div class="d-flex mt-auto align-items-center">
@@ -795,7 +795,7 @@
                     <field name="active" column_invisible="True"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
                     <field name="lost_reason_id" optional="hide"/>
-                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="referred" column_invisible="True"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="lead_properties"/>

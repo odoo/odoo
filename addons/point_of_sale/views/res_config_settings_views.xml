@@ -57,7 +57,7 @@
                                     <div class="content-group" invisible="not pos_use_presets">
                                         <div class="row">
                                             <label for="pos_available_preset_ids" class="col-lg-3" string="Available"/>
-                                            <field name="pos_available_preset_ids" widget="many2many_tags" options="{'no_quick_create': True, 'color_field': 'color'}" />
+                                            <field name="pos_available_preset_ids" widget="many2many_tags" options="{'no_quick_create': True, 'color_field': 'color', 'on_tag_click': 'edit_color'}" />
                                         </div>
                                         <div class="row">
                                             <label for="pos_default_preset_id" class="col-lg-3" string="Default"/>

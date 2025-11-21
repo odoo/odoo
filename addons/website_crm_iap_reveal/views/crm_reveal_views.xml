@@ -52,7 +52,7 @@
                     </div>
                     <group>
                         <group string="Opportunity Generation Conditions">
-                            <field name="industry_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="industry_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True, 'no_quick_create': True}"/>
                             <field name="filter_on_size"/>
                             <label for="company_size_min" invisible="not filter_on_size"/>
                             <div invisible="not filter_on_size">
@@ -65,7 +65,7 @@
                             <field name="extra_contacts"/>
                             <field name="contact_filter_type" widget="radio"/>
                             <field name="preferred_role_id" invisible="contact_filter_type != 'role'" options="{'no_create_edit': True, 'no_quick_create': True}"/>
-                            <field name="other_role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" invisible="not preferred_role_id or contact_filter_type != 'role'"/>
+                            <field name="other_role_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True, 'no_quick_create': True}" invisible="not preferred_role_id or contact_filter_type != 'role'"/>
                             <field name="seniority_id" invisible="contact_filter_type != 'seniority'" options="{'no_create_edit': True, 'no_quick_create': True}"/>
                         </group>
                     </group>

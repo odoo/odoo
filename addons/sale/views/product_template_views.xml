@@ -12,7 +12,7 @@
             <group name="upsell" position="inside">
                 <field name="optional_product_ids"
                     widget="many2many_tags"
-                    options="{'color_field': 'color'}"
+                    options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                     domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                     context="{'search_product_product': True}"
                     placeholder="Recommend when 'Adding to Cart' or quotation"/>

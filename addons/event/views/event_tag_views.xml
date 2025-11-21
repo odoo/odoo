@@ -9,7 +9,7 @@
                 <list string="Event Category">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 </list>
             </field>
         </record>
