@@ -8,6 +8,7 @@ import {
     isEmptyBlock,
     isVisibleTextNode,
     isZWS,
+    isContentEditableAncestor,
 } from "@html_editor/utils/dom_info";
 import {
     ancestors,
@@ -596,6 +597,9 @@ export class FontPlugin extends Plugin {
             ];
             // Wrap rangeContent with clones of their ancestors to keep the styles.
             for (const ancestor of ancestorsList) {
+                if (isContentEditableAncestor(ancestor)) {
+                    break;
+                }
                 // Keep the formatting by keeping inline ancestors and paragraph
                 // related ones like headings etc.
                 if (!isBlock(ancestor) || isParagraphRelatedElement(ancestor)) {

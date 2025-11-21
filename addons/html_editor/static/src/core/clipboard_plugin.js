@@ -1,4 +1,9 @@
-import { isTextNode, isParagraphRelatedElement, isEmptyBlock } from "../utils/dom_info";
+import {
+    isTextNode,
+    isParagraphRelatedElement,
+    isEmptyBlock,
+    isContentEditable,
+} from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { unwrapContents, wrapInlinesInBlocks, splitTextNode, fillEmpty } from "../utils/dom";
@@ -165,7 +170,9 @@ export class ClipboardPlugin extends Plugin {
             clonedContents = processor(clonedContents, selection) || clonedContents;
         }
         this.dependencies.dom.removeSystemProperties(clonedContents);
-        fillClipboardData(ev, clonedContents);
+        fillClipboardData(ev, clonedContents, {
+            fillEditorClipboard: isContentEditable(selection.commonAncestorContainer),
+        });
     }
 
     /**
