@@ -2900,7 +2900,7 @@ class TestStockValuation(TestStockValuationCommon):
         invoice = self._create_invoice(self.product_avco_auto, quantity=10, price_unit=100, product_uom=self.env.ref('uom.product_uom_pack_6'))
         self.assertEqual(self.product_avco_auto.standard_price, 10)
         self.assertRecordValues(
-            invoice.journal_line_ids,
+            invoice.line_ids,
             [
                 {'account_id': self.category_avco_auto.property_account_income_categ_id.id, 'credit': 1000.0, 'debit': 0.0},
                 {'account_id': self.account_receivable.id, 'credit': 0.0, 'debit': 1000.0},
