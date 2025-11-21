@@ -294,7 +294,6 @@ test("test that powerbox should not open in translate mode", async () => {
     const textNode = editor.editable.querySelector("span").firstChild;
     expect(textNode.nodeType).toBe(Node.TEXT_NODE);
     setSelection({ anchorNode: textNode, anchorOffset: 0 });
-    await animationFrame();
     // Simulate typing `/`
     await insertText(editor, "/");
     await animationFrame();
