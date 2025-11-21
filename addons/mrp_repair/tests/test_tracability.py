@@ -299,7 +299,7 @@ class TestRepairTraceability(TestMrpCommon):
         sm = self.env['stock.move'].create({
             'product_id': component.id,
             'product_uom_qty': 1,
-            'product_uom': component.uom_id.id,
+            'uom_id': component.uom_id.id,
             'location_id': scrap_location_id,
             'location_dest_id': self.stock_location.id,
         })

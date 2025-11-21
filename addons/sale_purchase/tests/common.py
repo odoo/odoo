@@ -40,7 +40,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'categ_id': cls.product_category_purchase.id,
             'service_to_purchase': True,
             'seller_ids': [Command.create({
-                'product_uom_id': uom_unit.id,
+                'uom_id': uom_unit.id,
                 'partner_id': cls.partner_vendor_service.id,
                 'price': 100,
                 'delay': 1,
@@ -61,7 +61,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'categ_id': cls.product_category_purchase.id,
             'service_to_purchase': True,
             'seller_ids': [Command.create({
-                'product_uom_id': uom_dozen.id,
+                'uom_id': uom_dozen.id,
                 'partner_id': cls.partner_vendor_service.id,
                 'price': 10,
                 'delay': 5,

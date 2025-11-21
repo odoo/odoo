@@ -91,7 +91,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             with po_form.order_line.new() as line_form:
                 line_form.product_id = product
                 line_form.product_qty = 1
-                line_form.product_uom_id = product.uom_id
+                line_form.uom_id = product.uom_id
                 line_form.date_planned = date_planned
                 if taxes:
                     line_form.tax_ids.clear()
@@ -120,7 +120,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.product_deliver.name,
             'product_id': self.product_deliver.id,
             'product_qty': 10.0,
-            'product_uom_id': self.product_deliver.uom_id.id,
+            'uom_id': self.product_deliver.uom_id.id,
             'price_unit': self.product_deliver.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -129,7 +129,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.service_deliver.name,
             'product_id': self.service_deliver.id,
             'product_qty': 10.0,
-            'product_uom_id': self.service_deliver.uom_id.id,
+            'uom_id': self.service_deliver.uom_id.id,
             'price_unit': self.service_deliver.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -170,7 +170,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.product_order.name,
             'product_id': self.product_order.id,
             'product_qty': 10.0,
-            'product_uom_id': self.product_order.uom_id.id,
+            'uom_id': self.product_order.uom_id.id,
             'price_unit': self.product_order.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -179,7 +179,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.service_order.name,
             'product_id': self.service_order.id,
             'product_qty': 10.0,
-            'product_uom_id': self.service_order.uom_id.id,
+            'uom_id': self.service_order.uom_id.id,
             'price_unit': self.service_order.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -214,7 +214,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.product_deliver.name,
             'product_id': self.product_deliver.id,
             'product_qty': 10.0,
-            'product_uom_id': self.product_deliver.uom_id.id,
+            'uom_id': self.product_deliver.uom_id.id,
             'price_unit': self.product_deliver.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -223,7 +223,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.service_deliver.name,
             'product_id': self.service_deliver.id,
             'product_qty': 10.0,
-            'product_uom_id': self.service_deliver.uom_id.id,
+            'uom_id': self.service_deliver.uom_id.id,
             'price_unit': self.service_deliver.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -259,7 +259,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.product_order.name,
             'product_id': self.product_order.id,
             'product_qty': 10.0,
-            'product_uom_id': self.product_order.uom_id.id,
+            'uom_id': self.product_order.uom_id.id,
             'price_unit': self.product_order.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -268,7 +268,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.service_order.name,
             'product_id': self.service_order.id,
             'product_qty': 10.0,
-            'product_uom_id': self.service_order.uom_id.id,
+            'uom_id': self.service_order.uom_id.id,
             'price_unit': self.service_order.list_price,
             'order_id': purchase_order.id,
             'tax_ids': False,
@@ -312,7 +312,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                 'name': self.product_order.name,
                 'product_id': self.product_order.id,
                 'product_qty': 1,
-                'product_uom_id': self.product_order.uom_id.id,
+                'uom_id': self.product_order.uom_id.id,
                 'price_unit': 1000,
                 'order_id': po.id,
                 'tax_ids': False,
@@ -355,7 +355,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_qty': 12,
-                'product_uom_id': self.product_a.uom_id.id,
+                'uom_id': self.product_a.uom_id.id,
                 'price_unit': 0.001,
                 'tax_ids': False,
             })]
@@ -500,7 +500,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'name': self.product_order.name,
                     'product_id': self.product_order.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product_order.uom_id.id,
+                    'uom_id': self.product_order.uom_id.id,
                     'price_unit': self.product_order.list_price,
                     'tax_ids': False,
                     'sequence': sequence_number,
@@ -534,7 +534,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'name': self.product_order.name,
                     'product_id': self.product_order.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product_order.uom_id.id,
+                    'uom_id': self.product_order.uom_id.id,
                     'price_unit': self.product_order.list_price,
                     'tax_ids': False,
                     'sequence': sequence_number,
@@ -576,7 +576,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'name': self.product_deliver.name,
                     'product_id': self.product_deliver.id,
                     'product_qty': 20.0,
-                    'product_uom_id': self.product_deliver.uom_id.id,
+                    'uom_id': self.product_deliver.uom_id.id,
                     'price_unit': self.product_deliver.list_price,
                     'tax_ids': False,
                 }),
@@ -704,7 +704,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         # Increase the PO line quantity: it should take another price if min. qty. is reached.
         po_form = Form(po)
         with po_form.order_line.edit(0) as po_line_form:
-            po_line_form.product_uom_id = uom_dozen
+            po_line_form.uom_id = uom_dozen
             po_line_form.product_qty = 3
         po = po_form.save()
         po_line = po.order_line[0]
@@ -725,7 +725,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': "just a description",
             'product_id': self.product_deliver.id,
             'product_qty': 1,
-            'product_uom_id': self.product_deliver.uom_id.id,
+            'uom_id': self.product_deliver.uom_id.id,
             'price_unit': self.product_deliver.list_price,
             'order_id': po.id,
             'tax_ids': False,
@@ -734,7 +734,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': self.product_deliver.display_name,
             'product_id': self.product_deliver.id,
             'product_qty': 1,
-            'product_uom_id': self.product_deliver.uom_id.id,
+            'uom_id': self.product_deliver.uom_id.id,
             'price_unit': self.product_deliver.list_price,
             'order_id': po.id,
             'tax_ids': False,
@@ -743,7 +743,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': f"{self.product_deliver.display_name} with more description",
             'product_id': self.product_deliver.id,
             'product_qty': 1,
-            'product_uom_id': self.product_deliver.uom_id.id,
+            'uom_id': self.product_deliver.uom_id.id,
             'price_unit': self.product_deliver.list_price,
             'order_id': po.id,
             'tax_ids': False,
@@ -752,7 +752,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'name': "Switch",
             'product_id': self.product_deliver.id,
             'product_qty': 1,
-            'product_uom_id': self.product_deliver.uom_id.id,
+            'uom_id': self.product_deliver.uom_id.id,
             'price_unit': self.product_deliver.list_price,
             'order_id': po.id,
             'tax_ids': False,

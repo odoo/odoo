@@ -943,7 +943,7 @@ class AccountMoveLine(models.Model):
             # vendor bills should have the product purchase UOM
             if line.move_id.is_purchase_document():
                 seller_ids = line.product_id.seller_ids._get_filtered_supplier(line.company_id, line.product_id, False)
-                line.product_uom_id = seller_ids[:1].product_uom_id or line.product_id.uom_id
+                line.product_uom_id = seller_ids[:1].uom_id or line.product_id.uom_id
             else:
                 line.product_uom_id = line.product_id.uom_id
 

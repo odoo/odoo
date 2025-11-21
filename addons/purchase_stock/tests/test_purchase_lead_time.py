@@ -185,7 +185,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # rule
         move_1 = self.env['stock.move'].create({
             'product_id': product_1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.output_location.id,
             'product_uom_qty': 10,
@@ -201,7 +201,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         move_2 = self.env['stock.move'].create({
             'product_id': product_1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.output_location.id,
             'product_uom_qty': 5,
@@ -306,7 +306,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.env['stock.move'].create({
             'date': datetime.today() + timedelta(days=3),
             'product_id': prod.id,
-            'product_uom': prod.uom_id.id,
+            'uom_id': prod.uom_id.id,
             'product_uom_qty': 5.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.customer_location.id,
@@ -342,7 +342,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             delivery_moves |= self.env['stock.move'].create({
                 'date': datetime.today() + timedelta(days=i),
                 'product_id': product.id,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_uom_qty': 5.0,
                 'location_id': warehouse.lot_stock_id.id,
                 'location_dest_id': self.customer_location.id,

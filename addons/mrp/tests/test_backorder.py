@@ -297,14 +297,14 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo_form.bom_id = self.env['mrp.bom'].create({
             'product_id': product_finished.id,
             'product_tmpl_id': product_finished.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': 'flexible',
             'bom_line_ids': [Command.create({
                 'product_id': product_component.id,
                 'product_qty': 1,
-                'product_uom_id': self.uom_gm.id,
+                'uom_id': self.uom_gm.id,
             })],
         })
         mo_form.product_qty = 1000
@@ -980,7 +980,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         cls.bom_finished1 = cls.env['mrp.bom'].create({
             'product_id': cls.finished1.id,
             'product_tmpl_id': cls.finished1.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 1,
             'consumption': 'flexible',
             'type': 'normal',

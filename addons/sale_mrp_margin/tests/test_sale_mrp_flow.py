@@ -85,7 +85,7 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
             },
             {
                 'product_tmpl_id': kit.product_tmpl_id.id,
-                'product_uom_id': kit.uom_id.id,
+                'uom_id': kit.uom_id.id,
                 'product_qty': 1.0,
                 'type': 'phantom',
                 'bom_line_ids': [

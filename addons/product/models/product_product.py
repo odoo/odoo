@@ -1032,14 +1032,14 @@ class ProductProduct(models.Model):
         for seller in sellers_filtered:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
-            if quantity_uom_seller and uom_id and uom_id != seller.product_uom_id:
-                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom_id)
+            if quantity_uom_seller and uom_id and uom_id != seller.uom_id:
+                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.uom_id)
 
             if seller.date_start and seller.date_start > date:
                 continue
             if seller.date_end and seller.date_end < date:
                 continue
-            if params and params.get('force_uom') and seller.product_uom_id != uom_id and seller.product_uom_id != self.uom_id:
+            if params and params.get('force_uom') and seller.uom_id != uom_id and seller.uom_id != self.uom_id:
                 continue
             if partner_id and seller.partner_id not in [partner_id, partner_id.parent_id]:
                 continue

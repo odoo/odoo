@@ -351,7 +351,7 @@ class TestDropship(common.TransactionCase):
         po.order_line = [(0, 0, {
             'product_id': self.dropship_product.id,
             'product_qty': 1.00,
-            'product_uom_id': self.dropship_product.uom_id.id,
+            'uom_id': self.dropship_product.uom_id.id,
         })]
         po.button_confirm()
         dropship = po.picking_ids

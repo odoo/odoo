@@ -51,9 +51,9 @@ class StockWarehouseOrderpoint(models.Model):
             " [('is_storable', '=', True)]"),
         ondelete='cascade', required=True, check_company=True, index=True)
     product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id')
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit', related='product_id.uom_id')
-    product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
+    product_uom_name = fields.Char(string='Product unit of measure label', related='uom_id.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Min Quantity', digits='Product Unit', required=True, default=0.0,
         help="The minimum Stock level that will trigger a replenishment.")
@@ -212,12 +212,12 @@ class StockWarehouseOrderpoint(models.Model):
             if orderpoint.product_max_qty < orderpoint.product_min_qty or not orderpoint.product_max_qty:
                 orderpoint.product_max_qty = orderpoint.product_min_qty
 
-    @api.depends('route_id', 'product_id', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    @api.depends('route_id', 'product_id', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_replenishment_uom_ids(self):
         for orderpoint in self:
             orderpoint.allowed_replenishment_uom_ids = orderpoint.product_id.uom_ids
             if 'buy' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.seller_ids.product_uom_id
+                orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.seller_ids.uom_id
 
     @api.depends('allowed_replenishment_uom_ids')
     def _compute_replenishment_uom_id_placeholder(self):
@@ -282,16 +282,16 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('product_id', 'qty_to_order', 'product_max_qty')
     def _compute_unwanted_replenish(self):
         for orderpoint in self:
-            if not orderpoint.product_id or orderpoint.product_uom.is_zero(orderpoint.qty_to_order) or orderpoint.product_uom.compare(orderpoint.product_max_qty, 0) == -1:
+            if not orderpoint.product_id or orderpoint.uom_id.is_zero(orderpoint.qty_to_order) or orderpoint.uom_id.compare(orderpoint.product_max_qty, 0) == -1:
                 orderpoint.unwanted_replenish = False
             else:
                 after_replenish_qty = orderpoint.product_id.with_context(company_id=orderpoint.company_id.id, location=orderpoint.location_id.id).virtual_available + orderpoint.qty_to_order
-                orderpoint.unwanted_replenish = orderpoint.product_uom.compare(after_replenish_qty, orderpoint.product_max_qty) > 0
+                orderpoint.unwanted_replenish = orderpoint.uom_id.compare(after_replenish_qty, orderpoint.product_max_qty) > 0
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.product_uom = self.product_id.uom_id.id
+            self.uom_id = self.product_id.uom_id.id
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -417,7 +417,7 @@ class StockWarehouseOrderpoint(models.Model):
     'product_id', 'location_id', 'product_id.seller_ids.delay', 'company_id.horizon_days')
     def _compute_qty_to_order_computed(self):
         def to_compute(orderpoint):
-            rounding = orderpoint.product_uom.rounding
+            rounding = orderpoint.uom_id.rounding
             # The check is on purpose. We only want to consider the horizon days if the forecast is negative and
             # there is already something to resupply base on lead times.
             return (
@@ -471,7 +471,7 @@ class StockWarehouseOrderpoint(models.Model):
         qty_in_progress = qty_in_progress_by_orderpoint.get(self.id)
         if qty_in_progress is None:
             qty_in_progress = self._quantity_in_progress()[self.id]
-        rounding = self.product_uom.rounding
+        rounding = self.uom_id.rounding
         # The check is on purpose. We only want to consider the horizon days if the forecast is negative and
         # there is already something to resupply base on lead times.
         if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
@@ -735,14 +735,14 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = '%s - %s' % (orderpoint.display_name, ','.join(origins.mapped('name')))
                         else:
                             origin = orderpoint.name
-                        if orderpoint.product_uom.compare(orderpoint.qty_to_order, 0.0) == 1:
+                        if orderpoint.uom_id.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
                             global_horizon_days = orderpoint.get_horizon_days()
                             if global_horizon_days:
                                 date -= relativedelta.relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['stock.rule'].Procurement(
-                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
+                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.uom_id,
                                 orderpoint.location_id, orderpoint.name, origin,
                                 orderpoint.company_id, values))
 

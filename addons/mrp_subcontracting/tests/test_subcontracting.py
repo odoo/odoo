@@ -815,7 +815,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'move_ids': [(0, 0, {
                 'product_id': self.finished.id,
                 'product_uom_qty': 10.0,
-                'product_uom': uom_duo.id,
+                'uom_id': uom_duo.id,
                 'location_id': supplier_location.id,
                 'location_dest_id': self.warehouse.lot_stock_id.id,
             })],
@@ -929,7 +929,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.finished.id,
             'product_tmpl_id': self.finished.product_tmpl_id.id,
-            'product_uom_id': self.finished.uom_id.id,
+            'uom_id': self.finished.uom_id.id,
             'quantity': 1,
             'warehouse_id': self.warehouse.id,
         })
@@ -1588,7 +1588,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             'move_ids': [Command.create({
                 'product_id': subcontracted_produt.id,
                 'product_uom_qty': 100,
-                'product_uom': subcontracted_produt.uom_id.id,
+                'uom_id': subcontracted_produt.uom_id.id,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': warehouse.lot_stock_id.id,
             })],
@@ -1639,7 +1639,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
                 'move_ids': [Command.create({
                    'product_id': self.finished.id,
                    'product_uom_qty': product_qty,
-                   'product_uom': self.finished.uom_id.id,
+                   'uom_id': self.finished.uom_id.id,
                    'location_id': self.ref('stock.stock_location_suppliers'),
                    'location_dest_id': warehouse.lot_stock_id.id,
                 })]

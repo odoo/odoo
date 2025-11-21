@@ -18,7 +18,7 @@ class MrpBom(models.Model):
             if any(bl.cost_share < 0 for bl in bom.bom_line_ids):
                 raise UserError(_("Components cost share have to be positive or equals to zero."))
             for product in bom.product_tmpl_id.product_variant_ids:
-                total_variant_cost_share = sum(bom.bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(product) and not bl.product_uom_id.is_zero(bl.product_qty)).mapped('cost_share'))
+                total_variant_cost_share = sum(bom.bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(product) and not bl.uom_id.is_zero(bl.product_qty)).mapped('cost_share'))
                 if float_round(total_variant_cost_share, precision_digits=2) not in [0, 100]:
                     raise UserError(_("The total cost share for a BoM's component have to be 100"))
         return res
@@ -42,7 +42,7 @@ class MrpBomLine(models.Model):
     def _get_cost_share(self):
         self.ensure_one()
         product = self.env.context.get('bom_variant_id', self.env['product.product'])
-        variant_bom_lines = self.bom_id.bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(product) and not bl.product_uom_id.is_zero(bl.product_qty))
+        variant_bom_lines = self.bom_id.bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(product) and not bl.uom_id.is_zero(bl.product_qty))
         if not float_is_zero(self.cost_share, precision_digits=2) or not len(variant_bom_lines) or not all(float_is_zero(bom_line.cost_share, precision_digits=2) for bom_line in variant_bom_lines):
             return self.cost_share / 100
         return 1 / len(variant_bom_lines)

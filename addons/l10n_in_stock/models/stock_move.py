@@ -9,7 +9,7 @@ class StockMove(models.Model):
     def _l10n_in_get_product_price_unit(self):
         self.ensure_one()
         return self.product_id.uom_id._compute_price(
-            self.product_id.with_company(self.company_id).standard_price, self.product_uom
+            self.product_id.with_company(self.company_id).standard_price, self.uom_id
         )
 
     def _l10n_in_get_product_tax(self):

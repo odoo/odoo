@@ -112,17 +112,17 @@ class PurchaseOrderLine(models.Model):
             for req_line in pol.order_id.requisition_id.line_ids:
                 if req_line.product_id == pol.product_id:
                     line = req_line
-                    if req_line.product_uom_id == pol.product_uom_id:
+                    if req_line.uom_id == pol.uom_id:
                         break
 
-            pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom_id)
+            pol.price_unit = line.uom_id._compute_price(line.price_unit, pol.uom_id)
             partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
             params = {'order_id': pol.order_id}
             seller = pol.product_id._select_seller(
                 partner_id=partner,
                 quantity=pol.product_qty,
                 date=pol.order_id.date_order and pol.order_id.date_order.date(),
-                uom_id=line.product_uom_id,
+                uom_id=line.uom_id,
                 params=params)
             if not pol.date_planned:
                 pol.date_planned = pol._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)

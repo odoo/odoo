@@ -29,7 +29,7 @@ class TestL10nRoEdiStockCommon(ValuationReconciliationTestCommon):
             product = data['product_id']
             cls.env['stock.move'].create({
                 'product_id': product.id,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_uom_qty': data['product_uom_qty'],
                 'quantity': data['quantity'],
                 'procure_method': data.get('procure_method', 'make_to_stock'),

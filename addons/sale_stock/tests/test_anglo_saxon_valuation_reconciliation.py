@@ -58,7 +58,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 11,
             'price_unit': 13,
         })
@@ -230,7 +230,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock_loc.id,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
             'price_unit': product.standard_price + 1,
             'picking_type_id': in_type.id,
@@ -341,7 +341,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         sm_1 = self.env['stock.move'].create({
             'product_id': products[0].id,
             'product_uom_qty': 1,
-            'product_uom': products[0].uom_id.id,
+            'uom_id': products[0].uom_id.id,
             'location_id': out_picking.location_id.id,
             'location_dest_id': out_picking.location_dest_id.id,
             'picking_id': out_picking.id,
@@ -358,7 +358,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         sm_2 = self.env['stock.move'].create({
             'product_id': products[1].id,
             'product_uom_qty': 1,
-            'product_uom': products[1].uom_id.id,
+            'uom_id': products[1].uom_id.id,
             'location_id': out_picking.location_id.id,
             'location_dest_id': out_picking.location_dest_id.id,
             'picking_id': out_picking.id,

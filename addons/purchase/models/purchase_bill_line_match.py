@@ -86,7 +86,7 @@ class PurchaseBillLineMatch(models.Model):
                    pol.partner_id as partner_id,
                    pol.product_id as product_id,
                    pol.product_qty as line_qty,
-                   pol.product_uom_id as line_uom_id,
+                   pol.uom_id as line_uom_id,
                    pol.qty_invoiced as qty_invoiced,
                    pol.qty_to_invoice as qty_to_invoice,
                    po.id as purchase_order_id,

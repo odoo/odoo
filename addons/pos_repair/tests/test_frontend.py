@@ -13,7 +13,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.stock_warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         self.repair1 = self.env['repair.order'].create({
             'product_id': self.product_1.id,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
             'picking_type_id': self.stock_warehouse.repair_type_id.id,
             'move_ids': [
                 (0, 0, {

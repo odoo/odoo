@@ -55,7 +55,7 @@ class TestAnalytics(TestStockCommon):
         })
         picking_out.picking_type_id.analytic_costs = True
         move_values = {
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'picking_id': picking_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -102,7 +102,7 @@ class TestAnalytics(TestStockCommon):
         })
         picking_in.picking_type_id.analytic_costs = True
         move_values = {
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -160,7 +160,7 @@ class TestAnalytics(TestStockCommon):
         picking_in.picking_type_id.analytic_costs = True
         self.project[self.plan1_name] = False  # Remove the mandatory plan from the project linked to the picking
         self.MoveObj.create({
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,

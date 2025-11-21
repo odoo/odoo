@@ -353,7 +353,7 @@ class StockLocation(models.Model):
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
-                    ], ['location_dest_id'], ['quantity:array_agg', 'product_uom_id:recordset'])
+                    ], ['location_dest_id'], ['quantity:array_agg', 'uom_id:recordset'])
                     quant_data = self.env['stock.quant']._read_group([
                         ('product_id', '=', product.id),
                         ('location_id', 'in', locations.ids),

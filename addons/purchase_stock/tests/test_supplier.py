@@ -10,7 +10,7 @@ class TestSupplier(TestStockCommon):
             'price': 123.0,
             'min_qty': 345,
             'delay': 1,
-            'product_uom_id': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_id': self.product_1.id,
         })
 

@@ -187,7 +187,7 @@ class TestLotSerial(TestStockCommon):
         delivery_picking.is_locked = False
         self.env['stock.move.line'].create({
             'product_id': additional_product.id,
-            'product_uom_id': additional_product.uom_id.id,
+            'uom_id': additional_product.uom_id.id,
             'picking_id': delivery_picking.id,
             'quantity': 3,
             'lot_id': lot.id,

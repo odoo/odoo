@@ -224,7 +224,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         })
         kit_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_final_prod.product_tmpl_id.id,
-            'product_uom_id': kit_final_prod.uom_id.id,
+            'uom_id': kit_final_prod.uom_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
         })
@@ -237,7 +237,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             Command.create({
                 'product_id': product_c.id,
                 'product_qty': 24,
-                'product_uom_id': self.env.ref('uom.product_uom_unit').id
+                'uom_id': self.env.ref('uom.product_uom_unit').id
             }),
         ]
 

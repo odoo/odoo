@@ -7,7 +7,7 @@
         <span class="d-block">
           <t t-out="rawRecord.product_id[1]"/>
           <t t-if="rawRecord.product_qty">
-            <span> (<t t-out="rawRecord.product_qty"/> <t t-if="rawRecord.product_uom_id" t-out="rawRecord.product_uom_id[1]"/>)</span>
+            <span> (<t t-out="rawRecord.product_qty"/> <t t-if="rawRecord.uom_id" t-out="rawRecord.uom_id[1]"/>)</span>
           </t>
         </span>
       </t>

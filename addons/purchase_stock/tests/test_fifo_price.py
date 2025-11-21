@@ -38,7 +38,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
-                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -65,7 +65,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
-                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
             })
@@ -90,7 +90,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'move_ids': [(0, 0, {
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
@@ -113,7 +113,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'move_ids': [(0, 0, {
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 500.0,
-                'product_uom': self.env.ref('uom.product_uom_gram').id,
+                'uom_id': self.env.ref('uom.product_uom_gram').id,
                 'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
@@ -144,14 +144,14 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                     'name': 'FIFO Ice Cream',
                     'product_id': product_cable_management_box.id,
                     'product_qty': 30,
-                    'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
+                    'uom_id': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 0.150,
                     'date_planned': time.strftime('%Y-%m-%d')}),
                 (0, 0, {
                     'name': product_cable_management_box.name,
                     'product_id': product_cable_management_box.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
+                    'uom_id': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 150.0,
                     'date_planned': time.strftime('%Y-%m-%d')})]
                 })
@@ -170,7 +170,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'move_ids': [(0, 0, {
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 49.5,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
@@ -190,7 +190,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'move_ids': [(0, 0, {
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 10,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
@@ -224,7 +224,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'move_ids': [(0, 0, {
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 100,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
@@ -250,7 +250,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'move_ids': [(0, 0, {
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 400,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
@@ -272,7 +272,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fifo_negative.id,
                 'product_qty': 50.0,
-                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -291,7 +291,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': product_cable_management_box.name,
                 'product_id': product_fifo_negative.id,
                 'product_qty': 600.0,
-                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
+                'uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -334,7 +334,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': super_product.name,
                 'product_id': super_product.id,
                 'product_qty': 1000,
-                'product_uom_id': super_product.uom_id.id,
+                'uom_id': super_product.uom_id.id,
                 'price_unit': super_product.standard_price,
                 'date_planned': time.strftime('%Y-%m-%d'),
                 'tax_ids': [(4, tax.id)],

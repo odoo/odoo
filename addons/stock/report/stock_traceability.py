@@ -144,7 +144,7 @@ class StockTraceabilityReport(models.TransientModel):
             'model_id': move_line.id,
             'model': 'stock.move.line',
             'product_id': move_line.product_id.display_name,
-            'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.quantity), move_line.product_id.uom_id.name),
+            'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.uom_id, move_line.product_id.uom_id, move_line.quantity), move_line.product_id.uom_id.name),
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
             'location_source': location_source,

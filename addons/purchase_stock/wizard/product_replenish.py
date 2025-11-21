@@ -34,7 +34,7 @@ class ProductReplenish(models.TransientModel):
         elif not self.show_vendor:
             self.partner_id = False
 
-    @api.depends('route_id', 'partner_id', 'quantity', 'product_uom_id')
+    @api.depends('route_id', 'partner_id', 'quantity', 'uom_id')
     def _compute_date_planned(self):
         super()._compute_date_planned()
         for rec in self:
@@ -104,6 +104,6 @@ class ProductReplenish(models.TransientModel):
             self.product_id,
             partner=self.partner_id,
             qty=self.quantity,
-            uom=self.product_uom_id,
+            uom=self.uom_id,
             params={"force_uom": True},
         )

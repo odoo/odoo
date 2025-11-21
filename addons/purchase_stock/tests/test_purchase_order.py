@@ -28,7 +28,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'name': cls.product_id_1.name,
                     'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
-                    'product_uom_id': cls.product_id_1.uom_id.id,
+                    'uom_id': cls.product_id_1.uom_id.id,
                     'price_unit': 500.0,
                     'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -36,7 +36,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'name': cls.product_id_2.name,
                     'product_id': cls.product_id_2.id,
                     'product_qty': 5.0,
-                    'product_uom_id': cls.product_id_2.uom_id.id,
+                    'uom_id': cls.product_id_2.uom_id.id,
                     'price_unit': 250.0,
                     'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
@@ -182,7 +182,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_qty': 10,
-                    'product_uom_id': uom_unit.id,
+                    'uom_id': uom_unit.id,
                     'price_unit': 123.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -368,7 +368,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             'seller_ids': [Command.create({
                 'partner_id': self.partner_a.id,
                 'min_qty': 1,
-                'product_uom_id': yards_uom.id,
+                'uom_id': yards_uom.id,
             })]
         })
         po = self.env['purchase.order'].create({
@@ -417,7 +417,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'name': super_product.name,
                 'product_id': super_product.id,
                 'product_qty': 7,
-                'product_uom_id': super_product.uom_id.id,
+                'uom_id': super_product.uom_id.id,
                 'price_unit': super_product.standard_price,
                 'tax_ids': [(4, tax.id)],
             })],
@@ -624,7 +624,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
                 'product_qty': -5.0,
-                'product_uom_id': self.product_id_2.uom_id.id,
+                'uom_id': self.product_id_2.uom_id.id,
                 'price_unit': 250.0,
             })],
         }
