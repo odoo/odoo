@@ -8,7 +8,33 @@ from odoo.addons.hw_drivers.main import drivers, iot_devices
 from odoo.addons.hw_drivers.tools.helpers import toggleable
 from odoo.tools.lru import LRU
 
+<<<<<<< f80cd1554d05dd2ae4febd179020487dd99a376f
 _logger = logging.getLogger(__name__)
+||||||| 776c5dcfc82ff4f7836b7af4dc76dea536f727c3
+
+class DriverMetaClass(type):
+    priority = -1
+
+    def __new__(cls, clsname, bases, attrs):
+        newclass = super(DriverMetaClass, cls).__new__(cls, clsname, bases, attrs)
+        newclass.priority += 1
+        if clsname != 'Driver':
+            drivers.append(newclass)
+        return newclass
+=======
+_logger = logging.getLogger(__name__)
+
+
+class DriverMetaClass(type):
+    priority = -1
+
+    def __new__(cls, clsname, bases, attrs):
+        newclass = super(DriverMetaClass, cls).__new__(cls, clsname, bases, attrs)
+        newclass.priority += 1
+        if clsname != 'Driver':
+            drivers.append(newclass)
+        return newclass
+>>>>>>> 55ddc9e9de521e3b75b19dd9fdf99494eeafe93f
 
 
 class Driver(Thread):
@@ -65,3 +91,46 @@ class Driver(Thread):
     def disconnect(self):
         self._stopped.set()
         del iot_devices[self.device_identifier]
+<<<<<<< f80cd1554d05dd2ae4febd179020487dd99a376f
+||||||| 776c5dcfc82ff4f7836b7af4dc76dea536f727c3
+
+    def _check_idempotency(self, iot_idempotent_id, session_id):
+        """
+        Some IoT requests for the same action might be received several times.
+        To avoid duplicating the resulting actions, we check if the action was "recently" executed.
+        If this is the case, we will simply ignore the action
+
+        :return: the `session_id` of the same `iot_idempotent_id` if any. False otherwise,
+        which means that it is the first time that the IoT box received the request with this ID
+        """
+        cache = self._iot_idempotent_ids_cache
+        if iot_idempotent_id in cache:
+            return cache[iot_idempotent_id]
+        cache[iot_idempotent_id] = session_id
+        return False
+=======
+
+    def _check_idempotency(self, iot_idempotent_id=None, session_id="unknown", **_kwargs):
+        """Some IoT requests for the same action might be received several times.
+        To avoid duplicating the resulting actions, we check if the action was "recently" executed.
+        If this is the case, we will simply ignore the action
+
+        :param str iot_idempotent_id: the idempotent ID received from the controller
+        :param session_id: the session ID of the current request
+        :param dict _kwargs: only here to allow providing the whole websocket/longpolling received dict
+        :return: the `session_id` of the same `iot_idempotent_id` if any. False otherwise,
+        which means that it is the first time that the IoT box received the request with this ID
+        """
+        if not iot_idempotent_id:
+            return False
+
+        cache = self._iot_idempotent_ids_cache
+        if iot_idempotent_id in cache:
+            _logger.debug(
+                "Ignored request from '%s' as iot_idempotent_id '%s' already received",
+                iot_idempotent_id, cache[iot_idempotent_id]
+            )
+            return cache[iot_idempotent_id]
+        cache[iot_idempotent_id] = session_id
+        return False
+>>>>>>> 55ddc9e9de521e3b75b19dd9fdf99494eeafe93f

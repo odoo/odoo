@@ -37,9 +37,33 @@ class DriverController(http.Controller):
 
         iot_device = iot_devices.get(device_identifier)
 
+<<<<<<< f80cd1554d05dd2ae4febd179020487dd99a376f
         if not iot_device:
             _logger.warning("IoT Device with identifier %s not found", device_identifier)
             return False
+||||||| 776c5dcfc82ff4f7836b7af4dc76dea536f727c3
+            # Skip the request if it was already executed (duplicated action calls)
+            iot_idempotent_id = data.get("iot_idempotent_id")
+            if iot_idempotent_id:
+                idempotent_session = iot_device._check_idempotency(iot_idempotent_id, session_id)
+                if idempotent_session:
+                    _logger.info("Ignored request from %s as iot_idempotent_id %s already received from session %s",
+                                 session_id, iot_idempotent_id, idempotent_session)
+                    return False
+            _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+            iot_device.action(data)
+            return True
+        return False
+=======
+            # Skip the request if it was already executed (duplicated action calls)
+            if iot_device._check_idempotency(**data, session_id=session_id):
+                return False
+
+            _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+            iot_device.action(data)
+            return True
+        return False
+>>>>>>> 55ddc9e9de521e3b75b19dd9fdf99494eeafe93f
 
         iot_device.data['owner'] = session_id
         data = json.loads(data)
