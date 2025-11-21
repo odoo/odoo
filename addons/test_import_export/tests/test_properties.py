@@ -1,4 +1,5 @@
 import json
+
 from odoo.tests import new_test_user
 from odoo.tests.common import RecordCapturer, HttpCase
 
@@ -477,3 +478,72 @@ class TestPropertiesExportImport(HttpCase):
             {'bool_prop': True, 'tags_prop': ['bb'], 'm2m_prop': self.partners[1:].ids},
             {'bool_prop': False, 'tags_prop': ['bb', 'cc'], 'm2m_prop': False},
         ])
+
+    def test_import_properties_no_acces_acl(self):
+        model_id = self.env['ir.model']._get_id(self.ModelDefinition._name)
+
+        user = new_test_user(self.env, login='AAA', groups='base.group_system')
+        self.env['ir.model.access'].search([('model_id', '=', model_id)]).unlink()
+        self.env['ir.model.access'].create({
+            'name': "don't care",
+            'model_id': model_id,
+            'group_id': self.env.ref('base.group_system').id,
+            'perm_read': False,
+        })
+
+        values_list = [
+            [
+                "Record Definition Id", f"TextType ({self.definition_records[0].display_name})",
+            ],
+            [
+                str(self.definition_records[0].id), 'One Text',
+            ],
+        ]
+        Import = self.env['base_import.import'].with_user(user)
+
+        import_wizard = Import.create({
+            'res_model': self.ModelProperty._name,
+            'file': '\n'.join([';'.join(values) for values in values_list]),
+            'file_type': 'text/csv',
+        })
+        opts = {'quoting': '"', 'separator': ';', 'has_headers': True}
+        preview = import_wizard.parse_preview(opts)
+
+        # Don't find the properties field since the user doesn't have accept to the definition model
+        self.assertEqual(
+            preview['matches'],
+            {
+                0: ['record_definition_id'],
+            },
+        )
+
+    def test_import_properties_no_acces_groups(self):
+        user = new_test_user(self.env, login='AAA', groups='base.group_system')
+        values_list = [
+            [
+                "Record Definition Id", f"TextType ({self.definition_records[0].display_name})",
+            ],
+            [
+                str(self.definition_records[0].id), 'One Text',
+            ],
+        ]
+        Import = self.env['base_import.import'].with_user(user)
+
+        # Patch groups of properties_definition
+        self.patch(self.ModelDefinition._fields['properties_definition'], "groups", "base.NO_ACCESS")
+
+        import_wizard = Import.create({
+            'res_model': self.ModelProperty._name,
+            'file': '\n'.join([';'.join(values) for values in values_list]),
+            'file_type': 'text/csv',
+        })
+        opts = {'quoting': '"', 'separator': ';', 'has_headers': True}
+        preview = import_wizard.parse_preview(opts)
+
+        # Don't find the properties field since the user doesn't have access to the field definition
+        self.assertEqual(
+            preview['matches'],
+            {
+                0: ['record_definition_id'],
+            },
+        )
