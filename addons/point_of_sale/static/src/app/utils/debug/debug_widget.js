@@ -8,6 +8,7 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
+import { downloadPosLogs } from "../pretty_console_log";
 const { DateTime } = luxon;
 
 const useDialogDraggable = makeDraggableHook({
@@ -177,6 +178,9 @@ export class DebugWidget extends Component {
     }
     refreshDisplay() {
         this.hardwareProxy.message("display_refresh", {});
+    }
+    async downloadLogs() {
+        await downloadPosLogs();
     }
     _onBufferUpdate({ detail: value }) {
         this.state.buffer = value;
