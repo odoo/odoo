@@ -657,6 +657,30 @@ class AccountMove(models.Model):
 
         return json_data
 
+    def _l10n_tw_edi_send_create_buyer(self):
+        """
+        Create a buyer before issuing B2B invoices
+        """
+        buyer_json_data = {
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "Action": "Add",
+            "Type": "1",
+            "Identifier": self.partner_id.commercial_partner_id.vat,
+            "CompanyName": self.partner_id.commercial_partner_id.name,
+            "TradingSlang": self.partner_id.commercial_partner_id.vat,
+            "ExchangeMode": "0",
+            "EmailAddress": self.partner_id.commercial_partner_id.email,
+        }
+
+        if self.partner_id.commercial_partner_id.contact_address_inline:
+            buyer_json_data["Address"] = self.partner_id.commercial_partner_id.contact_address_inline
+        if self.partner_id.commercial_partner_id.phone or self.partner_id.commercial_partner_id.mobile:
+            number = self.partner_id.commercial_partner_id.phone or self.partner_id.commercial_partner_id.mobile
+            buyer_json_data["TelephoneNumber"] = self._reformat_phone_number(number)
+
+        return call_ecpay_api("/MaintainMerchantCustomerData", buyer_json_data, self.company_id,
+                              self.l10n_tw_edi_is_b2b)
+
     def _l10n_tw_edi_send(self, json_content):
         """
         Issuing an e-invoice by calling the Ecpay API and update the invoicing result in Odoo
@@ -664,6 +688,14 @@ class AccountMove(models.Model):
         self.ensure_one()
         # Ensure to lock the records that will be sent, to avoid risking sending them twice.
         self.env["res.company"]._with_locked_records(self)
+
+        if self.l10n_tw_edi_is_b2b:
+            response_data = self._l10n_tw_edi_send_create_buyer()
+            # 1: New buyer successfully created - can continue with invoicing
+            # 6160052: Buyer already exists - can continue with invoicing
+            # Other codes: Indicate error - don't proceed with invoicing
+            if int(response_data.get("RtnCode")) not in (1, 6160052):
+                return response_data.get("RtnMsg").split("\r\n")
 
         response_data = call_ecpay_api("/Issue", json_content, self.company_id, self.l10n_tw_edi_is_b2b)
         if int(response_data.get("RtnCode")) != 1:
