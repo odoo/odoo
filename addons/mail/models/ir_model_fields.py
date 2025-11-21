@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import groupby
 
 
@@ -32,7 +32,8 @@ class IrModelFields(models.Model):
             attrs['tracking'] = field_data['tracking']
         return attrs
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_tracking(self):
         """ When unlinking fields populate tracking value table with relevant
         information. That way if a field is removed (custom tracked, migration
         or any other reason) we keep the tracking and its relevant information.
@@ -56,4 +57,3 @@ class IrModelFields(models.Model):
                         'type': field.ttype,
                     }
                 })
-        return super().unlink()
