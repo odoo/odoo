@@ -19,33 +19,25 @@ class IrModel(models.Model):
         string="Has Mail Blacklist", default=False,
     )
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_mail_stuff(self):
         """ Delete mail data (followers, messages, activities) associated with
         the models being deleted.
         """
-        if not self:
-            return True
+        models = tuple(self.mapped('model'))
+        model_ids = tuple(self.ids)
 
-        # Delete followers, messages and attachments for models that will be unlinked.
-        mail_models = self.search([
-            ('model', 'in', ('mail.activity', 'mail.activity.type', 'mail.followers', 'mail.message'))
-        ], order='id')
+        query = "DELETE FROM mail_activity WHERE res_model_id IN %s"
+        self.env.cr.execute(query, [model_ids])
 
-        if not (self & mail_models):
-            models = tuple(self.mapped('model'))
-            model_ids = tuple(self.ids)
+        query = "DELETE FROM mail_activity_type WHERE res_model IN %s"
+        self.env.cr.execute(query, [models])
 
-            query = "DELETE FROM mail_activity WHERE res_model_id IN %s"
-            self.env.cr.execute(query, [model_ids])
+        query = "DELETE FROM mail_followers WHERE res_model IN %s"
+        self.env.cr.execute(query, [models])
 
-            query = "DELETE FROM mail_activity_type WHERE res_model IN %s"
-            self.env.cr.execute(query, [models])
-
-            query = "DELETE FROM mail_followers WHERE res_model IN %s"
-            self.env.cr.execute(query, [models])
-
-            query = "DELETE FROM mail_message WHERE model in %s"
-            self.env.cr.execute(query, [models])
+        query = "DELETE FROM mail_message WHERE model in %s"
+        self.env.cr.execute(query, [models])
 
         # Get files attached solely to the models being deleted (and none other)
         models = tuple(self.mapped('model'))
@@ -66,8 +58,6 @@ class IrModel(models.Model):
 
         for (fname,) in fnames:
             self.env['ir.attachment']._file_delete(fname)
-
-        return super(IrModel, self).unlink()
 
     def write(self, vals):
         if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
