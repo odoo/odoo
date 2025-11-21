@@ -3,7 +3,7 @@
 from urllib.parse import quote
 
 from odoo import api, models, fields
-from odoo.tools.image import base64_to_image
+from odoo.tools.image import binary_to_image
 from odoo.exceptions import UserError
 
 SUPPORTED_IMAGE_MIMETYPES = {
@@ -63,11 +63,11 @@ class IrAttachment(models.Model):
                     name = quote(attachment.name)
                     attachment.image_src = '/web/image/%s-%s/%s' % (attachment.id, unique, name)
 
-    @api.depends('datas')
+    @api.depends('raw')
     def _compute_image_size(self):
         for attachment in self:
             try:
-                image = base64_to_image(attachment.datas)
+                image = binary_to_image(attachment.raw or b'')
                 attachment.image_width = image.width
                 attachment.image_height = image.height
             except UserError:

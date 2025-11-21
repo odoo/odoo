@@ -1,3 +1,4 @@
+import base64
 from markupsafe import Markup
 from math import ceil
 
@@ -192,7 +193,7 @@ class BaseDocumentLayout(models.TransientModel):
         transparent colors and white-ish colors, then calls the averaging
         method twice to evaluate both primary and secondary colors.
 
-        :param logo: logo to process
+        :param logo: logo to process (base64 encoded)
         :param white_threshold: arbitrary value defining the maximum value a color can reach
         :param mitigate: arbitrary value defining the maximum value a band can reach
 
@@ -202,9 +203,10 @@ class BaseDocumentLayout(models.TransientModel):
             return False, False
         # The "===" gives different base64 encoding a correct padding
         logo += b'===' if isinstance(logo, bytes) else '==='
+        logo = base64.b64decode(logo)
         try:
             # Catches exceptions caused by logo not being an image
-            image = tools.image_fix_orientation(tools.base64_to_image(logo))
+            image = tools.ImageProcess(logo).image
         except Exception:
             return False, False
 

@@ -1,10 +1,11 @@
+import base64
 import os
 from PIL import Image
 from functools import partial
 
 from odoo.tests import TransactionCase, tagged, Form
 from odoo.tools import frozendict
-from odoo.tools.image import image_to_base64, hex_to_rgb
+from odoo.tools.image import image_apply_opt, hex_to_rgb
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -54,7 +55,8 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
             fname_split = fname.split('.')
             if not fname_split[0] in _file_cache:
                 with Image.open(os.path.join(dir_path, fname), 'r') as img:
-                    base64_img = image_to_base64(img, 'PNG')
+                    img_bin = image_apply_opt(img, 'PNG')
+                    base64_img = base64.b64encode(img_bin)
                     primary, secondary = self.env['base.document.layout'].extract_image_primary_secondary_colors(base64_img)
                     _img = frozendict({
                         'img': base64_img,
@@ -203,8 +205,8 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         })
         with Form(self.env['base.document.layout']) as doc_layout:
             with Image.open(os.path.join(dir_path, 'logo_ci.png'), 'r') as img:
-                base64_img = image_to_base64(img, 'PNG')
-                doc_layout.logo = base64_img
+                img_bin = image_apply_opt(img, 'PNG')
+                doc_layout.logo = base64.b64encode(img_bin)
             self.assertNotEqual(None, doc_layout.primary_color)
 
 

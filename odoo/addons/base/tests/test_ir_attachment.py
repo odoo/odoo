@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import hashlib
@@ -16,7 +15,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger
 from odoo.tests import tagged
 
-from odoo.tools.image import image_to_base64
+from odoo.tools.image import image_apply_opt
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
@@ -138,14 +137,14 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             img.paste(logo)
             img.save(img_bin, 'JPEG')
 
-        img_encoded = image_to_base64(img, 'JPEG')
-        img_bin = img_bin.getvalue()
+        img_bin = image_apply_opt(img, 'JPEG')
 
         fullsize = 124.99
 
         ####################################
         ### test create/write on 'datas'
         ####################################
+        img_encoded = base64.b64encode(img_bin)
         attach = Attachment.with_context(image_no_postprocess=True).create({
             'name': 'image',
             'datas': img_encoded,
