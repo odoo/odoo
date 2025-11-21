@@ -759,6 +759,20 @@ class HrEmployee(models.Model):
         return False, False
 
     def _compute_versions_count(self):
+        if archived_employees := self.filtered(lambda e: not e.active):
+            version_read_group = self.env['hr.version'].with_context(active_test=False)._read_group(
+                [('employee_id', 'in', self.ids)],
+                ['employee_id', 'active'],
+                ['id:count'],
+            )
+            version_count_per_employee = {
+                employee: count
+                for employee, active, count in version_read_group
+                if active != employee in archived_employees
+            }
+            for employee in self:
+                employee.versions_count = version_count_per_employee.get(employee, 0)
+            return
         version_count_per_employee = dict(
             self.env['hr.version']._read_group(
                 [('employee_id', 'in', self.ids)],
@@ -1761,6 +1775,9 @@ We can redirect you to the public employee list."""
 
     def action_open_versions(self):
         self.ensure_one()
+        context = {}
+        if not self.active:
+            context['search_default_archived'] = 1
         return {
             'type': 'ir.actions.act_window',
             'name': self.employee_id.name + self.env._(' Records'),
@@ -1769,7 +1786,8 @@ We can redirect you to the public employee list."""
             'view_mode': 'list,graph,pivot',
             'views': [(self.env.ref('hr.hr_version_list_view').id, 'list'), (False, 'graph'), (False, 'pivot')],
             'domain': [('employee_id', '=', self.employee_id.id)],
-            'search_view_id': self.env.ref('hr.hr_version_search_view').id
+            'search_view_id': self.env.ref('hr.hr_version_search_view').id,
+            'context': context,
         }
 
     def _get_store_avatar_card_fields(self, target):

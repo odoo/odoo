@@ -67,6 +67,10 @@ export class VersionsTimeline extends StatusBarField {
         });
     }
 
+    get showAddButton() {
+        return !('active' in this.props.record.fields) || this.props.record.data.active;
+    }
+
     displayContractLines() {
         return ["contract_type_id", "contract_date_start", "contract_date_end"].every(
             (fieldName) => fieldName in this.props.record.fields
