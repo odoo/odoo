@@ -103,7 +103,7 @@ function hasTurn(iceServers) {
  * establish a connection with other call participants with the SFU when possible, and still handle
  * peer-to-peer for the participants who did not manage to establish a SFU connection.
  */
-export class Network {
+class Network {
     /** @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} */
     p2p;
     /** @type {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} */
