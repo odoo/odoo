@@ -651,7 +651,12 @@ class IrModelFields(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         for field in self:
-            safe_eval(field.domain or '[]')
+            try:
+                safe_eval(field.domain or '[]')
+            except ValueError as e:
+                raise ValidationError(
+                    _("An error occurred while evaluating the domain:\n%(error)s", error=e)
+                ) from e
 
     @api.constrains('name')
     def _check_name(self):
