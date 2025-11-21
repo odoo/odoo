@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductVariantOption">
+    <BuilderRow label.translate="Media">
+        <BuilderButton id="'o_wsale_add_images'" type="'success'" className="'flex-grow-1'" action="'productAddImage'">Add</BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Tags">
+        <BasicMany2Many
+            model="this.state.searchModel"
+            selection="this.domState.selection"
+            setSelection="this.setSelection.bind(this)"
+            create="this.create.bind(this)"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

@@ -155,12 +155,7 @@
             <t t-if="show_ribbons">
                 <t t-set="bg_color" t-value="ribbon.bg_color"/>
                 <t t-set="text_color" t-value="ribbon.text_color"/>
-                <span
-                    t-att-data-ribbon-id="ribbon.id"
-                    t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()}"
-                    t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
-                    t-out="ribbon.name or ''"
-                />
+                <t t-call="website_sale.product_ribbon"/>
             </t>
         </a>
         <div t-if="is_sample" class="o_ribbon_right small text-bg-primary">Sample</div>
