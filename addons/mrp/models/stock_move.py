@@ -233,6 +233,8 @@ class StockMove(models.Model):
 
         for move in self:
             if not move.description_picking_manual and move.bom_line_id.id in bom_line_description:
+                if move.description_picking == move.product_id.display_name:
+                    move.description_picking = ''
                 move.description_picking += ('\n' if move.description_picking else '') + bom_line_description.get(move.bom_line_id.id)
 
     @api.depends('raw_material_production_id.priority')
