@@ -7,7 +7,7 @@
             <t t-if="props.readonly">
                 <span t-if="!isEmpty(startDateField)" class="text-truncate" t-esc="getFormattedValue(0)" t-att-data-tooltip="getFormattedValue(0, true)"/>
             </t>
-            <t t-elif="props.required or props.alwaysRange or !isEmpty(startDateField) or startDateField === props.name">
+            <t t-elif="isRange(values) or isRequired(startDateField) or !isEmpty(startDateField) or startDateField === props.name">
                 <t t-if="picker.activeInput !== startDateField and values[0]">
                     <button 
                         t-ref="start-date" 
@@ -46,7 +46,7 @@
                 <t t-if="props.readonly">
                     <span class="text-truncate" t-esc="getFormattedValue(1)" t-att-data-tooltip="getFormattedValue(1, true)"/>
                 </t>
-                <t t-elif="props.required or props.alwaysRange or !isEmpty(endDateField) or (isEmpty(startDateField) and endDateField === props.name)">
+                <t t-elif="isRange(values) or isRequired(endDateField) or !isEmpty(endDateField) or (isEmpty(startDateField) and endDateField === props.name)">
                     <t t-if="picker.activeInput !== endDateField and values[1]">
                         <button 
                             t-ref="end-date" 
