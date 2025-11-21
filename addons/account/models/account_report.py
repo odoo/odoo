@@ -147,7 +147,7 @@ class AccountReport(models.Model):
         string="Hide lines at 0",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
         compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'),
-        precompute=True, readonly=False, store=True, depends=['root_report_id'],
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_period_comparison = fields.Boolean(
         string="Period Comparison",
@@ -174,7 +174,7 @@ class AccountReport(models.Model):
         string="Account Types",
         selection=[('both', "Payable and receivable"), ('payable', "Payable"), ('receivable', "Receivable"), ('disabled', 'Disabled')],
         compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False,
-        precompute=True, store=True, depends=['root_report_id'],
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_partner = fields.Boolean(
         string="Partners",
