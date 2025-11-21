@@ -1,7 +1,6 @@
 import { RecipientTag, useRecipientChecker } from "@mail/core/web/recipient_tag";
 import { parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsField,
@@ -44,7 +43,9 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             this.quickCreate = this.quickCreateRecipient.bind(this);
         }
 
-        this.recipientCheckerBus = useRecipientChecker(() => this.tags.map((tag) => ({ id: tag.id, email: tag.props.email })));
+        this.recipientCheckerBus = useRecipientChecker(() =>
+            this.tags.map((tag) => ({ id: tag.id, email: tag.props.email }))
+        );
 
         const update = this.update;
         this.update = async (object) => {
@@ -107,20 +108,8 @@ export const fieldMany2ManyTagsEmail = {
     ...many2ManyTagsField,
     component: FieldMany2ManyTagsEmail,
     supportedOptions: [
-        ...many2ManyTagsField.supportedOptions,
-        {
-            label: _t("Edit Tags"),
-            name: "edit_tags",
-            type: "boolean",
-        },
+        ...many2ManyTagsField.supportedOptions.filter((option) => option.name !== "color_field"),
     ],
-    extractProps({ options, attrs }, dynamicInfo) {
-        const props = many2ManyTagsField.extractProps(...arguments);
-        props.context = dynamicInfo.context;
-        const hasEditPermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
-        props.canEditTags = options.edit_tags ? hasEditPermission : false;
-        return props;
-    },
     relatedFields: (fieldInfo) => [
         ...many2ManyTagsField.relatedFields(fieldInfo),
         { name: "email", type: "char", readonly: false },

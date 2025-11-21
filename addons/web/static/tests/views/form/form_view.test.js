@@ -724,7 +724,7 @@ test(`form with o2m having a many2many fields using the many2many_tags widget al
                     <field name="partner_ids">
                         <list>
                             <field name="name"/>
-                            <field name="type_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="type_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         </list>
                     </field>
                 </form>

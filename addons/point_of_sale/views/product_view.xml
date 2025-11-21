@@ -71,7 +71,7 @@
                                    widget="many2many_tags"
                                    groups="point_of_sale.group_pos_user"
                                    string="Category"
-                                   options="{'color_field': 'color'}"/>
+                                   options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <field name="color"
                                    widget="color_picker" string="Color" />
                         </group>
@@ -86,7 +86,7 @@
                                 widget="many2many_tags"
                                 groups="point_of_sale.group_pos_user"
                                 domain="[('id', '!=', id)]"
-                                options="{'color_field': 'color'}"
+                                options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                                 placeholder="Recommend when 'Adding to Cart'"/>
                         </group>
                     </group>

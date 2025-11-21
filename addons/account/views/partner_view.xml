@@ -206,7 +206,7 @@
                     <page string="Invoicing" name="accounting" invisible="not is_company and parent_id" groups="account.group_account_invoice,account.group_account_readonly">
                         <group>
                             <group string="General" name="general" groups="account.group_account_invoice,account.group_account_readonly">
-                                <field name="bank_ids" context="{'default_partner_id': id}" domain="[('partner_id','=', id)]" widget="many2many_tags_banks" options="{'color_field': 'color', 'allow_out_payment_field': 'allow_out_payment', 'edit_tags': True}"/>
+                                <field name="bank_ids" context="{'default_partner_id': id}" domain="[('partner_id','=', id)]" widget="many2many_tags_banks" options="{'color_field': 'color', 'allow_out_payment_field': 'allow_out_payment', 'on_tag_click': 'open_form'}"/>
                                 <field name="property_account_receivable_id" required="True" groups="account.group_account_user"/>
                                 <field name="property_account_payable_id" required="True" groups="account.group_account_user"/>
                                 <field name="autopost_bills" groups="account.group_account_user"/>

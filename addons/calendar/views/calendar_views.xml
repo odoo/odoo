@@ -84,7 +84,7 @@
                 <field name="user_id" widget="many2one_avatar_user" readonly="recurrency" optional="hide"/>
                 <field name="partner_ids" widget="many2many_tags" readonly="recurrency" optional="show"/>
                 <field name="alarm_ids" widget="many2many_tags" optional="hide" readonly="recurrency"/>
-                <field name="categ_ids" widget="many2many_tags" optional="hide" readonly="recurrency" options="{'color_field': 'color'}"/>
+                <field name="categ_ids" widget="many2many_tags" optional="hide" readonly="recurrency" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 <field name="recurrency" optional="hide" readonly="1"/>
                 <field name="privacy" optional="hide" readonly="recurrency"/>
                 <field name="show_as" optional="hide" readonly="recurrency"/>
@@ -232,7 +232,7 @@
                             <group>
                                 <group>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
-                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" readonly="not user_can_edit"/>
+                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" readonly="not user_can_edit"/>
                                     <label for="description" string="Calendar description" colspan="2"/>
                                     <field name="description"
                                         colspan="2"
@@ -441,7 +441,7 @@
                 <field name="res_model_name" invisible="not res_model_name"
                        options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'fa fa-bell-o'}"/>
-                <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag', 'color_field': 'color'}"/>
+                <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag', 'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
                 <field name="description" invisible="not display_description" options="{'icon': 'fa fa-sticky-note'}"/>
             </calendar>

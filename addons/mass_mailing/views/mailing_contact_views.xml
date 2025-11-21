@@ -122,7 +122,7 @@
                         <group>
                             <field name="create_date" readonly="1" invisible="not id"/>
                             <field name="message_bounce" readonly="1" invisible="not id"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                                    placeholder="e.g. &quot;VIP&quot;, &quot;Roadshow&quot;, ..." style="width: 100%"/>
                         </group>
                     </group>

@@ -1,6 +1,6 @@
 import {
-    many2ManyTagsFieldColorEditable,
-    Many2ManyTagsFieldColorEditable,
+    many2ManyTagsField,
+    Many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -11,10 +11,10 @@ import { Component, onMounted } from "@odoo/owl";
 class BankTag extends Component {
     static template = "account.BankTag";
     static components = { BadgeTag };
-    static props = ["allowOutPayment?", "color", "onClick", "onDelete" , "text"];
+    static props = ["allowOutPayment?", "color", "onClick", "onDelete", "onClick", "text"];
 }
 
-export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
+export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
     static template = "account.FieldMany2ManyTagsBanks";
     static components = {
         ...super.components,
@@ -57,10 +57,10 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
 }
 
 export const fieldMany2ManyTagsBanks = {
-    ...many2ManyTagsFieldColorEditable,
+    ...many2ManyTagsField,
     component: FieldMany2ManyTagsBanks,
     supportedOptions: [
-        ...(many2ManyTagsFieldColorEditable.supportedOptions || []),
+        ...many2ManyTagsField.supportedOptions.filter((option) => option.name !== "color_field"),
         {
             label: _t("Allows out payments"),
             name: "allow_out_payment_field",
@@ -68,12 +68,12 @@ export const fieldMany2ManyTagsBanks = {
         },
     ],
     additionalClasses: [
-        ...(many2ManyTagsFieldColorEditable.additionalClasses || []),
+        ...(many2ManyTagsField.additionalClasses || []),
         "o_field_many2many_tags",
     ],
     relatedFields: ({ options }) => {
         return [
-            ...many2ManyTagsFieldColorEditable.relatedFields({ options }),
+            ...many2ManyTagsField.relatedFields({ options }),
             { name: options.allow_out_payment_field, type: "boolean", readonly: false },
         ];
     },

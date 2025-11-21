@@ -8,7 +8,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name" readonly="1"/>
                 <field name="description" optional="hide"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="prerequisite_channel_ids" widget="many2many_tags" optional="hide"/>
                 <field name="prerequisite_of_channel_ids" widget="many2many_tags" optional="hide"/>

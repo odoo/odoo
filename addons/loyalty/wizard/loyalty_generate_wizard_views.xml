@@ -13,7 +13,7 @@
                             <field name="program_type" invisible="1"/>
                             <field name="mode" widget="radio" invisible="program_type == 'ewallet'"/>
                             <field name="customer_ids" widget="many2many_tags" placeholder="For all customers" invisible="mode == 'anonymous'"/>
-                            <field name="customer_tag_ids" widget="many2many_tags" invisible="mode == 'anonymous'" options="{'color_field': 'color'}"/>
+                            <field name="customer_tag_ids" widget="many2many_tags" invisible="mode == 'anonymous'" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <field name="coupon_qty" string="Quantity to generate" readonly="mode == 'selected'" required="mode == 'anonymous'"/>
                             <label string="Coupon value" for="points_granted" groups="base.group_no_one" invisible="program_type != 'coupons'"/>
                             <span class="d-inline-block" groups="base.group_no_one" invisible="program_type != 'coupons'">

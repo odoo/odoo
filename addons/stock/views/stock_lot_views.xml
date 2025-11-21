@@ -39,7 +39,7 @@
                         <field name="ref" string="Reference"/>
                         <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         <field name="partner_ids" string="Customer" invisible="not partner_ids or not location_id" groups="stock.group_stock_manager"
-                               widget="many2many_tags" options="{'edit_tags': True}"/>
+                               widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
                     </group>
                     <group string="Inventory" name="inventory_group">
                         <label for="product_qty" invisible="not display_complete"/>

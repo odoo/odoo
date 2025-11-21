@@ -31,7 +31,7 @@
                                 <field name="fold"/>
                                 <field name="user_id" invisible="True"/>
                                 <field name="auto_validation_state" invisible="not rating_template_id"/>
-                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'edit_tags': True}" invisible="user_id" required="not user_id"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'open_form'}" invisible="user_id" required="not user_id"/>
                                 <label for="rotting_threshold_days" string="Rotting in"/>
                                 <div>
                                     <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
@@ -86,7 +86,7 @@
                     <field name="name" placeholder="e.g. To Do"/>
                     <field name="rotting_threshold_days" optional="hide"/>
                     <field name="mail_template_id" optional="hide"/>
-                    <field name="project_ids" required="1" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="project_ids" required="1" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="color" optional="hide" widget="color_picker"/>
                     <field name="fold" optional="show"/>
                 </list>
@@ -116,7 +116,7 @@
                         </t>
                         <t t-name="card">
                             <field name="name" class="fw-bolder text-truncate"/>
-                            <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         </t>
                     </templates>
                 </kanban>

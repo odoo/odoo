@@ -52,7 +52,7 @@
             </field>
 
             <field name="tag_ids" position="after">
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}" invisible="website_id"></field>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_quick_create': True}" invisible="website_id"></field>
             </field>
         </field>
     </record>

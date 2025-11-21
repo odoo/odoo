@@ -50,7 +50,7 @@
                         </span>
                         <field t-if="record.partner_id.value" name="partner_id" class="text-truncate text-muted d-block"/>
                     </div>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" context="{'project_id': project_id}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" context="{'project_id': project_id}"/>
                     <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="remaining_days"/>
                     <field t-if="record.displayed_image_id.value" groups="base.group_user" name="displayed_image_id" widget="attachment_image"/>
                     <footer t-if="!selection_mode">
@@ -185,7 +185,7 @@
                             <field name="depend_on_count" invisible="1" />
                             <field name="allow_task_dependencies" invisible="1" />
                             <field name="current_user_same_company_partner" invisible="1"/>
-                            <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_edit': True, 'no_edit_color': True}"/>
+                            <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_edit': True}"/>
                             <field name="partner_id" readonly="not current_user_same_company_partner" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
                             <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
                             <field name="recurring_task" invisible="not allow_recurring_tasks or not active or parent_id" groups="project.group_project_recurring_tasks"/>
@@ -235,7 +235,7 @@
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1" width="20px"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
@@ -270,7 +270,7 @@
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="1"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"

@@ -156,7 +156,7 @@
                        optional="show"/>
                 <field name="tag_ids"
                       widget="many2many_tags"
-                      options="{'color_field': 'color'}"
+                      options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                       optional="hide"/>
                 <field name="state"
                     decoration-success="state == 'sale'"
@@ -893,7 +893,7 @@
                                 </div>
                                 <field name="reference" readonly="1" invisible="not reference"/>
                                 <field name="client_order_ref"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                             </group>
                             <group name="sale_info" string="Invoicing">
                                 <field name="show_update_fpos" invisible="1"/>

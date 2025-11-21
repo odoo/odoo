@@ -173,7 +173,7 @@
                         <field name="product_id" readonly="1"/>
                         <field name="qty_remaining" string="Quantity" readonly="1" invisible="state == 'done'"/>
                         <field name="qty_produced" string="Produced Quantity" groups="base.group_no_one" readonly="state == 'done' or product_tracking == 'serial'"/>
-                        <field name="finished_lot_ids" readonly="1" widget="many2many_tags" options="{'edit_tags': True}"/>
+                        <field name="finished_lot_ids" readonly="1" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
                     </group>
                 </group>
                 <group>

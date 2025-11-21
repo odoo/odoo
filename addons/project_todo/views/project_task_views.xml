@@ -31,7 +31,7 @@
                         <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
                             <field name="name" class="fw-bold fs-5" widget="name_with_subtask_count"/>
                             <field t-if="record.date_deadline.raw_value" name="date_deadline" widget="remaining_days"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <field t-if="record.displayed_image_id.value" name="displayed_image_id" widget="attachment_image"/>
                         </div>
                         <div class="d-flex pt-2">
@@ -69,7 +69,7 @@
                 <field name="priority" widget="priority" optional="hidden" width="70px"/>
                 <field name="date_deadline" optional="show" widget="remaining_days"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
-                <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                 <field name="personal_stage_type_id" string="Stage" optional="hide"/>
             </list>
         </field>
@@ -116,7 +116,7 @@
                         <group>
                             <field name="tag_ids"
                                 widget="many2many_tags"
-                                options="{'color_field': 'color', 'no_create_edit': True}"
+                                options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"
                                 class="me-2"/>
                             <field name="date_deadline"
                                 decoration-danger="date_deadline &lt; current_date"/>
@@ -178,7 +178,7 @@
                                options="{'no_open': True}"
                                widget="many2many_avatar_user"/>
                         <field name="tag_ids" widget="many2many_tags"
-                               options="{'color_field': 'color', 'no_create_edit': True}"
+                               options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"
                                context="{'project_id': project_id}"
                                placeholder="Choose tags from the selected project"/>
                     </group>
@@ -203,7 +203,7 @@
                       scales="day,week,month,year">
                 <field name="name"/>
                 <field name="priority" widget="priority"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not tag_ids"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" invisible="not tag_ids"/>
                 <field name="personal_stage_id" string="Personal Stage" options="{'no_open': True}" invisible="not personal_stage_id"/>
             </calendar>
         </field>
