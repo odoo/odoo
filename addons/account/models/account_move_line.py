@@ -12,6 +12,7 @@ from odoo.tools import frozendict, float_compare, groupby, SQL, OrderedSet
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 _logger = logging.getLogger(__name__)
@@ -1939,6 +1940,8 @@ class AccountMoveLine(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted(self):
+        if self.env.context.get(MODULE_UNINSTALL_FLAG):
+            return
         # Prevent deleting lines on posted entries
         if not self.env.context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
             raise UserError(_("You can't delete a posted journal item. Don’t play games with your accounting records; reset the journal entry to draft before deleting it."))
