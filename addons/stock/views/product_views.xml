@@ -287,7 +287,7 @@
                     <field name="qty_available"/>
                     <field name="free_qty"/>
                 </field>
-                <field name="product_template_attribute_value_ids" position="after">
+                <div name="o_kanban_price" position="after">
                     <div t-if="record.is_storable.raw_value" invisible="not context.get('display_stock')"
                          name="o_kanban_qty_available_and_on_hand">
                         <t name="qty_free" t-if="record.free_qty.raw_value != record.qty_available.raw_value">
@@ -300,7 +300,7 @@
                             <span class="text-muted small"> On Hand</span>
                         </t>
                     </div>
-                </field>
+                </div>
                 <a role="menuitem" type="open" position="after">
                     <a role="menuitem" type="object" name="action_product_forecast_report" class="dropdown-item border-top-0">View Availability</a>
                 </a>
