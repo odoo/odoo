@@ -1460,6 +1460,7 @@ We can redirect you to the public employee list."""
             'departure_description': False,
             'departure_date': False
         })
+        self.version_id.action_unarchive()
         return res
 
     def action_archive(self):
@@ -1490,6 +1491,7 @@ We can redirect you to the public employee list."""
                     'context': {'active_id': self.id},
                     'views': [[False, 'form']]
                 }
+        self.version_ids.action_archive()
         return res
 
     @api.onchange('company_id')
