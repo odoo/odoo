@@ -4,6 +4,7 @@
 from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class MailingMailing(models.Model):
@@ -27,15 +28,32 @@ class MailingMailing(models.Model):
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
-        domain = Domain.AND([
-            [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
-            [('state', 'not in', ['draft', 'cancel'])],
-            [('move_type', 'in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'])]
-        ])
-        moves_data = self.env['account.move'].sudo()._read_group(
-            domain, ['utm_reference'], ['amount_untaxed_signed:sum'],
-        )
-        mapped_data = dict(moves_data)
+        if self.ids:
+            query_res = self.env.execute_query(SQL(
+                """SELECT move.utm_reference, SUM(move.amount_untaxed_signed * COALESCE(currency_rate.rate, 1))
+                     FROM account_move move
+                     /* To use the exchange rate effective at the creation of the invoice. */
+                     LEFT JOIN LATERAL (
+                         SELECT rate
+                           FROM res_currency_rate
+                          WHERE company_id = move.company_id
+                            AND currency_id = %(currency_id)s
+                            AND name < move.date
+                          ORDER BY name DESC
+                          LIMIT 1
+                     ) currency_rate
+                       ON TRUE
+                    WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+                      AND move.state NOT IN ('draft', 'cancel')
+                      AND move.utm_reference IN %(utm_references)s
+                    GROUP BY move.utm_reference""",
+                currency_id=self.env.company.currency_id.id,
+                utm_references=tuple(f'{mass_mailing._name},{mass_mailing.id}' for mass_mailing in self)
+            ))
+            mapped_data = dict(query_res)
+        else:
+            mapped_data = {}
+
         for mass_mailing in self:
             mass_mailing.sale_invoiced_amount = mapped_data.get(
                 f'{mass_mailing._name},{mass_mailing.id}',
