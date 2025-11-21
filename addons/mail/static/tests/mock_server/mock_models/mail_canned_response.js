@@ -1,19 +1,26 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class MailCannedResponse extends models.ServerModel {
     _name = "mail.canned.response";
+
+    group_ids = fields.Many2many({
+        relation: "res.groups",
+        falsy_value_label: "🔒 Private",
+    });
 
     _views = {
         list: `
             <list>
                 <field name="source" widget="shortcut"/>
+                <field name="group_ids" widget="many2many_falsy_value_label"/>
             </list>
         `,
         form: `
             <form>
                 <field name="source" widget="shortcut"/>
+                <field name="group_ids" widget="many2many_falsy_value_label"/>
             </form>
         `,
         kanban: `
@@ -21,6 +28,7 @@ export class MailCannedResponse extends models.ServerModel {
                 <templates>
                     <t t-name="card">
                         <field name="source" widget="shortcut"/>
+                        <field name="group_ids" widget="many2many_falsy_value_label"/>
                     </t>
                 </templates>
             </kanban>
