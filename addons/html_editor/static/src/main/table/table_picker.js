@@ -16,50 +16,56 @@ export class TablePicker extends Component {
             cols: 3,
             rows: 3,
         });
-        useExternalListener(this.props.editable.ownerDocument, "keydown", (ev) => {
-            const key = ev.key;
-            const isRTL = this.props.direction === "rtl";
-            switch (key) {
-                case "Enter":
-                    ev.preventDefault();
-                    this.insertTable();
-                    break;
-                case "ArrowUp":
-                    ev.preventDefault();
-                    if (this.state.rows > 1) {
-                        this.state.rows -= 1;
-                    }
-                    break;
-                case "ArrowDown":
-                    this.state.rows += 1;
-                    ev.preventDefault();
-                    break;
-                case "ArrowLeft":
-                    ev.preventDefault();
-                    if (isRTL) {
-                        this.state.cols += 1;
-                    } else {
-                        if (this.state.cols > 1) {
-                            this.state.cols -= 1;
+        useExternalListener(
+            this.props.editable.ownerDocument,
+            "keydown",
+            (ev) => {
+                ev.stopPropagation();
+                const key = ev.key;
+                const isRTL = this.props.direction === "rtl";
+                switch (key) {
+                    case "Enter":
+                        ev.preventDefault();
+                        this.insertTable();
+                        break;
+                    case "ArrowUp":
+                        ev.preventDefault();
+                        if (this.state.rows > 1) {
+                            this.state.rows -= 1;
                         }
-                    }
-                    break;
-                case "ArrowRight":
-                    ev.preventDefault();
-                    if (isRTL) {
-                        if (this.state.cols > 1) {
-                            this.state.cols -= 1;
+                        break;
+                    case "ArrowDown":
+                        this.state.rows += 1;
+                        ev.preventDefault();
+                        break;
+                    case "ArrowLeft":
+                        ev.preventDefault();
+                        if (isRTL) {
+                            this.state.cols += 1;
+                        } else {
+                            if (this.state.cols > 1) {
+                                this.state.cols -= 1;
+                            }
                         }
-                    } else {
-                        this.state.cols += 1;
-                    }
-                    break;
-                default:
-                    ev.stopImmediatePropagation();
-                    this.props.overlay.close();
-                    break;
-            }
-        });
+                        break;
+                    case "ArrowRight":
+                        ev.preventDefault();
+                        if (isRTL) {
+                            if (this.state.cols > 1) {
+                                this.state.cols -= 1;
+                            }
+                        } else {
+                            this.state.cols += 1;
+                        }
+                        break;
+                    default:
+                        ev.stopImmediatePropagation();
+                        this.props.overlay.close();
+                        break;
+                }
+            },
+            { capture: true }
+        );
     }
 
     updateSize(cols, rows) {
