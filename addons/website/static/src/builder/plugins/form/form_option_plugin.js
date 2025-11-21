@@ -243,6 +243,9 @@ export class FormOptionPlugin extends Plugin {
         if (field.records) {
             return field.records;
         }
+
+        const order = field.orderBy ? { order: field.orderBy } : {};
+
         if (field._property && field.type === "tags") {
             // Convert tags to records to avoid added complexity.
             // Tag ids need to escape "," to be able to recover their value on
@@ -252,9 +255,12 @@ export class FormOptionPlugin extends Plugin {
                 display_name: tag[1],
             }));
         } else if (field._property && field.comodel) {
-            field.records = await this.services.orm.searchRead(field.comodel, field.domain || [], [
+            field.records = await this.services.orm.searchRead(
+                field.comodel,
+                field.domain || [],
                 "display_name",
-            ]);
+                order
+            );
         } else if (field.type === "selection") {
             // Set selection as records to avoid added complexity.
             field.records = field.selection.map((el) => ({
@@ -273,7 +279,8 @@ export class FormOptionPlugin extends Plugin {
             field.records = await this.services.orm.searchRead(
                 field.relation,
                 field.domain || [],
-                fieldNames
+                fieldNames,
+                order
             );
             if (field.fieldName) {
                 field.records.forEach((r) => (r["display_name"] = r[field.fieldName]));
@@ -948,8 +955,8 @@ export class AddActionFieldAction extends BuilderAction {
             }
         }
         const fieldName = params.fieldName;
-        if (params.isSelect === "true") {
-            value = parseInt(value);
+        if (params.fieldType === "many2one") {
+            value = JSON.parse(value).id;
         }
         this.dependencies.websiteFormOption.addHiddenField(el, value, fieldName);
     }
@@ -972,11 +979,20 @@ export class AddActionFieldAction extends BuilderAction {
             const dataForValues = getParsedDataFor(formId, el.ownerDocument);
             return dataForValues?.["email_to"] || DEFAULT_EMAIL_TO_VALUE;
         }
-        if (value) {
-            return value;
-        } else {
+        if (!value || (params.fieldType === "many2many" && !params.searchable)) {
             return params.isSelect ? "0" : "";
         }
+
+        if (params.fieldType === "many2one") {
+            // May have some default string values
+            // We must detect these and normalize to `"0"`
+            if (!/^\d+$/.test(value)) {
+                return JSON.stringify({ id: 0 });
+            }
+            return JSON.stringify({ id: parseInt(value) });
+        }
+
+        return value;
     }
     isApplied({ editingElement, params, value }) {
         const currentValue = this.getValue({
@@ -985,6 +1001,13 @@ export class AddActionFieldAction extends BuilderAction {
         });
         return currentValue === value;
     }
+    clean({ editingElement: el, params }) {
+        for (const inputEl of el.querySelectorAll(
+            `.s_website_form_dnone input[name="${params.fieldName}"]`
+        )) {
+            inputEl.closest(".s_website_form_field").remove();
+        }
+    }
 }
 export class PromptSaveRedirectAction extends BuilderAction {
     static id = "promptSaveRedirect";
@@ -992,21 +1015,29 @@ export class PromptSaveRedirectAction extends BuilderAction {
     setup() {
         this.canTimeout = false;
     }
-    apply({ params: { mainParam } }) {
+    apply({ params: { createAction, dialogTitle, dialogDescription } }) {
         const redirectToAction = (action) => {
-            redirect(`/odoo/action-${encodeURIComponent(action)}`);
+            redirect(`/odoo/action-${encodeURIComponent(action)}/new`);
         };
         new Promise((resolve) => {
-            const message = _t("You are about to be redirected. Your changes will be saved.");
             this.services.dialog.add(ConfirmationDialog, {
-                body: message,
+                title: dialogTitle || _t("Confirmation"),
+                body:
+                    dialogDescription ||
+                    _t("You are about to be redirected. Your changes will be saved."),
                 confirmLabel: _t("Save and Redirect"),
                 confirm: async () => {
                     await this.dependencies.savePlugin.save();
                     await this.config.closeEditor();
-                    redirectToAction(mainParam);
+                    if (typeof createAction === "function") {
+                        const url = await createAction();
+                        this.services.website.goToWebsite({ path: url, edition: true });
+                    } else {
+                        redirectToAction(createAction);
+                    }
                     resolve();
                 },
+                cancelLabel: _t("Stay here"),
                 cancel: () => resolve(),
             });
         });

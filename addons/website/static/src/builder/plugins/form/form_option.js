@@ -6,12 +6,15 @@ import { session } from "@web/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { getParsedDataFor } from "@website/js/utils";
 import { registry } from "@web/core/registry";
+import { FormModelWarningBanner } from "./form_model_warning_banner";
 
 export class FormOption extends BaseOptionComponent {
     static id = "form_option";
     static template = "website.s_website_form_form_option";
     static dependencies = ["websiteFormOption"];
-    static components = { FormActionFieldsOption };
+    static selector = ".s_website_form";
+    static applyTo = "form";
+    static components = { FormActionFieldsOption, FormModelWarningBanner };
     static async cleanForSave(el, { dependencies, services }) {
         for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
             sigEl.remove();
