@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, _
+from odoo import _, api, models
 from odoo.tools.misc import str2bool
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import FloatFmt, UBL_NAMESPACES
 
 from stdnum.no import mva
+
+CHORUS_PRO_PEPPOL_ID = "0009:11000201100044"
 
 
 class AccountEdiXmlUbl_Bis3(models.AbstractModel):
@@ -26,6 +28,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
     Thus, EHF 3 and Bis 3 are actually the same format. The specific rules for NO defined in Bis 3 are added in Bis 3.
     """
+
+    @api.model
+    def _is_customer_behind_chorus_pro(self, customer):
+        return customer.peppol_eas and customer.peppol_endpoint and f"{customer.peppol_eas}:{customer.peppol_endpoint}" == CHORUS_PRO_PEPPOL_ID
 
     # -------------------------------------------------------------------------
     # EXPORT
