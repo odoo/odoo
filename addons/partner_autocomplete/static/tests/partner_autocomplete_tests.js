@@ -136,7 +136,7 @@ QUnit.module('partner_autocomplete', {
             `<form>
                 <field name="company_type"/>
                 <field name="name" widget="field_partner_autocomplete"/>
-                <field name="parent_id" widget="res_partner_many2one"/>
+                <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..."/>
                 <field name="website"/>
                 <field name="image_1920" widget="image"/>
                 <field name="email"/>
@@ -183,7 +183,7 @@ QUnit.module('partner_autocomplete', {
     }
 
     QUnit.test("Partner autocomplete : Company type = Individual", async function (assert) {
-        assert.expect(12);
+        assert.expect(13);
         await makeView(makeViewParams);
 
         // Set company type to Individual
@@ -194,6 +194,11 @@ QUnit.module('partner_autocomplete', {
 
         const companyInput = target.querySelector("[name='parent_id'] input");
         const autocompleteContainer = companyInput.parentElement;
+        assert.strictEqual(
+            companyInput.placeholder,
+            "Company Name...",
+            "The placeholder should be displayed"
+        );
 
         await click(companyInput, null);
         assert.containsNone(
