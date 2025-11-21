@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import odoo.tests
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.pos_self_order.tests.test_self_order_preset import TestSelfOrderPreset
@@ -12,7 +14,9 @@ class TestTakeawayMail(MailCase, TestSelfOrderPreset):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
 
-        with self.mock_mail_gateway():
+        with self.mock_mail_gateway(), patch.object(
+            self.env.registry['pos.order'], 'order_receipt_generate_image', return_value=b'Receipt',
+        ):
             self.start_tour(self_route, "test_preset_takeaway_email_tour")
         order = self.pos_config.current_session_id.order_ids
         self.assertEqual(len(order), 1)
@@ -22,3 +26,4 @@ class TestTakeawayMail(MailCase, TestSelfOrderPreset):
         # Message is posted and mail is sent on time
         self.assertEqual(len(self._new_mails), 1)
         self.assertEqual(self._new_mails.subject, "Your BarTest receipt")
+        self.assertEqual(len(self._new_mails.attachment_ids), 1)
