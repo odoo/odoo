@@ -241,9 +241,9 @@ export const hasHardwareAcceleration = memoize(() => {
  *
  * @template {object[]} T
  * @param {Object} options
- * @param {(…dependencies: any[]) => void | (() => void)} options.effect The
+ * @param {(...dependencies: any[]) => void | (() => void)} options.effect The
  *        effect callback. May return a cleanup function.
- * @param {(…args: [...T]) => any[]} options.dependencies Returns an array of
+ * @param {(...args: [...T]) => Object|Array} options.dependencies Returns an array of
  *        values to track. The effect is called only if these values change.
  * @param {[...T]} options.reactiveTargets Objects that the effect depends on.
  */
@@ -253,13 +253,81 @@ export function effectWithCleanup({ effect: effectFn, dependencies, reactiveTarg
     effect((...deps) => {
         const nextDependencies = dependencies(...deps);
         const changed =
-            !prevDependencies || nextDependencies.some((v, i) => v !== prevDependencies[i]);
+            !prevDependencies ||
+            (Array.isArray(nextDependencies)
+                ? nextDependencies.some((v, i) => v !== prevDependencies[i])
+                : Object.keys(nextDependencies).some(
+                      (key) => nextDependencies[key] !== prevDependencies[key]
+                  ));
         if (changed) {
+            prevDependencies = Array.isArray(nextDependencies)
+                ? [...nextDependencies]
+                : { ...nextDependencies };
             cleanup?.();
-            cleanup = effectFn(...nextDependencies);
-            prevDependencies = [...nextDependencies];
+            cleanup = Array.isArray(nextDependencies)
+                ? effectFn(...nextDependencies)
+                : effectFn({ ...nextDependencies });
         }
     }, reactiveTargets);
+}
+
+/**
+ * A thin wrapper around `effectWithCleanup` that debounces the cleanup phase:
+ * setup runs immediately when activated, while cleanup is delayed until the
+ * predicate remains false for `delay` ms.
+ *
+ * Setup is executed again only after cleanup has completed, ensuring symmetry
+ * between setup and cleanup.
+ *
+ * @template T - type of reactive targets
+ * @template D - type of dependencies
+ * @param {Object} options
+ * @param {(dependencies: D) => (() => void)} options.effect Function called
+ * when the predicate becomes true and the effect is not active. Receives the
+ * values returned by `dependencies`.
+ * @param {number} options.delay Debounce delay in milliseconds before running
+ * cleanup.
+ * @param {(...targets: T) => D} options.dependencies Function returning an
+ * array of values tracked by the effect; passed to setup/cleanup.
+ * @param {(...targets: T) => boolean} options.predicate Function returning a
+ * boolean to determine whether the effect should be activated.
+ * @param {[...T]} options.reactiveTargets Array of reactive objects that the
+ * effect depends on.
+ */
+export function effectWithDebouncedCleanup({
+    delay,
+    dependencies,
+    effect: effectFn,
+    predicate,
+    reactiveTargets,
+}) {
+    let timeout;
+    let active = false;
+    let cleanup;
+    effectWithCleanup({
+        effect(ctx) {
+            const { predicate, ...deps } = ctx;
+            if (!predicate) {
+                return;
+            }
+            clearTimeout(timeout);
+            if (!active) {
+                cleanup = effectFn(deps);
+                active = true;
+            }
+            return () => {
+                timeout = setTimeout(() => {
+                    cleanup();
+                    active = false;
+                }, delay);
+            };
+        },
+        dependencies: (...targets) => ({
+            predicate: predicate(...targets),
+            ...dependencies(...targets),
+        }),
+        reactiveTargets,
+    });
 }
 
 /**
