@@ -62,9 +62,7 @@
                 <filter string="Running Contract" name="running_contract"
                         domain="[
                             '&amp;',
-                                '|',
-                                    ('contract_date_start', '=', False),
-                                    ('contract_date_start', '&lt;', 'today'),
+                                ('contract_date_start', '&lt;', 'today'),
                                 '|',
                                     ('contract_date_end', '=', False),
                                     ('contract_date_end', '>=', 'today')
@@ -78,6 +76,10 @@
                         domain="[
                             ('contract_date_start', '!=', False),
                             ('contract_date_start', '>', 'today'),
+                        ]"/>
+                <filter string="Active Employees" name="active_employees"
+                        domain="[
+                            ('employee_id.active', '=', True)
                         ]"/>
                 <separator />
                 <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start"/>
