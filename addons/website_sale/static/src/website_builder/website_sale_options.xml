@@ -11,6 +11,12 @@
     <xpath expr="//replace_media_option" position="attributes">
         <attribute name="t-attf-exclude" add=".o_wsale_product_images :is({{replaceMediaOptionSelector}})" separator=", "/>
     </xpath>
+    <xpath expr="//image_pop_up_option" position="attributes">
+        <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
+    </xpath>
+    <xpath expr="//replace_media_option" position="attributes">
+        <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
+    </xpath>
 
     <xpath expr="//t[@id='page_options_hook']" position="after">
         <checkout_page_option
@@ -64,12 +70,25 @@
             title="Product"
             editableOnly="false"
             groups='["website.group_website_designer"]'/>
-    </xpath>
-
-    <xpath expr="//navbar_logo_option" position="after">
         <products_ribbon_option
-            t-attf-selector="#products_grid .oe_product, {{this.productPageOptionSelector}}"
+            t-attf-selector="#products_grid .oe_product, {{productTemplateOptionSelector}}, {{productVariantOptionSelector}}"
             editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <product_template_option
+            t-att-selector="productTemplateOptionSelector"
+            editableOnly="false"/>
+        <product_variant_option
+            t-att-selector="productVariantOptionSelector"
+            editableOnly="false"/>
+        <product_tag_option
+            template="website_sale.ProductTagOption"
+            t-att-selector="tagSelector"
+            editableOnly="false"
+            title="Tag"
+            groups='["website.group_website_designer"]'/>
+        <product_tag_image_option
+            template="website_sale.ProductTagImageOption"
+            t-att-selector="tagImageSelector"
             groups='["website.group_website_designer"]'/>
     </xpath>
 

@@ -15,11 +15,11 @@ export class ProductsRibbonOptionPlugin extends Plugin {
         'setRibbon',
         'deleteRibbon',
         '_setRibbon',
-        'setProductTemplateID',
-        'getProductTemplateID',
+        'addProductVariantsRibbons',
         'addProductTemplatesRibbons',
         'loadInfo',
         'getCount',
+        'isVariantMode',
     ];
     count = proxy({ value: 0 });
 
@@ -36,6 +36,7 @@ export class ProductsRibbonOptionPlugin extends Plugin {
         this.positionClasses = { left: "o_left", right: "o_right" };
         this.styleClasses = { ribbon: "o_wsale_ribbon", tag: "o_wsale_badge" };
         this.productTemplatesRibbons = [];
+        this.productVariantsRibbons = [];
         this.editMode = false;
     }
     getCount() {
@@ -78,14 +79,18 @@ export class ProductsRibbonOptionPlugin extends Plugin {
         return this.ribbons;
     }
 
-    async _setRibbon(editingElement, ribbon, save = true) {
+    async _setRibbon(editingElement, ribbon, save = true, variantMode = false) {
         const ribbonId = ribbon.id;
         const editableBody = editingElement.ownerDocument.body;
-        editingElement.dataset.ribbonId = ribbonId;
+        if (variantMode) {
+            editingElement.dataset.ribbonId = ribbonId;
+        } else {
+            editingElement.dataset.templateRibbonId = ribbonId;
+        }
 
         // Update all ribbons with this ID
         const ribbons = editableBody.ownerDocument.querySelectorAll(
-            `[data-ribbon-id="${ribbonId}"]`,
+            `[data-template-ribbon-id="${ribbonId}"], [data-ribbon-id="${ribbonId}"]`
         );
 
         for (const ribbonElement of ribbons) {
@@ -183,6 +188,32 @@ export class ProductsRibbonOptionPlugin extends Plugin {
             );
         }
 
+        // Building the final variant to ribbon-id map so that we can remove duplicate entries
+        const finalVariantRibbons = this.productVariantsRibbons.reduce(
+            (acc, { variantId, ribbonId }) => {
+                acc[variantId] = ribbonId;
+                return acc;
+            },
+            {}
+        );
+        // Inverting the relationship so that we have all variants that have the same ribbon to
+        // reduce RPCs
+        const ribbonVariants = {};
+        for (const [variantId, ribbonId] of Object.entries(finalVariantRibbons)) {
+            const serverRibbonId = this.getServerId(ribbonId);
+            const variants = (ribbonVariants[serverRibbonId] ||= []);
+            variants.push(parseInt(variantId));
+        }
+
+        for (const [ribbonIdStr, variantIds] of Object.entries(ribbonVariants)) {
+            const ribbonId = parseInt(ribbonIdStr) || false;
+            promises.push(
+                this.services.orm.write("product.product", variantIds, {
+                    variant_ribbon_id: ribbonId,
+                })
+            );
+        }
+
         return Promise.all(promises);
     }
 
@@ -191,7 +222,11 @@ export class ProductsRibbonOptionPlugin extends Plugin {
      *
      */
     async deleteRibbon(editingElement) {
-        const ribbonId = parseInt(editingElement.querySelector('.o_ribbons')?.dataset.ribbonId);
+        const ribbonId = parseInt(
+            this.isVariantMode(editingElement)
+                ? editingElement.querySelector(".o_ribbons")?.dataset.ribbonId
+                : editingElement.querySelector(".o_ribbons")?.dataset.templateRibbonId
+        );
         if (this.ribbonsObject[ribbonId]) {
             const ribbonIndex = this.ribbons.findIndex(ribbon => ribbon.id === ribbonId);
             if (ribbonIndex !== -1 ) {
@@ -209,6 +244,11 @@ export class ProductsRibbonOptionPlugin extends Plugin {
                 .querySelector('[data-oe-model="product.template"]')
                 .getAttribute("data-oe-id")
         );
+        this.productVariantID = parseInt(
+            editingElement
+                .querySelector('[data-oe-model="product.product"]')
+                .getAttribute("data-oe-id")
+        );
         const ribbons = editingElement.ownerDocument.querySelectorAll(
             `[data-ribbon-id="${ribbonId}"]`
         );
@@ -216,13 +256,21 @@ export class ProductsRibbonOptionPlugin extends Plugin {
             ribbonElement.classList.add("d-none");
             ribbonElement.dataset.ribbonId = "";
             let templateId;
+            let variantId;
             if (isProductPage) {
                 templateId = this.productTemplateID;
+                variantId = this.productVariantID;
             } else {
                 // Find the product template ID from the ribbon element's parent article.
                 const productArticle = ribbonElement.closest('article.oe_product_cart');
                 const templateElement = productArticle?.querySelector('[data-oe-model="product.template"]');
                 templateId = templateElement ? parseInt(templateElement.getAttribute('data-oe-id')) : null;
+                const variantElement = productArticle?.querySelector(
+                    '[data-oe-model="product.product"]'
+                );
+                variantId = variantElement
+                    ? parseInt(variantElement.getAttribute("data-oe-id"))
+                    : null;
             }
             if (templateId && !isNaN(templateId)) {
                 this.addProductTemplatesRibbons({
@@ -230,14 +278,14 @@ export class ProductsRibbonOptionPlugin extends Plugin {
                     ribbonId: false,
                 });
             }
+            if (variantId && !isNaN(variantId)) {
+                this.addProductVariantsRibbons({
+                    variantId: variantId,
+                    ribbonId: false,
+                });
+            }
         });
         await this._saveRibbons();
-    }
-    getProductTemplateID() {
-        return this.productTemplateID;
-    }
-    setProductTemplateID(id) {
-        this.productTemplateID = id
     }
     /**
      * Add or update a product template's ribbon assignment.
@@ -258,6 +306,17 @@ export class ProductsRibbonOptionPlugin extends Plugin {
             this.productTemplatesRibbons.push({ templateId, ribbonId });
         }
     }
+    addProductVariantsRibbons({ variantId, ribbonId }) {
+        // Ensure one entry per variant
+        const index = this.productVariantsRibbons.findIndex(
+            (entry) => entry.variantId === variantId
+        );
+        if (index !== -1) {
+            this.productVariantsRibbons[index].ribbonId = ribbonId;
+        } else {
+            this.productVariantsRibbons.push({ variantId, ribbonId });
+        }
+    }
     getRibbonsObject() {
         return this.ribbonsObject;
     }
@@ -270,11 +329,21 @@ export class ProductsRibbonOptionPlugin extends Plugin {
     getRibbons() {
         return this.ribbons;
     }
-    setRibbon(key, value){
+    setRibbon(key, value) {
         const index = this.ribbons.findIndex((ribbon) => ribbon.id == key);
         if (index !== -1) {
             this.ribbons[index] = value;
         }
+    }
+
+    isVariantMode(editingElement) {
+        const productTemplate = editingElement.querySelector('[data-oe-model="product.template"]');
+        const templateId = productTemplate ? parseInt(productTemplate.dataset.oeId) : null;
+        return (
+            (editingElement.closest("#product_detail") &&
+                editingElement.querySelector(".variant_attribute")) ||
+            !templateId
+        );
     }
 }
 
@@ -286,7 +355,9 @@ export class SetRibbonAction extends BuilderAction {
     }
     isApplied({ editingElement, value }) {
         const ribbonId = parseInt(
-            editingElement.querySelector('.o_ribbons')?.dataset.ribbonId,
+            this.ribbonOptions.isVariantMode(editingElement)
+                ? editingElement.querySelector(".o_ribbons")?.dataset.ribbonId
+                : editingElement.querySelector(".o_ribbons")?.dataset.templateRibbonId
         );
         const match = !ribbonId || !this.ribbonOptions.getRibbonsObject().hasOwnProperty(ribbonId)
             ? ''
@@ -294,16 +365,30 @@ export class SetRibbonAction extends BuilderAction {
         return match === value;
     }
     apply({ isPreviewing, editingElement, value }) {
-        const productTemplateID = parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.template"]')
-                .getAttribute('data-oe-id')
-        );
-        this.ribbonOptions.setProductTemplateID(productTemplateID)
-        this.ribbonOptions.addProductTemplatesRibbons({
-            templateId: productTemplateID,
-            ribbonId: value,
-        });
+        const variantMode = this.ribbonOptions.isVariantMode(editingElement);
+        if (variantMode) {
+            const productVariantID = parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.product"]')
+                    .getAttribute("data-oe-id")
+            );
+            this.ribbonOptions.productVariantID = productVariantID;
+            this.ribbonOptions.addProductVariantsRibbons({
+                variantId: productVariantID,
+                ribbonId: value,
+            });
+        } else {
+            const productTemplateID = parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.template"]')
+                    .getAttribute('data-oe-id')
+            );
+            this.ribbonOptions.productTemplateID = productTemplateID;
+            this.ribbonOptions.addProductTemplatesRibbons({
+                templateId: productTemplateID,
+                ribbonId: value,
+            });
+        }
 
         const ribbon = this.ribbonOptions.getRibbonsObject()[value] || {
             id: '',
@@ -318,27 +403,44 @@ export class SetRibbonAction extends BuilderAction {
             editingElement.querySelector('.o_ribbons'),
             ribbon,
             !isPreviewing,
+            variantMode
         );
     }
 }
 export class CreateRibbonAction extends BuilderAction {
     static id = 'createRibbon';
     static dependencies = ['productsRibbonOptionPlugin']
-    setup(){
+    setup() {
         this.ribbonOptions = this.dependencies.productsRibbonOptionPlugin
     }
     apply({ editingElement }) {
-        const productTemplateId = parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.template"]')
-                .getAttribute('data-oe-id')
-        );
-        this.ribbonOptions.setProductTemplateID(productTemplateId);
+        const variantMode = this.ribbonOptions.isVariantMode(editingElement);
         const ribbonId = Date.now();
-        this.ribbonOptions.addProductTemplatesRibbons({
-            templateId: productTemplateId,
-            ribbonId: ribbonId,
-        });
+        if (variantMode) {
+            const productVariantId = parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.product"]')
+                    .getAttribute("data-oe-id")
+            );
+            this.ribbonOptions.productVariantID = parseInt(productVariantId);
+            const ribbonId = Date.now();
+            this.ribbonOptions.addProductVariantsRibbons({
+                variantId: productVariantId,
+                ribbonId: ribbonId,
+            });
+        } else {
+            const productTemplateId = parseInt(
+                editingElement
+                    .querySelector('[data-oe-model="product.template"]')
+                    .getAttribute('data-oe-id')
+            );
+            this.ribbonOptions.productTemplateID = productTemplateId;
+            this.ribbonOptions.addProductTemplatesRibbons({
+                templateId: productTemplateId,
+                ribbonId: ribbonId,
+            });
+        }
+
         const ribbon = proxy({
             serverId: null,
             id: ribbonId,
@@ -350,7 +452,12 @@ export class CreateRibbonAction extends BuilderAction {
         });
         this.ribbonOptions.addRibbon(ribbon);
         this.ribbonOptions.setRibbonObject(ribbonId, ribbon);
-        return this.ribbonOptions._setRibbon(editingElement.querySelector('.o_ribbons'), ribbon);
+        return this.ribbonOptions._setRibbon(
+            editingElement.querySelector(".o_ribbons"),
+            ribbon,
+            true,
+            variantMode
+        );
     }
 }
 export class ModifyRibbonAction extends BuilderAction {
@@ -361,7 +468,9 @@ export class ModifyRibbonAction extends BuilderAction {
     }
     getValue({ editingElement, params }) {
         const ribbonId = parseInt(
-            editingElement.querySelector('.o_ribbons')?.dataset.ribbonId
+            this.ribbonOptions.isVariantMode(editingElement)
+                ? editingElement.querySelector(".o_ribbons")?.dataset.ribbonId
+                : editingElement.querySelector(".o_ribbons")?.dataset.templateRibbonId
         );
         if (!ribbonId || !this.ribbonOptions.getRibbonsObject().hasOwnProperty(ribbonId)) {
             return;
@@ -370,8 +479,10 @@ export class ModifyRibbonAction extends BuilderAction {
         return this.ribbonOptions.getRibbonsObject()[ribbonId][params.mainParam];
     }
     isApplied({ editingElement, params, value }) {
-        let ribbonId = parseInt(
-            editingElement.querySelector('.o_ribbons')?.dataset.ribbonId
+        const ribbonId = parseInt(
+            this.ribbonOptions.isVariantMode(editingElement)
+                ? editingElement.querySelector(".o_ribbons")?.dataset.ribbonId
+                : editingElement.querySelector(".o_ribbons")?.dataset.templateRibbonId
         );
         if (!ribbonId || !this.ribbonOptions.getRibbonsObject().hasOwnProperty(ribbonId)) {
             return;
@@ -380,16 +491,20 @@ export class ModifyRibbonAction extends BuilderAction {
     }
     async apply({ editingElement, params, value }) {
         const isPreviewMode = this.dependencies.history.getIsPreviewing();
+        const isVariantMode = this.ribbonOptions.isVariantMode(editingElement);
         const ribbonEl = editingElement.querySelector('.o_ribbons')
         const setting = params.mainParam;
-        const ribbonId = parseInt(ribbonEl.dataset.ribbonId);
+        const ribbonId = parseInt(
+            isVariantMode ? ribbonEl.dataset.ribbonId : ribbonEl.dataset.templateRibbonId
+        );
         const previousRibbon = this.ribbonOptions.getRibbonsObject()[ribbonId];
         this.ribbonOptions.setRibbonObject(ribbonId, {...previousRibbon, [setting]: value});
         this.ribbonOptions.setRibbon(ribbonId, {...previousRibbon, [setting]: value});
         const res = await this.ribbonOptions._setRibbon(
             ribbonEl,
             { ...previousRibbon, [setting]: value },
-            !isPreviewMode
+            !isPreviewMode,
+            isVariantMode
         );
         if(isPreviewMode){
             this.ribbonOptions.setRibbonObject(ribbonId, previousRibbon)

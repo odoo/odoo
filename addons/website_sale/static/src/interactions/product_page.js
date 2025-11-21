@@ -621,6 +621,10 @@ export class ProductPage extends Interaction {
             productPrice.classList.add('decimal_precision');
             productPrice.dataset.precision = precision;
         }
+        const variantParent = parent.closest('#product_detail')
+        if (variantParent) {
+            variantParent.dataset.name = combination.display_name;
+        }
         const pricePerUom = parent.querySelector('.o_product_price_unit')
             ?.querySelector('.oe_currency_value');
         if (pricePerUom) {

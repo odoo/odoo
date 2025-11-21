@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductTemplateOption">
+    <BuilderRow label.translate="Tags">
+        <BasicMany2Many
+            model="this.state.searchModel"
+            selection="this.domState.selection"
+            setSelection="this.setSelection.bind(this)"
+            create="this.create.bind(this)"
+        />
+    </BuilderRow>
+</t>
+
+</templates>
