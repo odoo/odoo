@@ -191,16 +191,6 @@ class AccountMove(models.Model):
         copy=True,
     )
 
-    # /!\ Deprecated! Kept in stable, but will be removed in master.
-    journal_line_ids = fields.One2many(
-        comodel_name='account.move.line',
-        inverse_name='move_id',
-        string='Journal Items (DEPRECATED)',
-        copy=False,
-        domain=[('display_type', 'not in', ('line_section', 'line_subsection', 'line_note'))],
-        exportable=False,
-    )
-
     # === Link to the partial that created this exchange move === #
     exchange_diff_partial_ids = fields.One2many(
         comodel_name='account.partial.reconcile',
@@ -3821,7 +3811,7 @@ class AccountMove(models.Model):
         self._check_user_access([vals])
 
         unmodifiable_fields = [
-            'line_ids', 'invoice_line_ids', 'journal_line_ids',
+            'line_ids', 'invoice_line_ids',
             'date', 'invoice_date',
             'partner_id', 'fiscal_position_id',
             'invoice_payment_term_id',
