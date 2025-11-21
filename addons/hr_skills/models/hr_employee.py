@@ -21,6 +21,7 @@ class HrEmployee(models.Model):
         compute='_compute_current_employee_skill_ids', readonly=False)
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True, groups="hr.group_hr_user")
     certification_ids = fields.One2many('hr.employee.skill', compute='_compute_certification_ids', readonly=False)
+    display_certification_page = fields.Boolean(compute="_compute_display_certification_page")
 
     @api.depends('employee_skill_ids')
     def _compute_current_employee_skill_ids(self):
@@ -37,6 +38,9 @@ class HrEmployee(models.Model):
     def _compute_certification_ids(self):
         for employee in self:
             employee.certification_ids = employee.employee_skill_ids.filtered('is_certification')
+
+    def _compute_display_certification_page(self):
+        self.display_certification_page = bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1))
 
     @api.model_create_multi
     def create(self, vals_list):
