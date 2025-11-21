@@ -387,6 +387,7 @@ class RepairOrder(models.Model):
         moves_to_reassign = self.env['stock.move']
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            self.update_sale_order_warehouse(vals.get('picking_type_id'))
             for repair in self:
                 if repair.state in ('cancel', 'done'):
                     continue
@@ -759,6 +760,15 @@ class RepairOrder(models.Model):
             })
 
         return self.env['product.product'].browse(product_id).list_price
+
+    def update_sale_order_warehouse(self, picking_type_id):
+        for rec in self:
+            if rec.sale_order_id and rec.sale_order_id.state == 'draft':
+                current_warehouse = rec.sale_order_id.warehouse_id
+                picking_type = self.env['stock.picking.type'].browse(picking_type_id)
+                new_warehouse = picking_type.warehouse_id
+                if current_warehouse != new_warehouse:
+                    rec.sale_order_id.warehouse_id = new_warehouse
 
     # ------------------------------------------------------------
     # MAIL.THREAD
