@@ -541,7 +541,7 @@ class ProductTemplate(models.Model):
             ])
         if len(self.env.companies) > 1 and 'company_id' in vals:
             tickets = self.env['event.event.ticket'].sudo().search([
-                ('product_id', '=', self.ids),
+                ('product_id', '=', self.product_variant_ids),
             ])
             tickets.event_id._check_consistent_company_id()
         for product_template in self:
