@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-08-27 14:16+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/fleet/"
@@ -58,9 +58,9 @@ msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,             such as pulling trailers, boats, or other vehicles."
 msgstr ""
-"Peräkoukku on ajoneuvon runkoon kiinnitettävä laite vetotarkoituksiin,"
-"                      kuten perävaunujen, veneiden tai muiden ajoneuvojen "
-"vetämiseen."
+"Peräkoukku on ajoneuvon runkoon kiinnitettävä laite "
+"vetotarkoituksiin,                      kuten perävaunujen, veneiden tai "
+"muiden ajoneuvojen vetämiseen."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__trailer_hook
@@ -68,9 +68,9 @@ msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,            such as pulling trailers, boats, or other vehicles."
 msgstr ""
-"Peräkoukku on ajoneuvon runkoon kiinnitettävä laite vetotarkoituksiin,"
-"              kuten perävaunujen, veneiden tai muiden ajoneuvojen "
-"vetämiseen."
+"Peräkoukku on ajoneuvon runkoon kiinnitettävä laite "
+"vetotarkoituksiin,              kuten perävaunujen, veneiden tai muiden "
+"ajoneuvojen vetämiseen."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -213,6 +213,7 @@ msgstr "Arkistoi"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -444,11 +445,11 @@ msgstr "Tuoteryhmä(t)"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
-"Kategoriat auttavat hallinnoimaan ajokalustoasi tehokkaammin ja järjestämään"
-" ajoneuvosi."
+"Kategoriat auttavat hallinnoimaan ajokalustoasi tehokkaammin ja järjestämään "
+"ajoneuvosi."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
@@ -493,8 +494,7 @@ msgstr "Valitse, onko sopimus edelleen voimassa vai ei"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr "Valitse, koskeeko palvelu sopimuksia, ajoneuvopalveluja vai molempia"
 
 #. module: fleet
@@ -774,8 +774,8 @@ msgstr "Päivämäärä jolloin sopimuksen voimassaolo alkaa"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 "Päivä jolloin sopimuksen voimassaolo päättyy (oletuksena vuosi alkupäivästä)"
 
@@ -943,8 +943,8 @@ msgid ""
 "Emission Standard specifies the regulatory test procedure or             "
 "guideline under which a vehicle's emissions are measured."
 msgstr ""
-"Päästöstandardi määrittelee sääntelyyn perustuvan testimenettelyn tai"
-"             ohjeistuksen, jonka mukaisesti ajoneuvon päästöt mitataan."
+"Päästöstandardi määrittelee sääntelyyn perustuvan testimenettelyn "
+"tai             ohjeistuksen, jonka mukaisesti ajoneuvon päästöt mitataan."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -1523,7 +1523,8 @@ msgid ""
 "            you when some contracts have to be renewed."
 msgstr ""
 "Hallitse kaikkia sopimuksiasi (leasing, vakuutukset jne.) osoitteessa\n"
-"            niihin liittyvät palvelut ja kustannukset. Odoo varoittaa automaattisesti\n"
+"            niihin liittyvät palvelut ja kustannukset. Odoo varoittaa "
+"automaattisesti\n"
 "            kun jotkin sopimukset on uusittava."
 
 #. module: fleet
@@ -1903,8 +1904,8 @@ msgstr "Omnium"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia "
 "lähetettäessä. Jos sitä ei ole asetettu, käytetään englanninkielistä "
@@ -2273,8 +2274,8 @@ msgstr "Sytytystulpan vaihto"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__doors
 msgid ""
-"Specifies the total number of doors, including the truck and hatch doors, if"
-" applicable."
+"Specifies the total number of doors, including the truck and hatch doors, if "
+"applicable."
 msgstr ""
 "Määrittää ovien kokonaismäärän, mukaan lukien tavaratilan ja takaluukun "
 "ovet, jos sellaisia on."
@@ -2415,8 +2416,8 @@ msgid ""
 "This is the date at which the car will be available, if not set it means "
 "available instantly"
 msgstr ""
-"Tämä on päivämäärä, jolloin auto on saatavilla, jos sitä ei ole asetettu, se"
-" tarkoittaa, että se on saatavilla heti"
+"Tämä on päivämäärä, jolloin auto on saatavilla, jos sitä ei ole asetettu, se "
+"tarkoittaa, että se on saatavilla heti"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2474,10 +2475,12 @@ msgstr "Kiertoapu"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "Seuraa kaikkia ajoneuvollesi tehtyjä huoltoja.\n"
-"            Huoltoja voi olla monenlaisia: satunnaisia korjauksia, kiinteitä huoltoja jne."
+"            Huoltoja voi olla monenlaisia: satunnaisia korjauksia, kiinteitä "
+"huoltoja jne."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
@@ -2777,13 +2780,13 @@ msgid ""
 "            each vehicle. Example: active, being repaired, sold."
 msgstr ""
 "Voit mukauttaa käytettävissä olevaa tilaa seurataksesi kehitystä\n"
-"            kunkin ajoneuvon tilannetta. Esimerkki: aktiivinen, korjattavana, myyty."
+"            kunkin ajoneuvon tilannetta. Esimerkki: aktiivinen, "
+"korjattavana, myyty."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr ""
-"Voit määrittää useita malleja (esim. A3, A4) kullekin merkille (Audi)."
+msgstr "Voit määrittää useita malleja (esim. A3, A4) kullekin merkille (Audi)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form

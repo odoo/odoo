@@ -7,13 +7,14 @@
 # Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-10-29 15:45+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-4/purchase_stock/es_419/>\n"
 "Language: es_419\n"
@@ -40,6 +41,12 @@ msgstr "%(otd)s %%"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d day(s)"
 msgstr "+ %d días"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr "+ %s día(s)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -102,19 +109,21 @@ msgstr "<strong>Fecha de envío solicitada:</strong>"
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
 msgid "A storable product is a product for which you manage stock."
 msgstr ""
-"Los productos almacenables son productos para los que gestiona el "
-"inventario."
+"Los productos almacenables son productos para los que gestiona el inventario."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"La cantidad recibida se puede calcular en automático con el mecanismo según la configuración del producto:\n"
+"La cantidad recibida se puede calcular en automático con el mecanismo según "
+"la configuración del producto:\n"
 "- Manual: la cantidad se establece de forma manual en la línea\n"
-"- Movimientos de inventario: la cantidad corresponde a las recolecciones confirmadas\n"
+"- Movimientos de inventario: la cantidad corresponde a las recolecciones "
+"confirmadas\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -142,9 +151,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
-"Permitir fabricación bajo pedido, o automatizar las órdenes de compra, "
-"cuando un producto se venda. Tendrás acceso directo a los documentos que se "
-"creen."
+"Permite la fabricación bajo pedido o automatiza las órdenes de compra cuando "
+"se venda un producto. Crea enlaces directos entre los documentos."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -182,8 +190,8 @@ msgid ""
 "Change the applied filters to receive suggestions about quantities to "
 "replenish for desired products."
 msgstr ""
-"Cambie los filtros aplicados para recibir sugerencias sobre las cantidades a"
-" reabastecer de los productos deseados."
+"Cambie los filtros aplicados para recibir sugerencias sobre las cantidades a "
+"reabastecer de los productos deseados."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
@@ -296,8 +304,8 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Si cuenta con los módulos necesarios, podrá definir la ruta del producto: si"
-" se comprará, se fabricará, se reabastecerá bajo pedido, etc."
+"Si cuenta con los módulos necesarios, podrá definir la ruta del producto: si "
+"se comprará, se fabricará, se reabastecerá bajo pedido, etc."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -380,8 +388,8 @@ msgid ""
 "based on actual demand. Use the percentage to take into account seasonality "
 "or business growth."
 msgstr ""
-"Estima el valor de ventas tomando en cuenta le perido pasado y ordena lo que"
-" necesites según la demanda real. Usa el porcentaje para tomar en cuenta la "
+"Estima el valor de ventas tomando en cuenta le perido pasado y ordena lo que "
+"necesites según la demanda real. Usa el porcentaje para tomar en cuenta la "
 "estacionalidad o el crecimiento del negocio."
 
 #. module: purchase_stock
@@ -587,8 +595,8 @@ msgstr "Es posible que se necesiten acciones manuales."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Margen de error para los plazos de entrega del proveedor. Cuando el sistema "
 "genera órdenes de compra para reordenar productos, se programarán con estos "
@@ -625,6 +633,12 @@ msgid "Next transfer(s) impacted:"
 msgstr "Siguiente(s) traslado(s) afectado(s):"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr "No encontramos ningún proveedor"
+
+#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/kanban_controller.js:0
 msgid "No product to buy found"
@@ -656,8 +670,8 @@ msgstr "Entregas cumplidas a tiempo"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo no puede generar los asientos anglosajones. El valor total de %s es "
 "cero."
@@ -701,12 +715,12 @@ msgstr "Punto de la orden"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"Durante los últimos x días; el número de productos recibidos a tiempo divido"
-" entre el número de products.x ordenados es el parámetro "
+"Durante los últimos x días; el número de productos recibidos a tiempo divido "
+"entre el número de products.x ordenados es el parámetro "
 "purchase_stock.on_time_delivery_days del sistema o el predeterminado 365."
 
 #. module: purchase_stock
@@ -1057,26 +1071,26 @@ msgstr ""
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "The warehouse of operation type (%(operation_type)s) is inconsistent with "
-"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
-" %(product)s. Change the operation type or cancel the request for quotation."
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
-"El almacén del tipo de operación (%(operation_type)s) es incompatible con la"
-" ubicación (%(location)s) de la regla de reordenamiento "
-"(%(reordering_rule)s) para el producto %(product)s. Cambie el tipo de "
-"operación o cancele la solicitud de cotización."
+"El almacén del tipo de operación (%(operation_type)s) es incompatible con la "
+"ubicación (%(location)s) de la regla de reordenamiento (%(reordering_rule)s) "
+"para el producto %(product)s. Cambie el tipo de operación o cancele la "
+"solicitud de cotización."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
-"No existe un precio de proveedor coincidente para generar la orden de compra"
-" del producto %s (no definió un proveedor, no se alcanzó la cantidad mínima,"
-" las fechas no son válidas, ...). Vaya al formulario del producto y complete"
-" la lista de proveedores."
+"No existe un precio de proveedor coincidente para generar la orden de compra "
+"del producto %s (no definió un proveedor, no se alcanzó la cantidad mínima, "
+"las fechas no son válidas, ...). Vaya al formulario del producto y complete "
+"la lista de proveedores."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
@@ -1118,16 +1132,16 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Esto agrega una ruta de triangulación aplicable a los productos para "
-"solicitar que sus proveedores los entreguen a sus clientes. Un producto para"
-" triangulación generará una solicitud de cotización de compra al confirmar "
-"la orden de venta. A esto se le llama flujo bajo demanda. La dirección de "
+"solicitar que sus proveedores los entreguen a sus clientes. Un producto para "
+"triangulación generará una solicitud de cotización de compra al confirmar la "
+"orden de venta. A esto se le llama flujo bajo demanda. La dirección de "
 "entrega solicitada será la dirección de entrega del cliente, no su almacén."
 
 #. module: purchase_stock
@@ -1223,7 +1237,7 @@ msgstr "Análisis de entregas a tiempo del proveedor"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Vendor Pricelist"
-msgstr "Listas de precios del proveedor"
+msgstr "Listas de precios de proveedores"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
@@ -1252,8 +1266,8 @@ msgstr "Los productos se podrán enviar a este almacén cuando se compren"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "Cuando se necesiten productos en <b>%s</b>, <br/> se generará una solicitud "
 "de cotización para satisfacer la necesidad.<br/>Nota: esta regla se "
@@ -1273,23 +1287,11 @@ msgid "You must set a Vendor Location for this partner %s"
 msgstr "Debe asignar una ubicación para este contacto %s"
 
 #. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/models/purchase_order_line.py:0
-msgid ""
-"You're trying to decrease the ordered quantity below the received quantity, you goofball.\n"
-"\n"
-"Try creating a return first silly billy!"
-msgstr ""
-"La cantidad ordenada no puede ser menor a la cantidad recibida.\n"
-"\n"
-"Crea una devolución primero."
-
-#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "based on stock on hand, and expected sales volumes or actual demand."
 msgstr ""
-"según las existencias a la mano, el volumen de ventas esperado, o la demanda"
-" real."
+"según las existencias a la mano, el volumen de ventas esperado, o la demanda "
+"real."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
@@ -1312,3 +1314,13 @@ msgstr "ordenado en lugar de"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "debe reabastecer este producto de forma manual."
+
+#~ msgid ""
+#~ "You're trying to decrease the ordered quantity below the received "
+#~ "quantity, you goofball.\n"
+#~ "\n"
+#~ "Try creating a return first silly billy!"
+#~ msgstr ""
+#~ "La cantidad ordenada no puede ser menor a la cantidad recibida.\n"
+#~ "\n"
+#~ "Crea una devolución primero."

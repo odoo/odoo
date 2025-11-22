@@ -7,13 +7,14 @@
 # Wil Odoo, 2025
 #
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:09+0000\n"
-"PO-Revision-Date: 2025-09-12 20:47+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-4/pos_loyalty/es_419/>\n"
 "Language: es_419\n"
@@ -28,11 +29,13 @@ msgstr ""
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid ""
 "\n"
-"        Technical field used to link multiple reward lines from the same reward together.\n"
+"        Technical field used to link multiple reward lines from the same "
+"reward together.\n"
 "    "
 msgstr ""
 "\n"
-"        Campo técnico que se usa para vincular varias líneas de recompensa en una sola recompensa.\n"
+"        Campo técnico que se usa para vincular varias líneas de recompensa "
+"en una sola recompensa.\n"
 "    "
 
 #. module: pos_loyalty
@@ -121,6 +124,12 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Available rewards"
 msgstr "Recompensas disponibles"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Balance"
+msgstr "Balance"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -551,6 +560,12 @@ msgstr ""
 "la orden."
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Spent:"
+msgstr "Gastado:"
+
+#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
 msgid "Technical field, whether all product match"
 msgstr "Campo técnico, si todos los productos coinciden"
@@ -596,10 +611,12 @@ msgstr "El cupón que se usó para obtener la recompensa."
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid ""
-"The following codes already exist in the database, perhaps they were already sold?\n"
+"The following codes already exist in the database, perhaps they were already "
+"sold?\n"
 "%s"
 msgstr ""
-"Los siguientes códigos ya existen en la base de datos, ¿quizá ya se vendieron?\n"
+"Los siguientes códigos ya existen en la base de datos, ¿quizá ya se "
+"vendieron?\n"
 "%s"
 
 #. module: pos_loyalty
@@ -608,8 +625,8 @@ msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
 msgstr ""
-"La acción de reporte que se ejecutará al crear un cupón, tarjeta de regalo o"
-" tarjeta de lealtad en el PdV."
+"La acción de reporte que se ejecutará al crear un cupón, tarjeta de regalo o "
+"tarjeta de lealtad en el PdV."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -642,8 +659,7 @@ msgstr "No hay suficientes puntos para el cupón: %s."
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
 msgid "There are not enough points on the coupon to claim this reward."
-msgstr ""
-"El cupón no tiene los puntos suficientes para obtener esta recompensa."
+msgstr "El cupón no tiene los puntos suficientes para obtener esta recompensa."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -791,6 +807,12 @@ msgstr "Si esta línea es parte de una recompensa o no."
 
 #. module: pos_loyalty
 #. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Won:"
+msgstr "Ganado:"
+
+#. module: pos_loyalty
+#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Yes"
 msgstr "Sí"
@@ -800,14 +822,15 @@ msgstr "Sí"
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr ""
-"No puede establecer una cantidad o precio negativo en la tarjeta de regalo o"
-" monedero electrónico."
+"No puede establecer una cantidad o precio negativo en la tarjeta de regalo o "
+"monedero electrónico."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/loyalty_program.py:0
 msgid "You must set '%(mail_template)s' before setting '%(report)s'."
-msgstr "Debe establecer %(mail_template)s\"\" antes de establecer %(report)s\"\"."
+msgstr ""
+"Debe establecer %(mail_template)s\"\" antes de establecer %(report)s\"\"."
 
 #. module: pos_loyalty
 #. odoo-javascript

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2025-08-25 07:38+0000\n"
 "Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -181,8 +181,7 @@ msgstr "คำนวณราคาจาก BoM"
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr ""
-"คำนวณราคาของสินค้าโดยใช้สินค้าและการปฏิบัติของบิลวัสดุที่เกี่ยวข้อง สำหรับสินค้าที่ผลิตเท่านั้น"
+msgstr "คำนวณราคาของสินค้าโดยใช้สินค้าและการปฏิบัติของบิลวัสดุที่เกี่ยวข้อง สำหรับสินค้าที่ผลิตเท่านั้น"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
@@ -243,7 +242,6 @@ msgstr "ละทิ้ง"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
-#: model:ir.model.fields,field_description:mrp_account.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -284,7 +282,6 @@ msgstr "ต้นทุนต่อหน่วยพิเศษ"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
-#: model:ir.model.fields,field_description:mrp_account.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -376,8 +373,7 @@ msgstr "รายการบัญชีวิเคราะห์ Mo"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
+msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr "กรุณาตรวจสอบให้แน่ใจว่ายอดเครดิตรวมเท่ากับยอดเดบิตรวม"
 
 #. module: mrp_account
@@ -464,11 +460,6 @@ msgid "Stock Move"
 msgstr "ย้ายสต็อก"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "ชั้นการประเมินมูลค่าสต็อก"
-
-#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
 msgid ""
@@ -479,9 +470,9 @@ msgstr "MO ที่รายการ WIP นี้อ้างอิง คา
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
 msgstr ""
 "ค่าใช้จ่ายจะถูกบันทึกเมื่อใบสั่งผลิตถูกทำเครื่องหมายว่าเสร็จสิ้น หากไม่ได้ตั้งค่า "
 "บัญชีค่าใช้จ่ายของผลิตภัณฑ์ขั้นสุดท้ายจะถูกใช้แทน"
@@ -489,8 +480,10 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
 "บัญชีนี้จะถูกใช้คู่กันในการประเมินมูลค่าสำหรับทั้งส่วนประกอบและสินค้าขั้นสุดท้ายสำหรับใบสั่งผลิต\n"
 "             หากมีค่าใช้จ่ายศูนย์งาน/พนักงาน ค่านี้จะยังคงอยู่ในบัญชีเมื่อการผลิตเสร็จสมบูรณ์"
@@ -611,3 +604,6 @@ msgstr "บันทึกผลผลิตของศูนย์งาน"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[WC] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "ชั้นการประเมินมูลค่าสต็อก"

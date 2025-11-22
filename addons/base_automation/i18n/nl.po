@@ -8,13 +8,14 @@
 # Manon Rondou, 2025
 # Wil Odoo, 2025
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-08-19 14:33+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-4/"
 "base_automation/nl/>\n"
 "Language: nl\n"
@@ -70,8 +71,8 @@ msgstr "<code>env</code>: omgeving waarop de actie is geactiveerd"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: model van het record waarop de actie wordt geactiveerd; "
 "is een nietig recordset"
@@ -82,8 +83,8 @@ msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
 msgstr ""
-"<code>payload</code>: de payload van de aanroep (GET-parameters, JSON-body),"
-" als dict."
+"<code>payload</code>: de payload van de aanroep (GET-parameters, JSON-body), "
+"als dict."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -193,7 +194,6 @@ msgstr "Toepassen op"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Gearchiveerd"
 
@@ -425,8 +425,8 @@ msgstr "Indien aangevinkt hebben sommige berichten een leveringsfout."
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
 "Indien aanwezig, moet aan deze voorwaarde voldaan zijn voordat de "
 "automatiseringsregel wordt uitgevoerd."
@@ -448,6 +448,11 @@ msgid ""
 msgstr ""
 "Als deze wordt vernieuwd, werk dan de geheime URL bij in de externe app die "
 "de webhook aanroept."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "Gearchiveerd opnemen"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -524,8 +529,8 @@ msgstr "Modelnaam"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
 "Het actiemodel %(action_name)s moet overeenkomen met dat van "
 "geautomatiseerde regel%(rule_name)s."
@@ -721,18 +726,21 @@ msgstr "Selecteer velden..."
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
-"Een e-mail verzenden wanneer een object van status verandert, records archiveren\n"
-"                na een maand inactiviteit of herinner jezelf eraan om een follow-up taak te doen\n"
+"Een e-mail verzenden wanneer een object van status verandert, records "
+"archiveren\n"
+"                na een maand inactiviteit of herinner jezelf eraan om een "
+"follow-up taak te doen\n"
 "                wanneer een specifiek label wordt toegevoegd."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "Stuur een e-mail wanneer de status van een object verandert, archiveer "
@@ -756,14 +764,14 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
-"Sommige triggers hebben een referentie naar een selectieveld nodig. Dit veld"
-" wordt gebruikt om dit op te slaan."
+"Sommige triggers hebben een referentie naar een selectieveld nodig. Dit veld "
+"wordt gebruikt om dit op te slaan."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 "Sommige triggers hebben een referentie naar een ander veld nodig. Dit veld "
 "wordt gebruikt om het op te slaan."
@@ -810,8 +818,7 @@ msgstr "Doel Record"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
 "Het doelmodel van acties %(action_names)s verschilt van het regelmodel."
 
@@ -819,11 +826,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
-"De \"%(trigger_value)s\" %(trigger_label)s kan alleen gebruikt worden met de"
-"  \"%(state_value)s\" actie type"
+"De \"%(trigger_value)s\" %(trigger_label)s kan alleen gebruikt worden met "
+"de  \"%(state_value)s\" actie type"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -977,17 +984,19 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"Bij het berekenen van een op een dag gebaseerde tijdsgebonden voorwaarde, is"
-" het mogelijk om een kalender te gebruiken gebaseerd op werkdagen."
+"Bij het berekenen van een op een dag gebaseerde tijdsgebonden voorwaarde, is "
+"het mogelijk om een kalender te gebruiken gebaseerd op werkdagen."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Wanneer moet de aandoening worden geactiveerd.\n"
-"                Indien aanwezig, wordt gecontroleerd door de planner. Indien leeg, wordt dit gecontroleerd bij aanmaken en bijwerken."
+"                Indien aanwezig, wordt gecontroleerd door de planner. Indien "
+"leeg, wordt dit gecontroleerd bij aanmaken en bijwerken."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

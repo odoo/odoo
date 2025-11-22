@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
 "PO-Revision-Date: 2025-08-22 23:41+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/hr/fi/"
@@ -478,7 +478,6 @@ msgstr "Kyky hallita useita tehtäviä"
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
 msgid "Absent"
 msgstr "Poissa"
@@ -712,7 +711,6 @@ msgstr "Arkistoi"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__archive
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__archive
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -1235,6 +1233,14 @@ msgstr "Peruuta"
 #: code:addons/hr/models/hr_version.py:0
 msgid "Cannot archive the only active version of an employee."
 msgstr "Ainoaa aktiivista työntekijän versiota ei voi arkistoida."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid ""
+"Cannot modify multiple versions contract dates with different contracts at "
+"once."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2266,6 +2272,12 @@ msgid "Employees Tags"
 msgstr "Työntekijöiden tunnisteet"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
@@ -2527,6 +2539,7 @@ msgid "Full-Time"
 msgstr "Kokoaikainen"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr "Tulevat toimenpiteet"
@@ -2638,7 +2651,7 @@ msgid "Hiring"
 msgstr "Rekrytointi"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__home
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
 msgstr "Aloitussivu"
@@ -3065,6 +3078,7 @@ msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
 msgstr "Myöhässä olevat toimenpiteet"
@@ -3528,7 +3542,7 @@ msgid "Number of new employees you expect to recruit."
 msgstr "Odotettu palkattavien työntekijöiden määrä."
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__office
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
 msgstr "Toimisto"
@@ -3579,8 +3593,8 @@ msgstr "Toimintoa ei tueta."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "Muu"
@@ -3609,7 +3623,6 @@ msgstr "Työajan ulkopuolella"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
 msgstr "Työajan ulkopuolella"
@@ -3847,7 +3860,6 @@ msgstr "Läsnäoloraportointinäyttö, sähköpostin ja IP-osoitteen valvonta."
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
 msgid "Present"
 msgstr "Paikalla"
@@ -4294,6 +4306,11 @@ msgid "Show Hr Icon Display"
 msgstr "Näytä HR-kuvakkeen näyttö"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+msgid "Show all records whose next activity date is past"
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 msgid "Show employees"
@@ -4738,6 +4755,7 @@ msgstr ""
 "uuteen yritykseen."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "Tämän päivän toimenpiteet"
@@ -4786,7 +4804,6 @@ msgstr "Ymmärrys käyttäjäkokemuksen (UX) periaatteista"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
 msgstr "Ei määritelty"
 
@@ -5062,7 +5079,6 @@ msgstr "Työpaikan sijainti"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
-#: model:ir.model.fields,field_description:hr.field_hr_version__work_location_name
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
 msgid "Work Location Name"
 msgstr "Työn sijainnin nimi"
@@ -5070,7 +5086,6 @@ msgstr "Työn sijainnin nimi"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
-#: model:ir.model.fields,field_description:hr.field_hr_version__work_location_type
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
 msgid "Work Location Type"
 msgstr "Työn sijainnin tyyppi"
@@ -5164,6 +5179,14 @@ msgstr "Työaikataulut"
 #: model:ir.model.fields,field_description:hr.field_resource_resource__calendar_id
 msgid "Working Time"
 msgstr "Työaika"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
+msgstr ""
 
 #. module: hr
 #. odoo-python

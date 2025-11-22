@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-09-02 16:36+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -84,8 +84,8 @@ msgid ""
 "At least one of the following fields %(field_list)s is required on %"
 "(record)s."
 msgstr ""
-"Pelo menos um dos seguintes campos %(field_list)s é obrigatório em "
-"%(record)s."
+"Pelo menos um dos seguintes campos %(field_list)s é obrigatório em %"
+"(record)s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_id
@@ -94,14 +94,14 @@ msgid "Attachment"
 msgstr "Anexo"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
+msgid "Australia (BIS Billing 3.0 A-NZ)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
 msgid "Australia ABN"
 msgstr "Austrália ABN"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
-msgid "Australia BIS Billing 3.0 A-NZ"
-msgstr "Australia BIS Billing 3.0 A-NZ"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9914
@@ -163,8 +163,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"Código usado para identificar o endpoint do BIS Billing 3.0 e seus derivados."
-"\n"
+"Código usado para identificar o endpoint do BIS Billing 3.0 e seus "
+"derivados.\n"
 "             Lista disponível em https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 
@@ -229,8 +229,8 @@ msgid ""
 "Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, "
 "Phone: %(phone)s, Email: %(email)s"
 msgstr ""
-"Não foi possível recuperar o parceiro com detalhes: Nome: %(name)s, CNPJ: "
-"%(vat)s, Telefone: %(phone)s, E-mail: %(email)s"
+"Não foi possível recuperar o parceiro com detalhes: Nome: %(name)s, CNPJ: %"
+"(vat)s, Telefone: %(phone)s, E-mail: %(email)s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -244,8 +244,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
 msgstr ""
-"Não foi possível recuperar o imposto: %(tax_percentage)s %% na linha "
-"'%(line)s'."
+"Não foi possível recuperar o imposto: %(tax_percentage)s %% na linha '%"
+"(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -800,8 +800,8 @@ msgstr "VAT Sérvia"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
-msgid "Singapore BIS Billing 3.0 SG"
-msgstr "Singapore BIS Billing 3.0 SG"
+msgid "Singapore (BIS Billing 3.0 SG)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0195
@@ -865,8 +865,8 @@ msgid ""
 "The Peppol endpoint is not valid. It should contain exactly 10 digits "
 "(Company Registry number).The expected format is: 1234567890"
 msgstr ""
-"O endpoint do Peppol não é válido. Ele deve conter exatamente 10 dígitos ("
-"número de registro da empresa). O formato esperado é: 1234567890"
+"O endpoint do Peppol não é válido. Ele deve conter exatamente 10 dígitos "
+"(número de registro da empresa). O formato esperado é: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1060,3 +1060,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "Australia BIS Billing 3.0 A-NZ"
+#~ msgstr "Australia BIS Billing 3.0 A-NZ"
+
+#~ msgid "Singapore BIS Billing 3.0 SG"
+#~ msgstr "Singapore BIS Billing 3.0 SG"

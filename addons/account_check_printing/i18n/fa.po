@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_check_printing
+# * account_check_printing
 #
 # Translators:
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023
@@ -12,26 +12,39 @@
 # Hamid Darabi, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # saeed raesi <saeed.raesi2020@gmail.com>, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: saeed raesi <saeed.raesi2020@gmail.com>, 2023\n"
-"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-s18-4/"
+"account_check_printing/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid ": Check Number Sequence"
+msgid "%(journal)s: Check Number Sequence"
+msgstr "%(journal)s: بررسی توالی اعداد"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "%(number)s in journal %(journal)s"
 msgstr ""
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -40,7 +53,9 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
 msgstr "حاشیه چک های ایجاد شده را متناسب با تنظیمات چاپگر خود تنظیم کنید."
 
 #. module: account_check_printing
@@ -49,11 +64,18 @@ msgid "Amount in Words"
 msgstr "مقدار به حروف"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Bills"
+msgstr "صورتحساب"
+
+#. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
 msgstr "لغو"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
@@ -101,7 +123,9 @@ msgstr "اعداد وارد شده در چک فقط می توانند رقم ب�
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "اگر چک های از قبل چاپ شده شما شماره گذاری نشده است ، این گزینه را علامت بزنید."
+msgstr ""
+"اگر چک های از قبل چاپ شده شما شماره گذاری نشده است ، این گزینه را علامت "
+"بزنید."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -109,6 +133,8 @@ msgid "Check to print"
 msgstr "چک برای پرینت"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
 msgstr "چکها"
@@ -141,11 +167,6 @@ msgid "Config Settings"
 msgstr "تنظیمات پیکربندی"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "مخاطب"
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
 msgstr "ایجاد شده توسط"
@@ -156,7 +177,17 @@ msgid "Created on"
 msgstr "ایجادشده در"
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Default"
+msgstr "پیش‌فرض"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
@@ -167,25 +198,33 @@ msgid "Go to the configuration panel"
 msgstr "برو به صفحه پیکربندی"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
+msgid "Has Check Layout"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
 msgid "ID"
 msgstr "شناسه"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
-msgstr "برای چاپ همزمان چند فقره چک ، آنها باید به یک دفتر بانکی تعلق داشته باشند."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
+msgstr ""
+"برای چاپ همزمان چند فقره چک ، آنها باید به یک دفتر بانکی تعلق داشته باشند."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
 msgstr "روزنامه"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "داده روزنامه"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -207,12 +246,29 @@ msgstr "شماره دهی دستی"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"دستی: پرداخت یا واریز با هر روشی غیر از اودوو.\n"
+"درگاه‌های پرداخت: هر درگاه روش پرداخت مخصوص به خود دارد. با کمک توکن پرداخت "
+"ذخیره شده توسط شریک هنگام خرید یا اشتراک آنلاین، درخواست تراکنش از/به یک "
+"کارت را ارائه دهید. \n"
+"چک: پرداخت صورت‌حساب‌ها و پرینت آن از اودوو.\n"
+"واریز انبوه: جمع‌آوری چک‎‌های چند مشتری و سپس ارائه‌ی مجموع آنها برای واریز به "
+"حساب. ماژول پرداخت انبوه برای این کار موردنیاز است. \n"
+"انتقال اعتباری SEPA: پرداخت در حوزه‌ی SEPA با ارائه‎‌ی یک فایل اعتباری SEPA به "
+"بانک. مآژول حساب SAPA برای این کار لازم است. \n"
+"حق برداشت مستقیم از SEPA: پرداخت از طریق حوزه‌ی SEPA با کمک وکالت‌نامه‌ای که "
+"شریک‌تان به شما می‌دهد. استفاده از ماژول حساب SEPA ضروری است.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -240,8 +296,6 @@ msgstr "هیچکدام"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
 msgstr "روش پرداخت"
 
@@ -258,26 +312,20 @@ msgstr "پرداخت‌ها"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
-msgstr "پرداخت های چاپی به عنوان چک باید \"چک\" به عنوان روش پرداخت انتخاب شده باشد و قبلاً مغایرت گیری نشده باشد"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"پرداخت های چاپی به عنوان چک باید \"چک\" به عنوان روش پرداخت انتخاب شده باشد "
+"و قبلاً مغایرت گیری نشده باشد"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
-msgstr "لطفاً شماره اولین چک از قبل چاپ شده را که می خواهید روی آن چاپ کنید وارد کنید."
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
-msgstr "روش پرداخت ترجیحی"
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "روش پرداخت ترجیحی هنگام پرداخت این فروشنده. این برای فیلتر کردن صورتحساب های فروشنده با روش پرداخت ترجیحی برای ثبت پرداخت به صورت انبوه استفاده می شود. از موارد استفاده کنید: پرونده های بانکی را برای سیم های دسته ای ایجاد کنید ، بررسی کنید."
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
+msgstr ""
+"لطفاً شماره اولین چک از قبل چاپ شده را که می خواهید روی آن چاپ کنید وارد کنید."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -309,9 +357,10 @@ msgid "Print Pre-numbered Checks"
 msgstr "چاپ چکهای از پیش شماره‌گذاری شده"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_payment_register
-msgid "Register Payment"
-msgstr "ثبت پرداخت"
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Refunds"
+msgstr "بازدریافت‌ها"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -322,7 +371,8 @@ msgstr "حاشیه راست"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "قالب مربوط به برگه چک را که روی آن چاپ می کنید ، انتخاب کنید.\n"
@@ -341,12 +391,24 @@ msgstr "شماره ترتیب چک چاپی بعدی."
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "شماره‌ی چک را نشان بده"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"بررسی طراح دچار مشکل شده است، لطفاً طرح دیگری را در بخش تنظیمات  صدور فاکتور/"
+"حسابداری انتخاب کرده و دوباره امتحان کنید."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
 msgstr ""
 
 #. module: account_check_printing
@@ -355,24 +417,38 @@ msgstr ""
 msgid ""
 "The following numbers are already used:\n"
 "%s"
-msgstr ""
+msgstr "اعداد زیر قبلاً استفاده شده‌اند: %s"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
 msgstr ""
+"شماره‌‎ی آخرین چک %s بود. به منظور اجتناب از رد شدن یک چک توسط بانکف تنها می‌"
+"توانید از یک عدد بزرگ‌تر استفاده کنید."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
 msgstr ""
+"دفتر روزنامه‌ی انتخاب شده برای چاپ شماره‌های چک پیکربندی شده است. چکی که از قب "
+"چاتپ شده است دارای شماره است یا اگر شماره‌ی جدید نادرست است، می‌توانید آن را "
+"در صفحه‌ی پیکربندی دفتر روزنامه تغییر دهید."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
 msgstr ""
+"اگر جزئیات چک (ته چک) در یک صفحه جای نگیرند، این گزینه به شما امکان می‌دهد "
+"آنها را روی چند صفحه چاپ کنید."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -381,11 +457,15 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"این گزینه به شما امکان می‌دهد برچسب تاریخ روی چک را برای هر CPA چاپ کنید.\n"
+"اگر این چک از قبل چاپ شده دارای برچسب تاریخ باشد، آن را لغو کنید."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
 msgstr ""
+"این گزینه امکان ذخیره‌ی شماره‌ی چک‌های مربوطه را در پرداخت‌ها فراهم می‌کند."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -395,10 +475,54 @@ msgstr "ارسال نشده"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
+msgstr "چک باطل شده"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"شما باید یک طرح چک را انتخاب کنید. برای این کار، به تنظیمات صدور فاکتور/"
+"حسابداری رفته و گزینه‌ی «طرح چک» را جستجو کنید."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "check_number"
 msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
+msgid "out_refund"
 msgstr ""
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "sep"
+msgstr ""
+
+#~ msgid "Contact"
+#~ msgstr "مخاطب"
+
+#~ msgid "Journal Entry"
+#~ msgstr "داده روزنامه"
+
+#~ msgid "Preferred Payment Method"
+#~ msgstr "روش پرداخت ترجیحی"
+
+#~ msgid ""
+#~ "Preferred payment method when paying this vendor. This is used to filter "
+#~ "vendor bills by preferred payment method to register payments in mass. "
+#~ "Use cases: create bank files for batch wires, check runs."
+#~ msgstr ""
+#~ "روش پرداخت ترجیحی هنگام پرداخت این فروشنده. این برای فیلتر کردن صورتحساب "
+#~ "های فروشنده با روش پرداخت ترجیحی برای ثبت پرداخت به صورت انبوه استفاده می "
+#~ "شود. از موارد استفاده کنید: پرونده های بانکی را برای سیم های دسته ای "
+#~ "ایجاد کنید ، بررسی کنید."
+
+#~ msgid "Register Payment"
+#~ msgstr "ثبت پرداخت"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-08-27 14:16+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -99,8 +99,8 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text"
-" Messages are being processed.</span>"
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+"Messages are being processed.</span>"
 msgstr ""
 "<span name=\"process_text_sms\" invisible=\"mailing_type != "
 "'sms'\">Tekstiviestejä käsitellään.</span>"
@@ -120,8 +120,8 @@ msgid ""
 "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages have been sent.</span>"
 msgstr ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">Tekstiviestit on"
-" lähetetty.</span>"
+"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">Tekstiviestit on "
+"lähetetty.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
@@ -132,22 +132,26 @@ msgstr "<span widget=\"statinfo\">Avoin vastaanottaja</span>"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
+"                            It appears you don't have enough IAP credits. "
+"Click here to buy credits.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Sinulla ei näytä olevan tarpeeksi IAP-krediittejä. Klikkaa tästä ostaaksesi krediittejä.\n"
+"                            Sinulla ei näytä olevan tarpeeksi IAP-"
+"krediittejä. Klikkaa tästä ostaaksesi krediittejä.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears your SMS account is not registered. Click here to set up your account.\n"
+"                            It appears your SMS account is not registered. "
+"Click here to set up your account.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Näyttää siltä, että tekstiviestitiliäsi ei ole rekisteröity. Klikkaa tästä tilin perustamiseksi.\n"
+"                            Näyttää siltä, että tekstiviestitiliäsi ei ole "
+"rekisteröity. Klikkaa tästä tilin perustamiseksi.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -203,6 +207,11 @@ msgstr "Käsittelyssä tapahtui virhe."
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
 msgid "Attachment Count"
 msgstr "Liitteiden määrä"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_authentication
+msgid "Authentication Error\""
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -413,7 +422,8 @@ msgid ""
 "For an Email, Subject your Recipients will see in their inbox.\n"
 "                    For an SMS Text Message, internal Title of the Message."
 msgstr ""
-"Sähköpostin aihe, jonka vastaanottajat näkevät saapuneessa postilaatikossaan.\n"
+"Sähköpostin aihe, jonka vastaanottajat näkevät saapuneessa "
+"postilaatikossaan.\n"
 "                    Tekstiviestin osalta viestin sisäinen otsikko."
 
 #. module: mass_mailing_sms
@@ -424,6 +434,11 @@ msgid ""
 msgstr ""
 "Sähköpostin aihe, jonka vastaanottajat näkevät postilaatikossaan.\n"
 "Tekstiviestissä viestin sisäinen otsikko."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_to
+msgid "From / To identic"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
@@ -464,8 +479,8 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
 "Jos tarkistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää "
 "saa massatekstiviestejä miltään listalta"
@@ -473,8 +488,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid ""
-"Immediately send the SMS Mailing instead of queuing up. Use at your own "
-"risk."
+"Immediately send the SMS Mailing instead of queuing up. Use at your own risk."
 msgstr ""
 "Lähetä tekstiviestilähetys heti jonottamisen sijaan. Käytä omalla "
 "vastuullasi."
@@ -484,6 +498,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
 msgstr "Sisällytä opt-out-linkki"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_callback
+msgid "Incorrect callback URL"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -627,6 +646,11 @@ msgid "Messages"
 msgstr "Viestit"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_missing
+msgid "Missing From Number"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
 msgid "Missing Number"
 msgstr "Puuttuva numero"
@@ -649,8 +673,8 @@ msgstr "Ei vielä tietoja!"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
 msgid ""
-"No need to import mailing lists, you can send SMS to contacts saved in other"
-" Odoo apps."
+"No need to import mailing lists, you can send SMS to contacts saved in other "
+"Odoo apps."
 msgstr ""
 "Postituslistoja ei tarvitse tuoda, vaan voit lähettää tekstiviestejä muihin "
 "Odoo-sovelluksiin tallennettuihin yhteystietoihin."
@@ -703,11 +727,11 @@ msgstr "Numero(t)"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"Once you send these text messages, they'll be making a grand entrance in all"
-" pockets, creating quite the bzzzzz!"
+"Once you send these text messages, they'll be making a grand entrance in all "
+"pockets, creating quite the bzzzzz!"
 msgstr ""
-"Kun lähetät nämä tekstiviestit, ne tekevät suuren vaikutuksen ja aiheuttavat"
-" melkoisen pörinän!"
+"Kun lähetät nämä tekstiviestit, ne tekevät suuren vaikutuksen ja aiheuttavat "
+"melkoisen pörinän!"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -722,8 +746,8 @@ msgid ""
 "Oops! The phone number seems to be incorrect. Please make sure to include "
 "the country code."
 msgstr ""
-"Hups! Puhelinnumero vaikuttaa virheelliseltä. Varmistathan, että se sisältää"
-" maakoodin."
+"Hups! Puhelinnumero vaikuttaa virheelliseltä. Varmistathan, että se sisältää "
+"maakoodin."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
@@ -1103,8 +1127,7 @@ msgstr "Voittajan valinta"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid ""
-"Write an appealing SMS Text Message, define recipients and track its "
-"results."
+"Write an appealing SMS Text Message, define recipients and track its results."
 msgstr ""
 "Kirjoita houkutteleva tekstiviesti, määritä vastaanottajat ja seuraa sen "
 "tuloksia."

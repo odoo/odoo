@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-10-27 23:40+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-14 05:18+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "product/ja/>\n"
@@ -443,6 +443,14 @@ msgstr ""
 "明細の価格を計算するための一連の販売価格または規則です。\n"
 "　　これは、いくつかの価格設定、シーズン値引などを処理するために最適なツール"
 "です。"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -890,7 +898,7 @@ msgstr "茶"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Bye-bye, record!"
-msgstr "さよなら、レコード！"
+msgstr "このレコードを削除します"
 
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
@@ -947,10 +955,10 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"プロダクトの測定単位を変更すると、1%(old_uom_name)s= 1%(new_uom_name)s "
-"の変換が適用されます。\n"
-"このプロダクトを使用しているすべての既存のレコード(販売オーダ、購買オーダなど"
-")は、単位名が置き換えられて更新されます。"
+"プロダクトの測定単位を変更すると、1%(old_uom_name)s= 1%(new_uom_name)s の変換"
+"が適用されます。\n"
+"このプロダクトを使用しているすべての既存のレコード(販売オーダ、購買オーダな"
+"ど)は、単位名が置き換えられて更新されます。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -1193,7 +1201,7 @@ msgstr "プロダクト作成"
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:product.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr "オーダで作成"
+msgstr "オーダ時に作成"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -3327,6 +3335,12 @@ msgid "Ray-Ban"
 msgstr "Ray-Ban"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr "赤"
@@ -4413,7 +4427,8 @@ msgstr " %s プロダクトの追加料金を更新しようとしています�
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr "価格表機能を停止しています。すべてのアクティブな価格表はアーカイブされます。"
+msgstr ""
+"価格表機能を停止しています。すべてのアクティブな価格表はアーカイブされます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
@@ -4467,13 +4482,6 @@ msgid ""
 msgstr ""
 "リンクされているプロダクトがあるため、この属性をアーカイブすることはできませ"
 "ん。"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "価格表項目で主要価格表をその他価格表に割当てることはできません。"
 
 #. module: product
 #. odoo-python
@@ -4772,6 +4780,10 @@ msgstr "to"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr "価格表項目で主要価格表をその他価格表に割当てることはできません。"
 
 #~ msgid "1 year warranty extension"
 #~ msgstr "1年保証延長"

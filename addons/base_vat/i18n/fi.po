@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-08-28 23:40+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -32,8 +32,7 @@ msgstr "1-01-85004-3 or 101850043"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
 "10XXXXXXXXXXY tai 20XXXXXXXXXXXXY tai 15XXXXXXXXXXY tai 16XXXXXXXXXXY tai "
 "17XXXXXXXXXXY"
@@ -177,6 +176,13 @@ msgstr ""
 "eurooppalaisen VIES-palvelun suorittaman tarkastuksen tuloksesta."
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"If you are trying to input a European number, this is the expected format: "
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
@@ -205,11 +211,11 @@ msgstr "ALV-numero"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
-"%(vat_label)s numero [%(wrong_vat)s] ei näytä olevan kelvollinen. "
-"%(expected_note)s"
+"%(vat_label)s numero [%(wrong_vat)s] ei näytä olevan kelvollinen. %"
+"(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -242,8 +248,8 @@ msgstr "VIES-palvelin ei pystynyt tulkitsemaan ALV-numeroa %s."
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
 msgstr ""
 "Arvonlisäveron vahvistamista koskevaa pyyntöä ei käsitelty. VIES-palvelu on "
 "vastannut seuraavalla virheilmoituksella: %s"
@@ -253,8 +259,8 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
 msgstr ""
-"Ilmoittaaksesi selkeästi, että ALV:tä ei ole (tai se ei ole voimassa), käytä"
-" merkkiä '/'."
+"Ilmoittaaksesi selkeästi, että ALV:tä ei ole (tai se ei ole voimassa), käytä "
+"merkkiä '/'."
 
 #. module: base_vat
 #. odoo-python

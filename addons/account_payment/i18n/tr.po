@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_payment
@@ -27,8 +27,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"%(number)s - taksit tutarı olan <strong>%(amount)s</strong> vadesine <strong"
-" class=\"text-primary\"> %(date)s</strong> kalmıştır"
+"%(number)s - taksit tutarı olan <strong>%(amount)s</strong> vadesine <strong "
+"class=\"text-primary\"> %(date)s</strong> kalmıştır"
 
 #. module: account_payment
 #. odoo-javascript
@@ -111,12 +111,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Uyarı!</strong> Bu ödeme için bekleyen bir iade vardır.\n"
-"                        İşlenmesi için bir dakika bekleyin. İade hala beklemedeyse\n"
-"                        Birkaç dakika sonra lütfen ödeme sağlayıcınızın yapılandırmasını kontrol edin."
+"                        İşlenmesi için bir dakika bekleyin. İade hala "
+"beklemedeyse\n"
+"                        Birkaç dakika sonra lütfen ödeme sağlayıcınızın "
+"yapılandırmasını kontrol edin."
 
 #. module: account_payment
 #. odoo-python
@@ -127,8 +131,8 @@ msgstr "Müşteri %s tarihine kadar ödeme yaparsa indirim uygulanacaktır."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "Bu fatura için zaten bir ödeme yapılmış. Lütfen ikinci kez ödeme "
 "yapmadığınızdan emin olun."
@@ -198,11 +202,6 @@ msgstr "İşlem Yakala"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Kapat"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Kod"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -704,8 +703,7 @@ msgstr "Ödeme işlemi sırasında bir sorun oluştu: işlem başarısız. <br/>
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr ""
-"Ödeme işlemi sırasında bir problem oluştu: Geçersiz kredi kartı ID'si."
+msgstr "Ödeme işlemi sırasında bir problem oluştu: Geçersiz kredi kartı ID'si."
 
 #. module: account_payment
 #. odoo-python
@@ -763,10 +761,12 @@ msgstr "Geçersiz İşlem"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Etkin veya test durumundaki bir sağlayıcıya bağlı bir ödeme yöntemini silemezsiniz.\n"
+"Etkin veya test durumundaki bir sağlayıcıya bağlı bir ödeme yöntemini "
+"silemezsiniz.\n"
 "Bağlı sağlayıcı(lar): %s"
 
 #. module: account_payment
@@ -786,7 +786,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Bir ödeme sağlayıcısının günlüğünü silmeden önce sağlayıcıyı devre dışı bırakmanız gerekir.\n"
+"Bir ödeme sağlayıcısının günlüğünü silmeden önce sağlayıcıyı devre dışı "
+"bırakmanız gerekir.\n"
 "Bağlı sağlayıcılar: %s"
 
 #. module: account_payment
@@ -810,3 +811,6 @@ msgstr "uygulandı."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "Vadesi geçmiş."
+
+#~ msgid "Code"
+#~ msgstr "Kod"

@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 11:54+0000\n"
-"PO-Revision-Date: 2025-10-28 10:02+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-19 16:41+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s18-4/sale_gelato/pt_BR/>\n"
@@ -80,19 +80,19 @@ msgstr ""
 "                        Temos o prazer de informar que seu pedido está em "
 "trânsito.\n"
 "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
-"                            <t t-set=\"tracking_url\" t-value="
-"\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            Seu número de rastreamento é <a t-att-href="
-"\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <t t-set=\"tracking_url\" t-"
+"value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Seu número de rastreamento é <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
 "                            <br/><br/>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            Seus números de rastreamento são:\n"
 "                            <ul>\n"
-"                                <li t-foreach=\"ctx['tracking_data']\" t-as="
-"\"tracking_url\">\n"
-"                                   <a t-att-href=\"tracking_url\" t-out="
-"\"ctx['tracking_data'][tracking_url]\"/>>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                   <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>>\n"
 "                                </li>\n"
 "                            </ul>\n"
 "                        </t>\n"
@@ -106,9 +106,9 @@ msgstr ""
 "                    Obrigado,\n"
 " <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
 "<br/>\n"
-"<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"object.user_id.name or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">Mitchell Admin</"
+"t></div>\n"
 "</t>\n"
 "</p>\n"
 "</div>\n"
@@ -246,6 +246,12 @@ msgid ""
 msgstr ""
 "A Gelato não pôde prosseguir com o atendimento do pedido %"
 "(order_reference)s: %(gelato_message)s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/controlers/main.py:0
+msgid "Gelato has canceled order %(reference)s."
+msgstr "A Gelato cancelou o pedido %(reference)s."
 
 #. module: sale_gelato
 #. odoo-python
@@ -419,6 +425,18 @@ msgid ""
 msgstr ""
 "O pedido com referência %(order_reference)s não foi enviado para a Gelato.\n"
 "Motivo: %(error_message)s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to confirm the order %s on Gelato."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to delete the order %s on Gelato."
+msgstr ""
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form

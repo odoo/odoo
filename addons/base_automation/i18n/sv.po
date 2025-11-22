@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_automation
-# 
+# * base_automation
+#
 # Translators:
 # Lasse L, 2025
 # Wil Odoo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-4/"
+"base_automation/sv/>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -66,8 +69,8 @@ msgstr "<code>env</code>: miljö där åtgärden utlöses"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: modell för den post som åtgärden utlöses på; är en void "
 "recordset"
@@ -119,7 +122,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
 msgid "<span class=\"o_stat_text\">Automation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">automatisering</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -189,7 +192,6 @@ msgstr "Ansök på"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Arkiverad"
 
@@ -280,7 +282,7 @@ msgstr "Försening"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_mode
 msgid "Delay mode"
-msgstr ""
+msgstr "Fördröjningsläge"
 
 #. module: base_automation
 #. odoo-python
@@ -288,11 +290,13 @@ msgstr ""
 msgid ""
 "Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."
 msgstr ""
+"Fördröjningen måste vara positiv. Ställ in 'Fördröjningsläge' på 'Före' för "
+"att neutralisera fördröjningen."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay unit"
-msgstr ""
+msgstr "Fördröjningsenhet"
 
 #. module: base_automation
 #. odoo-javascript
@@ -366,7 +370,7 @@ msgstr "Följare (kontakter)"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Following child actions have warnings: %(children)s"
-msgstr ""
+msgstr "Följande underaktiviteter har varningar: %(children)s"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
@@ -419,8 +423,8 @@ msgstr "Om markerad, några meddelanden har leveransfel."
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
 "Om detta villkor finns måste det uppfyllas innan automatiseringsregeln körs."
 
@@ -430,6 +434,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
 msgstr ""
+"Om det finns måste detta villkor vara uppfyllt innan posten uppdateras. Inte "
+"markerat vid postskapande."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -437,6 +443,13 @@ msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
 msgstr ""
+"Om den förnyas, uppdatera den hemliga URL:en i tredjepartsappen som anropar "
+"denna webhook."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "Inkludera arkiverade"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -512,11 +525,11 @@ msgstr "Modellnamn"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
-"Modell för åtgärd %(action_name)s ska matcha den från automatiserad regel "
-"%(rule_name)s."
+"Modell för åtgärd %(action_name)s ska matcha den från automatiserad regel %"
+"(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -597,12 +610,12 @@ msgstr "På arkiverad"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On create"
-msgstr ""
+msgstr "Vid skapa"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On create and edit"
-msgstr ""
+msgstr "Vid skapa och redigera"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
@@ -637,7 +650,7 @@ msgstr "På webhook"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__previous_domain
 msgid "Previous Domain"
-msgstr ""
+msgstr "Förgående domän"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
@@ -657,7 +670,7 @@ msgstr "Hämta poster"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Renew"
-msgstr ""
+msgstr "Förnya"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
@@ -683,12 +696,12 @@ msgstr "Schemalagda åtgärder"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Scheduled action"
-msgstr ""
+msgstr "Schemalagd aktivitet"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Secret URL"
-msgstr ""
+msgstr "Välj URL"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -709,22 +722,24 @@ msgstr "Välj fält..."
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "Skicka ett e-postmeddelande när ett objekt ändrar status, arkivera poster\n"
-"                efter en månads inaktivitet eller påminn dig själv om att följa upp\n"
+"                efter en månads inaktivitet eller påminn dig själv om att "
+"följa upp\n"
 "                uppgifter när en specifik tagg läggs till."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
-"Skicka ett e-postmeddelande när ett objekt ändrar tillstånd, arkivera poster"
-" efter en månads inaktivitet eller påminn dig själv om att följa upp "
+"Skicka ett e-postmeddelande när ett objekt ändrar tillstånd, arkivera poster "
+"efter en månads inaktivitet eller påminn dig själv om att följa upp "
 "uppgifter när en specifik tagg läggs till. <br> Med Automation Rules kan du "
 "automatisera vilket arbetsflöde som helst."
 
@@ -736,7 +751,7 @@ msgstr "Serveraktivitet"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Set an explicit name"
-msgstr ""
+msgstr "Ange ett uttryckligt namn"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
@@ -750,8 +765,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 "Vissa triggers behöver en referens till ett annat fält. Detta fält används "
 "för att lagra den."
@@ -798,8 +813,7 @@ msgstr "Målrekord"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
 "Målmodellen för åtgärder %(action_names)s skiljer sig från regelmodellen."
 
@@ -807,11 +821,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s kan endast användas med åtgärdstypen"
-" \"%(state_value)s\""
+"\"%(trigger_value)s\" %(trigger_label)s kan endast användas med åtgärdstypen "
+"\"%(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -819,8 +833,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
-"Automatiseringsregeln utlöses om och endast om ett av dessa fält uppdateras."
-" Om de är tomma övervakas alla fält."
+"Automatiseringsregeln utlöses om och endast om ett av dessa fält uppdateras. "
+"Om de är tomma övervakas alla fält."
 
 #. module: base_automation
 #. odoo-javascript
@@ -837,6 +851,7 @@ msgstr ""
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "The scheduled action for Automation Rules seems to have vanished."
 msgstr ""
+"Den schemalagda åtgärden för automatiseringsregler verkar ha försvunnit."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -913,7 +928,7 @@ msgstr "Använd kalender"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__url
 msgid "Use this URL in the third-party app to call this webhook."
-msgstr ""
+msgstr "Använd den här URL:en i tredjepartsappen för att anropa denna webhook."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
@@ -972,10 +987,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "När ska villkoret utlösas.\n"
-"                Om det finns kommer det att kontrolleras av schemaläggaren. Om tomt, kommer att kontrolleras vid skapande och uppdatering."
+"                Om det finns kommer det att kontrolleras av schemaläggaren. "
+"Om tomt, kommer att kontrolleras vid skapande och uppdatering."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1001,6 +1018,8 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can ask an administrator to disable or fix this automation."
 msgstr ""
+"Du kan be en administratör att inaktivera eller åtgärda den här "
+"automatiseringen."
 
 #. module: base_automation
 #. odoo-python
@@ -1027,4 +1046,4 @@ msgstr "ingen åtgärd definierad..."
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
-msgstr ""
+msgstr "sökväg"

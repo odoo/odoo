@@ -10,13 +10,14 @@
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Mónica Pinheiro, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2025-09-02 16:37+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 13:10+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-4/"
 "website_slides_survey/pt/>\n"
 "Language: pt\n"
@@ -31,7 +32,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid "- %s (Courses - %s)"
-msgstr ""
+msgstr "- %s (Cursos - %s)"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -60,6 +61,26 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Caro(a) <t t-out=\"object.partner_id.name or 'participant' or ''\""
+">participante</t><br><br>\n"
+"        Infelizmente, reprovou na certificação e deixou de ser membro do "
+"curso: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Noções "
+"Básicas de Jardinagem</t>.<br><br>\n"
+"        Não hesite e volte a inscrever-se!\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href="
+"\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
+"                Inscreva-se agora\n"
+"            </a>\n"
+"        </div>\n"
+"        Agradecemos a sua participação.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -132,12 +153,12 @@ msgstr "<span class=\"text-muted\">Certificações</span>"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Certificado</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Finished</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Terminado</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
@@ -184,6 +205,9 @@ msgid ""
 "Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
 "%s"
 msgstr ""
+"Qualquer Inquérito listado abaixo é usado atualmente como uma Certificação "
+"de Curso e não pode ser eliminada:\n"
+"%s"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
@@ -607,6 +631,8 @@ msgstr "Você não tem permissão para vincular uma certificação."
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 msgid "You can create your certification from here or use an existing one. Once your certification is created, you can still edit it in backend."
 msgstr ""
+"Pode criar a sua certificação aqui ou usar uma existente. Assim que a sua "
+"certificação tenha sido criada, ainda poderá editá-la no backend."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content

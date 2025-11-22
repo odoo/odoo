@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:38+0000\n"
-"PO-Revision-Date: 2025-09-17 15:21+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:35+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/web/da/"
 ">\n"
@@ -504,17 +504,17 @@ msgid ""
 "merge all samples.<br/>It can lead to partially invalid result in case of "
 "concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
 "                                <option value=\"tabs\">Separeret (én pr. "
 "tabulator)</option>\n"
 "                                <option value=\"temporal\">Temporær "
 "(eksperimentel)</option>\n"
 "                            </select>\n"
-"                            <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Advarsel:</b> Temporør "
-"tilstand fletter alle prøver.<br/>Dette kan føre til et delvist ugyldigt "
-"resultat i tilfælde af samtidige resultater.<br/>Bruges varsomt </span>"
+"                            <span id=\"temporal_warning\" class=\"alert "
+"alert-warning\" style=\"display:none\"><b>Advarsel:</b> Temporør tilstand "
+"fletter alle prøver.<br/>Dette kan føre til et delvist ugyldigt resultat i "
+"tilfælde af samtidige resultater.<br/>Bruges varsomt </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -656,8 +656,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong class=\"text-nowrap\"><span class=\"oe_currency_value\">\n"
-"                                                       22.137,50</span> "
-"€</strong>"
+"                                                       22.137,50</span> €</"
+"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -2450,7 +2450,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 msgid "Delay the apparition of the zoomed image with a value in milliseconds"
-msgstr "Forsink fremkomsten af det zoomede billede med en værdi i millisekunder"
+msgstr ""
+"Forsink fremkomsten af det zoomede billede med en værdi i millisekunder"
 
 #. module: web
 #. odoo-javascript
@@ -5245,8 +5246,8 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type %"
 "(field_type)s)"
 msgstr ""
-"Kun typer %(supported_types)s er understøttet for kategori (fundet type "
-"%(field_type)s)"
+"Kun typer %(supported_types)s er understøttet for kategori (fundet type %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-python
@@ -5255,8 +5256,8 @@ msgid ""
 "Only types %(supported_types)s are supported for filter (found type %"
 "(field_type)s)"
 msgstr ""
-"Kun typer %(supported_types)s understøtter filter (fundet type "
-"%(field_type)s)"
+"Kun typer %(supported_types)s understøtter filter (fundet type %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -5448,8 +5449,8 @@ msgstr "Adgangskode"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
 msgstr ""
-"Anvend venligst følgende oplysninger ved betaling: <b><span>INV/2023/"
-"00003</span></b>"
+"Anvend venligst følgende oplysninger ved betaling: <b><span>INV/2023/00003</"
+"span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -6386,8 +6387,8 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
-"Vælg <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" title="
-"\"Database\"/>"
+"Vælg <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -7012,6 +7013,12 @@ msgstr "Domænet bør ikke indeholde ikke-literaler"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr "Filen er ikke et billede, størrelsen kan ikke ændres"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 msgid ""
@@ -7020,6 +7027,12 @@ msgid ""
 msgstr ""
 "Handlingen blev afbrudt. Dette betyder typisk, at den nuværende handling "
 "tager for lang tid."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr "Det er ikke muligt at ændre billedets størrelse"
 
 #. module: web
 #. odoo-javascript
@@ -7034,8 +7047,8 @@ msgid ""
 "The selected file (%(size)sB) is larger than the maximum allowed file size (%"
 "(maxSize)sB)."
 msgstr ""
-"Den valgte fil (%(size)sB) overskrider den maksimalt tilladte størrelse "
-"(%(maxSize)sB)."
+"Den valgte fil (%(size)sB) overskrider den maksimalt tilladte størrelse (%"
+"(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -7619,7 +7632,8 @@ msgstr "Brug udførelseskontekst"
 #: code:addons/web/static/src/views/fields/integer/integer_field.js:0
 msgid ""
 "Use it with the 'User-friendly format' option to customize the formatting."
-msgstr "Tilpas formateringen ved at bruge indstillingen 'brugervenligt format'."
+msgstr ""
+"Tilpas formateringen ved at bruge indstillingen 'brugervenligt format'."
 
 #. module: web
 #. odoo-javascript

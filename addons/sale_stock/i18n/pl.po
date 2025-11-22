@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-09-30 23:41+0000\n"
-"Last-Translator: Dawid Gacek <dawid.gacek@adapt-it.pl>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
 "sale_stock/pl/>\n"
 "Language: pl\n"
@@ -66,12 +67,16 @@ msgstr "<span class=\"o_stat_text\">Sprzedaż</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Wysłane\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Wysłane\n"
 "                                    </span>"
 
 #. module: sale_stock
@@ -94,16 +99,21 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Zgodnie z konfiguracją produktu, dostarczona ilość może być automatycznie obliczana przez mechanizm:\n"
+"Zgodnie z konfiguracją produktu, dostarczona ilość może być automatycznie "
+"obliczana przez mechanizm:\n"
 "- Ręcznie: ilość jest ustawiana ręcznie na linii\n"
 "- Analityczne z wydatków: ilość jest sumą ilości z zaksięgowanych wydatków\n"
-"- Z karty pracy: ilość jest sumą godzin zarejestrowanych na zadaniach powiązanych z tą linią sprzedaży\n"
+"- Z karty pracy: ilość jest sumą godzin zarejestrowanych na zadaniach "
+"powiązanych z tą linią sprzedaży\n"
 "- Przesunięcia zasobów: ilość pochodzi z potwierdzonych pobrań\n"
 
 #. module: sale_stock
@@ -235,6 +245,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
@@ -335,6 +346,7 @@ msgstr "Ma późne zbieranie"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ID"
 
@@ -345,8 +357,8 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Jeśli dostarczasz wszystkie produkty jednocześnie, zlecenie dostawy zostanie"
-" zaplanowane na podstawie największego czasu realizacji produktu. W "
+"Jeśli dostarczasz wszystkie produkty jednocześnie, zlecenie dostawy zostanie "
+"zaplanowane na podstawie największego czasu realizacji produktu. W "
 "przeciwnym razie będzie ono oparte na najkrótszym."
 
 #. module: sale_stock
@@ -379,8 +391,7 @@ msgstr "Incoterm:"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Międzynarodowe warunki handlowe są zestawem predefiniowanych procedur."
+msgstr "Międzynarodowe warunki handlowe są zestawem predefiniowanych procedur."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -455,12 +466,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Margines błędu dla dat obiecanych klientom. Produkty będą planowane do "
-"zapotrzebowań i dostaw o tyle dni wcześniej niż rzeczywista obiecana data, w"
-" celu radzenia sobie z nieoczekiwanymi opóźnieniami w łańcuchu dostaw."
+"zapotrzebowań i dostaw o tyle dni wcześniej niż rzeczywista obiecana data, w "
+"celu radzenia sobie z nieoczekiwanymi opóźnieniami w łańcuchu dostaw."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -558,10 +569,13 @@ msgstr "ZWROT"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
-"                replenishment propositions, shipping connectors, barcode scanner, etc."
+"                replenishment propositions, shipping connectors, barcode "
+"scanner, etc."
 msgstr ""
-"Zredukuj ilość oczekujących zamówień dzięki rezerwacjom, zarządzaniem lokalizacjami, inteligentnymi\n"
-"                propozycjami uzupełniania zapasów, kurierami, skanerem kodów kreskowych itp."
+"Zredukuj ilość oczekujących zamówień dzięki rezerwacjom, zarządzaniem "
+"lokalizacjami, inteligentnymi\n"
+"                propozycjami uzupełniania zapasów, kurierami, skanerem kodów "
+"kreskowych itp."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -720,6 +734,11 @@ msgid "Stock Rules report"
 msgstr "Raport reguł zasobów"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "Warstwa wyceny zapasów"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Raport reguły zasobów"
@@ -735,22 +754,26 @@ msgstr "Dostawa"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%(old_address)s\"</strong> to "
+"<strong>\"%(new_address)s\"</strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Adres dostawy został zmieniony na Zamówieniu Sprzedaży<br/>\n"
-"                        Z <strong>\"%(old_address)s\"</strong> na <strong>\"%(new_address)s\"</strong>,\n"
-"                        Prawdopodobnie powinieneś zaktualizować partnera w tym dokumencie."
+"                        Z <strong>\"%(old_address)s\"</strong> na <strong>\"%"
+"(new_address)s\"</strong>,\n"
+"                        Prawdopodobnie powinieneś zaktualizować partnera w "
+"tym dokumencie."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
-"Zamówiona ilość nie może zostać zmniejszona poniżej ilości już dostarczonej."
-" Zamiast tego, utwórz zwrot w swoim magazynie."
+"Zamówiona ilość nie może zostać zmniejszona poniżej ilości już dostarczonej. "
+"Zamiast tego, utwórz zwrot w swoim magazynie."
 
 #. module: sale_stock
 #. odoo-python

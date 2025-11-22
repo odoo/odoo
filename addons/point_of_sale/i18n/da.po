@@ -8,12 +8,13 @@
 # Wil Odoo, 2025
 # Kira Petersen, 2025
 # "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-10-30 09:32+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-21 14:35+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "point_of_sale/da/>\n"
@@ -165,6 +166,12 @@ msgstr ""
 "ordre?"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "%s required"
+msgstr "%s påkrævet"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%s untaxed"
@@ -230,6 +237,11 @@ msgstr "10000.00"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "11.11"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "123.45"
 msgstr "123.45"
 
@@ -242,6 +254,11 @@ msgstr "1234567890"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
 msgstr "2-03-2000 9:00 AM"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "38.83"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -555,7 +572,7 @@ msgid ""
 "A session-unique sequence number for the order. Negative if generated from "
 "the client"
 msgstr ""
-"Et unikt ekspeditionsnummer for ordren. Negativ, hvis genereret af kunden"
+"Et sessionsunikt sekvensnummer for ordren. Negativ, hvis genereret af kunden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
@@ -642,7 +659,7 @@ msgstr "Kontant afrunding"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__account_move_id
 msgid "Account Move"
-msgstr "Kontobevægelse"
+msgstr "Postering"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
@@ -845,6 +862,8 @@ msgid "Additional required user information:"
 msgstr "Yderligere nødvendige brugeroplysninger:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "Adresse"
@@ -852,7 +871,7 @@ msgstr "Adresse"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Adds a button to set a global discount"
-msgstr "Tilføjer en knap til fastsættelse af en generel rabat."
+msgstr "Tilføjer en knap til fastsættelse af en generel rabat"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -1544,6 +1563,12 @@ msgstr "Annulleret"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Cannot edit orderline"
+msgstr "Ordrelinje kan ikke redigeres"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Cannot modify a tip"
 msgstr "Drikkepenge kan ikke redigeres"
 
@@ -1895,7 +1920,7 @@ msgstr "Kontrollér, om produktet skal vises i kassesystemet."
 msgid ""
 "Check if you want to group products of this unit in point of sale orders"
 msgstr ""
-"Kontrollér, om produkter fra denne enhed skal samles i én ordre ved betaling."
+"Kontrollér, om produkter fra denne enhed skal samles i én ordre ved betaling"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1959,6 +1984,12 @@ msgstr "Vælg kunde"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
 msgstr "Vælg, hvordan portalens URL skal vises på kvitteringen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+msgid "Choose the tax you want to apply"
+msgstr "Vælg den skat, du vil anvende"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2596,6 +2627,7 @@ msgstr "Tilpassede værdier"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -2673,12 +2705,6 @@ msgstr "Kundeadresse påkrævet"
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "Kunde er påkrævet for %s betalingsform."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "Kunde påkrævet"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2839,7 +2865,8 @@ msgstr "Angiv produkter og kategorier for POS til detailhandel og restauranter"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr "Angiv den mindste møntfod for valutaen, der bruges til kontantbetaling"
+msgstr ""
+"Angiv den mindste møntenhed for den valuta, der bruges til kontantbetaling"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__name
@@ -2922,7 +2949,7 @@ msgstr "Destinationskonto er skrivebeskyttet"
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Details"
-msgstr "Detaljer:"
+msgstr "Detaljer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_sequence
@@ -3011,6 +3038,7 @@ msgstr "Rabat:"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Discard"
 msgstr "Kassér"
@@ -3140,9 +3168,7 @@ msgstr "Vis prisen på dine produkter med elektroniske prisskilte"
 #. odoo-python
 #: code:addons/point_of_sale/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"Har ikke adgang, undlad at inkludere disse data i den samlede e-mail til "
-"brugeren."
+msgstr "Har ikke adgang, spring over disse data til brugerens opsamlingsmail"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3374,12 +3400,6 @@ msgstr "Supplerende skatteoplysninger"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
 msgstr "Mislykkede plukninger"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Failed in printing %s changes of the order"
-msgstr "Udskrivningen %s af ordreændringerne mislykkedes"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4013,8 +4033,9 @@ msgid ""
 "                methods automatically."
 msgstr ""
 "Når kontoplanen installeres via Generelle Indstillinger i \n"
-"              Fakturering/Bogføringsappen oprettes kontantbetalinger eller "
-"betalinger via bankoverførsler automatisk."
+"                Fakturering/Bogføringsappen oprettes kontantbetalinger eller "
+"betalinger via\n"
+"                bankoverførsler automatisk."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -4448,7 +4469,7 @@ msgstr ""
 "Kassekladder bogføres direkte på journalens standardkonto via "
 "kontoudtogslinjerne.\n"
 "I bankjournaler bogføres der i stedet på den konto, der er angivet i denne "
-"betalingsmetode for åbne fakturaer.\n"
+"betalingsform for åbne fakturaer.\n"
 "Bemærk: Kun kasse- og bankjournaler er tilladt."
 
 #. module: point_of_sale
@@ -4754,6 +4775,12 @@ msgid "Misc"
 msgstr "Diverse"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Missing required"
+msgstr "Manglende oplysninger påkrævet"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "Mobil"
@@ -4865,15 +4892,15 @@ msgstr ""
 msgid ""
 "Need profit account for the following journals to post the gained amount: %s"
 msgstr ""
-"Følgende journaler mangler en gevinstkonto og kan derfor ikke bruges til at "
-"bogføre gevinster: %s"
+"Følgende journaler mangler en vindingskonto og kan derfor ikke bruges til at "
+"bogføre indtægter: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Net Weight:"
-msgstr "Nettovægt"
+msgstr "Nettovægt:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5215,6 +5242,7 @@ msgstr "Odoo"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Odoo Server Error"
 msgstr "Odoo-serverfejl"
@@ -5401,7 +5429,7 @@ msgstr "Åbningskontanter"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
-msgstr "Besked ved kasseeftersyn "
+msgstr "Besked ved kasseeftersyn: "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5449,7 +5477,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__pos_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__order_id
@@ -5539,12 +5566,18 @@ msgstr "Ordresekvens"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refunded_order_id
 msgid "Order from which items were refunded in this order"
-msgstr "Ordre, som indeholder varer fra denne ordre, der er blevet refunderet."
+msgstr "Ordre, som indeholder varer fra denne ordre, der er blevet refunderet"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
 msgstr "Ordrelinjer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order saved for later"
+msgstr "Ordre gemt til senere"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -5984,7 +6017,7 @@ msgstr "Bekræft venligst stort antal"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "Angiv venligst en gyldig kunde på ordren."
 
@@ -5995,8 +6028,8 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
-"Luk venligst alle POS-sessioner for denne periode, før du lukker den.\n"
-"Åbne sessioner er: %s "
+"Luk venligst alle POS-sessioner for denne periode, før du lukker den. Åbne "
+"sessioner er: %s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -6073,20 +6106,28 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
-"Gå venligst til %s journalen og angiv en indtægtskonto. Denne konto bruges "
+"Gå venligst til journalen %s, og angiv en vindingskonto. Denne konto bruges "
 "til at registrere kontantdifferencer."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"Please note that some printers could not be contacted. The changes will be "
+"taken into account locally, but a preparation ticket may be missing. Here is "
+"the list of printers with errors: %s\n"
+"Do you want to retry ?"
+msgstr ""
+"Det var ikke muligt at oprette forbindelse til nogle af printerne. "
+"Ændringerne er registreret lokalt, men der kan mangle en tilberedningsbon. "
+"Nedenfor vises en liste over printere med fejl: %s\n"
+"Vil du prøve igen?"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 msgid "Please print the invoice from the backend"
 msgstr "Udskriv venligst fakturaen fra backend"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-msgid "Please register the voucher number"
-msgstr "Indtast venligst rabatkuponnummeret"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6100,6 +6141,12 @@ msgstr "Scan venligst QR-koden med %s"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "Vælg venligst en betalingsform"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr "Vælg venligst en tidsblok, inden du fortsætter."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6491,6 +6538,9 @@ msgstr ""
 "            ordrer i køkkenet eller baren, når tjeneren opdaterer en ordre."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Preset"
@@ -7313,6 +7363,7 @@ msgstr "Detailhandel"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Retry"
 msgstr "Prøv igen"
 
@@ -7720,7 +7771,7 @@ msgstr "Sekvens"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
 msgid "Sequence Number"
-msgstr "Nummerserie"
+msgstr "Sekvensnummer"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7970,6 +8021,12 @@ msgid "Skip Preview Screen"
 msgstr "Spring forhåndsvisning over"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr "Tidsblok"
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "Lille hylde"
@@ -7985,6 +8042,12 @@ msgstr "Blød dej med smørret kanelfyld, toppet med flødeostglasur."
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Some Serial/Lot Numbers are missing"
 msgstr "Nogle serie- og partinumre mangler"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr "Nogle ordrer er allerede faktureret. Prøv igen senere."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8009,6 +8072,12 @@ msgstr ""
 "Nogle ordrer kunne ikke sendes til serveren på grund af problemer med "
 "internetforbindelsen. Du kan forlade kassesystemet, men luk ikke sessionen, "
 "før fejlen er rettet."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Some required information is missing."
+msgstr "Nogle nødvendige oplysninger mangler."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8134,12 +8203,6 @@ msgstr "Gem redigerede ordrer i backend"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Some orders are already being invoiced. Please try again later."
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -8379,7 +8442,7 @@ msgstr "Parti- og serienummer findes allerede."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "The Lot/Serial number is not valid"
-msgstr "Parti- og serienummer er ikke gyldig."
+msgstr "Parti- og serienummer er ikke gyldig"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8466,7 +8529,7 @@ msgid ""
 "(See Tips field.)"
 msgstr ""
 "Standardproduktet for drikkepenge mangler. Indtast drikkepengene manuelt i "
-"feltet til drikkepenge."
+"feltet til drikkepenge"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8750,6 +8813,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
 msgstr "Den valgte kunde mangler en adresse."
@@ -8840,7 +8904,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Pine Labs on the terminal."
-msgstr "Transaktionerne håndteres af Pine Labs i terminalen"
+msgstr "Transaktionerne håndteres af Pine Labs i terminalen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pine_labs
@@ -9035,6 +9099,18 @@ msgid "This invoice has been created from the point of sale session:%s"
 msgstr "Fakturaen er blevet oprettet ud fra kassesessionen:%s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"This invoice is linked to a POS Order, resetting it to draft prevents "
+"closing the session. You should rather refund the order or create a credit "
+"note."
+msgstr ""
+"Denne faktura er knyttet til en kasseordre. Hvis du nulstiller den til "
+"kladdestatus, vil det forhindre lukning af sessionen. I stedet bør du "
+"refundere ordren eller oprette en kreditnota."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
@@ -9050,7 +9126,7 @@ msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
 "Denne journal er tilknyttet en betalingsform. Det er ikke muligt at ændre "
-"dens type."
+"dens type"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9104,6 +9180,14 @@ msgstr ""
 "synkroniseret, og prøv derefter igen."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid ""
+"This orderline has already been sent to the kitchen and cannot be edited."
+msgstr ""
+"Denne ordre er allerede sendt til køkkenet og kan ikke længere redigeres."
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
@@ -9121,7 +9205,7 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
-"Denne nummerserie oprettes automatisk af Odoo, men du kan ændre den for at "
+"Denne sekvens oprettes automatisk af Odoo, men du kan ændre den for at "
 "tilpasse referencenumrene på dine ordrelinjer."
 
 #. module: point_of_sale
@@ -9131,7 +9215,7 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
-"Denne nummerserie oprettes automatisk af Odoo, men du kan ændre den for at "
+"Denne sekvens oprettes automatisk af Odoo, men du kan ændre den for at "
 "tilpasse referencenumrene på dine ordrer."
 
 #. module: point_of_sale
@@ -9288,6 +9372,7 @@ msgstr "I dag"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Total"
 msgstr "I alt"
 
@@ -9763,14 +9848,10 @@ msgstr ""
 "Advarsel, det betalte beløb er højere end det samlede beløb. (Difference: %s)"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr ""
-"Advarsel: IndexedDB understøttes ikke i din browser, og data kan derfor ikke "
-"gemmes. Vi anbefaler, at du anvender en moderne browser."
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid "Warning: Invoice Reset Risk"
+msgstr "Advarsel: risiko ved nulstilling af fakturaen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
@@ -9991,6 +10072,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/res_partner.py:0
+msgid ""
+"You cannot delete a customer that has point of sales orders. You can archive "
+"it instead."
+msgstr ""
+"Du kan ikke slette en kunde, der har kasseordrer. Du kan dog arkivere kunden."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
@@ -10030,13 +10120,6 @@ msgid "You cannot edit a payment for a posted order."
 msgstr ""
 "Det er ikke muligt at redigere en betaling på en ordre, der allerede er "
 "bogført."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr ""
-"Det er ikke muligt at fakturere ordrer, der tilhører forskellige firmaer."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10128,14 +10211,14 @@ msgid ""
 "You must select a QR-code method to generate QR-codes for this payment "
 "method."
 msgstr ""
-"For at generere QR-koder til denne betalingsmetode skal du først vælge en QR-"
-"kodemetode."
+"For at generere QR-koder til denne betalingsform skal du først vælge en "
+"metode til QR-koder."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You need a loss and profit account on your cash journal."
-msgstr "Din kassekladde skal indeholde både en tabskonto og en indtægtskonto."
+msgstr "Din kassekladde skal indeholde både en tabs- og vindingskonto."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10438,6 +10521,26 @@ msgstr "for at aktivere knapperne."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "bruger"
+
+#~ msgid "Customer required"
+#~ msgstr "Kunde påkrævet"
+
+#~ msgid "Failed in printing %s changes of the order"
+#~ msgstr "Udskrivningen %s af ordreændringerne mislykkedes"
+
+#~ msgid "Please register the voucher number"
+#~ msgstr "Indtast venligst rabatkuponnummeret"
+
+#~ msgid ""
+#~ "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
+#~ "Please use a modern browser."
+#~ msgstr ""
+#~ "Advarsel: IndexedDB understøttes ikke i din browser, og data kan derfor "
+#~ "ikke gemmes. Vi anbefaler, at du anvender en moderne browser."
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr ""
+#~ "Det er ikke muligt at fakturere ordrer, der tilhører forskellige firmaer."
 
 #~ msgid "39"
 #~ msgstr "39"

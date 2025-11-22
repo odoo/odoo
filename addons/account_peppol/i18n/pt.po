@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-09-02 16:33+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -171,19 +171,19 @@ msgstr ""
 "color: #454748; width: 100%; border-collapse:separate;\">\n"
 "    <tr>\n"
 "        <td align=\"center\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"padding: 16px; background-color: white; color: #454748; "
-"border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
 "                <!-- CABEÇALHO -->\n"
 "                <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
-"\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;\""
-">Notificação</span>\n"
+"                                    <span style=\"font-size: 10px;"
+"\">Notificação</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -193,20 +193,19 @@ msgstr ""
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
 "target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
-"!important; font-weight: 400; background-color: {{ "
-"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Enviar faturas\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object.uses_default_logo\">"
-"\n"
-"                                        <img t-att-src="
-"\"'/logo.png?company=%s' % object.id\" style="
-"\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt="
-"\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?"
+"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
+"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
@@ -223,19 +222,19 @@ msgstr ""
 "                <!-- CONTEÚDO -->\n"
 "                <tr>\n"
 "                    <td align=\"center\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
-"\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>Prezado(a) <t t-out="
-"\"object.name or ''\">YourCompany</t>,</p>\n"
+"                                    <p>Prezado(a) <t t-out=\"object.name or "
+"''\">YourCompany</t>,</p>\n"
 "\n"
 "                                    <p>Adicionamos sua empresa com sucesso à "
 "lista da <strong>Rede Peppol</strong>.</p>\n"
 "\n"
-"                                    <p>Agora você pode <strong>enviar<t t-if="
-"\"object.account_peppol_proxy_state == 'receiver'\"> receber</t></strong> "
+"                                    <p>Agora você pode <strong>enviar<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> receber</t></strong> "
 "faturas eletrônicas via Odoo - totalmente de graça.</p>\n"
 "\n"
 "                                    <p>Atenciosamente,</p>\n"
@@ -616,7 +615,8 @@ msgstr "Cancelar PEPPOL"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
-msgstr "Não é possível cancelar um registro que já tenha sido enviado ao PEPPOL"
+msgstr ""
+"Não é possível cancelar um registro que já tenha sido enviado ao PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
@@ -647,8 +647,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"Código usado para identificar o endpoint do BIS Billing 3.0 e seus derivados."
-"\n"
+"Código usado para identificar o endpoint do BIS Billing 3.0 e seus "
+"derivados.\n"
 "             Lista disponível em https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 
@@ -1249,12 +1249,6 @@ msgstr ""
 "documentos."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr "Verifique as configurações do usuário."
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
@@ -1267,8 +1261,12 @@ msgstr "E-mail de contato principal"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
-msgid "Primary contact email for Peppol-related communication"
-msgstr "E-mail de contato principal para comunicações relacionadas ao Peppol"
+msgid ""
+"Primary contact email for Peppol connection related communications and "
+"notifications.\n"
+"In particular, this email is used by Odoo to reconnect your Peppol account "
+"in case of database change."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1654,14 +1652,6 @@ msgstr "A mensagem não está em conformidade com a política AS4."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr ""
-"O parceiro está sem o Peppol EAS e/ou o identificador de ponto de "
-"extremidade."
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The processor determined that the message's security methods, parameters, "
@@ -1671,15 +1661,6 @@ msgstr ""
 "O processador determinou que não foram atendidos os métodos de segurança, "
 "parâmetros, escopo ou outros requisitos/acordos de nível de política de "
 "segurança da mensagem."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr ""
-"O método de identificação recomendado para a Bélgica é o número de registro "
-"da empresa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1695,7 +1676,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr "O tamanho da parte de dados em uma mensagem de fragmento é maior que %s"
+msgstr ""
+"O tamanho da parte de dados em uma mensagem de fragmento é maior que %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1765,6 +1747,13 @@ msgstr "Houve um problema com o Participante Peppol."
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
 msgstr "Essa fatura também foi"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "This number is used for identification purposes only."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1902,7 +1891,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending your e-invoices via Odoo with this Peppol ID"
-msgstr "Você está enviando suas faturas eletrônicas via Odoo com este Peppol ID"
+msgstr ""
+"Você está enviando suas faturas eletrônicas via Odoo com este Peppol ID"
 
 #. module: account_peppol
 #. odoo-python
@@ -1960,13 +1950,6 @@ msgid ""
 msgstr ""
 "Seu registro foi rejeitado e o motivo foi enviado por e-mail.\n"
 "Entre em contato com nosso suporte se precisar de mais assistência."
-
-#. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this mobile number"
-msgstr "Você receberá um código de verificação nesse número de celular"
 
 #. module: account_peppol
 #. odoo-python
@@ -2055,3 +2038,25 @@ msgstr "para enviar faturas, mas este"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr "Verifique as configurações do usuário."
+
+#~ msgid "Primary contact email for Peppol-related communication"
+#~ msgstr ""
+#~ "E-mail de contato principal para comunicações relacionadas ao Peppol"
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr ""
+#~ "O parceiro está sem o Peppol EAS e/ou o identificador de ponto de "
+#~ "extremidade."
+
+#~ msgid ""
+#~ "The recommended identification method for Belgium is your Company "
+#~ "Registry Number."
+#~ msgstr ""
+#~ "O método de identificação recomendado para a Bélgica é o número de "
+#~ "registro da empresa."
+
+#~ msgid "You will receive a verification code to this mobile number"
+#~ msgstr "Você receberá um código de verificação nesse número de celular"

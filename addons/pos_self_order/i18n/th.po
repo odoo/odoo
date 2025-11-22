@@ -7,13 +7,14 @@
 # Rasareeyar Lappiam, 2025
 #
 # "Rasareeyar Lappiam (rlap)" <rlap@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-08-25 07:43+0000\n"
-"Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
 "pos_self_order/th/>\n"
 "Language: th\n"
@@ -96,31 +97,31 @@ msgstr ""
 "                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
 "                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
 "                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
-"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\""
-"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
-"                    <t t-set=\"country\" t-value="
-"\"client.country_id.name or ''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">สวัสดีค่ะ <t t-out="
-"\"client_name\">ชื่อลูกค้า</t></t>\n"
+"                        <t t-if=\"client_name\">สวัสดีค่ะ <t t-"
+"out=\"client_name\">ชื่อลูกค้า</t></t>\n"
 "                        <t t-else=\"\">สวัสดีค่ะ</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>คำสั่งซื้อ<t t-out=\"object.tracking_number\""
-">...</t>ของคุณ เป็นจำนวน <t t-out=\"object.amount_total\">$xx.xx</t> "
-"ได้รับการยืนยันแล้ว <span t-if=\"object.preset_time or client.street\""
-">คำสั่งซื้อของคุณจะพร้อม</span> <span t-if=\"object.preset_time\">เมื่อ <t t-out="
-"\"format_time(time=object.preset_time, tz=tz, time_format='short', "
-"lang_code=lg)\">12:00 น.</t></span> <span t-if=\"client.street\">ที่อยู่ <t "
-"t-out=\"street\">ถนน</t> <t t-out=\"state\">รัฐ</t> <t t-out="
-"\"client.zip or ''\">ไปรษณีย์</t> <t t-out=\"city\">เมือง</t> <t t-out="
-"\"country\">ประเทศ</t></span></div>\n"
+"                    <div>คำสั่งซื้อ<t t-out=\"object.tracking_number\">...</"
+"t>ของคุณ เป็นจำนวน <t t-out=\"object.amount_total\">$xx.xx</t> ได้รับการยืนยันแล้ว "
+"<span t-if=\"object.preset_time or client.street\">คำสั่งซื้อของคุณจะพร้อม</span> "
+"<span t-if=\"object.preset_time\">เมื่อ <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 น.</t></span> <span t-if=\"client.street\">ที่อยู่ <t t-"
+"out=\"street\">ถนน</t> <t t-out=\"state\">รัฐ</t> <t t-out=\"client.zip or "
+"''\">ไปรษณีย์</t> <t t-out=\"city\">เมือง</t> <t t-out=\"country\">ประเทศ</t></"
+"span></div>\n"
 "                    <br/>\n"
 "                    <div>ขอขอบคุณ</div>\n"
 "                    <br/>\n"
@@ -164,22 +165,22 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">สวัสดีค่ะ<t t-out="
-"\"client_name\">ชื่อลูกค้า</t>,</t>\n"
+"                        <t t-if=\"client_name\">สวัสดีค่ะ<t t-"
+"out=\"client_name\">ชื่อลูกค้า</t>,</t>\n"
 "                        <t t-else=\"\">สวัสดีค่ะ</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>คำสั่งซื้อ <t t-out=\"object.tracking_number\">ของคุณ</"
 "t> เป็นจำนวน <t t-out=\"object.amount_total\">$xx.xx</t> ได้รับการยืนยันแล้ว <span "
-"t-if=\"object.preset_time\">คำสั่งซื้อจะถูกจัดส่งเมื่อ <t t-out=\"format_time("
-"time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"pm</t></span></div>\n"
+"t-if=\"object.preset_time\">คำสั่งซื้อจะถูกจัดส่งเมื่อ <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>ขอบคุณค่ะ</div>\n"
 "                    <br/>\n"
@@ -197,8 +198,7 @@ msgstr ""
 msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
-msgstr ""
-"สิทธิ์การเข้าถึงของผู้ใช้รายนี้จะถูกใช้เมื่อเยี่ยมชมเว็บไซต์สั่งซื้อด้วยตนเองเมื่อไม่มีการเปิดเซสชัน"
+msgstr "สิทธิ์การเข้าถึงของผู้ใช้รายนี้จะถูกใช้เมื่อเยี่ยมชมเว็บไซต์สั่งซื้อด้วยตนเองเมื่อไม่มีการเปิดเซสชัน"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -321,7 +321,7 @@ msgstr "ยกเลิกคำสั่งซื้อ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ยกเลิก"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -470,8 +470,7 @@ msgstr "ลิงค์ที่กำหนดเอง"
 msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
-msgstr ""
-"ลิงก์แบบกำหนดเองที่ร้านอาหารสามารถกำหนดค่าให้แสดงบนหน้าจอสั่งอาหารด้วยตนเองได้"
+msgstr "ลิงก์แบบกำหนดเองที่ร้านอาหารสามารถกำหนดค่าให้แสดงบนหน้าจอสั่งอาหารด้วยตนเองได้"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -609,7 +608,7 @@ msgstr "เทมเพลตอีเมล"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
 msgstr ""
@@ -645,6 +644,11 @@ msgid "Follow instructions on the terminal"
 msgstr "ปฏิบัติตามคำแนะนำบนเทอร์มินัล"
 
 #. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Free Metal / Wood Stands"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
@@ -652,13 +656,14 @@ msgstr "ค่าทั่วไป"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
+#: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
 msgid "Get QR Codes"
 msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid "Get QR codes"
 msgstr ""
 
@@ -765,8 +770,7 @@ msgstr "รูปภาพที่จะแสดงบนหน้าจอก
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
-msgstr ""
-"ในโหมดการสั่งซื้อด้วยตนเอง คุณต้องมีอย่างน้อยหนึ่งตารางเพื่อสร้างรหัส QR โค้ด"
+msgstr "ในโหมดการสั่งซื้อด้วยตนเอง คุณต้องมีอย่างน้อยหนึ่งตารางเพื่อสร้างรหัส QR โค้ด"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -782,7 +786,7 @@ msgstr "ข้อมูล"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Invoiced"
-msgstr ""
+msgstr "ออกใบแจ้งหนี้แล้ว"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -961,7 +965,7 @@ msgstr "ไม่สามารถใช้ได้ในการสั่ง
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "OK"
-msgstr ""
+msgstr "โอเค"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -973,7 +977,7 @@ msgstr "ตกลง"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
-msgstr ""
+msgstr "กำลังดำเนินการ"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1022,7 +1026,7 @@ msgstr "สินค้าหมด"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Paid"
-msgstr ""
+msgstr "ชำระแล้ว"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1053,8 +1057,7 @@ msgstr ""
 msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
-msgstr ""
-"ปรับแต่งหน้าจอสแปลชของคุณโดยเพิ่มรูปภาพหนึ่งหรือหลายรูปเพื่อสร้างสไลด์โชว์"
+msgstr "ปรับแต่งหน้าจอสแปลชของคุณโดยเพิ่มรูปภาพหนึ่งหรือหลายรูปเพื่อสร้างสไลด์โชว์"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1239,7 +1242,7 @@ msgstr "เลือก"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a country"
-msgstr ""
+msgstr "เลือกประเทศ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1703,7 +1706,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "is"
-msgstr ""
+msgstr "เป็น"
 
 #. module: pos_self_order
 #. odoo-javascript

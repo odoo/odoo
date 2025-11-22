@@ -8,15 +8,16 @@
 # Kira Petersen, 2025
 #
 # "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-10-29 12:06+0000\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:51+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/hr/da/>"
-"\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/hr/da/"
+">\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -476,7 +477,6 @@ msgstr "Evne til at håndtere flere opgaver"
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
 msgid "Absent"
 msgstr "Fraværende"
@@ -713,7 +713,6 @@ msgstr "Arkivér"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__archive
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__archive
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -1245,6 +1244,14 @@ msgstr "Annullér"
 msgid "Cannot archive the only active version of an employee."
 msgstr ""
 "Det er ikke muligt at arkivere den eneste aktive version af en medarbejder."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid ""
+"Cannot modify multiple versions contract dates with different contracts at "
+"once."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1789,6 +1796,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Angiv ressourcens arbejdstider. Hvis du ikke angiver dette, har ressourcen "
+"fuldstændig fleksible arbejdstider."
 
 #. module: hr
 #. odoo-javascript
@@ -2276,6 +2285,12 @@ msgid "Employees Tags"
 msgstr "Medarbejder-tags"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
@@ -2537,6 +2552,7 @@ msgid "Full-Time"
 msgstr "Fuldtid"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr "Fremtidige aktiviteter"
@@ -2648,7 +2664,7 @@ msgid "Hiring"
 msgstr "Ansætter"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__home
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
 msgstr "Startside"
@@ -3074,6 +3090,7 @@ msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
 msgstr "Forsinkede aktiviteter"
@@ -3320,7 +3337,7 @@ msgstr "Mine aktiviteter"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_version__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline på mine aktiviteter "
+msgstr "Deadline på mine aktiviteter"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -3535,7 +3552,7 @@ msgid "Number of new employees you expect to recruit."
 msgstr "Antal ansatte, du forventer at rekruttere."
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__office
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
 msgstr "Kontor"
@@ -3586,8 +3603,8 @@ msgstr "Handling ikke understøttet."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "Andet"
@@ -3616,7 +3633,6 @@ msgstr "Uden for arbejdstiden"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
 msgstr "Uden for arbejdstiden"
@@ -3852,7 +3868,6 @@ msgstr ""
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
 msgid "Present"
 msgstr "Til stede"
@@ -4300,6 +4315,11 @@ msgid "Show Hr Icon Display"
 msgstr "Vis HR-ikon"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+msgid "Show all records whose next activity date is past"
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 msgid "Show employees"
@@ -4669,7 +4689,8 @@ msgstr "Brugeren vil være i stand til at oprette og redigere medarbejdere."
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
-msgstr "Brugeren får adgang til både HR-konfiguration og statistiske rapporter."
+msgstr ""
+"Brugeren får adgang til både HR-konfiguration og statistiske rapporter."
 
 #. module: hr
 #. odoo-python
@@ -4745,6 +4766,7 @@ msgstr ""
 "i den nye virksomhed."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "Dagens aktiviteter"
@@ -4793,7 +4815,6 @@ msgstr "Forståelse af principperne for brugeroplevelse (UX)"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
 msgstr "Ubestemt"
 
@@ -5071,7 +5092,6 @@ msgstr "Arbejdssted"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
-#: model:ir.model.fields,field_description:hr.field_hr_version__work_location_name
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
 msgid "Work Location Name"
 msgstr "Navn på arbejdssted"
@@ -5079,7 +5099,6 @@ msgstr "Navn på arbejdssted"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
-#: model:ir.model.fields,field_description:hr.field_hr_version__work_location_type
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
 msgid "Work Location Type"
 msgstr "Type arbejdssted"
@@ -5172,6 +5191,14 @@ msgstr "Arbejdsplaner"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_resource_resource__calendar_id
 msgid "Working Time"
+msgstr "Arbejdstid"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
 msgstr ""
 
 #. module: hr
@@ -5266,13 +5293,13 @@ msgstr ""
 "eksisterende materialer (bøger, kursusbilag, Odoo-præsentationer og "
 "kommercielle værktøjer).\n"
 "Du vil sikre, at disse materialer tilpasses den nye version og\n"
-"foreslå forbedringer, der også dækker nye funktioner og områder i softwaren."
-"\n"
+"foreslå forbedringer, der også dækker nye funktioner og områder i "
+"softwaren.\n"
 "Du bliver en del af teamet for implementeringshjælp. Teamet består af 3 "
 "medarbejdere, der støtter under softwareimplementeringen. Din rolle vil "
 "blandt andet bestå i at\n"
-"afholde webinarer, der demonstrerer softwarens forskellige funktionaliteter,"
-"\n"
+"afholde webinarer, der demonstrerer softwarens forskellige "
+"funktionaliteter,\n"
 "samt yde support besvare kundernes spørgsmål.\n"
 "Derudover vil du støtte supportchefen i udviklingen af vores supportydelser. "
 "Det indebærer\n"

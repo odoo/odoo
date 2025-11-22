@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_product
-# 
+# * event_product
+#
 # Translators:
 # Wil Odoo, 2025
 # Junko Augias, 2025
-# 
+#
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2025-11-14 18:36+0000\n"
+"PO-Revision-Date: 2025-11-17 12:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
+"event_product/ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_product
 #: model:ir.model.fields,help:event_product.field_event_event_ticket__description
@@ -31,7 +35,7 @@ msgstr "顧客に伝えたいチケットの説明。"
 #: model:ir.model.fields,field_description:event_product.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:event_product.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr "オーダで作成"
+msgstr "オーダ時に作成"
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event__currency_id
@@ -148,6 +152,15 @@ msgid "Product Variant"
 msgstr "プロダクトバリアント"
 
 #. module: event_product
+#. odoo-python
+#: code:addons/event_product/models/product_product.py:0
+msgid ""
+"Products linked to an event ticket must have \"%(tracking)s\" set to \"%"
+"(event)s\"."
+msgstr "イベントチケットに関連付けられたプロダクトには、\"%(tracking)s\" を "
+"\"%(event)s\" に設定する必要があります。"
+
+#. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
 msgid "Sale Status"
 msgstr "販売ステータス"
@@ -171,4 +184,4 @@ msgstr "販売数"
 #. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
 msgid "Transaction"
-msgstr "取引明細書"
+msgstr "取引"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2025-08-21 19:35+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -245,7 +245,6 @@ msgstr "Hylkää"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
-#: model:ir.model.fields,field_description:mrp_account.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -286,7 +285,6 @@ msgstr "Ylimääräinen yksikkökustannus"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
-#: model:ir.model.fields,field_description:mrp_account.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ID"
 
@@ -378,8 +376,7 @@ msgstr "Valmistustilauksen kustannuspaikan rivi"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
+msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
 "Varmista, että hyvityksen kokonaismäärä on yhtä suuri kuin veloituksen "
 "kokonaismäärä."
@@ -468,11 +465,6 @@ msgid "Stock Move"
 msgstr "Varastosiirto"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "Varaston arvostuskerros"
-
-#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
 msgid ""
@@ -485,9 +477,9 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
 msgstr ""
 "Kulu kirjataan, kun tuotantotilaus merkitään tehdyksi. Jos sitä ei ole "
 "määritetty, sen sijaan käytetään lopputuotteen menotiliä."
@@ -495,11 +487,15 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
-"Tätä tiliä käytetään tuotantotilausten komponenttien ja lopputuotteiden arvonmäärityksen vastinparina.\n"
-"                Jos tilillä on työpiste-/työntekijäkustannuksia, tämä arvo jää tilille, kun tuotanto on saatu päätökseen."
+"Tätä tiliä käytetään tuotantotilausten komponenttien ja lopputuotteiden "
+"arvonmäärityksen vastinparina.\n"
+"                Jos tilillä on työpiste-/työntekijäkustannuksia, tämä arvo "
+"jää tilille, kun tuotanto on saatu päätökseen."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -618,3 +614,6 @@ msgstr "Työpisteen tuottavuusloki"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[WC] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Varaston arvostuskerros"

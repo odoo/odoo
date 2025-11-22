@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: purchase_stock
@@ -36,6 +36,12 @@ msgstr "%(otd)s %%"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d day(s)"
 msgstr "+ %d gün(ler)"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -102,11 +108,13 @@ msgstr "Depolanabilir bir ürün, stoklarını yönettiğiniz bir üründür."
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Ürün yapılandırmasına göre, alınan miktar mekanizma tarafından otomatik olarak hesaplanabilir:\n"
+"Ürün yapılandırmasına göre, alınan miktar mekanizma tarafından otomatik "
+"olarak hesaplanabilir:\n"
 "  - Manuel: miktar hat üzerinde manuel olarak ayarlanır\n"
 "  - Stok Hareketleri: miktar, onaylanmış toplamalardan gelir\n"
 
@@ -571,8 +579,8 @@ msgstr "Manuel işlem gerekebilir."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Tedarikçi teslimat süreleri için hata payı. Sistem, tekrar sipariş edilen "
 "ürünler için Satın Alma Siparişleri olşturduğunda, beklenmedik tedarikçi "
@@ -609,6 +617,12 @@ msgid "Next transfer(s) impacted:"
 msgstr "Etkilenen sonraki transfer(ler):"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/kanban_controller.js:0
 msgid "No product to buy found"
@@ -640,11 +654,10 @@ msgstr "OTD"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
-"Odoo, anglo sakson girişlerini oluşturamıyor.%s toplam değerlemesi "
-"sıfırdır. "
+"Odoo, anglo sakson girişlerini oluşturamıyor.%s toplam değerlemesi sıfırdır. "
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -685,8 +698,8 @@ msgstr "Sipariş Noktası"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "Son x gün içinde zamanında teslim alınan ürün sayısının sipariş edilen ürün "
@@ -1037,8 +1050,8 @@ msgstr ""
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "The warehouse of operation type (%(operation_type)s) is inconsistent with "
-"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
-" %(product)s. Change the operation type or cancel the request for quotation."
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
 "İşlem türü (%(operation_type)s) nün deposu, ürün (%(product)s) için yeniden "
 "sipariş kuralının (%(reordering_rule)s) konumu (%(location)s) ile uyumlu "
@@ -1048,12 +1061,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
-" %s ürünü için satınalma siparişi oluşturmak için uygun tedarikçi fiyatı yok"
-" (tedarikçi tanımlanmamış, minimum miktara ulaşılmadı, tarihler geçerli "
+" %s ürünü için satınalma siparişi oluşturmak için uygun tedarikçi fiyatı yok "
+"(tedarikçi tanımlanmamış, minimum miktara ulaşılmadı, tarihler geçerli "
 "değil, ...). Ürün formuna gidin ve tedarikçi listesini tamamlayın."
 
 #. module: purchase_stock
@@ -1074,8 +1087,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
-"Bu hesap, satın alma fiyatı ile maliyet tutarı arasındaki fiyat farkı değeri"
-" için kullanılacaktır."
+"Bu hesap, satın alma fiyatı ile maliyet tutarı arasındaki fiyat farkı değeri "
+"için kullanılacaktır."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1090,11 +1103,11 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Bu, tedarikçilerinizden müşterilerinize teslim etmelerini istemek için "
 "ürünlere uygulanacak bir dropshipping rotası ekler. Dropship ürünü, satış "
@@ -1224,8 +1237,8 @@ msgstr "Ürünler satın alındığında bu depoya sevk edilebilir"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "<b>%s</b>'de ürünlere ihtiyaç duyulduğunda, <br/>ihtiyacı karşılamak için "
 "bir teklif talebi oluşturulur. <br/>Not: Bu kural, alım rota(lar)ının "
@@ -1242,15 +1255,6 @@ msgstr ""
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Bu iş ortağı %s için bir tedarikçi konumu belirlemelisiniz"
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/models/purchase_order_line.py:0
-msgid ""
-"You're trying to decrease the ordered quantity below the received quantity, you goofball.\n"
-"\n"
-"Try creating a return first silly billy!"
-msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form

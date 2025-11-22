@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # "Marta (wacm)" <wacm@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-08-14 23:11+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
 "barcodes/pl/>\n"
 "Language: pl\n"
@@ -35,21 +36,28 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
-"<i>Nomenklatura kodów kreskowych</i> określa jak kody s rozpoznawane i kategoryzowane.\n"
-"Po skanowaniu kod jest przypisywany do <i>pierwszej</i> zasady z pasującym wzorcem. \n"
-"Składnia wzorca jest w formie wyrażenia regularnego i kod kreskowy zostaje dopasowany,\n"
+"<i>Nomenklatura kodów kreskowych</i> określa jak kody s rozpoznawane i "
+"kategoryzowane.\n"
+"Po skanowaniu kod jest przypisywany do <i>pierwszej</i> zasady z pasującym "
+"wzorcem. \n"
+"Składnia wzorca jest w formie wyrażenia regularnego i kod kreskowy zostaje "
+"dopasowany,\n"
 "gdy prefiks kodu kreskowego pasuje do wyrażenia regularnego."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets"
-" barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
 msgstr ""
 "Nomenklatura kodu kreskowego definiuje jak punkt sprzedaży identyfikuje i "
 "interpretuje kod kreskowy."
@@ -239,18 +247,28 @@ msgstr "Nomenklatura"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the\n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
-"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
-"Wzorce mogą także określać jak wartości liczbowe (np. waga lub cena) mogą być\n"
-"                                zakodowane w kodzie kreskowym. S one określane przez <code>{NNN}</code> gdzie N-ki\n"
-"                                definiują miejsca kodowania cyfr. Liczby zmiennoprzecinkowe obsługiwane są w formacie\n"
-"                                <code>{NNNDD}</code>, gdzie dziesiętne oznaczane są literą D. W tych przypadkach,\n"
-"                                braku części dziesiętnych, pole to<i>musi</i> być wypełnione\n"
+"Wzorce mogą także określać jak wartości liczbowe (np. waga lub cena) mogą "
+"być\n"
+"                                zakodowane w kodzie kreskowym. S one "
+"określane przez <code>{NNN}</code> gdzie N-ki\n"
+"                                definiują miejsca kodowania cyfr. Liczby "
+"zmiennoprzecinkowe obsługiwane są w formacie\n"
+"                                <code>{NNNDD}</code>, gdzie dziesiętne "
+"oznaczane są literą D. W tych przypadkach,\n"
+"                                braku części dziesiętnych, pole to<i>musi</"
+"i> być wypełnione\n"
 "                                zerami."
 
 #. module: barcodes
@@ -354,12 +372,12 @@ msgstr "Typ"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in"
-" one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
 "Kody UPC mogą być konwertowane do EAN poprzez dodanie początkowych zer. To "
-"ustawienie definiuje czy kody UPC/EAN powinny być automatycznie konwertowane"
-" podczas próby dopasowania reguły dla odmiennego kodowania."
+"ustawienie definiuje czy kody UPC/EAN powinny być automatycznie konwertowane "
+"podczas próby dopasowania reguły dla odmiennego kodowania."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -389,13 +407,21 @@ msgstr "Nieznana komenda"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid ""
-"Used to order rules such that rules with a smaller sequence match first"
+msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
-"Używane przy ustawieniu kolejności zasad, przez co zasady z niższą wartością"
-" dopasowywane są w pierwszej kolejności"
+"Używane przy ustawieniu kolejności zasad, przez co zasady z niższą wartością "
+"dopasowywane są w pierwszej kolejności"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "Wartość ostatniego zeskanowanego kodu kreskowego."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr ""
+"Nie możesz usunąć '%(name)s' ponieważ jest to domyślna nomenklatura kodu "
+"kreskowego."

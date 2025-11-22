@@ -8,13 +8,14 @@
 # Thi Huong Nguyen, 2025
 #
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-08-12 23:11+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-4/"
 "base_automation/vi/>\n"
 "Language: vi\n"
@@ -70,11 +71,11 @@ msgstr "<code>env</code>: môi trường mà tác vụ được kích hoạt"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
-"<code>model</code>: mô hình của bản ghi mà tác vụ được kích hoạt; là một tập"
-" bản ghi không còn hiệu lực"
+"<code>model</code>: mô hình của bản ghi mà tác vụ được kích hoạt; là một tập "
+"bản ghi không còn hiệu lực"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -105,8 +106,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-circle\"/> Trình lấy bản ghi mục tiêu mặc định sẽ hoạt"
-" động ngay lập tức đối với mọi webhook đến từ một phiên bản Odoo khác."
+"<i class=\"fa fa-info-circle\"/> Trình lấy bản ghi mục tiêu mặc định sẽ hoạt "
+"động ngay lập tức đối với mọi webhook đến từ một phiên bản Odoo khác."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -192,7 +193,6 @@ msgstr "Áp dụng cho"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Đã lưu trữ"
 
@@ -423,8 +423,8 @@ msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
 "Nếu có, điều kiện này phải được thỏa mãn trước khi thực thi quy tắc tự động "
 "hóa."
@@ -448,6 +448,11 @@ msgstr ""
 "webhook này."
 
 #. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "Bao gồm dữ liệu đã lưu trữ"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
 msgid "Is Follower"
 msgstr "Là người theo dõi"
@@ -455,8 +460,7 @@ msgstr "Là người theo dõi"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
-"Theo dõi xem tính năng tự động hóa này làm gì và tại sao nó tồn tại..."
+msgstr "Theo dõi xem tính năng tự động hóa này làm gì và tại sao nó tồn tại..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -522,8 +526,8 @@ msgstr "Tên mô hình"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
 "Mô hình của tác vụ %(action_name)s phải khớp với mô hình từ quy tắc tự động "
 "hoá %(rule_name)s."
@@ -719,18 +723,20 @@ msgstr "Chọn các trường..."
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "Gửi email khi một đối tượng thay đổi trạng thái, lưu trữ bản ghi\n"
-"                sau một tháng không hoạt động hoặc nhắc nhở bản thân theo dõi\n"
+"                sau một tháng không hoạt động hoặc nhắc nhở bản thân theo "
+"dõi\n"
 "                các nhiệm vụ khi một thẻ cụ thể được thêm vào."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "Gửi email khi một đối tượng thay đổi trạng thái, lưu trữ bản ghi sau một "
@@ -760,8 +766,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 "Một số trình kích hoạt cần tham chiếu đến trường khác. Trường này được sử "
 "dụng để lưu trữ nó."
@@ -808,8 +814,7 @@ msgstr "Bản ghi mục tiêu"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
 "Mô hình mục tiêu của các tác vụ %(action_names)s khác với mô hình quy tắc."
 
@@ -817,11 +822,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s chỉ có thể được dùng với loại "
-"\"%(state_value)s\" "
+"\"%(trigger_value)s\" %(trigger_label)s chỉ có thể được dùng với loại \"%"
+"(state_value)s\" "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -974,17 +979,19 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"Khi tính toán điều kiện theo thời gian dựa trên ngày, có thể sử dụng lịch để"
-" tính toán ngày dựa trên ngày làm việc."
+"Khi tính toán điều kiện theo thời gian dựa trên ngày, có thể sử dụng lịch để "
+"tính toán ngày dựa trên ngày làm việc."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Khi nào thì điều kiện sẽ được kích hoạt.\n"
-"             Nếu có, sẽ được kiểm tra bởi công cụ lập kế hoạch. Nếu trống, sẽ được kiểm tra khi tạo và cập nhật. "
+"             Nếu có, sẽ được kiểm tra bởi công cụ lập kế hoạch. Nếu trống, "
+"sẽ được kiểm tra khi tạo và cập nhật. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

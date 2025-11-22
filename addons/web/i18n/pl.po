@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:38+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2025-08-26 23:41+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/web/pl/"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
-"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
@@ -505,16 +505,16 @@ msgid ""
 "merge all samples.<br/>It can lead to partially invalid result in case of "
 "concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
 "                                <option value=\"tabs\">Oddzielnie (jeden na "
 "zakładkę)</option>\n"
 "                                <option value=\"temporal\">Czasowy "
 "(eksperymentalny)</option>\n"
 "                            </select>\n"
-"                            <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Uwaga:</b> Tryb czasowy "
-"scali wszystkie próbki.<br/>Może prowadzić do częściowo nieważnych wyników w "
+"                            <span id=\"temporal_warning\" class=\"alert "
+"alert-warning\" style=\"display:none\"><b>Uwaga:</b> Tryb czasowy scali "
+"wszystkie próbki.<br/>Może prowadzić do częściowo nieważnych wyników w "
 "przypadku równoległych profili.<br/>Korzystaj ostrożnie. </span>"
 
 #. module: web
@@ -2124,8 +2124,8 @@ msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
 msgstr ""
-"Nie można ustawić obrazu okładki: w widoku podano nieprawidłowe pole (\"%s\""
-")."
+"Nie można ustawić obrazu okładki: w widoku podano nieprawidłowe pole "
+"(\"%s\")."
 
 #. module: web
 #. odoo-javascript
@@ -7020,6 +7020,12 @@ msgstr "W domenie nie powinny występować wartości inne niż literały."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 msgid ""
@@ -7028,6 +7034,12 @@ msgid ""
 msgstr ""
 "Operacja została przerwana. Zwykle oznacza to, że bieżąca operacja zajmuje "
 "zbyt dużo czasu."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

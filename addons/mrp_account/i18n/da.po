@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-10-30 09:32+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 10:28+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "mrp_account/da/>\n"
@@ -26,12 +26,12 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$1000"
-msgstr "$1000"
+msgstr "1000 $"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$5000"
-msgstr "$5000"
+msgstr "5000 $"
 
 #. module: mrp_account
 #. odoo-python
@@ -42,7 +42,7 @@ msgstr "%s - arbejde"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "2023-08-15"
-msgstr "2023-08-15"
+msgstr "15-08-2023"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
@@ -82,7 +82,7 @@ msgstr "<span>Produkt</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span>Quantity</span>"
-msgstr "<span>Antal</span>"
+msgstr "<span>Mængde</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -127,7 +127,7 @@ msgstr "Omkostningssted"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analytisk fordeling"
+msgstr "Omkostningsfordeling"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
@@ -173,7 +173,7 @@ msgstr "Kategori"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Udregn pris fra stykliste"
+msgstr "Beregn pris ud fra stykliste"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -245,14 +245,13 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
-#: model:ir.model.fields,field_description:mrp_account.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Fordeling af omkostningssted"
+msgstr "Fordeling af omkostningssteder"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
@@ -262,7 +261,7 @@ msgstr "Domæne"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
 msgid "Expense Account"
-msgstr "Vareforbrugskonto"
+msgstr "Udgiftskonto"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
@@ -286,7 +285,6 @@ msgstr "Ekstra enhedsomkostninger"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
-#: model:ir.model.fields,field_description:mrp_account.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ID"
 
@@ -378,9 +376,9 @@ msgstr "Omkostningsstedslinje ved produktionsordrer"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
-msgstr "Sørg for, at det samlede kreditbeløb svarer til det samlede debetbeløb."
+msgid "Please make sure the total credit amount equals the total debit amount."
+msgstr ""
+"Sørg for, at det samlede kreditbeløb svarer til det samlede debetbeløb."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -410,7 +408,7 @@ msgstr "Produktkategori"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
 msgid "Product Variant"
-msgstr "Varevariant"
+msgstr "Produktvariant"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
@@ -441,7 +439,7 @@ msgstr "Produktionsordrer med tilsvarende WIP"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
 msgid "Reversal Date"
-msgstr "Tilbageførsel Dato"
+msgstr "Tilbageførselsdato"
 
 #. module: mrp_account
 #. odoo-python
@@ -463,12 +461,7 @@ msgstr "Vis evaluering"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerflytning"
-
-#. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "Lagerets lagvise værdiansættelse"
+msgstr "Lagerbevægelse"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
@@ -483,9 +476,9 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
 msgstr ""
 "Udgiften bogføres, når produktionsordren markeres som udført. Hvis dette "
 "ikke er angivet, anvendes i stedet udgiftskontoen for det færdige produkt."
@@ -493,8 +486,10 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
 "Denne konto bruges som modkonto for både komponenter og færdige produkter i "
 "produktionsordrer.\n"
@@ -504,12 +499,12 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Credit"
-msgstr "Kreditor total"
+msgstr "Samlet kredit"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
-msgstr "Debitor total"
+msgstr "Samlet debet"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -588,7 +583,7 @@ msgstr "Arbejdscenter"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
-msgstr "Produktionsordre"
+msgstr "Arbejdsordre"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
@@ -599,7 +594,7 @@ msgstr "Antal arbejdsordrer"
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
 msgid "Work Orders"
-msgstr "Produktionsordre"
+msgstr "Arbejdsordrer"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
@@ -617,3 +612,6 @@ msgstr "Arbejdscentrets produktivitetslog"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[WC] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Lagerets lagvise værdiansættelse"

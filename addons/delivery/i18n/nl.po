@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* delivery
-# 
+# * delivery
+#
 # Translators:
 # Jolien De Paepe, 2025
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
-"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:44+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-4/"
+"delivery/nl/>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: delivery
 #. odoo-python
@@ -64,7 +67,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
 "                                <span class=\"o_stat_text\">Omgeving</span>"
@@ -83,7 +87,8 @@ msgstr "<span class=\"text-success\">Debug aanvragen</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Productie</span>\n"
 "                                <span class=\"o_stat_text\">Omgeving</span>"
@@ -100,9 +105,9 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
-"Een beschrijving van de leveringsmethode die je aan je klanten wilt meedelen"
-" op de verkooporder en de e-mail met de verkoopbevestiging. Bijv. "
-"instructies die klanten moeten volgen."
+"Een beschrijving van de leveringsmethode die je aan je klanten wilt meedelen "
+"op de verkooporder en de e-mail met de verkoopbevestiging. Bijv. instructies "
+"die klanten moeten volgen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -152,8 +157,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Bedrag van de order wat kan profiteren van een gratis verzending, uitgedrukt"
-" in het bedrijfsvaluta"
+"Bedrag van de order wat kan profiteren van een gratis verzending, uitgedrukt "
+"in het bedrijfsvaluta"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -164,11 +169,11 @@ msgstr "Gearchiveerd"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid ""
-"Are you sure you want the delivery to be free for this order? You might have"
-" forgotten to compute the rates."
+"Are you sure you want the delivery to be free for this order? You might have "
+"forgotten to compute the rates."
 msgstr ""
-"Weet je zeker dat je een gratis levering wilt aanmaken voor deze bestelling?"
-" Misschien ben je vergeten de tarieven te berekenen."
+"Weet je zeker dat je een gratis levering wilt aanmaken voor deze bestelling? "
+"Misschien ben je vergeten de tarieven te berekenen."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -202,8 +207,7 @@ msgstr "Vervoerder"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 "De vervoerder %s kan niet hetzelfde label in zowel verplichte labels als "
 "uitgesloten labels hebben."
@@ -424,6 +428,7 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+#: model:ir.model.fields,field_description:delivery.field_ir_http__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
@@ -441,7 +446,8 @@ msgid ""
 "            to each method."
 msgstr ""
 "Elke vervoerder (bijv. UPS) kan verschillende verzendmethoden hebben (bijv.\n"
-"            UPS Express, UPS Standard) telkens gekoppeld aan een aantal regels\n"
+"            UPS Express, UPS Standard) telkens gekoppeld aan een aantal "
+"regels\n"
 "met prijsformules."
 
 #. module: delivery
@@ -464,11 +470,16 @@ msgstr "Fout: deze verzendwijze is niet beschikbaar."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Geschatte kosten: de geschatte kosten van de levering zullen aan de klant gefactureerd worden. \n"
-"Werkelijke kosten: de werkelijke kosten van de levering zullen aan de klant gefactureerd worden, de verzendkosten worden bijgewerkt op het verkooporder na de levering."
+"Geschatte kosten: de geschatte kosten van de levering zullen aan de klant "
+"gefactureerd worden. \n"
+"Werkelijke kosten: de werkelijke kosten van de levering zullen aan de klant "
+"gefactureerd worden, de verzendkosten worden bijgewerkt op het verkooporder "
+"na de levering."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -490,11 +501,11 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
-"Vul dit formulier in om de verzendmethode aan te passen naargelang de inhoud"
-" van de order of de bestemming."
+"Vul dit formulier in om de verzendmethode aan te passen naargelang de inhoud "
+"van de order of de bestemming."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -533,10 +544,16 @@ msgid "Group By"
 msgstr "Groeperen op"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+#: model:ir.model.fields,field_description:delivery.field_ir_http__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
@@ -570,8 +587,8 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
-"De methode is niet beschikbaar als het totale gewicht van de order groter is"
-" dan dit gewicht."
+"De methode is niet beschikbaar als het totale gewicht van de order groter is "
+"dan dit gewicht."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -796,9 +813,9 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
-"Voorvoegsels van postcodes waarop deze vervoerder van toepassing is. Merk op"
-" dat reguliere expressies kunnen worden gebruikt om landen met verschillende"
-" postcodelengtes te ondersteunen, d.w.z. '$' kan worden toegevoegd aan het "
+"Voorvoegsels van postcodes waarop deze vervoerder van toepassing is. Merk op "
+"dat reguliere expressies kunnen worden gebruikt om landen met verschillende "
+"postcodelengtes te ondersteunen, d.w.z. '$' kan worden toegevoegd aan het "
 "einde van een voorvoegsel om overeen te komen met de exacte postcode (bijv. "
 "'100$' zal alleen overeenkomen met '100' en niet met '1000')"
 
@@ -927,8 +944,8 @@ msgid ""
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
 "Details van de verzendmethode die moeten worden opgenomen aan de onderkant "
-"van de verkooporders en de bevestigingsmails. Bijv. Instructies voor klanten"
-" om te volgen."
+"van de verkooporders en de bevestigingsmails. Bijv. Instructies voor klanten "
+"om te volgen."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -963,14 +980,14 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
-"De methode is NIET beschikbaar als er minstens een product van de order over"
-" een van deze labels beschikt."
+"De methode is NIET beschikbaar als er minstens een product van de order over "
+"een van deze labels beschikt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 "De methode is alleen beschikbaar als er minstens een product van de order "
 "over een van deze labels beschikt."
@@ -1115,14 +1132,18 @@ msgstr "Gewicht maateenheid label"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Je kunt de verzendkosten niet bijwerken op een order waar deze al is gefactureerd!\n"
+"Je kunt de verzendkosten niet bijwerken op een order waar deze al is "
+"gefactureerd!\n"
 "\n"
-"De volgende leveringsregels (product, gefactureerde aantal en prijs) zijn al verwerkt:\n"
+"De volgende leveringsregels (product, gefactureerde aantal en prijs) zijn al "
+"verwerkt:\n"
 
 #. module: delivery
 #. odoo-python

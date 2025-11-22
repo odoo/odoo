@@ -7,13 +7,14 @@
 # Maitê Dietze, 2025
 #
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-08-22 23:41+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-18 13:58+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s18-4/mass_mailing_sms/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -28,7 +29,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
 msgid " (including link trackers and opt-out link)"
-msgstr " (incluindo rastreadores de links e links de cancelamento de inscrição)"
+msgstr ""
+" (incluindo rastreadores de links e links de cancelamento de inscrição)"
 
 #. module: mass_mailing_sms
 #. odoo-javascript
@@ -100,8 +102,8 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text"
-" Messages are being processed.</span>"
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+"Messages are being processed.</span>"
 msgstr ""
 "<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">As "
 "mensagens de texto SMS estão sendo processadas.</span>"
@@ -133,22 +135,26 @@ msgstr "<span widget=\"statinfo\">Abrir recipiente</span>"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
+"                            It appears you don't have enough IAP credits. "
+"Click here to buy credits.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Parece que você não tem créditos de IAP suficientes. Clique aqui para comprar créditos.\n"
+"                            Parece que você não tem créditos de IAP "
+"suficientes. Clique aqui para comprar créditos.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears your SMS account is not registered. Click here to set up your account.\n"
+"                            It appears your SMS account is not registered. "
+"Click here to set up your account.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Parece que sua conta de SMS não está registrada. Clique aqui para configurar sua conta.\n"
+"                            Parece que sua conta de SMS não está registrada. "
+"Clique aqui para configurar sua conta.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -204,6 +210,11 @@ msgstr "Ocorreu um erro."
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
 msgid "Attachment Count"
 msgstr "Contagem de anexos"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_authentication
+msgid "Authentication Error\""
+msgstr "Erro de autenticação\""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -293,8 +304,8 @@ msgstr "Código"
 msgid ""
 "Come back once some SMS Mailings are sent to check out aggregated results."
 msgstr ""
-"Volte após algumas distribuições por SMS terem sido enviadas para visualizar"
-" resultados agregados."
+"Volte após algumas distribuições por SMS terem sido enviadas para visualizar "
+"resultados agregados."
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_configuration
@@ -415,7 +426,8 @@ msgid ""
 "                    For an SMS Text Message, internal Title of the Message."
 msgstr ""
 "Para um e-mail, assunto que seus destinatários verão na caixa de entrada.\n"
-"                    Para uma mensagem de texto SMS, título interno da mensagem."
+"                    Para uma mensagem de texto SMS, título interno da "
+"mensagem."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_subject
@@ -425,6 +437,11 @@ msgid ""
 msgstr ""
 "Para um e-mail, o assunto que seus destinatários verão na caixa de entrada.\n"
 "Para um SMS, o título interno da mensagem."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_to
+msgid "From / To identic"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
@@ -465,17 +482,16 @@ msgstr "Se marcado, algumas mensagens têm um erro de entrega."
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
-"Se o número de telefone uniformizado estiver na lista de bloqueio, o contato"
-" não receberá mais SMS de envio em massa, de lista alguma"
+"Se o número de telefone uniformizado estiver na lista de bloqueio, o contato "
+"não receberá mais SMS de envio em massa, de lista alguma"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid ""
-"Immediately send the SMS Mailing instead of queuing up. Use at your own "
-"risk."
+"Immediately send the SMS Mailing instead of queuing up. Use at your own risk."
 msgstr ""
 "Enviar imediatamente a distribuição de SMS ao invés de enviar para a fila. "
 "Use por sua conta e risco."
@@ -485,6 +501,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
 msgstr "Incluir link de cancelamento"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_callback
+msgid "Incorrect callback URL"
+msgstr "URL de retorno de chamada incorreto"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -629,6 +650,11 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_missing
+msgid "Missing From Number"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
 msgid "Missing Number"
 msgstr "Número ausente"
@@ -651,11 +677,11 @@ msgstr "Sem dados ainda!"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
 msgid ""
-"No need to import mailing lists, you can send SMS to contacts saved in other"
-" Odoo apps."
+"No need to import mailing lists, you can send SMS to contacts saved in other "
+"Odoo apps."
 msgstr ""
-"Não é necessário importar listas de distribuição, você pode enviar SMSs para"
-" contatos salvos em outros aplicativos Odoo."
+"Não é necessário importar listas de distribuição, você pode enviar SMSs para "
+"contatos salvos em outros aplicativos Odoo."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_not_allowed
@@ -705,8 +731,8 @@ msgstr "Número(s)"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"Once you send these text messages, they'll be making a grand entrance in all"
-" pockets, creating quite the bzzzzz!"
+"Once you send these text messages, they'll be making a grand entrance in all "
+"pockets, creating quite the bzzzzz!"
 msgstr ""
 "Envie essas mensagens e eles chegarão fazendo todos os celulares vibrar!"
 
@@ -723,8 +749,8 @@ msgid ""
 "Oops! The phone number seems to be incorrect. Please make sure to include "
 "the country code."
 msgstr ""
-"Ops! O número de telefone parece estar incorreto. Certifique-se de incluir o"
-" código do país."
+"Ops! O número de telefone parece estar incorreto. Certifique-se de incluir o "
+"código do país."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
@@ -980,8 +1006,7 @@ msgstr "Distribuição de SMS de teste"
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 msgid "Test SMS could not be sent to %(destination)s: %(state)s"
-msgstr ""
-"Não foi possível enviar o SMS de teste para %(destination)s: %(state)s"
+msgstr "Não foi possível enviar o SMS de teste para %(destination)s: %(state)s"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -1102,8 +1127,7 @@ msgstr "Seleção da versão ganhadora"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid ""
-"Write an appealing SMS Text Message, define recipients and track its "
-"results."
+"Write an appealing SMS Text Message, define recipients and track its results."
 msgstr ""
 "Escreva uma mensagem de texto SMS atrativa, defina os destinatários e "
 "rastreie os resultados."

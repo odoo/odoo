@@ -7,13 +7,14 @@
 # Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-09-08 23:41+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-4/sms/es_419/>\n"
 "Language: es_419\n"
@@ -99,7 +100,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">Agregar</span>\n"
 "<span class=\"o_stat_text\">Acción de contexto</span>"
@@ -113,44 +115,60 @@ msgstr "<span class=\"o_stat_text\">Vista previa</span>"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">Eliminar</span>\n"
 "<span class=\"o_stat_text\">Acción de contexto</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
-msgstr "<span class=\"text-warning\" invisible=\"not no_record\">Sin registros</span>"
+msgid ""
+"<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">Sin registros</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to the recipients of the template\n"
-"                                    and will not appear in the messaging history.\n"
+"                                    The message will be sent as an SMS to "
+"the recipients of the template\n"
+"                                    and will not appear in the messaging "
+"history.\n"
 "                                </span>\n"
 "                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only be posted as an\n"
+"                                    The SMS will not be sent, it will only "
+"be posted as an\n"
 "                                    internal note in the messaging history.\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the recipients of the\n"
-"                                    template and it will also be posted as an internal note\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\">\n"
+"                                    The SMS will be sent as an SMS to the "
+"recipients of the\n"
+"                                    template and it will also be posted as "
+"an internal note\n"
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                    El mensaje se enviará como un SMS a los destinatarios de la plantilla\n"
-"                                    y no aparecerá en el historial de mensajes.\n"
+"                                    El mensaje se enviará como un SMS a los "
+"destinatarios de la plantilla\n"
+"                                    y no aparecerá en el historial de "
+"mensajes.\n"
 "                                </span>\n"
 "                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    El SMS no se enviará, solo se registrará como una\n"
-"                                    nota interna en el historial de mensajes.\n"
+"                                    El SMS no se enviará, solo se registrará "
+"como una\n"
+"                                    nota interna en el historial de "
+"mensajes.\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\">\n"
-"                                    El SMS se enviará como SMS a los destinatarios de la plantilla\n"
-"                                    y también se registrará como una nota interna\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\">\n"
+"                                    El SMS se enviará como SMS a los "
+"destinatarios de la plantilla\n"
+"                                    y también se registrará como una nota "
+"interna\n"
 "                                    en el historial de mensajes.\n"
 "                                </span>"
 
@@ -300,6 +318,11 @@ msgid "Choose your sender name"
 msgstr "Elija su nombre de remitente"
 
 #. module: sms
+#: model:ir.model,name:sms.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
 msgid "Composition Mode"
 msgstr "Modo de redacción"
@@ -401,6 +424,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:sms.field_mail_message__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:sms.field_res_company__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__display_name
@@ -485,11 +509,10 @@ msgstr "Tipo de error"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
-"Archivo desde el que se origina la plantilla. Se utiliza para restablecer la"
-" plantilla dañada."
+"Archivo desde el que se origina la plantilla. Se utiliza para restablecer la "
+"plantilla dañada."
 
 #. module: sms
 #. odoo-python
@@ -516,6 +539,7 @@ msgstr "Cuenta de compras dentro de la aplicación"
 #: model:ir.model.fields,field_description:sms.field_mail_message__id
 #: model:ir.model.fields,field_description:sms.field_mail_notification__id
 #: model:ir.model.fields,field_description:sms.field_mail_thread__id
+#: model:ir.model.fields,field_description:sms.field_res_company__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__id
@@ -757,8 +781,8 @@ msgstr "Campo de número"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will receive the SMS if sent in mass mode, without"
-" applying the Active Domain value"
+"Number of recipients that will receive the SMS if sent in mass mode, without "
+"applying the Active Domain value"
 msgstr ""
 "Número de destinatarios que recibirán el SMS si se envía en modo masivo sin "
 "aplicar el valor de dominio activo."
@@ -773,14 +797,14 @@ msgstr "Canceló"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "Idioma de traducción opcional (código ISO) a seleccionar para el envío de "
 "correos electrónicos. Si no se selecciona esta opción, se utilizará la "
 "versión en inglés. Por lo general, se usa una expresión de marcador de "
-"posición para indicar el idioma adecuado, por ejemplo, {{ "
-"object.partner_id.lang }}."
+"posición para indicar el idioma adecuado, por ejemplo, "
+"{{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -1300,8 +1324,8 @@ msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
-"El servicio SMS no está disponible para los usuarios nuevos y el registro de"
-" nuevas cuentas está suspendido."
+"El servicio SMS no está disponible para los usuarios nuevos y el registro de "
+"nuevas cuentas está suspendido."
 
 #. module: sms
 #. odoo-python
@@ -1401,22 +1425,29 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Multi Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Multi Actions': define an action that triggers several other server "
+"actions\n"
 msgstr ""
 "Tipo de acción de servidor. Los valores disponibles son:\n"
 "- 'Actualizar un registro': Actualiza los valores de un registro\n"
 "- 'Crear actividad': Crea una actividad (Conversaciones)\n"
-"- 'Enviar correo electrónico': Publica un mensaje, una nota o envía un correo electrónico (Conversaciones)\n"
+"- 'Enviar correo electrónico': Publica un mensaje, una nota o envía un "
+"correo electrónico (Conversaciones)\n"
 "- 'Enviar SMS': Envía SMS y los registra en los documentos (SMS) \n"
-"- 'Agregar o eliminar seguidores': Agrega o elimina seguidores de un registro (Conversaciones)\n"
+"- 'Agregar o eliminar seguidores': Agrega o elimina seguidores de un "
+"registro (Conversaciones)\n"
 "- 'Crear registro': Crea un nuevo registro con nuevos valores\n"
 "- 'Ejecutar código': Se ejecuta un bloque de código Python\n"
-"- 'Enviar notificación webhook': Envía una solicitud POST a un sistema externo, también conocido como webhook\n"
-"- 'Varias acciones': define una acción que activa otras acciones de servidor\n"
+"- 'Enviar notificación webhook': Envía una solicitud POST a un sistema "
+"externo, también conocido como webhook\n"
+"- 'Varias acciones': define una acción que activa otras acciones de "
+"servidor\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1460,15 +1491,19 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "Se utiliza para categorizar el generador de mensajes.\n"
-"'email': lo genera un correo electrónico entrante, por ejemplo, con una pasarela de correo\n"
-"'comment': lo genera una entrada del usuario, por ejemplo, a través de Conversaciones o del compositor\n"
+"'email': lo genera un correo electrónico entrante, por ejemplo, con una "
+"pasarela de correo\n"
+"'comment': lo genera una entrada del usuario, por ejemplo, a través de "
+"Conversaciones o del compositor\n"
 "'email_outgoing': lo genera un correo electrónico enviado\n"
 "'notification': lo genera el sistema, por ejemplo, mensajes de seguimiento\n"
-"'auto_comment': lo genera un mecanismo de notificación automatizado, por ejemplo un acuse de recibo\n"
+"'auto_comment': lo genera un mecanismo de notificación automatizado, por "
+"ejemplo un acuse de recibo\n"
 "'user_notification': se genera para un destinatario específico"
 
 #. module: sms
@@ -1580,11 +1615,16 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
-"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
-"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't "
+"allowed to modify it once you registered one, choose it carefully."
 msgstr ""
-"El nombre del remitente debe tener entre 3 y 11 caracteres de longitud y solo puede incluir caracteres alfanuméricos.\n"
-"                        Elija uno que vaya con el nombre de su empresa. No podrá modificarlo una vez que haya registrado uno, así que elíjalo con mucho cuidado."
+"El nombre del remitente debe tener entre 3 y 11 caracteres de longitud y "
+"solo puede incluir caracteres alfanuméricos.\n"
+"                        Elija uno que vaya con el nombre de su empresa. No "
+"podrá modificarlo una vez que haya registrado uno, así que elíjalo con mucho "
+"cuidado."
 
 #. module: sms
 #. odoo-python

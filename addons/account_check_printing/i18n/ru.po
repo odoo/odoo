@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-11-03 19:40+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:19+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_check_printing/ru/>\n"
 "Language: ru\n"
@@ -28,7 +29,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr ""
+msgstr "%(journal)s: Нумерация чеков"
 
 #. module: account_check_printing
 #. odoo-python
@@ -213,8 +214,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr ""
 "Чтобы напечатать несколько чеков одновременно, они должны относиться к "
 "одному и тому же банковскому журналу."
@@ -244,18 +245,30 @@ msgstr "Ручная нумерация"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Руководство: Платите или получайте оплату любым способом за пределами Odoo.\n"
-"Провайдеры платежей: Каждый поставщик платежей имеет свой собственный метод оплаты. Запросите транзакцию по карте/на карту благодаря платежному токену, сохраненному партнером при покупке или подписке онлайн.\n"
+"Провайдеры платежей: Каждый поставщик платежей имеет свой собственный метод "
+"оплаты. Запросите транзакцию по карте/на карту благодаря платежному токену, "
+"сохраненному партнером при покупке или подписке онлайн.\n"
 "Чек: Оплачивайте счета чеком и распечатывайте его из Odoo.\n"
-"Пакетное пополнение счета: Собирайте несколько чеков клиентов одновременно, генерируя и отправляя пакетный депозит в ваш банк. Необходим модуль account_batch_payment.\n"
-"Кредитный перевод SEPA: Платите в зоне SEPA, отправляя файл SEPA Credit Transfer в ваш банк. Необходим модуль account_sepa.\n"
-"Прямое дебетование SEPA: Получайте оплату в зоне SEPA благодаря мандату, предоставленному вам вашим партнером. Необходим модуль account_sepa.\n"
+"Пакетное пополнение счета: Собирайте несколько чеков клиентов одновременно, "
+"генерируя и отправляя пакетный депозит в ваш банк. Необходим модуль "
+"account_batch_payment.\n"
+"Кредитный перевод SEPA: Платите в зоне SEPA, отправляя файл SEPA Credit "
+"Transfer в ваш банк. Необходим модуль account_sepa.\n"
+"Прямое дебетование SEPA: Получайте оплату в зоне SEPA благодаря мандату, "
+"предоставленному вам вашим партнером. Необходим модуль account_sepa.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -309,8 +322,8 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr ""
 "Введите номер первого предварительно отпечатанного чека, на котором вы "
 "собираетесь печатать."
@@ -359,10 +372,12 @@ msgstr "Правое Поле"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 
 #. module: account_check_printing
@@ -389,6 +404,16 @@ msgid ""
 msgstr ""
 "Что-то не так с макетом проверки, пожалуйста, выберите другой макет в "
 "Настройках выставления счетов/бухгалтерии и попробуйте снова."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
+"Введенный номер чека (%(num)s) превышает максимально допустимое значение "
+"%(max)d. Введите номер меньше."
 
 #. module: account_check_printing
 #. odoo-python
@@ -464,8 +489,8 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Вам необходимо выбрать макет чека. Для этого зайдите в Настройки выставления"
-" счетов/расчетов, найдите \"Макет чека\" и установите его."
+"Вам необходимо выбрать макет чека. Для этого зайдите в Настройки выставления "
+"счетов/расчетов, найдите \"Макет чека\" и установите его."
 
 #. module: account_check_printing
 #. odoo-python

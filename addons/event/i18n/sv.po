@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event
+# * event
 #
 # Translators:
 # Wil Odoo, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:24+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-4/event/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -71,7 +74,7 @@ msgstr "%(slot_name)s (Utsålt)"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: saknas %(count)s plats(er)"
 
 #. module: event
 #. odoo-python
@@ -171,6 +174,7 @@ msgstr "5-10"
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Upptäck mer</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -293,7 +297,7 @@ msgstr "<i class=\"fa fa-building\" title=\"Deltagarens företag\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -454,8 +458,8 @@ msgid ""
 "                        <a t-attf-href=\"https://www.google.com/calendar/"
 "render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
 "&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
-"&amp;details={{ object.event_id._get_external_description() }}\" t-attf-"
-"style=\"padding:3px 5px; color: "
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"t-attf-style=\"padding:3px 5px; color: "
 "{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
 "text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/"
 "web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-"
@@ -685,7 +689,8 @@ msgid ""
 "                    <t t-if=\"event_address and location\">\n"
 "                        <table style=\"width:100%;\"><tr><td>\n"
 "                            <div>\n"
-"                                <i class=\"fa fa-map-marker\"/>\n"
+"                                <img src=\"/web_editor/font_to_img/61505/"
+"rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
 "                                <a t-attf-href=\"https://maps.google.com/"
 "maps?q={{ location }}\" target=\"new\">\n"
 "                                    <img t-if=\"event_address.static_map_url "
@@ -792,7 +797,8 @@ msgid ""
 "                        <div style=\"margin-bottom: 5px;\">\n"
 "                            <img t-attf-src=\"/report/barcode/QR/"
 "{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" "
-"height=\"100\" alt=\"QR Code\"/>\n"
+"height=\"100\" alt=\"QR Code\" t-att-style=\"'height: 100px !important;'\"/"
+">\n"
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -842,8 +848,8 @@ msgid ""
 "                        <a t-attf-href=\"https://www.google.com/calendar/"
 "render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
 "&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
-"&amp;details={{ object.event_id._get_external_description() }}\" t-attf-"
-"style=\"padding:3px 5px; color: "
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"t-attf-style=\"padding:3px 5px; color: "
 "{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
 "text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/"
 "web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-"
@@ -1070,7 +1076,8 @@ msgid ""
 "                    <table t-if=\"event_address and location\" "
 "style=\"width:100%;\"><tr><td>\n"
 "                        <div>\n"
-"                            <i class=\"fa fa-map-marker\"/>\n"
+"                            <img src=\"/web_editor/font_to_img/61505/"
+"rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
 "                            <a t-attf-href=\"https://maps.google.com/maps?"
 "q={{ location }}\" target=\"new\">\n"
 "                                <img t-if=\"event_address.static_map_url and "
@@ -1177,7 +1184,8 @@ msgid ""
 "                        <div style=\"margin-bottom: 5px;\">\n"
 "                            <img t-attf-src=\"/report/barcode/QR/"
 "{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" "
-"height=\"100\" alt=\"QR Code\"/>\n"
+"height=\"100\" alt=\"QR Code\" t-att-style=\"'height: 100px !important;'\"/"
+">\n"
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -1230,10 +1238,10 @@ msgid ""
 "out=\"object.sale_order_id.name\"/>\n"
 "                        and was placed on <t t-"
 "out=\"object.sale_order_id.date_order.date()\"/>\n"
-"                        <t t-if=\"object.sale_order_line_id.price_unit\"> "
+"                        <t t-if=\"object.sale_order_line_id.price_total\"> "
 "for an amount of\n"
 "                            <t t-"
-"out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': "
+"out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': "
 "'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
 "                        </t>.\n"
 "                    </div>\n"
@@ -1243,8 +1251,8 @@ msgid ""
 "                        <a t-attf-href=\"https://www.google.com/calendar/"
 "render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
 "&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
-"&amp;details={{ object.event_id._get_external_description() }}\" t-attf-"
-"style=\"padding:3px 5px; color: "
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"t-attf-style=\"padding:3px 5px; color: "
 "{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
 "text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/"
 "web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-"
@@ -1474,7 +1482,8 @@ msgid ""
 "                    <t t-if=\"event_address and location\">\n"
 "                        <table style=\"width:100%;\"><tr><td>\n"
 "                            <div>\n"
-"                                <i class=\"fa fa-map-marker\"/>\n"
+"                                <img src=\"/web_editor/font_to_img/61505/"
+"rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
 "                                <a t-attf-href=\"https://maps.google.com/"
 "maps?q={{ location }}\" target=\"new\">\n"
 "                                    <img t-if=\"event_address.static_map_url "
@@ -1536,6 +1545,11 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"En öppning kan inte schemaläggas utanför dess tidsintervall för "
+"evenemanget.\n"
+"\n"
+"Händelse: %(event_start)s - %(event_end)s\n"
+"Öppning: %(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1544,12 +1558,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"Sluttimmen för en slot måste vara senare än dess starttimme.\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "En slottimme måste ligga mellan 0:00 och 23:59."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1582,7 +1598,7 @@ msgstr "Aktiviteter"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Activities of"
-msgstr ""
+msgstr "Aktiviteter för"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
@@ -1657,13 +1673,13 @@ msgstr "Efter varje registrering"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "Efter evenemangets slut"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "Efter att evenemanget startat"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -1693,6 +1709,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Tillåt flera tidsluckor. Kommunikationen, det maximala antalet deltagare och "
+"det maximala antalet biljettregistreringar definieras för varje tidslucka i "
+"stället för hela evenemanget."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1814,7 +1833,7 @@ msgstr "Datum för deltagande"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Attended on %(attended_date)s"
-msgstr ""
+msgstr "Deltog den %(attended_date)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -1869,6 +1888,9 @@ msgid ""
 "                                    <span invisible=\"not is_multi_slots\"> "
 "per slot</span>"
 msgstr ""
+"Deltagare\n"
+"                                    <span invisible=\"not is_multi_slots\"> "
+"per plats</span>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -1937,13 +1959,13 @@ msgstr "Streckkoden ska vara unik"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "Innan evenemanget avslutas"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "Innan evenemanget börjar"
 
 #. module: event
 #. odoo-python
@@ -2089,6 +2111,8 @@ msgstr "Kommunikation"
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"Kommunikationen för %(event_name)s som planerades på %(scheduled_date)s "
+"misslyckades."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2174,7 +2198,7 @@ msgstr "Skapa marknadsstånd och hantera deras reservationer"
 #. module: event
 #: model:ir.model,website_form_label:event.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Skapa en kund"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -2325,7 +2349,7 @@ msgstr "Visa sponsorer och utställare på dina evenemangssidor"
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_slot__date_tz
 msgid "Display Timezone"
-msgstr ""
+msgstr "Visa tidszon"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -2340,7 +2364,7 @@ msgstr "Klar"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "Ladda ner biljetter"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -2393,7 +2417,7 @@ msgstr "Slutdatum"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__end_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "Slutdatum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
@@ -2408,7 +2432,7 @@ msgstr "Avslutad"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__end_hour
 msgid "Ending Hour"
-msgstr ""
+msgstr "Sluttimme"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
@@ -2540,12 +2564,12 @@ msgstr "Evenemangsansvarig"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
 msgid "Event Share URL"
-msgstr ""
+msgstr "URL för delning av evenemang"
 
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "Event Slot"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2753,7 +2777,7 @@ msgstr "Upplev levande musik, lokal mat och dryck."
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "Uttryckt i händelsens tidszon."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2794,6 +2818,9 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 msgstr ""
+"För ytterligare information, vänligen kontakta oss på <a "
+"class=\"o_translate_inline\" "
+"href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -2802,6 +2829,9 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 msgstr ""
+"För ytterligare information, vänligen kontakta oss på <a "
+"class=\"o_translate_inline\" "
+"href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2813,6 +2843,9 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 msgstr ""
+"För ytterligare information, vänligen kontakta oss på <a "
+"class=\"o_translate_inline\" "
+"href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -2821,6 +2854,9 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"För varje evenemang kan du definiera ett maximalt antal platser (antal "
+"deltagare), över detta antal accepteras inte registreringarna. Om "
+"evenemanget har flera platser tillämpas detta maximala antal per plats."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -3136,6 +3172,8 @@ msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"Anger den tidszon i vilken evenemangets datum/tider kommer att visas på "
+"webbplatsen."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__interval_type
@@ -3143,6 +3181,8 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"Anger när kommunikationen skickas. Om händelsen har flera tidsluckor gäller "
+"intervallet för varje tidslucka i stället för hela händelsen."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3170,7 +3210,7 @@ msgstr "Introduktion, CRM, försäljningsledning"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "Ogiltigt val av händelse/plats"
 
 #. module: event
 #. odoo-python
@@ -3192,7 +3232,7 @@ msgstr "Är tillgänglig"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "Har händelsen flera luckor"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -3213,7 +3253,7 @@ msgstr "Är Följare"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Är Multi Slots"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -3229,7 +3269,7 @@ msgstr "Pågår"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "Det misslyckades med felet %(error)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -3312,7 +3352,7 @@ msgstr "Sista deltagaren"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "Sista felet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3387,7 +3427,7 @@ msgstr "Begränsat Antal Platser"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "Länk där online-evenemanget kommer att äga rum."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3447,7 +3487,7 @@ msgstr "E-post skickad"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "Brevinkast"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3505,7 +3545,7 @@ msgstr "Max antal stolar"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "Maximum per slot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -3534,7 +3574,7 @@ msgstr "Månader"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "Flera spelautomater"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
@@ -3638,7 +3678,7 @@ msgstr "Anteckningar"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Notes & Documents"
-msgstr ""
+msgstr "Anteckningar och dokument"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3735,7 +3775,7 @@ msgstr "Evenemang online"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
 msgid "Online Event URL"
-msgstr ""
+msgstr "URL för online-evenemang"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3855,7 +3895,7 @@ msgstr "Ange en giltig base64-hemlighet"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "Ange en giltig URL för evenemanget."
 
 #. module: event
 #. odoo-javascript
@@ -4082,7 +4122,7 @@ msgstr "Anmälningsstart"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Rendering av mall misslyckades med fel: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -4167,7 +4207,7 @@ msgstr "Schemalagd tid"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "E-postmeddelanden för schemaläggare"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4282,7 +4322,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Visa alla poster vars nästa aktivitetsdatum är passerat"
 
 #. module: event
 #. odoo-javascript
@@ -4290,23 +4330,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_slot__event_slot_id
 #: model:ir.model.fields,field_description:event.field_event_registration__event_slot_id
 msgid "Slot"
-msgstr ""
+msgstr "Slot"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "Slot Mail Schemaläggare"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
 msgstr ""
+"Val av spelautomat är obligatoriskt vid evenemang med flera spelautomater."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "Slot-baserad kommunikation"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -4315,12 +4356,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "Slots"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "Antal spelautomater"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -4384,7 +4425,7 @@ msgstr "Startdatum"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__start_datetime
 msgid "Start Datetime"
-msgstr ""
+msgstr "Starttidpunkt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
@@ -4394,7 +4435,7 @@ msgstr "Säljstartsdatum"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__start_hour
 msgid "Starting Hour"
-msgstr ""
+msgstr "Starttimme"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
@@ -4569,6 +4610,9 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Följande slots kan inte tas bort så länge de har en eller flera "
+"registreringar kopplade till sig:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -4605,6 +4649,8 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and "
 "the extra registrations will remain."
 msgstr ""
+"Om det finns fler anmälningar än denna gräns kommer evenemanget att bli "
+"slutsålt och de extra anmälningarna kommer att finnas kvar."
 
 #. module: event
 #. odoo-python
@@ -4613,6 +4659,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"Det finns inte tillräckligt med platser tillgängliga för %(event_name)s:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -4621,6 +4669,8 @@ msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: %"
 "(error)s."
 msgstr ""
+"Det finns ett problem med dynamisk platshållare. Det faktiska felet som tas "
+"emot är: %(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -4634,6 +4684,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"Dessa evenemang kan inte ha luckor schemalagda utanför deras tidsintervall:\n"
+"%(event_names)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4669,7 +4721,7 @@ msgstr "Denna information kommer att tryckas på dina biljetter."
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Detta beror på ett fel i mallen %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -4701,7 +4753,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Detta kan vara länkat till mall %(template_link)s"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -4769,7 +4821,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "Biljetten scannades första gången den"
 
 #. module: event
 #. odoo-python
@@ -4832,7 +4884,7 @@ msgstr "Totalt antal deltagare"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "Total registrering"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4947,7 +4999,7 @@ msgstr "Kommande/Pågående"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "Uppdatera gränsen för antalet registreringar?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -5068,6 +5120,8 @@ msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
+"När händelsen är planerad att äga rum (uttryckt i din lokala tidszon i "
+"formulärvyn)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -5087,7 +5141,7 @@ msgstr "Inga platser är tillgängliga för denna biljett."
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "Om platserna är slutsålda för denna slot."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -5172,7 +5226,7 @@ msgstr "t.ex. \"främjande\""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. \"https://www.odoo.com\""
-msgstr ""
+msgstr "t.ex. ”https://www.odoo.com”"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create

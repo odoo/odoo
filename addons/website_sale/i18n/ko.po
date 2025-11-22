@@ -7,12 +7,13 @@
 # Sarah Park, 2025
 #
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-09-12 08:22+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-17 08:56+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-4/"
 "website_sale/ko/>\n"
@@ -1599,8 +1600,8 @@ msgid ""
 "strong>"
 msgstr ""
 "배송비 계산 후 DHL로 발송하세요.<br/>\n"
-"                            <strong>(홈&gt;앱 으로 이동하여 "
-"설치하세요)</strong>"
+"                            <strong>(홈&gt;앱 으로 이동하여 설치하세요)</"
+"strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1610,8 +1611,8 @@ msgid ""
 "strong>"
 msgstr ""
 "배송비 계산 후 FedEx로 발송하세요.<br/>\n"
-"                            <strong>(홈&gt;앱 으로 이동하여 "
-"설치하세요)</strong>"
+"                            <strong>(홈&gt;앱 으로 이동하여 설치하세요)</"
+"strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1621,8 +1622,8 @@ msgid ""
 "strong>"
 msgstr ""
 "배송비 계산 후 UPS로 발송하세요.<br/>\n"
-"                            <strong>(홈&gt;앱 으로 이동하여 "
-"설치하세요)</strong>"
+"                            <strong>(홈&gt;앱 으로 이동하여 설치하세요)</"
+"strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1632,8 +1633,8 @@ msgid ""
 "strong>"
 msgstr ""
 "배송비 계산 후 USPS로 발송하세요.<br/>\n"
-"                            <strong>(홈&gt;앱 으로 이동하여 "
-"설치하세요)</strong>"
+"                            <strong>(홈&gt;앱 으로 이동하여 설치하세요)</"
+"strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1879,7 +1880,6 @@ msgstr "사용자 지정 이메일 서식"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-#, fuzzy
 msgid "DHL"
 msgstr "DHL"
 
@@ -2084,6 +2084,7 @@ msgstr "팀 소개"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
@@ -2623,6 +2624,7 @@ msgstr "대해 동의합니다"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_document__id
@@ -2798,6 +2800,12 @@ msgstr "장바구니 추가 없이 즉시 결제"
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
 msgstr "세부 옵션을 즉시 선택하여 /shop 페이지에서 선택할 수 있습니다."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "Invalid category."
+msgstr "잘못된 카테고리입니다."
 
 #. module: website_sale
 #. odoo-python
@@ -3149,6 +3157,11 @@ msgstr "휴대폰 번호"
 #: code:addons/website_sale/const.py:0
 msgid "Modern Showcase"
 msgstr "모던 쇼케이스"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_module_module
+msgid "Module"
+msgstr "모듈"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3785,7 +3798,7 @@ msgstr "결제가 완료되면 주문을 처리합니다."
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_item_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/products_item_option.js:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
@@ -3861,7 +3874,7 @@ msgstr "품목명"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/product_page_option.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Page"
 msgstr "품목 페이지"
@@ -3999,7 +4012,7 @@ msgstr "품목"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/products_list_page_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products Page"
 msgstr "품목 페이지"

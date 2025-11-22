@@ -1,24 +1,72 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_vat
+# * base_vat
 #
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Martin Trigaux, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s18-4/"
+"base_vat/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "1-01-85004-3 or 101850043"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgstr ""
+"10XXXXXXXXY або 20XXXXXXXXY або 15XXXXXXXXY або 16XXXXXXXXY або 17XXXXXXXXY"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (NIN) або 1729171602 (VKN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "1792060346001 or 1792060346"
+msgstr "1792060346001 або 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
+msgstr "310175397400003 [15 цифр, перша та остання повинні бути \"3\"]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "49-098-576 or 49098576"
+msgstr "49-098-576 або 49098576"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
+msgstr "CHE-123.456.788 TVA або CHE-123.456.788 MWST або CHE-123.456.788 IVA"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -31,57 +79,181 @@ msgid "Config Settings"
 msgstr "Налаштування"
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"Connection with the VIES server failed. The VAT number %s could not be "
+"validated."
+msgstr ""
+"Помилка підключення до сервера VIES. Номер ПДВ %s неможливо завалідувати."
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Контакт"
 
 #. module: base_vat
-#: model:ir.model,name:base_vat.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "Схема оподаткування"
+#: model:ir.model,name:base_vat.model_res_country
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
+#: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
+msgid "Country"
+msgstr "Країна"
+
+#. module: base_vat
+#: model:ir.model,website_form_label:base_vat.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "DE123456788 or 12/345/67890"
+msgstr "DE123456788 або 12/345/67890"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
+#: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
+msgid "European VAT numbers are automatically checked on the VIES database."
+msgstr "Європейські номери ПДВ автоматично перевіряються в базі даних VIES."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
+"Приклад: '219999830019' (формат: 12 знаків, всі цифри, дійсна контрольна "
+"цифра)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "GB123456782 or XI123456782"
+msgstr "GB123456782 або XI123456782"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "GODE561231GR8"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "HU12345676 or 12345678-1-11 or 8071592153"
+msgstr "HU12345676 або 12345678-1-11 або 8071592153"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
+msgid "Has Foreign Fiscal Position"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_country__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr "ID"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
-msgid "If this checkbox is ticked, you will not be able to save a contact if its VAT number cannot be verified by the European VIES service."
-msgstr "Якщо позначено цей пункт, ви не зможете зберегти контакт, якщо його номер ПДВ не може бути підтверджено європейською службою VIES."
-
-#. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_failed_message
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_failed_message
-msgid "Technical field display a message to the user if the VIES check fails."
-msgstr "Технічне поле відображає повідомлення для користувача, якщо перевірка VIES не вдається."
+msgid ""
+"If this checkbox is ticked, the default fiscal position that applies will "
+"depend upon the output of the verification by the European VIES Service."
+msgstr ""
+"Якщо позначено, застосовна схема оподаткування за замовчуванням залежатиме "
+"від результатів перевірки Європейської служби VIES."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"If you are trying to input a European number, this is the expected format: "
 msgstr ""
-"%(vat_label)s номер [%(wrong_vat)s] здається недійсним. \n"
-"Примітка: очікуваний формат %(expected_format)s"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
+msgid "Intra-Community Valid"
+msgstr "Дійсний у межах спільноти"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Note: the expected format is %(expected_format)s"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
+#: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
+msgid "Perform Vies Validation"
+msgstr "Виконайте перевірку Vies"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
+msgid "Tax ID"
+msgstr "ІПН"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
-"%(vat_label)s номер [%(wrong_vat)s] для %(record_label)s здається недійсним. \n"
-"Примітка: очікуваний формат %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s failed the VIES VAT validation check."
-msgstr "ІПН %s не пройшов перевірку VIES VAT."
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. %(expected_note)s"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
+msgstr ""
+"Ідентифікаційний податковий номер. Значення тут буде перевірено на основі "
+"формату країни. Ви можете використовувати '/', щоб вказати, що партнер не "
+"платить податок."
 
 #. module: base_vat
 #. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid "The country detected for this foreign VAT number does not match the one set on this fiscal position."
-msgstr "Країна, виявлена для цього іноземного ІПН, не збігається з країною, установленою в цій схемі оподаткування."
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VAT number %s could not be interpreted by the VIES server."
+msgstr "Податковий номер %s не може бути інтерпретовано сервером VIES."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
+msgstr ""
+"Запит на підтвердження ПДВ не оброблено. Сервіс VIES відповів такою помилкою:"
+" %s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -102,12 +274,64 @@ msgstr "Перевірте номери ПДВ за допомогою євро�
 
 #. module: base_vat
 #. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid "fiscal position [%s]"
-msgstr "схема оподаткування [%s]"
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 цифр], і він повинен відповідати контрольній сумі алгоритму Luhn"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "either 11 digits for CPF or 14 digits for CNPJ"
+msgstr "11 цифр дял CPF або 14 цифр для CNPJ"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "партнер [%s]"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "Схема оподаткування"
+
+#~ msgid ""
+#~ "If this checkbox is ticked, you will not be able to save a contact if its "
+#~ "VAT number cannot be verified by the European VIES service."
+#~ msgstr ""
+#~ "Якщо позначено цей пункт, ви не зможете зберегти контакт, якщо його номер "
+#~ "ПДВ не може бути підтверджено європейською службою VIES."
+
+#~ msgid ""
+#~ "Technical field display a message to the user if the VIES check fails."
+#~ msgstr ""
+#~ "Технічне поле відображає повідомлення для користувача, якщо перевірка "
+#~ "VIES не вдається."
+
+#~ msgid ""
+#~ "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
+#~ "Note: the expected format is %(expected_format)s"
+#~ msgstr ""
+#~ "%(vat_label)s номер [%(wrong_vat)s] здається недійсним. \n"
+#~ "Примітка: очікуваний формат %(expected_format)s"
+
+#~ msgid ""
+#~ "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not "
+#~ "seem to be valid. \n"
+#~ "Note: the expected format is %(expected_format)s"
+#~ msgstr ""
+#~ "%(vat_label)s номер [%(wrong_vat)s] для %(record_label)s здається "
+#~ "недійсним. \n"
+#~ "Примітка: очікуваний формат %(expected_format)s"
+
+#~ msgid "The VAT number %s failed the VIES VAT validation check."
+#~ msgstr "ІПН %s не пройшов перевірку VIES VAT."
+
+#~ msgid ""
+#~ "The country detected for this foreign VAT number does not match the one "
+#~ "set on this fiscal position."
+#~ msgstr ""
+#~ "Країна, виявлена для цього іноземного ІПН, не збігається з країною, "
+#~ "установленою в цій схемі оподаткування."
+
+#~ msgid "fiscal position [%s]"
+#~ msgstr "схема оподаткування [%s]"

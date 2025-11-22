@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mrp_subcontracting
-# 
+# * mrp_subcontracting
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s18-4/"
+"mrp_subcontracting/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -90,8 +93,8 @@ msgstr ""
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr ""
-"Wählen Sie einen Lieferanten vom Typ Subunternehmer, wenn Sie dieses Produkt"
-" an einen Subunternehmer vergeben möchten."
+"Wählen Sie einen Lieferanten vom Typ Subunternehmer, wenn Sie dieses Produkt "
+"an einen Subunternehmer vergeben möchten."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -260,8 +263,8 @@ msgstr "Ist ein Subunternehmerstandort?"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
 msgid ""
-"List of Products used in the BoM, used to filter the list of products in the"
-" subcontracting portal view"
+"List of Products used in the BoM, used to filter the list of products in the "
+"subcontracting portal view"
 msgstr ""
 "Liste der in der Stückliste verwendeten Produkte, verwendet um die "
 "Produktliste in der Ansicht des Subunternehmerportals zu filtern"
@@ -280,8 +283,8 @@ msgid ""
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
 "Stellen Sie sicher, dass Sie die entsprechende Kommissionierung zum "
-"Beliefern Ihres Subunternehmers validieren oder anpassen, um Unstimmigkeiten"
-" in Ihrem Bestand zu vermeiden."
+"Beliefern Ihres Subunternehmers validieren oder anpassen, um Unstimmigkeiten "
+"in Ihrem Bestand zu vermeiden."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -344,8 +347,8 @@ msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
 msgstr ""
-"Portalbenutzer können keine Lagerbuchungen mit dem Status „Erledigt“ anlegen"
-" oder den aktuellen Status in „Erledigt“ ändern."
+"Portalbenutzer können keine Lagerbuchungen mit dem Status „Erledigt“ anlegen "
+"oder den aktuellen Status in „Erledigt“ ändern."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
@@ -596,8 +599,8 @@ msgstr "Derzeit gibt es keine Produktionen für Ihr Konto."
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 msgid ""
-"There shouldn't be multiple productions to record for the same subcontracted"
-" move."
+"There shouldn't be multiple productions to record for the same subcontracted "
+"move."
 msgstr ""
 "Es sollten nicht mehrere Produktionen für ein und dieselbe unterbeauftragte "
 "Buchung erfasst werden."
@@ -651,6 +654,14 @@ msgid ""
 msgstr ""
 "Sie können eine Stückliste mit Vorgängen oder Nebenproduktlinien nicht als "
 "Unterauftrag einstellen."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/mrp_unbuild.py:0
+msgid "You can't unbuild a subcontracted Manufacturing Order."
+msgstr ""
+"Ein an einen Subunternehmer vergebener Fertigungsauftrag kann nicht "
+"rückgängig gemacht werden."
 
 #. module: mrp_subcontracting
 #. odoo-python

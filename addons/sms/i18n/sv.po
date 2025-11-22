@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sms
-# 
+# * sms
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:42+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-4/sms/"
+"sv/>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -69,8 +72,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
-"<i class=\"fa fa-warning\"/> Du kan inte skicka SMS så länge ditt konto inte"
-" är registrerat."
+"<i class=\"fa fa-warning\"/> Du kan inte skicka SMS så länge ditt konto inte "
+"är registrerat."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -94,10 +97,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">Lägg till</span>\n"
-"                                <span class=\"o_stat_text\">Kontextåtgärd</span>"
+"                                <span class=\"o_stat_text\">Kontextåtgärd</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -108,30 +113,40 @@ msgstr "<span class=\"o_stat_text\">Förhandsgranskning</span>"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">Ta bort</span>\n"
-"                                <span class=\"o_stat_text\">Kontextåtgärd</span>"
+"                                <span class=\"o_stat_text\">Kontextåtgärd</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
-msgstr "<span class=\"text-warning\" invisible=\"not no_record\">Inga poster</span>"
+msgid ""
+"<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">Inga poster</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to the recipients of the template\n"
-"                                    and will not appear in the messaging history.\n"
+"                                    The message will be sent as an SMS to "
+"the recipients of the template\n"
+"                                    and will not appear in the messaging "
+"history.\n"
 "                                </span>\n"
 "                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only be posted as an\n"
+"                                    The SMS will not be sent, it will only "
+"be posted as an\n"
 "                                    internal note in the messaging history.\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the recipients of the\n"
-"                                    template and it will also be posted as an internal note\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\">\n"
+"                                    The SMS will be sent as an SMS to the "
+"recipients of the\n"
+"                                    template and it will also be posted as "
+"an internal note\n"
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
@@ -211,8 +226,8 @@ msgid ""
 "Are you sure you want to reset these sms templates to their original "
 "configuration? Changes and translations will be lost."
 msgstr ""
-"Är du säker på att du vill återställa dessa sms-mallar till sin ursprungliga"
-" konfiguration? Ändringar och översättningar kommer att gå förlorade."
+"Är du säker på att du vill återställa dessa sms-mallar till sin ursprungliga "
+"konfiguration? Ändringar och översättningar kommer att gå förlorade."
 
 #. module: sms
 #. odoo-python
@@ -279,6 +294,11 @@ msgstr "Välj ett exempel"
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Choose your sender name"
 msgstr "Välj ditt avsändarnamn"
+
+#. module: sms
+#: model:ir.model,name:sms.model_res_company
+msgid "Companies"
+msgstr "Bolag"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -382,6 +402,7 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:sms.field_mail_message__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:sms.field_res_company__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__display_name
@@ -464,8 +485,7 @@ msgstr "Typ av fel"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
 "Fil från vilken mallen härstammar. Används för att återställa trasig mall."
 
@@ -494,6 +514,7 @@ msgstr "IAP-konto"
 #: model:ir.model.fields,field_description:sms.field_mail_message__id
 #: model:ir.model.fields,field_description:sms.field_mail_notification__id
 #: model:ir.model.fields,field_description:sms.field_mail_thread__id
+#: model:ir.model.fields,field_description:sms.field_res_company__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__id
@@ -732,11 +753,11 @@ msgstr "Nummerfält"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will receive the SMS if sent in mass mode, without"
-" applying the Active Domain value"
+"Number of recipients that will receive the SMS if sent in mass mode, without "
+"applying the Active Domain value"
 msgstr ""
-"Antal mottagare som kommer att få SMS:et om det skickas i massläge, utan att"
-" Active Domain-värdet tillämpas"
+"Antal mottagare som kommer att få SMS:et om det skickas i massläge, utan att "
+"Active Domain-värdet tillämpas"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
@@ -748,13 +769,13 @@ msgstr "Uteslutet"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"Valfritt översättningsspråk (ISO-kod) som ska väljas när du skickar ett "
-"e-postmeddelande. Om inget anges används den engelska versionen. Detta bör "
-"vanligtvis vara ett platshållaruttryck som anger lämpligt språk, t.ex. {{ "
-"object.partner_id.lang }}."
+"Valfritt översättningsspråk (ISO-kod) som ska väljas när du skickar ett e-"
+"postmeddelande. Om inget anges används den engelska versionen. Detta bör "
+"vanligtvis vara ett platshållaruttryck som anger lämpligt språk, t.ex. "
+"{{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -1332,8 +1353,7 @@ msgstr "Detta SMS har tagits bort eftersom numret redan var använt."
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
 msgstr ""
-"Det här kontot har redan ett befintligt avsändarnamn och det kan inte "
-"ändras."
+"Det här kontot har redan ett befintligt avsändarnamn och det kan inte ändras."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
@@ -1345,8 +1365,8 @@ msgstr "Detta är det namn som kommer att visas som avsändare av SMS:et."
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Detta telefonnummer är svartlistat för SMS-marknadsföring. Klicka för att ta"
-" bort svartlistningen."
+"Detta telefonnummer är svartlistat för SMS-marknadsföring. Klicka för att ta "
+"bort svartlistningen."
 
 #. module: sms
 #. odoo-python
@@ -1375,12 +1395,29 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Multi Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Multi Actions': define an action that triggers several other server "
+"actions\n"
 msgstr ""
+"Typ av serveråtgärd. Följande värden är tillgängliga:\n"
+"- \"Update a Record\": uppdatera värdena i en post\n"
+"- \"Skapa aktivitet\": skapa en aktivitet (Diskutera)\n"
+"- \"Skicka e-post\": posta ett meddelande, en anteckning eller skicka ett e-"
+"postmeddelande (Diskutera)\n"
+"- \"Skicka SMS\": skicka SMS, logga in dem på dokument (SMS)- "
+"\"Lägg till/ta bort följare\": lägg till eller ta bort följare till en post "
+"(Diskutera)\n"
+"- \"Create Record\": skapa en ny post med nya värden\n"
+"- \"Execute Code\": ett block med Python-kod som kommer att köras\n"
+"- \"Send Webhook Notification\": skicka en POST-begäran till ett externt "
+"system, även känt som en Webhook\n"
+"- \"Multi Actions\": definiera en åtgärd som utlöser flera andra "
+"serveråtgärder\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1424,15 +1461,18 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "Används för att kategorisera meddelandegeneratorn\n"
 "'email': genereras av ett inkommande e-postmeddelande, t.ex. mailgateway\n"
-"'comment': genereras av användarens input, t.ex. genom discuss eller composer\n"
+"'comment': genereras av användarens input, t.ex. genom discuss eller "
+"composer\n"
 "'email_outgoing': genereras av ett utskick\n"
 "'notification': genereras av systemet, t.ex. spårningsmeddelanden\n"
-"'auto_comment': genereras av en automatiserad meddelandemekanism, t.ex. bekräftelse\n"
+"'auto_comment': genereras av en automatiserad meddelandemekanism, t.ex. "
+"bekräftelse\n"
 "'user_notification': genereras för en specifik mottagare"
 
 #. module: sms
@@ -1538,11 +1578,15 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
-"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
-"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't "
+"allowed to modify it once you registered one, choose it carefully."
 msgstr ""
-"Ditt avsändarnamn måste vara mellan 3 och 11 tecken långt och får endast innehålla alfanumeriska tecken.\n"
-"                        Det måste passa ditt företagsnamn, och du får inte ändra det när du väl har registrerat ett, välj det noggrant."
+"Ditt avsändarnamn måste vara mellan 3 och 11 tecken långt och får endast "
+"innehålla alfanumeriska tecken.\n"
+"                        Det måste passa ditt företagsnamn, och du får inte "
+"ändra det när du väl har registrerat ett, välj det noggrant."
 
 #. module: sms
 #. odoo-python

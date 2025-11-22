@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* barcodes
-# 
+# * barcodes
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-4/"
+"barcodes/sv/>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes
 #. odoo-python
@@ -28,21 +31,29 @@ msgstr " '*' är inte ett giltigt regex streckkodsmönster. Menade du '.*'?"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
-"<i>Streckkodsnomenklaturer</i> definierar hur streckkoder identifieras och kategoriseras.\n"
-"                                När en streckkod skannas associeras den till den <i>första</i> regeln med ett matchande\n"
-"                                mönster. Mönstret har samma syntax som ett reguljärt uttryck, och en streckkod matchas\n"
-"                                om det reguljära uttrycket matchar ett prefix i streckkoden."
+"<i>Streckkodsnomenklaturer</i> definierar hur streckkoder identifieras och "
+"kategoriseras.\n"
+"                                När en streckkod skannas associeras den till "
+"den <i>första</i> regeln med ett matchande\n"
+"                                mönster. Mönstret har samma syntax som ett "
+"reguljärt uttryck, och en streckkod matchas\n"
+"                                om det reguljära uttrycket matchar ett "
+"prefix i streckkoden."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets"
-" barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
 msgstr ""
 "En streckkodsnomenklatur definierar hur kassan identifierar och tolkar "
 "streckkoder"
@@ -181,7 +192,7 @@ msgstr "Kodning"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/manual_barcode.js:0
 msgid "Enter a barcode..."
-msgstr ""
+msgstr "Ange en streckkod..."
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -204,6 +215,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"För att kunna använda barcodes.barcode_events_mixin måste metoden "
+"on_barcode_scanned implementeras"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -230,18 +243,28 @@ msgstr "Nomenklatur"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the\n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
-"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
-"Mönster kan också definiera hur numeriska värden, som vikt eller pris, kan vara\n"
-"                                kodad i streckkoden. De indikeras av  <code>{NNN}</code> när versala N\n"
-"                                definiera var numrets siffror är kodade. Decimalnummer stöds också med\n"
-"                                decimaler angivna med D, som t.ex <code>{NNNDD}</code>. I dessa fall,\n"
-"                                streckkodsfältet på tillhörande poster <i></i> visa dessa siffror som\n"
+"Mönster kan också definiera hur numeriska värden, som vikt eller pris, kan "
+"vara\n"
+"                                kodad i streckkoden. De indikeras av  "
+"<code>{NNN}</code> när versala N\n"
+"                                definiera var numrets siffror är kodade. "
+"Decimalnummer stöds också med\n"
+"                                decimaler angivna med D, som t.ex "
+"<code>{NNNDD}</code>. I dessa fall,\n"
+"                                streckkodsfältet på tillhörande poster <i></"
+"i> visa dessa siffror som\n"
 "                                nollor."
 
 #. module: barcodes
@@ -346,13 +369,13 @@ msgstr "Typ"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in"
-" one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
 "UPC-koder kan konverteras till EAN genom att använda en nolla som prefix. "
 "Den här inställningen avgör om en UPC/EAN-streckkod ska konverteras "
-"automatiskt på ett eller annat sätt när man försöker matcha en regel med den"
-" andra kodningen."
+"automatiskt på ett eller annat sätt när man försöker matcha en regel med den "
+"andra kodningen."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -382,8 +405,7 @@ msgstr "Okänt streckkodskommando"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid ""
-"Used to order rules such that rules with a smaller sequence match first"
+msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
 "Används för att sortera regler så att regler med en mindre sekvens matchar "
 "först"
@@ -392,3 +414,12 @@ msgstr ""
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "Värde på senast skannade streckkod."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr ""
+"Du kan inte ta bort ’%(name)s’ eftersom det är standardnamnet för "
+"streckkoden."

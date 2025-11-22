@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_automation
-# 
+# * base_automation
+#
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2025
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s18-4/"
+"base_automation/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -44,20 +46,20 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
-"\"Canlı güncellemede\" otomasyon kuralları yalnızca \"Python Kodu Çalıştır\""
-" eylem türüyle kullanılabilir."
+"\"Canlı güncellemede\" otomasyon kuralları yalnızca \"Python Kodu Çalıştır\" "
+"eylem türüyle kullanılabilir."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "%s actions"
-msgstr ""
+msgstr "%s eylemler"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 msgid "1 action"
-msgstr ""
+msgstr "1 eylem"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -67,8 +69,8 @@ msgstr "<code>env</code>: eylemin tetiklendiği ortam"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: işlemin tetiklendiği kaydın modeli; boş bir kayıt "
 "kümesidir"
@@ -190,7 +192,6 @@ msgstr "Uygula"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Arşivlendi"
 
@@ -329,7 +330,7 @@ msgstr "Düzenle"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Email Events"
-msgstr ""
+msgstr "Etkinlikleri E-Posta Yoluyla Gönderin"
 
 #. module: base_automation
 #. odoo-python
@@ -420,8 +421,8 @@ msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr "Varsa, bu koşul otomasyon kuralı çalıştırılmadan önce sağlanmalıdır."
 
 #. module: base_automation
@@ -439,6 +440,11 @@ msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
 msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "Arşivlenenleri Dahil Et"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -514,8 +520,8 @@ msgstr "Model Adı"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
 "%(action_name)s eyleminin modeli, %(rule_name)s otomasyon kuralınınkiyle "
 "eşleşmelidir."
@@ -711,18 +717,20 @@ msgstr "Alanları seçin..."
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "Bir nesne durum değiştirdiğinde e-posta gönderin, bir ay boyunca \n"
-"                etkin olmayan kayıtları arşivleyin veya belirli bir etiket eklendiğinde görevleri takip etmek\n"
+"                etkin olmayan kayıtları arşivleyin veya belirli bir etiket "
+"eklendiğinde görevleri takip etmek\n"
 "                için kendinize hatırlatma gönderin."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "Bir nesne durum değiştirdiğinde e-posta gönderin, bir aydan fazla "
@@ -752,8 +760,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 "Bazı tetikleyicilerin başka bir alana referansa ihtiyacı vardır. Bu alan, o "
 "referansı saklamak için kullanılır."
@@ -800,8 +808,7 @@ msgstr "Hedef Kayıt"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
 "%(action_names)s eylemlerinin hedef modeli kural modeliyle uyumlu değil."
 
@@ -809,8 +816,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
 "\"%(trigger_value)s\" %(trigger_label)s sadece \"%(state_value)s\" eylem "
 "türü ile kullanılabilir"
@@ -974,10 +981,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Koşul ne zaman tetiklenmeli?\n"
-"Varsa, zamanlayıcı tarafından kontrol edilecektir. Boşsa, oluşturma ve güncelleme sırasında kontrol edilecektir."
+"Varsa, zamanlayıcı tarafından kontrol edilecektir. Boşsa, oluşturma ve "
+"güncelleme sırasında kontrol edilecektir."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1017,7 +1026,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "şuna dayanarak:"
 
 #. module: base_automation
 #. odoo-javascript

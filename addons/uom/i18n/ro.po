@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* uom
+# * uom
 #
 # Translators:
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2022
@@ -8,20 +8,23 @@
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2025-11-16 23:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-4/uom/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -233,6 +236,15 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Unele câmpuri critice au fost modificate în  %s.\n"
+"Rețineți că datele existente NU vor fi actualizate de această modificare.\n"
+"\n"
+"Având în vedere că unitățile de măsură influențează întregul sistem, acest "
+"lucru poate cauza probleme critice.\n"
+"De exemplu, modificarea rotunjirii ar putea afecta balanța stocurilor.\n"
+"\n"
+"Prin urmare, nu se recomandă modificarea unităților de măsură fundamentale "
+"într-o bază de date aflată în exploatare."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -347,7 +359,7 @@ msgstr "Categoria UM %s ar trebui să aibă doar o unitate de măsură de referi
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr ""
+msgstr "Uom"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-10-29 14:43+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-21 14:42+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_check_printing/da/>\n"
@@ -209,8 +209,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr ""
 "For at udskrive flere checks på en gang, skal de tilhøre den samme bank "
 "journal."
@@ -240,16 +240,22 @@ msgstr "Manuel nummerering"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Manuel: Betal eller bliv betalt via enhver metode udenfor Odoo.\n"
-"Betalingsydere: Hver betalingsyder har deres egen betalingsmetode. Anmod om "
-"en transaktion til/fra et kort, takket være en betalingstoken gemt af "
-"partneren under køb eller abonnering online.\n"
+"Betalingsydere: Hver betalingsyder har deres egen betalingsform. Anmod om en "
+"transaktion til/fra et kort, takket være en betalingstoken gemt af partneren "
+"under køb eller abonnering online.\n"
 "Check: Betal regninger via check og udskriv den fra Odoo.\n"
 "Samlet indbetaling: Saml flere kundechecks på én gang, og generer og indsend "
 "en samlet indbetaling til din bank. Modulet account_batch_payment er "
@@ -286,7 +292,7 @@ msgstr "Ingen"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
 msgid "Payment Method"
-msgstr "Betalingsmetode"
+msgstr "Betalingsform"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
@@ -305,14 +311,14 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Betalinger der skal printes som checks skal have 'Check' valgt som betalings"
-" metode, og må ikke allerede være afstemte"
+"Betalinger der skal printes som checks skal have 'Check' valgt som betalings "
+"metode, og må ikke allerede være afstemte"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr ""
 "Indtast venligst nummeret på den før forprintede check, som du skal til at "
 "printe på."
@@ -361,10 +367,12 @@ msgstr "Højre margin"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Vælg formatet der svarer til det check papir du vil bruge til at printe dine checks.\n"
+"Vælg formatet der svarer til det check papir du vil bruge til at printe dine "
+"checks.\n"
 "for at slå print funktionen fra, vælg 'Ingen'"
 
 #. module: account_check_printing
@@ -389,8 +397,16 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
-"Noget gik galt med Check Layout, vælg venligst et andet layout i "
-"Fakturering/Regnskab Indstillinger og forsøg igen."
+"Noget gik galt med Check Layout, vælg venligst et andet layout i Fakturering/"
+"Regnskab Indstillinger og forsøg igen."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
@@ -440,7 +456,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Denne indstilling gør det muligt for dig at printe dato mærkater på checken i overensstemmelse med CPA.\n"
+"Denne indstilling gør det muligt for dig at printe dato mærkater på checken "
+"i overensstemmelse med CPA.\n"
 "Deaktiver dette hvis dine forudprintede checks inkludere datomarkering."
 
 #. module: account_check_printing
@@ -448,8 +465,7 @@ msgstr ""
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
-"Dette gør det muligt at gemme nummeret på den tilsvarende check i "
-"betalinger."
+"Dette gør det muligt at gemme nummeret på den tilsvarende check i betalinger."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited

@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: account_payment
 #. odoo-python
@@ -111,12 +112,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Opozorilo!</strong> Za to plačilo je čakajoče vračilo.\n"
 "Počakajte trenutek, da se obdela. Če vračilo še vedno čaka \n"
-"                        čez nekaj minut preverite konfiguracijo svojega ponudnika plačilnih storitev."
+"                        čez nekaj minut preverite konfiguracijo svojega "
+"ponudnika plačilnih storitev."
 
 #. module: account_payment
 #. odoo-python
@@ -127,8 +131,8 @@ msgstr "Popust se obračuna, če stranka plača pred %s vključen."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "Plačilo za ta račun je že bilo izvedeno, prosimo, poskrbite, da ne plačate "
 "dvakrat."
@@ -200,11 +204,6 @@ msgid "Close"
 msgstr "Zaključi"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Oznaka"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
 msgstr "Uredi nastavitve"
@@ -273,8 +272,7 @@ msgstr "Popust za predčasno plačilo"
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Enable credit & debit card payments supported by Stripe."
 msgstr ""
-"Omogočite plačila s kreditnimi in debetnimi karticami, ki jih podpira "
-"Stripe."
+"Omogočite plačila s kreditnimi in debetnimi karticami, ki jih podpira Stripe."
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
@@ -660,8 +658,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
-"Plačilo, povezano s transakcijo s sklicem % reference, je bilo knjiženo: "
-"%(link)s"
+"Plačilo, povezano s transakcijo s sklicem % reference, je bilo knjiženo: %"
+"(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -768,10 +766,12 @@ msgstr "Neveljavna transakcija"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Plačilne metode, ki je povezana s ponudnikom v omogočenem ali testnem stanju, ni mogoče izbrisati.\n"
+"Plačilne metode, ki je povezana s ponudnikom v omogočenem ali testnem "
+"stanju, ni mogoče izbrisati.\n"
 "Povezani ponudnik(i): %s"
 
 #. module: account_payment
@@ -791,7 +791,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Preden izbrišete dnevnik ponudnika plačilnih storitev, ga morate najprej deaktivirati.\n"
+"Preden izbrišete dnevnik ponudnika plačilnih storitev, ga morate najprej "
+"deaktivirati.\n"
 "Povezani ponudniki: %s"
 
 #. module: account_payment
@@ -815,3 +816,6 @@ msgstr "je bil uporabljen."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "zapadle"
+
+#~ msgid "Code"
+#~ msgstr "Oznaka"

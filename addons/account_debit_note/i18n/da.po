@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-10-30 09:32+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-21 14:42+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_debit_note/da/>\n"
@@ -40,8 +40,8 @@ msgstr "Annullér"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" debit notes made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
 msgstr ""
 
 #. module: account_debit_note
@@ -125,7 +125,7 @@ msgid ""
 msgstr ""
 "I tilfælde af at du skal foretage rettelser for samtlige linjer, kan det "
 "være nyttigt at kopiere dem. Vi vil ikke kopiere dem for debit noter fra "
-"kredit noter."
+"kredit noter. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -155,7 +155,7 @@ msgstr "Sidst opdateret den"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
 msgid "Move"
-msgstr "Bevægelse"
+msgstr "Bogføringspost"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
@@ -196,7 +196,7 @@ msgstr "Debit noterne oprettet for denne faktura"
 
 #. module: account_debit_note
 #. odoo-python
-#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
 msgstr "Denne debit note er oprettet fra: %s"
 
@@ -225,8 +225,8 @@ msgstr "Du kan kun debitere posteret bevægelser."
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
 msgstr ""
 "Du kan ikke lave en debit nota for en faktura, der allerede er knyttet til "
 "en debit nota."

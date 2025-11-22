@@ -1,59 +1,62 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_peppol
+# * account_peppol
 #
 # Translators:
 # Wil Odoo, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-4/"
+"account_peppol/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Customer not on Peppol)"
-msgstr ""
+msgstr " (Kund inte på Peppol)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Demo)"
-msgstr ""
+msgstr " (Demo)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Test)"
-msgstr ""
+msgstr " (Test)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (no VAT)"
-msgstr ""
+msgstr " (exklusive moms)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
-msgstr ""
+msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "%s has requested electronic invoices reception on Peppol."
-msgstr ""
+msgstr "%s har begärt elektronisk fakturamottagning på Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -62,6 +65,9 @@ msgid ""
 "                            But you are receiving your e-invoices via this "
 "Access Point:"
 msgstr ""
+".<br/>\n"
+"                            Men du tar emot dina e-fakturor via denna Access "
+"Point:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -70,6 +76,10 @@ msgid ""
 "                                In Belgium, electronic invoicing is "
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
+"<br/>\n"
+"                                I Belgien är elektronisk fakturering "
+"<u>obligatoriskt från och med januari 2026</u> - vänta inte med att "
+"registrera dig."
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -160,6 +170,92 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"padding: 16px; background-color: white; color: #454748; "
+"border-collapse:separate;\">\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
+"\"0\" style="
+"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td valign=\"middle\">\n"
+"                                    <span style=\"font-size: 10px;\""
+">Avisering</span>\n"
+"                                    <br/>\n"
+"                                    <span style=\"font-size: 20px; font-"
+"weight: bold;\">\n"
+"                                        Välkommen till Peppol\n"
+"                                    </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-"
+"top: 18px;\">\n"
+"                                        <a t-attf-href=\"/odoo/accounting/\" "
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
+"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            Skicka fakturor\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td valign=\"middle\" align=\"right\">\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src="
+"\"'/logo.png?company=%s' % object.id\" style="
+"\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt="
+"\"'%s' % object.name\"/>\n"
+"                                    </t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; "
+"border:none; height:1px; margin:16px 0;\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- BODY -->\n"
+"                <tr>\n"
+"                    <td align=\"center\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
+"\"0\" style="
+"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td style=\"font-size: 14px;\">\n"
+"                                    <p>Bästa <t t-out=\"object.name or ''\""
+">DittBolag</t>,</p>\n"
+"\n"
+"                                    <p>Vi har lagt till ert företag i <strong"
+">Peppol-nätverket</strong>.</p>\n"
+"\n"
+"                                    <p>Ni kan nu <strong>skicka<t t-if="
+"\"object.account_peppol_proxy_state == 'receiver'\"> och ta emot</t></"
+"strong> elektroniska fakturor via Odoo – helt kostnadsfritt.</p>\n"
+"\n"
+"                                    <p>Med vänliga hälsningar,</p>\n"
+"\n"
+"                                    <p style=\"margin-bottom: 24px;\">Odoo-"
+"teamet</p>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"            "
 
 #. module: account_peppol
 #. odoo-python
@@ -170,6 +266,11 @@ msgid ""
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
+"Ett mottagningsbevis har mottagits för ett meddelande som tidigare skickats "
+"av den MSH som genererar detta fel, men innehållet stämmer inte överens med "
+"meddelandets innehåll (t.ex. en del har inte bekräftats, eller den "
+"tillhörande sammanfattningen stämmer inte överens med signaturens "
+"sammanfattning, för NRR)."
 
 #. module: account_peppol
 #. odoo-python
@@ -178,6 +279,8 @@ msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
 msgstr ""
+"Ett kvitto har inte mottagits för ett meddelande som tidigare skickats av "
+"den MSH som genererar detta fel."
 
 #. module: account_peppol
 #. odoo-python
@@ -186,6 +289,8 @@ msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
 msgstr ""
+"Ett fragment tas emot men ett tidigare mottaget fragmentmeddelande hade "
+"samma värden för GroupId och FragmentNum"
 
 #. module: account_peppol
 #. odoo-python
@@ -194,6 +299,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
+"Ett fragment tas emot men mer än ett fragmentmeddelande i en grupp av "
+"fragment anger ett värde för ett komprimeringselement."
 
 #. module: account_peppol
 #. odoo-python
@@ -202,6 +309,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
+"Ett fragment tas emot, men mer än ett fragmentmeddelande i en grupp av "
+"fragment anger ett värde för detta element."
 
 #. module: account_peppol
 #. odoo-python
@@ -209,6 +318,7 @@ msgstr ""
 msgid ""
 "A fragment is received that relates to a group that was previously rejected."
 msgstr ""
+"Ett fragment tas emot som hänför sig till en grupp som tidigare avvisats."
 
 #. module: account_peppol
 #. odoo-python
@@ -217,6 +327,8 @@ msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
 msgstr ""
+"En meddelandeenhet i en bunt bearbetades inte eftersom en relaterad "
+"meddelandeenhet i bunten orsakade ett fel."
 
 #. module: account_peppol
 #. odoo-python
@@ -225,6 +337,8 @@ msgid ""
 "A participant with these details has already been registered on the network. "
 "If you have previously registered to a Peppol service, please deregister."
 msgstr ""
+"En deltagare med dessa uppgifter har redan registrerats i nätverket. Om du "
+"tidigare har registrerat dig för en Peppol-tjänst, vänligen avregistrera dig."
 
 #. module: account_peppol
 #. odoo-python
@@ -239,6 +353,8 @@ msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
 msgstr ""
+"En svarande MSH anger att den tillämpar den alternativa MEP-bindningen på "
+"svarsmeddelandet."
 
 #. module: account_peppol
 #. odoo-python
@@ -247,6 +363,8 @@ msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
 msgstr ""
+"Ett värde sätts för FragmentCount, men ett tidigare mottaget fragment hade "
+"ett högre värde."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -271,7 +389,7 @@ msgstr "Guide för att flytta konto och skicka"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_user
 msgid "Account Peppol Edi User"
-msgstr ""
+msgstr "Konto Peppol Edi Användare"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__is_peppol_journal
@@ -287,38 +405,38 @@ msgstr "Aktivera"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Electronic Invoicing"
-msgstr ""
+msgstr "Aktivera elektronisk fakturering"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
-msgstr ""
+msgstr "Aktivera elektronisk fakturering (via Peppol)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Activate Peppol"
-msgstr ""
+msgstr "Aktivera Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Activate Peppol (Demo)"
-msgstr ""
+msgstr "Aktivera Peppol (Demo)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Activate Peppol (Test)"
-msgstr ""
+msgstr "Aktivera Peppol (Test)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Advanced Configuration"
-msgstr ""
+msgstr "Avancerad konfiguration"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Allow sending and receiving invoices through the Peppol network"
-msgstr ""
+msgstr "Tillåt att skicka och ta emot fakturor via Peppol-nätverket"
 
 #. module: account_peppol
 #. odoo-python
@@ -328,6 +446,9 @@ msgid ""
 "attribute contains a value that could not be recognized and therefore could "
 "not be used by the MSH."
 msgstr ""
+"Även om meddelandedokumentet är välformat och schemagiltigt, innehåller "
+"något element/attribut ett värde som inte kunde identifieras och därför inte "
+"kunde användas av MSH."
 
 #. module: account_peppol
 #. odoo-python
@@ -337,6 +458,9 @@ msgid ""
 "attribute value cannot be processed as expected because the related feature "
 "is not supported by the MSH."
 msgstr ""
+"Även om meddelandedokumentet är välformulerat och schemagiltigt kan vissa "
+"element/attributvärden inte behandlas som förväntat eftersom den relaterade "
+"funktionen inte stöds av MSH."
 
 #. module: account_peppol
 #. odoo-python
@@ -347,6 +471,10 @@ msgid ""
 "attribute, or with the processing mode of the MSH, or with the normative "
 "requirements of the ebMS specification."
 msgstr ""
+"Även om meddelandedokumentet är välformat och schemagiltigt, är något "
+"element/attributvärde inkonsekvent antingen med innehållet i ett annat "
+"element/attribut, eller med MSH:s bearbetningsläge, eller med de normativa "
+"kraven i ebMS-specifikationen."
 
 #. module: account_peppol
 #. odoo-python
@@ -356,6 +484,9 @@ msgid ""
 "or absence of some element/ attribute is not consistent with the capability "
 "of the MSH, with respect to supported features."
 msgstr ""
+"Även om meddelandedokumentet är välformat och schemagiltigt, är förekomsten "
+"eller avsaknaden av något element/attribut inte förenligt med MSH:s "
+"kapacitet med avseende på funktioner som stöds."
 
 #. module: account_peppol
 #. odoo-python
@@ -365,6 +496,9 @@ msgid ""
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
+"Trots att meddelandet skickades enligt kravet på garanterad leverans kunde "
+"tillförlitlighetsmodulen inte få någon försäkran om att meddelandet "
+"levererades korrekt, trots försök att skicka om det."
 
 #. module: account_peppol
 #. odoo-python
@@ -373,6 +507,8 @@ msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
 msgstr ""
+"En förmedlande MSH kunde inte dirigera ett ebMS-meddelande och avbröt "
+"behandlingen av meddelandet."
 
 #. module: account_peppol
 #. odoo-python
@@ -381,6 +517,8 @@ msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
 msgstr ""
+"En MSH har fastställt att meddelandet har löpt ut och kommer inte att "
+"försöka vidarebefordra eller leverera det."
 
 #. module: account_peppol
 #. odoo-python
@@ -390,18 +528,21 @@ msgid ""
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
 msgstr ""
+"En post i routningsfunktionen matchas som tilldelar meddelandet till en MPC "
+"för dragning, men mellanhanden MSH kan inte lagra meddelandet hos denna MPC"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred during the decompression."
-msgstr ""
+msgstr "Ett fel inträffade under dekomprimeringen."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred while decompressing the reassembled message."
 msgstr ""
+"Ett fel inträffade under dekomprimeringen av det ommonterade meddelandet."
 
 #. module: account_peppol
 #. odoo-python
@@ -410,6 +551,8 @@ msgid ""
 "An incoming message fragment has a a value greater than the known "
 "FragmentCount."
 msgstr ""
+"Ett fragment i ett inkommande meddelande har ett värde som är större än det "
+"kända FragmentCount."
 
 #. module: account_peppol
 #. odoo-python
@@ -420,12 +563,16 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
+"En förmedlande MSH har tilldelat meddelandet till en MPC för uthämtning och "
+"har framgångsrikt lagrat det. Förmedlaren satte dock en gräns för hur länge "
+"den var beredd att vänta på att meddelandet skulle hämtas, och den gränsen "
+"har nåtts."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Ett internt fel har inträffat"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -536,7 +683,7 @@ msgstr "Inställningar"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Configure your Peppol Services and allowed formats"
-msgstr ""
+msgstr "Konfigurera dina Peppol-tjänster och tillåtna format"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -556,17 +703,19 @@ msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
 msgstr ""
+"Det gick inte att hitta en XSD för att validera dokumentet med "
+"identifieraren \"%s\"."
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Skapa en kund"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Create, send and receive e-invoices for free."
-msgstr ""
+msgstr "Skapa, skicka och ta emot e-fakturor kostnadsfritt."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__create_uid
@@ -586,12 +735,12 @@ msgstr "Skapad den"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Customer is on Peppol but did not enable receiving documents."
-msgstr ""
+msgstr "Kunden är på Peppol men har inte aktiverat mottagning av dokument."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Danger zone"
-msgstr ""
+msgstr "Farlig zon"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__demo
@@ -638,7 +787,7 @@ msgstr "Klar"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "E-invoices will soon be mandatory in many countries"
-msgstr ""
+msgstr "E-fakturor är snart obligatoriska i många länder"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
@@ -660,7 +809,7 @@ msgstr "EDI-användare"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of type Peppol"
-msgstr ""
+msgstr "EDI-användare ska vara av typen Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -693,19 +842,19 @@ msgstr "Fel uppstod vid skapandet av EDI-dokumentet (format: %s):"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Free on Odoo"
-msgstr ""
+msgstr "Gratis på Odoo"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Fully automated"
-msgstr ""
+msgstr "Fullt automatiserad"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Got it !"
-msgstr ""
+msgstr "Jag har den!"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
@@ -783,6 +932,8 @@ msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
 msgstr ""
+"Det fanns meddelandeegenskaper i fragmentets SOAP-huvud som inte "
+"specificerades i %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -805,18 +956,20 @@ msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
 msgstr ""
+"Mer tid än %s har gått sedan det första fragmentet togs emot, men alla andra "
+"fragment har inte tagits emot."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr ""
+msgstr "Inget UBL-dokument tillhandahölls till Peppol Outbound Service."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
-msgstr ""
+msgstr "Ingen giltig slutpunkt för AS4-deltagare hittades."
 
 #. module: account_peppol
 #. odoo-python
@@ -825,11 +978,13 @@ msgid ""
 "Not enough disk space available to store all (expected) fragments of the "
 "group."
 msgstr ""
+"Det finns inte tillräckligt med diskutrymme för att lagra alla (förväntade) "
+"fragment av gruppen."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Not on Peppol"
-msgstr ""
+msgstr "Inte på Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -844,7 +999,7 @@ msgstr "Inte verifierat ännu"
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
 msgid "Notification email for peppol registration state update"
-msgstr ""
+msgstr "E-postmeddelande för uppdatering av peppolregistrering"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -854,13 +1009,13 @@ msgstr "Odoo"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_eas__odemo
 msgid "Odoo Demo ID"
-msgstr ""
+msgstr "Odoo Demo ID"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with the new regulation."
-msgstr ""
+msgstr "Odoo håller dig uppdaterad med den nya förordningen."
 
 #. module: account_peppol
 #. odoo-python
@@ -879,6 +1034,8 @@ msgstr "PEPPOL"
 msgid ""
 "PEPPOL allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"PEPPOL gör det möjligt att helt automatisera sändning och mottagning av "
+"e-fakturor."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -886,6 +1043,8 @@ msgstr ""
 msgid ""
 "PEPPOL is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"PEPPOL är den säkra standard för e-fakturor som används i EU och i resten av "
+"världen."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -922,13 +1081,13 @@ msgstr "PEPPOL: uppdatera deltagarstatus"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "PEPPOL: webhook keep alive"
-msgstr ""
+msgstr "PEPPOL: webhook håller sig vid liv"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid Peppol configuration."
-msgstr ""
+msgstr "Partnern har inte en giltig Peppol-konfiguration."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -939,17 +1098,17 @@ msgstr "Väntande mottagande"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Peppol Address should be provided."
-msgstr ""
+msgstr "Peppol Adress bör anges."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
 msgid "Peppol Can Send"
-msgstr ""
+msgstr "Peppol kan skicka"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
 msgid "Peppol Configuration Wizard"
-msgstr ""
+msgstr "Peppol Konfigurationsguide"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -966,24 +1125,26 @@ msgid ""
 "Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
 "%(error_message)s"
 msgstr ""
+"Peppol Fel [code=%(error_code)s]: %(error_subject)s\n"
+"%(error_message)s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_external_provider
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_external_provider
 msgid "Peppol External Provider"
-msgstr ""
+msgstr "Peppol Extern leverantör"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Peppol ID"
-msgstr ""
+msgstr "Peppol ID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "Peppol Purchase Journal"
-msgstr ""
+msgstr "Peppol Inköpsjournal"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1041,7 +1202,7 @@ msgstr "Peppol status"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol status update: %s"
-msgstr ""
+msgstr "Statusuppdatering för Peppol: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_warnings
@@ -1051,7 +1212,7 @@ msgstr "Peppol-varningar"
 #. module: account_peppol
 #: model:mail.template,name:account_peppol.mail_template_peppol_registration
 msgid "Peppol: Registration update"
-msgstr ""
+msgstr "Peppol: Uppdatering av registrering"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1088,12 +1249,8 @@ msgstr "Installera telefonnumrets bibliotek."
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
 msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr "Vänligen verifiera partnerkonfigurationen i partnerinställningarna."
+"Vänligen sätt en journal för Peppol-fakturor på %s innan du tar emot "
+"dokument."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
@@ -1108,8 +1265,16 @@ msgstr "E-postadress för primär kontakt"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
-msgid "Primary contact email for Peppol-related communication"
-msgstr "Primär kontaktadress för Peppol-relaterad kommunikation"
+msgid ""
+"Primary contact email for Peppol connection related communications and "
+"notifications.\n"
+"In particular, this email is used by Odoo to reconnect your Peppol account "
+"in case of database change."
+msgstr ""
+"Primär kontakt-e-post för Peppol-anslutningsrelaterad kommunikation och "
+"meddelanden.\n"
+"I synnerhet används detta e-postmeddelande av Odoo för att återansluta ditt "
+"Peppol-konto vid databasändring."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1123,6 +1288,8 @@ msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
 msgstr ""
+"Proxyfel, vänligen kontakta Odoo (saknar \"%s\" - kontrollera att den "
+"laddades från konfigurationspanelen)"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1137,7 +1304,7 @@ msgstr "Redo att skicka"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Receive your electronic invoices in Odoo"
-msgstr ""
+msgstr "Ta emot dina elektroniska fakturor i Odoo"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__smp_registration
@@ -1147,7 +1314,7 @@ msgstr "Registrera dig som mottagare"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Register with Odoo"
-msgstr ""
+msgstr "Registrera dig med Odoo"
 
 #. module: account_peppol
 #. odoo-python
@@ -1171,7 +1338,7 @@ msgstr "Registrerad för att få dokument via Peppol."
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Registration rejected."
-msgstr ""
+msgstr "Registreringen avvisas."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
@@ -1181,7 +1348,7 @@ msgstr "Avvisad"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Remove from Peppol"
-msgstr ""
+msgstr "Ta bort från Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1227,6 +1394,10 @@ msgid ""
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
+"Någon tillförlitlighetsfunktion som implementerats av "
+"tillförlitlighetsmodulen är inte i drift, eller så är "
+"tillförlitlighetstillståndet som är associerat med denna meddelandesekvens "
+"inte giltigt."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1236,12 +1407,16 @@ msgid ""
 "                        If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
+"Vissa tjänster stöder migreringsnycklar. Om detta är ditt fall kan du ange "
+"din migreringsnyckel nedan.\n"
+"                        Om inte, bör du avregistrera dig från din nuvarande "
+"tjänsteleverantör och registrera dig hos Odoo efteråt."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Something went wrong with your request"
-msgstr ""
+msgstr "Något gick fel med din begäran"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1255,6 +1430,9 @@ msgid ""
 "                                    By clicking the button below I accept "
 "that Odoo may process my e-invoices."
 msgstr ""
+"Testläget gör det möjligt att skicka e-fakturor via Peppols testnätverk.\n"
+"                                    Genom att klicka på knappen nedan "
+"godkänner jag att Odoo får behandla mina e-fakturor."
 
 #. module: account_peppol
 #. odoo-python
@@ -1269,6 +1447,8 @@ msgid ""
 "The MSH is experiencing temporary or permanent failure in trying to open a "
 "transport connection with a remote MSH."
 msgstr ""
+"MSH-enheten har ett tillfälligt eller permanent fel när den försöker öppna "
+"en transportanslutning med en fjärr-MSH-enhet."
 
 #. module: account_peppol
 #. odoo-python
@@ -1278,6 +1458,8 @@ msgid ""
 "is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
+"MSH kan inte lösa en extern nyttolastreferens (d.v.s. en del som inte ingår "
+"i ebMS-meddelandet, som identifieras av en PartInfo/href URI)."
 
 #. module: account_peppol
 #. odoo-python
@@ -1286,18 +1468,20 @@ msgid ""
 "The Peppol Participant DNS lookup resulted in an URL address that does not "
 "belong to this server."
 msgstr ""
+"Peppol-deltagarens DNS-uppslagning resulterade i en URL-adress som inte "
+"tillhör den här servern."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant cannot receive this document type."
-msgstr ""
+msgstr "Deltagaren i Peppol kan inte ta emot denna dokumenttyp."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant certificate is invalid."
-msgstr ""
+msgstr "Deltagarcertifikatet för Peppol är ogiltigt."
 
 #. module: account_peppol
 #. odoo-python
@@ -1306,6 +1490,8 @@ msgid ""
 "The Peppol Participant service group found on his Service Metadata Provider "
 "is invalid."
 msgstr ""
+"Den tjänstegrupp för Peppol-deltagaren som finns i hans metadataleverantör "
+"för tjänster är ogiltig."
 
 #. module: account_peppol
 #. odoo-python
@@ -1317,7 +1503,7 @@ msgstr "Identifieringsnumret för Peppols ändpunkt är inte korrekt."
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "The Peppol service that is used is %s."
-msgstr ""
+msgstr "Den Peppol-tjänst som används är %s."
 
 #. module: account_peppol
 #. odoo-python
@@ -1326,30 +1512,34 @@ msgid ""
 "The Service Metadata Publisher associated to this participant is not "
 "reachable. url: %s"
 msgstr ""
+"Den utgivare av metadata för tjänsten som är kopplad till denna deltagare är "
+"inte nåbar. url: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The UBL document provided to the Peppol Outbound Service is malformed."
 msgstr ""
+"UBL-dokumentet som levererats till Peppol Outbound Service är felaktigt "
+"utformat."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document could not be canonicalized."
-msgstr ""
+msgstr "XML-dokumentet kunde inte kanoniseras."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the XSD Schema."
-msgstr ""
+msgstr "XML-dokumentet är inte giltigt enligt XSD-schemat."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the schematron."
-msgstr ""
+msgstr "XML-dokumentet är inte giltigt enligt schematron."
 
 #. module: account_peppol
 #. odoo-python
@@ -1361,25 +1551,25 @@ msgstr "Dokumentet kunde inte hittas"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be sent to the Peppol Participant."
-msgstr ""
+msgstr "Dokumentet kunde inte skickas till deltagaren Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be validated."
-msgstr ""
+msgstr "Dokumentet kunde inte valideras."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "The document has been sent to Peppol for processing"
-msgstr ""
+msgstr "Dokumentet har skickats till Peppol för bearbetning"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
-msgstr ""
+msgstr "Nätverket för e-fakturering"
 
 #. module: account_peppol
 #. odoo-python
@@ -1388,6 +1578,8 @@ msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
 msgstr ""
+"Rubriken eb3:Message som kopierats till fragmentrubriken stämmer inte "
+"överens med rubriken eb3:Message i det återmonterade källmeddelandet."
 
 #. module: account_peppol
 #. odoo-python
@@ -1396,6 +1588,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
+"ebMS-headern är antingen inte välformulerad som ett XML-dokument eller "
+"överensstämmer inte med ebMS förpackningsregler."
 
 #. module: account_peppol
 #. odoo-python
@@ -1405,6 +1599,9 @@ msgid ""
 "the MSH is not compatible with the expected content, based on the associated "
 "P-Mode."
 msgstr ""
+"Det ebMS-huvud eller annat huvud (t.ex. tillförlitlighet, säkerhet) som MSH "
+"förväntar sig är inte kompatibelt med det förväntade innehållet, baserat på "
+"det associerade P-mode."
 
 #. module: account_peppol
 #. odoo-python
@@ -1413,6 +1610,8 @@ msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
+"Den krypterade datareferensen Security header avsedd för SOAP-aktören "
+"\"ebms\" kunde inte dekrypteras av Security Module."
 
 #. module: account_peppol
 #. odoo-python
@@ -1443,24 +1642,21 @@ msgid ""
 "other than the fragment header and a data part are in the message. are added "
 "or the SOAP Body is not empty."
 msgstr ""
+"Attributet href refererar inte till en giltig MIME-datadel, andra MIME-delar "
+"än fragmenthuvudet och en datadel finns i meddelandet. läggs till eller SOAP "
+"Body är inte tom."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The incoming message could not be decompressed."
-msgstr ""
+msgstr "Det inkommande meddelandet kunde inte dekomprimeras."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The message does not comply with the AS4 policy."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr "Partnern saknar Peppol EAS och/eller Endpoint identifierare."
+msgstr "Meddelandet är inte förenligt med AS4-policyn."
 
 #. module: account_peppol
 #. odoo-python
@@ -1470,13 +1666,9 @@ msgid ""
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr ""
+"Processorn fastställde att meddelandets säkerhetsmetoder, parametrar, "
+"omfattning eller andra krav eller överenskommelser på säkerhetspolicynivå "
+"inte var uppfyllda."
 
 #. module: account_peppol
 #. odoo-python
@@ -1485,12 +1677,14 @@ msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
 msgstr ""
+"Signaturen i säkerhetsrubriken som är avsedd för SOAP-aktören \"ebms\" kunde "
+"inte valideras av säkerhetsmodulen."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr ""
+msgstr "Storleken på datadelen i ett fragmentmeddelande är större än %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1499,6 +1693,7 @@ msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
 msgstr ""
+"Strukturen på en mottagen bunt är inte i enlighet med buntningsreglerna."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1515,29 +1710,33 @@ msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
 msgstr ""
+"Användningen av MIME är inte förenlig med den användning som krävs i denna "
+"specifikation."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There is no message available for pulling from this MPC at this moment."
 msgstr ""
+"Det finns inget meddelande tillgängligt för dragning från denna MPC för "
+"tillfället."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "There was an error while sending this invoice via Peppol."
-msgstr ""
+msgstr "Det uppstod ett fel när vi skickade denna faktura via Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the Peppol Request"
-msgstr ""
+msgstr "Det uppstod ett fel med Peppol-förfrågan"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the incoming message."
-msgstr ""
+msgstr "Det uppstod ett fel med det inkommande meddelandet."
 
 #. module: account_peppol
 #. odoo-python
@@ -1546,23 +1745,32 @@ msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
 msgstr ""
+"Det uppstod ett problem med Hermes Migration Token Collection Interface "
+"(MTCI)."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an issue with the Peppol Participant."
-msgstr ""
+msgstr "Det uppstod ett problem med Peppol-deltagaren."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
-msgstr ""
+msgstr "Denna faktura har också"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "This number is used for identification purposes only."
+msgstr "Detta nummer används endast för identifieringsändamål."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
-msgstr ""
+msgstr "Den här användaren är inte registrerad på vår Access Point."
 
 #. module: account_peppol
 #. odoo-python
@@ -1571,11 +1779,13 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"Den här användaren är inte en Peppol-användare. Den associerade proxy_type "
+"måste vara \"peppol\". Detta krävs för att skapa en peppoldeltagare."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "This will delete your Peppol registration."
-msgstr ""
+msgstr "Detta kommer att radera din Peppol-registrering."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1590,13 +1800,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unable to verify the digest value."
-msgstr ""
+msgstr "Det går inte att verifiera digest-värdet."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unexpected end of MIME multipart message."
-msgstr ""
+msgstr "Oväntat slut på MIME multipart-meddelande."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1613,7 +1823,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unknown Peppol Error: %s"
-msgstr ""
+msgstr "Okänt Peppol-fel: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -1648,29 +1858,31 @@ msgid ""
 "We could not find a user with this information on our server. Please check "
 "your information."
 msgstr ""
+"Vi kunde inte hitta någon användare med den här informationen på vår server. "
+"Vänligen kontrollera din information."
 
 #. module: account_peppol
 #: model:mail.template,subject:account_peppol.mail_template_peppol_registration
 msgid "Welcome to Peppol"
-msgstr ""
+msgstr "Välkommen till Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
-msgstr ""
+msgstr "Vad är Peppol och varför är det bra?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use PEPPOL ?"
-msgstr ""
+msgstr "Varför ska jag använda PEPPOL?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should you use it ?"
-msgstr ""
+msgstr "Varför ska du använda det?"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__wizard_id
@@ -1682,13 +1894,13 @@ msgstr "Guide"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
-msgstr ""
+msgstr "Du skickar och tar emot dina e-fakturor via Odoo med detta Peppol ID"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending your e-invoices via Odoo with this Peppol ID"
-msgstr ""
+msgstr "Du skickar dina e-fakturor via Odoo med detta Peppol ID"
 
 #. module: account_peppol
 #. odoo-python
@@ -1700,13 +1912,13 @@ msgstr "Du kan nu ta emot fakturor från demoleverantörer."
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send and receive electronic invoices via Peppol"
-msgstr ""
+msgstr "Nu kan du skicka och ta emot elektroniska fakturor via Peppol"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send electronic invoices via Peppol."
-msgstr ""
+msgstr "Du kan nu skicka elektroniska fakturor via Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -1718,13 +1930,13 @@ msgstr "Du kan nu skicka fakturor i demoläge."
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "You can send this invoice electronically via Peppol."
-msgstr ""
+msgstr "Du kan skicka fakturan elektroniskt via Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
-msgstr ""
+msgstr "Du har inte tillräckligt med kredit"
 
 #. module: account_peppol
 #. odoo-python
@@ -1733,6 +1945,8 @@ msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
 msgstr ""
+"Du har nått gränsen för hur många dokument du kan skicka idag. Försök igen "
+"senare. Kontakta supporten om du tror att du behöver öka den gränsen."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1742,13 +1956,10 @@ msgid ""
 "                            Please contact our support if you need further "
 "assistance."
 msgstr ""
-
-#. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this mobile number"
-msgstr "Du kommer att få en verifieringskod till detta mobilnummer"
+"Din registrering har avvisats, anledningen har skickats till dig via e-post."
+"\n"
+"                            Vänligen kontakta vår support om du behöver "
+"ytterligare hjälp."
 
 #. module: account_peppol
 #. odoo-python
@@ -1757,6 +1968,8 @@ msgid ""
 "Your Peppol registration will be activated soon. You can already send "
 "invoices."
 msgstr ""
+"Din Peppol-registrering kommer att aktiveras inom kort. Du kan redan nu "
+"skicka fakturor."
 
 #. module: account_peppol
 #. odoo-python
@@ -1765,17 +1978,19 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
+"Ditt företag är redan registrerat på en Access Point (%s) för mottagning av "
+"fakturor. Vi kommer att registrera er i Odoo endast som avsändare."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Your endpoint"
-msgstr ""
+msgstr "Din slutpunkt"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
-msgstr ""
+msgstr "Din identifiering har ännu inte godkänts för denna åtgärd"
 
 #. module: account_peppol
 #. odoo-python
@@ -1784,6 +1999,8 @@ msgid ""
 "Your registration has been rejected. Please contact the support for further "
 "assistance."
 msgstr ""
+"Din registrering har avvisats. Vänligen kontakta supporten för ytterligare "
+"hjälp."
 
 #. module: account_peppol
 #. odoo-python
@@ -1804,7 +2021,7 @@ msgstr "Din registrering bör aktiveras inom en dag."
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
-msgstr ""
+msgstr "Din begäran är fortfarande under behandling."
 
 #. module: account_peppol
 #. odoo-python
@@ -1816,19 +2033,31 @@ msgstr "av Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via Peppol"
-msgstr ""
+msgstr "kunde inte skickas via Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via Peppol"
-msgstr ""
+msgstr "skickat via Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
-msgstr ""
+msgstr "att skicka fakturor, men den här"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
-msgstr ""
+msgstr "användningsområden"
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr "Vänligen verifiera partnerkonfigurationen i partnerinställningarna."
+
+#~ msgid "Primary contact email for Peppol-related communication"
+#~ msgstr "Primär kontaktadress för Peppol-relaterad kommunikation"
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr "Partnern saknar Peppol EAS och/eller Endpoint identifierare."
+
+#~ msgid "You will receive a verification code to this mobile number"
+#~ msgstr "Du kommer att få en verifieringskod till detta mobilnummer"

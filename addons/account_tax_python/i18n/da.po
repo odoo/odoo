@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-10-29 08:50+0000\n"
+"PO-Revision-Date: 2025-11-21 22:45+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_tax_python/da/>\n"
@@ -42,7 +42,8 @@ msgstr ""
 "    - Procent: Momsbeløbet er en procentdel af prisen:\n"
 "        f.eks. 100 * (1 + 10%) = 110 (med moms)\n"
 "        f.eks. 110 / (1 + 10%) = 100 (uden moms)\n"
-"    - Procent med moms inkluderet: Momsen beregnes som en division af prisen::\n"
+"    - Procent med moms inkluderet: Momsen beregnes som en division af "
+"prisen::\n"
 "        f.eks. 180 / (1 - 10%) = 200 (med moms)\n"
 "        f.eks. 200 * (1 - 10%) = 180 (uden moms)\n"
 "        "
@@ -57,11 +58,17 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Beregn skattebeløbet.\n"
+"\n"
+":param base: flydende tal, det beløb, som skatten beregnes ud fra\n"
+":param price_unit: flydende tal\n"
+":param quantity: flydende tal\n"
+":param product: Et objekt, der repræsenterer produktet\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Tilpasset formel"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
@@ -72,17 +79,17 @@ msgstr "Vis navn"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Field '%s' is not accessible"
-msgstr ""
+msgstr "Feltet '%s' er ikke tilgængeligt"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
 msgid "Formula"
-msgstr "Formular"
+msgstr "Formel"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "Oplysninger om den dekrypterede formel"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
@@ -93,43 +100,43 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid AST node: %s"
-msgstr ""
+msgstr "Ugyldig AST-node: %s"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid formula"
-msgstr "Ugyldig formular"
+msgstr "Ugyldig formel"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Kwargs are not allowed"
-msgstr ""
+msgstr "Kwargs er ikke tilladt"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only int, float or None are allowed as constant values"
-msgstr ""
+msgstr "Kun int, float eller None er tilladte som konstante værdier."
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Only primitive types are allowed in python tax formula context."
-msgstr ""
+msgstr "Kun primitive typer er tilladt i Python-kontrolformler."
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only product['string'] read-access is allowed"
-msgstr ""
+msgstr "Kun skrivebeskyttet adgang til product['string'] er tilladt"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only read access to identifiers is allowed"
-msgstr ""
+msgstr "Kun skrivebeskyttet adgang til identifikatorer er tilladt"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -145,10 +152,10 @@ msgstr "Momsberegning"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown function call"
-msgstr ""
+msgstr "Ukendt funktionskald"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
-msgstr ""
+msgstr "Ukendt identifikator: %s"

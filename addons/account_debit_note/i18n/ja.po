@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_debit_note
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_debit_note
@@ -37,9 +37,11 @@ msgstr "キャンセル"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" debit notes made from this journal"
-msgstr "この仕訳帳から作成される顧客請求書とデビッドノートで同じシーケンスを共有したくない場合は、このボックスをチェックして下さい。"
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
+msgstr ""
+"この仕訳帳から作成される顧客請求書とデビッドノートで同じシーケンスを共有した"
+"くない場合は、このボックスをチェックして下さい。"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -119,7 +121,9 @@ msgstr "空の場合、借方仕訳の仕訳を使用します。"
 msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
-msgstr "全項目を修正する必要がある場合は、コピーすれば簡単に使用できます。クレジットノートからデビットノートへのコピーはできません。"
+msgstr ""
+"全項目を修正する必要がある場合は、コピーすれば簡単に使用できます。クレジット"
+"ノートからデビットノートへのコピーはできません。"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -190,7 +194,7 @@ msgstr "この請求書のために作成されたデビットノート"
 
 #. module: account_debit_note
 #. odoo-python
-#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
 msgstr "デビットノートが以下から作成されました：%s"
 
@@ -205,7 +209,9 @@ msgstr "仕訳帳を指定"
 msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
-msgstr "デビットノートを作成できるのは、顧客請求書、顧客クレジットノート、仕入先請求書、仕入先クレジットノート用のみです。"
+msgstr ""
+"デビットノートを作成できるのは、顧客請求書、顧客クレジットノート、仕入先請求"
+"書、仕入先クレジットノート用のみです。"
 
 #. module: account_debit_note
 #. odoo-python
@@ -217,9 +223,11 @@ msgstr "記帳済仕訳のみ借方記入できます。"
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
-msgstr "既にデビットノートにリンクされている請求書に対してデビットノートを作成することはできません。"
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
+msgstr ""
+"既にデビットノートにリンクされている請求書に対してデビットノートを作成するこ"
+"とはできません。"
 
 #. module: account_debit_note
 #. odoo-python

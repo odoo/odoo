@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
@@ -111,12 +111,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Achtung!</strong> Für diese Zahlung steht eine Erstattung an.\n"
-"                        Warten Sie einen Moment, bis sie bearbeitet wird. Wenn die Erstattung in ein paar Minuten immer noch aussteht,\n"
-"                        überprüfen Sie bitte die Konfiguration Ihres Zahlungsanbieters."
+"                        Warten Sie einen Moment, bis sie bearbeitet wird. "
+"Wenn die Erstattung in ein paar Minuten immer noch aussteht,\n"
+"                        überprüfen Sie bitte die Konfiguration Ihres "
+"Zahlungsanbieters."
 
 #. module: account_payment
 #. odoo-python
@@ -127,8 +131,8 @@ msgstr "Es wird ein Rabatt gewährt, wenn der Kunde vor dem %s bezahlt."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "Es wurde bereits eine Zahlung für diese Rechnung getätigt. Stellen Sie "
 "sicher, dass Sie nicht zweimal zahlen."
@@ -198,11 +202,6 @@ msgstr "Transaktion erfassen"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Schließen"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Code"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -333,7 +332,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"Im Testmodus wird eine Zahlung über eine Testzahlungsschnittstelle simuliert.\n"
+"Im Testmodus wird eine Zahlung über eine Testzahlungsschnittstelle "
+"simuliert.\n"
 "Dieser Modus wird für die Einrichtung des Anbieters empfohlen."
 
 #. module: account_payment
@@ -404,8 +404,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
-"Beachten Sie, dass nur Token von Anbietern verfügbar sind, die die Erfassung"
-" des Betrags ermöglichen."
+"Beachten Sie, dass nur Token von Anbietern verfügbar sind, die die Erfassung "
+"des Betrags ermöglichen."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -651,8 +651,7 @@ msgstr "Das Zugriffstoken ist ungültig."
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
-"Der zu erstattende Betrag muss positiv sein und darf nicht höher sein als "
-"%s."
+"Der zu erstattende Betrag muss positiv sein und darf nicht höher sein als %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
@@ -773,10 +772,12 @@ msgstr "Transaktion stornieren"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Sie können keine Zahlungsmethode löschen, die mit einem Anbieter im aktivierten oder Teststatus verknüpft ist.\n"
+"Sie können keine Zahlungsmethode löschen, die mit einem Anbieter im "
+"aktivierten oder Teststatus verknüpft ist.\n"
 "Verknüpfte(r) Anbieter: %s"
 
 #. module: account_payment
@@ -796,7 +797,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Sie müssen einen Zahlungsanbieter erst deaktivieren, bevor Sie seine Journale löschen.\n"
+"Sie müssen einen Zahlungsanbieter erst deaktivieren, bevor Sie seine "
+"Journale löschen.\n"
 "Verknüpfte Anbieter: %s"
 
 #. module: account_payment
@@ -820,3 +822,6 @@ msgstr "wurde angewandt."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "überfällig"
+
+#~ msgid "Code"
+#~ msgstr "Code"

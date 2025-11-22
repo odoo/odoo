@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-08-27 12:04+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -210,8 +210,8 @@ msgstr "Tunnus"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr ""
 "Voidaksesi tulostaa useamman shekin kerralla niiden on kuuluttava samaan "
 "päiväkirjaan."
@@ -241,18 +241,31 @@ msgstr "Manuaalinen numerointi"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Käsikirja: Maksa tai astaanota maksuja millä tahansa Odoon ulkopuolisella menetelmällä.\n"
-"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma maksutapansa. Pyydä maksutapahtuma kortilla/ kortille kumppanin tallentaman maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
+"Käsikirja: Maksa tai astaanota maksuja millä tahansa Odoon ulkopuolisella "
+"menetelmällä.\n"
+"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma "
+"maksutapansa. Pyydä maksutapahtuma kortilla/ kortille kumppanin tallentaman "
+"maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
 "Tarkista: Maksa laskut sekillä ja tulosta se Odoosta.\n"
-"Erätalletus: Kerää useita asiakasshekkejä kerralla generoimalla ja lähettämällä erätalletus pankkiin. Moduuli account_batch_payment on välttämätön.\n"
-"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto pankkiin. Moduuli account_sepa on välttämätön.\n"
-"SEPA-suoraveloitus: Saat maksun SEPA-alueella kumppanisi sinulle antaman valtuutuksen avulla. Moduuli account_sepa on välttämätön.\n"
+"Erätalletus: Kerää useita asiakasshekkejä kerralla generoimalla ja "
+"lähettämällä erätalletus pankkiin. Moduuli account_batch_payment on "
+"välttämätön.\n"
+"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto "
+"pankkiin. Moduuli account_sepa on välttämätön.\n"
+"SEPA-suoraveloitus: Saat maksun SEPA-alueella kumppanisi sinulle antaman "
+"valtuutuksen avulla. Moduuli account_sepa on välttämätön.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -306,11 +319,10 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr ""
-"Syötä ensimmäisen valmiiksi numeroidun shekin numero, jota olet "
-"tulostamassa."
+"Syötä ensimmäisen valmiiksi numeroidun shekin numero, jota olet tulostamassa."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -356,7 +368,8 @@ msgstr "Oikea marginaali"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "Valitse muoto, joka vastaa shekkipaperia, jolle olet tulostamassa shekit.\n"
@@ -386,6 +399,14 @@ msgid ""
 msgstr ""
 "Shekin ulkoasun määrittelyssä tapahtui virhe. Valitse toinen ulkoasu "
 "Laskutus- tai Kirjanpito-sovelluksessa ja yritä uudelleen."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
@@ -435,15 +456,15 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Tämän vaihtoehdon avulla voit tulostaa päivämäärätarran shekille CPA:n mukaisesti.\n"
+"Tämän vaihtoehdon avulla voit tulostaa päivämäärätarran shekille CPA:n "
+"mukaisesti.\n"
 "Poista tämä käytöstä, jos esipainettu shekki sisältää jo päivämäärätarran."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
-"Tämä mahdollistaa shekin numeron tallennuksen sitä vastaavaan maksuun."
+msgstr "Tämä mahdollistaa shekin numeron tallennuksen sitä vastaavaan maksuun."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited

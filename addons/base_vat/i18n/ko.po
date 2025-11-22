@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_vat
-# 
+#
 # Translators:
 # Sarah Park, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_vat
@@ -29,10 +29,10 @@ msgstr "1-01-85004-3 또는 101850043"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
-"10XXXXXXXXY 또는 20XXXXXXXXY 또는 15XXXXXXXXY 또는 16XXXXXXXXY 또는 17XXXXXXXXY"
+"10XXXXXXXXY 또는 20XXXXXXXXY 또는 15XXXXXXXXY 또는 16XXXXXXXXY 또는 "
+"17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
@@ -162,7 +162,16 @@ msgstr "ID"
 msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
-msgstr "선택란에 표시하면, 재정 위치 기본값은 유럽 VIES 서비스 확인 결과에 따라서 다르게 적용됩니다."
+msgstr ""
+"선택란에 표시하면, 재정 위치 기본값은 유럽 VIES 서비스 확인 결과에 따라서 다"
+"르게 적용됩니다."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"If you are trying to input a European number, this is the expected format: "
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -193,9 +202,10 @@ msgstr "사업자등록번호"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
-msgstr "%(vat_label)s [%(wrong_vat)s] 번호는 유효하지 않습니다. %(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
+msgstr ""
+"%(vat_label)s [%(wrong_vat)s] 번호는 유효하지 않습니다. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -204,8 +214,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
-"%(record_label)s 에 대한 %(vat_label)s 번호 [%(wrong_vat)s] 가 유효하지 않습니다. "
-"%(expected_note)s"
+"%(record_label)s 에 대한 %(vat_label)s 번호 [%(wrong_vat)s] 가 유효하지 않습"
+"니다. %(expected_note)s"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
@@ -215,7 +225,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
+"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니"
+"다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
 
 #. module: base_vat
 #. odoo-python
@@ -227,15 +238,18 @@ msgstr "%s VAT 번호는 VIES 서버에서 확인할 수 없습니다."
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
-msgstr "VAT 유효성 검사 요청이 실패했습니다. VIES 서비스가 다음 오류를 확인했습니다 %s"
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
+msgstr ""
+"VAT 유효성 검사 요청이 실패했습니다. VIES 서비스가 다음 오류를 확인했습니다 "
+"%s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr "(유효) 부가가치세 없음으로 명확히 표시하려면 '/' 기호를 대신 사용합니다."
+msgstr ""
+"(유효) 부가가치세 없음으로 명확히 표시하려면 '/' 기호를 대신 사용합니다."
 
 #. module: base_vat
 #. odoo-python

@@ -7,13 +7,14 @@
 # Rasareeyar Lappiam, 2025
 #
 # "Rasareeyar Lappiam (rlap)" <rlap@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-09-01 23:40+0000\n"
-"Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_peppol/th/>\n"
 "Language: th\n"
@@ -169,19 +170,19 @@ msgstr ""
 "color: #454748; width: 100%; border-collapse:separate;\">\n"
 "    <tr>\n"
 "        <td align=\"center\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"padding: 16px; background-color: white; color: #454748; "
-"border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
 "                <!-- ส่วนหัว -->\n"
 "                <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
-"\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;\""
-">การแจ้งเตือน</span>\n"
+"                                    <span style=\"font-size: 10px;"
+"\">การแจ้งเตือน</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -191,20 +192,19 @@ msgstr ""
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
 "target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
-"!important; font-weight: 400; background-color: {{ "
-"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            ส่งใบแจ้งหนี้\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object.uses_default_logo\">"
-"\n"
-"                                        <img t-att-src="
-"\"'/logo.png?company=%s' % object.id\" style="
-"\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt="
-"\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?"
+"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
+"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
@@ -221,20 +221,20 @@ msgstr ""
 "                <!-- เนื้อหา -->\n"
 "                <tr>\n"
 "                    <td align=\"center\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing="
-"\"0\" style="
-"\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>เรียน <t t-out=\"object.name or ''\""
-">YourCompany</t>,</p>\n"
+"                                    <p>เรียน <t t-out=\"object.name or "
+"''\">YourCompany</t>,</p>\n"
 "\n"
 "                                    <p>เราได้เพิ่มบริษัทของคุณเข้าในบัญชี "
 "<strong>เน็ตเวิร์กของ Peppol</strong> เรียบร้อยแล้ว</p>\n"
 "\n"
-"                                    <p>ตอนนี้คุณสามารถ<strong>ส่ง<t t-if="
-"\"object.account_peppol_proxy_state == 'receiver'\"> "
-"และรับ</t></strong>ใบแจ้งหนี้ทางอิเล็กทรอนิกส์ผ่าน Odoo ได้ฟรีโดยสมบูรณ์</p>\n"
+"                                    <p>ตอนนี้คุณสามารถ<strong>ส่ง<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> และรับ</t></"
+"strong>ใบแจ้งหนี้ทางอิเล็กทรอนิกส์ผ่าน Odoo ได้ฟรีโดยสมบูรณ์</p>\n"
 "\n"
 "                                    <p>ขอแสดงความนับถือ</p>\n"
 "\n"
@@ -429,8 +429,8 @@ msgid ""
 "not be used by the MSH."
 msgstr ""
 "แม้ว่าเอกสารข้อความจะถูกจัดรูปแบบอย่างถูกต้องและเป็นไปตามสคีมา "
-"แต่บางองค์ประกอบหรือแอตทริบิวต์มีค่าที่ไม่สามารถระบุได้ และด้วยเหตุนี้จึงไม่สามารถใช้งานโดย MSH ("
-"Message Service Handler)"
+"แต่บางองค์ประกอบหรือแอตทริบิวต์มีค่าที่ไม่สามารถระบุได้ และด้วยเหตุนี้จึงไม่สามารถใช้งานโดย MSH "
+"(Message Service Handler)"
 
 #. module: account_peppol
 #. odoo-python
@@ -453,9 +453,9 @@ msgid ""
 "attribute, or with the processing mode of the MSH, or with the normative "
 "requirements of the ebMS specification."
 msgstr ""
-"แม้ว่าเอกสารข้อความจะมีรูปแบบที่ดีและโครงร่างถูกต้อง "
-"แต่ค่าองค์ประกอบ/แอตทริบิวต์บางอย่างไม่สอดคล้องกับเนื้อหาขององค์ประกอบ/แอตทริบิวต์อื่น หรือกั"
-"บโหมดการประมวลผลของ MSH หรือกับข้อกำหนดเชิงบรรทัดฐานของข้อกำหนด ebMS"
+"แม้ว่าเอกสารข้อความจะมีรูปแบบที่ดีและโครงร่างถูกต้อง แต่ค่าองค์ประกอบ/"
+"แอตทริบิวต์บางอย่างไม่สอดคล้องกับเนื้อหาขององค์ประกอบ/แอตทริบิวต์อื่น "
+"หรือกับโหมดการประมวลผลของ MSH หรือกับข้อกำหนดเชิงบรรทัดฐานของข้อกำหนด ebMS"
 
 #. module: account_peppol
 #. odoo-python
@@ -563,8 +563,7 @@ msgstr "วิธีการส่ง Peppol ที่มีจำหน่า�
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid ""
 "By clicking the button below I accept that Odoo may process my e-invoices."
-msgstr ""
-"เมื่อคลิกปุ่มด้านล่าง ฉันยอมรับว่า Odoo อาจประมวลผลใบแจ้งหนี้อิเล็กทรอนิกส์ของฉัน"
+msgstr "เมื่อคลิกปุ่มด้านล่าง ฉันยอมรับว่า Odoo อาจประมวลผลใบแจ้งหนี้อิเล็กทรอนิกส์ของฉัน"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__receiver
@@ -995,8 +994,7 @@ msgstr "PEPPOL"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid ""
 "PEPPOL allows for complete automation of sending and receiving e-invoices."
-msgstr ""
-"PEPPOL ช่วยให้การส่งและรับใบแจ้งหนี้อิเล็กทรอนิกส์เป็นระบบอัตโนมัติสมบูรณ์แบบ"
+msgstr "PEPPOL ช่วยให้การส่งและรับใบแจ้งหนี้อิเล็กทรอนิกส์เป็นระบบอัตโนมัติสมบูรณ์แบบ"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1160,7 +1158,7 @@ msgstr "สถานะของ Peppol"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol status update: %s"
-msgstr ""
+msgstr "อัปเดตสถานะ Peppol: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_warnings
@@ -1209,12 +1207,6 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr "โปรดตรวจสอบการกำหนดค่าพาร์ทเนอร์ ในการตั้งค่าพาร์ทเนอร์"
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
@@ -1227,8 +1219,12 @@ msgstr "อีเมลสำหรับการติดต่อหลัก
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
-msgid "Primary contact email for Peppol-related communication"
-msgstr "อีเมลสำหรับการติดต่อหลัก เพื่อการสื่อสารที่เกี่ยวข้องกับ Peppol"
+msgid ""
+"Primary contact email for Peppol connection related communications and "
+"notifications.\n"
+"In particular, this email is used by Odoo to reconnect your Peppol account "
+"in case of database change."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1359,8 +1355,8 @@ msgid ""
 msgstr ""
 "บริการบางรายการรองรับคีย์สำหรับการย้ายข้อมูล หากบริการของคุณรองรับ คุณสามารถกรอก "
 "migration key ด้านล่างนี้ได้\n"
-"                            แต่หากไม่รองรับ คุณควรยกเลิกการลงทะเบียนกับผู้ให้บริการเดิมก่"
-"อน แล้วจึงลงทะเบียนกับ Odoo ภายหลัง"
+"                            แต่หากไม่รองรับ "
+"คุณควรยกเลิกการลงทะเบียนกับผู้ให้บริการเดิมก่อน แล้วจึงลงทะเบียนกับ Odoo ภายหลัง"
 
 #. module: account_peppol
 #. odoo-python
@@ -1526,8 +1522,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
-"ส่วนหัว ebMS ไม่ได้จัดรูปแบบอย่างถูกต้องในฐานะเอกสาร XML หรือไม่เป็นไปตามกฎการจัดแพ็"
-"กเกจของ ebMS"
+"ส่วนหัว ebMS ไม่ได้จัดรูปแบบอย่างถูกต้องในฐานะเอกสาร XML "
+"หรือไม่เป็นไปตามกฎการจัดแพ็กเกจของ ebMS"
 
 #. module: account_peppol
 #. odoo-python
@@ -1556,8 +1552,7 @@ msgstr ""
 msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
-msgstr ""
-"หมายเลขปลายทางอาจไม่ถูกต้อง โปรดตรวจสอบว่าคุณป้อนหมายเลขประจำตัวที่ถูกต้องหรือไม่"
+msgstr "หมายเลขปลายทางอาจไม่ถูกต้อง โปรดตรวจสอบว่าคุณป้อนหมายเลขประจำตัวที่ถูกต้องหรือไม่"
 
 #. module: account_peppol
 #. odoo-python
@@ -1596,26 +1591,12 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr "พาร์ทเนอร์ไม่มี Peppol EAS และ/หรือตัวระบุปลายทาง"
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The processor determined that the message's security methods, parameters, "
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr ""
-"วิธีการระบุตัวตนที่แนะนำสำหรับประเทศเบลเยียมคือหมายเลขทะเบียนบริษัทของคุณ"
 
 #. module: account_peppol
 #. odoo-python
@@ -1696,6 +1677,13 @@ msgid "This invoice has also been"
 msgstr ""
 
 #. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "This number is used for identification purposes only."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
@@ -1721,8 +1709,7 @@ msgstr ""
 msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
-msgstr ""
-"หากต้องการสร้างใบแจ้งหนี้อิเล็กทรอนิกส์ที่สมบูรณ์ ให้ตั้งค่าประเทศสำหรับพาร์ทเนอร์รายนี้ด้วย"
+msgstr "หากต้องการสร้างใบแจ้งหนี้อิเล็กทรอนิกส์ที่สมบูรณ์ ให้ตั้งค่าประเทศสำหรับพาร์ทเนอร์รายนี้ด้วย"
 
 #. module: account_peppol
 #. odoo-python
@@ -1883,15 +1870,7 @@ msgid ""
 "assistance."
 msgstr ""
 "การลงทะเบียนของคุณถูกปฏิเสธ เหตุผลได้ถูกส่งถึงคุณทางอีเมลแล้ว\n"
-"                            "
-"โปรดติดต่อฝ่ายสนับสนุนของเราหากคุณต้องการความช่วยเหลือเพิ่มเติม"
-
-#. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this mobile number"
-msgstr "คุณจะได้รับรหัสยืนยันไปยังหมายเลขโทรศัพท์มือถือนี้"
+"                            โปรดติดต่อฝ่ายสนับสนุนของเราหากคุณต้องการความช่วยเหลือเพิ่มเติม"
 
 #. module: account_peppol
 #. odoo-python
@@ -1977,3 +1956,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr ""
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr "โปรดตรวจสอบการกำหนดค่าพาร์ทเนอร์ ในการตั้งค่าพาร์ทเนอร์"
+
+#~ msgid "Primary contact email for Peppol-related communication"
+#~ msgstr "อีเมลสำหรับการติดต่อหลัก เพื่อการสื่อสารที่เกี่ยวข้องกับ Peppol"
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr "พาร์ทเนอร์ไม่มี Peppol EAS และ/หรือตัวระบุปลายทาง"
+
+#~ msgid ""
+#~ "The recommended identification method for Belgium is your Company "
+#~ "Registry Number."
+#~ msgstr "วิธีการระบุตัวตนที่แนะนำสำหรับประเทศเบลเยียมคือหมายเลขทะเบียนบริษัทของคุณ"
+
+#~ msgid "You will receive a verification code to this mobile number"
+#~ msgstr "คุณจะได้รับรหัสยืนยันไปยังหมายเลขโทรศัพท์มือถือนี้"

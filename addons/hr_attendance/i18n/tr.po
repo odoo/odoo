@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_attendance
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_attendance
@@ -39,8 +39,12 @@ msgstr "'Dokümentasyon'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
-msgid "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" title=\"Dönem\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
+"title=\"Period\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
+"title=\"Dönem\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -59,10 +63,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
+"available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Uygun değil\">\n"
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
+"available\" title=\"Uygun değil\">\n"
 "                                    </span>"
 
 #. module: hr_attendance
@@ -151,10 +157,12 @@ msgstr "Aktif Çalışanlar"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid ""
-"Add a few employees to be able to select an employee here and perform his check in / check out.\n"
+"Add a few employees to be able to select an employee here and perform his "
+"check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"Bir personel seçebilmek ve onun giriş/çıkış kaydını oluşturabilmek için bir kaç çalışan oluşturun.\n"
+"Bir personel seçebilmek ve onun giriş/çıkış kaydını oluşturabilmek için bir "
+"kaç çalışan oluşturun.\n"
 "Personel oluşturmak için Personel menüsüne gidin."
 
 #. module: hr_attendance
@@ -373,8 +381,7 @@ msgid ""
 "schedule."
 msgstr ""
 "Çalışanların çalışma programlarına göre ek bir toleransla otomatik olarak "
-"çıkış yapın. Esnek çalışma programına sahip çalışanlar için geçerli "
-"değildir."
+"çıkış yapın. Esnek çalışma programına sahip çalışanlar için geçerli değildir."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -455,8 +462,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
-"Yeni katılım kaydı %(empl_name)s için oluşturulamaz, "
-"personel%(datetime)starihinden beri çıkış yapmamış"
+"Yeni katılım kaydı %(empl_name)s için oluşturulamaz, personel%"
+"(datetime)starihinden beri çıkış yapmamış"
 
 #. module: hr_attendance
 #. odoo-python
@@ -465,8 +472,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
-"Yeni katılım kaydı %(empl_name)s için oluşturulamaz, personel "
-"%(datetime)starihinde çoktan giriş yapmış"
+"Yeni katılım kaydı %(empl_name)s için oluşturulamaz, personel %"
+"(datetime)starihinde çoktan giriş yapmış"
 
 #. module: hr_attendance
 #. odoo-python
@@ -641,12 +648,8 @@ msgid "Define the way the user will be identified by the application."
 msgstr "Kullanıcının uygulama tarafından tanımlanma şeklini tanımlayın."
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Departement"
-msgstr "Departman"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
 msgstr "Departman"
 
@@ -920,8 +923,8 @@ msgstr "Identify Manually"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
-"If checked, days not covered by an attendance will be visible in the Report."
-" Does not apply to employees with a flexible working schedule."
+"If checked, days not covered by an attendance will be visible in the Report. "
+"Does not apply to employees with a flexible working schedule."
 msgstr ""
 "İşaretlendiğinde, raporlarda katılımın kapsanmadığı günler görünür hale "
 "gelir. Esnek çalışma saatlerine sahip çalışanlar için geçerli değildir."
@@ -1489,8 +1492,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
-"This attendance was automatically created to cover an unjustified absence on"
-" that day."
+"This attendance was automatically created to cover an unjustified absence on "
+"that day."
 msgstr ""
 "Bu devamlılık kaydı, o günkü haksız devamsızlığı telafi etmek için otomatik "
 "olarak oluşturulmuştur."
@@ -1712,3 +1715,6 @@ msgstr "veya"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "isteğe bağlı PIN kodu ile"
+
+#~ msgid "Departement"
+#~ msgstr "Departman"

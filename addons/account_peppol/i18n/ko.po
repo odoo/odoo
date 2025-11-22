@@ -7,13 +7,14 @@
 # Sarah Park, 2025
 #
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-09-08 23:41+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_peppol/ko/>\n"
 "Language: ko\n"
@@ -1226,12 +1227,6 @@ msgid ""
 msgstr "문서를 수신하기 전에 %s에 Peppol 청구서에 대한 전표를 설정하세요."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr "파트너 설정 메뉴에서 파트너 환경설정을 확인하세요."
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
@@ -1244,8 +1239,15 @@ msgstr "기본 연락처 이메일"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
-msgid "Primary contact email for Peppol-related communication"
-msgstr "Peppol 관련 연락을 위한 기본 이메일"
+msgid ""
+"Primary contact email for Peppol connection related communications and "
+"notifications.\n"
+"In particular, this email is used by Odoo to reconnect your Peppol account "
+"in case of database change."
+msgstr ""
+"Peppol 연결 관련 커뮤니케이션 및 안내용 기본 연락처 이메일입니다.\n"
+"특히, 이 이메일은 데이터베이스가 변경될 경우 Odoo에서 Peppol 계정에 재접속할 "
+"때 사용됩니다."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1624,12 +1626,6 @@ msgstr "메시지가 AS4 정책에 부합하지 않습니다. "
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr "협력사에 Peppol EAS 및/또는 엔드 포인트 식별 기호가 없습니다."
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The processor determined that the message's security methods, parameters, "
@@ -1638,13 +1634,6 @@ msgid ""
 msgstr ""
 "프로세서에서 메시지의 보안 방법, 매개변수, 범위 또는 기타 보안 정책 수준 요"
 "구 사항이나 계약이 충족되지 않았음을 확인되었습니다."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr "벨기에에서 식별용으로 권장되는 방식은 회사 등록 번호입니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1725,6 +1714,13 @@ msgstr "Peppol 이용자에게 문제가 있습니다."
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
 msgstr "또한 이 청구서는"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "This number is used for identification purposes only."
+msgstr "이 번호는 신원 확인 목적으로만 사용됩니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1919,13 +1915,6 @@ msgstr ""
 "                            추가 도움이 필요하시면 지원팀에 문의해 주세요."
 
 #. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this mobile number"
-msgstr "이 휴대폰 번호로 인증 코드가 전송됩니다."
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2011,3 +2000,20 @@ msgstr "청구서 전송, 다만 이 건은"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "사용"
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr "파트너 설정 메뉴에서 파트너 환경설정을 확인하세요."
+
+#~ msgid "Primary contact email for Peppol-related communication"
+#~ msgstr "Peppol 관련 연락을 위한 기본 이메일"
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr "협력사에 Peppol EAS 및/또는 엔드 포인트 식별 기호가 없습니다."
+
+#~ msgid ""
+#~ "The recommended identification method for Belgium is your Company "
+#~ "Registry Number."
+#~ msgstr "벨기에에서 식별용으로 권장되는 방식은 회사 등록 번호입니다."
+
+#~ msgid "You will receive a verification code to this mobile number"
+#~ msgstr "이 휴대폰 번호로 인증 코드가 전송됩니다."

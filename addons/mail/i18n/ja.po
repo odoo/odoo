@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
 "PO-Revision-Date: 2025-10-27 23:40+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/mail/"
@@ -36,10 +36,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            - 特定のフォロワー: "
-"レコードのフォロワーに追加/削除する特定の連絡先を選択します。\n"
-"- 動的なフォロワー:  "
-"選択したレコードのフィールドの連絡先すべてがフォロワーに追加/削除されます。\n"
+"            - 特定のフォロワー: レコードのフォロワーに追加/削除する特定の連絡"
+"先を選択します。\n"
+"- 動的なフォロワー:  選択したレコードのフィールドの連絡先すべてがフォロワーに"
+"追加/削除されます。\n"
 "        "
 
 #. module: mail
@@ -244,14 +244,6 @@ msgstr ""
 "文をメッセージに入力するには %(bold_start)s::shortcut%(bold_end)sを入力しま"
 "す。 %(new_line)s 絵文字をメッセージに挿入するには %(bold_start)s:emoji:%"
 "(bold_end)sを入力します。 "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
-"%(open_button)s%(icon)s%(open_em)s編集を破棄%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -3307,9 +3299,9 @@ msgid ""
 "local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
-"送信サーバフィルタに一致しない場合のデフォルト。'notifications' "
-"のようなローカルパートか、'notifications@example.com'のような完全なメールアド"
-"レスを指定し、すべての送信メールを上書きすることができます。"
+"送信サーバフィルタに一致しない場合のデフォルト。'notifications' のようなロー"
+"カルパートか、'notifications@example.com'のような完全なメールアドレスを指定"
+"し、すべての送信メールを上書きすることができます。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3465,6 +3457,12 @@ msgstr "ダイレクトメッセージ"
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Discard"
 msgstr "破棄"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Discard editing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5319,8 +5317,9 @@ msgid ""
 "If set, will restrict the template to this specific "
 "user.                                                   If not set, shared "
 "with all users."
-msgstr "設定された場合、テンプレートはこの特定のユーザに制限されます。 "
-"設定されていない場合は、すべてのユーザと共有されます。"
+msgstr ""
+"設定された場合、テンプレートはこの特定のユーザに制限されます。 設定されていな"
+"い場合は、すべてのユーザと共有されます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -10663,11 +10662,6 @@ msgid "The channel UUID must be unique"
 msgstr "チャネルUUIDは一意にして下さい。"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "チャネルタイプは空にすることはできません。"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
@@ -10986,20 +10980,20 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-msgid "This is the start of #%(channelName)s channel"
-msgstr "これは #%(channelName)s チャネルの開始です"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of %(conversationName)s group"
 msgstr "これは %(conversationName)s グループの開始です"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-msgid "This is the start of direct chat with %(userName)s"
-msgstr "これは %(userName)sとの直接チャットの開始です"
+msgid "This is the start of the #%(channelName)s channel"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/thread.js:0
+msgid "This is the start of your direct chat with %(userName)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11046,7 +11040,8 @@ msgstr "このレコードには例外活動があります。"
 msgid ""
 "This setting will be applied to all channels using the default notification "
 "settings."
-msgstr "この設定は、デフォルトの通知設定を使用しているすべてのチャンネルに適用されま"
+msgstr ""
+"この設定は、デフォルトの通知設定を使用しているすべてのチャンネルに適用されま"
 "す。"
 
 #. module: mail
@@ -11614,6 +11609,12 @@ msgstr "会話をミュート解除"
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Unnamed"
 msgstr "無名"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12554,7 +12555,8 @@ msgstr " #%sに招待されました。"
 msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
-msgstr "このテンプレートにファイルを添付できます。（このテンプレートを使って作られた"
+msgstr ""
+"このテンプレートにファイルを添付できます。（このテンプレートを使って作られた"
 "すべてのEメールに添付）"
 
 #. module: mail
@@ -13261,3 +13263,18 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” 、 “%(channel_name)s内”"
+
+#~ msgid ""
+#~ "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%"
+#~ "(close_button)s"
+#~ msgstr ""
+#~ "%(open_button)s%(icon)s%(open_em)s編集を破棄%(close_em)s%(close_button)s"
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "チャネルタイプは空にすることはできません。"
+
+#~ msgid "This is the start of #%(channelName)s channel"
+#~ msgstr "これは #%(channelName)s チャネルの開始です"
+
+#~ msgid "This is the start of direct chat with %(userName)s"
+#~ msgstr "これは %(userName)sとの直接チャットの開始です"

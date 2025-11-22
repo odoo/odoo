@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_timesheet_holidays
+# * project_timesheet_holidays
 #
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2022
@@ -8,21 +8,23 @@
 # Martin Trigaux, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022\n"
-"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"PO-Revision-Date: 2025-11-10 06:12+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-4/"
+"project_timesheet_holidays/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
-"1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -47,7 +49,7 @@ msgstr "הגדר הגדרות"
 #. module: project_timesheet_holidays
 #: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "צור משימה"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
@@ -58,7 +60,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "שם לתצוגה"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -74,7 +76,7 @@ msgstr "עובד"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__id
 msgid "ID"
-msgstr ""
+msgstr "מזהה"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -111,6 +113,8 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"הפרויקט המוגדר כברירת מחדל ליצירת דפי נוכחות אוטומטיים מבקשות היעדרות. ניתן "
+"להגדיר פרויקט שונה לכל סוג היעדרות בנפרד."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -118,6 +122,8 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"המשימה המוגדרת כברירת מחדל בעת יצירת דפי נוכחות אוטומטית מבקשות היעדרות. "
+"ניתן לציין משימה אחרת לכל סוג היעדרות בנפרד."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -133,7 +139,7 @@ msgstr "מאשר חופשות"
 #: code:addons/project_timesheet_holidays/models/hr_leave.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 msgid "Time Off (%(index)s/%(total)s)"
-msgstr ""
+msgstr "זמן היעדרות (%(index)s/%(total)s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
@@ -144,7 +150,7 @@ msgstr "משימת חופשה"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "מספר סוגי היעדרות"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -166,7 +172,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "View Time Off"
-msgstr ""
+msgstr "הצג העדרות"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -175,12 +181,14 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"לא ניתן ליצור דפי נוכחות למשימה המשויכת לסוג היעדרות. אנא השתמש באפליקציית "
+"ההיעדרויות לבקשת חופשה חדשה."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "You cannot delete timesheets that are linked to global time off."
-msgstr ""
+msgstr "לא ניתן למחוק דיווחי שעות המקושרים  להעדרות  גלובלית."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -189,6 +197,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"לא ניתן למחוק דפי נוכחות המשויכים לבקשות היעדרות. אנא בטל את בקשת ההיעדרות "
+"דרך אפליקציית ההיעדרויות."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -197,6 +207,8 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"לא ניתן לערוך דפי נוכחות המשויכים לבקשות היעדרות. אנא השתמש באפליקציית "
+"ההיעדרויות כדי לשנות את בקשות ההיעדרות שלך."
 
 #. module: project_timesheet_holidays
 #. odoo-python

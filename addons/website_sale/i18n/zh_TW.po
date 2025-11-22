@@ -7,13 +7,14 @@
 # Tony Ng, 2025
 #
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-18 23:12+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:51+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s18-4/website_sale/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -1586,6 +1587,9 @@ msgid ""
 "                            <strong>(please go to Home&gt;Apps to install)</"
 "strong>"
 msgstr ""
+"計算運費並使用 DHL 發貨<br/>\n"
+"                            <strong>（請前往主頁 &gt; "
+"應用程式以安裝）</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1594,6 +1598,9 @@ msgid ""
 "                            <strong>(please go to Home&gt;Apps to install)</"
 "strong>"
 msgstr ""
+"計算運費並使用 FedEx 發貨<br/>\n"
+"                            <strong>（請前往主頁 &gt; "
+"應用程式以安裝）</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1602,6 +1609,9 @@ msgid ""
 "                            <strong>(please go to Home&gt;Apps to install)</"
 "strong>"
 msgstr ""
+"計算運費並使用 UPS 發貨<br/>\n"
+"                            <strong>（請前往主頁 &gt; "
+"應用程式以安裝）</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1610,6 +1620,9 @@ msgid ""
 "                            <strong>(please go to Home&gt;Apps to install)</"
 "strong>"
 msgstr ""
+"計算運費並使用美國郵政署（USPS）發貨<br/>\n"
+"                            <strong>（請前往主頁 &gt; "
+"應用程式以安裝）</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1854,7 +1867,7 @@ msgstr "自訂電郵範本"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL"
-msgstr ""
+msgstr "DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2057,6 +2070,7 @@ msgstr "了解我們的團隊"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
@@ -2135,7 +2149,7 @@ msgstr "加入新產品至購物車之前，你想先清空購物車嗎？"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Documentation"
-msgstr ""
+msgstr "系統使用說明"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2591,6 +2605,7 @@ msgstr "我同意"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_document__id
@@ -2765,6 +2780,12 @@ msgstr "立即結賬，不加入購物車"
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
 msgstr "完成建立的款式變體，可即時在你的 /shop 網店頁面中選取。"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "Invalid category."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -3112,6 +3133,11 @@ msgstr "行動電話"
 #: code:addons/website_sale/const.py:0
 msgid "Modern Showcase"
 msgstr "現代化展示"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_module_module
+msgid "Module"
+msgstr "模組"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3746,7 +3772,7 @@ msgstr "收到付款後處理訂單。"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_item_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/products_item_option.js:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
@@ -3822,7 +3848,7 @@ msgstr "產品名稱"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/product_page_option.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Page"
 msgstr "產品頁"
@@ -3960,7 +3986,7 @@ msgstr "產品"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/products_list_page_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products Page"
 msgstr "產品頁"
@@ -5339,7 +5365,7 @@ msgstr ""
 msgid ""
 "We weren't able to update your cart. Please refresh your page before trying "
 "again."
-msgstr ""
+msgstr "未能更新你的購物車。請重新載入頁面，然後再試。"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website

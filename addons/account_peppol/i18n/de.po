@@ -7,13 +7,14 @@
 # Larissa Manderfeld, 2025
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-08-22 23:41+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:19+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_peppol/de/>\n"
 "Language: de\n"
@@ -1269,13 +1270,6 @@ msgstr ""
 "für %s an."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr ""
-"Bitte überprüfen Sie die Partnerkonfiguration in den Partnereinstellungen."
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
@@ -1288,8 +1282,16 @@ msgstr "Primäre Kontakt-E-Mail"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
-msgid "Primary contact email for Peppol-related communication"
-msgstr "Primäre Kontakt-E-Mail für die Kommunikation mit Peppol"
+msgid ""
+"Primary contact email for Peppol connection related communications and "
+"notifications.\n"
+"In particular, this email is used by Odoo to reconnect your Peppol account "
+"in case of database change."
+msgstr ""
+"Primäre Kontakt-E-Mail-Adresse für Mitteilungen und Benachrichtigungen im "
+"Zusammenhang mit der Peppol-Verbindung.\n"
+"Insbesondere wird diese E-Mail-Adresse von Odoo verwendet, um Ihr Peppol-"
+"Konto im Falle einer Datenbankänderung erneut zu verbinden."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1678,12 +1680,6 @@ msgstr "Die Nachricht entspricht nicht der AS4-Richtlinie."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr "Dem Partner fehlt die Peppol-EAS- und/oder Endpunkt-Kennung."
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The processor determined that the message's security methods, parameters, "
@@ -1693,15 +1689,6 @@ msgstr ""
 "Der Prozessor hat festgestellt, dass die Sicherheitsmethoden, Parameter, der "
 "Umfang oder andere Anforderungen oder Vereinbarungen in Bezug auf "
 "Sicherheitsrichtlinien der Nachricht nicht erfüllt sind."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr ""
-"Der empfohlene Identifizierungsmethode für Belgien ist die "
-"Unternehmensregisternummer."
 
 #. module: account_peppol
 #. odoo-python
@@ -1791,6 +1778,13 @@ msgstr "Bei dem Peppol-Teilnehmer ist ein Problem aufgetreten."
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
 msgstr "Die Rechnung wurde auch"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "This number is used for identification purposes only."
+msgstr "Diese Nummer dient ausschließlich zu Identifikationszwecken."
 
 #. module: account_peppol
 #. odoo-python
@@ -1995,13 +1989,6 @@ msgstr ""
 "Sie weitere Hilfe benötigen."
 
 #. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this mobile number"
-msgstr "Sie erhalten einen Verifizierungscode an diese Handynummer"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2090,3 +2077,23 @@ msgstr ", um Rechnungen zu verwenden, aber diese"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "verwendet"
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr ""
+#~ "Bitte überprüfen Sie die Partnerkonfiguration in den Partnereinstellungen."
+
+#~ msgid "Primary contact email for Peppol-related communication"
+#~ msgstr "Primäre Kontakt-E-Mail für die Kommunikation mit Peppol"
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr "Dem Partner fehlt die Peppol-EAS- und/oder Endpunkt-Kennung."
+
+#~ msgid ""
+#~ "The recommended identification method for Belgium is your Company "
+#~ "Registry Number."
+#~ msgstr ""
+#~ "Der empfohlene Identifizierungsmethode für Belgien ist die "
+#~ "Unternehmensregisternummer."
+
+#~ msgid "You will receive a verification code to this mobile number"
+#~ msgstr "Sie erhalten einen Verifizierungscode an diese Handynummer"

@@ -9,12 +9,13 @@
 # Sarah Park, 2025
 #
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-22 23:41+0000\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
+"PO-Revision-Date: 2025-11-17 08:51+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-4/mail/"
 "ko/>\n"
@@ -249,14 +250,6 @@ msgstr ""
 "답을 메시지에 삽입하려면 %(bold_start)s::바로가기%(bold_end)s를 입력합니다.%"
 "(new_line)s 메시지에 이모지를 삽입하려면 %(bold_start)s:emoji:%(bold_end)s를 "
 "입력합니다."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
-"%(open_button)s%(icon)s%(open_em)s편집 취소%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -3458,6 +3451,12 @@ msgstr "다이렉트 메시지"
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Discard"
 msgstr "취소"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Discard editing"
+msgstr "편집 내용 삭제"
 
 #. module: mail
 #. odoo-javascript
@@ -10636,11 +10635,6 @@ msgid "The channel UUID must be unique"
 msgstr "채널 UUID는 고유해야 합니다."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "채널 유형은 공란으로 둘 수 없습니다."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
@@ -10959,20 +10953,20 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-msgid "This is the start of #%(channelName)s channel"
-msgstr "#%(channelName)s 채널의 시작입니다."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of %(conversationName)s group"
 msgstr "%(conversationName)s 그룹의 시작입니다."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-msgid "This is the start of direct chat with %(userName)s"
-msgstr "%(userName)s 님과 채팅을 시작합니다."
+msgid "This is the start of the #%(channelName)s channel"
+msgstr "#%(channelName)s 채널의 시작 부분입니다"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/thread.js:0
+msgid "This is the start of your direct chat with %(userName)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11577,6 +11571,12 @@ msgstr "대화 음소거 해제"
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Unnamed"
 msgstr "이름 없음"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr "이름 없는 %(record_model_name)s (%(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -13221,3 +13221,18 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s”의 “%(channel_name)s”"
+
+#~ msgid ""
+#~ "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%"
+#~ "(close_button)s"
+#~ msgstr ""
+#~ "%(open_button)s%(icon)s%(open_em)s편집 취소%(close_em)s%(close_button)s"
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "채널 유형은 공란으로 둘 수 없습니다."
+
+#~ msgid "This is the start of #%(channelName)s channel"
+#~ msgstr "#%(channelName)s 채널의 시작입니다."
+
+#~ msgid "This is the start of direct chat with %(userName)s"
+#~ msgstr "%(userName)s 님과 채팅을 시작합니다."

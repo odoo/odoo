@@ -8,13 +8,14 @@
 # Wil Odoo, 2025
 #
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-08-22 23:41+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s18-4/base_automation/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -48,8 +49,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
-"As regras de automação \"atualização em tempo real\" só podem ser usadas com"
-" o tipo de ação \"Executar código Python\"."
+"As regras de automação \"atualização em tempo real\" só podem ser usadas com "
+"o tipo de ação \"Executar código Python\"."
 
 #. module: base_automation
 #. odoo-javascript
@@ -71,8 +72,8 @@ msgstr "<code>env</code>: ambiente onde a ação é disparada"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: modelo do registro em que a ação é disparada; é um "
 "conjunto de registros vazio"
@@ -107,8 +108,8 @@ msgid ""
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/> O recuperador de registros de destino "
-"padrão está pronto para uso em qualquer webhook que venha de outra instância"
-" do Odoo."
+"padrão está pronto para uso em qualquer webhook que venha de outra instância "
+"do Odoo."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -194,7 +195,6 @@ msgstr "Aplicar em"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Arquivado"
 
@@ -425,11 +425,11 @@ msgstr "Se marcado, há mensagens com erros de entrega."
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
-"Se presente, esta condição precisa ser cumprida antes de executar a regra de"
-" automação."
+"Se presente, esta condição precisa ser cumprida antes de executar a regra de "
+"automação."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -448,6 +448,11 @@ msgid ""
 msgstr ""
 "Se renovado, atualize o URL secreto no aplicativo de terceiros que chama "
 "esse webhook."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "Incluir arquivo"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -523,8 +528,8 @@ msgstr "Nome do modelo"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
 "O modelo da ação %(action_name)s deve corresponder a uma das regras de "
 "automação %(rule_name)s."
@@ -720,7 +725,8 @@ msgstr "Selecione campos…"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "Envie um e-mail quando um objeto trocar de estado, arquive registros\n"
@@ -730,8 +736,8 @@ msgstr ""
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "Envie um e-mail quando um objeto mudar de estado, arquive registros após um "
@@ -761,8 +767,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
 "Alguns gatilhos precisam de referência a outro campo. Este campo é usado "
 "para armazená-los."
@@ -809,18 +815,16 @@ msgstr "Registro-alvo"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
-"Os modelos-alvo das ações %(action_names)s são diferentes do modelo de "
-"regra."
+"Os modelos-alvo das ações %(action_names)s são diferentes do modelo de regra."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
 "%(trigger_label)s \"%(trigger_value)s\" pode ser utilizado apenas com o tipo "
 "de ação \"%(state_value)s\""
@@ -848,8 +852,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "The scheduled action for Automation Rules seems to have vanished."
-msgstr ""
-"A ação programada para as Regras de automação parece ter desaparecido."
+msgstr "A ação programada para as Regras de automação parece ter desaparecido."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -985,10 +988,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Quando a condição deve ser disparada.\n"
-"                Se presente, será verificado pelo agendador. Se vazio, será verificado na criação e na atualização."
+"                Se presente, será verificado pelo agendador. Se vazio, será "
+"verificado na criação e na atualização."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1014,8 +1019,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can ask an administrator to disable or fix this automation."
 msgstr ""
-"Você pode pedir a um administrador para desativar ou corrigir essa "
-"automação."
+"Você pode pedir a um administrador para desativar ou corrigir essa automação."
 
 #. module: base_automation
 #. odoo-python
@@ -1024,8 +1028,8 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
-"Não é possível enviar um e-mail, adicionar seguidores ou criar uma atividade"
-" para um registro excluído."
+"Não é possível enviar um e-mail, adicionar seguidores ou criar uma atividade "
+"para um registro excluído."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban

@@ -8,12 +8,13 @@
 # Wil Odoo, 2025
 # Duy BQ <duybq86@gmail.com>, 2025
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-09-28 23:40+0000\n"
+"POT-Creation-Date: 2025-11-14 18:35+0000\n"
+"PO-Revision-Date: 2025-11-11 09:02+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-4/"
 "mail/vi/>\n"
@@ -250,14 +251,6 @@ msgstr ""
 "(bold_end)s để chèn một câu trả lời soạn sẵn trong nội dung của bạn.%"
 "(new_line)sNhập %(bold_start)s:emoji:%(bold_end)s để chèn một emoji trong "
 "nội dung của bạn."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
-"%(open_button)s%(icon)s%(open_em)sHuỷ chỉnh sửa%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -3400,7 +3393,7 @@ msgstr "Xoá tất cả bản xem trước"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Deleted document"
-msgstr ""
+msgstr "Xoá tài liệu"
 
 #. module: mail
 #. odoo-javascript
@@ -3487,6 +3480,12 @@ msgstr "Tin nhắn trực tiếp"
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Discard"
 msgstr "Huỷ bỏ"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Discard editing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8652,7 +8651,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Powered by"
-msgstr "Cung cấp bởi"
+msgstr "Được hỗ trợ bởi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
@@ -10709,11 +10708,6 @@ msgid "The channel UUID must be unique"
 msgstr "Kênh UUID phải là duy nhất"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Loại kênh không được để trống"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
@@ -11037,20 +11031,20 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-msgid "This is the start of #%(channelName)s channel"
-msgstr "Đây là khởi đầu của kênh #%(channelName)s "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of %(conversationName)s group"
 msgstr "Đây là khởi đầu của kênh nhóm %(conversationName)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-msgid "This is the start of direct chat with %(userName)s"
-msgstr "Đây là khởi đầu của cuộc trò chuyện trực tiếp với %(userName)s"
+msgid "This is the start of the #%(channelName)s channel"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/thread.js:0
+msgid "This is the start of your direct chat with %(userName)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11665,6 +11659,12 @@ msgstr "Bật lại thông báo cuộc trò chuyện"
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Unnamed"
 msgstr "Chưa đặt tên"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13333,3 +13333,19 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” trong “%(channel_name)s”"
+
+#~ msgid ""
+#~ "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%"
+#~ "(close_button)s"
+#~ msgstr ""
+#~ "%(open_button)s%(icon)s%(open_em)sHuỷ chỉnh sửa%(close_em)s%"
+#~ "(close_button)s"
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "Loại kênh không được để trống"
+
+#~ msgid "This is the start of #%(channelName)s channel"
+#~ msgstr "Đây là khởi đầu của kênh #%(channelName)s "
+
+#~ msgid "This is the start of direct chat with %(userName)s"
+#~ msgstr "Đây là khởi đầu của cuộc trò chuyện trực tiếp với %(userName)s"

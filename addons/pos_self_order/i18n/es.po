@@ -8,13 +8,14 @@
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:37+0000\n"
-"PO-Revision-Date: 2025-10-14 23:40+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-4/"
 "pos_self_order/es/>\n"
 "Language: es\n"
@@ -98,31 +99,31 @@ msgstr ""
 "                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
 "                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
 "                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
-"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\""
-"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
-"                    <t t-set=\"country\" t-value="
-"\"client.country_id.name or ''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hola, <t t-out="
-"\"client_name\">nombre del cliente</t>:</t>\n"
+"                        <t t-if=\"client_name\">Hola, <t t-"
+"out=\"client_name\">nombre del cliente</t>:</t>\n"
 "                        <t t-else=\"\">Hola:</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Su pedido <t t-out=\"object.tracking_number\">...</"
 "t> por un importe de <t t-out=\"object.amount_total\">xx,xx €</t> se ha "
 "confirmado. <span t-if=\"object.preset_time or client.street\">Estará listo</"
-"span> <span t-if=\"object.preset_time\">a las <t t-out=\"format_time("
-"time=object.preset_time, tz=tz, time_format='short', lang_code=lg)"
-"\">12:00 h</t></span> <span t-if=\"client.street\">en <t t-out=\"street\""
-">calle</t>, <t t-out=\"state\">provincia</t>, <t t-out=\"client.zip or ''\""
-">código postal</t>, <t t-out=\"city\">ciudad</t>, <t t-out=\"country\""
-">país</t></span></div>\n"
+"span> <span t-if=\"object.preset_time\">a las <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 h</t></span> <span t-if=\"client.street\">en <t t-"
+"out=\"street\">calle</t>, <t t-out=\"state\">provincia</t>, <t t-"
+"out=\"client.zip or ''\">código postal</t>, <t t-out=\"city\">ciudad</t>, <t "
+"t-out=\"country\">país</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Gracias,</div>\n"
 "                    <br/>\n"
@@ -166,21 +167,21 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hola, <t t-out="
-"\"client_name\">nombre del cliente</t>:</t>\n"
+"                        <t t-if=\"client_name\">Hola, <t t-"
+"out=\"client_name\">nombre del cliente</t>:</t>\n"
 "                        <t t-else=\"\">Hola:</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Su pedido <t t-out=\"object.tracking_number\">...</"
 "t> por un importe de <t t-out=\"object.amount_total\">xx,xx € </t> se ha "
-"confirmado. <span t-if=\"object.preset_time\">Estará listo a las <t t-out="
-"\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"confirmado. <span t-if=\"object.preset_time\">Estará listo a las <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">12:00 h</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Gracias,</div>\n"
@@ -613,7 +614,7 @@ msgstr "Plantillas de correo electrónico"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
 msgstr ""
@@ -652,6 +653,11 @@ msgid "Follow instructions on the terminal"
 msgstr "Siga las instrucciones en la terminal"
 
 #. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Free Metal / Wood Stands"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
@@ -659,13 +665,14 @@ msgstr "Genérico"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
+#: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
 msgid "Get QR Codes"
 msgstr "Obtener códigos QR"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid "Get QR codes"
 msgstr "Obtener códigos QR"
 
@@ -1677,7 +1684,7 @@ msgstr "C.P."
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
-msgstr ""
+msgstr "ya no están"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1717,13 +1724,13 @@ msgstr "incluido"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "is"
-msgstr ""
+msgstr "es"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "no longer available. Please go back and edit your order."
-msgstr ""
+msgstr "disponibles. Regrese y edite su pedido."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

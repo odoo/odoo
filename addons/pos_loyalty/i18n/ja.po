@@ -7,13 +7,14 @@
 # Wil Odoo, 2025
 #
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:09+0000\n"
-"PO-Revision-Date: 2025-08-21 19:35+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "pos_loyalty/ja/>\n"
 "Language: ja\n"
@@ -27,11 +28,13 @@ msgstr ""
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid ""
 "\n"
-"        Technical field used to link multiple reward lines from the same reward together.\n"
+"        Technical field used to link multiple reward lines from the same "
+"reward together.\n"
 "    "
 msgstr ""
 "\n"
-"        同じリワードの複数のリワード明細を一緒にリンクするために使用される技術フィールド。\n"
+"        同じリワードの複数のリワード明細を一緒にリンクするために使用される技"
+"術フィールド。\n"
 "    "
 
 #. module: pos_loyalty
@@ -73,7 +76,9 @@ msgstr "リワードはロードできませんでした"
 msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
-msgstr "プロモコードの代替として使用される技術フィールド。プロモコードが変更されると自動的に生成されます。"
+msgstr ""
+"プロモコードの代替として使用される技術フィールド。プロモコードが変更されると"
+"自動的に生成されます。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_res_partner__loyalty_card_count
@@ -118,6 +123,12 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Available rewards"
 msgstr "利用可能なリワード"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Balance"
+msgstr "残高"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -289,13 +300,17 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr "ギフトカードプログラムのリワードが無効です。1ポイントにつき1通貨の値引をご利用下さい。"
+msgstr ""
+"ギフトカードプログラムのリワードが無効です。1ポイントにつき1通貨の値引をご利"
+"用下さい。"
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr "ギフトカードプログラムの規則が無効です。1ポイントにつき1通貨の値引をご利用下さい。"
+msgstr ""
+"ギフトカードプログラムの規則が無効です。1ポイントにつき1通貨の値引をご利用下"
+"さい。"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -483,7 +498,9 @@ msgstr "eウォレットで払戻"
 msgid ""
 "Refunding a top up or reward product for an eWallet or gift card program is "
 "not allowed."
-msgstr "eウォレットまたはギフトカードプログラムのチャージまたはリワードプロダクトの払戻しはできません。"
+msgstr ""
+"eウォレットまたはギフトカードプログラムのチャージまたはリワードプロダクトの払"
+"戻しはできません。"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -537,7 +554,15 @@ msgstr "シンプルなペン"
 msgid ""
 "Some coupons are invalid. The applied coupons have been updated. Please "
 "check the order."
-msgstr "一部のクーポンは無効です。適用されたクーポンは更新されました。オーダ内容をご確認下さい。"
+msgstr ""
+"一部のクーポンは無効です。適用されたクーポンは更新されました。オーダ内容をご"
+"確認下さい。"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Spent:"
+msgstr "使用済:"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
@@ -583,10 +608,12 @@ msgstr "リワードを請求する際に使用するクーポン"
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid ""
-"The following codes already exist in the database, perhaps they were already sold?\n"
+"The following codes already exist in the database, perhaps they were already "
+"sold?\n"
 "%s"
 msgstr ""
-"以下のコードはすでにデータベースに存在しています、おそらくすでに販売されたのでしょうか？\n"
+"以下のコードはすでにデータベースに存在しています、おそらくすでに販売されたの"
+"でしょうか？\n"
 "%s"
 
 #. module: pos_loyalty
@@ -594,7 +621,9 @@ msgstr ""
 msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
-msgstr "POSでクーポン/ギフトカード/ロイヤリティカードを作成する際に実行されるレポートアクション。"
+msgstr ""
+"POSでクーポン/ギフトカード/ロイヤリティカードを作成する際に実行されるレポート"
+"アクション。"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -602,7 +631,9 @@ msgstr "POSでクーポン/ギフトカード/ロイヤリティカードを作�
 msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
-msgstr "リワード\"%s\"のドメインにエラーが含まれています、ドメインはPOS顧客と互換性がなければなりません。"
+msgstr ""
+"リワード\"%s\"のドメインにエラーが含まれています、ドメインはPOS顧客と互換性が"
+"なければなりません。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -639,7 +670,9 @@ msgstr "この報酬を請求するには、バスケット内のプロダクト
 msgid ""
 "There is no email template on the gift card program and your pos is set to "
 "print them."
-msgstr "ギフトカードプログラムにはEメールのテンプレートはなく、POSはEメールを印刷するように設定されています。"
+msgstr ""
+"ギフトカードプログラムにはEメールのテンプレートはなく、POSはEメールを印刷する"
+"ように設定されています。"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -647,7 +680,9 @@ msgstr "ギフトカードプログラムにはEメールのテンプレート�
 msgid ""
 "There is no print report on the gift card program and your pos is set to "
 "print them."
-msgstr "ギフトカードプログラムには印刷レポートはなく、POSはEメールを印刷するように設定されています。"
+msgstr ""
+"ギフトカードプログラムには印刷レポートはなく、POSはEメールを印刷するように設"
+"定されています。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -690,7 +725,9 @@ msgstr "このクーポンはまだ有効ではありません (%s)"
 msgid ""
 "This gift card is not linked to any order. Do you really want to apply its "
 "reward?"
-msgstr "このギフトカードはどのオーダにもリンクされていません。本当に特典を適用しますか？"
+msgstr ""
+"このギフトカードはどのオーダにもリンクされていません。本当に特典を適用します"
+"か？"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
@@ -763,6 +800,12 @@ msgstr "この明細がリワードの一部かどうか"
 
 #. module: pos_loyalty
 #. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Won:"
+msgstr "獲得:"
+
+#. module: pos_loyalty
+#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Yes"
 msgstr "はい"
@@ -771,7 +814,8 @@ msgstr "はい"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "You cannot set negative quantity or price to gift card or ewallet."
-msgstr "ギフトカードまたはeウォレットに負の数量または価格を設定することはできません"
+msgstr ""
+"ギフトカードまたはeウォレットに負の数量または価格を設定することはできません"
 
 #. module: pos_loyalty
 #. odoo-python

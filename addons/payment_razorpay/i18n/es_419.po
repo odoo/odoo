@@ -7,13 +7,14 @@
 # Fernanda Alvarez, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:39+0000\n"
-"PO-Revision-Date: 2025-10-29 15:49+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 22:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-4/payment_razorpay/es_419/>\n"
 "Language: es_419\n"
@@ -205,6 +206,16 @@ msgstr "Secreto del webhook de Razorpay"
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Click the \"Connect\" button to set up "
+"your account"
+msgstr ""
+"Faltan las credenciales de Razorpay. Haz clic en el botón \"Conectar\" para "
+"configurar tu cuenta."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Razorpay gave us the following information: '%s'"
 msgstr "Razorpay nos dio la siguiente información: '%s'"
 
@@ -289,8 +300,8 @@ msgstr "Este proveedor está vinculado a su cuenta de Razorpay."
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Transactions processed by Razorpay can't be manually voided from Odoo."
 msgstr ""
-"Las transacciones que se procesen con Razorpay no se pueden anular de manera"
-" manual desde Odoo."
+"Las transacciones que se procesen con Razorpay no se pueden anular de manera "
+"manual desde Odoo."
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -300,20 +311,23 @@ msgstr "Secreto del webhook"
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid ""
-"You are currently connected to Razorpay through the credentials method, which is\n"
-"                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
+"You are currently connected to Razorpay through the credentials method, "
+"which is\n"
+"                    deprecated. Click the \"Connect\" button below to use "
+"the recommended OAuth\n"
 "                    method."
 msgstr ""
 "Está conectado a Razorpay con el método de credenciales, el cual es\n"
-"                    obsoleto. Haga clic en el botón \"Conectar\" de abajo para usar el método recomendado\n"
+"                    obsoleto. Haga clic en el botón \"Conectar\" de abajo "
+"para usar el método recomendado\n"
 "                    OAuth."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_token.py:0
 msgid ""
-"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
-" this payment method"
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
+"this payment method"
 msgstr ""
 "No puede pagar importes superiores a %(currency_symbol)s %(max_amount)s con "
 "este método de pago"

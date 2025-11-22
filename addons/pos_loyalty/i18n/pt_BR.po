@@ -7,13 +7,14 @@
 # Maitê Dietze, 2025
 #
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:09+0000\n"
-"PO-Revision-Date: 2025-08-22 23:41+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s18-4/pos_loyalty/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -28,11 +29,13 @@ msgstr ""
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid ""
 "\n"
-"        Technical field used to link multiple reward lines from the same reward together.\n"
+"        Technical field used to link multiple reward lines from the same "
+"reward together.\n"
 "    "
 msgstr ""
 "\n"
-"     Campo técnico usado para vincular várias linhas de recompensa do mesmo bônus.\n"
+"     Campo técnico usado para vincular várias linhas de recompensa do mesmo "
+"bônus.\n"
 "    "
 
 #. module: pos_loyalty
@@ -75,8 +78,8 @@ msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
 msgstr ""
-"Um campo técnico usado como alternativa ao código promocional. Isso é gerado"
-" automaticamente quando o código promocional é alterado."
+"Um campo técnico usado como alternativa ao código promocional. Isso é gerado "
+"automaticamente quando o código promocional é alterado."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_res_partner__loyalty_card_count
@@ -121,6 +124,12 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Available rewards"
 msgstr "Recompensas disponíveis"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Balance"
+msgstr "Saldo"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -293,8 +302,8 @@ msgstr "ID"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
 msgstr ""
-"Recompensa do programa de cartão-presente inválida. Use 1 moeda por desconto"
-" de pontos."
+"Recompensa do programa de cartão-presente inválida. Use 1 moeda por desconto "
+"de pontos."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -491,8 +500,8 @@ msgid ""
 "Refunding a top up or reward product for an eWallet or gift card program is "
 "not allowed."
 msgstr ""
-"Reembolsar uma recarga ou produto de recompensa para uma carteira digital ou"
-" programa de cartão-presente não é permitido."
+"Reembolsar uma recarga ou produto de recompensa para uma carteira digital ou "
+"programa de cartão-presente não é permitido."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -551,6 +560,12 @@ msgstr ""
 "Verifique o pedido."
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Spent:"
+msgstr "Gasto:"
+
+#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
 msgid "Technical field, whether all product match"
 msgstr "Campo técnico, se todos os produtos correspondem"
@@ -595,10 +610,12 @@ msgstr "O cupom utilizado para resgatar esta recompensa."
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid ""
-"The following codes already exist in the database, perhaps they were already sold?\n"
+"The following codes already exist in the database, perhaps they were already "
+"sold?\n"
 "%s"
 msgstr ""
-"Os códigos a seguir já existem na base de dados, talvez eles já tenham sido vendidos?\n"
+"Os códigos a seguir já existem na base de dados, talvez eles já tenham sido "
+"vendidos?\n"
 "%s"
 
 #. module: pos_loyalty
@@ -607,8 +624,8 @@ msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
 msgstr ""
-"A ação de relatório a ser executada ao criar um cupom/cartão-presente/cartão"
-" de fidelidade no PDV."
+"A ação de relatório a ser executada ao criar um cupom/cartão-presente/cartão "
+"de fidelidade no PDV."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -647,8 +664,7 @@ msgstr "Não há pontos suficientes no cupom para resgatar esta recompensa."
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
-"Não há produtos suficientes no carrinho para resgatar esta recompensa."
+msgstr "Não há produtos suficientes no carrinho para resgatar esta recompensa."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -657,8 +673,8 @@ msgid ""
 "There is no email template on the gift card program and your pos is set to "
 "print them."
 msgstr ""
-"Não existe modelo de e-mail no programa de cartão-presente, e o seu PDV está"
-" configurado para imprimi-los."
+"Não existe modelo de e-mail no programa de cartão-presente, e o seu PDV está "
+"configurado para imprimi-los."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -786,6 +802,12 @@ msgstr "Erro de validação"
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Whether this line is part of a reward or not."
 msgstr "Se esta linha é parte de uma recompensa ou não."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Won:"
+msgstr "Ganho:"
 
 #. module: pos_loyalty
 #. odoo-javascript

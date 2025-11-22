@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
@@ -114,8 +114,7 @@ msgstr "Chequenummers kunnen alleen uit cijfers bestaan"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
-"Vink deze optie aan als je her-afgedrukte cheques niet genummerd zijn."
+msgstr "Vink deze optie aan als je her-afgedrukte cheques niet genummerd zijn."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -206,8 +205,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr ""
 "Om meerdere cheques tegelijk af te drukken moeten ze behoren tot hetzelfde "
 "bankdagboek."
@@ -237,18 +236,32 @@ msgstr "Handmatige nummering"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Handmatig: Betaal of ontvang betalingen via een andere methode buiten Odoo.\n"
-"Betalingsproviders: Elke betalingsprovider heeft zijn eigen betalingsmethode. Vraag een transactie aan voor een kaart met behulp van een betalingstoken die de partner heeft opgeslagen bij online aankopen of abonnementen.\n"
+"Betalingsproviders: Elke betalingsprovider heeft zijn eigen "
+"betalingsmethode. Vraag een transactie aan voor een kaart met behulp van een "
+"betalingstoken die de partner heeft opgeslagen bij online aankopen of "
+"abonnementen.\n"
 "Cheque: Betaal facturen per cheque en print deze vanuit Odoo.\n"
-"Batchstorting: Verzamel meerdere klantcheques tegelijk door een batchstorting te genereren en in te dienen bij je bank. De module account_batch_payment is vereist.\n"
-"SEPA Credit Transfer: Betaal in de SEPA-zone door een SEPA-overschrijvingsbestand naar je bank te sturen. De module account_sepa is vereist.\n"
-"SEPA Direct Debit: Ontvang betalingen binnen de SEPA-zone via een mandaat dat je partner aan jou heeft verleend. De module account_sepa is vereist.\n"
+"Batchstorting: Verzamel meerdere klantcheques tegelijk door een "
+"batchstorting te genereren en in te dienen bij je bank. De module "
+"account_batch_payment is vereist.\n"
+"SEPA Credit Transfer: Betaal in de SEPA-zone door een SEPA-"
+"overschrijvingsbestand naar je bank te sturen. De module account_sepa is "
+"vereist.\n"
+"SEPA Direct Debit: Ontvang betalingen binnen de SEPA-zone via een mandaat "
+"dat je partner aan jou heeft verleend. De module account_sepa is vereist.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -302,8 +315,8 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr ""
 "Geef aub het nummer in van de eerste voorgedrukte cheque die je gaat "
 "afdrukken."
@@ -352,10 +365,12 @@ msgstr "Rechtermarge"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Selecteer het formaat dat overeenkomt met het cheque papier dat je gebruikt om je cheque's af te drukken.\n"
+"Selecteer het formaat dat overeenkomt met het cheque papier dat je gebruikt "
+"om je cheque's af te drukken.\n"
 "Om deze afdrukoptie te de-activeren selecteert je 'Geen'."
 
 #. module: account_check_printing
@@ -385,6 +400,14 @@ msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
+
+#. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
 "The following numbers are already used:\n"
@@ -411,8 +434,8 @@ msgid ""
 "wrong, you can change it in the journal configuration page."
 msgstr ""
 "Het geselecteerde dagboek is geconfigureerd om chequenummers af te drukken. "
-"Als je voorgedrukt papier al nummers bevat of als het huidige nummer fout is"
-" kun je dit wijzigen op de dagboek configuratie pagina."
+"Als je voorgedrukt papier al nummers bevat of als het huidige nummer fout is "
+"kun je dit wijzigen op de dagboek configuratie pagina."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -459,9 +482,8 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Je moet een cheque-indeling kiezen. Ga hiervoor naar "
-"Facturering/Boekhoudinstellingen, zoek naar 'Cheque-indeling' en stel er een"
-" in."
+"Je moet een cheque-indeling kiezen. Ga hiervoor naar Facturering/"
+"Boekhoudinstellingen, zoek naar 'Cheque-indeling' en stel er een in."
 
 #. module: account_check_printing
 #. odoo-python

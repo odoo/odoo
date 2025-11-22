@@ -8,13 +8,14 @@
 # Rasareeyar Lappiam, 2025
 #
 # "Rasareeyar Lappiam (rlap)" <rlap@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-08-25 07:15+0000\n"
-"Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 22:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
 "base_automation/th/>\n"
 "Language: th\n"
@@ -47,8 +48,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
-"กฎอัตโนมัติ \"ในการอัปเดตแบบไลฟ์\" สามารถใช้ได้เฉพาะกับประเภทการดำเนินการ "
-"\"เรียกใช้โค้ด Python\" เท่านั้น"
+"กฎอัตโนมัติ \"ในการอัปเดตแบบไลฟ์\" สามารถใช้ได้เฉพาะกับประเภทการดำเนินการ \"เรียกใช้โค้ด "
+"Python\" เท่านั้น"
 
 #. module: base_automation
 #. odoo-javascript
@@ -70,8 +71,8 @@ msgstr "<code>env</code>: สภาพแวดล้อมที่การด
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: แบบจำลองของเรกคอร์ดที่ทริกเกอร์การดำเนินการ เป็นชุดบันทึกที่ว่างเปล่า"
 
@@ -115,8 +116,8 @@ msgid ""
 "save or not</em>."
 msgstr ""
 "<i class=\"fa fa-warning\"/>กฎการทำงานอัตโนมัติที่ทริกเกอร์โดยการเปลี่ยนแปลง UI "
-"จะถูกดำเนินการ<em>ทุกครั้ง</em>ที่มีการเปลี่ยนแปลงฟิลด์ที่เฝ้าดู "
-"<em>ไม่ว่าคุณจะบันทึกหรือไม่ก็ตาม</em>"
+"จะถูกดำเนินการ<em>ทุกครั้ง</em>ที่มีการเปลี่ยนแปลงฟิลด์ที่เฝ้าดู <em>ไม่ว่าคุณจะบันทึกหรือไม่ก็ตาม</"
+"em>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
@@ -191,7 +192,6 @@ msgstr "ใช้เมื่อ"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "เก็บถาวรแล้ว"
 
@@ -420,8 +420,8 @@ msgstr "ถ้าเลือก ข้อความบางข้อคว�
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr "หากมี ต้องปฏิบัติตามเงื่อนไขนี้ก่อนที่จะดำเนินการกฎอัตโนมัติ"
 
 #. module: base_automation
@@ -429,8 +429,7 @@ msgstr "หากมี ต้องปฏิบัติตามเงื่�
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
-msgstr ""
-"หากมี เงื่อนไขนี้ต้องเป็นไปตามก่อนอัปเดตบันทึก ไม่ใช่ตรวจสอบเมื่อสร้างบันทึก"
+msgstr "หากมี เงื่อนไขนี้ต้องเป็นไปตามก่อนอัปเดตบันทึก ไม่ใช่ตรวจสอบเมื่อสร้างบันทึก"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -438,6 +437,11 @@ msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
 msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "รวมที่เก็บถาวรแล้ว"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -512,10 +516,9 @@ msgstr "ชื่อโมเดล"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
-msgstr ""
-"รูปแบบการกระทำ %(action_name)s ควรตรงกับรูปแบบจากกฎอัตโนมัติ %(rule_name)s"
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
+msgstr "รูปแบบการกระทำ %(action_name)s ควรตรงกับรูปแบบจากกฎอัตโนมัติ %(rule_name)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -708,7 +711,8 @@ msgstr "เลือกฟิลด์..."
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "ส่งอีเมลเมื่อออบเจ็กต์เปลี่ยนสถานะ เก็บถาวรบันทึก\n"
@@ -718,8 +722,8 @@ msgstr ""
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "ส่งอีเมลเมื่อวัตถุเปลี่ยนสถานะ เก็บถาวรบันทึกหลังจากที่ไม่ได้ใช้งานเป็นเวลาหนึ่งเดือน "
@@ -741,16 +745,14 @@ msgstr "ตั้งชื่อที่ชัดเจน"
 msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
-msgstr ""
-"การเปิดใช้งานบางตัวจำเป็นต้องมีการอ้างอิงไปยังช่องการเลือก ช่องนี้ใช้เพื่อจัดเก็บ"
+msgstr "การเปิดใช้งานบางตัวจำเป็นต้องมีการอ้างอิงไปยังช่องการเลือก ช่องนี้ใช้เพื่อจัดเก็บ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
-msgstr ""
-"การเปิดใช้งานบางตัวจำเป็นต้องมีการอ้างอิงไปยังช่องอื่น ช่องนี้ใช้เพื่อจัดเก็บ"
+"Some triggers need a reference to another field. This field is used to store "
+"it."
+msgstr "การเปิดใช้งานบางตัวจำเป็นต้องมีการอ้างอิงไปยังช่องอื่น ช่องนี้ใช้เพื่อจัดเก็บ"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
@@ -794,19 +796,18 @@ msgstr "บันทึกเป้าหมาย"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr "รูปแบบเป้าหมายของการกระทำ %(action_names)s แตกต่างจากรูปแบบกฎ"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s ใช้ได้กับประเภทการกระทำ "
-"\"%(state_value)s\" เท่านั้น"
+"\"%(trigger_value)s\" %(trigger_label)s ใช้ได้กับประเภทการกระทำ \"%"
+"(state_value)s\" เท่านั้น"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -957,14 +958,14 @@ msgstr "ประวัติการสื่อสารของเว็บ
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
-"เมื่อคำนวณเงื่อนไขการจับเวลาแบบอิงวัน คุณสามารถใช้ปฏิทินเพื่อคำนวณวันที่ตามวันทำการได้"
+msgstr "เมื่อคำนวณเงื่อนไขการจับเวลาแบบอิงวัน คุณสามารถใช้ปฏิทินเพื่อคำนวณวันที่ตามวันทำการได้"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "เมื่อใดที่ควรทริกเกอร์เงื่อนไข\n"
 "ถ้ามีจะมีการตรวจสอบโดยผู้จัดตารางเวลา ถ้าหากว่างเปล่า จะถูกตรวจสอบเมื่อถูกสร้างและอัปเดต"

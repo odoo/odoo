@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* delivery
-# 
+# * delivery
+#
 # Translators:
 # Jolien De Paepe, 2025
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:49+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/"
+"delivery/fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: delivery
 #. odoo-python
@@ -57,14 +61,16 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                    Achetez Odoo Enterprise maintenant pour obtenir plus de fournisseurs.\n"
+"                    Achetez Odoo Enterprise maintenant pour obtenir plus de "
+"fournisseurs.\n"
 "                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Environnement</span>\n"
 "                                <span class=\"o_stat_text\">de test</span>"
@@ -83,10 +89,12 @@ msgstr "<span class=\"text-success\">Demandes de débogage</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Environnement</span>\n"
-"                                <span class=\"o_stat_text\">de production</span>"
+"                                <span class=\"o_stat_text\">de production</"
+"span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -101,8 +109,8 @@ msgid ""
 "for customers to follow."
 msgstr ""
 "Une description du mode de livraison que vous souhaitez communiquer à vos "
-"clients sur la commande client et l'e-mail de confirmation de vente. Par ex."
-" instructions à suivre par les clients."
+"clients sur la commande client et l'e-mail de confirmation de vente. Par ex. "
+"instructions à suivre par les clients."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -166,8 +174,8 @@ msgstr "Archivé"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid ""
-"Are you sure you want the delivery to be free for this order? You might have"
-" forgotten to compute the rates."
+"Are you sure you want the delivery to be free for this order? You might have "
+"forgotten to compute the rates."
 msgstr ""
 "Êtes-vous sûr de vouloir offrir la livraison gratuite pour cette commande ? "
 "Vous avez peut-être oublié de calculer les tarifs."
@@ -204,8 +212,7 @@ msgstr "Transporteur"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 "Le transporteur %s ne peut pas avoir la même étiquette dans les étiquettes "
 "obligatoires et exclues."
@@ -398,7 +405,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
-"Les préfixes postaux de livraison sont attribués aux transporteurs pour limiter\n"
+"Les préfixes postaux de livraison sont attribués aux transporteurs pour "
+"limiter\n"
 "les codes postaux pour lesquels ils sont disponibles."
 
 #. module: delivery
@@ -426,6 +434,7 @@ msgstr "Ignorer"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+#: model:ir.model.fields,field_description:delivery.field_ir_http__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
@@ -442,7 +451,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"Chaque société de transport (par ex. UPS) peut avoir plusieurs modes de livraison (par ex.\n"
+"Chaque société de transport (par ex. UPS) peut avoir plusieurs modes de "
+"livraison (par ex.\n"
 "UPS Express, UPS Standard) avec un ensemble de règles de tarification\n"
 "pour chaque mode."
 
@@ -466,11 +476,15 @@ msgstr "Erreur : ce mode de livraison n'est pas disponible."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Coût estimé : le client se verra facturer le coût estimé de l'expédition. \n"
-"Coût réel : le client se verra facturer le coût réel de l'expédition, le coût de l'expédition sera mis à jour sur la commande client après la livraison."
+"Coût réel : le client se verra facturer le coût réel de l'expédition, le "
+"coût de l'expédition sera mis à jour sur la commande client après la "
+"livraison."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -486,17 +500,17 @@ msgstr "Étiquettes exclues"
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
-"Complétez ce champ si vous envisagez de facturer l'expédition en fonction du"
-" transfert."
+"Complétez ce champ si vous envisagez de facturer l'expédition en fonction du "
+"transfert."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
-"Remplir ce formulaire vous permet d'indiquer le mode d'expédition disponible"
-" en fonction du contenu de la commande ou de sa destination."
+"Remplir ce formulaire vous permet d'indiquer le mode d'expédition disponible "
+"en fonction du contenu de la commande ou de sa destination."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -535,10 +549,16 @@ msgid "Group By"
 msgstr "Regrouper par"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_ir_http
+msgid "HTTP Routing"
+msgstr "Routage HTTP"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+#: model:ir.model.fields,field_description:delivery.field_ir_http__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
@@ -563,8 +583,8 @@ msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
 msgstr ""
-"Si le volume total de la commande est supérieur à ce volume, le mode ne sera"
-" pas disponible."
+"Si le volume total de la commande est supérieur à ce volume, le mode ne sera "
+"pas disponible."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
@@ -799,10 +819,10 @@ msgid ""
 "will only match '100' and not '1000')"
 msgstr ""
 "Préfixes des codes postaux auxquels s'applique ce transporteur. Notez que "
-"les expressions régulières peuvent être utilisées pour prendre en charge les"
-" pays dont la longueur des codes postaux varie, c'est-à-dire que le signe "
-"'$' peut être ajouté à la fin du préfixe pour correspondre au code postal "
-"exact (par exemple '100$' correspondra uniquement à '100' et non à '1000')"
+"les expressions régulières peuvent être utilisées pour prendre en charge les "
+"pays dont la longueur des codes postaux varie, c'est-à-dire que le signe '$' "
+"peut être ajouté à la fin du préfixe pour correspondre au code postal exact "
+"(par exemple '100$' correspondra uniquement à '100' et non à '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -966,14 +986,14 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
-"Ce mode n'est PAS disponible si un des produits de la commande possède l'une"
-" de ces étiquettes."
+"Ce mode n'est PAS disponible si un des produits de la commande possède l'une "
+"de ces étiquettes."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 "Ce mode uniquement disponible si au moins un des produits de la commande "
 "possède l'une de ces étiquettes."
@@ -1121,14 +1141,18 @@ msgstr "Intitulé de l'unité de mesure de poids "
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Vous ne pouvez pas mettre à jour les frais d'expéditions sur une commande si elle a déjà été facturée !\n"
+"Vous ne pouvez pas mettre à jour les frais d'expéditions sur une commande si "
+"elle a déjà été facturée !\n"
 "\n"
-"Les lignes de livraison suivantes (produit, quantité facturée et prix) ont déjà été exécutées.\n"
+"Les lignes de livraison suivantes (produit, quantité facturée et prix) ont "
+"déjà été exécutées.\n"
 
 #. module: delivery
 #. odoo-python

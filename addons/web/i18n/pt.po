@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:38+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2025-09-02 16:34+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -519,15 +519,15 @@ msgid ""
 "merge all samples.<br/>It can lead to partially invalid result in case of "
 "concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
 "                                <option value=\"tabs\">Separados (um por "
 "registro))</option>\n"
 "                                <option value=\"temporal\">Temporal "
 "(experimental)</option>\n"
 "                            </select>\n"
-"                            <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Aviso:</b> O modo temporal "
+"                            <span id=\"temporal_warning\" class=\"alert "
+"alert-warning\" style=\"display:none\"><b>Aviso:</b> O modo temporal "
 "mesclará todas as amostras.<br/>Pode levar a um resultado parcialmente "
 "inválido no caso de perfis simultâneos.<br/>Use com cautela </span>"
 
@@ -542,8 +542,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">R$ <span class=\"oe_currency_value\""
-">11.750,00</span></span>"
+"<span class=\"text-nowrap\">R$ <span class=\"oe_currency_value\">11.750,00</"
+"span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -551,8 +551,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">R$ <span class=\"oe_currency_value\""
-">7.500,00</span></span>"
+"<span class=\"text-nowrap\">R$ <span class=\"oe_currency_value\">7.500,00</"
+"span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -671,8 +671,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong class=\"text-nowrap\">US$ <span class=\"oe_currency_value\">\n"
-"                                                       "
-"22.137,50</span></strong>"
+"                                                       22.137,50</span></"
+"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -3870,7 +3870,8 @@ msgstr "Intervalo de tempo inválido"
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "Invalid view type '%(view_type)s' for action id=%(action)s"
-msgstr "Tipo de visualização inválido '%(view_type)s' para a ação id=%(action)s"
+msgstr ""
+"Tipo de visualização inválido '%(view_type)s' para a ação id=%(action)s"
 
 #. module: web
 #. odoo-javascript
@@ -5208,8 +5209,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
-"Dos %(selectedRecord)s registros selecionados, apenas os primeiros "
-"%(firstRecords)s foram arquivados/desarquivados."
+"Dos %(selectedRecord)s registros selecionados, apenas os primeiros %"
+"(firstRecords)s foram arquivados/desarquivados."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -7033,6 +7034,12 @@ msgstr "O domínio não deve envolver não literais"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 msgid ""
@@ -7041,6 +7048,12 @@ msgid ""
 msgstr ""
 "A operação foi interrompida. Isso geralmente significa que a operação atual "
 "está demorando muito."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

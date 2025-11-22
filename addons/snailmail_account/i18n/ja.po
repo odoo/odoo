@@ -7,13 +7,14 @@
 # Junko Augias, 2025
 #
 # Ryoko Tsuda <ryoko@quartile.co>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-09-19 10:23+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "snailmail_account/ja/>\n"
 "Language: ja\n"
@@ -34,7 +35,9 @@ msgstr "(切手: %s)"
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"ここに設定した数値は会社固有のものです。\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"ここに設定した数値は会社固有の"
+"ものです。\"/>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_move_send
@@ -63,6 +66,7 @@ msgid "Create a Customer"
 msgstr "顧客を作成する"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_res_partner__display_name
@@ -70,6 +74,7 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__id
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__id
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__id
 #: model:ir.model.fields,field_description:snailmail_account.field_res_partner__id
@@ -83,6 +88,11 @@ msgid "Invoice sending"
 msgstr "顧客請求書送付"
 
 #. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__send_by_post_stamps
 msgid "Send By Post Stamps"
 msgstr "郵便切手で送信"
@@ -93,7 +103,9 @@ msgstr "郵便切手で送信"
 msgid ""
 "The partners on the following invoices have no valid address, so those "
 "invoices will not be sent: %s"
-msgstr "以下の請求書に記載されている取引先は有効なメールアドレスがないため、これらの請求書は送信されません: %s"
+msgstr ""
+"以下の請求書に記載されている取引先は有効なメールアドレスがないため、これらの"
+"請求書は送信されません: %s"
 
 #. module: snailmail_account
 #. odoo-python
