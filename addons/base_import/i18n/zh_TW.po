@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Martin Trigaux, 2024
 # Tony Ng, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_import
@@ -83,11 +84,12 @@ msgstr "允許與子欄位匹配"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"匯入期間發生未知問題（可能連線中斷，超出資料現制或超出內存限制）。 如果問題是暫時的，請重試。 如果問題仍然存在，請嘗試拆分文件，而不是立即匯入。"
+"匯入期間發生未知問題（可能連線中斷，超出資料現制或超出內存限制）。 如果問題是"
+"暫時的，請重試。 如果問題仍然存在，請嘗試拆分文件，而不是立即匯入。"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -150,8 +152,8 @@ msgstr "直欄 %(column)s 內有不正確的值（值：%(value)s）"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr "%(column)s 欄包含不正確數值。錯誤位於第 %(line)d 行：%(error)s"
 
 #. module: base_import
@@ -175,8 +177,7 @@ msgstr "備註"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr "無法檢索網址：%(url)s[%(field_name)s:L%(line_number)d]:%(error)s"
 
 #. module: base_import
@@ -294,11 +295,11 @@ msgstr "匯入記錄時出錯： 文本分隔符應為單字符。"
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"匯入記錄時發生錯誤：所有列的大小應該相同，但標題列有 %(title_row_entries)d 個記項，而第一行有 "
-"%(first_row_entries)d 個。你可能需要更改分隔符。"
+"匯入記錄時發生錯誤：所有列的大小應該相同，但標題列有 %(title_row_entries)d 個"
+"記項，而第一行有 %(first_row_entries)d 個。你可能需要更改分隔符。"
 
 #. module: base_import
 #. odoo-javascript
@@ -389,8 +390,8 @@ msgstr "格式設定"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr "發現不正確圖像資料，圖像應作為 URL 或 base64 編碼資料匯入。"
 
 #. module: base_import
@@ -437,7 +438,9 @@ msgstr ""
 msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
-msgstr "如果模型使用 openchatter，歷史記錄跟蹤將在匯入期間設置訂閱併發送通知，但會導致匯入速度變慢。"
+msgstr ""
+"如果模型使用 openchatter，歷史記錄跟蹤將在匯入期間設置訂閱併發送通知，但會導"
+"致匯入速度變慢。"
 
 #. module: base_import
 #. odoo-python
@@ -495,8 +498,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"儲存格格式無效：列 %(row)s，欄 "
-"%(col)s，值為：%(cell_value)s，格式為：%(cell_format)s。系統不支援「%(format_type)s」格式。"
+"儲存格格式無效：列 %(row)s，欄 %(col)s，值為：%(cell_value)s，格式為：%"
+"(cell_format)s。系統不支援「%(format_type)s」格式。"
 
 #. module: base_import
 #. odoo-python
@@ -773,6 +776,22 @@ msgid "The file will be imported by batches"
 msgstr "檔案將分批匯入"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -805,7 +824,8 @@ msgstr "匯入時追蹤匯入歷史"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr "無法裝載 \"{extension}\"  文件:需要Python 模組 \"{modname}\""
 
 #. module: base_import
@@ -838,23 +858,23 @@ msgstr "上載檔案"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
-"在 24 小時制中使用 HH 表示小時，在 12 小時制中使用 II 和 \"p\"。您還可以使用自定義格式。留空以把格式交給 Odoo "
-"猜測（推薦使用）"
+"在 24 小時制中使用 HH 表示小時，在 12 小時制中使用 II 和 \"p\"。您還可以使用"
+"自定義格式。留空以把格式交給 Odoo 猜測（推薦使用）"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
-"用 YYYY 表示年，MM 表示月，DD 表示日。包括分隔符，如點、正斜線或連字號。除已有建議外，您還可以使用自定義格式。留空以把格式交給 Odoo "
-"猜測（推薦使用）"
+"用 YYYY 表示年，MM 表示月，DD 表示日。包括分隔符，如點、正斜線或連字號。除已"
+"有建議外，您還可以使用自定義格式。留空以把格式交給 Odoo 猜測（推薦使用）"
 
 #. module: base_import
 #. odoo-javascript

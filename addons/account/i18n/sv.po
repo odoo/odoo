@@ -39,13 +39,16 @@
 # Wil Odoo, 2025
 # Claes-Johan Dahlin <user-89@users.noreply.translate.odoo.com>, 2025.
 # Mikael Akerberg <mikael.akerberg@mariaakerberg.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2025.
+# Johannes Myrlander <johannes.myrlander@ucsonedo.se>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-11-04 09:08+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 06:40+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/account/"
 "sv/>\n"
 "Language: sv\n"
@@ -234,18 +237,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 
 #. module: account
 #. odoo-python
@@ -1024,6 +1015,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Du kan välja hur du vill att vi ska skicka dina "
+"fakturor och med vilket elektroniskt format.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -3448,7 +3443,7 @@ msgstr "Automatpost"
 #: model:ir.model.fields,field_description:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_users__autopost_bills
 msgid "Auto-post bills"
-msgstr "Automatisk bokföring av fakturor"
+msgstr "Automatisk bokföring av leverantörsfakturor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
@@ -3476,7 +3471,7 @@ msgstr "Auto-validera"
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_config_settings__autopost_bills
 msgid "Auto-validate bills"
-msgstr "Auto-validera fakturor"
+msgstr "Auto-validera leverantörsfakturor"
 
 #. module: account
 #. odoo-python
@@ -3994,7 +3989,7 @@ msgstr "Fakturareferens"
 #: model_terms:ir.ui.view,arch_db:account.view_account_bill_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Bills"
-msgstr "Fakturor"
+msgstr "Leverantörsfakturor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4004,7 +3999,7 @@ msgstr "Fakturaanlyser"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Late"
-msgstr "Sena fakturor"
+msgstr "Förfallna leverantörsfakturor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4025,7 +4020,7 @@ msgstr "Fakturor att betala"
 #. module: account
 #: model:account.account,name:account.1_to_receive_pay
 msgid "Bills to receive"
-msgstr "Fakturor att ta emot"
+msgstr "Leverantörsfakturor att ta emot"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__blank_if_zero
@@ -6223,7 +6218,7 @@ msgstr "Standardskatter som används vid försäljning av produkten"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "Standardvärdet för 'company_id' för %(record)s är inte ett heltal"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -6487,7 +6482,7 @@ msgstr "Fördelning av diskontering Nyckel"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_allocation_needed
 msgid "Discount Allocation Needed"
-msgstr "Nödvändig fördelning av rabatter"
+msgstr "Rabattfördelning behövs"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6872,7 +6867,7 @@ msgstr "Dra och släpp"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop and let the AI process your bills automatically."
-msgstr "Släpp och låt AI hantera dina fakturor automatiskt."
+msgstr "Släpp och låt AI hantera dina leverantörsfakturor automatiskt."
 
 #. module: account
 #. odoo-python
@@ -8109,7 +8104,7 @@ msgstr "Grupp efter: Konto > Skatt "
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
 msgid "Group by: Tax > Account "
-msgstr "Grupp av: Skatt > Konto "
+msgstr "Gruppera efter: Skatt > Konto "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -9396,14 +9391,14 @@ msgstr "Fakturor vars verifikat har stämts av med dessa betalningar."
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_partial_underpaid
 msgid "Invoices/Bills Partial Match if Underpaid"
-msgstr "Delvis matchning av fakturor/räkningar om underbetalning"
+msgstr "Delvis matchning av kund- och leverantörsfakturor vid underbetalning"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_perfect_match
 msgid "Invoices/Bills Perfect Match"
-msgstr "Perfekt matchning av fakturor/räkningar"
+msgstr "Perfekt matchning av kund- och leverantörsfakturor"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -9435,8 +9430,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
-"Oegentligheter på grund av utkast, makulerade eller raderade fakturor med "
-"ett löpnummer sedan senaste låsdatum."
+"Oegentligheter på grund av utkast, makulerade eller raderade "
+"leverantörsfakturor med ett löpnummer sedan senaste låsdatum."
 
 #. module: account
 #. odoo-python
@@ -9866,7 +9861,7 @@ msgstr "juni"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "KPI-leverantör"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -12448,7 +12443,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Betalningar som har stämts av mot denna faktura."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13125,7 +13120,7 @@ msgstr "Avstämda fakturor Typ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Avstämda betalningar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -13629,7 +13624,7 @@ msgstr "Avrundningsstrategi"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 msgid "Rule to match invoices/bills"
-msgstr "Regel för att matcha fakturor/räkningar"
+msgstr "Regel för att matcha kund- och leverantörsfakturor"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
@@ -17839,7 +17834,7 @@ msgstr "Användare Räkenskapsår Låsdatum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__user_groupby
 msgid "User Group By"
-msgstr "Användargrupp av"
+msgstr "Gruppera användare efter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_hard_lock_date
@@ -18067,9 +18062,9 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
-"Säljarens räkningar kan förgenereras baserat på köp\n"
+"Leverantörsfakturor kan förgenereras baserat på köp\n"
 "                   beställningar eller kvitton. Detta gör att du kan "
-"kontrollera fakturor\n"
+"kontrollera räkningar\n"
 "                   du får från din leverantör enligt utkastet\n"
 "                   dokument i Odoo."
 
@@ -19259,7 +19254,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "bills for"
-msgstr "fakturor för"
+msgstr "Leverantörsfakturor för"
 
 #. module: account
 #. odoo-python
@@ -19686,6 +19681,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Betalningskvitto (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

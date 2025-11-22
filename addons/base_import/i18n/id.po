@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Abe Manyo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_import
@@ -85,8 +85,8 @@ msgstr "Izinkan pencocokkan dengan subfield"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "Masalah yang tidak diketahui terjadi selama impor (mungkin kehilangan "
@@ -156,11 +156,11 @@ msgstr "Kolom %(column)s memiliki value yang tidak tepat (value: %(value)s)"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
-"Kolom %(column)s memiliki value yang tidak tepat. Error di baris %(line)d: "
-"%(error)s"
+"Kolom %(column)s memiliki value yang tidak tepat. Error di baris %(line)d: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -183,11 +183,10 @@ msgstr "Komentar"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Tidak dapat mengambil URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Tidak dapat mengambil URL: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -306,8 +305,8 @@ msgstr "Error selagi mengimpor record: Text Delimiter harusnya satu karakter."
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Error selagi mengimpor record: semua baris seharusnya memiliki ukuran yang "
 "sama, tapi baris judul memiliki %(title_row_entries)d entri sementara baris "
@@ -403,8 +402,8 @@ msgstr "Formatting"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "Menemukan data gambar yang tidak valid, gambar harus diimpor sebagai URL "
 "atau data base64-encode."
@@ -444,7 +443,8 @@ msgid ""
 msgstr ""
 "Bila file berisi\n"
 "                    nama-nama kolom, Odoo dapat mencoba mendeteksi otomatis\n"
-"                    field yang sesuai dengan kolom. Hal ini membuat impor lebih\n"
+"                    field yang sesuai dengan kolom. Hal ini membuat impor "
+"lebih\n"
 "                    sederhana terutama ketika file memiliki banyak kolom."
 
 #. module: base_import
@@ -454,8 +454,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Bila model menggunakan openchatter, sejarah pelacakan akan membuat langganan"
-" dan mengirimkan notifikasi selama impor, tapi ini akan berujung pada impor "
+"Bila model menggunakan openchatter, sejarah pelacakan akan membuat langganan "
+"dan mengirimkan notifikasi selama impor, tapi ini akan berujung pada impor "
 "yang lebih lambat."
 
 #. module: base_import
@@ -796,6 +796,22 @@ msgid "The file will be imported by batches"
 msgstr "File kaan diimpor secara batch"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -828,8 +844,10 @@ msgstr "Lacak riwayat selama impor"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr "Tidak dapat memuat file \"{extension}\": requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr ""
+"Tidak dapat memuat file \"{extension}\": requires Python module \"{modname}\""
 
 #. module: base_import
 #. odoo-python
@@ -863,8 +881,8 @@ msgstr "Unggah file-file Anda"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 "Gunakan HH untuk jam dalam sistem 24j, gunakan II secara bersamaan dengan "
 "'p' untuk sistem 12j. Anda dapat menggunakan format custom di atas saran "
@@ -875,10 +893,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "Gunakan YYYY untuk mewakili tahun, MM untuk bulan dan DD untuk hari. "
 "Termasuk separator sepeerti titik, garis miring atau garis. Anda dapat "

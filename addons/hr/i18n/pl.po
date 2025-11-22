@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-03 18:38+0000\n"
-"PO-Revision-Date: 2025-10-22 14:06+0000\n"
+"PO-Revision-Date: 2025-11-12 14:22+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/hr/pl/>\n"
 "Language: pl\n"
@@ -35,12 +35,12 @@ msgstr "# wiadomości do wysłania"
 #. odoo-python
 #: code:addons/hr/models/hr_job.py:0
 msgid "%s (copy)"
-msgstr "%s (kopia)"
+msgstr "%s (kopiuj)"
 
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr "'Odznaka - %s' % (object.name).replace('/', '')"
+msgstr "'Plakietka - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -104,8 +104,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Gratulacje!</b> Mogę zalecić by ustawić <a href=\"%s\"> plan wdrożenia?</"
-"a>"
+"<b>Gratulacje!</b> Czy mogę polecić ci skonfigurowanie<a href=\"%s\"> planu "
+"wdrażania?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -113,8 +113,8 @@ msgid ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
 "title=\"Company\"/>"
 msgstr ""
-"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
-"title=\"Company\"/>"
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Firma\" title="
+"\"Firma\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -147,7 +147,7 @@ msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Adresy IP</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Wyśłij Emaile</span>"
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Wyślij e-maile</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -156,7 +156,7 @@ msgid ""
 "Activities</span>"
 msgstr ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Zamknij "
-"działania</span>"
+"aktywności</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -275,7 +275,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
 msgid "Absent"
-msgstr "Nieobecny(a)"
+msgstr "Nieobecny/a"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -346,7 +346,7 @@ msgstr "Ikona typu aktywności"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
-msgstr "Działanie "
+msgstr "Aktywność wg"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan_template
@@ -571,8 +571,7 @@ msgstr "Automatycznie Subskrybuj Działy"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_discuss_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
-"Automatycznie subskrybuj członków tych działów do odpowiedniego kanału."
+msgstr "Automatycznie subskrybuj członków tych działów do odpowiedniego kanału."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -727,7 +726,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 #: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
-msgstr "Poziom certyfikatu "
+msgstr "Poziom certyfikatu"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
@@ -1061,8 +1060,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
-"Zdefiniuj plan pracy zasobu. Jeśli nie zostanie ustawiony, zasób będzie mieć "
-"w pełni elastyczne godziny pracy."
+"Określ harmonogram pracy zasobu. Jeśli nie zostanie on ustawiony, zasób "
+"będzie miał całkowicie elastyczne godziny pracy."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
@@ -1460,7 +1459,7 @@ msgstr "Znaczniki pracowników"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Employees profile"
-msgstr ""
+msgstr "Profil pracownika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
@@ -1824,14 +1823,12 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Możesz zgasić to pole, że jeśli nie chcesz widzieć zasobu bez usuwania."
+msgstr "Możesz zgasić to pole, że jeśli nie chcesz widzieć zasobu bez usuwania."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
-msgstr ""
-"Jeśli masz więcej niż jeden samochód, po prostu oddziel tablice spacją."
+msgstr "Jeśli masz więcej niż jeden samochód, po prostu oddziel tablice spacją."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -2198,7 +2195,7 @@ msgstr "Wiadomości"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Must Have"
-msgstr "Musisz mieć ..."
+msgstr "Musisz mieć"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__my_activity_date_deadline
@@ -2398,7 +2395,7 @@ msgstr "Liczba wiadomości z błędami przy doręczeniu"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "Liczba nowych pracowników do zatrudnienia"
+msgstr "Liczba nowych pracowników do zatrudnienia."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
@@ -2495,8 +2492,8 @@ msgid ""
 "enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
-"Kod PIN używany do zameldowania/wyjścia w trybie kiosku aplikacji Obecność "
-"(jeśli włączono w konfiguracji) oraz do zmiany kasjera w aplikacji Punkt "
+"Kod PIN używany do zameldowania/wyjścia w trybie kiosku aplikacji Obecność ("
+"jeśli włączono w konfiguracji) oraz do zmiany kasjera w aplikacji Punkt "
 "sprzedaży."
 
 #. module: hr
@@ -2557,7 +2554,7 @@ msgstr "Profity"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_permanent
 msgid "Permanent"
-msgstr "Permanent"
+msgstr "Permanentny"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2568,7 +2565,7 @@ msgstr "Permanent"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Personal Evolution"
-msgstr "Ewolucja osobista:"
+msgstr "Rozwój osobisty"
 
 #. module: hr
 #. odoo-python
@@ -2653,8 +2650,8 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Zasady publikowania wiadomości na dokumencie za pomocą poczty "
-"elektronicznej.\n"
+"Zasady publikowania wiadomości na dokumencie za pomocą poczty elektronicznej."
+"\n"
 "- wszyscy: każdy może publikować\n"
 "- partnerzy: tylko uwierzytelnieni partnerzy\n"
 "- obserwatorzy: tylko następcy powiązanego dokumentu lub członkowie "
@@ -2840,7 +2837,7 @@ msgstr "Przyczyna"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
 msgid "Reason Code"
-msgstr ""
+msgstr "Kod powodu"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -2891,7 +2888,7 @@ msgstr "Powiązani pracownicy na podstawie adresu prywatnego"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Użytkownik powiązany z zasobem do zarządzania jego dostępnością"
+msgstr "Użytkownik powiązany z zasobem do zarządzania jego dostępnością."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
@@ -3219,7 +3216,7 @@ msgstr "Cel"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Technical Expertise"
-msgstr "Ekspertyza techniczna"
+msgstr "Umiejętności techniczne"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
@@ -3277,6 +3274,13 @@ msgid ""
 "              This mission requires strong collaboration with Technical "
 "Service and Sales."
 msgstr ""
+"Kierownik ds. marketingu definiuje średnio- i długoterminową strategię "
+"marketingową dla swoich segmentów rynku\n"
+"                na świecie. Opracowuje i monitoruje roczny budżet we "
+"współpracy z działem sprzedaży. Określa\n"
+"                portfolio produktów i klientów zgodnie z planem "
+"marketingowym. Misja ta wymaga ścisłej \n"
+"                współpracy z działem technicznym i działem sprzedaży."
 
 #. module: hr
 #. odoo-python
@@ -3539,6 +3543,7 @@ msgstr "Ostrzeżenie"
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
 msgstr ""
+"Aktualnie poszukujemy kogoś, kto dołączy do naszego zespołu konsultantów."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3548,6 +3553,10 @@ msgid ""
 "meet clients to explain the technical possibilities that can meet their "
 "needs."
 msgstr ""
+"Aktualnie poszukujemy kogoś, kto dołączy do naszego zespołu Sieciowego.\n"
+"                Szukamy osoby, która jest w stanie płynnie nawigować "
+"pomiędzy kodowaniem a przeprowadzaniem analiz, lub spotkaniami z klientem w "
+"celu omówienia możliwości technicznych, które odpowiadają jego potrzebom."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
@@ -3738,6 +3747,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
+"Nie masz uprawnień dostępu do rekordów \"Pracownika\" (hr.employee).\n"
+"Możemy skierować Cie na publiczną listę pracowników."
 
 #. module: hr
 #. odoo-python
@@ -3813,8 +3824,8 @@ msgstr ""
 "sugerowanie ulepszeń w celu uwzględnienia nowych domen oprogramowania.\n"
 "Dołączysz do działu wsparcia implementacji. Ten 3-osobowy zespół pomaga "
 "klientom Odoo w konfiguracji oprogramowania. Twoją rolą będzie\n"
-"Animowanie webinarów w celu pokazania różnych funkcjonalności "
-"oprogramowania.\n"
+"Animowanie webinarów w celu pokazania różnych funkcjonalności oprogramowania."
+"\n"
 "być zaangażowanym we wsparcie klientów i\n"
 "odpowiadać na ich pytania.\n"
 "Pomaganie kierownikowi wsparcia w tworzeniu nowych usług wsparcia poprzez\n"
