@@ -8,7 +8,6 @@ class MailTestTLead(models.Model):
     _description = 'Lead-like model'
     _inherit = [
         'mail.thread.blacklist',
-        'mail.thread.cc',
         'mail.activity.mixin',
     ]
     _mail_defaults_to_email = True

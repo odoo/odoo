@@ -25,7 +25,7 @@ class HrApplicant(models.Model):
     _description = "Applicant"
     _order = "priority desc, id desc"
     _order = "sequence"
-    _inherit = ['mail.thread.cc',
+    _inherit = [
                'mail.thread.main.attachment',
                'mail.thread.blacklist',
                'mail.thread.phone',

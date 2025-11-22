@@ -251,7 +251,6 @@ class TestMailFlow(MailCommon, TestRecipients):
                 subject='Inquiry',
                 target_model='mail.test.lead',
             )
-        self.assertEqual(lead.email_cc, email_cc, 'Filled by mail.thread.cc mixin')
         self.assertEqual(lead.email_from, self.test_emails[0])
         self.assertEqual(lead.name, 'Inquiry')
         self.assertFalse(lead.partner_id)
@@ -328,17 +327,17 @@ class TestMailFlow(MailCommon, TestRecipients):
                 'name': 'Sylvie Lelitre (Zboing)',
                 'partner_id': partner_sylvie.id,
             },
-            {  # mail.thread.cc: email_cc field
-                'create_values': {},
-                'email': 'pay@zboing.com',
-                'name': 'pay@zboing.com',
-                'partner_id': partner_pay.id,
-            },
             {  # reply message
                 'create_values': {},
                 'email': 'accounting@zboing.com',
                 'name': 'Josiane Quichopoils',
                 'partner_id': partner_accounting.id,
+            },
+            {  # mail cc
+                'create_values': {},
+                'email': 'pay@zboing.com',
+                'name': 'pay@zboing.com',
+                'partner_id': partner_pay.id,
             },
         ]
         for suggested, expected in zip(suggested_all, expected_all):

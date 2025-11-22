@@ -584,7 +584,6 @@
                                     <field name="parent_id" invisible="not project_id" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form', 'search_default_project_id': project_id, 'default_project_id': project_id}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="email_cc" groups="base.group_no_one" invisible="is_template or has_project_template"/>
                                 </group>
                                 <group invisible="is_template or has_project_template">
                                     <field name="date_assign" groups="base.group_no_one"/>
