@@ -743,6 +743,7 @@ export function createReporting(parentReporting) {
 
     const reporting = reactive({
         assertions: 0,
+        duration: 0,
         failed: 0,
         passed: 0,
         skipped: 0,

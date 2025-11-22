@@ -1120,6 +1120,101 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         ])
         self.assertEqual(timesheet.timesheet_invoice_type, 'billable_time')
 
+    def test_linked_timesheet_after_invoice_reversal(self):
+        """Test that uneditable timesheet entries aren't linked to a reversed invoice form"""
+
+        # Full refund credit note
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        task = so_line.task_id
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Invoice Reversal',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        invoice = sale_order._create_invoices()[0]
+        invoice.action_post()
+        self.assertEqual(timesheet.timesheet_invoice_id, invoice, "Timesheet should be linked to the invoice")
+        reversal_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids
+        ).create({
+            'reason': 'full refund',
+            'journal_id': invoice.journal_id.id,
+        })
+        reversal_wizard.modify_moves()
+        self.assertFalse(timesheet.timesheet_invoice_id, "Timesheet should not be linked to the invoice after reversal")
+        timesheet.write({'unit_amount': 7})
+        self.assertEqual(timesheet.unit_amount, 7, "It Should be possible to edit timesheet after invoice reversal")
+
+        # Partial refund credit note
+        sale_order2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        so_line1 = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order2.id,
+        })
+        so_line2 = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order2.id,
+        })
+        sale_order2.action_confirm()
+        task1 = so_line1.task_id
+        task2 = so_line2.task_id
+        timesheet1 = self.env['account.analytic.line'].create({
+            'name': 'Timesheet Task 1',
+            'project_id': task1.project_id.id,
+            'task_id': task1.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet2 = self.env['account.analytic.line'].create({
+            'name': 'Timesheet Task 2',
+            'project_id': task2.project_id.id,
+            'task_id': task2.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        invoice2 = sale_order2._create_invoices()[0]
+        invoice2.action_post()
+        self.assertEqual(timesheet1.timesheet_invoice_id, invoice2, "Timesheet1 should be linked to the invoice")
+        self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "Timesheet2 should be linked to the invoice")
+
+        refund_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=invoice2.ids
+        ).create({
+            'reason': 'partial refund',
+            'journal_id': invoice2.journal_id.id,
+        })
+        refund_action = refund_wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(refund_action['res_id'])
+        invoice_line_to_remove = credit_note.invoice_line_ids.filtered(
+            lambda line: line.sale_line_ids.id == so_line2.id
+        )
+        invoice_line_to_remove.unlink()
+        credit_note.action_post()
+        self.assertFalse(timesheet1.timesheet_invoice_id, "Timesheet1 should be cleared after partial refund of its task")
+        self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "Timesheet2 should still be linked to the original invoice")
+
 
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):

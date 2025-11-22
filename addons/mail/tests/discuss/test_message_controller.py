@@ -327,6 +327,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             self.env["res.partner"].search_count([('email', '=', "john@test.be")]),
             "guest should not be allowed to create a partner from an email from message_post",
         )
+        self.assertEqual(0, self.env["res.partner"].search_count([('email', '=', "bob@test.be")], limit=1))
         demo = self.authenticate("demo", "demo")
         res3 = self.url_open(
             url="/mail/partner/from_email",
@@ -335,8 +336,11 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "params": {
                         "thread_model": "discuss.channel",
                         "thread_id": self.channel.id,
-                        "emails": ["john@test.be"],
-                        'additional_values': {"john@test.be": {'phone': '123456789'}},
+                        "emails": ["john@test.be", "bob@test.be"],
+                        'additional_values': {
+                            "john@test.be": {'phone': '123456789'},
+                            '"bob" <bob@test.be>': {'phone': '987654321'},
+                        },
                     },
                 }
             ),
@@ -344,9 +348,13 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertEqual(res3.status_code, 200)
         self.assertEqual(
-            1,
-            self.env["res.partner"].search_count([('email', '=', "john@test.be"), ('phone', '=', "123456789")]),
-            "authenticated users can create a partner from an email",
+            2,
+            self.env["res.partner"].search_count([
+                '|',
+                '&', ('email', '=', 'john@test.be'), ('phone', '=', '123456789'),
+                '&', ('email', '=', 'bob@test.be'), ('phone', '=', '987654321'),
+            ], limit=2),
+            "authenticated users can create partners from emails",
         )
         # should not create another partner with same email
         res4 = self.url_open(
