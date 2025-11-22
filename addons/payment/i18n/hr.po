@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment
-# 
+# * payment
+#
 # Translators:
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2024
 # Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2024
@@ -22,20 +22,23 @@
 # Servisi RAM d.o.o. <support@servisiram.hr>, 2024
 # Bole <bole@dajmi5.com>, 2024
 # Luka Carević <luka@uvid.hr>, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
-"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"PO-Revision-Date: 2025-11-13 12:40+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/payment/"
+"hr/>\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -89,6 +92,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
 msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i> Konfigurirajte pružatelja usluga "
+"plaćanja"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -407,7 +412,7 @@ msgstr "Naziv banke"
 #: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Brands"
-msgstr ""
+msgstr "Brendovi"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_buckaroo
@@ -480,7 +485,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "Ručno evidentiraj iznos"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -890,7 +895,7 @@ msgstr "Naknadno obrađeno"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__is_primary
 msgid "Is Primary Payment Method"
-msgstr ""
+msgstr "Je primarna metoda plaćanja"
 
 #. module: payment
 #. odoo-javascript
@@ -902,7 +907,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "Ruta dolaska"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1027,7 +1032,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
-msgstr ""
+msgstr "Nisu pronađeni načini plaćanja za vaše pružatelje usluga plaćanja."
 
 #. module: payment
 #. odoo-python
@@ -1476,7 +1481,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr ""
+msgstr "Odaberite valute. Ostavite prazno kako ne biste ograničili nijednu."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -1646,7 +1651,7 @@ msgstr ""
 msgid ""
 "The brands of the payment methods that will be displayed on the payment "
 "form."
-msgstr ""
+msgstr "Brendovi načina plaćanja koje će biti prikazane na obrascu za plaćanje."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
@@ -1681,6 +1686,8 @@ msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
 msgstr ""
+"Valute dostupne kod ovog pružatelja usluga plaćanja. Ostavite prazno kako ne "
+"biste ograničili nijednu."
 
 #. module: payment
 #. odoo-python
@@ -1716,6 +1723,9 @@ msgid ""
 " provider allows it). When paying with another currency, this payment method"
 " is not available to customers."
 msgstr ""
+"Popis valuta koje podržava ovaj način plaćanja (ako pružatelj usluga to "
+"dopušta). Prilikom plaćanja drugom valutom, ovaj način plaćanja nije "
+"dostupan korisnicima."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
@@ -1776,6 +1786,10 @@ msgid ""
 "The primary payment method of the current payment method, if the latter is a brand.\n"
 "For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
 msgstr ""
+"Primarni način plaćanja trenutnog načina plaćanja, ako je potonji robna "
+"marka.\n"
+"Na primjer, \"Kartica\" je primarni način plaćanja robne marke kartice "
+"\"VISA\"."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -1814,7 +1828,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tehnički kod ovog pružatelja usluga plaćanja."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -1888,7 +1902,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr ""
+msgstr "Nema se što platiti."
 
 #. module: payment
 #. odoo-python

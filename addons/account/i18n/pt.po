@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-06 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 17:01+0000\n"
+"POT-Creation-Date: 2025-11-13 18:36+0000\n"
+"PO-Revision-Date: 2025-11-20 17:42+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
 "account/pt/>\n"
@@ -2145,6 +2145,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Movimento de acréscimo criado em %(date)s: %(accrual_entry)s.                "
+"E o seu movimento de reversão: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -8578,7 +8580,7 @@ msgstr "Está entre "
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Está o PdC Instalado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -8997,7 +8999,7 @@ msgstr "Junho"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "Provedor de KPI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -14507,6 +14509,8 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the "
 "group."
 msgstr ""
+"O código do país do número de IVA estrangeiro não corresponde a nenhum país "
+"do grupo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14590,13 +14594,6 @@ msgstr "O endereço de entrega será usado ao computar a posição fiscal."
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
 msgstr "Os documentos que geraram a fatura."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "The entry %s (id %s) is using accounts from a different company."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14810,6 +14807,12 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
+"O mapeamento utiliza expressões regulares.\n"
+"- Para fazer corresponder o texto no início da linha (em etiqueta ou notas), "
+"basta preencher o seu texto.\n"
+"- Para fazer corresponder o texto em qualquer lugar (em etiqueta ou notas), "
+"coloque o seu texto entre .*\n"
+"  por exemplo: .*N°48748 abc123.*"
 
 #. module: account
 #. odoo-python
@@ -14953,6 +14956,11 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"O modelo de reconciliação só será aplicado para o tipo de transação "
+"selecionada:\n"
+"        * Montante Recebido: Aplicado quando é recebido um valor.\n"
+"        * Montante Pago: Aplicado quando é pago um valor.\n"
+"        * Montante Pago/Recebido: Aplicado em ambos os casos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -14980,6 +14988,12 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"O modelo de reconciliação só será aplicado quando o rótulo:\n"
+"        * Contém: O rótulo proposto deve conter este carater (não faz "
+"distinção entre maiúsculas e minúsculas).\n"
+"        * Não Contém: Negação de \"Contém\".\n"
+"        * Coincide com a expressão regular: Define a sua própria expressão "
+"regular."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -14990,6 +15004,12 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"O modelo de reconciliação só será aplicado quando a nota:\n"
+"        * Contém: A nota proposta deve conter este carater (não faz "
+"distinção entre maiúsculas e minúsculas).\n"
+"        * Não Contém: Negação de \"Contém\".\n"
+"        * Coincide com a expressão regular: Define a sua própria expressão "
+"regular."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
@@ -15000,6 +15020,12 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"O modelo de reconciliação só será aplicado quando o tipo de transação:\n"
+"        * Contém: O tipo de transação proposto deve conter este caracter ("
+"insensível a maiúsculas e minúsculas).\n"
+"        * Não contém: Negação de \"Contém\".\n"
+"        * Coincide com a expressão regular: Defina a sua própria expressão "
+"regular."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -15082,8 +15108,8 @@ msgstr ""
 "A conta de destino selecionada está configurada para usar uma moeda "
 "específica. Cada lançamento transferido para ela será convertido para esta "
 "moeda, causando\n"
-"                        a perda de qualquer valor em moeda estrangeira "
-"pré-existente."
+"                        a perda de qualquer valor em moeda estrangeira pré-"
+"existente."
 
 #. module: account
 #. odoo-python
@@ -15226,6 +15252,8 @@ msgid ""
 "The sum of total residual amount propositions and the statement line amount "
 "allowed gap type."
 msgstr ""
+"A soma do valor total remanescente e o montante da linha de extrato permite "
+"o tipo de lacuna."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_param
@@ -15234,6 +15262,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this amount/percentage."
 msgstr ""
+"A soma do valor total remanescente corresponde ao montante da linha de "
+"extrato sob este montante/percentagem."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
@@ -15327,8 +15357,8 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
-"Não há um diário de imposto em regime de caixa definido para a empresa '%s'."
-"\n"
+"Não há um diário de imposto em regime de caixa definido para a empresa "
+"'%s'.\n"
 "Configure isso nas configurações financeiras"
 
 #. module: account
@@ -15379,7 +15409,7 @@ msgstr "Este Trimestre"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
-msgstr ""
+msgstr "Este Período Fiscal"
 
 #. module: account
 #. odoo-python
@@ -15590,6 +15620,8 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
+"Esta regra de conciliação é usada quando o utilizador não tem certeza de "
+"todas as informações da contraparte."
 
 #. module: account
 #. odoo-python
@@ -15958,7 +15990,7 @@ msgstr "Tipo de transação"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type_param
 msgid "Transaction Type Parameter"
-msgstr ""
+msgstr "Parâmetro do tipo de transação"
 
 #. module: account
 #. odoo-python
@@ -16336,7 +16368,7 @@ msgstr "Usar Débito Direto SEPA"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "Use a contabilidade Storno"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
@@ -16854,7 +16886,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With Partner matching"
-msgstr ""
+msgstr "Matching Com Parceiro"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -16866,14 +16898,16 @@ msgstr "Com imposto"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
-msgstr "Escreva o nome de cliente para <b>criá-lo</b> ou <b>veja sugestões</b>."
+msgstr ""
+"Escreva o nome de cliente para <b>criá-lo</b> ou <b>veja sugestões</b>."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr "Escreva aqui <b>seu próprio endereço de e-mail</b> para testar o fluxo."
+msgstr ""
+"Escreva aqui <b>seu próprio endereço de e-mail</b> para testar o fluxo."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
@@ -16945,6 +16979,8 @@ msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
+"Não pode apagar os termos de pagamento, porque outros registos ainda o "
+"referenciam. No entanto, pode arquivá-lo."
 
 #. module: account
 #. odoo-python
@@ -16963,6 +16999,8 @@ msgstr ""
 msgid ""
 "You can only change the period/account for items that are not yet reconciled."
 msgstr ""
+"Você só pode alterar o período/conta para itens que ainda não estão "
+"reconciliados."
 
 #. module: account
 #. odoo-python
@@ -16970,13 +17008,14 @@ msgstr ""
 #, python-format
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
+"Você só pode alterar o período/conta para os itens do diário publicados."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr ""
+msgstr "Você só pode reconciliar lançamentos publicados."
 
 #. module: account
 #. odoo-python
@@ -17006,7 +17045,7 @@ msgstr "Você só pode ressequenciar itens a partir de um mesmo diário"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "Você só pode reverter lançamentos publicados."
 
 #. module: account
 #. odoo-python
@@ -17191,6 +17230,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Não pode registar um pagamento porque não há mais nada a pagar nos itens de "
+"diário selecionados."
 
 #. module: account
 #. odoo-python
@@ -17521,7 +17562,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr "Não é possível fazer um lançamento em um diário arquivado (%(journal)s)"
+msgstr ""
+"Não é possível fazer um lançamento em um diário arquivado (%(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -17601,7 +17643,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
+msgstr "Não pode alterar o tipo de um documento previamente publicado."
 
 #. module: account
 #. odoo-python
@@ -17636,6 +17678,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
+"Você não pode usar esta conta (%s) neste diário, verifique o campo "
+"\"Diários Permitidos\" na conta relacionada."
 
 #. module: account
 #. odoo-python
@@ -17645,6 +17689,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the section 'Control-"
 "Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
+"Não pode usar esta conta (%s) neste diário, verifique a seção "
+"\"Controle-Acesso\" no guia \"Configurações Avançadas\" no diário em causa."
 
 #. module: account
 #. odoo-python
@@ -17691,7 +17737,8 @@ msgstr ""
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "You do not have the rights to trust or un-trust accounts."
-msgstr "Você não tem permissão para tornar contas confiáveis ou não confiáveis."
+msgstr ""
+"Você não tem permissão para tornar contas confiáveis ou não confiáveis."
 
 #. module: account
 #. odoo-python
@@ -17921,7 +17968,7 @@ msgstr "ex. Ativos Correntes"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Customer Invoices"
-msgstr ""
+msgstr "por ex., Faturas de Clientes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
@@ -17988,7 +18035,7 @@ msgstr "aqui"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
 msgid "in amount"
-msgstr ""
+msgstr "em valor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -18002,7 +18049,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
-msgstr ""
+msgstr "em percentagem"
 
 #. module: account
 #. odoo-python

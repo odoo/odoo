@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock
+# * stock
 #
 # Translators:
 # Rolandas <info@paninfo.lt>, 2023
@@ -26,22 +26,24 @@
 # Aurelija Vitkauskiene, 2024
 # Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # Wil Odoo, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-25 18:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"PO-Revision-Date: 2025-11-20 17:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-17/stock/"
+"lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 :"
+" n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock
 #. odoo-python
@@ -180,7 +182,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr ""
+msgstr "'Važtaraštis - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -206,7 +208,7 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr ""
+msgstr "'Surinkimas - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #. odoo-python
@@ -783,7 +785,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? Dėl to jūsų atsargose gali būti neatitikimų."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -872,7 +874,7 @@ msgstr "Veiklos tipo ikona"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
 msgid "Activity view"
-msgstr ""
+msgstr "Veiklos rodinys"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3588,7 +3590,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Hardware"
-msgstr ""
+msgstr "Techninė įranga"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -6284,6 +6286,8 @@ msgid ""
 "Please put this document inside your return parcel.<br/>\n"
 "                                Your parcel must be sent to this address:"
 msgstr ""
+"Prašome įdėti šį dokumentą į grąžinamą siuntą.<br/>\n"
+"                                Siuntinys privalo būti siunčiamas adresu:"
 
 #. module: stock
 #. odoo-python
@@ -7090,7 +7094,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "RETURN OF"
-msgstr ""
+msgstr "GRĄŽINIMAS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
@@ -7207,7 +7211,7 @@ msgstr "Gautas kiekis"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_reception_report
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reception Report"
-msgstr ""
+msgstr "Reception Report"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking
@@ -7563,12 +7567,12 @@ msgstr "Paėmimo grąžinimo eilutė"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Return Slip"
-msgstr ""
+msgstr "Grąžinimo Kvitas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_id
 msgid "Return of"
-msgstr ""
+msgstr "Grąžinimas"
 
 #. module: stock
 #. odoo-python
@@ -7580,7 +7584,7 @@ msgstr "%s sugrįžimas"
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
 msgid "Return slip"
-msgstr ""
+msgstr "Grąžinimo kvitas"
 
 #. module: stock
 #. odoo-python
@@ -7921,7 +7925,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
 msgid "Send email"
-msgstr ""
+msgstr "Siųskite el. laišką"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
@@ -9190,7 +9194,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr ""
+msgstr "Ši pastaba pridedama prie pristatymo užsakymų."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9198,6 +9202,8 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
+"Ši pastaba pridedama prie vidinių perkėlimo užsakymų (pvz., kur sandėlyje "
+"surinkti produktą)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9205,6 +9211,8 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the "
 "warehouse)."
 msgstr ""
+"Ši pastaba pridedama prie kvitų užsakymų (pvz., kur sandėlyje laikyti "
+"produktą)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -9944,7 +9952,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__visibility_days
 msgid "Visibility Days"
-msgstr ""
+msgstr "Visibility Days"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking

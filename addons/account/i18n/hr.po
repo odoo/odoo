@@ -47,8 +47,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-06 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 17:01+0000\n"
+"POT-Creation-Date: 2025-11-13 18:36+0000\n"
+"PO-Revision-Date: 2025-11-20 16:16+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/account/"
 "hr/>\n"
@@ -3174,7 +3174,7 @@ msgstr "Izvodi banke"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 msgid "Bank Suspense"
-msgstr ""
+msgstr "Prijelazni bankovni konto"
 
 #. module: account
 #. odoo-python
@@ -3915,6 +3915,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "credit notes made from this journal"
 msgstr ""
+"Označite ovu opciju ako ne želite koristiti istu sekvencu za račune i "
+"odobrenja kreirane u ovom dnevniku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
@@ -6737,12 +6739,12 @@ msgstr "Prati uplate kupca"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay our invoices"
-msgstr ""
+msgstr "Pratite, preuzmire ili platite naše račune"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay your invoices"
-msgstr ""
+msgstr "Pratite, preuzmire ili platite svoje račune"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_follower_ids
@@ -7484,6 +7486,7 @@ msgstr ""
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
 msgstr ""
+"Ako označite ovu opciju, moći ćete registrirati svoju uplatu putem SEPA-e."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -7499,6 +7502,9 @@ msgid ""
 "must charge VAT based on the delivery address. This rule applies regardless "
 "of where you are located."
 msgstr ""
+"Ako prodajete robu i usluge kupcima u drugoj zemlji EU, morate obračunavati "
+"PDV prema adresi isporuke. Ovo pravilo vrijedi bez obzira na to gdje se "
+"nalazite."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -9586,7 +9592,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr "Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
+msgstr ""
+"Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -12842,6 +12849,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also "
 "be named using this prefix by default."
 msgstr ""
+"Kraći naziv, koristi se za prikaz. Ovaj prefiks se koristi za knjiženja ovog "
+"dnevnika."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -14072,13 +14081,6 @@ msgstr "Dokument(i) koji su generirali ovaj račun."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "The entry %s (id %s) is using accounts from a different company."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "The entry %s (id %s) must be in draft."
 msgstr ""
 
@@ -14677,7 +14679,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
-msgstr ""
+msgstr "Trenutno nema računa i plaćanja vezanih za Vaš korisnički račun."
 
 #. module: account
 #. odoo-python
@@ -14830,6 +14832,10 @@ msgid ""
 "master budgets and the budgets are defined, the project managers can set the "
 "planned amount on each analytic account."
 msgstr ""
+"Ovo omogućuje računovođama upravljanje analitičkim i međupovezanim "
+"proračunima. Nakon što su definirani glavni proračuni i pojedinačni "
+"proračuni, voditelji projekata mogu postaviti planirani iznos za svaki "
+"analitički račun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -15005,6 +15011,8 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
+"Ovaj uvjet plaćanja će biti korišten umjesto zadanog za nabavne naloge i "
+"ulazne račune"
 
 #. module: account
 #. odoo-python
@@ -16214,6 +16222,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"Možete odabrati različite modele za svaki tip referencije. Zadani model je "
+"Odoo referenca."
 
 #. module: account
 #. odoo-python
@@ -16960,7 +16970,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Your Invoices"
-msgstr ""
+msgstr "Vaši računi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

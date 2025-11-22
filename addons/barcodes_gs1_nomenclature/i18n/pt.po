@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* barcodes_gs1_nomenclature
+# * barcodes_gs1_nomenclature
 #
 # Translators:
 # Wil Odoo, 2023
 # Daniel Reis, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-07 18:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daniel Reis, 2025\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"PO-Revision-Date: 2025-11-20 17:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
+"barcodes_gs1_nomenclature/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -29,11 +32,14 @@ msgid ""
 "A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
 "to be converted to a valid date: '%(error_message)'"
 msgstr ""
+"Houve correspondência com um padrão de nomenclatura de código de barras GS1. "
+"No entanto, não foi possível coverter o código de barras em uma data válida: "
+"'%(error_message)'"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
 msgid "Alpha-Numeric Name"
-msgstr ""
+msgstr "Número alfanumérico"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
@@ -41,11 +47,13 @@ msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
 msgstr ""
+"Delimitador de regex alternativo para o FNC1. O separador não deve "
+"corresponder ao início/fim de nenhum padrão de regras relacionado."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
 msgid "Associated Uom"
-msgstr ""
+msgstr "UM associada"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
@@ -75,7 +83,7 @@ msgstr "Decimal"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
 msgid "Destination location"
-msgstr ""
+msgstr "Local do destino"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
@@ -90,12 +98,12 @@ msgstr "Data de Expiração"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "Separador FNC1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid "GS1 Content Type"
-msgstr ""
+msgstr "Tipo de conteúdo GS1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
@@ -112,26 +120,28 @@ msgstr "Rotas HTTP"
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
 msgstr ""
+"Se for verdadeiro, use o último dígito do AI para determinar onde está o "
+"primeiro decimal"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
-msgstr ""
+msgstr "Código de barras inválido: não pode ser formatado como data"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
-msgstr ""
+msgstr "Código de barras inválido: o dígito de verificação está incorreto"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
 msgid "Is GS1 Nomenclature"
-msgstr ""
+msgstr "É uma nomenclatura GS1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
@@ -151,12 +161,12 @@ msgstr "Medida"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
 msgid "Numeric Identifier"
-msgstr ""
+msgstr "Identificador numérico"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
 msgid "Pack Date"
-msgstr ""
+msgstr "Data da embalagem"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
@@ -206,6 +216,10 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"O padrão de regra \"%s\" não é válido, ele precisa de dois grupos:\n"
+"\t- Um primeiro para o identificador do aplicativo (geralmente de 2 a 4 "
+"dígitos);\n"
+"Um segundo para capturar o valor."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -218,6 +232,11 @@ msgid ""
 "Check also the possible matched values can only be digits, otherwise the "
 "value can't be casted as a measure."
 msgstr ""
+"Há algo errado com o padrão \"%s\" da regra de código de barras.\n"
+"Se essa regra usar decimal, verifique se ela não pode obter outro valor que "
+"não seja um dígito como último caractere do identificador do aplicativo.\n"
+"Verifique também se os possíveis valores correspondentes só podem ser "
+"dígitos, caso contrário, o valor não poderá ser convertido em uma medida."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -226,6 +245,8 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
+"Essa nomenclatura usa a especificação GS1, e somente as regras de "
+"codificação GS1-128 são aceitas nesse tipo de nomenclatura."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -233,13 +254,15 @@ msgstr ""
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
 msgstr ""
+"Esse código de barras não pode ser analisado por nenhuma regra de código de "
+"barras."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."
-msgstr ""
+msgstr "Esse código de barras não pode ser parcial ou totalmente analisado."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding

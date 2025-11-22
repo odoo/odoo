@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_timesheet
+# * sale_timesheet
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
-"PO-Revision-Date: 2025-02-10 10:34+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2025-11-20 18:37+0000\n"
+"PO-Revision-Date: 2025-11-22 17:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Kurdish (Central) <https://translate.odoo.com/projects/"
+"odoo-17/sale_timesheet/ckb/>\n"
+"Language: ku\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -24,7 +28,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No activities found. Let's start a new one!\n"
 "                </p><p>\n"
-"                    Track your working hours by projects every day and invoice this time to your customers.\n"
+"                    Track your working hours by projects every day and "
+"invoice this time to your customers.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -39,8 +44,10 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Record timesheets\n"
 "                </p><p>\n"
-"                    You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    You can register and track your workings hours by "
+"project every\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required.\n"
 "                </p>\n"
 "            "
@@ -54,8 +61,8 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
 msgid ""
-"% of timesheets that are billable compared to the total number of timesheets"
-" linked to the AA of the project, rounded to the unit."
+"% of timesheets that are billable compared to the total number of timesheets "
+"linked to the AA of the project, rounded to the unit."
 msgstr ""
 
 #. module: sale_timesheet
@@ -84,8 +91,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid ""
 "<i class=\"fa fa-lightbulb-o\"/>\n"
-"                        Define the rate at which an employee's time is billed based on their expertise, skills, or experience.\n"
-"                        To bill the same service at a different rate, create separate sales order items."
+"                        Define the rate at which an employee's time is "
+"billed based on their expertise, skills, or experience.\n"
+"                        To bill the same service at a different rate, create "
+"separate sales order items."
 msgstr ""
 
 #. module: sale_timesheet
@@ -137,12 +146,20 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "پێچەوانەکردنەوەی جوڵەی هەژمار"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -171,12 +188,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "هێڵی شیکاری"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr ""
+msgstr "هێڵەکانی شیکاری"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -269,7 +286,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
 msgid "Commercial Entity"
-msgstr ""
+msgstr "یەکەیەکی بازرگانی"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__commercial_partner_id
@@ -280,7 +297,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__company_id
 msgid "Company"
-msgstr ""
+msgstr "کۆمپانیا"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_config_settings
@@ -295,7 +312,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost
 msgid "Cost"
-msgstr ""
+msgstr "تێچوو"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost_currency_id
@@ -348,7 +365,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "دروستکراوە لەلایەن..."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_date
@@ -356,21 +373,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_date
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_date
 msgid "Created on"
-msgstr ""
+msgstr "دروستکراوە لە"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__currency_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__currency_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "دراو"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__partner_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__partner_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "کڕیار"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
@@ -406,7 +423,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Discard"
-msgstr ""
+msgstr "ڕەتکردنەوە"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
@@ -419,14 +436,14 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "Draft Invoice"
-msgstr ""
+msgstr "ڕەشنووسی فاکتورە"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
-msgstr ""
+msgstr "کارمەند"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
@@ -441,7 +458,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
 msgid "End Date"
-msgstr ""
+msgstr "بەرواری کۆتایی"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
@@ -489,7 +506,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
@@ -499,7 +516,6 @@ msgstr ""
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
-#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/models/account.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
@@ -507,7 +523,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
 msgid "Invoice"
-msgstr ""
+msgstr "فاکتورە"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
@@ -519,8 +535,8 @@ msgstr ""
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
-"Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
-" create later on."
+"Invoice based on timesheets (delivered quantity) on projects or tasks you'll "
+"create later on."
 msgstr ""
 
 #. module: sale_timesheet
@@ -559,19 +575,19 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Invoiced"
-msgstr ""
+msgstr "فاکتورە کراوە"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "فاکتورەکان"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoicing"
-msgstr ""
+msgstr "فاکتورەکردن"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
@@ -619,7 +635,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_uid
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "دوایین نوێکردنەوە لەلایەن..."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_date
@@ -627,20 +643,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_date
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "دوایین نوێکردنەوە لە..."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__line_ids
 msgid "Lines"
-msgstr ""
+msgstr "هێڵەکان"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
 
 #. module: sale_timesheet
@@ -755,12 +774,12 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "ئۆپەراسیۆنەکە پشتگیری ناکرێت"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
 msgid "Order Reference"
-msgstr ""
+msgstr "ئاماژەی داواکاری"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
@@ -786,17 +805,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__pricing_type
 msgid "Pricing"
-msgstr ""
+msgstr "نرخدانان"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "بەرهەم"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "جۆری بەرهەم"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -814,7 +833,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__project_id
 msgid "Project"
-msgstr ""
+msgstr "پرۆژە"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
@@ -926,7 +945,6 @@ msgstr ""
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
-#: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
@@ -941,7 +959,6 @@ msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
@@ -972,9 +989,17 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid ""
-"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
-"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
-"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+"Sales order item that will be selected by default on the timesheets of the "
+"corresponding employee. It bypasses the sales order item defined on the "
+"project and the task, and can be modified on each timesheet entry if "
+"necessary. In other words, it defines the rate at which an employee's time "
+"is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to "
+"create two separate sales order items as each sales order item can only have "
+"a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their "
+"timesheets on this project specifically. It will bypass the timesheet cost "
+"set on the employee."
 msgstr ""
 
 #. module: sale_timesheet
@@ -1034,7 +1059,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 msgid "Service"
-msgstr ""
+msgstr "خزمەتگوزاری"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
@@ -1066,7 +1091,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
-msgstr ""
+msgstr "خزمەتگوزارییەکان"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__show_hours_recorded_button
@@ -1111,9 +1136,6 @@ msgstr ""
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
-#: code:addons/sale_timesheet/models/product.py:0
-#: code:addons/sale_timesheet/models/product.py:0
-#: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
@@ -1134,7 +1156,9 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid ""
-"The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
+"The Sales Order cannot be created because you did not enter some employees "
+"that entered timesheets on this project. Please list all the relevant "
+"employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
 
@@ -1180,8 +1204,8 @@ msgid ""
 "The task rate is perfect if you would like to bill different services to "
 "different customers at different rates. The fixed rate is perfect if you "
 "bill a service at a fixed rate per hour or day worked regardless of the "
-"employee who performed it. The employee rate is preferable if your employees"
-" deliver the same service at a different rate. For instance, junior and "
+"employee who performed it. The employee rate is preferable if your employees "
+"deliver the same service at a different rate. For instance, junior and "
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
@@ -1413,15 +1437,15 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "نرخی یەکە"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit

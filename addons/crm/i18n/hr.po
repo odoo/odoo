@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm
+# * crm
 #
 # Translators:
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2024
@@ -29,21 +29,23 @@
 # Bole <bole@dajmi5.com>, 2024
 # Matija Gudlin, 2025
 # Luka Carević <luka@uvid.hr>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-03 02:34+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
-"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"PO-Revision-Date: 2025-11-19 13:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/crm/hr/>"
+"\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -294,6 +296,13 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Povremeno dodjeljuj leadove prema definiranim pravilima</span><br/>\n"
+"                                <span invisible="
+"\"not crm_use_auto_assignment\">\n"
+"                                    All sales teams will use this setting by "
+"default unless\n"
+"                                    specified otherwise.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -651,6 +660,11 @@ msgid ""
 "                                        To work with the CRM, you should <a "
 "name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"Budući da niste član nijednog prodajnog tima, prema zadanim postavkama "
+"prikazuje vam se tijek prodaje <b>prvog tima.</b>\n"
+"                                        Da biste mogli raditi u CRM-u, "
+"trebate <a name=\"%d\" type=\"action\" tabindex=\"-1\">se pridružiti nekom "
+"timu.</a>"
 
 #. module: crm
 #. odoo-python
@@ -662,6 +676,10 @@ msgid ""
 "                                        To work with the CRM, you should "
 "join a team."
 msgstr ""
+"Budući da niste član nijednog prodajnog tima, prema zadanim postavkama "
+"prikazuje vam se tijek prodaje <b>prvog tima.</b>\n"
+"                                        Da biste mogli raditi u CRM-u, "
+"trebate se pridružiti nekom timu."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -703,7 +721,7 @@ msgstr "Datum dodjeljivanja"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain
 msgid "Assignment Domain"
-msgstr ""
+msgstr "Domena dodjele"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -972,7 +990,7 @@ msgstr "Čestitamo, puno sreće u ulovu tako velike ribe! :)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr ""
+msgstr "Uzmite u obzir leadove kreirane do:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1442,7 +1460,7 @@ msgstr "Email: Demo dobrodošlice"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr ""
+msgstr "Automatski obogati sve leadove"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
@@ -1452,7 +1470,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr ""
+msgstr "Obogati leadove samo na zahtjev"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_enrich
@@ -1465,6 +1483,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
 msgstr ""
+"Obogati leadove informacijama o tvrtkama koristeći njihove email adrese."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -2010,7 +2029,7 @@ msgstr "Pronalaženje prilika"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
 msgid "Lead Plans"
-msgstr ""
+msgstr "Planovi za leadove"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2225,7 +2244,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Otkrivanje dolazne pošte temeljeno na lokalnom dijelu adrese"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -3061,7 +3080,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "Predviđajuće ocjenjivanje leadova"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -3125,12 +3144,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
 msgid "Prorated Revenue"
-msgstr ""
+msgstr "Razmjerni prihod"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_forecast
 msgid "Prorated Revenues"
-msgstr ""
+msgstr "Razmjerni prihodi"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -3239,7 +3258,7 @@ msgstr "Obnovi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
-msgstr ""
+msgstr "Dodjela prema pravilima"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3410,7 +3429,7 @@ msgstr "Prikaži samo prilike"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Skip auto assignment"
-msgstr ""
+msgstr "Preskoči automatsko dodjeljivanje"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -3586,7 +3605,7 @@ msgstr "Timovi"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_member_config
 msgid "Teams Members"
-msgstr ""
+msgstr "Članovi timova"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3652,11 +3671,13 @@ msgid ""
 "The success rate is computed based on the stage, but you can add more fields "
 "in the statistical analysis."
 msgstr ""
+"Stopa uspješnosti računa se prema fazi, no moguće je dodati dodatna polja u "
+"statističku analizu."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
+msgstr "Ova analiza prikazuje koliko je leadova kreirano po mjesecima."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3699,6 +3720,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts, "
 "e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Ovo je naziv koji vam pomaže pratiti vaše različite kampanje, npr. "
+"Jesenski_pogon, Božićni_posebni"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
@@ -3803,7 +3826,7 @@ msgstr "Praćenje"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Trailing 12 months"
-msgstr ""
+msgstr "Posljednjih 12 mjeseci"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_exceeded
@@ -3884,7 +3907,7 @@ msgstr "Ažuriraj"
 #: model:ir.actions.act_window,name:crm.crm_lead_pls_update_action
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Update Probabilities"
-msgstr ""
+msgstr "Ažuriraj vjerojatnosti"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_pls_update
@@ -4000,7 +4023,7 @@ msgstr "Jako visok"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Visits to Leads"
-msgstr ""
+msgstr "Posjete web posjetitelja pretvorene u leadove"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
@@ -4145,7 +4168,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
-msgstr ""
+msgstr "npr. \"Mjesečno\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -4155,7 +4178,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Negotiation"
-msgstr ""
+msgstr "npr. Pregovaranje"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

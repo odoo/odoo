@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project
-# 
+# * sale_project
+#
 # Translators:
 # Levent Karakaş <levent@mektup.at>, 2023
 # Murat Durmuş <muratd@projetgrup.com>, 2023
@@ -16,20 +16,22 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:38+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-11-20 14:43+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/"
+"sale_project/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_project
 #. odoo-python
@@ -57,7 +59,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)s'nin Satış Siparişi Kalemleri"
 
 #. module: sale_project
 #. odoo-python
@@ -85,6 +87,13 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> Satış "
+"Siparişi\n"
+"                       </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            Faturalandırılabilir Yapın\n"
+"                       </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -93,6 +102,9 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Satış Siparişleri\n"
+"                       </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -115,6 +127,14 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Ürün yapılandırmasına göre teslim edilen miktar şu yöntemlerle otomatik "
+"olarak hesaplanabilir:\n"
+"  - Manuel: miktar satırda elle belirlenir\n"
+"  - Giderlerden Analitik: miktar, muhasebeleştirilmiş giderlerin toplamından "
+"alınır\n"
+"  - Çalışma Çizelgesi: miktar, bu satış satırına bağlı görevlerde kaydedilen "
+"saatlerin toplamıdır\n"
+"  - Stok Hareketleri: miktar, onaylanmış sevkiyatlardan alınır\n"
 
 #. module: sale_project
 #. odoo-python
@@ -161,12 +181,12 @@ msgstr "Satılan malların maliyeti"
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Satılan Malın Maliyeti Kalemleri"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Create Project"
-msgstr ""
+msgstr "Proje Oluştur"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -473,7 +493,7 @@ msgstr "Dönüm Noktaları"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "Yeni Satış Siparişi Öğesi"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
@@ -490,7 +510,7 @@ msgstr "Faturalanamaz"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Faturalandırılmadı"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -533,7 +553,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Portal Satış Siparişi"
 
 #. module: sale_project
 #. odoo-python
@@ -610,7 +630,7 @@ msgstr "Miktar"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "Miktar (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
@@ -757,7 +777,7 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Faturalandırılacak kişiyi seçin..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -912,7 +932,7 @@ msgstr "Tedarikçi  Faturaları"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Satış Siparişi Görüntüle"
 
 #. module: sale_project
 #. odoo-python

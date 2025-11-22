@@ -9,13 +9,14 @@
 # Maitê Dietze, 2024
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
-"PO-Revision-Date: 2025-09-27 01:41+0000\n"
-"Last-Translator: Humberto Sousa <humberto.sousa@smartimprove.pt>\n"
+"PO-Revision-Date: 2025-11-20 16:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
 "stock_landed_costs/pt/>\n"
 "Language: pt\n"
@@ -40,11 +41,12 @@ msgstr " já saiu"
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Valoração</span>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
@@ -95,7 +97,7 @@ msgstr "Ícone de Tipo de Atividade"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Additional Costs"
-msgstr ""
+msgstr "Custos adicionais"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -190,16 +192,18 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"O custo e linhas de ajustes não correspondem. Talvez seja necessário "
+"recalcular os custos adicionais."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 msgid "Create Landed Costs"
-msgstr ""
+msgstr "Criar custos adicionais"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr ""
+msgstr "Criar novo custo adicional"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -232,19 +236,19 @@ msgstr "Data"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Default Journal"
-msgstr ""
+msgstr "Diário padrão"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "Método de divisão padrão"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "Método de divisão padrão quando usado para custos adicionais"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -286,6 +290,13 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Igual: O custo será dividido igualmente.\n"
+"Por quantidade: o custo será dividido de acordo com a quantidade do produto."
+"\n"
+"Por custo atual: o custo será dividido de acordo com o custo atual do "
+"produto.\n"
+"Por peso: o custo será dividido de acordo com seu peso.\n"
+"Por volume: o custo será dividido de acordo com seu volume."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -352,6 +363,8 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"Indica se o produto é um custo adicional: ao receber uma fatura de "
+"fornecedor, você pode alocar esse custo em recibos anteriores."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -361,7 +374,7 @@ msgstr "É Seguidor"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "É uma linha de custos adicionais"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -417,7 +430,7 @@ msgstr "Custos de entrega"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "Custos adicionais visíveis"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -430,6 +443,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Os custos adicionais permitem que você inclua custos adicionais (envio, "
+"seguro, impostos alfandegários etc.) no custo do produto."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -453,7 +468,7 @@ msgstr "Atividades em Atraso"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr ""
+msgstr "Diário de custos adicionais"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
@@ -488,7 +503,7 @@ msgstr "Novo"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "Novo valor"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
@@ -540,7 +555,7 @@ msgstr "Apenas custos de entrega em rascunho podem ser validados"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
 msgid "Original Value"
-msgstr ""
+msgstr "Valor original"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -559,7 +574,7 @@ msgstr "Configure a Conta de despesas para o produto:  %s."
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "Defina o %s no qual esses custos adicionais devem ser aplicados."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -644,7 +659,7 @@ msgstr "Custos de Entrega do Stock"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Linha de custos adicionais de estoque"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
@@ -697,7 +712,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "Linhas de ajuste de valoração"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -738,6 +753,9 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
+"Não é possível aplicar os custos adicionais nos %s(s) escolhidos. Os custos "
+"adicionais só podem ser aplicados a produtos com método de custo médio ou "
+"PEPS."
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -747,3 +765,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"Não é possível alterar o tipo de produto ou desativar a opção de custos "
+"adicionais porque o produto é usado em uma linha de movimentação de conta."

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project
-# 
+# * project
+#
 # Translators:
 # Dragos Vasile, 2024
 # Claudia Baisan, 2024
@@ -17,20 +17,23 @@
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2025
 # Larisa_nexterp, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larisa_nexterp, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2025-11-20 18:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-17/project/"
+"ro/>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: project
 #. odoo-python
@@ -101,7 +104,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "#{task.stage_id.name}"
-msgstr ""
+msgstr "#{task.stage_id.name}"
 
 #. module: project
 #. odoo-python
@@ -115,7 +118,7 @@ msgstr "%(closed_task_count)s / %(task_count)s"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -210,6 +213,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Notează observații</b> pentru comunicări interne <i>(persoanele care "
+"urmăresc această sarcină nu vor fi notificate despre notă decât dacă le "
+"etichetezi explicit)</i>. Folosește @ <b>mențiuni</b> pentru a notifica un "
+"coleg sau # <b>mențiuni</b> pentru a notifica o echipă întreagă."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -367,7 +374,7 @@ msgstr "<i class=\"oi oi-arrow-right me-1\"/>Înapoi la modul de editare"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
-msgstr ""
+msgstr "<i title=\"Sarcină privată\" class=\"fa fa-lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -377,7 +384,7 @@ msgstr "<small class=\"text-end\">Stage:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Responsabili</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -406,12 +413,12 @@ msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partener\" title=\"Partener
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> Finalizat</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> Sarcini</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -443,12 +450,14 @@ msgstr "<span class=\"o_stat_text\">Ultima evaluare</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sarcină părinte</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
 msgstr ""
+"<span class=\"text-muted o_row ps-1 pb-3\">Trimite o solicitare de "
+"evaluare:</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -459,6 +468,18 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class="
+"\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible="
+"\"rating_status == 'periodic'\">O solicitare de evaluare va fi trimisă "
+"imediat ce sarcina ajunge într-o etapă pentru care este definit un șablon de "
+"email de evaluare.</span>\n"
+"                                                    <span invisible="
+"\"rating_status == 'stage'\">Solicitările de evaluare vor fi trimise atât "
+"timp cât sarcina rămâne într-o etapă pentru care este definit un șablon de "
+"email de evaluare.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -533,12 +554,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr ""
+msgstr "O sarcină privată nu poate avea o sarcină părinte."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr ""
+msgstr "O sub-sarcină nu poate fi recurentă."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -668,7 +689,7 @@ msgstr "Adaugă contacte pentru a partaja proiectul..."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr ""
+msgstr "Adăugați detalii despre această sarcină..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
@@ -934,7 +955,7 @@ msgstr "Alocați"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignement Date"
-msgstr ""
+msgstr "Data atribuirii"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -962,6 +983,8 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
+"Atașați toate documentele sau linkurile direct la sarcină, pentru a avea "
+"toate informațiile de cercetare centralizate."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -989,7 +1012,7 @@ msgstr "Sarcini generate automat pentru activități regulate"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_state
 msgid "Automatic Kanban Status"
-msgstr ""
+msgstr "Stare Kanban automată"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_state
@@ -998,6 +1021,12 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"Modifică automat starea când clientul răspunde la feedback pentru această "
+"etapă.\n"
+" * Feedback pozitiv de la client va actualiza starea la 'Aprobat' (bulină "
+"verde).\n"
+" * Feedback neutru sau negativ va seta starea kanban la 'Modificări "
+"solicitate' (bulină portocalie).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1079,7 +1108,7 @@ msgstr "Blocat de"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Blocking"
-msgstr ""
+msgstr "Blochează"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1096,7 +1125,7 @@ msgstr "Furtună de Idei"
 #. module: project
 #: model:project.tags,name:project.project_tags_00
 msgid "Bug"
-msgstr ""
+msgstr "Bug"
 
 #. module: project
 #. odoo-python
@@ -1148,6 +1177,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Alegeți un <b>nume</b> pentru proiectul dvs. <i>Poate fi orice doriți: "
+"numele unui client, al unui produs, al unei echipe, al unui șantier etc.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1251,6 +1282,9 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"Comunicați cu clienții pe sarcină folosind gateway-ul de e-mail. Atașați "
+"design-urile de logo la sarcină, astfel încât informația să circule de la "
+"designeri la lucrătorii care imprimă tricoul."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1322,7 +1356,7 @@ msgstr "Contact"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "Convertește sarcina"
 
 #. module: project
 #. odoo-python
@@ -1330,7 +1364,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "Convertește în sarcină/sub-sarcină"
 
 #. module: project
 #. odoo-javascript
@@ -1551,6 +1585,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"Clienții propun feedback prin email; Odoo creează automat sarcini, iar tu "
+"poți comunica direct pe sarcină."
 
 #. module: project
 #. odoo-python
@@ -1590,6 +1626,10 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"Data la care starea sarcinii a fost modificată ultima dată.\n"
+"Pe baza acestei informații puteți identifica sarcinile blocate și obține "
+"statistici despre timpul necesar pentru a muta sarcinile dintr-o etapă/stare "
+"în alta."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1697,7 +1737,7 @@ msgstr "Șterge etapă"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #, python-format
 msgid "Delete Project Stage"
-msgstr ""
+msgstr "Șterge etapa proiectului"
 
 #. module: project
 #. odoo-python
@@ -1897,6 +1937,9 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"Fiecare utilizator ar trebui să aibă cel puțin o etapă personală. Creați o "
+"etapă nouă către care sarcinile pot fi transferate după ce cele selectate "
+"sunt șterse."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -2024,7 +2067,7 @@ msgstr "Favorite"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "Proiecte favorite"
 
 #. module: project
 #. odoo-javascript
@@ -2042,12 +2085,12 @@ msgstr "Pliat în Kanban"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "Urmărește și comentează sarcinile proiectelor tale"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "Urmărește evoluția proiectelor tale"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2121,6 +2164,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
 msgstr ""
+"Obțineți feedback de la clienți și evaluați performanța angajaților dvs."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2135,6 +2179,9 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
+"Acordați angajaților acces la proiectul sau sarcinile dvs. adăugându-i ca "
+"urmăritori. Angajații primesc automat acces la sarcinile care le sunt "
+"atribuite."
 
 #. module: project
 #. odoo-python
@@ -2162,6 +2209,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
 msgstr ""
+"Gestionează colectarea ideilor în cadrul Sarcinilor noului tău Proiect și "
+"discută-le în chatter-ul sarcinilor."
 
 #. module: project
 #. odoo-javascript
@@ -2203,7 +2252,7 @@ msgstr "Istoric"
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "Renovare locuință"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2301,6 +2350,12 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
+"Dacă este setat, o solicitare de evaluare va fi trimisă automat prin e-mail "
+"clientului când sarcina ajunge în această etapă.\n"
+"Alternativ, va fi trimisă la un interval regulat atât timp cât sarcina "
+"rămâne în această etapă, în funcție de configurația proiectului.\n"
+"Pentru a folosi această funcționalitate, asigurați-vă că opțiunea 'Evaluări "
+"clienți' este activată pe proiect."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2308,6 +2363,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the project"
 " reaches this stage."
 msgstr ""
+"Dacă este setat, un e-mail va fi trimis automat clientului când proiectul "
+"ajunge în această etapă."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2315,6 +2372,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the task "
 "reaches this stage."
 msgstr ""
+"Dacă este setat, un e-mail va fi trimis automat clientului când sarcina "
+"ajunge în această etapă."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2464,7 +2523,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "Este mod comutare"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2486,6 +2545,9 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Urmăriți progresul sarcinilor dvs. de la creare până la finalizare.<br>\n"
+"                    Colaborați eficient discutând în timp real sau prin "
+"e-mail."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2493,6 +2555,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Urmăriți progresul sarcinilor dvs. de la creare până la finalizare.<br>\n"
+"                Colaborați eficient discutând în timp real sau prin e-mail."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2577,7 +2641,7 @@ msgstr "Activități întârziate"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "Etape întârziate"
 
 #. module: project
 #. odoo-python
@@ -2608,7 +2672,7 @@ msgstr "Să creăm primul dvs. <b>proiect</b>."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "Să creăm prima ta <b>etapă</b>."
 
 #. module: project
 #. odoo-javascript
@@ -2622,7 +2686,7 @@ msgstr "Să creăm prima ta <b>sarcină</b>."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "Să creăm a doua ta <b>etapă</b>."
 
 #. module: project
 #. odoo-javascript
@@ -2632,6 +2696,7 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"Să revenim la <b>vizualizarea kanban</b> pentru a vedea următoarele sarcini."
 
 #. module: project
 #. odoo-javascript
@@ -2675,7 +2740,7 @@ msgstr "Desing Logo"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Look for the"
-msgstr ""
+msgstr "Caută"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -2696,6 +2761,9 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
 "      assign them and use the"
 msgstr ""
+"Gestionează ciclul de viață al proiectului tău folosind vizualizarea kanban. "
+"Adaugă proiecte nou achiziționate,\n"
+"      atribuie-le și folosește"
 
 #. module: project
 #. odoo-javascript
@@ -2732,6 +2800,8 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"Măsurați satisfacția clienților trimițând solicitări de evaluare atunci când "
+"sarcinile dvs. ajung într-o anumită etapă."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -2849,7 +2919,7 @@ msgstr "Sarcinile mele"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "My Updates"
-msgstr ""
+msgstr "Actualizările mele"
 
 #. module: project
 #. odoo-python
@@ -2875,7 +2945,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the Tasks"
-msgstr ""
+msgstr "Numele sarcinilor"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -2883,6 +2953,8 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr ""
+"Nume folosit pentru a face referire la sarcinile proiectului tău, ex. "
+"sarcini, tichete, sprinturi etc..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2904,7 +2976,7 @@ msgstr "Nou(ă)"
 #. module: project
 #: model:project.tags,name:project.project_tags_01
 msgid "New Feature"
-msgstr ""
+msgstr "Funcționalitate nouă"
 
 #. module: project
 #. odoo-javascript
@@ -2926,7 +2998,7 @@ msgstr "Comenzi noi"
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 #, python-format
 msgid "New Project"
-msgstr ""
+msgstr "Proiect nou"
 
 #. module: project
 #. odoo-javascript
@@ -2947,7 +3019,7 @@ msgstr "Cerere nouă"
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 #, python-format
 msgid "New Task"
-msgstr ""
+msgstr "Sarcină nouă"
 
 #. module: project
 #. odoo-python
@@ -3002,17 +3074,17 @@ msgstr "Tip de activitate următoare"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Customer"
-msgstr ""
+msgstr "Fără client"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
-msgstr ""
+msgstr "Fără etapă"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
-msgstr ""
+msgstr "Fără proiect"
 
 #. module: project
 #. odoo-python
@@ -3091,7 +3163,7 @@ msgstr "Fără"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Not Implemented."
-msgstr ""
+msgstr "Neimplementat."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
@@ -3150,20 +3222,20 @@ msgstr "Numărul de mesaje cu eroare de livrare"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr ""
+msgstr "În afara traseului"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_office_design
 #: model:project.project,name:project.project_project_1
 msgid "Office Design"
-msgstr ""
+msgstr "Design birou"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr ""
+msgstr "Sprint vechi finalizat"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
@@ -3177,7 +3249,7 @@ msgstr "În așteptare"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr ""
+msgstr "Pe traseu"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -3189,7 +3261,7 @@ msgstr "Lunar"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
-msgstr ""
+msgstr "Sunt permise ca atașamente doar imagini jpeg, png, bmp și tiff."
 
 #. module: project
 #. odoo-javascript
@@ -3234,7 +3306,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "Organizați prioritățile între comenzi folosind"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3243,6 +3315,9 @@ msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Organizați-vă sarcinile distribuindu-le pe fluxul de lucru.<br>\n"
+"                    Colaborați eficient discutând în timp real sau prin "
+"e-mail."
 
 #. module: project
 #. odoo-python
@@ -3300,6 +3375,7 @@ msgstr ""
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
+"Compania partenerului nu poate fi diferită de compania proiectelor atribuite"
 
 #. module: project
 #. odoo-python
@@ -3307,12 +3383,15 @@ msgstr ""
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
+"Compania partenerului nu poate fi diferită de compania sarcinilor atribuite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
+"Persoanele invitate să colaboreze la proiect vor avea drepturi de acces la "
+"portal."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3361,7 +3440,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
 msgid "Personal Task Stage"
-msgstr ""
+msgstr "Etapă personală sarcină"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3419,6 +3498,8 @@ msgid ""
 "Portal users will be removed from the followers of the project and its "
 "tasks."
 msgstr ""
+"Utilizatorii portal vor fi eliminați din urmăritorii proiectului și ai "
+"sarcinilor sale."
 
 #. module: project
 #. odoo-javascript
@@ -3433,7 +3514,7 @@ msgstr "Anterior"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "Prioritizați-vă sarcinile marcându-le pe cele importante folosind"
 
 #. module: project
 #. odoo-python
@@ -3448,7 +3529,7 @@ msgstr "Prioritate"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
 msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
-msgstr ""
+msgstr "Prioritate: {{'Importantă' if task.priority == '1' else 'Normală'}}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
@@ -3470,7 +3551,7 @@ msgstr "Personal"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
-msgstr ""
+msgstr "Sarcini private"
 
 #. module: project
 #. odoo-python
@@ -3567,7 +3648,7 @@ msgstr "Nume proiect"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Project Rating Status"
-msgstr ""
+msgstr "Stare evaluare proiect"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
@@ -3578,12 +3659,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
 #: model:ir.model,name:project.model_project_share_wizard
 msgid "Project Sharing"
-msgstr ""
+msgstr "Partajare proiect"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Project Sharing: Task"
-msgstr ""
+msgstr "Partajare proiect: Sarcină"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
@@ -3593,19 +3674,19 @@ msgstr "Etapa proiectului"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
 msgid "Project Stage Changed"
-msgstr ""
+msgstr "Etapă proiect schimbată"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "Asistent ștergere etapă proiect"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr ""
+msgstr "Etape proiect"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -3615,7 +3696,7 @@ msgstr "Etichete Proiect"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "Asistent ștergere etapă sarcină proiect"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3625,7 +3706,7 @@ msgstr "Sarcini Proiect"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "Project Title"
-msgstr ""
+msgstr "Titlu proiect"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
@@ -3637,7 +3718,7 @@ msgstr "Actualizare proiect"
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr ""
+msgstr "Actualizări de proiect."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -3647,12 +3728,12 @@ msgstr "Vizibilitate Proiect"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project description..."
-msgstr ""
+msgstr "Descriere proiect..."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "Stare proiect - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -3662,12 +3743,12 @@ msgstr "Sarcini proiect"
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
 msgid "Project: Project Completed"
-msgstr ""
+msgstr "Proiect: Proiect finalizat"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Project: Request Acknowledgment"
-msgstr ""
+msgstr "Proiect: Confirmare solicitare"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -3677,7 +3758,7 @@ msgstr "Proiect: Trimite rating"
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Project: Task Rating Request"
-msgstr ""
+msgstr "Proiect: Solicitare evaluare sarcină"
 
 #. module: project
 #. odoo-python
@@ -3712,6 +3793,8 @@ msgstr "Proiecte"
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
 msgstr ""
+"Proiectele conțin sarcini pe aceeași temă și fiecare are propriul tablou de "
+"bord."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
@@ -3720,6 +3803,9 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+"Proiecte în care această etapă este prezentă. Dacă urmezi un flux de lucru "
+"similar în mai multe proiecte, poți partaja această etapă între ele și "
+"obține informații consolidate astfel."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -3762,6 +3848,9 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"Verifică rapid starea sarcinilor pentru aprobări sau solicitări de "
+"modificare și identifică-le pe cele în așteptare până când dependențele sunt "
+"rezolvate cu pictograma clepsidră."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -3862,7 +3951,7 @@ msgstr "Numai citire"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
-msgstr ""
+msgstr "Recepție {{ object.name }}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
@@ -3895,7 +3984,7 @@ msgstr "Recurent"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurring Tasks"
-msgstr ""
+msgstr "Sarcini recurente"
 
 #. module: project
 #. odoo-javascript
@@ -3923,7 +4012,7 @@ msgstr "Modelul Documentului Asociat"
 #: model:account.analytic.account,name:project.analytic_renovations
 #: model:project.project,name:project.project_project_3
 msgid "Renovations"
-msgstr ""
+msgstr "Renovări"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
@@ -4010,21 +4099,21 @@ msgstr "Față tristă"
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to drag images in description"
-msgstr ""
+msgstr "Salvați sarcina pentru a putea trage imagini în descriere"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to paste images in description"
-msgstr ""
+msgstr "Salvați sarcina pentru a putea lipi imagini în descriere"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
-msgstr ""
+msgstr "Programează activitatea când este gata."
 
 #. module: project
 #. odoo-javascript
@@ -4048,7 +4137,7 @@ msgstr "Caută proiect"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr ""
+msgstr "Caută actualizare"
 
 #. module: project
 #. odoo-python
@@ -4062,7 +4151,7 @@ msgstr "Căutare totală"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr ""
+msgstr "Caută în responsabili"
 
 #. module: project
 #. odoo-python
@@ -4083,14 +4172,14 @@ msgstr "Căutare în Mesaje"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Milestone"
-msgstr ""
+msgstr "Caută în etape"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Priority"
-msgstr ""
+msgstr "Caută în prioritate"
 
 #. module: project
 #. odoo-python
@@ -4118,7 +4207,7 @@ msgstr "Căutare in Stadii"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr ""
+msgstr "Caută în stare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4159,13 +4248,13 @@ msgstr "Setare imagine copertă"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "Setează stare"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr ""
+msgstr "Setează un șablon de e-mail pentru evaluare pe etape"
 
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
@@ -4173,20 +4262,22 @@ msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
 msgstr ""
+"Setează pe etapele proiectului pentru a informa clienții când proiectul "
+"ajunge în acea etapă"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_priority_switch_field/project_task_priority_switch_field.js:0
 #, python-format
 msgid "Set priority as %s"
-msgstr ""
+msgstr "Setează prioritatea ca %s"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Set state as..."
-msgstr ""
+msgstr "Setează starea ca..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4194,6 +4285,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
+"Setează acest șablon pe o etapă a proiectului pentru a solicita feedback de "
+"la clienți. Activează funcția „evaluări clienți” pe proiect"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -4228,7 +4321,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Share Project"
-msgstr ""
+msgstr "Partajează proiectul"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4278,21 +4371,21 @@ msgstr "Specificații "
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "Sprint Backlog"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr ""
+msgstr "Sprint finalizat"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr ""
+msgstr "Sprint în desfășurare"
 
 #. module: project
 #. odoo-javascript
@@ -4321,7 +4414,7 @@ msgstr "Etapă schimbată"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Responsabil etapă"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4333,7 +4426,7 @@ msgstr "Etapa schimbată"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Stage: %s"
-msgstr ""
+msgstr "Etapă: %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__stages_active
@@ -4350,7 +4443,7 @@ msgstr "Etape de șters"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "Sarcini marcate cu stea"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -4428,7 +4521,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Trimis la"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_allocated_hours
@@ -4437,6 +4530,9 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
+"Suma orelor alocate pentru toate sub-sarcinile (și sub-sarcinile lor) legate "
+"de această sarcină. De obicei mai mică sau egală cu orele alocate acestei "
+"sarcini."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4491,7 +4587,7 @@ msgstr "Activitati Sarcina"
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "Sarcină aprobată"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
@@ -4530,7 +4626,7 @@ msgstr "Sarcină Efectuată"
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "Sarcină în desfășurare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4545,7 +4641,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
 msgid "Task Properties"
-msgstr ""
+msgstr "Proprietăți sarcină"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
@@ -4576,7 +4672,7 @@ msgstr "Etapa Sarcinii Modificata"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "Etape sarcină"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4595,12 +4691,12 @@ msgstr "Nume sarcină..."
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "Sarcină în așteptare"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
 msgid "Task approved"
-msgstr ""
+msgstr "Sarcină aprobată"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
@@ -4610,7 +4706,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr ""
+msgstr "Sarcină finalizată"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4620,7 +4716,7 @@ msgstr "Sarcină"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Sarcină: Solicitare evaluare"
 
 #. module: project
 #. odoo-python
@@ -4688,7 +4784,7 @@ msgstr "Etapele Sarcinilor"
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 #, python-format
 msgid "Tasks in Recurrence"
-msgstr ""
+msgstr "Sarcini recurente"
 
 #. module: project
 #. odoo-javascript
@@ -4707,12 +4803,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
-msgstr ""
+msgstr "Etapa personală a utilizatorului curent."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr ""
+msgstr "Etapa personală de sarcină a utilizatorului curent."
 
 #. module: project
 #. odoo-python
@@ -4727,24 +4823,24 @@ msgstr "Documentul nu există sau nu aveți drepturile de a-l accesa."
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
-msgstr ""
+msgstr "Data de sfârșit trebuie să fie în viitor"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr ""
+msgstr "Următoarea etapă a fost adăugată:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr ""
+msgstr "Următoarele etape au fost adăugate:"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "Intervalul trebuie să fie mai mare decât 0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4773,6 +4869,7 @@ msgstr ""
 msgid ""
 "The project and the associated partner must be linked to the same company."
 msgstr ""
+"Proiectul și partenerul asociat trebuie să fie legați de aceeași companie."
 
 #. module: project
 #. odoo-python
@@ -4796,11 +4893,14 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
 msgstr ""
+"Compania proiectului nu poate fi schimbată dacă contul său analitic are "
+"linii analitice sau dacă este legat de mai multe proiecte."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
 msgstr ""
+"Data de început a proiectului trebuie să fie înainte de data de sfârșit."
 
 #. module: project
 #. odoo-python
@@ -4816,6 +4916,7 @@ msgstr "Căutarea nu suportă operatorul %s sau valoarea %s."
 msgid ""
 "The task and the associated partner must be linked to the same company."
 msgstr ""
+"Sarcina și partenerul asociat trebuie să fie legați de aceeași companie."
 
 #. module: project
 #. odoo-python
@@ -4866,7 +4967,7 @@ msgstr "Nu există sarcini"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "Nu există nimic de raportat."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -4900,6 +5001,8 @@ msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
 msgstr ""
+"Aceasta este o previzualizare a modului în care va arăta proiectul când este "
+"partajat cu clienții și aceștia au acces de editare."
 
 #. module: project
 #. odoo-python
@@ -4930,7 +5033,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "Această sarcină este blocată de o altă sarcină nefinalizată"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4960,13 +5063,13 @@ msgstr "Gestionare a timpului"
 #: model:digest.tip,name:project.digest_tip_project_1
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
-msgstr ""
+msgstr "Sfat: Creează sarcini din e-mailurile primite"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
-msgstr ""
+msgstr "Sfat: Folosește stările sarcinilor pentru a urmări progresul acestora"
 
 #. module: project
 #. odoo-python
@@ -5020,6 +5123,9 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"Pentru a transforma o sarcină într-o sub-sarcină, selectează o sarcină "
+"părinte. Alternativ, lasă câmpul sarcină părinte necompletat pentru a "
+"converti o sub-sarcină într-o sarcină independentă."
 
 #. module: project
 #. odoo-python
@@ -5054,6 +5160,8 @@ msgstr "Urmărește satisfacția clienților pe sarcini"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
+"Urmărește punctele majore de progres care trebuie atinse pentru a obține "
+"succes"
 
 #. module: project
 #. odoo-javascript
@@ -5072,6 +5180,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"Urmărește costurile, veniturile și marja proiectului setând contul analitic "
+"asociat proiectului pe documentele relevante."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5104,6 +5214,8 @@ msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
 msgstr ""
+"Etichetele transparente nu sunt vizibile în vizualizarea kanban a "
+"proiectelor și sarcinilor tale."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
@@ -5115,7 +5227,7 @@ msgstr "Bilunar"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Two tasks cannot depend on each other."
-msgstr ""
+msgstr "Două sarcini nu pot depinde una de cealaltă."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
@@ -5129,14 +5241,14 @@ msgstr "Tipul activității de excepție din înregistrare."
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "Dezarhivează proiecte"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_type.py:0
 #, python-format
 msgid "Unarchive Tasks"
-msgstr ""
+msgstr "Dezarhivează sarcini"
 
 #. module: project
 #. odoo-javascript
@@ -5178,17 +5290,17 @@ msgstr "Actualizare"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Actualizare creată"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_03
 msgid "Usability"
-msgstr ""
+msgstr "Utilizabilitate"
 
 #. module: project
 #: model:res.groups,name:project.group_project_milestone
 msgid "Use Milestones"
-msgstr ""
+msgstr "Folosește etape"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -5198,12 +5310,12 @@ msgstr "Utilizați evaluarea în proiect"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr ""
+msgstr "Folosește sarcini recurente"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
 msgid "Use Stages on Project"
-msgstr ""
+msgstr "Folosește etape pe proiect"
 
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
@@ -5556,6 +5668,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
 msgstr ""
+"Aveți control total și puteți revoca accesul la portal oricând. Sunteți gata "
+"să continuați?"
 
 #. module: project
 #. odoo-python
@@ -5576,7 +5690,7 @@ msgstr "Trebuie să fii"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "Managerii tăi decid care feedback este acceptat"
 
 #. module: project
 #. odoo-javascript
@@ -5593,12 +5707,12 @@ msgstr "și"
 msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
-msgstr ""
+msgstr "și care feedback este mutat în coloana „Respins”."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr ""
+msgstr "responsabili"
 
 #. module: project
 #. odoo-javascript
@@ -5612,7 +5726,7 @@ msgstr "avatar"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "button."
-msgstr ""
+msgstr "buton."
 
 #. module: project
 #. odoo-javascript
@@ -5624,7 +5738,7 @@ msgstr "comentarii"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr ""
+msgstr "ex: Revizuire lunară"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5637,7 +5751,7 @@ msgstr "de exemplu : Office Party"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr ""
+msgstr "ex: Lansare produs"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -5648,7 +5762,7 @@ msgstr "ex: Trimite invitații"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr ""
+msgstr "ex: Sarcini"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
@@ -5658,7 +5772,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "ex: De făcut"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5669,12 +5783,12 @@ msgstr "ex. domeniu.com"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr ""
+msgstr "ex: office-party"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr ""
+msgstr "ex: Lansare produs"
 
 #. module: project
 #. odoo-javascript
@@ -5687,7 +5801,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "pictogramă pentru a-ți organiza activitățile zilnice."
 
 #. module: project
 #. odoo-javascript
@@ -5703,7 +5817,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon."
-msgstr ""
+msgstr "pictogramă."
 
 #. module: project
 #. odoo-javascript
@@ -5715,22 +5829,22 @@ msgstr "conectat"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_view_my_task
 msgid "menu view My Tasks"
-msgstr ""
+msgstr "meniul Vizualizează Sarcinile Mele"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "periodic"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "project."
-msgstr ""
+msgstr "proiect."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "ready to be marked as reached"
-msgstr ""
+msgstr "gata să fie marcată ca atinsă"
 
 #. module: project
 #. odoo-javascript
@@ -5740,6 +5854,8 @@ msgstr ""
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
 msgstr ""
+"stare pentru a indica o solicitare de modificări sau o nevoie de discuție pe "
+"o sarcină."
 
 #. module: project
 #. odoo-javascript
@@ -5749,6 +5865,8 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"stare pentru a informa colegii că o sarcină este aprobată pentru următoarea "
+"etapă."
 
 #. module: project
 #. odoo-javascript
@@ -5762,14 +5880,14 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "stare pentru a marca sarcina ca finalizată."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
-msgstr ""
+msgstr "sub-sarcini)"
 
 #. module: project
 #. odoo-python
@@ -5781,12 +5899,12 @@ msgstr "sarcină"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestone has been updated:"
-msgstr ""
+msgstr "termenul limită pentru următoarea etapă a fost actualizat:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestones has been updated:"
-msgstr ""
+msgstr "termenul limită pentru următoarele etape a fost actualizat:"
 
 #. module: project
 #. odoo-javascript
@@ -5795,7 +5913,7 @@ msgstr ""
 msgid ""
 "to define if the project is\n"
 "      ready for the next step."
-msgstr ""
+msgstr "pentru a defini dacă proiectul este gata pentru următorul pas."
 
 #. module: project
 #. odoo-javascript
@@ -5809,17 +5927,17 @@ msgstr "pentru a posta un comentariu."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to signalize what is the current status of your Idea."
-msgstr ""
+msgstr "pentru a semnala care este starea curentă a Ideii tale."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "la atingerea unei anumite etape"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
-msgstr ""
+msgstr "va genera sarcini în"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
@@ -5827,6 +5945,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Chestionar "
+"de satisfacție"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

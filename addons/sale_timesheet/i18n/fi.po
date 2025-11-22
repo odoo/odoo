@@ -18,13 +18,14 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
-"PO-Revision-Date: 2025-08-21 09:17+0000\n"
-"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"POT-Creation-Date: 2025-11-20 18:37+0000\n"
+"PO-Revision-Date: 2025-11-22 17:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/"
 "sale_timesheet/fi/>\n"
 "Language: fi\n"
@@ -43,7 +44,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No activities found. Let's start a new one!\n"
 "                </p><p>\n"
-"                    Track your working hours by projects every day and invoice this time to your customers.\n"
+"                    Track your working hours by projects every day and "
+"invoice this time to your customers.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -51,7 +53,8 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Ei löytynyt toimintoja. Aloitetaan uusi!\n"
 "                </p><p>\n"
-"                    Seuraa työtuntejasi projekteittain joka päivä ja laskuta tämä aika asiakkailtasi.\n"
+"                    Seuraa työtuntejasi projekteittain joka päivä ja laskuta "
+"tämä aika asiakkailtasi.\n"
 "                </p>\n"
 "            "
 
@@ -65,8 +68,10 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Record timesheets\n"
 "                </p><p>\n"
-"                    You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    You can register and track your workings hours by "
+"project every\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required.\n"
 "                </p>\n"
 "            "
@@ -75,8 +80,10 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Tallenna työaikakirjauksia\n"
 "                </p><p>\n"
-"                    Voit rekisteröidä ja seurata työtuntejasi projektikohtaisesti jokaista\n"
-"                    päivittäin. Jokaisesta projektiin käytetystä ajasta tulee kustannus, ja se voidaan laskuttaa uudelleen\n"
+"                    Voit rekisteröidä ja seurata työtuntejasi "
+"projektikohtaisesti jokaista\n"
+"                    päivittäin. Jokaisesta projektiin käytetystä ajasta "
+"tulee kustannus, ja se voidaan laskuttaa uudelleen\n"
 "                    asiakkaille näin haluttaessa.\n"
 "                </p>\n"
 "            "
@@ -89,8 +96,8 @@ msgstr " Tilausehdokkaat"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
 msgid ""
-"% of timesheets that are billable compared to the total number of timesheets"
-" linked to the AA of the project, rounded to the unit."
+"% of timesheets that are billable compared to the total number of timesheets "
+"linked to the AA of the project, rounded to the unit."
 msgstr ""
 "% laskutettavia työaikakirjauksia verrattuna projektin AA:han liittyvien "
 "työaikakirjauksien kokonaismäärään, pyöristettynä mittayksikköön."
@@ -121,12 +128,17 @@ msgstr "- Työaikakirjausten tuote"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid ""
 "<i class=\"fa fa-lightbulb-o\"/>\n"
-"                        Define the rate at which an employee's time is billed based on their expertise, skills, or experience.\n"
-"                        To bill the same service at a different rate, create separate sales order items."
+"                        Define the rate at which an employee's time is "
+"billed based on their expertise, skills, or experience.\n"
+"                        To bill the same service at a different rate, create "
+"separate sales order items."
 msgstr ""
 "<i class=\"fa fa-lightbulb-o\"/>\n"
-"                        Määrittele määrä, jolla työntekijän työaika laskutetaan hänen asiantuntemuksensa, taitojensa tai kokemuksensa perusteella.\n"
-"                        Jos haluat laskuttaa samaa palvelua eri hinnalla, luo erilliset myyntitilauserät."
+"                        Määrittele määrä, jolla työntekijän työaika "
+"laskutetaan hänen asiantuntemuksensa, taitojensa tai kokemuksensa "
+"perusteella.\n"
+"                        Jos haluat laskuttaa samaa palvelua eri hinnalla, "
+"luo erilliset myyntitilauserät."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -177,17 +189,27 @@ msgstr "<u>Myynti</u>"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Tuotekonfiguraation mukaan toimitettu määrä voidaan laskea automaattisesti mekanismin avulla:\n"
+"Tuotekonfiguraation mukaan toimitettu määrä voidaan laskea automaattisesti "
+"mekanismin avulla:\n"
 "  - Manuaalinen: määrä asetetaan manuaalisesti linjalla\n"
 "  - Analyyttinen kuluista: määrä on kirjattujen kulujen summa\n"
-"  - Työaikakirjaukset: määrä on tähän myyntiriviin liittyviin tehtäviin kirjattujen tuntien summa\n"
+"  - Työaikakirjaukset: määrä on tähän myyntiriviin liittyviin tehtäviin "
+"kirjattujen tuntien summa\n"
 "  - Varastosiirrot: määrä tulee vahvistetuista poiminnoista\n"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "Tilisiirron kumoaminen"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -550,7 +572,6 @@ msgstr "Info Lasku"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
-#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/models/account.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
@@ -570,8 +591,8 @@ msgstr "Laskutuspolitiikka"
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
-"Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
-" create later on."
+"Invoice based on timesheets (delivered quantity) on projects or tasks you'll "
+"create later on."
 msgstr ""
 "Laskuta myöhemmin luotavien projektien tai tehtävien työaikakirjauksien "
 "(toimitettu määrä) perusteella."
@@ -584,8 +605,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a project for "
 "the order with a task for each sales order line to track the time spent."
 msgstr ""
-"Laskuta työaikakirjauksien perusteella (toimitettu määrä) ja luo tilaukselle"
-" projekti, jossa on tehtävä jokaiselle myyntitilausriville käytetyn ajan "
+"Laskuta työaikakirjauksien perusteella (toimitettu määrä) ja luo tilaukselle "
+"projekti, jossa on tehtävä jokaiselle myyntitilausriville käytetyn ajan "
 "seuraamiseksi."
 
 #. module: sale_timesheet
@@ -607,8 +628,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create an empty "
 "project for the order to track the time spent."
 msgstr ""
-"Laskuta työaikakirjauksien perusteella (toimitettu määrä) ja luo tilaukselle"
-" tyhjä projekti, jotta voit seurata käytettyä aikaa."
+"Laskuta työaikakirjauksien perusteella (toimitettu määrä) ja luo tilaukselle "
+"tyhjä projekti, jotta voit seurata käytettyä aikaa."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -698,13 +719,19 @@ msgstr "Rivit"
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"Aseta määrät manuaalisesti tilauksesta: Lasku perustuu manuaalisesti syötettyyn määrään luomatta analyyttistä tiliä.\n"
-"Sopimuksen aikataulut: Lasku perustuu siihen liittyvän aikataulun seurattuihin tunteihin.\n"
-"Luo tehtävä ja seuraa tunteja: Luo tehtävä myyntitilauksen vahvistukseen ja seuraa työtuntia"
+"Aseta määrät manuaalisesti tilauksesta: Lasku perustuu manuaalisesti "
+"syötettyyn määrään luomatta analyyttistä tiliä.\n"
+"Sopimuksen aikataulut: Lasku perustuu siihen liittyvän aikataulun "
+"seurattuihin tunteihin.\n"
+"Luo tehtävä ja seuraa tunteja: Luo tehtävä myyntitilauksen vahvistukseen ja "
+"seuraa työtuntia"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
@@ -815,8 +842,8 @@ msgid ""
 "distinction."
 msgstr ""
 "Laskutetaan vain ne työaikakirjaukset, joita ei ole vielä laskutettu (ja "
-"tarvittaessa vahvistettu) tältä jaksolta. Jos jaksoa ei ole merkitty, kaikki"
-" työaikakirjaukset, joita ei ole vielä laskutettu (ja tarvittaessa "
+"tarvittaessa vahvistettu) tältä jaksolta. Jos jaksoa ei ole merkitty, kaikki "
+"työaikakirjaukset, joita ei ole vielä laskutettu (ja tarvittaessa "
 "vahvistettu), laskutetaan erottelematta."
 
 #. module: sale_timesheet
@@ -850,8 +877,8 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
-"Toimitetun ajan prosenttiosuus verrattuna etukäteen maksettuun määrään, joka"
-" on saavutettava, jotta lisämyyntimahdollisuus aktivoituu."
+"Toimitetun ajan prosenttiosuus verrattuna etukäteen maksettuun määrään, joka "
+"on saavutettava, jotta lisämyyntimahdollisuus aktivoituu."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -1001,7 +1028,6 @@ msgstr "Myynnin ennakkolasku"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
-#: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
@@ -1016,7 +1042,6 @@ msgstr "Myyntitilaus"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
@@ -1047,13 +1072,30 @@ msgstr "Myyntitilaukset"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid ""
-"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
-"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
-"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+"Sales order item that will be selected by default on the timesheets of the "
+"corresponding employee. It bypasses the sales order item defined on the "
+"project and the task, and can be modified on each timesheet entry if "
+"necessary. In other words, it defines the rate at which an employee's time "
+"is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to "
+"create two separate sales order items as each sales order item can only have "
+"a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their "
+"timesheets on this project specifically. It will bypass the timesheet cost "
+"set on the employee."
 msgstr ""
-"Myyntitilauksen kohde, joka valitaan oletusarvoisesti vastaavan työntekijän työaikakirjausta. Ohittaa projektissa ja tehtävässä määritellyn myyntitilauksen kohteen, ja sitä voidaan tarvittaessa muuttaa jokaisen työaikakirjauksen yhteydessä. Se määrittelee, millä nopeudella työntekijän työaika laskutetaan esimerkiksi hänen asiantuntemuksensa, taitojensa tai kokemuksensa perusteella.\n"
-"Jos haluat laskuttaa samaa palvelua eri hinnalla, sinun on luotava kaksi erillistä myyntitilauksen kohdetta, sillä kullakin myyntitilauksen kohteella voi olla kerrallaan vain yksi yksikköhinta.\n"
-"Voit myös määritellä työntekijöidesi tuntikohtaisen yrityskustannuksen heidän työaikalaskelmilleen nimenomaan tässä projektissa. Se ohittaa työntekijälle määritetyn tuntikustannuksen."
+"Myyntitilauksen kohde, joka valitaan oletusarvoisesti vastaavan työntekijän "
+"työaikakirjausta. Ohittaa projektissa ja tehtävässä määritellyn "
+"myyntitilauksen kohteen, ja sitä voidaan tarvittaessa muuttaa jokaisen "
+"työaikakirjauksen yhteydessä. Se määrittelee, millä nopeudella työntekijän "
+"työaika laskutetaan esimerkiksi hänen asiantuntemuksensa, taitojensa tai "
+"kokemuksensa perusteella.\n"
+"Jos haluat laskuttaa samaa palvelua eri hinnalla, sinun on luotava kaksi "
+"erillistä myyntitilauksen kohdetta, sillä kullakin myyntitilauksen kohteella "
+"voi olla kerrallaan vain yksi yksikköhinta.\n"
+"Voit myös määritellä työntekijöidesi tuntikohtaisen yrityskustannuksen "
+"heidän työaikalaskelmilleen nimenomaan tässä projektissa. Se ohittaa "
+"työntekijälle määritetyn tuntikustannuksen."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1195,9 +1237,6 @@ msgstr "Tehtäväanalyysi"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
-#: code:addons/sale_timesheet/models/product.py:0
-#: code:addons/sale_timesheet/models/product.py:0
-#: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
@@ -1222,10 +1261,14 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid ""
-"The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
+"The Sales Order cannot be created because you did not enter some employees "
+"that entered timesheets on this project. Please list all the relevant "
+"employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"Myyntitilausta ei voida luoda, koska et ole syöttänyt joitakin työntekijöitä, jotka ovat syöttäneet työaikakirjauksia tähän projektiin. Listaa kaikki kyseiset työntekijät ennen myyntitilauksen luomista.\n"
+"Myyntitilausta ei voida luoda, koska et ole syöttänyt joitakin "
+"työntekijöitä, jotka ovat syöttäneet työaikakirjauksia tähän projektiin. "
+"Listaa kaikki kyseiset työntekijät ennen myyntitilauksen luomista.\n"
 "Puuttuvat työntekijät: %s"
 
 #. module: sale_timesheet
@@ -1255,8 +1298,8 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
-"Myyntitilausta ei voida luoda, koska osa tämän projektin työaikakirjauksista"
-" on jo linkitetty toiseen myyntitilaukseen."
+"Myyntitilausta ei voida luoda, koska osa tämän projektin työaikakirjauksista "
+"on jo linkitetty toiseen myyntitilaukseen."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1272,14 +1315,14 @@ msgid ""
 "The task rate is perfect if you would like to bill different services to "
 "different customers at different rates. The fixed rate is perfect if you "
 "bill a service at a fixed rate per hour or day worked regardless of the "
-"employee who performed it. The employee rate is preferable if your employees"
-" deliver the same service at a different rate. For instance, junior and "
+"employee who performed it. The employee rate is preferable if your employees "
+"deliver the same service at a different rate. For instance, junior and "
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
 "Tehtävähinta sopii täydellisesti, jos haluat laskuttaa eri asiakkailta eri "
-"palveluita eri hinnoilla. Kiinteä hinta sopii hyvin, jos laskutat palvelusta"
-" kiinteän hinnan työtuntia tai -päivää kohti riippumatta siitä, kuka "
+"palveluita eri hinnoilla. Kiinteä hinta sopii hyvin, jos laskutat palvelusta "
+"kiinteän hinnan työtuntia tai -päivää kohti riippumatta siitä, kuka "
 "työntekijöistä sen suoritti. Työntekijähinta on suositeltava, jos "
 "työntekijäsi suorittavat saman palvelun eri hinnalla. Esimerkiksi nuoremmat "
 "ja vanhemmat konsultit tuottavat saman palvelun (= konsultointi), mutta eri "
@@ -1518,8 +1561,8 @@ msgstr "Palvelun seuranta"
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
 "Seuraa tehtyjä tuntejasi projekteittain ja laskuta käytetty aika "
 "asiakkailtasi."

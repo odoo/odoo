@@ -33,13 +33,14 @@
 # Santiago Payà <santiagopim@gmail.com>, 2025
 # Noemi Pla, 2025
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-07 18:36+0000\n"
-"PO-Revision-Date: 2025-09-25 01:40+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2025-11-18 13:55+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-17/website/"
 "ca/>\n"
 "Language: ca\n"
@@ -73,7 +74,7 @@ msgstr ""
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
-msgstr ""
+msgstr "El camp «URL de» no pot estar buit."
 
 #. module: website
 #. odoo-python
@@ -91,13 +92,17 @@ msgid ""
 "\"Homepage URL\" field in the website settings or the page properties on any "
 "custom page."
 msgstr ""
+"El camp «URL a» no es pot definir com a «/». Si vols modificar el contingut "
+"de la pàgina principal, utilitza el camp «URL de la pàgina d'inici» a la "
+"configuració del lloc web o bé edita les propietats de pàgina en qualsevol "
+"pàgina personalitzada."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" cannot be set to an existing page."
-msgstr ""
+msgstr "El camp «URL a» no es pot establir en una pàgina existent."
 
 #. module: website
 #. odoo-python
@@ -145,17 +150,17 @@ msgstr "# Visites"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.navbar
 msgid "#{_navbar_name if _navbar_name else 'Main'}"
-msgstr ""
+msgstr "#{_navbar_name if _navbar_name else 'Main'}"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "#{display_label} #{depth}"
-msgstr ""
+msgstr "#{display_label} #{depth}"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "#{heading_label} #{depth}"
-msgstr ""
+msgstr "#{heading_label} #{depth}"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -192,7 +197,7 @@ msgstr "%s registre(s) seleccionats, esteu segur que voleu publicar-los tots?"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;"
-msgstr ""
+msgstr "&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -268,7 +273,7 @@ msgstr "+1 555-555-5556"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "+1 555-555-5556\""
-msgstr ""
+msgstr "+1 555-555-5556\""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -848,6 +853,8 @@ msgid ""
 "<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
 "555-555-5556</span>"
 msgstr ""
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -985,7 +992,7 @@ msgstr ""
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "<p>Attached files: </p>"
-msgstr ""
+msgstr "<p>Fitxers adjunts: </p>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -1030,6 +1037,20 @@ msgid ""
 "                        Standard Shipping\n"
 "                    </small>"
 msgstr ""
+"<small class=\"d-flex align-items-center\">\n"
+"                        <i class=\"fa fa-1x fa-fw fa-usd fa-stack me-1\"/>\n"
+"                        Garantia del millor preu\n"
+"                    </small>\n"
+"                    <small class=\"d-flex align-items-center\">\n"
+"                        <i class="
+"\"fa fa-1x fa-fw fa-shopping-basket fa-stack me-1\"/>\n"
+"                        30 dies per a devolucions en línia\n"
+"                    </small>\n"
+"                    <small class=\"d-flex align-items-center\">\n"
+"                        <i class=\"fa fa-1x fa-fw fa-truck fa-stack me-1\"/>"
+"\n"
+"                        Enviament estàndard\n"
+"                    </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1039,6 +1060,11 @@ msgid ""
 "the first chars after 'google' is enough, we'll guess the rest.\n"
 "                                </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                                    <i class=\"fa fa-info\"/>: només cal "
+"escriure algunes de les primeres lletres després de 'google'; nosaltres "
+"esdevindrem la resta.\n"
+"                                </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -1063,17 +1089,17 @@ msgstr "<small class=\"text-muted\">(arrodonit-3)</small>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(ombra)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow-lg)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(ombra-lg)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow-sm)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(ombra-sm)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -1128,7 +1154,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid "<small>Free Returns and Standard Shipping</small>"
-msgstr ""
+msgstr "<small>Devolucions i enviament estàndard i gratuït</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -1214,12 +1240,12 @@ msgstr "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "<span class=\"o_stat_text\">Connected</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Connectat</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "<span class=\"o_stat_text\">Offline</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sense connexió</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
@@ -1416,6 +1442,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Assumpte</span>\n"
+"                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
@@ -1447,6 +1475,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Question</span>\n"
 "                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">La teva pregunta</span>\n"
+"                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
@@ -1460,7 +1490,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "<span>/model/</span>"
-msgstr ""
+msgstr "<span>/model/</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -1577,7 +1607,7 @@ msgstr "Un mapa i una llista de les vostres botigues"
 #: code:addons/website/models/website_menu.py:0
 #, python-format
 msgid "A mega menu cannot have a parent or child menu."
-msgstr ""
+msgstr "Un mega menú no pot tenir un menú pare ni un menú fill."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
@@ -1593,7 +1623,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "A second item"
-msgstr ""
+msgstr "Un segon element"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
@@ -1609,7 +1639,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "A third item"
-msgstr ""
+msgstr "Un tercer element"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -1652,7 +1682,7 @@ msgstr "Quant a"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_image_text
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_timeline_s_text_block_h2
 msgid "About Me"
-msgstr ""
+msgstr "Sobre mi"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_about_us
@@ -1721,6 +1751,8 @@ msgid ""
 "Achieve holistic health with personalized nutritional advice that "
 "complements your workouts, promoting overall well-being."
 msgstr ""
+"Aconsegueix una salut integral amb assessorament nutricional personalitzat "
+"que complementa els teus entrenaments i afavoreix el teu benestar general."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
@@ -1733,14 +1765,14 @@ msgstr "Acció"
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "Activating the last features."
-msgstr ""
+msgstr "S'estan activant les funcionalitats més recents."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "Activating your %s."
-msgstr ""
+msgstr "Activant el teu%s."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__active
@@ -1783,7 +1815,7 @@ msgstr "Afegeix elements"
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Add Files"
-msgstr ""
+msgstr "Afegir arxius"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
@@ -1845,14 +1877,14 @@ msgstr "Afegeix una pestanya"
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #, python-format
 msgid "Add Text Highlight Effects"
-msgstr ""
+msgstr "Afegir efectes de ressaltat"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/res_config_settings.py:0
 #, python-format
 msgid "Add Website"
-msgstr ""
+msgstr "Afegir lloc web"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
@@ -1870,7 +1902,7 @@ msgstr "Afegeix un tipus de lletra de Google"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add a Language"
-msgstr ""
+msgstr "Afegeix un idioma"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -1914,7 +1946,7 @@ msgstr "Afegeix un camp nou al final"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Add groups in the \"Access Rights\" tab below."
-msgstr ""
+msgstr "Afegir grups en la pestanya «Drets d'accés»."
 
 #. module: website
 #. odoo-python
@@ -1928,14 +1960,14 @@ msgstr "Afegeix llengües"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Add option"
-msgstr ""
+msgstr "Afegir opció"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 #, python-format
 msgid "Add page template"
-msgstr ""
+msgstr "Afegir plantilla de pàgina"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -1962,6 +1994,8 @@ msgid ""
 "Adding a language requires to leave the editor. This will save all your "
 "changes, are you sure you want to proceed?"
 msgstr ""
+"Si vols afegir un idioma, has de sortir de l'editor. Es desaran tots els "
+"teus canvis, estàs segur que vols continuar?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -1975,6 +2009,9 @@ msgid ""
 "Adjust volume, skip tracks, answer calls, and activate voice assistants with "
 "a simple tap, keeping your hands free and your focus on what matters most."
 msgstr ""
+"Ajusta el volum, passa de pista, respon trucades i activa l'assistent de veu "
+"amb un simple toc. Així, tindràs les mans lliures i podràs concentrar-te en "
+"allò que realment importa."
 
 #. module: website
 #. odoo-javascript
@@ -2108,7 +2145,7 @@ msgstr "Totes aquestes icones són completament gratuïtes per a ús comercial. 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "All-Day Comfort"
-msgstr ""
+msgstr "Comoditat durant tot el dia"
 
 #. module: website
 #. odoo-javascript
@@ -2188,7 +2225,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Always Underline"
-msgstr ""
+msgstr "Subratllar sempre"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -2203,7 +2240,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "Amazing Sound Quality"
-msgstr ""
+msgstr "So d'alta qualitat"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -2230,12 +2267,12 @@ msgstr "S'ha produït un error en renderitzar la plantilla"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "An example alert with an icon"
-msgstr ""
+msgstr "Exemple d'alerta amb una icona"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "An item"
-msgstr ""
+msgstr "Un element"
 
 #. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
@@ -2317,7 +2354,7 @@ msgstr "Una altra característica"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Another link"
-msgstr ""
+msgstr "Un altre enllaç"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__append
@@ -2369,14 +2406,14 @@ msgstr "Arxivat"
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "Are you sure you want to delete this page?"
-msgstr ""
+msgstr "Segur que vols eliminar aquesta pàgina?"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "Are you sure you want to delete those pages?"
-msgstr ""
+msgstr "Segur que vols eliminar aquestes pàgines?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -2518,7 +2555,7 @@ msgstr "Forma de fons"
 #: code:addons/website/static/src/xml/website.background.video.xml:0
 #, python-format
 msgid "Background video"
-msgstr ""
+msgstr "Vídeo de fons"
 
 #. module: website
 #. odoo-javascript
@@ -2576,7 +2613,7 @@ msgstr "Bàsic"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Basic example"
-msgstr ""
+msgstr "Exemple bàsic"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2692,7 +2729,7 @@ msgstr "Desenfocament"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action_menu
 msgid "Book your table today"
-msgstr ""
+msgstr "Reserva la teva taula avui"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -2824,7 +2861,7 @@ msgstr "Construint el vostre %s"
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "Building your website."
-msgstr ""
+msgstr "Estem creant el teu lloc web."
 
 #. module: website
 #. odoo-javascript
@@ -2937,6 +2974,8 @@ msgid ""
 "Cannot apply this option on current text selection. Try clearing the format "
 "and try again."
 msgstr ""
+"No és possible aplicar aquesta opció a la selecció de text actual. Prova "
+"d'esborrar el format i torna-ho a intentar."
 
 #. module: website
 #. odoo-python
@@ -3119,7 +3158,7 @@ msgstr "Casella de selecció"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Checkbox List"
-msgstr ""
+msgstr "Llista de la casella de verificació"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -3263,7 +3302,7 @@ msgstr "Faci clic per a seleccionar"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_numbers
 msgid "Clients"
-msgstr ""
+msgstr "Clients"
 
 #. module: website
 #. odoo-javascript
@@ -3291,7 +3330,7 @@ msgstr "Color del botó de tancament"
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 #, python-format
 msgid "Close editor"
-msgstr ""
+msgstr "Tancar editor"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -3303,7 +3342,7 @@ msgstr "Roba"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Clothes, Marketing, ..."
-msgstr ""
+msgstr "Roba, màrqueting, etc."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3376,7 +3415,7 @@ msgstr "Columnes"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_0_s_cover
 msgid "Coming Soon"
-msgstr ""
+msgstr "Pròximament"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_configurator_feature__website_config_preselection
@@ -3891,7 +3930,7 @@ msgstr "Clau personalitzada"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Custom Text"
-msgstr ""
+msgstr "Text personalitzat"
 
 #. module: website
 #. odoo-javascript
@@ -7956,7 +7995,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Modal title"
-msgstr ""
+msgstr "Títol del modal"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__mode
@@ -8794,7 +8833,7 @@ msgstr "La nostra oferta"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_map_s_text_block_h2
 msgid "Our Offices"
-msgstr ""
+msgstr "Les nostres oficines"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
@@ -10613,7 +10652,7 @@ msgstr "Barra lateral"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Sign in"
-msgstr "Registra entrada"
+msgstr "Iniciar sessió"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__connected
@@ -11822,7 +11861,7 @@ msgstr "TikTok"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_tiktok
 msgid "TikTok Account"
-msgstr ""
+msgstr "Compte de TikTok"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__time_since_last_action
@@ -13270,7 +13309,7 @@ msgstr "El que veus és el que obtens"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_share
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -13545,7 +13584,7 @@ msgstr "YouTube"
 #: code:addons/website/static/src/js/send_mail_form.js:0
 #, python-format
 msgid "Your Company"
-msgstr ""
+msgstr "La teva empresa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template

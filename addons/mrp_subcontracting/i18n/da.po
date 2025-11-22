@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mrp_subcontracting
-# 
+# * mrp_subcontracting
+#
 # Translators:
 # Mads Søndergaard, 2023
 # Martin Trigaux, 2023
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # Kira Petersen, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2025-11-20 17:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
+"mrp_subcontracting/da/>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
@@ -58,7 +60,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
 msgid "Bom Product"
-msgstr ""
+msgstr "Styklisteprodukt"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
@@ -77,6 +79,9 @@ msgid ""
 "company. Note that standard subcontracting routes will be adapted so as to "
 "take these into account automatically."
 msgstr ""
+"Markér dette felt for at oprette en særskilt lokation til underleverandører. "
+"Standardruterne for underleverandører tilpasses automatisk, så den nye "
+"lokation tages i betragtning."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -192,12 +197,12 @@ msgstr "Lager lokationer"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr ""
+msgstr "Er underleverance"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__is_subcontracting_location
 msgid "Is a Subcontracting Location?"
-msgstr ""
+msgstr "Er en underleverandørplacering?"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
@@ -205,6 +210,8 @@ msgid ""
 "List of Products used in the BoM, used to filter the list of products in the"
 " subcontracting portal view"
 msgstr ""
+"Liste over produkter anvendt i styklisten, bruges til at filtrere listen "
+"over produkter i underleverandørens portalvisning"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -217,7 +224,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr ""
+msgstr "MRP-produktioner, som partneren er underleverandør for"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -227,6 +234,8 @@ msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
+"Sørg for at validere eller tilpasse den tilknyttede genopfyldningsplukning "
+"til din underleverandør for at undgå uoverensstemmelser i lagerbeholdningen."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -263,7 +272,7 @@ msgstr "Nyeste"
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to record"
-msgstr ""
+msgstr "Intet at logge"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -295,6 +304,8 @@ msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
 msgstr ""
+"Portalbrugere kan ikke oprette en lagerbevægelse med status 'Udført' eller "
+"ændre den nuværende status til 'Udført'."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
@@ -435,7 +446,7 @@ msgstr "Lagerflytning"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
 msgid "Stock Pickings for which the Partner is the subcontractor"
-msgstr ""
+msgstr "Lagerplukninger, som partneren er underleverandør for"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
@@ -464,7 +475,7 @@ msgstr "Underleveres"
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "Subcontracted manufacturing orders cannot be merged."
-msgstr ""
+msgstr "Underleverandøropgaver kan ikke slås sammen."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -486,7 +497,7 @@ msgstr "Underleverings lokation"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr ""
+msgstr "Underleverandørplaceringer"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -506,26 +517,26 @@ msgstr "Underleverings operation type"
 #. module: mrp_subcontracting
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
 msgid "Subcontracting Portal"
-msgstr ""
+msgstr "Portal til underleverandører"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr ""
+msgstr "Transaktionstype for efterlevering af underleverandøropgave"
 
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #, python-format
 msgid "Subcontracting:"
-msgstr ""
+msgstr "Underleverandør:"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Subcontracting: %s"
-msgstr ""
+msgstr "Underleverandør: %s"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontractor_id
@@ -570,7 +581,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "There are currently no productions for your account."
-msgstr ""
+msgstr "Der er i øjeblikket ingen produktioner for din konto."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -580,13 +591,15 @@ msgid ""
 "There shouldn't be multiple productions to record for the same subcontracted"
 " move."
 msgstr ""
+"Der må ikke registreres flere produktioner for samme "
+"underleverandørpostering."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "This MO isn't related to a subcontracted move"
-msgstr ""
+msgstr "Denne produktionsordre er ikke tilknyttet en underleverandørpostering"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
@@ -603,6 +616,7 @@ msgstr "Overfør"
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
 msgstr ""
+"Anvendt til at begrænse adgang til portalbrugeren via registreringsregler"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
@@ -626,20 +640,22 @@ msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
 msgstr ""
+"Du kan ikke angive en stykliste med operationer eller biproduktlinjer som "
+"underleverance."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
 #, python-format
 msgid "You cannot alter the company's subcontracting location"
-msgstr ""
+msgstr "Du kan ikke ændre virksomhedens underleverandørplacering"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
-msgstr ""
+msgstr "Du kan ikke skrive i felter %s i mrp.production."
 
 #. module: mrp_subcontracting
 #. odoo-python
