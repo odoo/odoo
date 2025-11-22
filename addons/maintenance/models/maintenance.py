@@ -183,7 +183,7 @@ class MaintenanceEquipment(models.Model):
 
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Maintenance Request'
     _order = "id desc"
     _check_company_auto = True

@@ -94,7 +94,6 @@ class ProjectTask(models.Model):
     _date_name = "date_assign"
     _inherit = [
         'portal.mixin',
-        'mail.thread.cc',
         'mail.activity.mixin',
         'rating.mixin',
         'mail.tracking.duration.mixin',
@@ -233,7 +232,6 @@ class ProjectTask(models.Model):
     )
     # Need this field to check there is no email loops when Odoo reply automatically
     email_from = fields.Char('Email From')
-    email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
     rating_active = fields.Boolean(string='Stage Rating Status', related="stage_id.rating_active")
@@ -1173,15 +1171,6 @@ class ProjectTask(models.Model):
 
         current_partner = self_ctx.env.user.partner_id
 
-        all_partner_emails = []
-        for task in tasks.sudo():
-            all_partner_emails += tools.email_normalize_all(task.email_cc)
-        partners = self_ctx.env['res.partner'].search([('email', 'in', all_partner_emails)])
-        partner_per_email = {
-            partner.email: partner
-            for partner in partners
-            if not all(u.share for u in partner.user_ids)
-        }
         if tasks.project_id:
             tasks.sudo()._set_stage_on_project_from_task()
         for task in tasks.sudo():
@@ -1191,16 +1180,6 @@ class ProjectTask(models.Model):
                 task.message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
-            if task.email_cc:
-                partners_with_internal_user = self_ctx.env['res.partner']
-                for email in tools.email_normalize_all(task.email_cc):
-                    new_partner = partner_per_email.get(email)
-                    if new_partner:
-                        partners_with_internal_user |= new_partner
-                if not partners_with_internal_user:
-                    continue
-                task._send_email_notify_to_cc(partners_with_internal_user)
-                task.message_subscribe(partners_with_internal_user.ids)
         return tasks
 
     def write(self, vals):
@@ -1677,27 +1656,16 @@ class ProjectTask(models.Model):
         return res
 
     def _find_internal_users_from_address_mail(self, emails, project_id=False):
-        sanitized_email_dict = self._mail_cc_sanitized_raw_dict(emails)
+        sanitized_email_dict = {
+            tools.email_normalize(email): tools.formataddr((name, tools.email_normalize(email)))
+            for (name, email) in tools.mail.email_split_tuples(emails)
+        } if emails else {}
         matched_partners = self.env['res.partner']._find_or_create_from_emails(
             sanitized_email_dict.keys(),
             no_create=True
         )
-        partners = self.env['res.partner'].concat(*matched_partners)
-        unresolved_emails = set(sanitized_email_dict) - set(partners.mapped("email"))
-        if project_id:
-            project = self.env["project.project"].browse(project_id)
-            project_alias_address = project.alias_name + "@" + project.alias_domain_id.name
-            # Removing project alias from unresolved_emails as this will be added to cc_mail address and when
-            # a mail is sent unnecessary partner is created in the name of project_alias
-            unresolved_emails.discard(project_alias_address)
-        unmatched_partner_emails = [sanitized_email_dict.get(email) for email in unresolved_emails]
-
-        users = partners.user_ids
-        internal_user_ids = users.filtered(lambda u: not u.share).ids
-
-        partner_emails_without_internal_users = (partners - users.partner_id).mapped("email_formatted")
-
-        return internal_user_ids, partner_emails_without_internal_users, unmatched_partner_emails
+        users = self.env['res.partner'].concat(*matched_partners).user_ids
+        return users.filtered(lambda u: not u.share).ids
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
@@ -1718,18 +1686,14 @@ class ProjectTask(models.Model):
             'name': msg_dict.get('subject') or _("No Subject"),
             'allocated_hours': 0.0,
             'partner_id': msg_dict.get('author_id'),
-            'email_cc': ", ".join(self._mail_cc_sanitized_raw_dict(msg_dict.get('cc')).values()) if custom_values.get('project_id') else ""
-
         }
         defaults.update(custom_values)
 
         # users having email address matched from emails recepients are filtered out and added as assignees to the task
         if msg_dict.get('to'):
-            internal_users, partner_emails_without_users, unmatched_partner_emails = self._find_internal_users_from_address_mail(msg_dict.get('to'), defaults.get('project_id'))
+            internal_users = self._find_internal_users_from_address_mail(msg_dict.get('to'), defaults.get('project_id'))
             # set only internal users as assignees
             defaults['user_ids'] = defaults.get('user_ids', []) + internal_users
-            if custom_values.get("project_id") and (partner_emails_without_users or unmatched_partner_emails):
-                defaults["email_cc"] = defaults.get("email_cc", "") + ", " + ", ".join(partner_emails_without_users + unmatched_partner_emails)
         task = super(ProjectTask, self.with_context(create_context)).message_new(msg_dict, custom_values=defaults)
         partners = task._partner_find_from_emails_single(tools.email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or '')), no_create=True)
         if task.project_id:

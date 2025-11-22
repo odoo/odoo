@@ -711,7 +711,6 @@ class TestAPI(ThreadRecipients):
         self.assertFalse(self.env['res.partner'].search([('email_normalized', 'in', test_emails)]))
 
         test_record = self.env['mail.test.recipients'].create({
-            'email_cc': tools.mail.formataddr(test_cc_tuples[0]),
             'name': 'Test Recipients',
         })
         messages = self.env['mail.message']
@@ -749,11 +748,6 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
-            }, {  # override of model for email_cc
-                'create_values': {},
-                'email': test_cc_tuples[0][1],
-                'name': test_cc_tuples[0][0],
-                'partner_id': False,
             }, {  # replying message to
                 'create_values': {},
                 'email': test_to_tuples[0][1],
@@ -776,11 +770,6 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
-            }, {  # override of model for email_cc
-                'create_values': {},
-                'email': test_cc_tuples[0][1],
-                'name': test_cc_tuples[0][0],
-                'partner_id': False,
             },  # and not author, as it is odoobot's email
         ], strict=True):
             with self.subTest():
@@ -789,12 +778,7 @@ class TestAPI(ThreadRecipients):
         # discussion: should be last message
         recipients = test_record._message_get_suggested_recipients(reply_discussion=True, no_create=True)
         for recipient, expected in zip(recipients, [
-            {  # override of model for email_cc
-                'create_values': {},
-                'email': test_cc_tuples[0][1],
-                'name': test_cc_tuples[0][0],
-                'partner_id': False,
-            }, {  # replying message to
+            {  # replying message to
                 'create_values': {},
                 'email': test_to_tuples[1][1],
                 'name': test_to_tuples[1][0],
@@ -812,28 +796,23 @@ class TestAPI(ThreadRecipients):
         # check with partner creation
         recipients = test_record._message_get_suggested_recipients(reply_message=messages[0], no_create=False)
         new_partners = self.env['res.partner'].search([('email_normalized', 'in', test_emails)], order='id ASC')
-        self.assertEqual(len(new_partners), 3, 'Find or create should have created 3 partners, one / email')
-        new_to, new_cc_0, new_cc_1 = new_partners
+        self.assertEqual(len(new_partners), 2, 'Find or create should have created 2 partners, one / email')
+        new_to, new_cc_0 = new_partners
         for recipient, expected in zip(recipients, [
             {  # partner first: author of message
                 'create_values': {},
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
-            }, {  # override of model for email_cc
-                'email': test_cc_tuples[0][1],
-                'name': test_cc_tuples[0][0],
-                'partner_id': new_to.id,
-                'create_values': {},
             }, {  # replying message to
                 'email': test_to_tuples[0][1],
                 'name': test_to_tuples[0][0],
-                'partner_id': new_cc_0.id,
+                'partner_id': new_to.id,
                 'create_values': {},
             }, {  # replying message  cc
                 'email': test_cc_tuples[1][1],
                 'name': test_cc_tuples[1][0],
-                'partner_id': new_cc_1.id,
+                'partner_id': new_cc_0.id,
                 'create_values': {},
             },
         ], strict=True):
@@ -848,13 +827,7 @@ class TestAPI(ThreadRecipients):
             'email_cc': '"Test Cc" <test.cc.1@test.example.com>',
             'name': 'Test Recipients',
         })
-        base_expected = [{
-            'create_values': {},
-            'email': 'test.cc.1@test.example.com',
-            'name': 'Test Cc',
-            'partner_id': False,
-        }]
-        for user, post_values, expected_add in [
+        for user, post_values, expected in [
             (
                 self.user_employee,
                 {
@@ -921,7 +894,6 @@ class TestAPI(ThreadRecipients):
             test_record.with_user(user).message_post(**post_values)
             test_record.message_unsubscribe(partner_ids=test_record.message_partner_ids.ids)
             suggested = test_record._message_get_suggested_recipients(reply_discussion=True, no_create=True)
-            expected = base_expected + expected_add
             # as we can't use sorted directly, reorder manually, hey
             expected.sort(key=lambda item: item['partner_id'], reverse=True)
             with self.subTest(message=post_values['body']):
