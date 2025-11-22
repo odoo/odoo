@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_peppol
+# * account_peppol
 #
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-24 18:38+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-11-19 14:56+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-3/"
+"account_peppol/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -256,6 +259,10 @@ msgid ""
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
+"มีการได้รับใบตอบรับ (Receipt)   สำหรับข้อความที่เคยส่งออกโดย MSH แล้ว "
+"แต่เนื้อหาของใบตอบรับไม่ตรงกับเนื้อหาของข้อความเดิม ตัวอย่างเช่น "
+"บางส่วนของข้อความยังไม่ได้รับการยืนยัน หรือ ค่าแฮชที่แนบมากับใบตอบรับไม่ตรงกับค่าแฮชของลายเซ็น "
+"(ในกรณีของ NRR)"
 
 #. module: account_peppol
 #. odoo-python
@@ -280,6 +287,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
+"ได้รับชิ้นส่วนแล้ว แต่มีข้อความชิ้นส่วนมากกว่าหนึ่งรายการในกลุ่มชิ้นส่วน "
+"ระบุค่าสำหรับองค์ประกอบการบีบอัด"
 
 #. module: account_peppol
 #. odoo-python
@@ -288,6 +297,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
+"มีการรับข้อมูลแบบแยกส่วน (fragment) "
+"แต่มีมากกว่าหนึ่งข้อความในกลุ่มเดียวกันที่ระบุค่าขององค์ประกอบนี้ ซึ่งไม่ถูกต้อง"
 
 #. module: account_peppol
 #. odoo-python
@@ -311,6 +322,8 @@ msgid ""
 "A participant with these details has already been registered on the network. "
 "If you have previously registered to a Peppol service, please deregister."
 msgstr ""
+"ผู้เข้าร่วมที่มีรายละเอียดเหล่านี้ได้ลงทะเบียนบนเครือข่ายแล้ว หากคุณเคยลงทะเบียนบริการ Peppol "
+"ไว้แล้ว โปรดยกเลิกการลงทะเบียน"
 
 #. module: account_peppol
 #. odoo-python
@@ -414,6 +427,9 @@ msgid ""
 "attribute contains a value that could not be recognized and therefore could "
 "not be used by the MSH."
 msgstr ""
+"แม้ว่าเอกสารข้อความจะถูกจัดรูปแบบอย่างถูกต้องและเป็นไปตามสคีมา "
+"แต่บางองค์ประกอบหรือแอตทริบิวต์มีค่าที่ไม่สามารถระบุได้ และด้วยเหตุนี้จึงไม่สามารถใช้งานโดย MSH ("
+"Message Service Handler)"
 
 #. module: account_peppol
 #. odoo-python
@@ -423,6 +439,9 @@ msgid ""
 "attribute value cannot be processed as expected because the related feature "
 "is not supported by the MSH."
 msgstr ""
+"แม้ว่าเอกสารข้อความจะถูกต้องตามรูปแบบและสอดคล้องกับแบบแผนมาแล้ว "
+"แต่ค่าของบางองค์ประกอบหรือแอตทริบิวต์ไม่สามารถประมวลผลได้ตามที่คาดไว้ "
+"เนื่องจากฟีเจอร์ที่เกี่ยวข้องนั้นไม่ได้รับการรองรับโดย MSH (Message Service Handler)"
 
 #. module: account_peppol
 #. odoo-python
@@ -433,6 +452,9 @@ msgid ""
 "attribute, or with the processing mode of the MSH, or with the normative "
 "requirements of the ebMS specification."
 msgstr ""
+"แม้ว่าเอกสารข้อความจะมีรูปแบบที่ดีและโครงร่างถูกต้อง "
+"แต่ค่าองค์ประกอบ/แอตทริบิวต์บางอย่างไม่สอดคล้องกับเนื้อหาขององค์ประกอบ/แอตทริบิวต์อื่น หรือกั"
+"บโหมดการประมวลผลของ MSH หรือกับข้อกำหนดเชิงบรรทัดฐานของข้อกำหนด ebMS"
 
 #. module: account_peppol
 #. odoo-python
@@ -442,6 +464,8 @@ msgid ""
 "or absence of some element/ attribute is not consistent with the capability "
 "of the MSH, with respect to supported features."
 msgstr ""
+"แม้ว่าข้อความเอกสารจะถูกต้องตามรูปแบบและสอดคล้องกับ schema แต่การมีหรือไม่มีบาง element/"
+"attribute ยังไม่สอดคล้องกับความสามารถของ MSH ในแง่ของฟีเจอร์ที่รองรับ"
 
 #. module: account_peppol
 #. odoo-python
@@ -451,6 +475,9 @@ msgid ""
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
+"แม้ว่าข้อความจะถูกส่งภายใต้ข้อกำหนดการส่งมอบที่รับประกัน "
+"แต่โมดูลความน่าเชื่อถือไม่สามารถรับประกันได้ว่าข้อความจะถูกส่งอย่างถูกต้อง "
+"แม้ว่าจะพยายามส่งซ้ำอีกครั้งก็ตาม"
 
 #. module: account_peppol
 #. odoo-python
@@ -476,6 +503,8 @@ msgid ""
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
 msgstr ""
+"มีการจับคู่รายการหนึ่งในฟังก์ชันการกำหนดเส้นทาง ซึ่งกำหนดให้ข้อความถูกส่งต่อไปยัง MPC "
+"สำหรับการดึงข้อมูล แต่ MSH ตัวกลางไม่สามารถจัดเก็บข้อความนี้ไว้กับ MPC ที่กำหนดได้"
 
 #. module: account_peppol
 #. odoo-python
@@ -506,6 +535,10 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
+"ตัวกลาง MSH ได้กำหนดให้ข้อความนี้ไปยัง MPC สำหรับการเรียกใช้ (pull) "
+"และได้จัดเก็บข้อความนั้นเรียบร้อยแล้ว อย่างไรก็ตาม "
+"ตัวกลางได้ตั้งค่าระยะเวลาสูงสุดที่พร้อมจะรอให้มีการเรียกใช้ข้อความดังกล่าว "
+"และขณะนี้ระยะเวลาดังกล่าวได้สิ้นสุดลงแล้ว"
 
 #. module: account_peppol
 #. odoo-python
@@ -1308,6 +1341,8 @@ msgid ""
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
+"ฟังก์ชันด้านความน่าเชื่อถือบางอย่างที่ถูกพัฒนาโดยโมดูล Reliability ยังไม่สามารถใช้งานได้ "
+"หรือสถานะความน่าเชื่อถือที่เชื่อมโยงกับชุดข้อความนี้ไม่ถูกต้อง"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1317,6 +1352,10 @@ msgid ""
 "                        If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
+"บริการบางรายการรองรับคีย์สำหรับการย้ายข้อมูล หากบริการของคุณรองรับ คุณสามารถกรอก "
+"migration key ด้านล่างนี้ได้\n"
+"                            แต่หากไม่รองรับ คุณควรยกเลิกการลงทะเบียนกับผู้ให้บริการเดิมก่"
+"อน แล้วจึงลงทะเบียนกับ Odoo ภายหลัง"
 
 #. module: account_peppol
 #. odoo-python
@@ -1362,6 +1401,8 @@ msgid ""
 "is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
+"ระบบ MSH ไม่สามารถเข้าถึงไฟล์แนบหรือข้อมูลที่อยู่นอกข้อความ ebMS ได้ (เช่น ข้อมูลที่ระบุไว้ใน "
+"PartInfo/href แต่ไม่ได้แนบมาด้วยในข้อความ)"
 
 #. module: account_peppol
 #. odoo-python
@@ -1480,6 +1521,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
+"ส่วนหัว ebMS ไม่ได้จัดรูปแบบอย่างถูกต้องในฐานะเอกสาร XML หรือไม่เป็นไปตามกฎการจัดแพ็"
+"กเกจของ ebMS"
 
 #. module: account_peppol
 #. odoo-python
@@ -1489,6 +1532,8 @@ msgid ""
 "the MSH is not compatible with the expected content, based on the associated "
 "P-Mode."
 msgstr ""
+"ส่วนหัว ebMS หรือส่วนหัวอื่น (เช่น ความน่าเชื่อถือ ความปลอดภัย) ที่ MSH "
+"คาดหวังไว้ไม่เข้ากันกับเนื้อหาที่คาดหวังไว้ โดยอิงจาก P-Mode ที่เกี่ยวข้อง"
 
 #. module: account_peppol
 #. odoo-python
@@ -1497,6 +1542,8 @@ msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
+"ข้อมูลที่ถูกเข้ารหัสซึ่งอ้างอิงถึงส่วนหัว Security ที่ตั้งใจไว้สำหรับ \"ebms\" SOAP actor "
+"ไม่สามารถถอดรหัสได้โดยโมดูลรักษาความปลอดภัย"
 
 #. module: account_peppol
 #. odoo-python
@@ -1525,6 +1572,9 @@ msgid ""
 "other than the fragment header and a data part are in the message. are added "
 "or the SOAP Body is not empty."
 msgstr ""
+"แอตทริบิวต์ href ไม่ได้อ้างอิงไปยังส่วนข้อมูล MIME ที่ถูกต้อง มีส่วน MIME อื่น ๆ นอกเหนือจากส่วน "
+"fragment header และ data part อยู่ในข้อความ หรือมีการเพิ่มส่วนเหล่านี้เข้าไป หรือ SOAP "
+"Body ไม่ว่างเปล่า"
 
 #. module: account_peppol
 #. odoo-python
@@ -1645,6 +1695,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"ผู้ใช้นี้ไม่ใช่ผู้ใช้ Peppol โดย proxy_type ที่เกี่ยวข้องต้องเป็น \"peppol\" "
+"ซึ่งเป็นข้อกำหนดสำหรับการสร้างผู้เข้าร่วม Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1805,6 +1857,8 @@ msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
 msgstr ""
+"คุณส่งเอกสารครบจำนวนสูงสุดที่กำหนดในวันนี้แล้ว ลองใหม่อีกครั้งในภายหลัง "
+"โปรดติดต่อฝ่ายสนับสนุนหากคุณคิดว่าจำเป็นต้องเพิ่มจำนวนเอกสาร"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1832,6 +1886,8 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
+"บริษัทของคุณได้ลงทะเบียนบน Access Point (%s) สำหรับรับใบแจ้งหนี้เรียบร้อยแล้ว "
+"เราจะลงทะเบียนคุณบน Odoo ในฐานะผู้ส่งเท่านั้น"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form

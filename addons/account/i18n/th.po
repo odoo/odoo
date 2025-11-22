@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-15 11:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-3/account/"
+"th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -196,15 +199,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -7119,7 +7113,7 @@ msgstr "นามแฝงอีเมล"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Email Notifications"
-msgstr ""
+msgstr "การแจ้งเตือนทางอีเมล"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_template
@@ -7332,7 +7326,7 @@ msgstr ""
 #. module: account
 #: model:res.country.group,name:account.europe_vat
 msgid "European Union VAT"
-msgstr ""
+msgstr "ภาษีมูลค่าเพิ่มสหภาพยุโรป"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -8679,6 +8673,10 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
+"หากคุณขายสินค้าและบริการให้กับลูกค้า                                                                                                                     "
+"ในประเทศสมาชิกสหภาพยุโรป (EU) อื่น คุณต้องคิดภาษีมูลค่าเพิ่ม (VAT) "
+"ตามที่อยู่ที่จัดส่ง                           \n"
+"                                กฎข้อนี้ใช้ไม่ว่าคุณจะตั้งอยู่ที่ไหนก็ตาม"
 
 #. module: account
 #. odoo-python
@@ -8800,6 +8798,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
+"ในรายงาน '%(report_name)s' บนบรรทัด '%(line_name)s' ที่มีป้ายกำกับ '%(label)s'<br/"
+">\n"
+"รูปแบบของนิพจน์ cross report ไม่ถูกต้อง<br/>\n"
+"รูปแบบที่ถูกต้องควรเป็น: cross_report(<report_id>|<xml_id>)<br/>\n"
+"ตัวอย่าง: cross_report(my_module.my_report) หรือ cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -14083,6 +14086,9 @@ msgid ""
 "Any file extension will be accepted.\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"ส่งอีเมลแยกต่างหากสำหรับใบแจ้งหนี้แต่ละฉบับ\n"
+"รับไฟล์นามสกุลใดก็ได้\n"
+"Odoo จะแปลเฉพาะไฟล์ PDF และ XML เท่านั้น"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -15585,7 +15591,7 @@ msgstr "ประเทศที่จะใช้รายงานภาษี
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "อัตราสกุลเงินจะต้องเป็นบวกเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -15993,6 +15999,13 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"โมเดลการกระทบยอดจะถูกนำไปใช้ต่อเมื่ออย่างใดอย่างหนึ่งในรายการต่อไปนี้ตรงกับเงื่อนไขที่กำหนด "
+"ได้แก่ ป้ายกำกับในรายการเดินบัญชี รายละเอียดธุรกรรม หรือหมายเหตุ:\n"
+"        * ประกอบด้วย (Contains): รายการเดินบัญชีต้องมีข้อความนี้อยู่ (ไม่สนใจตัวพิมพ์ใหญ่-"
+"เล็ก)\n"
+"        * ไม่ประกอบด้วย (Not Contains): ตรงข้ามกับ \"ประกอบด้วย\"\n"
+"        * ตรงกับรูปแบบ (Match Regex): กำหนดรูปแบบข้อความที่ต้องการด้วย Regular "
+"Expression ของคุณเอง"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -16672,6 +16685,8 @@ msgid ""
 "context,\n"
 "                such as for sending by email or reviewing a batch of records."
 msgstr ""
+"มุมมองนี้จะแสดงเฉพาะรายการบัญชีที่ถูกเลือกมาจากบริบทอื่น เช่น \n"
+"    การส่งทางอีเมลหรือการตรวจสอบข้อมูลเป็นชุด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16769,6 +16784,8 @@ msgid ""
 "they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"เพื่อรักษาประวัติการตรวจสอบอย่างเข้มงวด คุณไม่สามารถลบบันทึกบัญชีหลังจากที่ได้บันทึกแล้ว\n"
+"แต่คุณสามารถยกเลิกบันทึกบัญชีนั้นแทน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -17059,6 +17076,8 @@ msgid ""
 "limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"แจ้งเตือนเมื่อสร้างใบแจ้งหนี้และใบสั่งขายสำหรับพันธมิตรที่มียอดลูกหนี้รวมเกินขีดจำกัด                               "
+"ตั้งค่ามากกว่า 0.0 เพื่อเปิดใช้งานการตรวจสอบวงเงินเครดิต"
 
 #. module: account
 #. odoo-python

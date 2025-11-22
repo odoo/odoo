@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project
+# * sale_project
 #
 # Translators:
 # yael terner, 2024
@@ -20,21 +20,22 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
 # or balmas, 2025
 # NoaFarkash, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-15 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: NoaFarkash, 2025\n"
-"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"PO-Revision-Date: 2025-11-15 11:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-3/"
+"sale_project/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
-"1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 2) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_project
 #. odoo-python
@@ -49,18 +50,26 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    לא נמצאו אבני דרך, בוא ניצר אחת!\n"
+"                </p><p>\n"
+"                    עקוב אחר נקודות התקדמות מרכזיות שחייבים להגיע אליהן כדי "
+"להצליח.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)sשל פריט ההזמנה"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Orders"
-msgstr ""
+msgstr "%(name)sהזמנת מכירה"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -103,6 +112,13 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> הזמנת "
+"מכירה  \n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            אפשר לחיוב \n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -111,6 +127,9 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            הזמנות מכירות \n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -118,6 +137,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                        <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">לקוח</span>\n"
+"                        <span class=\"o_stat_text\">סקירה</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -145,6 +166,8 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"יש להגדיר פרויקט בהצעת המחיר %(order)s או בטופס המוצר שיוצר משימה בעת הזמנה\n"
+"%(product_name)s למוצר הבא נדרש פרויקט שאליו ניתן לשייך את המשימה:"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -153,6 +176,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"כאשר מאשרים הזמנת מכירה, המערכת יוצרת משימה בפרויקט הרלוונטי,והפרטים "
+"האנליטיים של הפרויקט ישמשו גם כבסיס לנתונים הפיננסיים של פריטי הזמנת המכירה "
+"החדשים."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -166,18 +192,24 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"בהתאם להגדרות המוצר, כמות שסופקה יכולה להיחשב באופן אוטומטי באמצעות אחד "
+"המנגנונים הבאים:\n"
+"ידני: הכמות מוזנת באופן ידני בשורה.\n"
+"אנליטי מהוצאות : הכמות היא סכום הכמויות מהוצאות שנרשמו.\n"
+"גיליון שעות : הכמות היא סכום השעות שנרשמו במשימות המקושרות לשורת מכירה זו.\n"
+"תנועות מלאי: הכמות מגיעה מהעברות מלאי שאושרו.\n"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "מבוסס על הכמות שסופקה (ידני)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
-msgstr ""
+msgstr "מבוסס על אבני דרך"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
@@ -200,13 +232,13 @@ msgstr "הגדרות תצורה"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold"
-msgstr ""
+msgstr "מחיר של טובין שנמכרו"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "עלות המוצרים שנמכרו"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -216,7 +248,7 @@ msgstr "צור פרויקט"
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "צור משימה"
 
 #. module: sale_project
 #. odoo-python
@@ -237,12 +269,13 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"צור פרויקט להזמנה עם משימה לכל שורת הזמנת מכירה כדי לעקוב אחר הזמן שהושקע."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
-msgstr ""
+msgstr "צור משימה בפרויקט קיים כדי לעקוב אחר הזמן שהושקע"
 
 #. module: sale_project
 #. odoo-python
@@ -254,7 +287,7 @@ msgstr "צור חשבונית ספק"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "צור פרויקט ריק להזמנה למעקב אחר הזמן שהושקע."
 
 #. module: sale_project
 #. odoo-python
@@ -284,7 +317,7 @@ msgstr "צור בהזמנה "
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
-msgstr ""
+msgstr "צור פרויקטים או משימות בהמשך, וקשר אותם להזמנה למעקב אחר הזמן שהושקע."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -301,7 +334,7 @@ msgstr "חשבוניות לקוח"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "הוגדר בהצעת המחיר"
 
 #. module: sale_project
 #. odoo-javascript
@@ -312,7 +345,7 @@ msgstr "נמסר"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "קמפיין שיווק דיגיטלי (פרויקט)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
@@ -330,7 +363,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "שם לתצוגה"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -352,12 +385,12 @@ msgstr "מקדמות"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "פרויקט ריק"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "שירותי ריצוף"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__id
@@ -375,7 +408,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
 msgid "ID"
-msgstr ""
+msgstr "מזהה"
 
 #. module: sale_project
 #. odoo-python
@@ -387,7 +420,7 @@ msgstr "בתהליך"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "חשבונית עבור אבני הדרך ברגע שהושגו."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -469,7 +502,7 @@ msgstr "אבני דרך"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "פריט הזמנה חדש"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -486,14 +519,14 @@ msgstr "לא חויב"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "הגדר רהיטי משרד (משימה)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
-msgstr ""
+msgstr "כשהלקוח מאשר את הצעת המחיר, היא הופכת להזמנת מכירה."
 
 #. module: sale_project
 #. odoo-python
@@ -504,31 +537,31 @@ msgstr "שירותים אחרים"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "ציור"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once "
 "the milestone is reached."
-msgstr ""
+msgstr "אחוז מכמות ההזמנה שיסופק אוטומטית ברגע שאבן הדרך הושגה."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
-msgstr ""
+msgstr "שירותי אינסטלציה"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "הזמנת מכירה בפורטל"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "תשלום מראש / מחיר קבוע"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -547,6 +580,8 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are "
 "set up for it."
 msgstr ""
+"מוצרים שנכנסו לאיסופי מלאי מסוג שיוצר עלויות אנליטיות — יחויבו מחדש בהזמנת "
+"המכירה הזו, אם ההגדרות שלהם מאפשרות זאת."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -576,7 +611,7 @@ msgstr "אבן דרך בפרויקט"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "אבן דרך לפרויקט"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -649,7 +684,7 @@ msgstr "פריט הזמנת לקוח"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr ""
+msgstr "פריט בהזמנת המכירה שיעודכן כאשר אבן הדרך תושג."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -663,6 +698,11 @@ msgid ""
 "also change or remove the sales order item of each timesheet entry "
 "individually."
 msgstr ""
+"פריט בהזמנת המכירה שאליו יתווסף הזמן שהושקע במשימה זו, כדי לחיוב הלקוח. \n"
+"כברירת מחדל ייבחר פריט הזמנת המכירה שהוגדר בפרויקט. אם לא הוגדר כזה, ייבחר "
+"פריט התשלום מראש האחרון שעדיין נותר בו זמן. \n"
+"Remove the sales order item in order to make this task non billable. You can "
+"ניתן גם לשנות או להסיר את פריט הזמנת המכירה עבור כל דוח שעות בנפרד."
 
 #. module: sale_project
 #. odoo-javascript
@@ -694,6 +734,9 @@ msgid ""
 "It can be modified on each task and timesheet entry individually if "
 "necessary."
 msgstr ""
+"פריט הזמנת לקוח שייבחר כברירת מחדל במשימות ובדיווחי השעות של פרויקט זה, אלא "
+"אם העובד שצויין בדיווחי השעות מקושר במפורש לפריט הזמנת לקוח אחר בפרויקט..\n"
+"ניתן לשנות זאת, במדית הצורך,  בכל משימה או דיווח שעות ."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -703,7 +746,7 @@ msgstr "הזמנת לקוח שאליה קשורה המשימה."
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "מברג"
 
 #. module: sale_project
 #. odoo-python
@@ -715,12 +758,12 @@ msgstr "חיפוש בחשבונית"
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "חפש בשורות הזמנת לקוח"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "בחר את מי לחייב"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -749,7 +792,7 @@ msgstr "משימה"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "משימה נוצרה (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -770,7 +813,7 @@ msgstr "ניתוח נתוני משימות"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "The Sale Order Item should contain a service product."
-msgstr ""
+msgstr "פריט הזמנה צריך להכיל מוצר מסוג שירות"
 
 #. module: sale_project
 #. odoo-python
@@ -805,12 +848,14 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed, is "
 "already linked to a project, or doesn't involve any services."
 msgstr ""
+"הפרויקט לא יכול להיווצר מאחר שהזמנת המכירה חייבת להיות מאושרת, היא כבר קשורה "
+"לפרויקט, או שאינה כוללת שירותים כלשהם."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "This Sales Order must contain at least one product of type \"Service\"."
-msgstr ""
+msgstr "הזמנת המכירה חייבת להכיל לפחות מוצר אחד מסוג \"שירות\"."
 
 #. module: sale_project
 #. odoo-python
@@ -862,17 +907,17 @@ msgstr "חשבוניות הספק"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "הצג הזמנות מכירה"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "שירות עיצוב מחדש של אתר (פרויקט ומשימה)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "שירותי חיווט"
 
 #. module: sale_project
 #. odoo-python
@@ -881,6 +926,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"אינך יכול לקשר את פריט ההזמנה %(order_id)s - %(product_id)s למשימה זו מכיוון "
+"שמדובר בהוצאה עם חשבונית מתוקנת."
 
 #. module: sale_project
 #. odoo-python

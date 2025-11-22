@@ -7,13 +7,14 @@
 # Ujjawal Pathak, 2025
 #
 # "Ujjawal Pathak (pauj)" <pauj@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
-"PO-Revision-Date: 2025-08-07 04:45+0000\n"
-"Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
+"POT-Creation-Date: 2025-11-14 18:36+0000\n"
+"PO-Revision-Date: 2025-11-15 11:06+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "event_product/hi/>\n"
 "Language: hi\n"
@@ -62,13 +63,13 @@ msgstr "डिस्प्ले नाम"
 #. module: event_product
 #: model:ir.model,name:event_product.model_event_event
 msgid "Event"
-msgstr ""
+msgstr "इवेंट"
 
 #. module: event_product
 #: model:ir.model,name:event_product.model_event_registration
 #: model:ir.model.fields.selection,name:event_product.selection__product_template__service_tracking__event
 msgid "Event Registration"
-msgstr ""
+msgstr "इवेंट के लिए रजिस्ट्रेशन"
 
 #. module: event_product
 #: model:product.template,name:event_product.product_product_event_standard_product_template
@@ -88,7 +89,7 @@ msgstr ""
 #. module: event_product
 #: model:ir.model,name:event_product.model_event_event_ticket
 msgid "Event Ticket"
-msgstr ""
+msgstr "इवेंट टिकट"
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_product_product__event_ticket_ids
@@ -114,7 +115,7 @@ msgstr "आईडी"
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__to_pay
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
 msgid "Not Sold"
-msgstr ""
+msgstr "नहीं बिका"
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
@@ -151,6 +152,14 @@ msgid "Product Variant"
 msgstr "उत्पाद प्रकार"
 
 #. module: event_product
+#. odoo-python
+#: code:addons/event_product/models/product_product.py:0
+msgid ""
+"Products linked to an event ticket must have \"%(tracking)s\" set to \"%"
+"(event)s\"."
+msgstr ""
+
+#. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
 msgid "Sale Status"
 msgstr ""
@@ -169,7 +178,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
 msgid "Sold"
-msgstr ""
+msgstr "बिक गया"
 
 #. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form

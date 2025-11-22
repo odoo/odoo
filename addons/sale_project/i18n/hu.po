@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project
+# * sale_project
 #
 # Translators:
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2024
@@ -11,20 +11,22 @@
 # krnkris, 2024
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # gezza <geza.nagy@oregional.hu>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-15 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
-"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"PO-Revision-Date: 2025-11-15 11:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-s18-3/"
+"sale_project/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_project
 #. odoo-python
@@ -39,18 +41,26 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Nincsenek mérföldkövek. Készítsen egyet!\n"
+"                </p><p>\n"
+"                    Kövesse nyomon a sikeres megvalósításhoz vezető "
+"lényegesebb előrehaladási pontokat.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)svevői rendelési tételek"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Orders"
-msgstr ""
+msgstr "%(name)svevői rendelések"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -61,6 +71,11 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -71,6 +86,11 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != 'cancel'\""
+"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -83,6 +103,13 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> Vevői "
+"rendelés\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            Számlázható\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -91,6 +118,9 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Vevői rendelés\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -98,13 +128,15 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                        <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Vevő</span>\n"
+"                        <span class=\"o_stat_text\">Előnézet</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vevői rendelés</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -114,7 +146,7 @@ msgstr "<span class=\"o_stat_text\">Feladatok</span>"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
-msgstr ""
+msgstr "<span>)</span>"
 
 #. module: sale_project
 #. odoo-python
@@ -125,6 +157,10 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"Meg kell adni egy projektet a(z) %(order)s ajánlaton vagy a termékek "
+"űrlapján a rendeléshez kapcsolódó feladat létrehozásához.\n"
+"A következő termékekhez szükséges projekt megadása feladat létrehozásához: "
+"%(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -133,6 +169,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"Feladat kerül létrehozásra a projektben a vevői rendelés megerősítésekor. A "
+"projekt analitikus szétosztása hivatkozási alapként szolgál az újonnan "
+"létrehozott vevői rendelés tételeknél."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -146,24 +185,32 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"A termék konfigurációjától függően a szállított mennyiség az alábbi módokon "
+"számítható:\n"
+"  - Manuális: a mennyiség kézi megadása a soron\n"
+"  - Analitikus kiadás: a mennyiség a könyvelésre küldött kiadások "
+"összesítéséből számítódik\n"
+"  - Időnyilvántartás: a mennyiség az értékesítési rendelés soraihoz kapcsolt "
+"feladatokra rögzített órák összege\n"
+"  - Készletmozgások: a mennyiség a jóváhagyott kiszedések mennyisége\n"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "Szállított mennyiség alapján (kézi)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
-msgstr ""
+msgstr "Mérföldkövek alapján"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "Számlázható"
 
 #. module: sale_project
 #. odoo-python
@@ -180,7 +227,7 @@ msgstr "Beállítások"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold"
-msgstr ""
+msgstr "Eladott áruk beszerzési értéke"
 
 #. module: sale_project
 #. odoo-python
@@ -191,12 +238,12 @@ msgstr ""
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Projekt létrehozása"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Feladat létrehozása"
 
 #. module: sale_project
 #. odoo-python
@@ -217,12 +264,15 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"Projekt létrehozása a rendeléshez, benne a vevői rendelés egyes soraihoz "
+"kapcsolt feladatokkal az eltöltött idő nyomonkövetéséhez."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
 msgstr ""
+"Feladat létrehozása létező projektben az eltöltött idő nyomonkövetéséhez."
 
 #. module: sale_project
 #. odoo-python
@@ -235,6 +285,8 @@ msgstr "Szállítói számla létrehozása"
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
 msgstr ""
+"Rendeléshez kapcsolt üres projekt létrehozása az eltöltött idő "
+"nyomonkövetéséhez."
 
 #. module: sale_project
 #. odoo-python
@@ -253,6 +305,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
+"Számlák létrehozása, fizetése regisztrálása és szállítókkal történő "
+"beszélgetések nyomonkövetése."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -267,6 +321,8 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"Projektek vagy feladatok létrehozása később, majd hozzákapcsolásuk a "
+"rendeléshez az eltöltött idő nyomonkövetéséhez."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -283,7 +339,7 @@ msgstr "Vevői számlák"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Ajánlaton megadva"
 
 #. module: sale_project
 #. odoo-javascript
@@ -294,7 +350,7 @@ msgstr "Kiszállítva"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "Digitális marketing kampány (projekt)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
@@ -312,12 +368,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Megjelenített név"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "Vevői rendelés megjelenítése"
 
 #. module: sale_project
 #. odoo-python
@@ -334,12 +390,12 @@ msgstr "Előlegek"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "Projekt kiürítése"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "Padlóburkolási szolgáltatások"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__id
@@ -357,7 +413,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_project
 #. odoo-python
@@ -369,13 +425,13 @@ msgstr "Folyamatban"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "Mérföldkövek teljesítése alapján történő számlázás."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "Idő és anyag számlázása a vevőknek"
 
 #. module: sale_project
 #. odoo-javascript
@@ -423,6 +479,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
+"Kézi mennyiség a rendelésen: számlázás a kézzel megadott mennyiség alapján "
+"analitikus számla létrehozása nélkül.\n"
+"Szerződéses munkaidő: számlázás a kapcsolódó időnyilvántartásokon megadott "
+"órák alapján.\n"
+"Feladat létrehozása és idő követése: vevői rendelés megerősítésekor feladat "
+"létrehozása és munkaidő rögzítése."
 
 #. module: sale_project
 #. odoo-python
@@ -447,7 +509,7 @@ msgstr "Mérföldkövek"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "Új vevői rendelés tétel"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -459,12 +521,12 @@ msgstr "Nem számlázható"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Nem számlázott"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "Irodai bútor szett (feladat)"
 
 #. module: sale_project
 #. odoo-python
@@ -472,6 +534,7 @@ msgstr ""
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 msgstr ""
+"Ha a vevő megerősíti az ajánlatot, akkor az ajánlat vevői rendeléssé válik."
 
 #. module: sale_project
 #. odoo-python
@@ -482,7 +545,7 @@ msgstr "Egyéb szolgáltatások"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "Festés"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -490,11 +553,13 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once "
 "the milestone is reached."
 msgstr ""
+"A rendelt mennyiség százaléka, ez alapján történik a számlázás a mérföldkő "
+"teljesítésekor."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
-msgstr ""
+msgstr "Vízvezeték szerelés"
 
 #. module: sale_project
 #. odoo-python
@@ -506,7 +571,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Rögzített ár"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -525,6 +590,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are "
 "set up for it."
 msgstr ""
+"A helyes beállítás esetén számlázásra kerülnek ebben a vevői rendelésben a "
+"készletkiszedésekhez adott olyan termékek, melyek műveleti típusa analitikus "
+"költségeket generál."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -539,12 +607,12 @@ msgstr "Projekt"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Projekt & Feladat"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
 msgid "Project Account"
-msgstr ""
+msgstr "Projekt analitikus számla"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
@@ -554,18 +622,18 @@ msgstr "Projekt mérföldkő"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Projekt mérföldkövek"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "Projekt sablon"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Projekt vevői rendelések"
 
 #. module: sale_project
 #. odoo-python
@@ -583,17 +651,17 @@ msgstr "Mennyiség"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "Mennyiség (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Ajánlati sablon sor"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Értékesítés & Számlázás"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
@@ -628,6 +696,7 @@ msgstr "Vevői rendelés tétel"
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
 msgstr ""
+"A vevői rendelés tétel, mely frissítésre kerül a mérföldkő teljesítésekor."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -641,6 +710,15 @@ msgid ""
 "also change or remove the sales order item of each timesheet entry "
 "individually."
 msgstr ""
+"Vevői rendelés tétel, melyhez a feladathoz rögzített idők hozzáadásra "
+"kerülnek a vevőnek történő számlázás céljából.\n"
+"Alapértelmezés szerint a projekten megadott vevői rendelés tétel kerül "
+"felhasználásra. Ha ott nincs megadva semmi, akkor az a legutóbbi előre "
+"fizetett vevői rendelés tétel kerül felhasználásra, melyen még van "
+"fennmaradt idő.\n"
+"Távolítsa el a vevői rendelés tételt, ha nem szeretné a feladatot számlázni. "
+"Az egyes munkaidő bejegyzéseknél külön-külön is változtathatja vagy "
+"eltávolíthatja a vevői rendelés tételt."
 
 #. module: sale_project
 #. odoo-javascript
@@ -672,22 +750,27 @@ msgid ""
 "It can be modified on each task and timesheet entry individually if "
 "necessary."
 msgstr ""
+"Vevői rendelés tétel, mely alapértelmezés szerint kiválasztásra kerül "
+"feladatokon és munkaidő bejegyzéseken ebben a projektben, kivéve ha a "
+"munkaidőn megadott munkavállaló kifejezetten kapcsolva van egy másik vevői "
+"rendelés tételhez a projektben.\n"
+"Módosítani lehet feladatonként és munkaidő bejegyzésenként is ha szükséges."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Vevői rendelés, melyhez a feladat kapcsolásra került."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "Csavarhúzó"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Számla keresés"
 
 #. module: sale_project
 #. odoo-python
@@ -698,13 +781,13 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Számla partner..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "Szolgáltatás számlázási szabály"
 
 #. module: sale_project
 #. odoo-javascript
@@ -727,12 +810,12 @@ msgstr "Feladat"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "Feladat létrehozva (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Feladat ismétlődés"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -748,7 +831,7 @@ msgstr "Feladatok elemzése"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "The Sale Order Item should contain a service product."
-msgstr ""
+msgstr "A vevői rendelésnek tartalmaznia kell egy szolgáltatás terméket."
 
 #. module: sale_project
 #. odoo-python
@@ -757,6 +840,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"A(z) %s termék nem rendelkezhet globális projekt beállítással mivel a termék "
+"projektet fog generálni."
 
 #. module: sale_project
 #. odoo-python
@@ -765,6 +850,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"A(z) %s termék nem rendelkezhet projekt vagy projektsablon beállítással "
+"mivel nem fog projektet generálni."
 
 #. module: sale_project
 #. odoo-python
@@ -773,6 +860,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"A(z) %s termék nem rendelkezhet projektsablon beállítással mivel feladatot "
+"fog generálni egy globális projektben."
 
 #. module: sale_project
 #. odoo-python
@@ -781,18 +870,23 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed, is "
 "already linked to a project, or doesn't involve any services."
 msgstr ""
+"A projektet nem sikerült létrehozni mivel a vevői rendelést előbb meg kell "
+"erősíteni, vagy már kapcsolva van projekthez, vagy nem tartalmaz "
+"szolgáltatás jellegű terméket."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "This Sales Order must contain at least one product of type \"Service\"."
 msgstr ""
+"A vevői rendelésnek legalább egy szolgáltatás jellegű terméket kell "
+"tartalmaznia."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
-msgstr ""
+msgstr "Feladat létrehozásának forrása: %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
 #. odoo-python
@@ -838,17 +932,17 @@ msgstr "Beszállítói számlák"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Vevői rendelés megtekintése"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "Weboldal újratervezés szolgáltatás (projekt & feladat)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "Kábelezési szolgáltatások"
 
 #. module: sale_project
 #. odoo-python
@@ -857,12 +951,14 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"%(order_id)s - %(product_id)s rendelési tétel nem köthető ehhez a feladathoz "
+"mivel az egy továbbszámlázott kiadás."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "Lehetővé válik számla készítése és fizetés beszedése."
 
 #. module: sale_project
 #. odoo-python

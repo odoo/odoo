@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 00:20+0000\n"
+"PO-Revision-Date: 2025-11-20 09:45+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/mrp/"
 "ja/>\n"
@@ -1437,7 +1437,7 @@ msgstr "製造数量を変更"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
-msgstr "生産数量を変更"
+msgstr "製造数量を変更"
 
 #. module: mrp
 #. odoo-python
@@ -1919,7 +1919,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
 msgid "Currently Produced Quantity"
-msgstr "現在生産数量"
+msgstr "現在の製造済数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_description_variants
@@ -4080,7 +4080,7 @@ msgstr "オーダ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_production
 msgid "Original Production Quantity"
-msgstr "予定生産数量"
+msgstr "元の製造数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
@@ -5583,9 +5583,8 @@ msgid ""
 "The percentage of the final production cost for this by-product line "
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
-msgstr ""
-"この副産品の最終生産原価に占める割合(生産数量で割ったもの)。全ての副産品の原"
-"価割合の合計は100以下である必要があります。"
+msgstr "この副産品の最終生産原価に占める割合(製造済数量で割ったもの)。全ての副産品の"
+"原価割合の合計は100以下である必要があります。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
@@ -5634,7 +5633,7 @@ msgstr "生産済数量は正の数にして下さい。"
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 msgid "The quantity to produce must be positive!"
-msgstr "生産数量は正の数である必要があります。"
+msgstr "製造数量は正の数である必要があります。"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
@@ -6750,8 +6749,7 @@ msgstr ""
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
-msgstr ""
-"完了またはキャンセル状態の作業オーダの生産数量を変更することはできません。"
+msgstr "完了またはキャンセル状態の作業オーダの製造済数量を変更することはできません。"
 
 #. module: mrp
 #. odoo-python
@@ -6934,7 +6932,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than initial demand"
-msgstr "生産数量が初期需要を下回っています"
+msgstr "製造済数量が初期需要を下回っています"
 
 #. module: mrp
 #. odoo-python

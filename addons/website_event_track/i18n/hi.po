@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_event_track
+# * website_event_track
 #
 # Translators:
 # Wil Odoo, 2025
 # Ujjawal Pathak, 2025
 #
+# "Ujjawal Pathak (pauj)" <pauj@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 18:40+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Ujjawal Pathak, 2025\n"
-"Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"PO-Revision-Date: 2025-11-16 22:49+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
+"website_event_track/hi/>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -608,6 +612,380 @@ msgid ""
 "            </table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"            <t t-set=\"event_organizer\" t-value="
+"\"object.event_id.organizer_id\"/>\n"
+"            <t t-set=\"event_address\" t-value=\"object.event_id.address_id\""
+"/>\n"
+"            <t t-set=\"is_online\" t-value="
+"\"'is_published' in object.event_id and object.event_id.is_published\"/>\n"
+"            <t t-set=\"agenda_urls\" t-value="
+"\"object._get_track_calendar_urls()\"/>\n"
+"            <t t-set=\"google_url\" t-value=\"agenda_urls.get('google_url')\""
+"/>\n"
+"            <t t-set=\"iCal_url\" t-value=\"agenda_urls.get('iCal_url')\"/>\n"
+"            <t t-set=\"yahoo_url\" t-value=\"agenda_urls.get('yahoo_url')\"/>"
+"\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"padding: 16px; background-color: white; color: #454748; "
+"border-collapse:separate;\">\n"
+"            <tbody>\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"middle\">\n"
+"                                <span style=\"font-size: 10px;\">आपका इवेंट "
+"ट्रैक</span><br/>\n"
+"                                <span style=\"font-size: 20px; font-weight: "
+"bold;\" t-out=\"object.name\"/>\n"
+"                            </td><td valign=\"middle\" align=\"right\">\n"
+"                                <t t-if="
+"\"not object.company_id.uses_default_logo\">\n"
+"                                    <img t-att-src="
+"\"'/logo.png?company=%s' % object.company_id.id\" style="
+"\"padding: 0px; margin: 0px; margin-right: 10px; height: auto; width: 80px;\""
+" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"                            <tr><td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- TALK DESCRIPTION -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;\""
+">\n"
+"                                <div>\n"
+"                                    नमस्ते<t t-if=\"not user_id.is_public\" "
+"t-out=\"' ' + user_id.name\"/>,\n"
+"                                    <br/><br/>\n"
+"                                    आपने हाल में ही \n"
+"                                    <a t-if="
+"\"object.description or object.partner_biography\" t-attf-href="
+"\"{{ object.get_base_url() }}{{ object.website_url }}\" style=\"font-"
+"weight:bold;color:#875A7B;text-decoration:none;\" t-out=\"object.name or ''\""
+">OpenWood Collection Online Reveal</a>\n"
+"                                    <span t-else=\"\" style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</span> बातचीत में दिलचस्पी दिखाई है.\n"
+"                                </div>\n"
+"                                <div t-if=\"agenda_urls\">\n"
+"                                    <br/>\n"
+"                                    <strong>इस बातचीत को अपने कैलेंडर में "
+"जोड़ें</strong>\n"
+"                                    <a t-if=\"google_url\" t-att-href="
+"\"google_url\" t-attf-style=\"padding:3px 5px; color: {{"
+"object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                        <img src="
+"\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-"
+"align:middle;\" height=\"16\" alt=\"\"/>\n"
+"                                        Google\n"
+"                                    </a>\n"
+"                                    <a t-if=\"iCal_url\" t-att-href="
+"\"iCal_url\" t-attf-style=\"padding:3px 5px; color:{{"
+"object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"text-decoration:none;border-radius:3px;\">\n"
+"                                        <img src="
+"\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-"
+"align:middle;\" height=\"16\" alt=\"\"/>\n"
+"                                        iCal/Outlook\n"
+"                                    </a>\n"
+"                                    <a t-if=\"yahoo_url\" t-att-href="
+"\"yahoo_url\" t-attf-style=\"padding:3px 5px; color: {{"
+"object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                        <img src="
+"\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-"
+"align:middle;\" height=\"16\" alt=\"\"/> Yahoo\n"
+"                                    </a>\n"
+"                                    <br/><br/>\n"
+"                                </div>\n"
+"                                <div>\n"
+"                                    ल्द मिलते हैं,<br/>\n"
+"                                    <span style=\"color: #454748;\">\n"
+"                                    -- <br/>\n"
+"                                    <t t-out=\"object"
+".event_id.organizer_id.name or object.event_id.company_id.name or ''\""
+">YourCompany</t>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- DETAILS -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;\""
+">\n"
+"                                <table style=\"width:100%;\">\n"
+"                                    <tr>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <img src="
+"\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style="
+"\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                        </td>\n"
+"                                        <td style="
+"\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\""
+">\n"
+"                                            <div t-if=\"object.is_one_day\">"
+"\n"
+"                                                <t t-out=\"object.date\" "
+"t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;:"
+" True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">4 मई, 2021</t>\n"
+"                                                <t t-out=\"object.date\" "
+"t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;:"
+" True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">7:"
+"00 AM</t>\n"
+"                                                 - <t t-out="
+"\"object.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">5:"
+"00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div t-else=\"\">\n"
+"                                                <strong>इन्होंने</strong>\n"
+"                                                <t t-out="
+"\"object.date or object.event_id.date_begin\" t-options=\""
+"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, "
+"&quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">4 मई, 2021</t>\n"
+"                                                 - <t t-out="
+"\"object.date or object.event_id.date_begin\" t-options=\""
+"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, "
+"&quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: "
+"True, &quot;format&quot;: &quot;short&quot;}\">7:00 AM</t>\n"
+"                                                <strong>के लिए</strong>\n"
+"                                                <t t-out="
+"\"object.date_end or object.event_id.date_end\" t-options=\""
+"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, "
+"&quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">6 मई, 2021</t>\n"
+"                                                 - <t t-out="
+"\"object.date_end or object.event_id.date_end\" t-options=\""
+"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, "
+"&quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: "
+"True, &quot;format&quot;: &quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or ''\">"
+"Europe/Brussels</t></i></div>\n"
+"                                        </td>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <t t-if="
+"\"event_address or object.location_id\">\n"
+"                                                <img src="
+"\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style="
+"\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style="
+"\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address\">\n"
+"                                                <t t-set=\"location\" "
+"t-value=\"''\"/>\n"
+"                                                <t t-if="
+"\"event_address.name\">\n"
+"                                                    <div t-out="
+"\"event_address.name or ''\">Teksa SpA</div>\n"
+"                                                </t>\n"
+"                                                <t t-if="
+"\"event_address.street\">\n"
+"                                                    <div t-out="
+"\"event_address.street or ''\">Puerto Madero 9710</div>\n"
+"                                                    <t t-set=\"location\" "
+"t-value=\"event_address.street\"/>\n"
+"                                                </t>\n"
+"                                                <t t-if="
+"\"event_address.street2\">\n"
+"                                                    <div t-out="
+"\"event_address.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                                    <t t-set=\"location\" "
+"t-value=\"'%s, %s' % (location, event_address.street2)\"/>\n"
+"                                                </t>\n"
+"                                                <div>\n"
+"                                                    <t t-if="
+"\"event_address.city\">\n"
+"                                                        <t t-out="
+"\"event_address.city or ''\">Pudahuel</t>,\n"
+"                                                        <t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, event_address.city)\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-if="
+"\"event_address.state_id.name\">\n"
+"                                                        <t t-out="
+"\"event_address.state_id.name or ''\">C1</t>,\n"
+"                                                        <t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, event_address.state_id.name)\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-if="
+"\"event_address.zip\">\n"
+"                                                        <t t-out="
+"\"event_address.zip or ''\">98450</t>\n"
+"                                                        <t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, event_address.zip)\"/>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <t t-if="
+"\"event_address.country_id.name\">\n"
+"                                                    <div t-out="
+"\"event_address.country_id.name or ''\">Argentina</div>\n"
+"                                                    <t t-set=\"location\" "
+"t-value=\"'%s, %s' % (location, event_address.country_id.name)\"/>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <div t-if=\"object.location_id\" "
+"t-out=\"'Talk location:' + object.location_id.name\"/>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </td></tr>\n"
+"                            <tr t-if=\"not object.date\">\n"
+"                                <td>\n"
+"                                    <strong><u>ध्यान दें</u></strong>: ईमेल भेजते "
+"समय बातचीत की शुरुआत और समाप्ति का समय नहीं बताया गया था. इस मैसेज में दिए गए समय इवें"
+"ट के समय से मेल खाते हैं.\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <t t-if=\"event_organizer\">\n"
+"                                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;\""
+">\n"
+"                                <!-- CONTACT ORGANIZER -->\n"
+"                                <t t-if="
+"\"object.event_id.organizer_id.name or object.event_id.company_id.name\">\n"
+"                                    <div>\n"
+"                                        <span style=\"font-weight:300;margin:"
+"10px 0px\">इस बातचीत के बारे में कोई सवाल है?</span>\n"
+"                                        <div>कृपया ऑर्गनाइज़र से संपर्क करें:</div>\n"
+"                                        <ul>\n"
+"                                            <li t-out=\"object"
+".event_id.organizer_id.name or object.event_id.company_id.name or ''\""
+">YourCompany</li>\n"
+"                                            <t t-if=\"event_organizer.email\""
+">\n"
+"                                                <li>मेल: <a t-attf-href="
+"\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></li>"
+"\n"
+"                                            </t>\n"
+"                                            <t t-if="
+"\"object.event_id.organizer_id.phone or object.event_id.company_id.phone\">\n"
+"                                                <li>फ़ोन: <t t-out="
+"\"object.event_id.organizer_id.phone or object.event_id.company_id.phone\""
+"/></li>\n"
+"                                            </t>\n"
+"                                        </ul>\n"
+"                                    </div>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                                <hr t-if=\"is_online or event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;\""
+">\n"
+"                                <!-- PWA MARKGETING -->\n"
+"                                <div t-if=\"is_online\">\n"
+"                                    <strong>सबसे अच्छा मोबाइल अनुभव "
+"पाएं.</strong>\n"
+"                                    <a href=\"/event\">हमारा मोबाइल ऐप्लिकेशन "
+"इंस्टॉल करें</a>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- PWA MARKGETING SEPARATION-->\n"
+"                                <hr t-if=\"is_online and event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;\""
+">\n"
+"                                <!-- GOOGLE MAPS LINK -->\n"
+"                                <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                                    <div>\n"
+"                                        <img src="
+"\"/web_editor/font_to_img/61505/rgb(81,81,102)/20\" height=\"20\" style"
+"=\"vertical-align: bottom;\"/>\n"
+"                                        <a t-attf-href="
+"\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                            <img t-if="
+"\"event_address.static_map_url and event_address.static_map_url_is_valid\" t"
+"-attf-src=\"{{ event_address.static_map_url }}\" style=\"vertical-"
+"align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                            <span t-else=\"\">Google Maps पर "
+"हमारे जगह की जानकारी देखें</span>\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td></tr></table>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"            </table>\n"
+"            </td></tr>\n"
+"            <!-- FOOTER BY -->\n"
+"            <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                  <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"                    इन्होंने भेजा है <a target=\"_blank\" t-attf-href="
+"\"{{ object.get_base_url() }}\" style=\"color: #875A7B;\" t-out=\"object"
+".event_id.organizer_id.name or object.event_id.company_id.name or ''\""
+">YourCompany</a>\n"
+"                    <t t-if="
+"\"'website_url' in object.event_id and object.event_id.website_url\">\n"
+"                        <br/>\n"
+"                        <a href=\"/event\" style=\"color:#875A7B;\">हमारे सभी "
+"इवेंट</a> के बारे में जानें.\n"
+"                    </t>\n"
+"                  </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            </table>\n"
+"        "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -705,14 +1083,14 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
 msgid "Advanced reporting"
-msgstr ""
+msgstr "ऐडवांस्ड रिपोर्टिंग"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Agenda"
-msgstr ""
+msgstr "एजेंडा"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
@@ -723,7 +1101,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "All Events"
-msgstr ""
+msgstr "सभी इवेंट"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
@@ -764,7 +1142,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 msgid "Application"
-msgstr ""
+msgstr "ऐप्लिकेशन"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -893,7 +1271,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Categories"
-msgstr ""
+msgstr "कैटगरी"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
@@ -948,7 +1326,7 @@ msgstr "संस्था"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
 msgid "Company Name"
-msgstr ""
+msgstr "कंपनी का नाम"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_res_config_settings
@@ -988,22 +1366,22 @@ msgstr "संपर्क"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Contact Details"
-msgstr ""
+msgstr "संपर्क करने की जानकारी"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
 msgid "Contact Email"
-msgstr ""
+msgstr "संपर्क करने के लिए ईमेल"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact Information"
-msgstr ""
+msgstr "संपर्क जानकारी"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
 msgid "Contact Phone"
-msgstr ""
+msgstr "संपर्क करने के लिए फ़ोन"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -1205,7 +1583,7 @@ msgstr "ईमेल टेंप्लेट"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Email*"
-msgstr ""
+msgstr "ईमेल*"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1219,7 +1597,7 @@ msgstr "त्रुटि!"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
-msgstr ""
+msgstr "इवेंट"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
@@ -1341,7 +1719,7 @@ msgstr "फ़िल्टर"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "Finished"
-msgstr ""
+msgstr "पूरा हुआ"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_2
@@ -1351,7 +1729,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "कानबान में फ़ोल्ड किया गया"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
@@ -1405,22 +1783,22 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
 msgid "Green"
-msgstr ""
+msgstr "ग्रीन"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "ग्रीन कानबान लेबल"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
 msgid "Grey"
-msgstr ""
+msgstr "ग्रे"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "ग्रे कानबान लेबल"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
@@ -1446,7 +1824,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
 msgid "High"
-msgstr ""
+msgstr "हाई"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
@@ -1575,7 +1953,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "In"
-msgstr ""
+msgstr "इन"
 
 #. module: website_event_track
 #. odoo-python
@@ -1603,7 +1981,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "Install"
-msgstr ""
+msgstr "इंस्टॉल करें"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1619,7 +1997,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Introduction"
-msgstr ""
+msgstr "भूमिका"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1663,7 +2041,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "पब्लिश है"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
@@ -1708,37 +2086,37 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
 msgid "Job Position"
-msgstr ""
+msgstr "जॉब पोज़िशन"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Job Title"
-msgstr ""
+msgstr "नौकरी का शीर्षक"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "कानबान ब्लॉक किए जाने की व्याख्या"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "कानबान ब्लॉक किए जाने की व्याख्या"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "कानबान स्टेट"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "कानबान स्टेट लेबल"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "कानबान मान्य होने की व्याख्या"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -1829,7 +2207,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Location"
-msgstr ""
+msgstr "जगह"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
@@ -1849,7 +2227,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track31
 msgid "Lunch"
-msgstr ""
+msgstr "लंच"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
@@ -1871,7 +2249,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
-msgstr ""
+msgstr "मीडियम"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
@@ -2070,7 +2448,7 @@ msgstr "फ़ोन"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Picture"
-msgstr ""
+msgstr "पिक्चर"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -2142,7 +2520,7 @@ msgstr ""
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Published"
-msgstr ""
+msgstr "प्रकाशित"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
@@ -2164,17 +2542,17 @@ msgstr "रेटिंग"
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage4
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage5
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "अगले स्टेज के लिए तैयार"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
 msgid "Red"
-msgstr ""
+msgstr "रेड"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "रेड कानबान लेबल"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
@@ -2324,7 +2702,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "Speakers"
-msgstr ""
+msgstr "स्पीकर"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -2340,7 +2718,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
-msgstr ""
+msgstr "स्टेज का नाम"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -2388,7 +2766,7 @@ msgstr "टैग नाम"
 #. module: website_event_track
 #: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "टैग नाम पहले से ही मौजूद है!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
@@ -2422,7 +2800,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Talks"
-msgstr ""
+msgstr "बातचीत"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2765,7 +3143,7 @@ msgstr "अज्ञात"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "Unpublished"
-msgstr ""
+msgstr "अप्रकाशित"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -2812,13 +3190,13 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "मौजूदा वेबसाइट पर दिखना"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Visitor"
-msgstr ""
+msgstr "विज़िटर"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
@@ -2914,7 +3292,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_menu
 msgid "Website Menu"
-msgstr ""
+msgstr "वेबसाइट मेन्यू"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
@@ -2924,7 +3302,7 @@ msgstr "वेबसाइट मैसेज"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
-msgstr ""
+msgstr "वेबसाइट यूआरएल"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_visitor
@@ -2939,17 +3317,17 @@ msgstr "वेबसाइट कम्यूनिकेशन हिस्ट�
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "वेबसाइट पर मेटा की जानकारी"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "वेबसाइट पर मेटा कीवर्ड"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "वेबसाइट पर मेटा टाइटल"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
@@ -3068,7 +3446,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
-msgstr ""
+msgstr "घंटे"
 
 #. module: website_event_track
 #. odoo-python

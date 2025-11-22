@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-# 
+#
 # Translators:
 # Eirini Spiridonidou <eirinisofia999@gmail.com>, 2024
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2024
@@ -12,26 +12,42 @@
 # Agapi Psyllou, 2025
 # Anastasia Mimou, 2025
 # Charalampos Loukas, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-11-21 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Charalampos Loukas, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid "%(user_name)s already in other teams (%(team_names)s)."
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid "%(user_names)s already in other teams (%(team_names)s)."
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -55,6 +71,12 @@ msgid "Action Needed"
 msgstr "Απαιτείται ενέργεια"
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Activate \"Multi-team\""
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
@@ -72,36 +94,21 @@ msgstr "Πρόσθεσε ένα Μέλος της Ομάδας"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid ""
-"Add members to automatically assign their documents to this sales team."
+msgid "Add members to automatically assign their documents to this sales team."
 msgstr ""
 "Προσθήκη μελών για να επισυνάπτουν αυτόματα τα έγγραφά τους σε αυτήν την "
 "ομάδα πωλήσεων."
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team_member.py:0
-msgid ""
-"Adding %(user_name)s in this team will remove them from %(team_names)s. "
-"Working in multiple teams? Activate the option under Configuration>Settings."
-msgstr ""
-"Προσθέτοντας τους %(user_name)s σε αυτή την ομάδα θα  διαγράφούν από "
-"%(team_names)s. Εργασία σε πολλές ομάδες; Ενεργοποιήστε την επιλογή στο "
-"μενού Configuration>Settings."
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_names)s in this team will remove them from %(team_names)s."
-msgstr ""
-"Προσθέτοντας %(user_names)s σε αυτή την ομάδα θα διαγραφούν από "
-"%(team_names)s."
-
-#. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
 msgstr "Διαχειριστής"
+
+#. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/js/crm_team_form.js:0
+msgid "An error occurred while activating the Multi-Team option."
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
@@ -208,11 +215,6 @@ msgid "Dashboard Button"
 msgstr "Κουμπί Ταμπλό"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
-msgid "Dashboard Graph Data"
-msgstr "Γραφικά Δεδομένα Ταμπλό"
-
-#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
@@ -227,6 +229,7 @@ msgstr "Σχεδίαση"
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
+#: model:ir.model.fields,field_description:sales_team.field_res_users__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -242,10 +245,8 @@ msgstr "Αγαπημένα Μέλη"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid ""
-"Favorite teams to display them in the dashboard and access them easily."
-msgstr ""
-"Αγαπημένες ομάδες για προβολή στο Ταμπλό και εύκολη πρόσβαση σε αυτές."
+msgid "Favorite teams to display them in the dashboard and access them easily."
+msgstr "Αγαπημένες ομάδες για προβολή στο Ταμπλό και εύκολη πρόσβαση σε αυτές."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -279,6 +280,7 @@ msgstr "Έχει Μήνυμα"
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__id
+#: model:ir.model.fields,field_description:sales_team.field_res_users__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -391,11 +393,6 @@ msgid "Messages"
 msgstr "Μηνύματα"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__mobile
-msgid "Mobile"
-msgstr "Κινητό"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
@@ -463,6 +460,7 @@ msgstr "Αξιολογήσεις"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
+#: model:res.groups.privilege,name:sales_team.res_groups_privilege_sales
 msgid "Sales"
 msgstr "Πωλήσεις"
 
@@ -524,12 +522,6 @@ msgstr "Πωλητές"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
 msgstr "Αναζήτηση Ομάδων Πωλήσεων"
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid "Sample data"
-msgstr "Δείγματα δεδομένων"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
@@ -606,6 +598,14 @@ msgid "The default company for this user."
 msgstr "Η προεπιλεγμένη εταιρεία αυτού του χρήστη."
 
 #. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
@@ -624,8 +624,8 @@ msgstr "Εκπαίδευση"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
-"UX: Δώστε στους χρήστες να μην προσθέτουν στην τρέχουσα επιλεγμένη ομάδα για"
-" την αποφυγή διπλοεγγραφών"
+"UX: Δώστε στους χρήστες να μην προσθέτουν στην τρέχουσα επιλεγμένη ομάδα για "
+"την αποφυγή διπλοεγγραφών"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
@@ -642,11 +642,10 @@ msgstr "Απροσδιόριστο μοντέλο γραφήματος για τ
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid ""
-"Use Sales Teams to organize your sales departments and draw up reports."
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
-"Χρησιμοποιήστε Ομάδες Πωλήσεων για να οργανώσετε τα τμήματα πωλήσεών σας και"
-" να σχεδιάσετε reports."
+"Χρησιμοποιήστε Ομάδες Πωλήσεων για να οργανώσετε τα τμήματα πωλήσεών σας και "
+"να σχεδιάσετε reports."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -655,7 +654,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
-"Χρησιμοποιήστε την Ομάδα Πωλήσεων για να οργανώσετε τα τμήματα πωήσεων σας..\n"
+"Χρησιμοποιήστε την Ομάδα Πωλήσεων για να οργανώσετε τα τμήματα πωήσεων "
+"σας..\n"
 "                Κάθε ομάδα θα εργάζεται σε ξεχωριστό pipeline."
 
 #. module: sales_team
@@ -671,6 +671,14 @@ msgstr ""
 #: model:ir.model,name:sales_team.model_res_users
 msgid "User"
 msgstr "Χρήστης"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -703,28 +711,30 @@ msgid "Users assigned to this team."
 msgstr "Χρήστες που έχουν ανατεθεί σε αυτή την ομάδα."
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "Ιστότοπος"
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Working in multiple teams? Activate the option under Configuration>Settings."
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Working in multiple teams?"
 msgstr ""
-"Εργάζεστε με πολλαπλές ομάδες: Ενεργοποιήστε την επιλογή στο "
-"Διαμόρφωση>Ρυθμίσεις."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"You are trying to create duplicate membership(s). We found that "
-"%(duplicates)s already exist(s)."
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
 msgstr ""
-"Προσπαθείτε να δημιουργήσετε διπλότυπες συνδρομές . Βρήκαμε ότι  "
-"%(duplicates)s υπάρχουν ήδη."
+"Προσπαθείτε να δημιουργήσετε διπλότυπες συνδρομές . Βρήκαμε ότι  %"
+"(duplicates)s υπάρχουν ήδη."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -753,8 +763,39 @@ msgstr ""
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
 msgstr ""
 "Ο χρήστης θα έχει πρόσβαση στις ρυθμίσεις πωλήσεων και στις αναφορές "
 "στατιστικών."
+
+#~ msgid ""
+#~ "Adding %(user_name)s in this team will remove them from %(team_names)s. "
+#~ "Working in multiple teams? Activate the option under "
+#~ "Configuration>Settings."
+#~ msgstr ""
+#~ "Προσθέτοντας τους %(user_name)s σε αυτή την ομάδα θα  διαγράφούν από %"
+#~ "(team_names)s. Εργασία σε πολλές ομάδες; Ενεργοποιήστε την επιλογή στο "
+#~ "μενού Configuration>Settings."
+
+#~ msgid ""
+#~ "Adding %(user_names)s in this team will remove them from %(team_names)s."
+#~ msgstr ""
+#~ "Προσθέτοντας %(user_names)s σε αυτή την ομάδα θα διαγραφούν από %"
+#~ "(team_names)s."
+
+#~ msgid "Dashboard Graph Data"
+#~ msgstr "Γραφικά Δεδομένα Ταμπλό"
+
+#~ msgid "Mobile"
+#~ msgstr "Κινητό"
+
+#~ msgid "Sample data"
+#~ msgstr "Δείγματα δεδομένων"
+
+#~ msgid ""
+#~ "Working in multiple teams? Activate the option under "
+#~ "Configuration>Settings."
+#~ msgstr ""
+#~ "Εργάζεστε με πολλαπλές ομάδες: Ενεργοποιήστε την επιλογή στο "
+#~ "Διαμόρφωση>Ρυθμίσεις."

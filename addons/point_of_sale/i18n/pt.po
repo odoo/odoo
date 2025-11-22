@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2025-11-08 22:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -247,6 +247,11 @@ msgstr "10000,00"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "11.11"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "123.45"
 msgstr "123,45"
 
@@ -259,6 +264,11 @@ msgstr "1234567890"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
 msgstr "2-03-2000 9:00 AM"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "38.83"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_39
@@ -372,27 +382,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Olá <t t-out=\"client_name\""
-">Nome do cliente</t>,</t>\n"
+"                        <t t-if=\"client_name\">Olá <t t-"
+"out=\"client_name\">Nome do cliente</t>,</t>\n"
 "                        <t t-else=\"\">Olá,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Agradecemos por comprar da <t t-out=\"store_name\""
-">Nome da loja</t>!</div>\n"
+"                    <div>Agradecemos por comprar da <t t-"
+"out=\"store_name\">Nome da loja</t>!</div>\n"
 "                    <div> Em anexo, você encontrará o recibo de compra de "
 "<span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">data</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">hora</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">hora</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Cordialmente,</div>\n"
@@ -407,8 +417,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title="
-"\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
+"PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -423,8 +433,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Prezado(a) %(client_name)s,<br/>Aqui está seu recibo %(is_invoiced)"
-"sde             %(pos_name)s no valor de %(amount)s da %(company_name)s. </p>"
+"<p>Prezado(a) %(client_name)s,<br/>Aqui está seu recibo %"
+"(is_invoiced)sde             %(pos_name)s no valor de %(amount)s da %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -432,8 +443,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">A "
-"determinar</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">A determinar</"
+"span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -475,9 +486,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Dica: adicione uma lista de preços de devolução "
-"(ex.: 0€)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Dica: adicione uma lista de preços de devolução (ex.: 0€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1971,7 +1981,8 @@ msgstr "Torta de cereja"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_bagel_product_template
 msgid "Chewy and dense bagel, perfect for sandwiches or with cream cheese."
-msgstr "Bagel mastigável e denso, perfeito para sanduíches ou com cream cheese."
+msgstr ""
+"Bagel mastigável e denso, perfeito para sanduíches ou com cream cheese."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_ids
@@ -2961,7 +2972,8 @@ msgstr "Nome da demo"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_rye_bread_product_template
 msgid "Dense and dark, made with rye flour, perfect for sandwiches."
-msgstr "Denso e escuro, feito com farinha de centeio, perfeito para sanduíches."
+msgstr ""
+"Denso e escuro, feito com farinha de centeio, perfeito para sanduíches."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3322,8 +3334,8 @@ msgid ""
 "form."
 msgstr ""
 "Os funcionários podem escanear seus crachás ou inserir um PIN para fazer "
-"login em uma sessão de PDV. Essas credenciais são configuráveis na aba *"
-"Definições de RH* no formulário do funcionário."
+"login em uma sessão de PDV. Essas credenciais são configuráveis na aba "
+"*Definições de RH* no formulário do funcionário."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3817,7 +3829,8 @@ msgstr "Ocultar uso de terminal de pagamento"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
-msgstr "Oculte ou exiba o menu Predefinições na configuração do Ponto de Venda."
+msgstr ""
+"Oculte ou exiba o menu Predefinições na configuração do Ponto de Venda."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4321,8 +4334,8 @@ msgid ""
 msgstr ""
 "Parece que o(s) pedido(s) do PDV %(order_ref)s não tem um cliente.\n"
 "\n"
-"Você gostaria de definir %(customer_name)s como o cliente para o(s) pedido(s)"
-" selecionado(s)?"
+"Você gostaria de definir %(customer_name)s como o cliente para o(s) "
+"pedido(s) selecionado(s)?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -5084,8 +5097,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"Se não houver um plano de contas configurado, acesse o menu "
-"\"configuração/configurações\" e instale um na guia Faturamento."
+"Se não houver um plano de contas configurado, acesse o menu \"configuração/"
+"configurações\" e instale um na guia Faturamento."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5341,7 +5354,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr "Somente os administradores podem editar cabeçalhos e rodapés de recibos"
+msgstr ""
+"Somente os administradores podem editar cabeçalhos e rodapés de recibos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -6089,7 +6103,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
-msgstr "Defina a conta de receita para esse produto: '%(product)s' (id:%(id)d)."
+msgstr ""
+"Defina a conta de receita para esse produto: '%(product)s' (id:%(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8521,8 +8536,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"O Ponto de Venda suporta apenas a estratégia de arredondamento "
-"\"adicionar uma linha de arredondamento\"."
+"O Ponto de Venda suporta apenas a estratégia de arredondamento \"adicionar "
+"uma linha de arredondamento\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8726,8 +8741,8 @@ msgstr ""
 msgid ""
 "The order delivery / pickup date is in the future. You cannot cancel it."
 msgstr ""
-"A data de entrega/retirada do pedido está no futuro. Você não pode "
-"cancelá-la."
+"A data de entrega/retirada do pedido está no futuro. Você não pode cancelá-"
+"la."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9429,6 +9444,7 @@ msgstr "Hoje"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Total"
 msgstr "Total"
 
@@ -10122,7 +10138,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
-msgstr "Não é possível criar uma sessão que comece antes de: %(lock_date_info)s"
+msgstr ""
+"Não é possível criar uma sessão que comece antes de: %(lock_date_info)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10238,8 +10255,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Você ativou a opção \"Identificar cliente\" para a forma de pagamento "
-"%(payment_method)s, mas há cliente no pedido %(order)s."
+"Você ativou a opção \"Identificar cliente\" para a forma de pagamento %"
+"(payment_method)s, mas há cliente no pedido %(order)s."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

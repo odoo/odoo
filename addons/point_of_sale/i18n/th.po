@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2025-11-08 22:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -230,6 +230,11 @@ msgstr "10000.00"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "11.11"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "123.45"
 msgstr "123.45"
 
@@ -242,6 +247,11 @@ msgstr "1234567890"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
 msgstr "2-03-2000 9:00 น."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "38.83"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_39
@@ -353,27 +363,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">สวัสดีค่ะ <t t-out="
-"\"client_name\">ชื่อลูกค้า</t>,</t>\n"
+"                        <t t-if=\"client_name\">สวัสดีค่ะ <t t-"
+"out=\"client_name\">ชื่อลูกค้า</t>,</t>\n"
 "                        <t t-else=\"\">สวัสดีค่ะ</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>ขอขอบคุณที่ซื้อสินค้าจาก <t t-out=\"store_name\""
-">ชื่อร้านค้า</t>!</div>\n"
-"                    <div>แนบใบเสร็จรับเงินสำหรับการซื้อของคุณ<span><t t-out="
-"\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
-"MMMM&quot;,                          lang_code=lg) or ''"
-"\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">time</t>.</span>\n"
+"                    <div>ขอขอบคุณที่ซื้อสินค้าจาก <t t-out=\"store_name\">ชื่อร้านค้า</"
+"t>!</div>\n"
+"                    <div>แนบใบเสร็จรับเงินสำหรับการซื้อของคุณ<span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">date</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">time</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>ด้วยความนับถือ,</div>\n"
@@ -8978,8 +8988,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
-"สมุดบัญชีเล่มนี้เชื่อมโยงกับวิธีการชำระเงิน %(payment_method)s ซึ่งกำลังถูกใช้โดยออร์เดอร์ "
-"%(pos_order)s ในเซสชัน POS ที่กำลังใช้งานอยู่ %(pos_session)s"
+"สมุดบัญชีเล่มนี้เชื่อมโยงกับวิธีการชำระเงิน %(payment_method)s ซึ่งกำลังถูกใช้โดยออร์เดอร์ %"
+"(pos_order)s ในเซสชัน POS ที่กำลังใช้งานอยู่ %(pos_session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9206,6 +9216,7 @@ msgstr "วันนี้"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Total"
 msgstr "รวม"
 
