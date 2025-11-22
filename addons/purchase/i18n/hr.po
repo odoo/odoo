@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 19:10+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
@@ -262,8 +262,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
 "title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" title="
-"\"Otkazano\"/><span class=\"d-none d-md-inline\">Otkazano</span>"
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Otkazano\"/><span class=\"d-none d-md-inline\">Otkazano</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -307,10 +307,10 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\""
-">Zahtjev za ponudom</span>\n"
-"           <span class=\"o_form_label\" invisible="
-"\"state in ('draft', 'sent')\">Narudžba</span>"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Zahtjev za ponudom</span>\n"
+"           <span class=\"o_form_label\" invisible=\"state in ('draft', "
+"'sent')\">Narudžba</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -759,8 +759,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. "
-"%(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
+"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. %"
+"(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
 "želite promijeniti, arhivirajte proizvod i stvorite novi."
 
 #. module: purchase
@@ -1541,7 +1541,8 @@ msgstr "Označuje količinu proizvoda koju želite naručiti."
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr "Interno upozorenje za partnera ili proizvode koje je postavio korisnik."
+msgstr ""
+"Interno upozorenje za partnera ili proizvode koje je postavio korisnik."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1765,10 +1766,8 @@ msgid "Message for Purchase Order"
 msgstr "Poruka za narudžbu (nabave)"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
 msgstr "Poruka za stavku naloga za nabavu"
 
@@ -2322,6 +2321,12 @@ msgstr "Unos u kupovnu mrežu"
 #: code:addons/purchase/models/product.py:0
 msgid "Purchase History for %s"
 msgstr "Povijest nabave za %s"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
+msgid "Purchase Line Warn Msg"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
@@ -3280,6 +3285,12 @@ msgstr "Vrsta aktivnosti iznimke na zapisu."
 msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
 msgstr ""
 
 #. module: purchase

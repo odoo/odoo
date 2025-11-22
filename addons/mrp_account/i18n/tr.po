@@ -17,13 +17,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-12 14:57+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-20 13:20+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "mrp_account/tr/>\n"
 "Language: tr\n"
@@ -35,27 +36,23 @@ msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-#, fuzzy
 msgid "$1000"
 msgstr "$1000"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-#, fuzzy
 msgid "$5000"
 msgstr "$5000"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
-#, fuzzy
 msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
 msgstr "%(value)s için %(quantity)s %(unit)s adresinden %(production)s"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
-#, fuzzy
 msgid "%s - Labour"
 msgstr "%s - İşgücü"
 
@@ -71,13 +68,11 @@ msgstr "<span class=\"o_stat_text\">Üretim</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
-#, fuzzy
 msgid "<span class=\"o_stat_text\">WIP</span>"
 msgstr "<span class=\"o_stat_text\">WIP</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-#, fuzzy
 msgid "<span style=\"margin-right: 15px;\">Total</span>"
 msgstr "<span style=\"margin-right: 15px;\">Toplam</span>"
 
@@ -103,7 +98,6 @@ msgstr "<span>Miktar</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-#, fuzzy
 msgid "<span>Ref.</span>"
 msgstr "<span>Ref.</span>"
 
@@ -134,7 +128,6 @@ msgstr "YMM muhasebe kaydı yapılırken oluşturulacak yevmiye satırı"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-#, fuzzy
 msgid "Acme Corp."
 msgstr "Acme Corp."
 
@@ -177,7 +170,6 @@ msgstr "BoM Sayısı"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
-#, fuzzy
 msgid "Bom"
 msgstr "Bom"
 
@@ -211,12 +203,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp_account/report/stock_valuation_report.py:0
 #: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Cost of Production"
 msgstr "Üretim Maliyeti"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
-#, fuzzy
 msgid "Costs Hour Account"
 msgstr "Maliyetler Saat Hesabı"
 
@@ -449,13 +441,11 @@ msgstr "Üretim"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
-#, fuzzy
 msgid "Production Account"
 msgstr "Üretim Hesabı"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-#, fuzzy
 msgid "REF123"
 msgstr "REF123"
 
@@ -467,9 +457,8 @@ msgstr "Referans"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
-#, fuzzy
 msgid "Relevant WIP MOs"
-msgstr "İlgili WIP MO'ları"
+msgstr "İlgili Devam Eden Üretim Emirleri"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -506,17 +495,15 @@ msgstr "Stok Değerleme"
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
-#, fuzzy
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
-"Bu WIP girişinin dayandığı MO'lar. WIP girişi oluşturulurken ayarlanması "
-"beklenir."
+"Bu Devam Eden girişinin dayandığı Üretimler. Girişi oluşturulurken "
+"ayarlanması beklenir."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
-#, fuzzy
 msgid ""
 "The expense is accounted for when the manufacturing order is marked as done. "
 "If not set, it is the expense account of the final product that will be used "
@@ -528,7 +515,6 @@ msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
-#, fuzzy
 msgid ""
 "This account will be used as a valuation counterpart for both components and "
 "final products for manufacturing orders.\n"
@@ -570,28 +556,24 @@ msgstr "YMM - Genel Giderler"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
-#, fuzzy
 msgid "WIP Entries of %s"
-msgstr "WIP Girişleri %s"
+msgstr "Devam Eden Girişleri %s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_count
-#, fuzzy
 msgid "WIP Journal Entry Count"
-msgstr "WIP Günlük Girişi Sayısı"
+msgstr "Devam Eden Yevmiye Girişi Sayısı"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
-#, fuzzy
 msgid "WIP MOs of %s"
-msgstr "WIP MO'ları %s"
+msgstr "Devam Eden Üretim Emirleri %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-#, fuzzy
 msgid "WIP Report for"
-msgstr "için WIP Raporu"
+msgstr "Şunun için Devam Eden İşler Raporu"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
@@ -605,9 +587,8 @@ msgstr "YMM muhasebe sihirbazı"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
-#, fuzzy
 msgid "WIP report"
-msgstr "WIP raporu"
+msgstr "Devam Eden İşler raporu"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
@@ -616,9 +597,8 @@ msgstr "İş Merkezi Analitik Hesap Satırı"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_ids
-#, fuzzy
 msgid "Wip Move"
-msgstr "Silme Hareketi"
+msgstr "Devam Eden İş Hareketi"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting

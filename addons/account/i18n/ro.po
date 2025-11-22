@@ -14,13 +14,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Cuciureanu Larisa <larisa.cuciureanu@nexterp.ro>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Ciocoiu Beatrice-Flavia <ciocoiuflavia008@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-10 15:46+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-20 10:30+0000\n"
+"Last-Translator: Ciocoiu Beatrice-Flavia <ciocoiuflavia008@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/account/"
 "ro/>\n"
 "Language: ro\n"
@@ -220,18 +221,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) ar trebui să fie un cont de tip \"%"
-"(receivable)s\" sau \"%(payable)s\" cu ambele opțiuni \"%"
-"(allow_reconciliation)s\" și \"%(non_trade)s\" activate."
 
 #. module: account
 #. odoo-python
@@ -2689,12 +2678,6 @@ msgid "Account Move Count"
 msgstr "Număr mișcări cont"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__line_ids
-msgid "Account Move Line Items"
-msgstr "Elemente linie mișcare cont"
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Inversare Notă Contabilă"
@@ -3318,8 +3301,6 @@ msgid "Add a rounding line"
 msgstr "Adăugați o linie de rotunjire"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
 msgstr "Adaugă o secțiune"
@@ -9530,6 +9511,8 @@ msgstr ""
 "facturi noi:"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
 msgstr "Ascunde compoziția"
@@ -9541,6 +9524,8 @@ msgid "Hide Post Button"
 msgstr "Ascunde butonul de postare"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
 msgstr "Ascunde prețurile"
@@ -11200,8 +11185,8 @@ msgstr "Jurnal Etichetă element"
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
 #: model:ir.actions.act_window,name:account.action_account_moves_all_tree
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11209,6 +11194,12 @@ msgstr "Jurnal Etichetă element"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
 msgstr "Elemente jurnal"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+msgid "Journal Items (DEPRECATED)"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -14820,7 +14811,7 @@ msgstr "Bon"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Receipts"
-msgstr "Bonuri"
+msgstr "Recepții"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_receivable
@@ -16295,6 +16286,12 @@ msgid "Show Accounting Features - Readonly"
 msgstr "Afișați caracteristicile contabile - Readonly"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Composition"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -16366,6 +16363,12 @@ msgstr "Afișează diferența de plată"
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
 msgstr "Afișează detaliile termenului de plată"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Prices"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -17202,7 +17205,7 @@ msgstr "Scurtătură formulă etichete de taxă"
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr "Tipul impozitului"
+msgstr "Tipul Taxei"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_calculation_rounding_method
@@ -17545,6 +17548,13 @@ msgid ""
 msgstr ""
 "Disponibilitatea este setată pe 'Potrivire țară', dar câmpul Țară nu este "
 "completat."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+"Factura / Data de restituire este necesară pentru a valida acest document."
 
 #. module: account
 #. odoo-python
@@ -21866,6 +21876,18 @@ msgstr ""
 "or 'n/a' }})"
 
 #~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) ar trebui să fie un cont de tip \"%"
+#~ "(receivable)s\" sau \"%(payable)s\" cu ambele opțiuni \"%"
+#~ "(allow_reconciliation)s\" și \"%(non_trade)s\" activate."
+
+#~ msgid "Account Move Line Items"
+#~ msgstr "Elemente linie mișcare cont"
+
+#~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
 #~ "And its reverse entry: %(reverse_entry)s."
 #~ msgstr ""
@@ -23251,10 +23273,6 @@ msgstr ""
 #~ "Trebuie să ștergeți %(model)s's %(sequence_field)s pentru a continua.\n"
 #~ "În acest scop, ar trebui să resecvențiați înregistrările pentru a menține "
 #~ "o secvență continuă bazată pe data."
-
-#~ msgid "The Bill/Refund date is required to validate this document."
-#~ msgstr ""
-#~ "Factura / Data de restituire este necesară pentru a valida acest document."
 
 #~ msgid ""
 #~ "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "

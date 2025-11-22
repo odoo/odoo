@@ -4,13 +4,15 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-11-12 15:04+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-20 13:21+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/tr/>\n"
 "Language: tr\n"
@@ -45,20 +47,17 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-#, fuzzy
 msgid "%(name)s's %(action_name)s"
 msgstr "%(name)s's %(action_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-#, fuzzy
 msgid "%(name)s's Sales Order Items"
 msgstr "%(name)s'nin Satış Siparişi Kalemleri"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-#, fuzzy
 msgid ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
 "order associated with this project has been cancelled. We recommend either "
@@ -74,7 +73,6 @@ msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
-#, fuzzy
 msgid ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
 "order associated with this task has been cancelled. We recommend either "
@@ -90,7 +88,6 @@ msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            <span class=\"o_stat_value\">0</span> Sales "
@@ -110,7 +107,6 @@ msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            Sales Orders\n"
@@ -122,19 +118,16 @@ msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
-#, fuzzy
 msgid "<span class=\"o_stat_text\"> Projects</span>"
 msgstr "<span class=\"o_stat_text\"> Proje Yönetimi</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
-#, fuzzy
 msgid "<span class=\"o_stat_text\"> Tasks</span>"
 msgstr "<span class=\"o_stat_text\"> Görevler</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Preview</span>"
 msgstr "<span class=\"o_stat_text\">Önizleme</span>"
 
@@ -147,7 +140,6 @@ msgstr "<span class=\"o_stat_text\">Satış Siparişi</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.task_type_edit_inherit_sale_project
-#, fuzzy
 msgid ""
 "<span name=\"rating_status_helper\">\n"
 "                    <span invisible=\"rating_status == 'periodic'\">A rating "
@@ -161,10 +153,10 @@ msgstr ""
 "<span name=\"rating_status_helper\">\n"
 "                    <span invisible=\"rating_status == 'periodic'\">Projenin "
 "faturalandırılabilir olması koşuluyla, bir görev bu aşamaya ulaşır ulaşmaz "
-"bir derecelendirme talebi gönderilecektir.</span>\n"
+"bir puanlama talebi gönderilecektir.</span>\n"
 "                    <span invisible=\"rating_status == 'stage'\">Projenin "
 "faturalandırılabilir olması koşuluyla, görev bu aşamada kaldığı sürece "
-"derecelendirme talepleri gönderilecektir.</span>\n"
+"puanlama talepleri gönderilecektir.</span>\n"
 "                </span>"
 
 #. module: sale_project
@@ -175,7 +167,6 @@ msgstr "<span>)</span>"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
-#, fuzzy
 msgid ""
 "A project must be defined on the quotation %(order)s or on the form of "
 "products creating a task on order.\n"
@@ -184,12 +175,11 @@ msgid ""
 msgstr ""
 "Teklifte %(order)s veya sipariş üzerine görev oluşturan ürünlerin formunda "
 "bir proje tanımlanmalıdır.\n"
-"Aşağıdaki ürün, görevini koymak için proje yönetimine ihtiyaç duyar: "
+"Aşağıdaki ürün, görev atanması için proje yönetimine ihtiyaç duyar: "
 "%(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
-#, fuzzy
 msgid ""
 "A task will be created for the project upon sales order confirmation. The "
 "analytic distribution of this project will also serve as a reference for "
@@ -247,14 +237,12 @@ msgstr "İptal Edildi"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
-#, fuzzy
 msgid "Confirm & Close"
 msgstr "Onayla ve Kapat"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-#, fuzzy
 msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
@@ -271,15 +259,13 @@ msgstr "Satılan malların maliyeti"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-#, fuzzy
 msgid "Cost of Goods Sold Items"
 msgstr "Satılan Malın Maliyeti Kalemleri"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
-#, fuzzy
 msgid "Create Project"
-msgstr "Proje Yönetimi Oluştur"
+msgstr "Proje Oluştur"
 
 #. module: sale_project
 #. odoo-javascript
@@ -307,18 +293,16 @@ msgstr "Müşteri Faturası Oluştur"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
-#, fuzzy
 msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
 "Harcanan zamanı takip etmek için her bir satış siparişi satırı için bir "
-"görev içeren sipariş için bir proje oluşturun."
+"görev içeren  bir proje oluşturun."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
-#, fuzzy
 msgid "Create a task in an existing project to track the time spent."
 msgstr ""
 "Harcanan zamanı izlemek için mevcut bir proje yönetimini kullanarak bir "
@@ -333,11 +317,8 @@ msgstr "Tedarikçi faturası oluşturun"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
-#, fuzzy
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
-"Harcanan zamanı takip etmek için sipariş için boş bir proje Yönetimi "
-"oluşturun."
+msgstr "Harcanan zamanı takip etmek için sipariş için boş bir proje  oluşturun."
 
 #. module: sale_project
 #. odoo-python
@@ -368,7 +349,6 @@ msgstr "Sipariş Üzerine Oluştur"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
-#, fuzzy
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
@@ -391,7 +371,6 @@ msgstr "Müşteri Faturaları"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
-#, fuzzy
 msgid "Defined on quotation"
 msgstr "Teklifte tanımlanmıştır"
 
@@ -404,7 +383,6 @@ msgstr "Teslim Edilen"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
-#, fuzzy
 msgid "Digital Marketing Campaign (project)"
 msgstr "Dijital Pazarlama Kampanyası (Proje Yönetimi)"
 
@@ -452,13 +430,11 @@ msgstr "Peşinat Ödemeleri"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
-#, fuzzy
 msgid "Empty project"
 msgstr "Boş proje"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
-#, fuzzy
 msgid "Flooring Services"
 msgstr "Döşeme Hizmetleri"
 
@@ -582,13 +558,11 @@ msgstr "Kilometre taşları"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
-#, fuzzy
 msgid "New Sales Order Item"
 msgstr "Yeni Satış Siparişi Öğesi"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
-#, fuzzy
 msgid "New project"
 msgstr "Yeni proje"
 
@@ -601,13 +575,11 @@ msgstr "Faturalanamaz"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
-#, fuzzy
 msgid "Not Billed"
 msgstr "Faturalandırılmadı"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
-#, fuzzy
 msgid "Office Furniture Set (task)"
 msgstr "Ofis Mobilya Takımı (görev)"
 
@@ -619,7 +591,6 @@ msgstr "Diğer Hizmetler"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
-#, fuzzy
 msgid "Painting"
 msgstr "Boyama"
 
@@ -639,14 +610,12 @@ msgstr ""
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
-#, fuzzy
 msgid "Plumbing Services"
 msgstr "Sıhhi Tesisat Hizmetleri"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
-#, fuzzy
 msgid "Portal Sale Order"
 msgstr "Portal Satış Siparişi"
 
@@ -668,7 +637,6 @@ msgstr "Ürün Varyantı"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
-#, fuzzy
 msgid ""
 "Products added to stock pickings, whose operation type is configured to "
 "generate analytic costs, will be re-invoiced in this sales order if they are "
@@ -717,7 +685,6 @@ msgstr "Proje Şablonu"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
-#, fuzzy
 msgid "Project Template create Wizard"
 msgstr "Proje Yönetimi Şablonu Oluşturma Sihirbazı"
 
@@ -739,7 +706,6 @@ msgstr "Miktar"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
-#, fuzzy
 msgid "Quantity (%)"
 msgstr "Miktar (%)"
 
@@ -750,9 +716,8 @@ msgstr "Teklif Şablon Satırı"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
-#, fuzzy
 msgid "Role To Users"
-msgstr "Kullanıcılara Rol"
+msgstr "Kullanıcılara Rol Tanımla"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -857,7 +822,6 @@ msgstr "Görevin bağlı olduğu satış siparişi."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
-#, fuzzy
 msgid "Screw Driver"
 msgstr "Tornavida"
 
@@ -876,7 +840,6 @@ msgstr "Satış Siparişi Öğelerinde Ara"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
-#, fuzzy
 msgid "Select who to bill..."
 msgstr "Faturalandırılacak kişiyi seçin..."
 
@@ -923,7 +886,6 @@ msgstr "Görev Aşaması"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
-#, fuzzy
 msgid "Task Template"
 msgstr "Görev Şablonu"
 
@@ -940,7 +902,6 @@ msgstr "Görev Analizi"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
-#, fuzzy
 msgid "The Sales Order must contain at least one service product."
 msgstr "Satış Siparişi en az bir hizmet ürünü içermelidir."
 
@@ -975,7 +936,6 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
-#, fuzzy
 msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
@@ -1008,7 +968,6 @@ msgstr "Servis Rotası"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__display_name
-#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -1044,19 +1003,16 @@ msgstr "Tedarikçi  Faturaları"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
-#, fuzzy
 msgid "View Sales Order"
 msgstr "Satış Siparişi Görüntüle"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
-#, fuzzy
 msgid "Website Redesign Service (project & task)"
-msgstr "Web Sitesi Yeniden Tasarım Hizmeti (proje yönetimi & görev)"
+msgstr "Web Sitesi Yeniden Tasarım Hizmeti (proje & görev)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
-#, fuzzy
 msgid "Wiring Services"
 msgstr "Kablolama Hizmetleri"
 
@@ -1073,20 +1029,17 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
-#, fuzzy
 msgid "[Project] %(task_name)s"
 msgstr "[Proje Yönetimi] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
-#, fuzzy
 msgid "delivered_manual"
 msgstr "delivered_manual"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
-#, fuzzy
 msgid "sale_line_id"
-msgstr "sale_line_id"
+msgstr "satış_satır_id"

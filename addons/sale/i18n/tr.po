@@ -30,15 +30,16 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-12 15:00+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/sale/tr/>"
-"\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/sale/tr/"
+">\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
-#, fuzzy
 msgid ""
 "\n"
 "            If your customer runs on Odoo 18 or higher, customer data and "
@@ -131,7 +131,6 @@ msgstr "2023-12-31"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "25.00"
 msgstr "25.00"
 
@@ -161,7 +160,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_payment_executed
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
@@ -223,33 +221,34 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"       <t t-set=\"transaction_sudo\" t-value="
-"\"object.get_portal_last_transaction()\"/>\n"
+"       <t t-set=\"transaction_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
 "        Merhaba,\n"
 "       <br/><br/>\n"
 "        Referanslı bir ödeme\n"
 "       <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        tutar\n"
-"       <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"       <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        siparişiniz için\n"
-"       <span style=\"font-weight:bold;\" t-out=\"object.name or ''\""
-">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
-"\n"
+"       <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</"
+"span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
 "            beklemede.\n"
 "           <br/>\n"
-"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid +"
-" transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ("
-"'draft', 'sent')\">\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
+"+ transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
+"('draft', 'sent')\">\n"
 "                Ödeme onaylandıktan sonra siparişiniz onaylanacaktır.\n"
 "           </t>\n"
 "            <t t-else=\"\">\n"
 "                Onaylandıktan sonra,\n"
-"               <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"object.amount_total - object.amount_paid - transaction_sudo.amount, "
-"object.currency_id) or ''\">$ 10.00</span>\n"
+"               <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid - "
+"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "                ödenmeye devam edecektir.\n"
 "           </t>\n"
 "        </t>\n"
@@ -258,9 +257,9 @@ msgstr ""
 "           <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"               <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"               <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                ödenecek.\n"
 "           </t>\n"
 "        </t>\n"
@@ -270,8 +269,8 @@ msgstr ""
 "        Herhangi bir sorunuz varsa bizimle iletişime geçmekten çekinmeyin.\n"
 "       <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
 "Admin</t></div>\n"
 "       </t>\n"
 "    </p>\n"
@@ -280,7 +279,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
@@ -609,27 +607,27 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
 "        Merhaba,\n"
 "       <br/><br/>\n"
-"       <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\""
-"/>\n"
+"       <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"/"
+">\n"
 "        Siparişiniz <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span> tutarı <span style=\"font-weight:bold;\" t-out=\""
-"format_amount(object.amount_total, object.currency_id) or ''\"> 10.00 "
+"''\">S00049</span> tutarı <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10.00 "
 "$</span>\n"
-"        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ("
-"'done', 'authorized'))\">\n"
+"        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in "
+"('done', 'authorized'))\">\n"
 "            onaylanmıştır.<br/>\n"
 "            Güveniniz için teşekkür ederiz!\n"
 "       </t>\n"
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
 "            beklemede. Ödeme alındığında onaylanacaktır.\n"
 "           <t t-if=\"object.reference\">\n"
-"                Ödeme referansınız <span style=\"font-weight:bold;\" t-out=\""
-"object.reference or ''\"/>.\n"
+"                Ödeme referansınız <span style=\"font-weight:bold;\" t-"
+"out=\"object.reference or ''\"/>.\n"
 "           </t>\n"
 "        </t>\n"
 "       <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
-"\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+">\n"
 "       <t t-if=\"documents\">\n"
 "            <br/>\n"
 "           <t t-if=\"len(documents)&gt;1\">\n"
@@ -642,8 +640,8 @@ msgstr ""
 "               <t t-foreach=\"documents\" t-as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\">\n"
 "                       <a t-out=\"document.ir_attachment_id.name\" t-att-"
-"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target="
-"\"target\"/>\n"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/>\n"
 "                    </li>\n"
 "               </t>\n"
 "            </ul>\n"
@@ -652,8 +650,8 @@ msgstr ""
 "        Herhangi bir sorunuz olursa bizimle iletişime geçmekten çekinmeyin.\n"
 "       <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
 "Admin</t></div>\n"
 "       </t>\n"
 "    </p>\n"
@@ -662,15 +660,16 @@ msgstr ""
 "       <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-"
 "collapse: collapse; white-space: nowrap;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"               <td style=\"width: 150px;\"><span style=\"font-weight:bold;\""
-">Ürünler</span></td>\n"
+"               <td style=\"width: 150px;\"><span style=\"font-weight:bold;"
+"\">Ürünler</span></td>\n"
 "               <td/>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-"
 "weight:bold;\">Miktar</span></td>\n"
 "               <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
-"                       <t t-if="
-"\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                       <t t-"
+"if=\"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'\">\n"
 "                            Vergi Hariç.\n"
 "                       </t>\n"
 "                        <t t-else=\"\">\n"
@@ -685,32 +684,32 @@ msgstr ""
 "            <t t-set=\"line_subtotal\" t-value=\"                     "
 "line.price_subtotal                     if "
 "object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'                     else line.price_total                 \"/>"
-"\n"
-"           <t t-set=\"current_subtotal\" t-value="
-"\"current_subtotal + line_subtotal\"/>\n"
+"'tax_excluded'                     else line.price_total                 \"/"
+">\n"
+"           <t t-set=\"current_subtotal\" t-value=\"current_subtotal + "
+"line_subtotal\"/>\n"
 "            <t t-if=\"(not hasattr(line, 'is_delivery') or not "
 "line.is_delivery) and (                     line.display_type in "
 "['line_section', 'line_subsection', 'line_note']                     or "
 "line.product_type == 'combo'                 )\">\n"
-"               <table width=\"100%\" style="
-"\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number or 0\"/>\n"
+"               <table width=\"100%\" style=\"color: #454748; font-size: "
+"12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number or 0\"/>\n"
 "                   <tr t-att-style=\"'background-color: #f2f2f2' if "
 "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number + 1\"/>\n"
+"                        <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number + 1\"/>\n"
 "                       <td colspan=\"4\">\n"
 "                            <t t-if=\"line.display_type in ('line_section', "
 "'line_subsection') or line.product_type == 'combo'\">\n"
 "                               <span t-att-style=\"'font-weight:bold;' if "
-"line.display_type == 'line_subsection' else 'font-weight:bolder;'\" t-out=\""
-"line.name or ''\">Ağaçların Bakımı Kursu</span>\n"
-"                                <t t-set=\"current_section\" t-value=\"line\""
-"/>\n"
-"                               <t t-set=\"current_subtotal\" t-value=\"0\"/>"
-"\n"
+"line.display_type == 'line_subsection' else 'font-weight:bolder;'\" t-"
+"out=\"line.name or ''\">Ağaçların Bakımı Kursu</span>\n"
+"                                <t t-set=\"current_section\" t-"
+"value=\"line\"/>\n"
+"                               <t t-set=\"current_subtotal\" t-value=\"0\"/"
+">\n"
 "                            </t>\n"
 "                           <t t-elif=\"line.display_type == 'line_note'\">\n"
 "                                <i t-out=\"line.name or ''\">Ağaçların "
@@ -720,76 +719,78 @@ msgstr ""
 "                    </tr>\n"
 "               </table>\n"
 "            </t>\n"
-"           <t t-elif="
-"\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
-"                <table width=\"100%\" style="
-"\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                   <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number or 0\"/>\n"
+"           <t t-elif=\"(not hasattr(line, 'is_delivery') or not "
+"line.is_delivery)\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: "
+"12px; border-collapse: collapse;\">\n"
+"                   <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
 "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                       <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number + 1\"/>\n"
+"                       <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                           <img t-attf-src="
-"\"/web/image/product.product/{{ line.product_id.id }}/image_128\" t-attf-"
-"style=\"width: 64px; height: {{object.website_id and "
+"                           <img t-attf-src=\"/web/image/product.product/"
+"{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: "
+"{{object.website_id and object.website_id._get_product_image_ratio_height() "
+"or '64px'}}; object-fit: cover; object-position: center;\" alt=\"Product "
+"image\"/>{{object.website_id and "
 "object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
-"cover; object-position: center;\" alt=\"Product image\"/>{{object.website_id "
-"and object.website_id._get_product_image_ratio_height() or '64px'}}; object-"
-"fit: cover; object-position: center;\" alt=\"Ürün resmi\"/>\n"
+"cover; object-position: center;\" alt=\"Ürün resmi\"/>\n"
 "                       </td>\n"
-"                        <td align=\"left\" t-out="
-"\"line.product_id.name or ''\">\tAğaçların Bakımı Kursu</td>\n"
-"                        <td width=\"15%\" align=\"center\" t-out="
-"\"line.product_uom_qty or ''\">1</td>\n"
+"                        <td align=\"left\" t-out=\"line.product_id.name or "
+"''\">\tAğaçların Bakımı Kursu</td>\n"
+"                        <td width=\"15%\" align=\"center\" t-"
+"out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><span style=\"font-"
 "weight:bold; white-space: nowrap;\">\n"
-"                        <t t-if="
-"\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                           <t t-out="
-"\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ "
+"                        <t t-"
+"if=\"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'\">\n"
+"                           <t t-"
+"out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ "
 "10.00</t>\n"
 "                        </t>\n"
 "                       <t t-else=\"\">\n"
-"                            <t t-out="
-"\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ "
+"                            <t t-"
+"out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ "
 "10.00</t>\n"
 "                        </t>\n"
 "                       </span></td>\n"
 "                   </tr>\n"
 "                </table>\n"
 "           </t>\n"
-"            <t t-if=\"current_section and (                     "
-"line_last                     or object.order_line[line_index+1]"
-".display_type in ('line_section', 'line_subsection')                     or "
+"            <t t-if=\"current_section and "
+"(                     line_last                     or "
+"object.order_line[line_index+1].display_type in ('line_section', "
+"'line_subsection')                     or "
 "object.order_line[line_index+1].product_type == 'combo'                     "
 "or (                         line.combo_item_id                         and "
-"not object.order_line[line_index+1].combo_item_id                     )"
-"                 ) and not line.is_downpayment\">\n"
+"not "
+"object.order_line[line_index+1].combo_item_id                     )                 ) "
+"and not line.is_downpayment\">\n"
 "               <t t-set=\"current_section\" t-value=\"None\"/>\n"
-"                <table width=\"100%\" style="
-"\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                   <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number or 0\"/>\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: "
+"12px; border-collapse: collapse;\">\n"
+"                   <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
 "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                       <t t-set=\"loop_cycle_number\" t-value="
-"\"loop_cycle_number + 1\"/>\n"
+"                       <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 100%\" align=\"right\">\n"
-"                           <span style=\"font-weight: bold;\">Ara "
-"toplam:</span>\n"
-"                            <span t-out="
-"\"format_amount(current_subtotal, object.currency_id) or ''\">$ 10.00</span>"
-"\n"
+"                           <span style=\"font-weight: bold;\">Ara toplam:</"
+"span>\n"
+"                            <span t-out=\"format_amount(current_subtotal, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                        </td>\n"
 "                   </tr>\n"
 "                </table>\n"
 "           </t>\n"
 "        </t>\n"
 "   </div>\n"
-"    <div style=\"margin: 0px; padding: 0px;\" t-if="
-"\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, "
+"'carrier_id') and object.carrier_id\">\n"
 "       <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-"
 "spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
@@ -797,16 +798,15 @@ msgstr ""
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
 "align=\"right\"><span style=\"font-weight:bold;\">Teslimat</span></td>\n"
 "               <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out="
-"\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ "
-"0.00</td>\n"
+"align=\"right\" t-out=\"format_amount(object.amount_delivery, "
+"object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "           <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
 "               <td style=\"width: 30%;\" align=\"right\"><span style=\"font-"
 "weight:bold;\">Vergilendirilmemiş Tutar:</span></td>\n"
-"               <td style=\"width: 10%;\" align=\"right\" t-out="
-"\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
+"               <td style=\"width: 10%;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
 "10.00</td>\n"
 "            </tr>\n"
 "       </table>\n"
@@ -817,12 +817,11 @@ msgstr ""
 "           <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
 "               <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\"><span style=\"font-weight:bold;\">Vergilendirilmemiş "
-"Tutar:</span></td>\n"
+"align=\"right\"><span style=\"font-weight:bold;\">Vergilendirilmemiş Tutar:</"
+"span></td>\n"
 "               <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out="
-"\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
-"10.00</td>\n"
+"align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+"object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "       </table>\n"
 "    </div>\n"
@@ -833,22 +832,22 @@ msgstr ""
 "                <td style=\"width: 60%\"/>\n"
 "               <td style=\"width: 30%;\" align=\"right\"><span style=\"font-"
 "weight:bold;\">Vergiler:</span></td>\n"
-"               <td style=\"width: 10%;\" align=\"right\" t-out="
-"\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
+"               <td style=\"width: 10%;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</"
+"td>\n"
 "            </tr>\n"
 "           <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
 "               <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
 "align=\"right\"><span style=\"font-weight:bold;\">Toplam:</span></td>\n"
 "               <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
-"align=\"right\" t-out="
-"\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>"
-"\n"
+"align=\"right\" t-out=\"format_amount(object.amount_total, "
+"object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "       </table>\n"
 "    </div>\n"
-"   <div t-if=\"object.partner_invoice_id\" style="
-"\"margin: 0px; padding: 0px;\">\n"
+"   <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: 0px;"
+"\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "           <tr>\n"
 "                <td style=\"padding-top: 10px;\">\n"
@@ -857,13 +856,12 @@ msgstr ""
 "S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_invoice_id.city or ''\">Los "
 "Angeles</t>\n"
-"                    <t t-out="
-"\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.zip or ''\""
-">90015</t>\n"
-"                    <t t-out="
-"\"object.partner_invoice_id.country_id.name or ''\">Amerika Birleşik "
-"Devletleri</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.state_id.name or "
+"''\">California</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</"
+"t>\n"
+"                    <t t-out=\"object.partner_invoice_id.country_id.name or "
+"''\">Amerika Birleşik Devletleri</t>\n"
 "                </td>\n"
 "           </tr>\n"
 "            <tr>\n"
@@ -873,11 +871,11 @@ msgstr ""
 "                       <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
 "                    </t>\n"
 "                   <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>"
-"\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/"
+">\n"
 "                   </t>\n"
-"                    (<t t-out="
-"\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
+"                    (<t t-out=\"format_amount(tx_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</t>)\n"
 "               </td>\n"
 "            </tr>\n"
 "       </table>\n"
@@ -888,19 +886,18 @@ msgstr ""
 "           <tr>\n"
 "                <td>\n"
 "                   <br/>\n"
-"                    <span style=\"font-weight:bold;\">Gönderim adresi:</span>"
-"\n"
-"                    <t t-out=\"object.partner_shipping_id.street or ''\""
-">1201 S Figueroa St</t>\n"
+"                    <span style=\"font-weight:bold;\">Gönderilecek adres:</"
+"span>\n"
+"                    <t t-out=\"object.partner_shipping_id.street or "
+"''\">1201 S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.city or ''\">Los "
 "Angeles</t>\n"
-"                    <t t-out="
-"\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.zip or ''\""
-">90015</t>\n"
-"                    <t t-out="
-"\"object.partner_shipping_id.country_id.name or ''\">Amerika Birleşik "
-"Devletleri</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.state_id.name or "
+"''\">California</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</"
+"t>\n"
+"                    <t t-out=\"object.partner_shipping_id.country_id.name or "
+"''\">Amerika Birleşik Devletleri</t>\n"
 "                </td>\n"
 "           </tr>\n"
 "        </table>\n"
@@ -908,16 +905,15 @@ msgstr ""
 "width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "               <td>\n"
-"                    <span style=\"font-weight:bold;\">Nakliye Yöntemi:</span>"
-"\n"
+"                    <span style=\"font-weight:bold;\">Nakliye Yöntemi:</"
+"span>\n"
 "                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
 "                   <t t-if=\"object.amount_delivery == 0.0\">\n"
 "                        (Ücretsiz)\n"
 "                   </t>\n"
 "                    <t t-else=\"\">\n"
-"                        (<t t-out="
-"\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ "
-"10.00</t>)\n"
+"                        (<t t-out=\"format_amount(object.amount_delivery, "
+"object.currency_id) or ''\">$ 10.00</t>)\n"
 "                   </t>\n"
 "                </td>\n"
 "           </tr>\n"
@@ -934,7 +930,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -985,8 +980,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"       <t t-set=\"doc_name\" t-value="
-"\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"       <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
+"('draft', 'sent') else 'order'\"/>\n"
 "        Merhaba,\n"
 "       <br/><br/>\n"
 "        <t t-out=\"doc_name or ''\"> teklifiniz</t> <span style=\"font-"
@@ -994,12 +989,12 @@ msgstr ""
 "       <t t-if=\"object.origin\">\n"
 "            (referansla: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "       </t>\n"
-"        tutarında <span style=\"font-weight: bold;\" t-out=\"format_amount("
-"object.amount_total, object.currency_id) or ''\"> 10.00 $</span> incelenmek "
-"üzere hazırdır.\n"
+"        tutarında <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10.00 "
+"$</span> incelenmek üzere hazırdır.\n"
 "       <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
-"\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+">\n"
 "       <t t-if=\"documents\">\n"
 "            <br/>\n"
 "           <t t-if=\"len(documents)&gt;1\">\n"
@@ -1012,8 +1007,8 @@ msgstr ""
 "               <t t-foreach=\"documents\" t-as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\">\n"
 "                       <a t-out=\"document.ir_attachment_id.name\" t-att-"
-"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target="
-"\"target\"/>\n"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/>\n"
 "                    </li>\n"
 "               </t>\n"
 "            </ul>\n"
@@ -1022,8 +1017,8 @@ msgstr ""
 "        Herhangi bir sorunuz olursa bizimle iletişime geçmekten çekinmeyin.\n"
 "       <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
 "Admin</t></div>\n"
 "       </t>\n"
 "    </p>\n"
@@ -1032,7 +1027,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_proforma
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -1063,24 +1057,25 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"       <t t-set=\"doc_name\" t-value="
-"\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"       <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
+"('draft', 'sent') else 'order'\"/>\n"
 "        Merhaba,\n"
 "       <br/><br/>\n"
 "        <t t-out=\"doc_name or ''\"> teklifiniz için proforma faturanız</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>"
-"\n"
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
+"span>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (referansla: <t t-out=\"object.origin or ''\"/> )\n"
 "       </t>\n"
-"        tutarında <span style=\"font-weight: bold;\" t-out=\"format_amount("
-"object.amount_total, object.currency_id) or ''\"> 10,00 $</span> mevcuttur.\n"
+"        tutarında <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 10,00 "
+"$</span> mevcuttur.\n"
 "       <br/><br/>\n"
 "        Herhangi bir sorunuz olursa bizimle iletişime geçmekten çekinmeyin.\n"
 "       <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
 "Admin</t></div>\n"
 "       </t>\n"
 "    </p>\n"
@@ -1212,7 +1207,6 @@ msgstr "<span class=\"o_stat_text\">Satılan</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
-#, fuzzy
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
 msgstr "<span id=\"o_sale_portal_use_amount_total\">Ödeyerek,</span>"
 
@@ -1228,7 +1222,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-#, fuzzy
 msgid "<span>1.00 Units</span>"
 msgstr "<span>1.00 Birim</span>"
 
@@ -1457,7 +1450,6 @@ msgstr "Aktiviteler"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
-#, fuzzy
 msgid "Activities of"
 msgstr "Faaliyetleri"
 
@@ -1564,15 +1556,13 @@ msgstr "Siparişe ekleme yapın"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
-#, fuzzy
 msgid "Add/Remove Followers"
 msgstr "Takipçi Ekle/Kaldır"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
-#, fuzzy
 msgid "Allowed Uom"
-msgstr "İzin Verilen Uom"
+msgstr "İzin Verilen Ölçü Birimi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1642,7 +1632,6 @@ msgstr "İndirimden Önceki Tutar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-#, fuzzy
 msgid "Amount paid:"
 msgstr "Ödenen miktar:"
 
@@ -1714,7 +1703,6 @@ msgstr "Seçilen öğeyi iptal etmek istediğinizden emin misiniz?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
 msgid ""
 "Are you sure you want to cancel this order? This may affect related "
 "documents or processes."
@@ -1743,7 +1731,6 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_product.py:0
-#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
@@ -1971,7 +1958,6 @@ msgstr "Teklifinize bazı ürünler veya hizmetler eklemek için burayı tıklay
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
-#, fuzzy
 msgid "Click to configure"
 msgstr "Yapılandırmak için tıklayın"
 
@@ -1990,15 +1976,13 @@ msgstr "Kapat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_composition
-#, fuzzy
 msgid "Collapse Composition"
-msgstr "Çöküş Kompozisyonu"
+msgstr "Bileşenleri Gizle"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_prices
-#, fuzzy
 msgid "Collapse Prices"
-msgstr "Çöküş Fiyatları"
+msgstr "Fiyatları Gizle"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
@@ -2013,7 +1997,6 @@ msgstr "Kombo Ürün"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-#, fuzzy
 msgid "Combo Product"
 msgstr "Kombo Ürün"
 
@@ -2071,7 +2054,6 @@ msgstr "Teslimat maliyetlerini hesaplayın ve Easypost ile gönderin"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "Compute shipping costs and ship with Envia.com"
 msgstr "Gönderim maliyetlerini hesaplayın ve Envia.com ile gönderin"
 
@@ -2229,7 +2211,6 @@ msgstr "Faturalar Oluştur"
 
 #. module: sale
 #: model:ir.model,website_form_label:sale.model_res_partner
-#, fuzzy
 msgid "Create a Customer"
 msgstr "Müşteri Oluşturma"
 
@@ -2277,7 +2258,6 @@ msgstr "Sipariş Üzerine Oluştur"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
-#, fuzzy
 msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
@@ -2508,7 +2488,6 @@ msgstr "Teslim Tarihi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-#, fuzzy
 msgid "Delivery Date:"
 msgstr "Teslim Tarihi:"
 
@@ -2833,7 +2812,6 @@ msgstr "Özel bir değer girin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
-#, fuzzy
 msgid "Envia.com Connector"
 msgstr "Envia.com Bağlayıcı"
 
@@ -2864,7 +2842,6 @@ msgstr "Geçerlilik Tarihi:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
-#, fuzzy
 msgid "Extra Tax Data"
 msgstr "Ekstra Vergi Verileri"
 
@@ -2927,7 +2904,6 @@ msgstr "Yazı tipi harika simgesi ör. fa-görevler"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-#, fuzzy
 msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                                sale orders."
@@ -3044,7 +3020,6 @@ msgstr "Arşivlenmiş Ürünleri Mevcut"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_authorized_transaction_ids
-#, fuzzy
 msgid "Has Authorized Transactions"
 msgstr "Yetkili İşlemleri Var"
 
@@ -3179,7 +3154,6 @@ msgstr "Ürünler İçe Aktarma Şablonu"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
-#, fuzzy
 msgid "Import Template for Quotations"
 msgstr "Teklifler için İçe Aktarma Şablonu"
 
@@ -3187,13 +3161,11 @@ msgstr "Teklifler için İçe Aktarma Şablonu"
 #. odoo-javascript
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
-#, fuzzy
 msgid "Import a request for quotation from a customer"
 msgstr "Bir müşteriden gelen fiyat teklifi talebini içe aktarma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-#, fuzzy
 msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                                discount column."
@@ -3221,7 +3193,6 @@ msgstr "Dahil"
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
-#, fuzzy
 msgid "Internal warning for the partner or the products as set by the user."
 msgstr "Kullanıcı tarafından belirlenen ortak veya ürünler için dahili uyarı."
 
@@ -3266,13 +3237,11 @@ msgstr "Fatura Satırları"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
-#, fuzzy
 msgid "Invoice Paid"
 msgstr "Ödenen Fatura"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
-#, fuzzy
 msgid "Invoice Posted"
 msgstr "Fatura Gönderildi"
 
@@ -3656,7 +3625,6 @@ msgstr "Teslim edilen Miktarı güncelleme yöntemi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-#, fuzzy
 msgid "Min Qty"
 msgstr "Min Miktar"
 
@@ -3673,14 +3641,12 @@ msgstr "Mitchell Admin"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
-#, fuzzy
 msgid "Move Down"
-msgstr "Aşağı Hareket Et"
+msgstr "Aşağı Hareket Edin"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
-#, fuzzy
 msgid "Move Up"
 msgstr "İlerleyin"
 
@@ -3830,7 +3796,6 @@ msgstr "Odoo"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
-#, fuzzy
 msgid "Office chairs can harm your floor: protect it"
 msgstr "Ofis koltukları zemine zarar verebilir: koruyun"
 
@@ -4097,7 +4062,6 @@ msgstr "Paketleme"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
-#, fuzzy
 msgid "Parent Section Line"
 msgstr "Ana Bölüm Hattı"
 
@@ -4209,7 +4173,6 @@ msgstr "Portal Erişim URL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
-#, fuzzy
 msgid "Prepayment Amount"
 msgstr "Ön Ödeme Tutarı"
 
@@ -4711,6 +4674,12 @@ msgid "Sale Information"
 msgstr "Satış Bilgileri"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
+msgid "Sale Line Warn Msg"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__sale_order_id
 #: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
@@ -4751,7 +4720,6 @@ msgstr "Sipariş Sayısı"
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
-#, fuzzy
 msgid "Sale Warning"
 msgstr "Satış Uyarısı"
 
@@ -4858,11 +4826,8 @@ msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
-#, fuzzy
 msgid "Sales Order Line Warning"
 msgstr "Satış Siparişi Satırı Uyarısı"
 
@@ -4957,7 +4922,6 @@ msgstr "Satış: Ödeme Yapıldı"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
-#, fuzzy
 msgid "Sales: Send Proforma"
 msgstr "Satışlar: Proforma Gönder"
 
@@ -5011,7 +4975,6 @@ msgstr "Bölüm Adı (örn. Ürünler, Hizmetler)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-#, fuzzy
 msgid "Section Summary"
 msgstr "Bölüm Özeti"
 
@@ -5033,7 +4996,6 @@ msgstr "Seçili Kombo Ürünleri"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr "Farklı ölçü birimlerinde veya ambalajlarda ürün satma ve satın alma"
 
@@ -5141,13 +5103,11 @@ msgstr "Shiprocket Bağlayıcı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
-#, fuzzy
 msgid "Shopee Sync"
 msgstr "Shopee Sync"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
-#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 
@@ -5196,7 +5156,6 @@ msgstr "İmzalanma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
-#, fuzzy
 msgid "So, are you sure you want to cancel these"
 msgstr "Peki, bunları iptal etmek istediğinize emin misiniz?"
 
@@ -5224,12 +5183,11 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
-#, fuzzy
 msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
 msgstr ""
-"Bazı sipariş satırlarında bir ürün eksik, daha ileri gitmeden önce bunları "
+"Bazı sipariş satırlarında bir ürün eksik, ilerlermeden önce bunları "
 "düzeltmeniz gerekiyor."
 
 #. module: sale
@@ -5302,13 +5260,11 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
-#, fuzzy
 msgid "Subsection"
 msgstr "Alt bölüm"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
 msgid "Subsection Name"
 msgstr "Alt Bölüm Adı"
 
@@ -5503,14 +5459,12 @@ msgstr "Erişim tokenı geçersiz."
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
-#, fuzzy
 msgid "The amount is lower than the prepayment amount."
 msgstr "Tutar, ön ödeme tutarından daha düşüktür."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
-#, fuzzy
 msgid "The amount must be greater than the prepayment amount."
 msgstr "Tutar, ön ödeme tutarından büyük olmalıdır."
 
@@ -5964,7 +5918,6 @@ msgstr "Birim Fiyat:"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "Units & Packagings"
 msgstr "Birimler & Ambalajlar"
 
@@ -6012,7 +5965,6 @@ msgstr "Vergileri Güncelle"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/upload_rfq_cog_menu/upload_rfq_cog_menu.xml:0
-#, fuzzy
 msgid "Upload Request For Quotation"
 msgstr "Teklif Talebi Yükle"
 
@@ -6041,7 +5993,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
-#, fuzzy
 msgid "Used by salespeople when they send proforma to prospects"
 msgstr ""
 "Satış görevlileri tarafından potansiyel müşterilere proforma gönderirken "
@@ -6106,7 +6057,6 @@ msgstr "Detayları Görüntüle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "View Other Providers"
 msgstr "Diğer Sağlayıcıları Görüntüle"
 
@@ -6152,13 +6102,11 @@ msgstr "Teklifinizin şirketi değişikliğine ilişkin uyarı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
-#, fuzzy
 msgid "Warning on Sales Orders"
 msgstr "Satış Siparişlerine İlişkin Uyarı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
-#, fuzzy
 msgid "Warning on Sales Orders and Invoices"
 msgstr "Satış Siparişleri ve Faturalarda Uyarı"
 
@@ -6351,14 +6299,12 @@ msgstr "gün"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
-#, fuzzy
 msgid "e.g. This customer has reported recurring issues with previous orders."
 msgstr ""
 "Örn. Bu müşteri önceki siparişlerinde tekrarlayan sorunlar bildirmiştir."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
-#, fuzzy
 msgid "e.g. This product is defective."
 msgstr "Örn. Bu ürün kusurludur."
 
@@ -6375,7 +6321,6 @@ msgstr "bu Satış Siparişi için."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
-#, fuzzy
 msgid "items?"
 msgstr "Eşyalar?"
 
@@ -6419,7 +6364,6 @@ msgstr "ile"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
-#, fuzzy
 msgid "you confirm acceptance on behalf of"
 msgstr "adına kabul ettiğinizi onaylıyorsunuz"
 
@@ -6437,7 +6381,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
-#, fuzzy
 msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
@@ -6447,7 +6390,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"

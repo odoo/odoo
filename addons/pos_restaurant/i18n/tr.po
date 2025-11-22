@@ -21,13 +21,14 @@
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-13 13:12+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/tr/>\n"
 "Language: tr\n"
@@ -40,14 +41,12 @@ msgstr ""
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid " and $1"
 msgstr " ve 1 dolar"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "%s, sent to the kitchen"
 msgstr "%s, mutfağa gönderildi"
 
@@ -371,21 +370,18 @@ msgstr "Kurs"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "Course %s fired"
-msgstr "Kurs %s ateşlendi"
+msgstr "Menü %s mutfağa gönderildi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__course_id
-#, fuzzy
 msgid "Course Ref"
-msgstr "Kurs Ref"
+msgstr "Menü Ref"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__index
-#, fuzzy
 msgid "Course index"
-msgstr "Kurs indeksi"
+msgstr "Menü indeksi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__course_ids
@@ -414,7 +410,6 @@ msgstr "Oluşturuldu"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__default_screen
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_default_screen
-#, fuzzy
 msgid "Default Screen"
 msgstr "Varsayılan Ekran"
 
@@ -448,7 +443,6 @@ msgstr "Restoranda Yemek"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/pos_order.js:0
-#, fuzzy
 msgid "Direct Sale"
 msgstr "Doğrudan Satış"
 
@@ -484,7 +478,6 @@ msgstr "Erken Makbuz Yazdırma"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_preset
-#, fuzzy
 msgid "Easily load a set of configuration options"
 msgstr "Bir dizi yapılandırma seçeneğini kolayca yükleyin"
 
@@ -549,9 +542,8 @@ msgstr "Dosya"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
-#, fuzzy
 msgid "Fire %s"
-msgstr "Yangın %s"
+msgstr "Mutfağa gönderim %s"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -562,9 +554,8 @@ msgstr "İşten çıkarma"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired_date
-#, fuzzy
 msgid "Fired Date"
-msgstr "Kovulma Tarihi"
+msgstr "Mutfağa gönderim tarihi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -634,11 +625,10 @@ msgstr "Kolaylık sağlamak için, aşağıdaki hediye hesaplamalarını sağlı
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
-#, fuzzy
 msgid "Force guest selection when clicking on order button in PoS restaurant"
 msgstr ""
-"Satış Noktası restoranda sipariş düğmesine tıklandığında misafir seçimini "
-"zorla"
+"Satış Noktası restoranında sipariş düğmesine tıklandığında misafir seçimini "
+"zorunlu kıl"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -713,7 +703,6 @@ msgstr ""
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid ""
 "It seems that the order has not been sent. Would you like to send it to "
 "preparation?"
@@ -926,9 +915,8 @@ msgstr "Sipariş Ref"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_order_course
-#, fuzzy
 msgid "POS Restaurant Order Course"
-msgstr "Satış Noktası Restoran Sipariş Kursu"
+msgstr "Satış Noktası Restoran Sipariş Menüsü"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
@@ -1000,7 +988,6 @@ msgstr "Planla"
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
-#, fuzzy
 msgid ""
 "Please close and validate the following open PoS Session before modifying "
 "this floor.\n"
@@ -1008,7 +995,7 @@ msgid ""
 msgstr ""
 "Lütfen bu katı değiştirmeden önce aşağıdaki açık Satış Noktası Oturumunu "
 "kapatın ve doğrulayın.\n"
-"Açık oturum: %(session_names)s"
+"Açık olan oturum: %(session_names)s"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -1063,7 +1050,6 @@ msgstr "Kekikli patates"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
-#, fuzzy
 msgid "Pro forma receipt"
 msgstr "Proforma makbuz"
 
@@ -1199,9 +1185,8 @@ msgstr "Siparişi aktarmak için masa seçin"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
-#, fuzzy
 msgid "Select the table first or after registering the order"
-msgstr "Önce veya siparişi kaydettikten sonra tabloyu seçin"
+msgstr "Masayı, siparişi kaydetmeden önce veya kaydettikten sonra seçin"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1218,14 +1203,12 @@ msgstr "Sıralama"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
-#, fuzzy
 msgid "Set Tab"
 msgstr "Sekmeyi Ayarla"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
-#, fuzzy
 msgid "Set Table"
 msgstr "Masa Ayarla"
 
@@ -1308,9 +1291,8 @@ msgstr "Ara Toplam"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.sushi_drink_combo_product_template
-#, fuzzy
 msgid "Sushi Lunch Combo"
-msgstr "Suşi Öğle Yemeği Kombo"
+msgstr "Suşi Öğle Yemeği Kombosu"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_sweet_potato
@@ -1359,7 +1341,6 @@ msgstr "Tablolar"
 
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_takeout_preset
-#, fuzzy
 msgid "Takeout"
 msgstr "Paket Servis"
 
@@ -1487,7 +1468,6 @@ msgstr "Transfer"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "Transfer \"%s\" to:"
 msgstr "\"%s\" adresine aktarın:"
 
@@ -1500,16 +1480,14 @@ msgstr "Aktarın / Birleştirin"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "Transfer all products of \"%s\" into:"
 msgstr "\"%s\" adresindeki tüm ürünleri aktarın:"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-#, fuzzy
 msgid "Transfer course"
-msgstr "Transfer kursu"
+msgstr "Menü transferi"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1547,7 +1525,6 @@ msgstr "Vodka 42 Below, lime, şeker, zencefilli gazoz"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "Warning !"
 msgstr "Uyarı!"
 
@@ -1584,7 +1561,6 @@ msgstr "Genişlik"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "You are currently transferring the order %s"
 msgstr "Şu anda siparişi transfer ediyorsunuz %s"
 
@@ -1620,7 +1596,6 @@ msgstr ""
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_preset.py:0
-#, fuzzy
 msgid "You cannot delete the master preset(s)."
 msgstr "Ana ön ayar(lar)ı silemezsiniz."
 
@@ -1647,7 +1622,6 @@ msgstr ""
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "You cannot transfer an order to itself"
 msgstr "Bir siparişi kendi üzerine aktaramazsınız"
 
@@ -1666,7 +1640,6 @@ msgstr "______________________________________________"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-#, fuzzy
 msgid "e.g. John"
 msgstr "Örneğin John"
 
@@ -1679,7 +1652,6 @@ msgstr "öğeler"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
-#, fuzzy
 msgid "product(s) selected"
 msgstr "seçilen ürün(ler)"
 

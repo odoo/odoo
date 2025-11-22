@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 21:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
@@ -279,8 +279,9 @@ msgid ""
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
 "'confirm'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"نماد پیکان\" title="
-"\"پیکان\" invisible=\"allocation_type == 'accrual' or state != 'confirm'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"نماد پیکان\" "
+"title=\"پیکان\" invisible=\"allocation_type == 'accrual' or state != "
+"'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -289,8 +290,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"آیکون فلش\" title="
-"\"فلش\" invisible=\"allocation_type == 'accrual'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"آیکون فلش\" "
+"title=\"فلش\" invisible=\"allocation_type == 'accrual'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -313,8 +314,8 @@ msgid ""
 "invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">روز</span>\n"
-"                                <span class=\"ml8\" invisible="
-"\"type_request_unit != 'hour'\">ساعت</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">ساعت</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -1298,8 +1299,8 @@ msgid ""
 msgstr ""
 "تغییر قرارداد این کارمند، برنامه کاری آن‌ها را در دوره‌ای تغییر می‌دهد که در آن "
 "مرخصی گرفته‌اند. تغییر این برنامه کاری، مدت زمان این مرخصی‌ها را به گونه‌ای "
-"تغییر می‌دهد که کارمند دیگر تخصیص مورد نیاز برای آن‌ها را ندارد. لطفاً این مرخصی‌"
-"ها و/یا تخصیص‌ها را قبل از تغییر قرارداد بررسی کنید."
+"تغییر می‌دهد که کارمند دیگر تخصیص مورد نیاز برای آن‌ها را ندارد. لطفاً این "
+"مرخصی‌ها و/یا تخصیص‌ها را قبل از تغییر قرارداد بررسی کنید."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1310,8 +1311,8 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
-"تغییر این برنامه کاری منجر به کمبود تخصیص مرخصی برای کارمند(ان) مورد نظر می‌"
-"شود به طوری که مرخصی‌های آینده‌ی آنها قبلاً گرفته شده‌اند. لطفاً مرخصی‌های این "
+"تغییر این برنامه کاری منجر به کمبود تخصیص مرخصی برای کارمند(ان) مورد نظر "
+"می‌شود به طوری که مرخصی‌های آینده‌ی آنها قبلاً گرفته شده‌اند. لطفاً مرخصی‌های این "
 "کارمند را بررسی کرده و تخصیص آنها را به درستی تنظیم کنید."
 
 #. module: hr_holidays
@@ -2616,7 +2617,8 @@ msgstr "بیا آن را تأیید کنیم"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's try to create a Sick Time Off, select it in the list"
-msgstr "بیایید تلاش کنیم یک مرخصی بیماری ایجاد کنیم و آن را در لیست انتخاب کنید"
+msgstr ""
+"بیایید تلاش کنیم یک مرخصی بیماری ایجاد کنیم و آن را در لیست انتخاب کنید"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
@@ -3706,6 +3708,16 @@ msgid "Small Unemployment"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid ""
+"Some employees already have time off requests in hours that overlap with the "
+"selected period, Odoo cannot automatically adjust or split hourly leaves "
+"during batch generation. Conflicting time off:\n"
+"%s"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
@@ -4086,8 +4098,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
 msgid "This field defines the unit of time after which the accrual starts."
-msgstr ""
-"این فیلد واحد زمانی را تعریف می‌کند که بعد از آن حق استفاده شروع می‌شود."
+msgstr "این فیلد واحد زمانی را تعریف می‌کند که بعد از آن حق استفاده شروع می‌شود."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
@@ -5043,16 +5054,6 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"You cannot refuse this allocation request since the employee has already "
-"taken leaves for it. Please refuse or delete those leaves first."
-msgstr ""
-"شما نمی‌توانید این درخواست تخصیص را رد کنید زیرا کارمند قبلاً مرخصی‌هایی برای "
-"آن گرفته است. لطفاً ابتدا آن مرخصی‌ها را رد یا حذف کنید."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "You do not have any allocation for this time off type.\n"
@@ -5405,6 +5406,13 @@ msgstr "معتبر تا"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "تأیید کردن"
+
+#~ msgid ""
+#~ "You cannot refuse this allocation request since the employee has already "
+#~ "taken leaves for it. Please refuse or delete those leaves first."
+#~ msgstr ""
+#~ "شما نمی‌توانید این درخواست تخصیص را رد کنید زیرا کارمند قبلاً مرخصی‌هایی "
+#~ "برای آن گرفته است. لطفاً ابتدا آن مرخصی‌ها را رد یا حذف کنید."
 
 #~ msgid " days"
 #~ msgstr " روز"

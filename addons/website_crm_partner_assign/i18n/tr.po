@@ -22,13 +22,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 15:02+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "website_crm_partner_assign/tr/>\n"
 "Language: tr\n"
@@ -81,7 +82,6 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Düzenle"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
-#, fuzzy
 msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to resellers"
 msgstr "<i class=\"oi oi-chevron-left me-2\"/>Bayilere geri dönün"
 
@@ -141,13 +141,11 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_view_kanban
-#, fuzzy
 msgid "<span class=\"me-1\">Partner:</span>"
-msgstr "<span class=\"me-1\">Ortak:</span>"
+msgstr "<span class=\"me-1\">Partner:</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
-#, fuzzy
 msgid ""
 "<span class=\"opacity-50\" invisible=\"partner_latitude &lt;= 0\">N </span>\n"
 "                                    <span class=\"opacity-50\" "
@@ -159,7 +157,6 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
-#, fuzzy
 msgid ""
 "<span class=\"opacity-50\" invisible=\"partner_longitude &lt;= 0\">E </"
 "span>\n"
@@ -175,7 +172,6 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
-#, fuzzy
 msgid "<span class=\"opacity-50\">( </span>"
 msgstr "<span class=\"opacity-50\">( </span>"
 
@@ -233,7 +229,6 @@ msgstr "<strong class=\"col-12 col-sm-4\">Öncelik</strong>"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,body_html:website_crm_partner_assign.email_template_lead_forward_mail
-#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
@@ -447,7 +442,7 @@ msgstr ""
 "\">us</t>.<br/>\n"
 "                            </t>\n"
 "                            Müşteri adayı ile 20 günden önce iletişime "
-"geçmezseniz müşteri adayı başka bir ortağa gönderilecektir.<br/><br/>\n"
+"geçmezseniz müşteri adayı başka bir partnere gönderilecektir.<br/><br/>\n"
 "                            Teşekkür ederim,<br/>\n"
 "                            <t t-out="
 "\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>"
@@ -702,9 +697,8 @@ msgstr "Fırsat Oluştur"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,website_form_label:website_crm_partner_assign.model_res_partner
-#, fuzzy
 msgid "Create a Customer"
-msgstr "Müşteri Oluşturma"
+msgstr "Müşteri Oluştur"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
@@ -851,7 +845,6 @@ msgstr "Ülkeye göre filtreleyin"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
-#, fuzzy
 msgid "Filter by industry"
 msgstr "Sektöre göre filtrele"
 
@@ -1191,7 +1184,6 @@ msgstr "Aşağıdaki alan(lar) güncellenemez: %s."
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
-#, fuzzy
 msgid ""
 "Only users with commercial partner which is a parent of the assigned partner "
 "can edit this lead."
@@ -1201,9 +1193,8 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
-#, fuzzy
 msgid "Open industries dropdown"
-msgstr "Sektörler açılır menüsünü açın"
+msgstr "Sektörler açılır menüsünü aç"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1275,9 +1266,8 @@ msgstr "İş Ortağı Konumu"
 #. module: website_crm_partner_assign
 #. odoo-javascript
 #: code:addons/website_crm_partner_assign/static/src/website_builder/partner_page_option_plugin.js:0
-#, fuzzy
 msgid "Partner Page"
-msgstr "Ortak Sayfası"
+msgstr "Partner Sayfası"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
@@ -1337,9 +1327,8 @@ msgstr "Planlanan Gelir"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-#, fuzzy
 msgid "Please check back soon."
-msgstr "Lütfen yakında tekrar kontrol edin."
+msgstr "Lütfen kısa süre sonra tekrar kontrol edin."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1381,13 +1370,11 @@ msgstr "Değerlendirme: 3 üzerinden 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#, fuzzy
 msgid "Rating: {{0}} on 3"
 msgstr "Değerlendirme: {{0}} on 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-#, fuzzy
 msgid "Rating: {{0}} on 4"
 msgstr "Değerlendirme: {{0}} on 4"
 
@@ -1426,7 +1413,6 @@ msgstr "Arama"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-#, fuzzy
 msgid "Search by name or address"
 msgstr "İsim veya adrese göre arama"
 
@@ -1447,9 +1433,8 @@ msgstr "Ülke filtrelerini görün"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
-#, fuzzy
 msgid "See industries filters"
-msgstr "Endüstri filtrelerine bakın"
+msgstr "Sektör filtrelerini gör"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -1530,7 +1515,6 @@ msgstr "İletilen Eposta Şablonu veritabanında yok"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
-#, fuzzy
 msgid "The full absolute URL to access the document through the website."
 msgstr "Belgeye web sitesi üzerinden erişmek için tam mutlak URL."
 
@@ -1607,9 +1591,8 @@ msgstr "Uyarı"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
-#, fuzzy
 msgid "We're expanding our partner network."
-msgstr "Ortak ağımızı genişletiyoruz."
+msgstr "Partner ağımızı genişletiyoruz."
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_website
@@ -1618,7 +1601,6 @@ msgstr "Websitesi"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
-#, fuzzy
 msgid "Website Absolute URL"
 msgstr "Web Sitesi Mutlak URL"
 
@@ -1663,14 +1645,12 @@ msgstr "tek bir iş ortağı: iş ortağının mauel seçimi"
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
-#, fuzzy
 msgid "activity_date_deadline"
 msgstr "activity_date_deadline"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
-#, fuzzy
 msgid "activity_ids"
 msgstr "activity_ids"
 
@@ -1721,14 +1701,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
-#, fuzzy
 msgid "user_id"
 msgstr "kullanıcı_id"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
-#, fuzzy
 msgid "won_status"
 msgstr "won_status"
 

@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-14 03:52+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-20 00:55+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/id/>\n"
@@ -3790,6 +3790,20 @@ msgid "Small Unemployment"
 msgstr "Pengangguran Kecil"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid ""
+"Some employees already have time off requests in hours that overlap with the "
+"selected period, Odoo cannot automatically adjust or split hourly leaves "
+"during batch generation. Conflicting time off:\n"
+"%s"
+msgstr ""
+"Beberapa karyawan sudah memiliki permintaan cuti dalam jam-jam yang "
+"bertentangan dengan periode terpilih, Odoo tidak dapat otomatis menyesuaikan "
+"atau memisahkan jam cuti pada pembuatan batch. Cuti dengan konflik:\n"
+"%s"
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
@@ -5183,16 +5197,6 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"You cannot refuse this allocation request since the employee has already "
-"taken leaves for it. Please refuse or delete those leaves first."
-msgstr ""
-"Anda tidak dapat menolak permintaan alokasi ini karena karyawan sudah "
-"mengambil cutinya. Mohon tolak atau hapus cuti tersebut terlebih dahulu."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "You do not have any allocation for this time off type.\n"
@@ -5555,6 +5559,13 @@ msgstr "valid sampai"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validasi"
+
+#~ msgid ""
+#~ "You cannot refuse this allocation request since the employee has already "
+#~ "taken leaves for it. Please refuse or delete those leaves first."
+#~ msgstr ""
+#~ "Anda tidak dapat menolak permintaan alokasi ini karena karyawan sudah "
+#~ "mengambil cutinya. Mohon tolak atau hapus cuti tersebut terlebih dahulu."
 
 #~ msgid "%g remaining out of %g"
 #~ msgstr "tersisa %g dari %g"

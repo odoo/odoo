@@ -22,13 +22,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-13 10:17+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "mrp_subcontracting/tr/>\n"
 "Language: tr\n"
@@ -41,20 +42,17 @@ msgstr ""
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s Sequence Resupply Subcontractor"
-msgstr "%(name)s Sıra İkmal Alt Yüklenicisi"
+msgstr "%(name)s Fason Yeniden Tedarik Sırası"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s Sequence subcontracting"
-msgstr "%(name)s Sıralı alt yüklenicilik"
+msgstr "%(name)s Fason Sırası"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
-#, fuzzy
 msgid "/my/productions"
 msgstr "/my/productions"
 
@@ -66,9 +64,8 @@ msgstr "Tümü"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production_serials
-#, fuzzy
 msgid "Assign serial numbers to production order"
-msgstr "Üretim siparişine seri numaraları atayın"
+msgstr "Üretim emrine seri numaraları atayın"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -131,15 +128,13 @@ msgstr "Kontak"
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
-#, fuzzy
 msgid "Create New Production"
 msgstr "Yeni Üretim Oluştur"
 
 #. module: mrp_subcontracting
 #: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
-#, fuzzy
 msgid "Create a Customer"
-msgstr "Müşteri Oluşturma"
+msgstr "Müşteri Oluştur"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -197,9 +192,8 @@ msgstr "Yapıldı"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
-#, fuzzy
 msgid "Follow manufacturing orders you have to fulfill"
-msgstr "Yerine getirmeniz gereken üretim siparişlerini takip edin"
+msgstr "Tamamlamanız gereken üretim emirlerini takip edin"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
@@ -231,13 +225,12 @@ msgstr "ID"
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
-#, fuzzy
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
 msgstr ""
-"Stokları doğru bir şekilde yönetmek için, taşeronluk konumlarının uygun "
-"şirkete bağlı Dahili tipte olması gerekir."
+"Stokları doğru bir şekilde yönetmek için, fason konumlarının uygun şirkete "
+"bağlı Dahili türde olması gerekir."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -320,11 +313,9 @@ msgstr "Sipariş"
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "Please set a lot/serial for the currently opened subcontracting MO first."
-msgstr ""
-"Lütfen önce şu anda açık olan taşeronluk MO için bir lot/seri belirleyin."
+msgstr "Lütfen önce şu anda açık olan fason MO için bir lot/seri belirleyin."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -473,9 +464,8 @@ msgstr "Fason konumları"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
-#, fuzzy
 msgid "Subcontracting MOs"
-msgstr "Taşeronluk MO'ları"
+msgstr "Fason MO'ları"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -499,9 +489,8 @@ msgstr "Alt Yüklenici Portalı"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
-#, fuzzy
 msgid "Subcontracting Productions"
-msgstr "Taşeron Üretimler"
+msgstr "Fason Üretimler"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -563,9 +552,8 @@ msgstr ""
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
-#, fuzzy
 msgid "The subcontracted goods have already been received."
-msgstr "Taşeron mallar halihazırda teslim alınmıştır."
+msgstr "Fason ürünler zaten teslim alınmış."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -608,9 +596,8 @@ msgstr ""
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_unbuild.py:0
-#, fuzzy
 msgid "You can't unbuild a subcontracted Manufacturing Order."
-msgstr "Taşerona verilmiş bir Üretim Siparişini geri alamazsınız."
+msgstr "Fason bir Üretim Emri için geri alma işlemi yapılamaz."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -632,9 +619,8 @@ msgstr "örn. PO0032"
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
-#, fuzzy
 msgid "state"
-msgstr "devlet"
+msgstr "durum"
 
 #~ msgid "Can be Subcontracted"
 #~ msgstr "Can be Subcontracted"

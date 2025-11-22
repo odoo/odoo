@@ -34,9 +34,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-11 10:52+0000\n"
-"Last-Translator: Zvonimir Galić <zvonimir.galic@viavista.ba>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-17 14:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/account/"
 "hr/>\n"
 "Language: hr\n"
@@ -58,6 +58,13 @@ msgid ""
 "        Select 'General' for miscellaneous operations journals.\n"
 "        "
 msgstr ""
+"\n"
+"        Odaberite 'Prodaja' za dnevnike računa kupaca.\n"
+"Odaberite 'Kupnja' za dnevnike računa dobavljača.\n"
+"Odaberite 'Gotovina', 'Banka' ili 'Kreditna kartica' za dnevnike koji se "
+"koriste za uplate kupaca ili dobavljača.\n"
+"Odaberite 'Opće' za dnevnike za ostale operacije.\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -189,8 +196,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s Fakturirano, "
-"%(quantity_delivered)s Isporučeno %(unit_price)s svaki"
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Fakturirano, %"
+"(quantity_delivered)s Isporučeno %(unit_price)s svaki"
 
 #. module: account
 #. odoo-python
@@ -209,18 +216,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) mora biti konto vrste \"%(receivable)s\" "
-"ili \"%(payable)s\" s uključenim opcijama \"%(allow_reconciliation)s\" i "
-"\"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -1079,8 +1074,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Paid</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Plaćeno\" role="
-"\"img\"/>\n"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Plaćeno\" "
+"role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Plaćeno</span>"
 
@@ -1208,8 +1203,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\""
-">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1340,8 +1335,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\"> $ <span class=\"oe_currency_value\"> "
-"19,250.00</span></span>"
+"<span class=\"text-nowrap\"> $ <span class=\"oe_currency_value\"> 19,250.00</"
+"span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1396,8 +1391,8 @@ msgid ""
 "invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Račun</span>\n"
-"                                        <span invisible="
-"\"reconciled_invoices_type == 'invoice'\"> Odobrenje</span>"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Odobrenje</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1966,7 +1961,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr "Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
+msgstr ""
+"Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
 
 #. module: account
 #. odoo-python
@@ -2222,12 +2218,6 @@ msgstr "Mapiranje konta"
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
 msgid "Account Move Count"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__line_ids
-msgid "Account Move Line Items"
 msgstr ""
 
 #. module: account
@@ -2844,8 +2834,6 @@ msgid "Add a rounding line"
 msgstr "Dodaj redak zaokruživanja"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
 msgstr "Dodaj odlomak"
@@ -4054,7 +4042,7 @@ msgstr "Izvodi banke"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 msgid "Bank Suspense"
-msgstr ""
+msgstr "Prijelazni bankovni konto"
 
 #. module: account
 #. odoo-python
@@ -4902,6 +4890,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "credit notes made from this journal"
 msgstr ""
+"Označite ovu opciju ako ne želite koristiti istu sekvencu za račune i "
+"odobrenja kreirane u ovom dnevniku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
@@ -7835,7 +7825,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr ""
+msgstr "Knjiži tečajne razlike u:"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
@@ -8871,6 +8861,8 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
 msgstr ""
@@ -8882,6 +8874,8 @@ msgid "Hide Post Button"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
 msgstr ""
@@ -9227,6 +9221,10 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
+"Ako je označeno, prilikom knjiženja unosa retroaktivno se primjenjuje hash "
+"na sva knjiženja u slijedu, počevši od tog unosa pa unatrag do zadnjeg "
+"hashiranog unosa. Hash se također može pokrenuti na zahtjev pomoću "
+"čarobnjaka \"Osiguraj knjiženja\" (Secure Entries)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10455,8 +10453,8 @@ msgstr "Oznaka stavke dnevnika"
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
 #: model:ir.actions.act_window,name:account.action_account_moves_all_tree
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10464,6 +10462,12 @@ msgstr "Oznaka stavke dnevnika"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
 msgstr "Stavke dnevnika"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+msgid "Journal Items (DEPRECATED)"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11664,7 +11668,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr "Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
+msgstr ""
+"Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -15377,6 +15382,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also "
 "be named using this prefix by default."
 msgstr ""
+"Kraći naziv, koristi se za prikaz. Ovaj prefiks se koristi za knjiženja ovog "
+"dnevnika."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
@@ -15386,6 +15393,12 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Composition"
 msgstr ""
 
 #. module: account
@@ -15459,6 +15472,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Prices"
 msgstr ""
 
 #. module: account
@@ -16588,6 +16607,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The Bill/Refund date is required to validate this document."
+msgstr "Datum računa je obavezan za potvrđivanje ovog dokumenta."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The Early Payment Discount days must be strictly positive."
 msgstr ""
@@ -17630,6 +17655,10 @@ msgid ""
 "master budgets and the budgets are defined, the project managers can set the "
 "planned amount on each analytic account."
 msgstr ""
+"Ovo omogućuje računovođama upravljanje analitičkim i međupovezanim "
+"proračunima. Nakon što su definirani glavni proračuni i pojedinačni "
+"proračuni, voditelji projekata mogu postaviti planirani iznos za svaki "
+"analitički račun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -17845,7 +17874,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
-msgstr ""
+msgstr "Ovu postavku nije moguće promijeniti nakon što je kreiran račun."
 
 #. module: account
 #. odoo-python
@@ -19188,6 +19217,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"Možete odabrati različite modele za svaki tip referencije. Zadani model je "
+"Odoo referenca."
 
 #. module: account
 #. odoo-python
@@ -20452,6 +20483,15 @@ msgid ""
 "a' }})"
 msgstr ""
 
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) mora biti konto vrste \"%"
+#~ "(receivable)s\" ili \"%(payable)s\" s uključenim opcijama \"%"
+#~ "(allow_reconciliation)s\" i \"%(non_trade)s\"."
+
 #~ msgid "Warning"
 #~ msgstr "Upozorenje"
 
@@ -21228,9 +21268,6 @@ msgstr ""
 
 #~ msgid "Tax to Apply"
 #~ msgstr "Porez za prijaviti"
-
-#~ msgid "The Bill/Refund date is required to validate this document."
-#~ msgstr "Datum računa je obavezan za potvrđivanje ovog dokumenta."
 
 #~ msgid "The account %s (%s) is deprecated."
 #~ msgstr "Konto: %s (%s) je zastario."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 19:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Kurdish (Central) <https://translate.odoo.com/projects/"
@@ -228,9 +228,9 @@ msgid ""
 "Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
 "Waiting for Bill</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label="
-"\"Waiting for Bill\" title=\"Waiting for Bill\"/><span class="
-"\"d-none d-md-inline\">چاوەڕێی بۆ پسووڵە کردن</span>"
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-"
+"inline\">چاوەڕێی بۆ پسووڵە کردن</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -238,8 +238,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
 "title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" title="
-"\"Cancelled\"/><span class=\"d-none d-md-inline\">هەڵوەشایەوە</span>"
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\">هەڵوەشایەوە</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -289,10 +289,10 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\""
-">داواکاری بۆ وەرگرتنی نرخ #</span>\n"
-"<span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\""
-">داواکاری کڕین</span>"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">داواکاری بۆ وەرگرتنی نرخ #</span>\n"
+"<span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')"
+"\">داواکاری کڕین</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1690,7 +1690,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
-msgstr "دڵنیابە تەنها ئەو پسووڵانە دەدەیت کە کاڵاکانت وەرگرتووە کە داوات کردووە"
+msgstr ""
+"دڵنیابە تەنها ئەو پسووڵانە دەدەیت کە کاڵاکانت وەرگرتووە کە داوات کردووە"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1740,10 +1741,8 @@ msgid "Message for Purchase Order"
 msgstr "پەیام بۆ داواکاری کڕین"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
 msgstr "پەیام بۆ هێڵی داواکاری کڕین"
 
@@ -2293,6 +2292,12 @@ msgstr ""
 #: code:addons/purchase/models/product.py:0
 msgid "Purchase History for %s"
 msgstr "مێژووی کڕین بۆ...%s"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
+msgid "Purchase Line Warn Msg"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
@@ -3252,6 +3257,12 @@ msgstr ""
 "فرۆشیار و  پەیوەندیداریان هەڵبوەشێنیتەوە."
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
 msgid "Unit"
@@ -3360,7 +3371,8 @@ msgstr "پسووڵەی فرۆشیار"
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
-msgstr "هێڵەکانی پارەی فرۆشیار تەنها دەتوانرێت زیاد بکرێت بۆ یەک داواکاری کڕین."
+msgstr ""
+"هێڵەکانی پارەی فرۆشیار تەنها دەتوانرێت زیاد بکرێت بۆ یەک داواکاری کڕین."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices

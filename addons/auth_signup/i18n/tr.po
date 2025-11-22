@@ -19,13 +19,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 14:54+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:44+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "auth_signup/tr/>\n"
 "Language: tr\n"
@@ -42,7 +43,6 @@ msgstr "+1 650-123-4567"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
-#, fuzzy
 msgid ""
 ",<br/><br/>\n"
 "                                A password reset was requested for the "
@@ -54,7 +54,7 @@ msgstr ""
 "                                Bu e-postaya bağlı hesap için bir şifre "
 "sıfırlama talep edildi.\n"
 "                                Bu bağlantıyı takip ederek şifrenizi "
-"değiştirebilirsiniz."
+"değiştirebilirsiniz"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -182,7 +182,6 @@ msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
-#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
@@ -319,7 +318,7 @@ msgstr ""
 " style=\"padding: 16px; background-color: white; color: #454748; border-"
 "collapse:separate;\">\n"
 "           <tbody>\n"
-"                <!-- HEADER -->\n"
+"                <!-- BAŞLIK -->\n"
 "               <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                       <table border=\"0\" cellpadding=\"0\" cellspacing="
@@ -349,7 +348,7 @@ msgstr ""
 "                        </table>\n"
 "                   </td>\n"
 "                </tr>\n"
-"               <!-- CONTENT -->\n"
+"               <!-- İÇERİK -->\n"
 "                <tr>\n"
 "                   <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                        <table border=\"0\" cellpadding=\"0\" cellspacing="
@@ -361,10 +360,10 @@ msgstr ""
 "                                    Sayın <t t-out=\"object.name or ''\""
 ">Marc Demo</t>,<br/> <br/>\n"
 "                                    <t t-out=\"object.company_id.name\"> "
-"YourCompany</t>'nin Portalına Hoşgeldiniz!<br/><br/>\n"
+"Şirketinizin Portalına Hoşgeldiniz!<br/><br/>\n"
 "                                    Aşağıdaki giriş ile sizin için bir hesap "
 "oluşturuldu: <t t-out=\"object.login\">demo</t><br/><br/>\n"
-"                                    Bir şifre toplama yapmak ve hesabınızı "
+"                                    Bir şifre almak ve hesabınızı "
 "etkinleştirmek için aşağıdaki düğmeye tıklayın.\n"
 "                                   <div style="
 "\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -372,9 +371,8 @@ msgstr ""
 "\"object.partner_id._get_signup_url()\" t-attf-style=\"display: inline-block;"
 " padding: 10px; text-decoration: none; font-size: 12px; background-color: {{"
 "object.company_id.email_secondary_color or '#875A7B'}}; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\""
-">{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
-"\">\n"
+"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
+"\n"
 "                                           <strong>Hesabı "
 "Etkinleştir</strong>\n"
 "                                        </a>\n"
@@ -392,7 +390,7 @@ msgstr ""
 "                        </table>\n"
 "                   </td>\n"
 "                </tr>\n"
-"               <!-- FOOTER -->\n"
+"               <!-- ALTBİLGİ -->\n"
 "                <tr>\n"
 "                   <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                        <table border=\"0\" cellpadding=\"0\" cellspacing="
@@ -400,7 +398,7 @@ msgstr ""
 "size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                           <tr><td valign=\"middle\" align=\"left\">\n"
 "                               <t t-out=\"object.company_id.name or ''\""
-">YourCompany</t>\n"
+">Şirketiniz</t>\n"
 "                            </td></tr>\n"
 "                            <tr> <td valign=\"middle\" align=\"left\" style="
 "\"opacity: 0.7;\">\n"
@@ -410,12 +408,12 @@ msgstr ""
 "                                    | <a t-attf-href="
 "\"mailto:{{ object.company_id.email }}\" style=\"text-decoration: none; "
 "color: #454748;\" t-out=\"object.company_id.email or ''\""
-">info@yourcompany.com</a>\n"
+">info@şirketiniz.com</a>\n"
 "                                </t>\n"
 "                               <t t-if=\"object.company_id.website\">\n"
 "                                    | <a t-att-href="
 "\"object.company_id.website\" style=\"text-decoration: none; color: #454748;"
-"\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"\" t-out=\"object.company_id.website or ''\">http://www.örnek.com</a>\n"
 "                                </t>\n"
 "                           </td></tr>\n"
 "                       </table>\n"
@@ -433,8 +431,7 @@ msgstr ""
 "                Powered by <a target=\"_blank\" t-attf-href=\"https"
 "://www.odoo.com?utm_source=db&amp;utm_medium={{ ctx.get('medium', 'auth') }}"
 "\" t-attf-style=\"color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}};\">{{object.company_id.email_secondary_color or '#875A7B'}};\""
-">Odoo</a>\n"
+"'#875A7B'}};\">Odoo</a>\n"
 "            </td></tr>\n"
 "        </table>\n"
 "   </td></tr>\n"
@@ -443,7 +440,6 @@ msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
-#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; "
@@ -724,7 +720,6 @@ msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
-#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; "
@@ -977,14 +972,12 @@ msgstr ""
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
-#, fuzzy
 msgid "A reset password link was sent by email"
 msgstr "E-posta ile bir şifre sıfırlama bağlantısı gönderildi"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
-#, fuzzy
 msgid "A signup link was sent by email"
 msgstr "E-posta ile bir kayıt bağlantısı gönderildi"
 
@@ -1059,7 +1052,6 @@ msgstr "Parolanız sıfırlanamadı"
 
 #. module: auth_signup
 #: model:ir.model,website_form_label:auth_signup.model_res_partner
-#, fuzzy
 msgid "Create a Customer"
 msgstr "Müşteri Oluşturma"
 
@@ -1139,7 +1131,6 @@ msgstr "Geçersiz kayıt belirteci"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
-#, fuzzy
 msgid "Invited"
 msgstr "Davetli"
 
@@ -1210,7 +1201,6 @@ msgstr "Parola sıfırlandı"
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
-#, fuzzy
 msgid "Password reset instructions sent to your email address."
 msgstr "E-posta adresinize gönderilen şifre sıfırlama talimatları."
 
@@ -1245,7 +1235,6 @@ msgstr "Parolayı Sıfırla"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-#, fuzzy
 msgid "Send Password Reset"
 msgstr "Şifre Sıfırlama Gönder"
 
@@ -1269,7 +1258,6 @@ msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.portal_set_password_email
-#, fuzzy
 msgid "Sent to new portal user after you invited them"
 msgstr "Yeni portal kullanıcısını davet ettikten sonra ona gönderilir"
 
@@ -1290,7 +1278,6 @@ msgstr "Ayarlar: Yeni Portal Kaydı"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
-#, fuzzy
 msgid "Settings: New Portal User Invite"
 msgstr "Ayarlar: Yeni Portal Kullanıcı Daveti"
 
@@ -1411,14 +1398,12 @@ msgstr "Bu eylemi arşivlenmiş bir kullanıcı üzerinde gerçekleştiremezsini
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.portal_set_password_email
-#, fuzzy
 msgid "Your account at {{ object.company_id.name }}"
 msgstr "Adresindeki hesabınız {{ object.company_id.name }}"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
-#, fuzzy
 msgid "Your password has been reset successfully."
 msgstr "Parolanız başarıyla sıfırlandı."
 
@@ -1444,7 +1429,6 @@ msgstr "info@yourcompany.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
-#, fuzzy
 msgid "name@example.com"
 msgstr "name@example.com"
 

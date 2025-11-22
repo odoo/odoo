@@ -4,13 +4,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-12 13:11+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-20 13:21+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "payment_paymob/tr/>\n"
 "Language: tr\n"
@@ -27,14 +28,12 @@ msgstr "API Anahtarı"
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-#, fuzzy
 msgid "Account Country"
 msgstr "Hesap Ülke"
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_transaction.py:0
-#, fuzzy
 msgid ""
 "An error occurred during the processing of your payment (%(msg)s). Please "
 "try again."
@@ -50,7 +49,6 @@ msgstr "Kod"
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Could not generate a new access token."
 msgstr "Yeni bir erişim belirteci oluşturulamadı."
 
@@ -73,28 +71,24 @@ msgstr "ID"
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-#, fuzzy
 msgid "Make the payment methods compatible with the Paymob portal."
 msgstr "Ödeme yöntemlerini Paymob portalı ile uyumlu hale getirin."
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Not all enabled payment methods were found on your account."
 msgstr "Hesabınızda etkinleştirilmiş tüm ödeme yöntemleri bulunamadı."
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Only currencies supported by Paymob can be selected."
 msgstr "Yalnızca Paymob tarafından desteklenen para birimleri seçilebilir."
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Only one currency can be selected per Paymob account."
 msgstr "Paymob hesabı başına yalnızca bir para birimi seçilebilir."
 
@@ -111,14 +105,12 @@ msgstr "Ödeme İşlemi"
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Payment methods have been successfully set up!"
 msgstr "Ödeme yöntemleri başarıyla ayarlandı!"
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Payment methods not found"
 msgstr "Ödeme yöntemleri bulunamadı"
 
@@ -129,31 +121,26 @@ msgstr "Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_api_key
-#, fuzzy
 msgid "Paymob API Key"
 msgstr "Paymob API Anahtarı"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_account_country_id
-#, fuzzy
 msgid "Paymob Account Country"
 msgstr "Paymob Hesap Ülkesi"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_hmac_key
-#, fuzzy
 msgid "Paymob HMAC Key"
 msgstr "Paymob HMAC Anahtarı"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_public_key
-#, fuzzy
 msgid "Paymob Public Key"
 msgstr "Paymob Açık Anahtarı"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_secret_key
-#, fuzzy
 msgid "Paymob Secret Key"
 msgstr "Paymob Gizli Anahtarı"
 
@@ -170,19 +157,16 @@ msgstr "Gizli Şifre"
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Successfully synchronized with Paymob"
 msgstr "Paymob ile başarıyla senkronize edildi"
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-#, fuzzy
 msgid "Synchronize With Paymob"
 msgstr "Paymob ile Senkronize Et"
 
 #. module: payment_paymob
 #: model:ir.model.fields,help:payment_paymob.field_payment_provider__paymob_account_country_id
-#, fuzzy
 msgid ""
 "The country of the Paymob account. The currency will be updated to match the "
 "country of the Paymob account."
@@ -193,7 +177,6 @@ msgstr ""
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "The following fields must be filled: %(fields)s"
 msgstr "Aşağıdaki alanlar doldurulmalıdır: %(fields)s"
 

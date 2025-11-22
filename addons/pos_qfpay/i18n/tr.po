@@ -4,13 +4,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 15:03+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "pos_qfpay/tr/>\n"
 "Language: tr\n"
@@ -27,17 +28,15 @@ msgstr "Alipay"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__amex_card
-#, fuzzy
 msgid "American Express Card"
 msgstr "American Express Kart"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
-#, fuzzy
 msgid "Credit card payments refund must be for the full amount."
 msgstr ""
-"Kredi kartı ile yapılan alacak ödemelerinin iadesi tutarın tamamı için "
+"Kredi kartı ile yapılan alacak ödemelerinin iadesi, tutarın tamamı için "
 "yapılmalıdır."
 
 #. module: pos_qfpay
@@ -47,14 +46,12 @@ msgstr "İsim Göster"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__fps
-#, fuzzy
 msgid "FPS"
 msgstr "FPS"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/qfpay.js:0
-#, fuzzy
 msgid ""
 "Failed to connect to the QFPay terminal. This might be a certificate issue.\n"
 "Make sure you imported the certificates provided by QFPay on this machine."
@@ -71,19 +68,16 @@ msgstr "ID"
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
-#, fuzzy
 msgid "No payment with %s found for this order."
 msgstr "Bu sipariş için %s ile ödeme bulunamadı."
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__octopus
-#, fuzzy
 msgid "Octopus"
-msgstr "Ahtapot"
+msgstr "Octopus"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__payme
-#, fuzzy
 msgid "PayMe"
 msgstr "PayMe"
 
@@ -95,45 +89,38 @@ msgstr "Satış Noktası Ödeme Yöntemleri"
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
-#, fuzzy
 msgid "QFPay Error"
 msgstr "QFPay Hatası"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_notification_key
-#, fuzzy
 msgid "QFPay Notification Key"
 msgstr "QFPay Bildirim Anahtarı"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_pos_key
-#, fuzzy
 msgid "QFPay POS Key"
 msgstr "QFPay Satış Noktası Anahtarı"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_payment_type
-#, fuzzy
 msgid "QFPay Payment Type"
 msgstr "QFPay Ödeme Tipi"
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_terminal_ip_address
-#, fuzzy
 msgid "QFPay Terminal IP Address"
 msgstr "QFPay Terminal IP Adresi"
 
 #. module: pos_qfpay
 #. odoo-python
 #: code:addons/pos_qfpay/models/pos_payment_method.py:0
-#, fuzzy
 msgid "QFPay is only valid for HKD Currency"
 msgstr "QFPay yalnızca HKD Para Birimi için geçerlidir"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
-#, fuzzy
 msgid ""
 "QFPay payment failed. Please try again or use a different payment method."
 msgstr ""
@@ -142,21 +129,18 @@ msgstr ""
 
 #. module: pos_qfpay
 #: model:ir.model.fields,field_description:pos_qfpay.field_pos_payment_method__qfpay_latest_response
-#, fuzzy
 msgid "Qfpay Latest Response"
 msgstr "Qfpay Son Yanıt"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
-#, fuzzy
 msgid "Refund amount cannot be greater than the original payment amount."
 msgstr "İade tutarı, orijinal ödeme tutarından fazla olamaz."
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/payment_qfpay.js:0
-#, fuzzy
 msgid ""
 "Refunds can only be made on the same day before 23:00 HKT. Use the QFPay "
 "portal to perform this refund"
@@ -167,37 +151,31 @@ msgstr ""
 #. module: pos_qfpay
 #. odoo-python
 #: code:addons/pos_qfpay/models/pos_payment_method.py:0
-#, fuzzy
 msgid "This method can only be used with QFPay payment terminal."
 msgstr "Bu yöntem sadece QFPay ödeme terminali ile kullanılabilir."
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__union
-#, fuzzy
 msgid "UnionPay QuickPass"
 msgstr "UnionPay QuickPass"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__unionpay_card
-#, fuzzy
 msgid "Unionpay Card"
 msgstr "Unionpay Kart"
 
 #. module: pos_qfpay
 #. odoo-javascript
 #: code:addons/pos_qfpay/static/src/app/qfpay.js:0
-#, fuzzy
 msgid "Unknown error occurred"
 msgstr "Bilinmeyen hata oluştu"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__card_payment
-#, fuzzy
 msgid "Visa/Mastercard"
 msgstr "Visa/Mastercard"
 
 #. module: pos_qfpay
 #: model:ir.model.fields.selection,name:pos_qfpay.selection__pos_payment_method__qfpay_payment_type__wx
-#, fuzzy
 msgid "WeChat Pay"
 msgstr "WeChat Pay"

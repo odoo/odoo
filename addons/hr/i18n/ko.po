@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 18:35+0000\n"
-"PO-Revision-Date: 2025-11-15 11:29+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-20 03:04+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/hr/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -464,12 +464,12 @@ msgstr "<strong class=\"s_rating_title\">자율성</strong>"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Be enthusiastic</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">열정적인 자세.</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Client Interaction</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">고객과의 상호 작용</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -484,7 +484,7 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Conflict Resolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">갈등 해결</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -526,7 +526,7 @@ msgstr "<strong class=\"s_rating_title\">관리 능력</strong>"
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">자기 계발</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -558,7 +558,7 @@ msgstr "<strong class=\"s_rating_title\">전문 기술</strong>"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Technology Strategy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">기술적인 전략</strong>"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -810,7 +810,7 @@ msgstr "할당"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
 msgid "Allowed Country State"
-msgstr ""
+msgstr "허용 국가 상태"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
@@ -1272,7 +1272,7 @@ msgstr "은행 계좌"
 #: code:addons/hr/models/hr_employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 msgid "Bank Account Allocation"
-msgstr ""
+msgstr "은행 계좌 할당"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard_line
@@ -1287,7 +1287,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_bank_account_allocation_wizard
 msgid "Bank Account Allocations"
-msgstr ""
+msgstr "은행 계좌 할당"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
@@ -2102,7 +2102,7 @@ msgstr "표시명"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/fields/many2one_avatar_employee_field/kanban_many2one_avatar_employee_field.js:0
 msgid "Display avatar name"
-msgstr "아바타 이름 표시"
+msgstr "아바타 표시명"
 
 #. module: hr
 #. odoo-python
@@ -2338,6 +2338,12 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Employee development is a core focus"
 msgstr "직원 개발이 가장 중요합니다."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee will be excluded from Pay Runs"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
@@ -2684,6 +2690,7 @@ msgid "Full-Time"
 msgstr "풀타임"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr "향후 활동"
@@ -3236,6 +3243,7 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
 msgstr "지연된 활동"
@@ -3606,7 +3614,7 @@ msgstr "서식을 찾을 수 없습니다"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 msgid "No contract"
-msgstr ""
+msgstr "계약 없음"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4516,6 +4524,11 @@ msgid "Show Hr Icon Display"
 msgstr "시간 아이콘 표시 보기"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+msgid "Show all records whose next activity date is past"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
 msgid "Show to all employees"
 msgstr "모든 직원에게 표시"
@@ -4951,6 +4964,7 @@ msgstr ""
 "상실 등 ...)들을 방지하려면 새 회사에 다른 직원을 생성해야 합니다."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "오늘 활동"
@@ -5071,7 +5085,7 @@ msgstr "사용자"
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "User Archive Notification"
-msgstr ""
+msgstr "사용자 보관함 이동 알림"
 
 #. module: hr
 #. odoo-python

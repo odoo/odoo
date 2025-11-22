@@ -10,12 +10,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-11-14 15:24+0000\n"
+"PO-Revision-Date: 2025-11-21 14:14+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/base/nl/>\n"
 "Language: nl\n"
@@ -681,6 +682,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Gebruik iMin ePOS-printers zonder de IoT Box in de Kassa\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -844,6 +848,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* Voeg export van IVA Simple belastingrapport toe.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -918,6 +924,9 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- Documenten verzenden en ontvangen via het Nemhandel-netwerk in OIOUBL 2.1-"
+"formaat\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -2688,6 +2697,8 @@ msgid ""
 "\n"
 "Accounting returns for Sweden\n"
 msgstr ""
+"\n"
+"Belastingaangiftes voor Zweden\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -3946,6 +3957,61 @@ msgid ""
 "- Configuration note: The .pfx certificate should be set on the payroll "
 "configuration.\n"
 msgstr ""
+"\n"
+"Automatische DIMONA-aangiften\n"
+"=============================\n"
+"\n"
+"Vereisten:\n"
+"--------------\n"
+"\n"
+"- Je hebt een digitaal certificaat nodig dat voldoet aan de Belgische "
+"overheid, voorzien door Global\n"
+"  Teken. Zie: https://shop.globalsign.com/en/belgische-overheidsdiensten\n"
+"\n"
+"- Genereer certificaatbestanden van je SSL-certificaat (.pfx-bestand) die "
+"nodig zijn om een technische gebruiker\n"
+"  te maken (.cer-bestand) en om op afstand te authenticeren met het ONSS-"
+"bestand (.pfx). Op een UNIX-\n"
+"  systeem kan je de volgende opdrachten gebruiken:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"- Voordat je gebruik kan maken van de webdienst REST van de sociale "
+"zekerheid, moet je een account aanmaken\n"
+"  voor jezelf of voor je klant en de sociale zekerheid configureren. (De "
+"hele procedure is\n"
+"  beschikbaar op https://www.socialsecurity.be/site_fr/employer/applics/"
+"dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Beheer van gebruikersaccounts: Volg de procedure https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Maak een technische gebruiker aan: Je klant moet nu een technische "
+"gebruiker aanmaken in het de online dienst\n"
+"    Toegangsbeheer. Volg deze procedure: https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR."
+"pdf\n"
+"\n"
+"  - Activeer een webservicekanaal: Zodra de technische gebruiker is "
+"aangemaakt, moet je klant\n"
+"    het webservicekanaal activeren in Toegangsbeheer. In de volgende "
+"handleiding vind je de\n"
+"    stappen die je moet volgen om het kanaal te activeren: https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Aan het einde van de procedure zou je een \"ONSS Expeditor Number\" "
+"moeten ontvangen.\n"
+"    Codeer die in de Instellingen van Loonadministratie met het .pem-bestand "
+"en het bijbehorende wachtwoord, indien aanwezig.\n"
+"\n"
+"- Configuratiemededeling: Het .pfx-certificaat moet ingesteld worden inde "
+"configuratie van loonadministratie.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -6756,6 +6822,100 @@ msgid ""
 "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"Maak dagboeken aan in Odoo om elektronische klantfacturen te maken en deze "
+"te rapporteren aan ARCA (via webservices).\n"
+"De beschikbare opties zijn:\n"
+"\n"
+"    * Elektronische factuur - Webservice\n"
+"    * Export voucher exporteren - Webservice\n"
+"    * Elektronische fiscale obligatie - Webservice\n"
+"\n"
+"Als je in de elektronische dagboeken een factuur valideert, wordt deze zowel "
+"in Odoo als in ARCA gevalideerd. Deze validatie wordt\n"
+"uitgevoerd op het moment dat we de status "
+"\"goedgekeurd/goedgekeurd met opmerkingen/afgekeurd\" ontvangen van ARCA. "
+"Als de factuur\n"
+"door ARCA is afgekeurd, wordt deze niet in het systeem geplaatst en wordt er "
+"een pop-upbericht getoond met zowel de foutmelding (afkeurredenen)\n"
+"die we ontvangen en een HINT over wat het probleem zou kunnen zijn.\n"
+"\n"
+"Voor audits en troubleshooting hebben we ook een menu "
+"\"Consult Invoice in ARCA\" toegevoegd waarmee we facturen kunnen raadplegen "
+"die eerder naar ARCA zijn\n"
+"gestuurd en het laatste nummer dat is gebruikt als ondersteuning voor "
+"mogelijke problemen met de synchronisatie van de sequenties tussen Odoo en "
+"ARCA.\n"
+"\n"
+"    OPMERKING: Vanuit de formulierweergave van het dagboek kunnen we een "
+"synchronisatie forceren tussen de odoo-sequenties voor elk van de "
+"documenttypes\n"
+"    met de laatste nummers die in ARCA zijn geregistreerd.\n"
+"\n"
+"Van leveranciersfacturen hebben we een functionaliteit toegevoegd die kan "
+"worden geconfigureerd in de boekhoudinstellingen om leveranciersfacturen\n"
+"in ARCA te verifiëren om te controleren of de leveranciersfacturen echt zijn "
+"(meer informatie vind je in de beschrijving van de instelling).\n"
+"\n"
+"Configuratie:\n"
+"\n"
+"1. Ga naar Boekhoudinstellingen > Argentijnse lokalisatie\n"
+"\n"
+"    1.1. Configureer de modus ARCA Web Services:\n"
+"\n"
+"    * Testomgeving om demo-certificaten te gebruiken die gebruikt zullen "
+"worden om testen en NIET\n"
+"      om echte facturen te maken voor ARCA. Enkel voor testing. Voor demo is "
+"dit al vooringesteld en hoef je niets meer te configureren\n"
+"      (in ARCA vaak Homologation environment genoemd).\n"
+"    * Productieomgeving om echte certificaten en legale facturen naar ARCA "
+"te genereren.\n"
+"\n"
+"    1.2. Configureer je ARCA-certificaat: Als je je in een demo-omgeving "
+"bevindt, is deze standaard ingesteld. Als je\n"
+"         in een productieomgeving bent, hoef je alleen maar je ARCA-"
+"certificaat te uploaden\n"
+"\n"
+"    1.3. Optioneel kun je aangeven of je de facturen van leveranciers wilt "
+"kunnen verifiëren in ARCA.\n"
+"\n"
+"2. Maak verkoopdagboeken aan die elk van je ARCA POS vertegenwoordigen ("
+"beschikbaar in ARCA Portal) die je wilt gebruiken in Odoo.\n"
+"\n"
+"    2.1. Het veld Use Documents is standaard ingesteld\n"
+"    2.2. Stel ARCA POS System in voor een van de elektronische systemen.\n"
+"\n"
+"        * Elektronische factuur - Webdienst\n"
+"        * Elektronische fiscale obligatie - Webdienst\n"
+"        * Export voucher - Webdienst\"\n"
+"\n"
+"    2.3. Stel het ARCA POS-nummer en ARCA POS-adres in, rekening houdend met "
+"wat je hebt geconfigureerd in je ARCA Portal.\n"
+"\n"
+"    OPMERKING: Je kunt de knop \"Controleer beschikbare ARCA POS\" in het "
+"dagboekformulier gebruiken om te bevestigen welke je moet gebruiken om de "
+"dagboeken aan te maken.\n"
+"\n"
+"Ga voor meer informatie over Elektronisch Factureren in Argentinië naar "
+"http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"De webservices die geïmplementeerd zijn, zijn de meest voorkomende:\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (Elektronische Factuur)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (Elektronische Fiscale Obligatie)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (Elektronische Export "
+"factuur - dezelfde als Export voucher)\n"
+"* wscdc - \"Constatación de Comprobantes\" (Factuurverificatie)\n"
+"\n"
+"Ga voor informatie over ontwikkeling naar http://www.afip.gob.ar/fe/"
+"documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -6790,6 +6950,38 @@ msgid ""
 "country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"In sommige Latijns-Amerikaanse landen, waaronder Argentinië en Chili, worden "
+"sommige boekhoudkundige transacties zoals facturen en facturen van "
+"leveranciers geclassificeerd aan de hand van documenttypes die zijn "
+"gedefinieerd door de belastingautoriteiten van de overheid (in Argentinië "
+"ARCA, in Chili SII).\n"
+"\n"
+"Deze module is bedoeld om te worden uitgebreid door lokalisaties om deze "
+"documenttypes te beheren en is essentiële informatie die moet worden "
+"weergegeven in de afgedrukte rapporten en die gemakkelijk moet kunnen worden "
+"geïdentificeerd, zowel binnen de set facturen als binnen de set accountmoves."
+"\n"
+"\n"
+"Elk documenttype heeft zijn eigen regels en volgnummer, dit laatste is "
+"geïntegreerd met het factuurnummer en de journaalvolgorde om het de "
+"lokalisatiegebruiker gemakkelijk te maken. Om deze documenttypes wel of niet "
+"te ondersteunen, heeft een journaal een nieuwe optie waarmee het document "
+"wel of niet kan worden gebruikt.\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"Als je lokalisatie deze logica nodig heeft, moet je deze module toevoegen "
+"als afhankelijkheid en in je lokalisatiemodule uitbreiden:\n"
+"\n"
+"* de methode _localization_use_documents() van het bedrijf uitbreiden.\n"
+"* maak de gegevens aan van de documenttypes die bestaan voor het specifieke "
+"land. Het documenttype heeft een landveld\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -8486,6 +8678,9 @@ msgid ""
 "Manage the inventory of your Kit products and display their availability "
 "status in your eCommerce store.\n"
 msgstr ""
+"\n"
+"Beheer de voorraad van je Kit-producten en geef de beschikbaarheidsstatus "
+"ervan weer in je E-commercewinkel.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -10322,6 +10517,10 @@ msgid ""
 "\n"
 "Force the installation of the Withholding Tax on Payment module\n"
 msgstr ""
+"\n"
+"Module Roerende voorheffing Saoedi-Arabië\n"
+"\n"
+"Installatie van de module Roerende voorheffing op betaling afdwingen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -15643,7 +15842,7 @@ msgstr "360 Feedback"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_3pl_logistic_company
 msgid "3PL Logistic Company"
-msgstr ""
+msgstr "3PL-logistiek bedrijf"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_external_tax
@@ -15836,12 +16035,17 @@ msgstr "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"E-mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Login / Email\" "
 "invisible=\"login != email\"/>\n"
 "                                    <i class=\"fa fa-fw fa-key text-"
 "primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Login / Email\" "
+"invisible=\"login != email\"/>\n"
+"                                    <i class=\"fa fa-fw fa-key text-primary\""
+" title=\"Login\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -16952,7 +17156,7 @@ msgstr "Account uittreksel"
 #: model:ir.module.module,shortdesc:base.module_account_fiscal_categories
 #: model:ir.module.module,summary:base.module_account_fiscal_categories
 msgid "Account Fiscal Report"
-msgstr ""
+msgstr "Boekhouding Fiscaal Verslag"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
@@ -16962,7 +17166,7 @@ msgstr "Rekeninghouder"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Rekeninghouder naam"
+msgstr "Naam rekeninghouder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -17580,6 +17784,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_pos_self_order_qfpay
 msgid "Addon for the Self Order App that allows customers to pay by QFPay."
 msgstr ""
+"Add-on voor de Zelfbediening-app waarmee klanten met QFPay kunnen betalen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_razorpay
@@ -17599,7 +17804,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_tests
 msgid "Addons to test Odoo industries code."
-msgstr ""
+msgstr "Addons om Odoo industries code te testen."
 
 #. module: base
 #. odoo-python
@@ -19493,6 +19698,8 @@ msgid ""
 "An addon for the Self Order App (KIOSK) that allows customers to pay using "
 "the Pine Labs POS Terminal."
 msgstr ""
+"Add-on voor de Zelfbediening-app (KIOSK) waarmee klanten kunnen betalen met "
+"de Kassaterminal van Pine Labs."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__tag
@@ -19913,7 +20120,7 @@ msgstr "Argentinië - Voorraad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports_simple
 msgid "Argentinean Accounting IVA Simple Export"
-msgstr ""
+msgstr "Argentijnse Boekhouding: IVA Simple export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -21676,8 +21883,9 @@ msgstr "België - Loonadministratie - Dimona"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_dimona_auto
+#, fuzzy
 msgid "Belgium - Payroll - Dimona - Automation"
-msgstr ""
+msgstr "België - Loonadministratie - Dimona - Automatisering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_acerta
@@ -21895,7 +22103,7 @@ msgstr "Bonaire, Sint Eustatius en Saba"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_booking_engine
 msgid "Booking Engine"
-msgstr ""
+msgstr "Boekingsplatform"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bookstore
@@ -23273,7 +23481,7 @@ msgstr "Klimzaal"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_clothing_boutique
@@ -23318,7 +23526,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codaclean
 msgid "Codaclean"
-msgstr ""
+msgstr "Codaclean"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server_history__code
@@ -23884,7 +24092,7 @@ msgstr "Koppel de webclient aan de Hatrdware"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codaclean
 msgid "Connect to Codaclean and automatically import CODA statements."
-msgstr ""
+msgstr "Maak verbinding met Codaclean en importeer automatisch CODA-uitreksel."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_gr_edi
@@ -24164,7 +24372,7 @@ msgstr "Bedrijf, Diensten, Technologie, Vormen, Illustraties"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cosmetics_store
 msgid "Cosmetics Store"
-msgstr ""
+msgstr "Cosmeticawinkel"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -25610,8 +25818,9 @@ msgstr "Denemarken - importeer SAF-T"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_nemhandel
+#, fuzzy
 msgid "Denmark EDI - Nemhandel"
-msgstr ""
+msgstr "Denemarken EDI - Nemhandel"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -27160,7 +27369,7 @@ msgstr "Escudo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_real_estate
 msgid "Estate Management"
-msgstr ""
+msgstr "Vastgoedbeheer"
 
 #. module: base
 #: model:res.country,name:base.ee
@@ -28997,7 +29206,7 @@ msgstr "Formulier"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Format"
-msgstr "Formatteer"
+msgstr "Formaat"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
@@ -30369,7 +30578,7 @@ msgstr "Hongkong"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitaility
 msgid "Hospitaility"
-msgstr ""
+msgstr "Horeca"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
@@ -30389,7 +30598,7 @@ msgstr "Hotel"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__hours
 msgid "Hours"
-msgstr "Uren"
+msgstr "Uur"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_T
@@ -30693,7 +30902,7 @@ msgstr "IT/Communicatie"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports_simple
 msgid "IVA Simple Reporting for Argentinean Localization"
-msgstr ""
+msgstr "IVA Simple rapportering voor Argentijnse lokalisatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_extract
@@ -31342,7 +31551,7 @@ msgstr "India - Voorraadrapportages (GST)"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__grouping__[3,2,0]
 msgid "Indian Grouping"
-msgstr ""
+msgstr "Indiase groepering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -31456,7 +31665,7 @@ msgstr "Branche"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_industry_data
 msgid "Industry base"
-msgstr ""
+msgstr "Branche basis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -31760,7 +31969,7 @@ msgstr "Interne notities..."
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__grouping__[3,0]
 msgid "International Grouping"
-msgstr ""
+msgstr "Internationale groepering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot
@@ -32634,7 +32843,7 @@ msgstr "Kiribati"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_mrp
 msgid "Kit Availability"
-msgstr ""
+msgstr "Beschikbaarheid Kit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_mrp_renting
@@ -33282,7 +33491,7 @@ msgstr "Liberië"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_library
 msgid "Library"
-msgstr ""
+msgstr "Bibliotheek"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bookstore
@@ -34021,7 +34230,7 @@ msgstr "Integraties van vacaturebanken met website beheren"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_mrp
 msgid "Manage Kit product inventory & availability"
-msgstr ""
+msgstr "Kit productvoorraad en -beschikbaarheid beheren"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_room
@@ -34697,7 +34906,7 @@ msgstr "Bericht"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_metal_fabricator
 msgid "Metal Fabricator"
-msgstr ""
+msgstr "Metaalverwerkingsbedrijf"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.MZN
@@ -34802,7 +35011,7 @@ msgstr "Millimes"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__mimetype
 msgid "Mime Type"
-msgstr "Mime Type"
+msgstr "MIME-type"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__min_id
@@ -35864,8 +36073,9 @@ msgstr "Nigeria - Boekhoudrapporten"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_night_clubs
+#, fuzzy
 msgid "Night Clubs"
-msgstr ""
+msgstr "Nachtclubs"
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -35999,7 +36209,7 @@ msgstr "Geen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_non_profit_organization
 msgid "Nonprofit organization"
-msgstr ""
+msgstr "Non-profitorganisatie"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -38679,7 +38889,7 @@ msgstr "Open een venster"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__config_url
 msgid "Open profiles config"
-msgstr ""
+msgstr "Profielconfiguratie openen"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_5
@@ -39495,12 +39705,12 @@ msgstr "Kassa Self Order IoT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_pine_labs
 msgid "POS Self Order Pine Labs"
-msgstr ""
+msgstr "Kassa Zelfbediening Pine Labs"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_qfpay
 msgid "POS Self Order QFPay"
-msgstr ""
+msgstr "Kassa Zelfbediening QFPay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_razorpay
@@ -39550,7 +39760,7 @@ msgstr "Kassa UrbanPiper - Uber Eats"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_imin
 msgid "POS iMin"
-msgstr ""
+msgstr "Kassasysteem iMin"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__prc
@@ -41521,12 +41731,12 @@ msgstr "Eigenschappen"
 #: model:ir.model.fields,field_description:base.field_res_partner__properties_base_definition_id
 #: model:ir.model.fields,field_description:base.field_res_users__properties_base_definition_id
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Eigenschappen Basisdefinitie"
 
 #. module: base
 #: model:ir.model,name:base.model_properties_base_definition_mixin
 msgid "Properties Base Definition Mixin"
-msgstr ""
+msgstr "Eigenschappen Basisdefinitie Mixin"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_definition
@@ -41551,7 +41761,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_condominium
 msgid "Property Owner Association"
-msgstr ""
+msgstr "Vereniging van eigenaren"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -42574,7 +42784,7 @@ msgstr "Restaurant extensie voor kassa "
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "Restore Revision"
-msgstr ""
+msgstr "Revisie herstellen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
@@ -42595,13 +42805,13 @@ msgstr "Retail"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__revision
 msgid "Revision"
-msgstr ""
+msgstr "Revisie"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Revision Code"
-msgstr ""
+msgstr "Revisiecode"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_tree
@@ -42674,7 +42884,7 @@ msgstr "Rol / Publiek"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Role / User"
-msgstr ""
+msgstr "Rol/Gebruiker"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -43108,7 +43318,7 @@ msgstr "Verkoopcommissie: Abonnement"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_enterprise
 msgid "Sale Enterprise"
-msgstr ""
+msgstr "Verkoop Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
@@ -43457,8 +43667,9 @@ msgstr "Saoedi-Arabië - Kassa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_withholding_tax
+#, fuzzy
 msgid "Saudi Arabia - Withholding Tax"
-msgstr ""
+msgstr "Saoedi-Arabië - Roerende voorheffing"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
@@ -43547,7 +43758,7 @@ msgstr "Bereik"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Scope:"
-msgstr ""
+msgstr "Scope:"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -44668,7 +44879,7 @@ msgstr "Socialmedia-koppelingen voor bedrijfsinstellingen."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_software_reseller
 msgid "Software Reseller"
-msgstr ""
+msgstr "Softwareverkoper"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_solar_installation
@@ -44780,7 +44991,7 @@ msgstr "Zuid-Soedan"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spa_resort
 msgid "Spa Resort"
-msgstr ""
+msgstr "Spa"
 
 #. module: base
 #. odoo-python
@@ -45589,7 +45800,7 @@ msgstr "Financiele rapportages - Zweden"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_returns
 msgid "Sweden - Accounting Returns"
-msgstr ""
+msgstr "Zweden - Belastingaangiften"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_sie4_export
@@ -46267,7 +46478,7 @@ msgstr "Je contacten sms'en op WhatsApp"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_textile_manufacturing
 msgid "Textile Manufacturing"
-msgstr ""
+msgstr "Textielproductie"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -46364,6 +46575,8 @@ msgid ""
 "The International Grouping will represent 123456789 to be 123,456,789.00; "
 "The Indian Grouping will represent 123456789 to be 12,34,56,789.00"
 msgstr ""
+"De Internationale Groepering toont 123456789 als 123.456.789,00; De Indiase "
+"Groepering toont 123456789 als 12.34.56.789,00"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -47846,8 +48059,11 @@ msgstr "Deze module wordt gebruikt voor online banksynchronisatie."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_dk_nemhandel
+#, fuzzy
 msgid "This module is used to send/receive documents with Nemhandel"
 msgstr ""
+"Deze module wordt gebruikt voor het verzenden/ontvangen van documenten met "
+"Nemhandel"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_peppol
@@ -47943,7 +48159,7 @@ msgstr "Duizend scheidingsteken"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_thrift_store
 msgid "Thrift Store"
-msgstr ""
+msgstr "Kringloopwinkel"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__4
@@ -48482,15 +48698,15 @@ msgstr ""
 "Type van serveractie. De volgende waarden zijn beschikbaar:\n"
 "\n"
 "- 'Werk een record bij': werk de waarden van een record bij\n"
-"- 'Maak activiteit aan': maak een activiteit (Discuss)\n"
-"- 'Stuur e-mail': plaats een bericht, een notitie of stuur een e-mail "
-"(Discuss)\n"
-"- 'Stuur SMS': stuur een SMS, log ze op documenten (SMS)\n"
+"- 'Activiteit aanmaken': maak een activiteit (Chat)\n"
+"- 'E-mail sturen': plaats een bericht, een notitie of stuur een e-mail (Chat)"
+"\n"
+"- 'Sms sturen': stuur een sms, log ze op documenten (sms)\n"
 "- 'Volgers toevoegen/verwijderen': voeg volgers toe of verwijder volgers van "
-"een record (Discuss)\n"
-"- 'Maak record aan': maak een nieuw record met nieuwe waarden\n"
-"- 'Voer code uit': een blok Python-code dat uitgevoerd zal worden\n"
-"- 'Stuur Webhook-melding': stuur een POST-verzoek naar een extern systeem, "
+"een record (Chat)\n"
+"- 'Record aanmaken': maak een nieuw record met nieuwe waarden\n"
+"- 'Code uitvoeren': een blok Python-code die uitgevoerd zal worden\n"
+"- 'Webhook-melding sturen': stuur een POST-verzoek naar een extern systeem, "
 "ook wel een Webhook genoemd\n"
 "- 'Meerdere acties': definieer een actie die verschillende andere "
 "serveracties triggert\n"
@@ -49728,8 +49944,9 @@ msgstr "Vertikale balk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_veterinary_clinic
+#, fuzzy
 msgid "Veterinary Clinic"
-msgstr ""
+msgstr "Dierenkliniek"
 
 #. module: base
 #: model:res.country,name:base.vn
@@ -50261,7 +50478,7 @@ msgstr "Weken"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wellness_practitioner
 msgid "Wellness Practitioner"
-msgstr ""
+msgstr "Wellness practitioner"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -51444,12 +51661,12 @@ msgstr "eCommerce/Gelato brug"
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr "eLearning"
+msgstr "E-learning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_elearning_platform
 msgid "eLearning Platform"
-msgstr ""
+msgstr "E-learningplatform"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
@@ -51524,7 +51741,7 @@ msgstr "html_value"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_imin
 msgid "iMin ePOS Printers in PoS"
-msgstr ""
+msgstr "iMin ePOS-printers in Kassa"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__embedded_parent_res_id

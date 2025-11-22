@@ -5,13 +5,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-12 15:04+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment_skills/tr/>\n"
 "Language: tr\n"
@@ -54,9 +55,8 @@ msgstr "Oluşturuldu"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__current_applicant_skill_ids
-#, fuzzy
 msgid "Current Applicant Skill"
-msgstr "Mevcut Başvuru Sahibi Becerisi"
+msgstr "Mevcut Başvuru Sahibi Yeteneği"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__display_name
@@ -67,7 +67,6 @@ msgstr "İsim Göster"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__display_warning_message
-#, fuzzy
 msgid "Display Warning Message"
 msgstr "Uyarı Mesajını Görüntüleme"
 
@@ -86,7 +85,6 @@ msgstr "İş Pozisyonu"
 #. module: hr_recruitment_skills
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/fields/skill_match_gauge_field/skill_match_gauge_field.xml:0
-#, fuzzy
 msgid "Job Position Matching"
 msgstr "İş Pozisyonu Eşleştirme"
 
@@ -102,7 +100,6 @@ msgstr "Son Güncelleme"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__levels_count
-#, fuzzy
 msgid "Levels Count"
 msgstr "Seviye Sayısı"
 
@@ -114,19 +111,16 @@ msgstr "Eşleştirme"
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
-#, fuzzy
 msgid "Matching Applicants"
 msgstr "Eşleşen Başvuru Sahipleri"
 
 #. module: hr_recruitment_skills
 #: model:ir.actions.act_window,name:hr_recruitment_skills.action_find_matching_job
-#, fuzzy
 msgid "Matching Positions"
 msgstr "Eşleşen Pozisyonlar"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
-#, fuzzy
 msgid "Matching Score"
 msgstr "Eşleştirme Puanı"
 
@@ -147,20 +141,17 @@ msgstr "Eksik Beceriler"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.crm_case_tree_view_inherit_hr_recruitment_skills
-#, fuzzy
 msgid "Move to this Job Position"
 msgstr "Bu İş Pozisyonuna Geçin"
 
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
-#, fuzzy
 msgid "No Matching Applicants"
 msgstr "Eşleşen Başvuru Sahibi Yok"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__levels_count
-#, fuzzy
 msgid "Number of levels linked to this skill type"
 msgstr "Bu beceri türüne bağlı seviye sayısı"
 
@@ -217,14 +208,12 @@ msgstr "Yetenekler"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
-#, fuzzy
 msgid "The end date must be after the start date."
 msgstr "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
 
 #. module: hr_recruitment_skills
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/fields/skill_match_gauge_field/skill_match_gauge_field.js:0
-#, fuzzy
 msgid "This score reflects skills and degree match"
 msgstr "Bu puan becerileri ve derece eşleşmesini yansıtır"
 
@@ -235,7 +224,6 @@ msgstr "Bitiş"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
-#, fuzzy
 msgid "Valid from"
 msgstr "Şu tarihten itibaren geçerlidir"
 
@@ -252,23 +240,20 @@ msgstr "Geçerlilik Bitişi"
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
-#, fuzzy
 msgid ""
 "We do not have any applicants who meet the skill requirements for this job "
 "position in the database at the moment."
 msgstr ""
-"Şu anda veri tabanımızda bu iş pozisyonu için beceri gereksinimlerini "
+"Şu anda veri tabanımızda bu iş pozisyonu için yetenek gereksinimlerini "
 "karşılayan herhangi bir başvuru sahibi bulunmamaktadır."
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__is_certification
-#, fuzzy
 msgid "if checked the skill type become a certification type"
-msgstr "işaretlenirse beceri türü bir sertifika türü haline gelir"
+msgstr "işaretlenirse yetenek türü bir sertifika türü haline gelir"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
-#, fuzzy
 msgid "indefinite"
 msgstr "Belirsiz"
 

@@ -4,7 +4,7 @@
 #
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025.
@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-21 05:28+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-18 14:10+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/payment/nl/"
 ">\n"
@@ -235,7 +235,7 @@ msgstr "ACH Direct Debit"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE"
-msgstr ""
+msgstr "ACTIVEREN"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -256,7 +256,7 @@ msgstr "Actief"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__active_provider_id
 msgid "Active Provider"
-msgstr ""
+msgstr "Actieve provider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -750,7 +750,7 @@ msgstr "Clearpay"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__code
@@ -787,7 +787,7 @@ msgstr "Bedrijf"
 #. module: payment
 #: model:ir.model,name:payment.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Configuratie-instellingen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -799,7 +799,7 @@ msgstr "Configuratie"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Confirm"
-msgstr ""
+msgstr "Bevestigen"
 
 #. module: payment
 #. odoo-javascript
@@ -837,7 +837,7 @@ msgstr "Overeenkomende module"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Could not establish the connection to the payment provider."
-msgstr ""
+msgstr "Kon de verbinding met de betaalprovider niet tot stand brengen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
@@ -1164,7 +1164,7 @@ msgstr "Heeft onderliggende in concept"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__has_enabled_provider
 msgid "Has Enabled Provider"
-msgstr ""
+msgstr "Heeft ingeschakelde provider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
@@ -1269,7 +1269,7 @@ msgstr "Is een geldig vast te leggen bedrag"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_mercado_pago_supported_country
 msgid "Is Mercado Pago Supported Country"
-msgstr ""
+msgstr "Is land dat door Mercado Pago wordt ondersteund"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1295,7 +1295,7 @@ msgstr "Het is momenteel gekoppeld aan de volgende documenten:"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_iyzico
 msgid "Iyzico"
-msgstr ""
+msgstr "Iyzico"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jcb
@@ -1520,8 +1520,9 @@ msgstr "Mercado Pago"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mercado_pago_wallet
+#, fuzzy
 msgid "Mercado Pago Wallet"
-msgstr ""
+msgstr "Mercado Pago Wallet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -2062,6 +2063,11 @@ msgid "Please wait..."
 msgstr "Even geduld..."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Post-process"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
 msgid "PostFinance Pay"
 msgstr "PostFinancieel salaris"
@@ -2096,7 +2102,7 @@ msgstr "Verwerkt door"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Production Environment"
-msgstr ""
+msgstr "Productieomgeving"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_promptpay
@@ -2175,7 +2181,7 @@ msgstr "Redpagos"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_redsys
 msgid "Redsys"
-msgstr ""
+msgstr "Redsys"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -2238,6 +2244,11 @@ msgstr "Revolut Pay"
 #: model:payment.method,name:payment.payment_method_rupay
 msgid "RuPay"
 msgstr "RuPay"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Run the post-processing step for this transaction."
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
@@ -2452,37 +2463,39 @@ msgstr "Test mode"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Thank you!"
-msgstr "Dank je!"
+msgstr "Bedankt!"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
 msgstr ""
+"Er is een fout opgetreden met de %(tx_label)s %(ref)s van %"
+"(formatted_amount)s."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized."
-msgstr ""
+msgstr "De %(tx_label)s %(ref)s van %(formatted_amount)s is geautoriseerd."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled."
-msgstr ""
+msgstr "De %(tx_label)s %(ref)s van %(formatted_amount)s is geannuleerd."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
-msgstr ""
+msgstr "De %(tx_label)s %(ref)s van %(formatted_amount)s is bevestigd."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
-msgstr ""
+msgstr "De %(tx_label)s %(ref)s van %(formatted_amount)s is in afwachting."
 
 #. module: payment
 #. odoo-python
@@ -2699,6 +2712,8 @@ msgid ""
 "The payment provider rejected the request.\n"
 "%s"
 msgstr ""
+"De betaalprovider heeft het verzoek afgewezen.\n"
+"%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -2727,7 +2742,7 @@ msgstr "De providerreferentie van de transactie"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The refund %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "De terugbetaling %(ref)s van %(formatted_amount)s is gestart."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
@@ -2799,7 +2814,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The transaction %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "De transactie %(ref)s van %(formatted_amount)s is gestart."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2954,7 +2969,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_troy
 msgid "Troy"
-msgstr ""
+msgstr "Troy"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
@@ -3135,6 +3150,8 @@ msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
 msgstr ""
+"Of de transactie plaatsvond in een productieomgeving. Onwaar voor "
+"transacties die zijn aangemaakt voordat deze tracering werd geïmplementeerd."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3342,12 +3359,14 @@ msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
 msgstr ""
+"De betaling kon niet worden voltooid voor de volgende transacties: %"
+"(tx_refs)s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "Je betaling is succesvol uitgevoerd."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form

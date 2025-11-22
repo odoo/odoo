@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 18:35+0000\n"
-"PO-Revision-Date: 2025-11-15 11:30+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-20 06:11+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/stock/"
 "ja/>\n"
 "Language: ja\n"
@@ -370,7 +370,7 @@ msgstr "(シリアルバーコード)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "), a replenishment must be done to reach the maximum level of stock ("
-msgstr ""
+msgstr ")、在庫の最大レベルに到達するためには補充が必要です ("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
@@ -416,6 +416,18 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* ベンダー：ベンダー: ベンダーからの製品の供給元ロケーションを表す仮想ロケー"
+"ション。\n"
+"* バーチャル：子ロケーションを集約し、倉庫の階層構造を作成するためのバーチャ"
+"ルロケーション。直接商品を含むことはできません。\n"
+"* 内部：倉庫内の物理的なロケーション、\n"
+"* 顧客：顧客：顧客へ送られる製品の仕向け地を表す仮想ロケーション。\n"
+"* 在庫ロス：在庫レベルを修正するために行われる在庫操作（物理的な在庫）のカウ"
+"ンターパートとして機能する仮想ロケーション。\n"
+"* 生産：生産：生産業務の仮想的な相手拠点。すなわち、この場所は部品を消費し、"
+"完成品を生産する。\n"
+"* トランジット：トランジット：企業間または倉庫間のオペレーションに使用される"
+"相手拠点。"
 
 #. module: stock
 #. odoo-python
@@ -446,7 +458,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "/day"
-msgstr ""
+msgstr "/日"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -1914,7 +1926,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
 msgstr "キャンセル"
@@ -3413,6 +3424,7 @@ msgstr "次元"
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Discard"
 msgstr "破棄"
 

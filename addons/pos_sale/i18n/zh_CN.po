@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-27 12:27+0000\n"
+"PO-Revision-Date: 2025-11-21 08:47+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/pos_sale/zh_Hans/>\n"
@@ -57,12 +57,12 @@ msgstr "新订单已创建。"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "销售点待付款金额"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
-msgstr ""
+msgstr "销售点内剩余需支付的金额，以避免重复付款或重复开立发票。"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -84,12 +84,12 @@ msgstr "配置设置"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "联系人"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "创建客户"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -104,7 +104,7 @@ msgstr "送货从"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "交货数量"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -121,7 +121,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -158,7 +158,7 @@ msgstr "预支付产品"
 msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
-msgstr ""
+msgstr "首期付款（参考：%(order_reference)s，日期：%(date)s）"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -186,7 +186,7 @@ msgstr "来自"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -199,18 +199,18 @@ msgstr "已开具发票"
 msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
-msgstr ""
+msgstr "您似乎没有在销售点中配置首期付款产品。您可以在销售点配置中选择一个。"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "日记账记项"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "Linked POS Orders"
-msgstr "关联POS 订单"
+msgstr "关联 POS 订单"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
@@ -248,17 +248,17 @@ msgstr "订单明细转移到POS"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr ""
+msgstr "POS 订单"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
 msgid "Paid"
-msgstr "已支"
+msgstr "已付款"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "POS配置"
+msgstr "POS 配置"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
@@ -293,7 +293,7 @@ msgstr "已过账"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -407,7 +407,7 @@ msgstr "该产品将用作销售订单的定金。"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "转移"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -415,6 +415,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"已从销售<br/>\n"
+"                               转移"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -422,12 +424,15 @@ msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"已转移<br/>\n"
+"                            至销售点"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Warning for %s"
-msgstr ""
+msgstr "%s 的警告"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -440,7 +445,7 @@ msgstr "您想要做什么？"
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #~ msgid "(left:"
 #~ msgstr "(左："

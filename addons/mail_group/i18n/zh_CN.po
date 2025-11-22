@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-27 07:56+0000\n"
+"PO-Revision-Date: 2025-11-21 08:48+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/mail_group/zh_Hans/>\n"
@@ -33,7 +33,7 @@ msgstr "信息"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "待审查"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -69,6 +69,17 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                您好！<br/><br/>\n"
+"                您已要求订阅邮寄清单<strong t-out=\"object.name or ''\"/>。\n"
+"                <br/><br/>\n"
+"                请到以下网址确认： <strong t-if=\"ctx.get('token_url')\"><a t"
+"-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\""
+"/></a></strong>\n"
+"                <br/><br/>\n"
+"                如果这是错误，或您没有请求此操作，请忽略此讯息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -87,6 +98,18 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                您好！<br/><br/>\n"
+"                您已要求取消订阅邮寄清单 <strong t-out=\"object.name or ''\""
+"/>。\n"
+"                <br/><br/>\n"
+"                请到以下网址确认： <strong t-if=\"ctx.get('token_url')\"><a t"
+"-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\""
+"/></a></strong>\n"
+"                <br/><br/>\n"
+"                如果这是错误，或您没有请求此操作，请忽略此讯息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -100,6 +123,14 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p><t t-out=\"object.partner_id.name or ''\"/> 您好！</p>\n"
+"                <p>请参阅下方有关 <t t-out=\"object.mail_group_id.name\"/> "
+"邮寄清单的使用指引。</p>\n"
+"                <p><t t-out="
+"\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -452,13 +483,13 @@ msgstr "选择或配置自定义域"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Closed"
-msgstr ""
+msgstr "已关闭"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
-msgstr ""
+msgstr "已关闭的群组仍可访问，但向其传送的电邮会被弹回"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -630,7 +661,7 @@ msgstr "群发信息只能与邮件组相连。目前的模式是%s。"
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
 msgid "Groups"
-msgstr ""
+msgstr "群组"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -658,6 +689,11 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"您好，\n"
+"    <br/><br/>\n"
+"    您尝试联络的邮寄清单已关闭，不再接受新邮件讯息。\n"
+"    <br/><br/>\n"
+"    顺祝  安康"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -717,7 +753,7 @@ msgstr "禁止的"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
 msgid "Is Closed"
-msgstr ""
+msgstr "已关闭"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated

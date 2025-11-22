@@ -29,13 +29,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 14:59+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/mrp/tr/>"
 "\n"
 "Language: tr\n"
@@ -74,7 +75,6 @@ msgstr " <br/><br/> Bileşenler %s'den alınacaktır. <b></b>."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
@@ -100,13 +100,11 @@ msgstr "# Ürün Reçetesi Kullanılan Yer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__num_splits
-#, fuzzy
 msgid "# Splits"
 msgstr "# Bölünmeler"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
-#, fuzzy
 msgid "# To Do Work Orders"
 msgstr "# Yapılacak İş Emirleri"
 
@@ -124,7 +122,6 @@ msgstr "# Ürün Reçetesi Kullanılan Yerin"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid "%(display_name)s"
 msgstr "%(display_name)s"
 
@@ -173,14 +170,12 @@ msgstr "%(qty)s %(measure)s unbuilt in %(order)s"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "%(qty)s Ready To Produce"
 msgstr "%(qty)s Üretime Hazır"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "%(qty)s To %(route)s"
 msgstr "%(qty)s için %(route)s"
 
@@ -214,7 +209,6 @@ msgstr "'Bitmiş ürünler - %s' % object.name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
-#, fuzzy
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'MO Genel Bakış - %s' % object.display_name"
 
@@ -232,7 +226,6 @@ msgstr "'İş Emri - %s' % object.name"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "(in"
 msgstr "(içinde"
 
@@ -245,7 +238,6 @@ msgstr "+ %d gün(ler)"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid "+ %s day(s)"
 msgstr "+ %s gün(ler)"
 
@@ -373,7 +365,6 @@ msgstr "<span class=\"col-6\">Bekleyenler</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid ""
 "<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
 "absolute\">Time Clock</span>\n"
@@ -405,7 +396,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
-#, fuzzy
 msgid ""
 "<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
 "absolute\">Time Clock</span>\n"
@@ -436,7 +426,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Add Operation</span>"
 msgstr "<span class=\"o_stat_text\">Operasyon Ekle</span>"
 
@@ -515,7 +504,6 @@ msgstr "<span class=\"o_stat_text\">Hurdalar</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Serial Numbers</span>"
 msgstr "<span class=\"o_stat_text\">Seri Numaraları</span>"
 
@@ -547,7 +535,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-#, fuzzy
 msgid ""
 "<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
 "span>\n"
@@ -561,17 +548,15 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-#, fuzzy
 msgid "<span invisible=\"time_mode == 'manual'\">work orders</span>"
 msgstr "<span invisible=\"time_mode == 'manual'\">iş emirleri</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid ""
 "<span name=\"to_produce\" class=\"fw-bold text-nowrap\">To Produce</span>"
 msgstr ""
-"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">Üretmek için</span>"
+"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">Üretilecek</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -591,7 +576,6 @@ msgstr "<span>Eylemler</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "<span>Generate BOM</span>"
 msgstr "<span>Ürün Ağacı Oluştur</span>"
 
@@ -633,7 +617,6 @@ msgstr "<span>dakika</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "<span> (minutes)</span>"
 msgstr "<span> (dakika)</span>"
 
@@ -813,7 +796,6 @@ msgstr "Gerçek"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__actual
-#, fuzzy
 msgid "Actual time"
 msgstr "Gerçek zaman"
 
@@ -883,7 +865,6 @@ msgstr "Tüm Ürünler"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__batch_size
-#, fuzzy
 msgid ""
 "All automatically generated manufacturing orders for this product will be of "
 "this size."
@@ -953,9 +934,8 @@ msgstr "İzin verildi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
-#, fuzzy
 msgid "Allowed Uom"
-msgstr "İzin Verilen Uom"
+msgstr "İzin Verilen Ölçü Birimi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1021,7 +1001,6 @@ msgstr "Arşivlendi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-#, fuzzy
 msgid "Are you sure you want to cancel these manufacturing orders?"
 msgstr "Bu üretim siparişlerini iptal etmek istediğinizden emin misiniz?"
 
@@ -1033,14 +1012,13 @@ msgstr "Bu üretim siparişini iptal etmek istediğinizden emin misiniz?"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/product.py:0
-#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
 "Bu ürün için %(uom)s dışında başka bir ölçü birimi (örn: %(problem_uom)s) "
-"kullanıldığından, ölçü birimi değişikliği yapılamaz, değiştirmek isterseniz "
+"kullanıldığından, ölçü birimi değişikliği yapılamaz. Değiştirmek isterseniz "
 "lütfen ürünü arşivleyin ve yeni bir tane oluşturun."
 
 #. module: mrp
@@ -1055,9 +1033,8 @@ msgstr "Seri Numaralarını Ata"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_serials
-#, fuzzy
 msgid "Assign serial numbers to production order"
-msgstr "Üretim siparişine seri numaraları atayın"
+msgstr "Üretim emrine seri numaraları atayın"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -1220,14 +1197,12 @@ msgstr "İlgili BoM listesinin satıları"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
-#, fuzzy
 msgid "Back to BoM"
 msgstr "BoM'a geri dön"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
-#, fuzzy
 msgid "Back to Production"
 msgstr "Üretime Geri Dön"
 
@@ -1277,7 +1252,6 @@ msgstr "Buna göre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__batch_size
-#, fuzzy
 msgid "Batch Size"
 msgstr "Parti Büyüklüğü"
 
@@ -1437,7 +1411,6 @@ msgstr "BoM Maliyeti"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "BoM Costs"
 msgstr "BoM Maliyetleri"
 
@@ -1471,13 +1444,11 @@ msgstr "Civata"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__bom_ids
-#, fuzzy
 msgid "Bom"
 msgstr "Bom"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__bom_id_placeholder
-#, fuzzy
 msgid "Bom Id Placeholder"
 msgstr "Bom Kimliği Yer Tutucu"
 
@@ -1559,13 +1530,12 @@ msgstr "İptal Edildi"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "Cannot compute days to prepare due to missing route info for at least 1 "
 "component or for the final product."
 msgstr ""
-"En az 1 bileşen veya nihai ürün için eksik rota bilgisi nedeniyle "
-"hazırlanacak günler hesaplanamıyor."
+"En az bir bileşen veya nihai ürün için rota bilgisi eksik olduğu için "
+"hazırlanma süresi hesaplanamıyor."
 
 #. module: mrp
 #. odoo-python
@@ -1580,7 +1550,6 @@ msgstr "Kapasite"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_positive_capacity
-#, fuzzy
 msgid "Capacity should be a non-negative number."
 msgstr "Kapasite negatif olmayan bir sayı olmalıdır."
 
@@ -1604,7 +1573,6 @@ msgstr "Kategori"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Center A"
 msgstr "Merkez A"
 
@@ -1626,7 +1594,6 @@ msgstr "Üretilecek Miktarı Değiştir"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
@@ -1642,9 +1609,8 @@ msgstr "Uygunluk Kontrolü"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__child_ids
-#, fuzzy
 msgid "Child Manufacturing Orders"
-msgstr "Çocuk Üretim Siparişleri"
+msgstr "Alt Üretim Siparişleri"
 
 #. module: mrp
 #. odoo-python
@@ -1681,7 +1647,6 @@ msgstr "Temizle"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Clears the selected lot/serial number"
 msgstr "Seçilen lot/seri numarasını temizler"
 
@@ -1756,7 +1721,6 @@ msgstr "Bileşenlerin Uygunluk Durumu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Components Available"
 msgstr "Mevcut Bileşenler"
 
@@ -1779,18 +1743,16 @@ msgstr "Hesapla"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
 msgstr ""
-"Bileşenleri ve/veya alt montajları satın alarak veya üretime tabi tutarak "
-"BoM'dan tüm bileşenleri yeniden tedarik etmek için gereken günleri "
+"Reçetedeki tüm bileşenlerin, bileşen ve/veya yarı mamullerin satın alınması "
+"veya üretilmesi yoluyla yeniden tedariki için gereken gün sayısını "
 "hesaplayın."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
-#, fuzzy
 msgid "Computed"
 msgstr "Hesaplanmış"
 
@@ -1888,7 +1850,6 @@ msgstr "Ürünlerin Maliyet Dağılımı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__cost_mode
-#, fuzzy
 msgid "Cost Mode"
 msgstr "Maliyet Modu"
 
@@ -1901,34 +1862,29 @@ msgstr "Maliyet Oranı (%)"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost as it is currently accumulated"
 msgstr "Şu anda birikmiş olan maliyet"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cost_mode
-#, fuzzy
 msgid "Cost based on"
 msgstr "Maliyete dayalı"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost based on cost projection"
 msgstr "Maliyet projeksiyonuna dayalı maliyet"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost based on related replenishments. Otherwise cost from product form"
 msgstr "İlgili ikmallere dayalı maliyet. Aksi takdirde ürün formundan maliyet"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost based on the BoM"
 msgstr "BoM'a dayalı maliyet"
 
@@ -1936,7 +1892,6 @@ msgstr "BoM'a dayalı maliyet"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Cost of Components per unit"
 msgstr "Birim başına Bileşen Maliyeti"
 
@@ -1944,7 +1899,6 @@ msgstr "Birim başına Bileşen Maliyeti"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Cost of Operations per unit"
 msgstr "Birim başına Operasyon Maliyeti"
 
@@ -1971,7 +1925,6 @@ msgstr "Bağlantılı ön teslimat sayısı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__serial_numbers_count
-#, fuzzy
 msgid "Count of serial numbers"
 msgstr "Seri numaralarının sayısı"
 
@@ -2009,13 +1962,12 @@ msgstr "Yeni bir iş emri performansı oluşturun"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
-#, fuzzy
 msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have "
 "enough time to replenish components or manufacture semi-finished products."
 msgstr ""
-"Bileşenleri yenilemek veya yarı mamul ürünler üretmek için yeterli zamana "
-"sahip olmak için Üretim Siparişlerini bu kadar gün önceden oluşturun ve "
+"Bileşenlerin tedarik edilmesi veya yarı mamullerin üretilmesi için yeterli "
+"süreyi sağlamak amacıyla, Üretim Emirlerini bu kadar gün önceden oluşturup "
 "onaylayın."
 
 #. module: mrp
@@ -2105,13 +2057,11 @@ msgstr "Oluşturuldu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Creates a new lot number"
 msgstr "Yeni bir lot numarası oluşturur"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Creates a new serial number"
 msgstr "Yeni bir seri numarası oluşturur"
 
@@ -2155,7 +2105,6 @@ msgstr "Özel Açıklama"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
-#, fuzzy
 msgid "Cycles"
 msgstr "Döngüler"
 
@@ -2173,7 +2122,6 @@ msgstr "Tarih Kategorisi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid ""
 "Date at which you plan to start.                                           "
 "Red if the scheduled end is forecasted after the production order "
@@ -2181,19 +2129,17 @@ msgid ""
 "date is in the past."
 msgstr ""
 "Başlamayı planladığınız tarih.                                           "
-"Planlanan bitiş üretim emri son tarihinden sonra tahmin ediliyorsa "
+"Planlanan bitiş, üretim emri son teslim tarihinden sonra öngörülüyorsa "
 "kırmızı.                                           Planlanan tarih geçmişte "
 "ise turuncu."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Date by Month"
 msgstr "Aylara Göre Tarih"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
-#, fuzzy
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
@@ -2201,7 +2147,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
-#, fuzzy
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
@@ -2209,9 +2154,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Date: Last 365 Days"
-msgstr "Tarih Son 365 Gün"
+msgstr "Tarih: Son 365 Gün"
 
 #. module: mrp
 #. odoo-javascript
@@ -2267,7 +2211,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
-#, fuzzy
 msgid ""
 "Defines if you can consume more or less components than the quantity defined "
 "on the BoM:\n"
@@ -2285,8 +2228,8 @@ msgstr ""
 "  * İzin verilir: tüm üretim kullanıcıları için izin verilir.\n"
 "  Uyarı ile izin verilir: üretim emrini kapatırken tüketim farklarının "
 "özetini içeren tüm üretim kullanıcıları için izin verilir.\n"
-"  Tüketimin yalnızca manuel olarak kaydedildiği bileşen Vurgu Tüketimi "
-"durumunda, uygun olduğunda tüketim uyarılarının da verileceğini unutmayın.\n"
+"  Tüketimin yalnızca manuel olarak kaydedildiği Highlight Consumption "
+"kullanımında, gerektiği durumlarda sistem yine de uyarı vermeye devam eder.\n"
 "  * Engellendi: BoM tüketimine uyulmadığında bir üretim emrini yalnızca bir "
 "yönetici kapatabilir."
 
@@ -2297,15 +2240,13 @@ msgstr "Gecikme Uyarı Tarihi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Delayed Productions"
-msgstr "Gecikmeli Prodüksiyonlar"
+msgstr "Geciken Üretimler"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Delegate part of the production process to subcontractors"
-msgstr "Üretim sürecinin bir kısmını alt yüklenicilere devretmek"
+msgstr "Üretim sürecinin bir kısmını alt yüklenicilere devredin"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -2336,7 +2277,6 @@ msgstr "Detaylar"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__cost_mode
-#, fuzzy
 msgid ""
 "Determines the way Odoo calculates the cost of the operation:\n"
 "- Based on Actual time: the cost will be calculated based on tracked time "
@@ -2440,7 +2380,6 @@ msgstr "Tüketilen Lot/Seri Numaralarını görüntüler."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Displays the produced Lot/Serial Numbers."
 msgstr "Üretilen Lot/Seri Numaralarını görüntüler."
 
@@ -2526,19 +2465,17 @@ msgstr "Birim Süre"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid ""
 "Each operation can have multiple steps (scan products, view instructions) or "
 "even quality checks."
 msgstr ""
-"Her işlemin birden fazla adımı (ürünleri tarayın, talimatları görüntüleyin) "
+"Her işlemin birden fazla adımı (ürünleri taratmak, talimatları görüntülemek) "
 "ve hatta kalite kontrolleri olabilir."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__effective_bom_id
-#, fuzzy
 msgid "Effective Bill of Materials"
-msgstr "Etkili Ürün Reçetesi"
+msgstr "Geçerli Ürün Reçetesi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_type
@@ -2552,19 +2489,17 @@ msgstr "Geçerlilik Kategorisi"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__effective_bom_id
-#, fuzzy
 msgid ""
 "Either the Bill of Materials set directly or the one computed to be used by "
 "this replenishment"
 msgstr ""
-"Ya doğrudan belirlenen ürün reçetesi ya da bu ikmal tarafından kullanılmak "
-"üzere hesaplanan ürün reçetesi"
+"Doğrudan tanımlanan Ürün Reçetesi ya da bu yeniden tedarik işlemi için "
+"sistem tarafından hesaplanan"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__enable_batch_size
-#, fuzzy
 msgid "Enable Batch Size"
-msgstr "Toplu İş Boyutunu Etkinleştir"
+msgstr "Parti Boyutunu Etkinleştir"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_finished
@@ -2587,13 +2522,11 @@ msgstr "Deponuzda stoklanabilir bir ürünün izlenebilirliğini sağlayın."
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
-#, fuzzy
 msgid "Equipment Failure"
 msgstr "Ekipman Arızası"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__estimated
-#, fuzzy
 msgid "Estimated"
 msgstr "Tahmini"
 
@@ -2652,9 +2585,8 @@ msgstr "Ürüne ekli dosyalar."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
-#, fuzzy
 msgid "Final Location from procurement"
-msgstr "Tedarikten Son Konum"
+msgstr "Tedarik sürecinden gelen Nihai Konum"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
@@ -2767,7 +2699,6 @@ msgstr "Öngörülen Rapor"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
-#, fuzzy
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming - "
 "Quantity to Remove)\n"
@@ -2808,9 +2739,8 @@ msgstr "Ücretsiz Kullanım / Elde Var"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Free to use / On Hand"
-msgstr "Ücretsiz kullanım / El altında"
+msgstr "Kullanılabilir / Fiili Stok"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2824,7 +2754,6 @@ msgstr "Tam Üretkenlik"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason7
-#, fuzzy
 msgid "Fully Productive Time"
 msgstr "Tam Üretken Zaman"
 
@@ -2846,15 +2775,13 @@ msgstr "Oluştur"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Generate Lot"
 msgstr "Lot Oluştur"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Generate Serial"
-msgstr "Seri Üret"
+msgstr "Seri Numarası Oluştur"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
@@ -2863,13 +2790,11 @@ msgstr "Seri Numaraları Oluştur"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Generate a new BoM from this Manufacturing Order"
 msgstr "Bu Üretim Emrinden yeni bir BoM oluşturun"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
-#, fuzzy
 msgid "Generated Lot/SN Label to Print"
 msgstr "Yazdırılacak Lot/SN Etiketi Oluşturuldu"
 
@@ -2920,9 +2845,8 @@ msgstr "Mesaj Var"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
-#, fuzzy
 msgid "Has Routing Lines"
-msgstr "Yönlendirme Hatları Var"
+msgstr "Rota Satırları Var"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
@@ -3062,53 +2986,48 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
 msgstr ""
-"Bu onay kutusu işaretlenirse, Odoo iş bittiğinde bir MO'nun tahsis raporu "
-"etiketlerini otomatik olarak yazdıracaktır."
+"Bu onay kutusu işaretlenirse, Üretim Emri tamamlandığında Odoo tahsis raporu "
+"etiketlerini otomatik olarak yazdırır."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
-"Bu onay kutusu işaretlenirse, Odoo bir MO'nun tahsis raporu tamamlandığında "
-"ve hamleler atandığında otomatik olarak yazdıracaktır."
+"Bu onay kutusu işaretlenirse, Üretim Emri tamamlanıp hareketleri atanmış "
+"olduğunda Odoo tahsis raporunu otomatik olarak yazdırır."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
-"Bu onay kutusu işaretlenirse, Odoo bir MO tamamlandığında lot/SN etiketini "
-"otomatik olarak yazdıracaktır."
+"Bu onay kutusu işaretlenirse, Üretim Emri tamamlandığında Odoo lot/seri "
+"numarası etiketini otomatik olarak yazdırır."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels "
 "of a MO when it is done."
 msgstr ""
-"Bu onay kutusu işaretlenirse, Odoo bir MO'nun ürün etiketlerini "
-"tamamlandığında otomatik olarak yazdıracaktır."
+"Bu onay kutusu işaretlenirse, Üretim Emri tamamlandığında Odoo ürün "
+"etiketlerini otomatik olarak yazdırır."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
-"Bu onay kutusu işaretlenirse, Odoo bir MO'nun üretim emri tamamlandığında "
-"otomatik olarak yazdıracaktır."
+"Bu onay kutusu işaretlenirse, Üretim Emri tamamlandığında Odoo üretim "
+"siparişini otomatik olarak yazdırır."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3133,11 +3052,10 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "Impossible to plan. Please check the workcenter availabilities."
 msgstr ""
-"Planlama yapmak imkansız. Lütfen çalışma merkezinin müsaitlik durumunu "
-"kontrol edin."
+"Planlama yapmak imkansız. Lütfen çalışma merkezi müsaitlik durumunu kontrol "
+"edin."
 
 #. module: mrp
 #. odoo-javascript
@@ -3156,19 +3074,16 @@ msgstr "İşlemde"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "In Transit"
 msgstr "Transit Halinde"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
-#, fuzzy
 msgid "In the BoM"
 msgstr "BoM'da"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
-#, fuzzy
 msgid "In the MO"
 msgstr "MO'da"
 
@@ -3198,9 +3113,8 @@ msgstr "Bu iş emrinde bir lot numarasını taramanız gereken stok hareketleri"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_delayed
-#, fuzzy
 msgid "Is Delayed"
-msgstr "Gecikmeli"
+msgstr "Gecikmiş"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
@@ -3230,19 +3144,16 @@ msgstr "Bir engel nedeni"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
 msgid "Is paused"
 msgstr "Duraklatıldı"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
 msgid "Is running"
 msgstr "Çalışıyor"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
 msgid "Is stopped"
 msgstr "Durduruldu"
 
@@ -3303,19 +3214,16 @@ msgstr "Dizüstü bilgisayar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Laptop Model X"
 msgstr "Dizüstü Bilgisayar Model X"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-#, fuzzy
 msgid "Laptop model X"
-msgstr "Dizüstü bilgisayar modeli X"
+msgstr "Dizüstü bilgisayar model X"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Laptop with 16GB RAM"
 msgstr "16GB RAM'li Dizüstü Bilgisayar"
 
@@ -3433,15 +3341,14 @@ msgstr "Ayrıl"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_document__attached_on_mrp
-#, fuzzy
 msgid ""
 "Leave hidden if document only accessible on product form.\n"
 "Select Bill of Materials to visualise this document as a product attachment "
 "when this product is in a bill of material."
 msgstr ""
 "Belgeye yalnızca ürün formundan erişilebiliyorsa gizli bırakın.\n"
-"Bu ürün bir ürün reçetesinde yer alıyorken bu belgeyi bir ürün eki olarak "
-"görselleştirmek için Ürün Reçetesi'ni seçin."
+"Bu ürün bir ürün reçetesinde yer aldığında, bu belgeyi ürün eki olarak "
+"görüntülemek için Ürün Reçetesini seçin."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3488,13 +3395,11 @@ msgstr "Kayıp Nedeni"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Lot/SN Label"
 msgstr "Lot/SN Etiketi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__done_mrp_lot_label_to_print
-#, fuzzy
 msgid "Lot/SN Label to Print"
 msgstr "Yazdırılacak Lot/SN Etiketi"
 
@@ -3535,14 +3440,12 @@ msgstr "MO Ön Teslimat"
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_cancelled
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_cancelled
-#, fuzzy
 msgid "MO Cancelled"
 msgstr "MO İptal Edildi"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_confirmed
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_confirmed
-#, fuzzy
 msgid "MO Confirmed"
 msgstr "MO Onaylandı"
 
@@ -3550,21 +3453,18 @@ msgstr "MO Onaylandı"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "MO Cost"
-msgstr "MO Maliyet"
+msgstr "MO Maliyeti"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "MO Costs"
 msgstr "MO Maliyetleri"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_done
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_done
-#, fuzzy
 msgid "MO Done"
 msgstr "MO Tamamlandı"
 
@@ -3577,7 +3477,6 @@ msgstr "MO  %s tarafından oluşturuldu"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
-#, fuzzy
 msgid "MO Overview"
 msgstr "MO Genel Bakış"
 
@@ -3588,16 +3487,14 @@ msgstr "ÜE Genel Raporu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "MO Pending"
 msgstr "MO Beklemede"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_progress
-#, fuzzy
 msgid "MO Progress"
-msgstr "MO İlerleme"
+msgstr "MO Süreci"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -3606,20 +3503,17 @@ msgstr "MO Hazırlık"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "MO Ready"
 msgstr "MO Hazır"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_to_close
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_to_close
-#, fuzzy
 msgid "MO To Close"
-msgstr "MO Kapatılacak"
+msgstr "Kapatılacak MO"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_document__attached_on_mrp
-#, fuzzy
 msgid "MRP : Visible at"
 msgstr "MRP : Şu adreste görülebilir"
 
@@ -3640,7 +3534,6 @@ msgstr "MRP İş Emri verimlilik kayıpları"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "MRP-001"
 msgstr "MRP-001"
 
@@ -3651,11 +3544,9 @@ msgstr "İş Emri İşlemlerini Yönetin"
 
 #. module: mrp
 #: model:res.groups,comment:mrp.group_mrp_manager
-#, fuzzy
 msgid ""
 "Manage the manufacturing processes and generate reports on those processes."
-msgstr ""
-"Üretim süreçlerini yönetmek ve bu süreçler hakkında raporlar oluşturmak."
+msgstr "Üretim süreçlerini yönetin ve bu süreçler hakkında raporlar oluşturun"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
@@ -3854,9 +3745,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation_graph
 #: model:ir.ui.menu,name:mrp.mrp_operation_picking
-#, fuzzy
 msgid "Manufacturings"
-msgstr "Üretim"
+msgstr "Üretimler"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -3881,7 +3771,6 @@ msgstr "Malzeme Uygunluğu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
-#, fuzzy
 msgid "Max Batch Size"
 msgstr "Maksimum Parti Büyüklüğü"
 
@@ -3948,9 +3837,8 @@ msgstr "Mrp Tüketim Uyarısı Satırı"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_mrp_display
-#, fuzzy
 msgid "Mrp Display"
-msgstr "Mrp Ekran"
+msgstr "Mrp Ekranı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -3978,7 +3866,6 @@ msgstr "Aktivite Son Tarihim"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "My MOs"
 msgstr "Benim MO'larım"
 
@@ -3989,9 +3876,8 @@ msgstr "Adı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
-#, fuzzy
 msgid "Never attribute values"
-msgstr "Asla öznitelik değerleri"
+msgstr "Asla özellik değeri atama"
 
 #. module: mrp
 #. odoo-python
@@ -4003,9 +3889,8 @@ msgstr "Yeni"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "New BoM from %(mo_name)s"
-msgstr "Yeni BoM'dan %(mo_name)s"
+msgstr "%(mo_name)s 'dan yeni BoM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -4048,23 +3933,20 @@ msgstr "Ön Teslimat Yok"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid "No BoM Found"
 msgstr "BoM Bulunamadı"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "No Operations Yet !"
-msgstr "Henüz Operasyon Yok!"
+msgstr "Henüz Bir Operasyon Yok!"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "No Ready To Produce"
-msgstr "Üretime Hazır Yok"
+msgstr "Üretime Hazır Olan Yok"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -4139,15 +4021,14 @@ msgstr "Mevcut Değil"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "Not Ready"
 msgstr "Hazır Değil"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Note that another version of this BOM is available."
-msgstr "Bu BOM'un başka bir versiyonunun mevcut olduğunu unutmayın."
+msgstr ""
+"Bu Ürün Reçetesinin başka bir versiyonunun da mevcut olduğunu unutmayın."
 
 #. module: mrp
 #. odoo-python
@@ -4183,7 +4064,6 @@ msgstr "Aksiyon Sayısı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_in_progress
-#, fuzzy
 msgid "Number of Manufacturing Orders In Progress"
 msgstr "Devam Eden Üretim Siparişi Sayısı"
 
@@ -4194,9 +4074,8 @@ msgstr "Geciken Üretim Emri Adedi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_to_close
-#, fuzzy
 msgid "Number of Manufacturing Orders To Close"
-msgstr "Kapanacak Üretim Siparişi Sayısı"
+msgstr "Kapatılacak Üretim Emirlerinin Sayısı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
@@ -4252,7 +4131,6 @@ msgstr "Teslimat hatası olan mesaj adedi"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__capacity
-#, fuzzy
 msgid ""
 "Number of pieces that can be produced in parallel for this product or for "
 "all, depending on the unit."
@@ -4277,7 +4155,6 @@ msgstr "OEE Hedefi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you want to print instantly,\n"
 "                                install the IoT App on a computer that is on "
@@ -4287,10 +4164,10 @@ msgid ""
 msgstr ""
 "Odoo varsayılan olarak bir PDF önizlemesi açar. Anında yazdırmak "
 "istiyorsanız,\n"
-"                                ile aynı yerel ağda bulunan bir bilgisayara "
-"IoT Uygulamasını yükleyin.\n"
-"                                barkod operatörü ve raporların "
-"yönlendirilmesini yapılandırın."
+"                                barkod operatörü ile aynı yerel ağda bulunan "
+"bir bilgisayara IoT Uygulamasını yükleyin\n"
+"                                 ve raporların yönlendirilmesini "
+"yapılandırın."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -4349,7 +4226,6 @@ msgstr "Operasyon Türü"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-#, fuzzy
 msgid "Operation..."
 msgstr "Operasyon."
 
@@ -4380,7 +4256,6 @@ msgstr "Operasyonlar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__operation_count
-#, fuzzy
 msgid "Operations Count"
 msgstr "Operasyon Sayısı"
 
@@ -4432,9 +4307,8 @@ msgstr "Orijinal Üretim Miktarı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
-#, fuzzy
 msgid "Outdated BoM"
-msgstr "Modası geçmiş BoM"
+msgstr "Güncel Olmayan Ürün Reçetesi (BoM)"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
@@ -4468,7 +4342,6 @@ msgstr "PDF"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Package barcode"
 msgstr "Paket barkodu"
 
@@ -4479,7 +4352,6 @@ msgstr "Üst BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__parent_ids
-#, fuzzy
 msgid "Parent Manufacturing Orders"
 msgstr "Ana Üretim Siparişleri"
 
@@ -4576,7 +4448,6 @@ msgstr "Üretim Yeri Öncesi Transfer"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#, fuzzy
 msgid "Pieces"
 msgstr "Parçalar"
 
@@ -4593,7 +4464,6 @@ msgstr "İş Emirleri Planlayın"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_with_components_availability
-#, fuzzy
 msgid "Plan based on Components Availability"
 msgstr "Bileşenlerin Kullanılabilirliğine Dayalı Plan"
 
@@ -4634,14 +4504,12 @@ msgstr "Lütfen pozitif miktar giriniz."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "Please set the first Serial Number or a default sequence"
-msgstr "Lütfen ilk Seri Numarasını veya varsayılan bir sırayı ayarlayın"
+msgstr "Lütfen ilk Seri Numarasını veya varsayılan bir sırayı tanımlayın"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
-#, fuzzy
 msgid ""
 "Please specify a manufacturing order.\n"
 "It will allow us to retrieve the lots/serial numbers of the correct "
@@ -4654,14 +4522,12 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "Please unblock the work center to start the work order."
-msgstr "İş emrini başlatmak için lütfen iş merkezinin blokajını kaldırın."
+msgstr "İş emrini başlatmak için lütfen iş merkezinin engelini kaldırın."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "Please unblock the work center to validate the work order"
 msgstr "İş emrini doğrulamak için lütfen iş merkezinin engelini kaldırın"
 
@@ -4714,19 +4580,16 @@ msgstr "Etiketleri Yazdır"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Print labels as:"
 msgstr "Etiketleri şu şekilde yazdırın:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Print when \"Create new Lot/SN\""
 msgstr "\"Yeni Lot/SN Oluştur\" olduğunda yazdır"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Print when done"
 msgstr "İşiniz bittiğinde yazdırın"
 
@@ -4737,15 +4600,13 @@ msgstr "Öncelik"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason5
-#, fuzzy
 msgid "Process Defect"
 msgstr "Süreç Hatası"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Process manufacturing orders from the barcode application"
-msgstr "Barkod uygulamasından üretim siparişlerini işleme"
+msgstr "Barkod uygulamasından üretim siparişlerini işleyin"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4779,7 +4640,6 @@ msgstr "Artık ürünler üretin"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Produce residual products (A + B -> C + D)"
 msgstr "Artık ürünler üretin (A + B -> C + D)"
 
@@ -4840,15 +4700,13 @@ msgstr "Ürün Kapasitesi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_bom
-#, fuzzy
 msgid "Product Catalog Product Is In Bom"
-msgstr "Ürün Kataloğu Ürün Bom'da"
+msgstr "Ürün Kataloğu Ürünü BoM’da Yer Alıyor"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_mo
-#, fuzzy
 msgid "Product Catalog Product Is In Mo"
-msgstr "Ürün Kataloğu Ürün Mo'da"
+msgstr "Ürün Kataloğu Ürünü MO’da Yer Alıyor"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_document
@@ -4862,7 +4720,6 @@ msgstr "Ürün Öngörülen Miktarı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__mrp_product_label_to_print
-#, fuzzy
 msgid "Product Label to Print"
 msgstr "Yazdırılacak Ürün Etiketi"
 
@@ -4922,13 +4779,11 @@ msgstr "Ürün Varyantları"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Product to build..."
-msgstr "İnşa edilecek ürün..."
+msgstr "Üretilecek ürün..."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_workcenter_product_product_uom_unique
-#, fuzzy
 msgid "Product/Unit capacity should be unique for each workcenter."
 msgstr "Ürün/Birim kapasitesi her bir iş merkezi için benzersiz olmalıdır."
 
@@ -4952,7 +4807,6 @@ msgstr "Üretim Tarihi"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid "Production End Date"
 msgstr "Üretim Bitiş Tarihi"
 
@@ -4960,7 +4814,6 @@ msgstr "Üretim Bitiş Tarihi"
 #: model:ir.model,name:mrp.model_mrp_production_group
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_group_id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_group_id
-#, fuzzy
 msgid "Production Group"
 msgstr "Üretim Grubu"
 
@@ -4994,7 +4847,6 @@ msgstr "Üretilen Ürünler için Üretim Emri"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid "Production Start Date"
 msgstr "Üretim Başlangıç Tarihi"
 
@@ -5133,9 +4985,8 @@ msgstr "Halihazırda Üretilen Miktar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
-#, fuzzy
 msgid "Quantity Ready"
-msgstr "Miktar Hazır"
+msgstr "Hazır Miktar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -5168,7 +5019,6 @@ msgstr "Stoklar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-#, fuzzy
 msgid "RAM"
 msgstr "RAM"
 
@@ -5197,14 +5047,12 @@ msgstr "Hazır"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Real Cost"
 msgstr "Gerçek Maliyet"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "Real Costs"
 msgstr "Gerçek Maliyetler"
 
@@ -5235,13 +5083,11 @@ msgstr "Alım süresi tahmini."
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason4
-#, fuzzy
 msgid "Reduced Speed"
 msgstr "Azaltılmış Hız"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason6
-#, fuzzy
 msgid "Reduced Yield"
 msgstr "Azaltılmış Verim"
 
@@ -5254,7 +5100,6 @@ msgstr "Referans"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_reference
-#, fuzzy
 msgid "Reference between stock documents"
 msgstr "Stok belgeleri arasında referans"
 
@@ -5312,7 +5157,6 @@ msgstr "(MTO) Sipariş Üzerine İkmal"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "Replenishments"
 msgstr "İkmaller"
 
@@ -5374,13 +5218,12 @@ msgstr "İş Merkezi Rotaları"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid ""
 "Run your Shop Floor with work orders for each operation defined on your bill "
 "of material."
 msgstr ""
-"Üretim Alanınızı, ürün reçetesinde tanımlanan her bir operasyon için iş "
-"emirleri ile çalıştırın."
+"Üretim alanınızı, ürün reçetesinde her bir operasyon için tanımlanan iş "
+"emirleriyle yönetin."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_sms_error
@@ -5497,10 +5340,9 @@ msgstr "Seri Numaraları"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "Serial number(s) for product %(product_name)s already produced"
 msgstr ""
-"Halihazırda üretilmiş olan %(product_name)s ürünü için seri numarası(ları)"
+"%(product_name)s ürünü için seri numarası(ları) zaten oluşturulmuş durumda."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -5509,15 +5351,13 @@ msgstr "Miktarları Ayarla ve Doğrula"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
-#, fuzzy
 msgid "Set Quantity"
-msgstr "Set Miktarı"
+msgstr "Miktarı Belirle"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
-#, fuzzy
 msgid "Set as Bill of Materials"
-msgstr "ürün reçetesi olarak ayarlayın"
+msgstr "Ürün reçetesi(BoM) olarak ayarlayın"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5547,7 +5387,6 @@ msgstr "Kurulum Süresi (dakika)"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
-#, fuzzy
 msgid "Setup and Adjustments"
 msgstr "Kurulum ve Ayarlamalar"
 
@@ -5570,13 +5409,11 @@ msgstr "BoM sütununu göster"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__show_bom
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__show_bom
-#, fuzzy
 msgid "Show Bom"
 msgstr "Bom'u Göster"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__show_bom_tab
-#, fuzzy
 msgid "Show Bom Tab"
 msgstr "Bom Sekmesini Göster"
 
@@ -5592,9 +5429,8 @@ msgstr "Son Lotları Göster"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_generate_bom
-#, fuzzy
 msgid "Show Generate BOM"
-msgstr "Ürün Ağacı Oluşturmayı Göster"
+msgstr "Ürün Reçetesi (BoM) Oluşturmayı Göster"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lock
@@ -5608,7 +5444,6 @@ msgstr "Açılır pencere göster?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce
-#, fuzzy
 msgid "Show Produce"
 msgstr "Ürünleri Göster"
 
@@ -5619,20 +5454,17 @@ msgstr "Tümünü Üret'i Göster"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_set_bom_button
-#, fuzzy
 msgid "Show Set Bom Button"
-msgstr "Set Bom Düğmesini Göster"
+msgstr "BoM'u Ayarla Butonunu göster"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__show_time_total
-#, fuzzy
 msgid "Show Total Duration?"
 msgstr "Toplam Süreyi Göster?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 
@@ -5659,30 +5491,28 @@ msgstr "Masif ahşap masa."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "Some work orders are already done, so you cannot unplan this manufacturing "
 "order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Bazı iş emirleri zaten yapılmıştır, bu nedenle bu üretim emrini "
-"planlayamazsınız.\n"
+"Bazı iş emirleri zaten tamamlandığı için bu üretim emrinin planlamasını "
+"kaldıramazsınız.\n"
 "\n"
 "Tüm bu ilerlemeyi boşa harcamak yazık olur, değil mi?"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "Some work orders have already started, so you cannot unplan this "
 "manufacturing order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Bazı iş emirleri zaten başlamıştır, bu nedenle bu üretim emrini "
-"planlayamazsınız.\n"
+"Bazı iş emirleri zaten başladığı için  bu üretim emrinin planlamasını "
+"kaldıramazsınız.\n"
 "\n"
 "Tüm bu ilerlemeyi boşa harcamak yazık olur, değil mi?"
 
@@ -5927,21 +5757,18 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__has_routing_lines
-#, fuzzy
 msgid "Technical field for workcenter views"
 msgstr "İş merkezi görünümleri için teknik alan"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
-#, fuzzy
 msgid "Technical field to check if produce all button can be shown"
 msgstr ""
-"Tümünü üret düğmesinin gösterilip gösterilemeyeceğini kontrol etmek için "
+"Tümünü üret butonunun gösterilip gösterilemeyeceğini kontrol etmek için "
 "teknik alan"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
-#, fuzzy
 msgid "Technical field to check if produce button can be shown"
 msgstr ""
 "Üret düğmesinin gösterilip gösterilemeyeceğini kontrol etmek için teknik alan"
@@ -5959,9 +5786,8 @@ msgstr "Rezerveyi ne zaman iptal edeceğimizi kontrol etmek için teknik alan"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
-#, fuzzy
 msgid "The BoM has been updated since creation of the MO"
-msgstr "YK, MO'nun kuruluşundan bu yana güncellenmiştir"
+msgstr "Üretim Emri oluşturulduğundan beri Ürün Reçetesi (BoM) güncellenmiştir."
 
 #. module: mrp
 #. odoo-python
@@ -5982,20 +5808,18 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid "The batch size must be positive!"
 msgstr "Parti büyüklüğü pozitif olmalıdır!"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "The current configuration is incorrect because it would create a cycle "
 "between these products: %s."
 msgstr ""
-"Mevcut konfigürasyon yanlıştır çünkü bu ürünler arasında bir döngü "
-"yaratacaktır: %s."
+"Mevcut konfigürasyon yanlış çünkü bu ürünler arasında bir döngü yaratacaktır:"
+" %s."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__day_2
@@ -6074,7 +5898,6 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "The quantity produced must be positive."
 msgstr "Üretilen miktar pozitif olmalıdır."
 
@@ -6132,7 +5955,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
-#, fuzzy
 msgid "The total should be equal to the quantity to produce."
 msgstr "Toplam, üretilecek miktara eşit olmalıdır."
 
@@ -6144,7 +5966,6 @@ msgstr "İş emri çoktan işlenmeliydi."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
-#, fuzzy
 msgid "Theorical time"
 msgstr "Teorik zaman"
 
@@ -6160,7 +5981,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "There is no defined calendar on workcenter %s."
 msgstr "%s iş merkezinde tanımlı bir takvim yoktur."
 
@@ -6287,7 +6107,6 @@ msgstr "Kurulum için dakika cinsinden süre."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
-#, fuzzy
 msgid ""
 "Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
 "time when there aren't any work orders yet"
@@ -6347,9 +6166,8 @@ msgstr "Başlatılacak"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#, fuzzy
 msgid "To Manufacture"
-msgstr "Üretim yapmak için"
+msgstr "Üretilecek"
 
 #. module: mrp
 #. odoo-python
@@ -6390,7 +6208,6 @@ msgstr "Bir ahşap panelin üst katmanı."
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Total Cost of Components"
 msgstr "Bileşenlerin Toplam Maliyeti"
 
@@ -6398,7 +6215,6 @@ msgstr "Bileşenlerin Toplam Maliyeti"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Total Cost of Operations"
 msgstr "Toplam Operasyon Maliyeti"
 
@@ -6406,7 +6222,6 @@ msgstr "Toplam Operasyon Maliyeti"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Total Cost of Production"
 msgstr "Toplam Üretim Maliyeti"
 
@@ -6419,7 +6234,6 @@ msgstr "Toplam Süre"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
-#, fuzzy
 msgid "Total Duration (minutes)"
 msgstr "Toplam Süre (dakika)"
 
@@ -6595,7 +6409,6 @@ msgstr "Birim Maliyeti"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "Unit Costs"
 msgstr "Birim Maliyetleri"
 
@@ -6656,13 +6469,12 @@ msgstr "Acil"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
-#, fuzzy
 msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
-"Bileşenleri tüketirken bitmiş ürünler oluşturmak için Üretim Siparişlerini "
-"(MO) kullanın: örn. 1 Masa = 4 Masa Ayağı + 1 Masa Üstü"
+"Bileşenleri tüketirken bitmiş ürünler oluşturmak için Üretim Emirlerini (MO) "
+"kullanın: örn. 1 Masa = 4 Masa Ayağı + 1 Masa Üstü"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -6682,9 +6494,8 @@ msgstr "Burada Kullanıldı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_group_id
-#, fuzzy
 msgid "Used for Productions"
-msgstr "Prodüksiyonlar için kullanılır"
+msgstr "Üretimlerde kullanılır"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
@@ -6722,14 +6533,14 @@ msgstr "Doğrula"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, fuzzy
 msgid ""
 "Values cannot be set and validated because a Lot/Serial Number needs to be "
 "specified for a tracked product that is having its consumed amount increased:"
 "%(products)s"
 msgstr ""
-"Tüketilen miktarı artırılan takip edilen bir ürün için bir Lot/Seri Numarası "
-"belirtilmesi gerektiğinden değerler ayarlanamaz ve doğrulanamaz:%(products)s"
+"Kullanım miktarı artırılan takip edilen bir ürün için Lot/Seri Numarası "
+"belirtilmesi gerektiğinden, değerler ayarlanamaz ve "
+"doğrulanamaz.z:%(products)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6739,7 +6550,6 @@ msgstr "Varyant"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Vendor ABC"
 msgstr "Satıcı ABC"
 
@@ -6750,18 +6560,16 @@ msgstr "İş emrini Görüntüle"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "View and allocate production quantities to customer orders or other "
 "manufacturing orders"
 msgstr ""
-"Üretim miktarlarını görüntüleyin ve müşteri siparişlerine veya diğer üretim "
-"siparişlerine tahsis edin"
+"Görüntüle ve üretim miktarlarını müşteri siparişlerine veya diğer üretim "
+"emirlerine tahsis et."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "Visible to all"
 msgstr "Herkes tarafından görülebilir"
 
@@ -6841,7 +6649,6 @@ msgstr "Websitesi iletişim geçmişi"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
-#, fuzzy
 msgid ""
 "When a procurement has a ‘produce’ route with a operation type set, it will "
 "try to create a Manufacturing Order for that product using a BoM of the same "
@@ -6849,11 +6656,12 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"Bir tedarik, işlem türü ayarlanmış bir 'üret' rotasına sahip olduğunda, aynı "
-"işlem türüne sahip bir BoM kullanarak bu ürün için bir Üretim Emri "
-"oluşturmaya çalışacaktır, aksi takdirde BoM aramasında işlem türü dikkate "
-"alınmaz. Bu, farklı BoM'lerle farklı üretim siparişlerini tetikleyen stok "
-"kurallarının tanımlanmasına olanak tanır."
+"Bir tedarik kaydında ‘üretim’ rotası ve buna bağlı bir operasyon tipi "
+"tanımlanmışsa, sistem aynı operasyon tipine sahip bir BoM kullanarak bu ürün "
+"için bir Üretim Emri oluşturmaya çalışır. Eğer uygun bir BoM yoksa, BoM "
+"aramasında operasyon tipi dikkate alınmaz. Bu sayede farklı BoM’larla "
+"tetiklenen farklı üretim emirlerini devreye sokan stok kuralları tanımlamak "
+"mümkün olur."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
@@ -7039,7 +6847,6 @@ msgstr "İş Emirleri"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
-#, fuzzy
 msgid "Work Orders Analysis"
 msgstr "İş Emirleri Analizi"
 
@@ -7226,14 +7033,12 @@ msgstr "Üretimi yalnızca aynı durumda birleştirebilirsiniz."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot cancel a manufacturing order that is already done."
-msgstr "Zaten yapılmış olan bir üretim siparişini iptal edemezsiniz."
+msgstr "Zaten yapılmış olan bir üretim emrini iptal edemezsiniz."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
@@ -7244,7 +7049,6 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "You cannot change the workcenter of a work order that is done."
 msgstr "Tamamlanmış bir iş emrinin iş merkezini değiştiremezsiniz."
 
@@ -7264,9 +7068,8 @@ msgstr "Döngüsel bağımlılık oluşturamazsınız."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot delete a manufacturing order that is already done."
-msgstr "Zaten yapılmış olan bir üretim emrini silemezsiniz."
+msgstr "Zaten bitmiş olan bir üretim emrini silemezsiniz."
 
 #. module: mrp
 #. odoo-python
@@ -7306,23 +7109,20 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot set more than 1 lot"
-msgstr "1'den fazla lot ayarlayamazsınız"
+msgstr "Birden fazla lot ayarlayamazsınız"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot set more than 1 lot per product"
-msgstr "Ürün başına 1 lottan fazlasını ayarlayamazsınız"
+msgstr "Ürün başına bir lottan fazlasını ayarlayamazsınız"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "You cannot start a work order that is already done or cancelled"
-msgstr "Zaten yapılmış veya iptal edilmiş bir iş emrini başlatamazsınız"
+msgstr "Zaten bitmiş veya iptal edilmiş bir iş emrini başlatamazsınız"
 
 #. module: mrp
 #. odoo-python
@@ -7414,7 +7214,6 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "You need to generate Lot/Serial Number(s) to mark as done some productions"
 msgstr ""
@@ -7424,7 +7223,6 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: %"
 "(missing_products)s"
@@ -7434,7 +7232,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
-#, fuzzy
 msgid "You produced less than the initial demand"
 msgstr "İlk talepten daha az üretim yaptınız"
 
@@ -7447,7 +7244,6 @@ msgstr "Final ürün için bir lot sağlamalısınız"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_quant.py:0
-#, fuzzy
 msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
@@ -7465,7 +7261,6 @@ msgstr "ZPL"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
-#, fuzzy
 msgid "bom_id"
 msgstr "bom_id"
 
@@ -7504,13 +7299,11 @@ msgstr "kimlik"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "it is added as a component in a manufacturing order"
-msgstr "bir üretim siparişine bileşen olarak eklenir"
+msgstr "bir üretim emrine bileşen olarak eklenir"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid ""
 "it is moved via a transfer, such as a receipt or a delivery order for "
 "instance."

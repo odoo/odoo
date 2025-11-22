@@ -24,13 +24,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-12 14:56+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "gamification/tr/>\n"
 "Language: tr\n"
@@ -60,7 +61,6 @@ msgstr "%s yarışmayı reddetti"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.mail_template_data_new_rank_reached
-#, fuzzy
 msgid ""
 "<div style=\"color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-"
 "serif;font-size:14px;\">\n"
@@ -136,7 +136,7 @@ msgstr ""
 "                </p>\n"
 "                <t t-if=\"object.next_rank_id.name\">\n"
 "                    <p> <strong t-out=\"object.next_rank_id.name or ''\"> "
-"Öğrencisi</strong> olmak için çalışmalarınıza devam edin!</p>\n"
+"Öğrenci</strong> olmak için çalışmalarınıza devam edin!</p>\n"
 "                </t>\n"
 "               <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                    <t t-set=\"gamification_redirection_data\" t-value="
@@ -211,7 +211,6 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-#, fuzzy
 msgid ""
 "<i role=\"img\" class=\"text-body fa fa-clock-o fa-3x\" title=\"Goal in "
 "Progress\" aria-label=\"Goal in Progress\"/>"
@@ -239,7 +238,6 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Related Goals</span>"
 msgstr "<span class=\"o_stat_text\">İlgili Hedefler</span>"
 
@@ -250,7 +248,6 @@ msgstr "<span class=\"o_stat_text\">Kullanıcılar</span>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
-#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" style=\"padding-top: 16px; background-"
 "color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;"
@@ -1172,7 +1169,6 @@ msgstr "Etkin"
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
 #: code:addons/gamification/models/res_users.py:0
 #: code:addons/gamification/tests/test_karma_tracking.py:0
-#, fuzzy
 msgid "Add Manually"
 msgstr "Manuel Olarak Ekle"
 
@@ -1445,9 +1441,8 @@ msgstr "Konsolide"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
-#, fuzzy
 msgid "Consolidation from %(from_date)s to %(end_date)s"
-msgstr "Konsolidasyon %(from_date)s adresinden %(end_date)s"
+msgstr "%(from_date)s tarihinden %(end_date)s tarihine kadar konsolidasyon"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
@@ -1662,7 +1657,6 @@ msgstr "Taslak"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
-#, fuzzy
 msgid "Earn your first points and join the adventure!"
 msgstr "İlk puanlarınızı kazanın ve maceraya katılın!"
 
@@ -1941,13 +1935,11 @@ msgstr "Bu Rozeti Ver"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
-#, fuzzy
 msgid "Granted By"
 msgstr "Tarafından Verildi"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
-#, fuzzy
 msgid "Granted on"
 msgstr "Kabul edildi"
 
@@ -2133,21 +2125,18 @@ msgstr "Karma Changes"
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
-#, fuzzy
 msgid "Karma Owner"
 msgstr "Karma Sahibi"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
-#, fuzzy
 msgid "Karma Tracking"
 msgstr "Karma Takibi"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
-#, fuzzy
 msgid "Karma Updates"
 msgstr "Karma Güncellemeleri"
 
@@ -2288,7 +2277,6 @@ msgstr "Hedeflerim"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
-#, fuzzy
 msgid "My Karma"
 msgstr "Benim Karmam"
 
@@ -2356,7 +2344,6 @@ msgstr "Sonraki Rapor Tarihi"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
-#, fuzzy
 msgid "No Karma Tracking"
 msgstr "Karma Takibi Yok"
 
@@ -2383,13 +2370,12 @@ msgstr "Hiç kimse, yarışmalar üzerinden atanır"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-#, fuzzy
 msgid ""
 "Nobody has succeeded to reach every goal, no badge is rewarded for this "
 "challenge."
 msgstr ""
-"Hiç kimse her hedefe ulaşmayı başaramadı, hiçbir rozet bu meydan okuma için "
-"ödüllendirilmedi."
+"Hiç kimse tüm hedeflere ulaşmayı başaramadı, bu meydan okuma için hiçbir "
+"rozet verilmedi."
 
 #. module: gamification
 #. odoo-python
@@ -2514,7 +2500,6 @@ msgstr "Dönemsellik"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
-#, fuzzy
 msgid "Previous Total"
 msgstr "Önceki Toplam"
 
@@ -2571,49 +2556,41 @@ msgstr "Ranks List"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-#, fuzzy
 msgid "Reach the next rank and become a Master!"
 msgstr "Bir sonraki rütbeye ulaşın ve Usta olun!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-#, fuzzy
 msgid "Reach the next rank and become a powerful user!"
 msgstr "Bir sonraki rütbeye ulaşın ve güçlü bir kullanıcı olun!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-#, fuzzy
 msgid "Reach the next rank and gain a very magic wand!"
 msgstr "Bir sonraki rütbeye ulaşın ve çok sihirli bir asa kazanın!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-#, fuzzy
 msgid "Reach the next rank and gain a very nice hat!"
 msgstr "Bir sonraki rütbeye ulaşın ve çok güzel bir şapka kazanın!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-#, fuzzy
 msgid "Reach the next rank and gain a very nice mug!"
 msgstr "Bir sonraki rütbeye ulaşın ve çok güzel bir kupa kazanın!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-#, fuzzy
 msgid "Reach the next rank and gain a very nice unicorn!"
 msgstr "Bir sonraki rütbeye ulaşın ve çok güzel bir tek boynuzlu at kazanın!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-#, fuzzy
 msgid "Reach the next rank to improve your status!"
 msgstr "Statünüzü yükseltmek için bir sonraki rütbeye ulaşın!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-#, fuzzy
 msgid "Reach the next rank to show the rest of the world you exist."
 msgstr ""
 "Dünyanın geri kalanına var olduğunuzu göstermek için bir üst rütbeye ulaşın."
@@ -2713,7 +2690,6 @@ msgstr "Ödül"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-#, fuzzy
 msgid ""
 "Reward (badge %(badge_name)s) for every succeeding user was sent to %"
 "(users)s."
@@ -2894,7 +2870,6 @@ msgstr "Kaynak Tipi"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-#, fuzzy
 msgid ""
 "Special rewards were sent to the top competing users. The ranking for this "
 "challenge is:"
@@ -2972,7 +2947,6 @@ msgstr "Hedef: daha az"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/tests/test_karma_tracking.py:0
-#, fuzzy
 msgid "Test Reason"
 msgstr "Test Nedeni"
 
@@ -3216,7 +3190,6 @@ msgstr "Karma Değişikliklerini İzleyin"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
-#, fuzzy
 msgid "Track the sources of the users karma and monitor"
 msgstr "Kullanıcı karmasının kaynaklarını takip edin ve izleyin"
 
@@ -3271,7 +3244,6 @@ msgstr "Kullanıcı"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
-#, fuzzy
 msgid "User Creation"
 msgstr "Kullanıcı Oluşturma"
 
@@ -3431,7 +3403,6 @@ msgstr "örn. Sorun Çözücü"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
-#, fuzzy
 msgid "e.g. Reach this rank to gain a free mug!"
 msgstr "Örn. Ücretsiz bir kupa kazanmak için bu rütbeye ulaşın!"
 
@@ -3473,7 +3444,6 @@ msgstr "bu ay"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge_user.py:0
-#, fuzzy
 msgid "🎉 You've earned the %(badge)s badge!"
 msgstr "🎉 %(badge)s rozetini kazandınız!"
 

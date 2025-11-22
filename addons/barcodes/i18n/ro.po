@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* barcodes
+# * barcodes
 #
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
@@ -8,27 +8,30 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Ciocoiu Beatrice-Flavia <ciocoiuflavia008@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2025-11-17 17:21+0000\n"
+"Last-Translator: Ciocoiu Beatrice-Flavia <ciocoiuflavia008@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"barcodes/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' nu este un șablon Regex de cod de bare. Folosiți '.*'"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -95,13 +98,13 @@ msgstr "Oricare"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/manual_barcode.xml:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplică"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Barcode"
-msgstr ""
+msgstr "Cod de bare"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -142,7 +145,7 @@ msgstr "Cod de bare scanat"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
-msgstr ""
+msgstr "Cod de bare: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -188,13 +191,13 @@ msgstr "EAN-8"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
 msgid "Encoding"
-msgstr "Codificare:"
+msgstr "Codificare"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/manual_barcode.js:0
 msgid "Enter a barcode..."
-msgstr ""
+msgstr "Introduceți un cod de bare..."
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -217,6 +220,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"Pentru a folosi barcodes.barcode_events_mixin, metoda on_barcode_scanned "
+"trebuie implementată"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -255,12 +260,18 @@ msgid ""
 "<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Șabloanele pot defini modul în care valorile numerice, cum ar fi greutatea "
+"sau prețul, pot fi transformate în cod de bare. Acestea sunt indicate prin "
+"<code>{NNN}</code> unde N-urile definesc unde sunt codificate cifrele "
+"codului. Zecimalele sunt indicate cu D-uri, <code>{NNNDD}</code>. În aceste "
+"cazuri, câmpul de cod de bare de pe înregistrările asociate <i>trebuie</i> "
+"să arate aceste cifre ca zerouri."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Vă rugăm să scanați din nou!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -286,7 +297,7 @@ msgstr "Tabele"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Tap to scan"
-msgstr ""
+msgstr "Atinge pentru a scana"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -299,6 +310,7 @@ msgstr "Modelul de potrivire a codului de bare"
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
 msgstr ""
+"Șablonul de cod de bare %(pattern)s nu duce la o expresie regulată validă."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids

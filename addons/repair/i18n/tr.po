@@ -25,13 +25,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 14:59+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/repair/"
 "tr/>\n"
 "Language: tr\n"
@@ -44,26 +45,22 @@ msgstr ""
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s Sequence repair"
 msgstr "%(name)s Dizi onarımı"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
-#, fuzzy
 msgid "%(product)s: Insufficient Quantity To Repair"
 msgstr "%(product)s: Onarım İçin Yeterli Miktar Yok"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
-#, fuzzy
 msgid "('Repair Order - %s' % (object.name))"
 msgstr "('Onarım Siparişi - %s' % (nesne.adı))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "(<i>Recycle</i>)"
 msgstr "(<i>Geri Dönüşüm</i>)"
 
@@ -74,7 +71,6 @@ msgstr "(<i>Kaldır</i>)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
-#, fuzzy
 msgid ""
 "* The 'New' status is used when a user is encoding a new and unconfirmed "
 "repair order.\n"
@@ -92,7 +88,6 @@ msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
-#, fuzzy
 msgid "<br/>You can still confirm the repair of"
 msgstr "<br/>Onarımını hala onaylayabilirsiniz"
 
@@ -103,7 +98,6 @@ msgstr "<i>(Ekle)</i>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
-#, fuzzy
 msgid "<span class=\"col-6\">Confirmed</span>"
 msgstr "<span class=\"col-6\">Onaylandı</span>"
 
@@ -114,31 +108,26 @@ msgstr "<span class=\"col-6\">Gecikenler</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
-#, fuzzy
 msgid "<span class=\"col-6\">Under Repair</span>"
 msgstr "<span class=\"col-6\">Onarım Altında</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Done:</span>"
-msgstr "<span class=\"o_stat_text\">Tamamdır:</span>"
+msgstr "<span class=\"o_stat_text\">Tamamlandı:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Repair Parts:</span>"
 msgstr "<span class=\"o_stat_text\">Onarım Parçaları:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
 msgstr "<span class=\"o_stat_text\">Satış Siparişi</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">To Do:</span>"
 msgstr "<span class=\"o_stat_text\">Yapılacaklar:</span>"
 
@@ -149,25 +138,21 @@ msgstr "<span>Siparişler</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "<span>Repair Order #</span>"
 msgstr "<span>Onarım Siparişi #</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "<strong>Customer:</strong>"
 msgstr "<strong>Müşteri:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "<strong>Lot/Serial:</strong>"
 msgstr "<strong>Lot/Seri:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "<strong>Product:</strong>"
 msgstr "<strong>Ürün:</strong>"
 
@@ -183,13 +168,12 @@ msgstr "<strong>Durumu:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
-#, fuzzy
 msgid ""
 "? , but get ready to have fun taking inventory to fix the negative stock "
 "quantity!"
 msgstr ""
-"? ama negatif stok miktarını düzeltmek için envanter çıkarırken eğlenmeye "
-"hazır olun!"
+"? ama negatif stok miktarını düzeltmek için envanter sayımı yapmaya "
+"hazırlanın, eğlenceli olacak!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -238,7 +222,6 @@ msgstr "İç not ekle."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_dest_id
-#, fuzzy
 msgid "Added Parts Destination Location"
 msgstr "Eklenen Parçalar Hedef Konum"
 
@@ -255,21 +238,18 @@ msgstr "Tümü"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_available
-#, fuzzy
 msgid "All Parts are available"
 msgstr "Tüm Parçalar Mevcuttur"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_lot_ids
-#, fuzzy
 msgid "Allowed Lot"
-msgstr "İzin Verilen Arsa"
+msgstr "İzin Verilen Lot"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_uom_ids
-#, fuzzy
 msgid "Allowed Uom"
-msgstr "İzin Verilen Uom"
+msgstr "İzin Verilen Birim"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
@@ -283,14 +263,12 @@ msgstr "Rezerve Üretimi Kaldırmaya İzin Ver"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
-#, fuzzy
 msgid "Any Part is late"
 msgstr "Herhangi Bir Parça Geç Kaldı"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/product.py:0
-#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
@@ -315,7 +293,6 @@ msgstr "Uygun"
 #. module: repair
 #. odoo-javascript
 #: code:addons/repair/static/src/components/product_catalog/kanban_controller.js:0
-#, fuzzy
 msgid "Back to Repair"
 msgstr "Onarıma Geri Dön"
 
@@ -379,14 +356,12 @@ msgstr "Firma"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-#, fuzzy
 msgid "Component Destination Location"
 msgstr "Bileşen Hedef Konumu"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 #: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
-#, fuzzy
 msgid "Component Source Location"
 msgstr "Bileşen Kaynak Konumu"
 
@@ -416,7 +391,6 @@ msgstr "Doğrulanmış"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-#, fuzzy
 msgid "Create Quotation"
 msgstr "Teklif Oluştur"
 
@@ -541,7 +515,6 @@ msgstr "Yazı tipi harika simgesi ör. fa-görevler"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-#, fuzzy
 msgid ""
 "For some of the parts, there is a difference between the initial demand and "
 "the actual quantity that was used. Are you sure you want to confirm ?"
@@ -561,7 +534,6 @@ msgstr "Mesaj Var"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_uncomplete_moves
-#, fuzzy
 msgid "Has Uncomplete Moves"
 msgstr "Tamamlanmamış Hareketleri Var"
 
@@ -628,13 +600,11 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__in_repair_count
-#, fuzzy
 msgid "In repair count"
-msgstr "Onarım sayısında"
+msgstr "Onarımda Olan Sayısı"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.product_view_search_catalog
-#, fuzzy
 msgid "In the Repair Order"
 msgstr "Onarım Siparişinde"
 
@@ -660,7 +630,6 @@ msgstr "Takipçi mi"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "Jane Smith"
 msgstr "Jane Smith"
 
@@ -671,7 +640,6 @@ msgstr "John Doe"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "L12345"
 msgstr "L12345"
 
@@ -707,7 +675,6 @@ msgstr "Geciken Aktiviteler"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__parts_availability
-#, fuzzy
 msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
@@ -803,25 +770,21 @@ msgstr "Aksiyon Sayısı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_late
-#, fuzzy
 msgid "Number of Late Repair Orders"
-msgstr "Geç Gelen Onarım Siparişi Sayısı"
+msgstr "Gecikmiş Onarım Siparişi Sayısı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_confirmed
-#, fuzzy
 msgid "Number of Repair Orders Confirmed"
 msgstr "Onaylanan Onarım Siparişi Sayısı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_under_repair
-#, fuzzy
 msgid "Number of Repair Orders Under Repair"
 msgstr "Onarımı Devam Eden Onarım Siparişi Sayısı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
-#, fuzzy
 msgid "Number of Repair Orders to Process"
 msgstr "İşlenecek Onarım Siparişi Sayısı"
 
@@ -874,9 +837,8 @@ msgstr "Parçalar"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability_state
-#, fuzzy
 msgid "Parts Availability State"
-msgstr "Parça Bulunabilirlik Durumu"
+msgstr "Parça Uygunluk Durumu"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -890,7 +852,6 @@ msgstr "Toplandı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_product_ids
-#, fuzzy
 msgid "Picking Product"
 msgstr "Ürün Toplama"
 
@@ -901,14 +862,12 @@ msgstr "Toplama Türü"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_visible
-#, fuzzy
 msgid "Picking Type Visible"
 msgstr "Toplama Türü Görünür"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
-#, fuzzy
 msgid "Please set the first Serial Number or a default sequence"
 msgstr "Lütfen ilk Seri Numarasını veya varsayılan bir sırayı ayarlayın"
 
@@ -927,26 +886,22 @@ msgstr "Ürün"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "Product A"
 msgstr "Ürün A"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "Product B"
 msgstr "Ürün B"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_product_product__product_catalog_product_is_in_repair
-#, fuzzy
 msgid "Product Catalog Product Is In Repair"
-msgstr "Ürün Kataloğu Ürün Onarımda"
+msgstr "Ürün Kataloğu Ürünü Onarımda"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_dest_id
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
-#, fuzzy
 msgid "Product Destination Location"
 msgstr "Ürün Varış Yeri"
 
@@ -968,7 +923,6 @@ msgstr "Ürün Miktarı"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_src_id
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
-#, fuzzy
 msgid "Product Source Location"
 msgstr "Ürün Kaynak Konumu"
 
@@ -1023,7 +977,6 @@ msgstr "Miktar"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "RO123456"
 msgstr "RO123456"
 
@@ -1040,19 +993,16 @@ msgstr "Hazır"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__recycle
-#, fuzzy
 msgid "Recycle"
 msgstr "Geri Dönüşüm"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
-#, fuzzy
 msgid "Recycle Destination Location"
 msgstr "Geri Dönüşüm Hedef Konumu"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
-#, fuzzy
 msgid "Recycled Parts Destination Location"
 msgstr "Geri Dönüştürülen Parçaların Varış Yeri"
 
@@ -1068,13 +1018,11 @@ msgstr "Kaldır"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
-#, fuzzy
 msgid "Remove Destination Location"
 msgstr "Hedef Konumu Kaldır"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
-#, fuzzy
 msgid "Removed Parts Destination Location"
 msgstr "Sökülen Parçalar Varış Yeri"
 
@@ -1088,7 +1036,6 @@ msgstr "Onarım"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_mto_pull_id
-#, fuzzy
 msgid "Repair MTO Rule"
 msgstr "Onarım MTO Kuralı"
 
@@ -1100,7 +1047,6 @@ msgstr "Onarım Notları"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_type_id
-#, fuzzy
 msgid "Repair Operation Type"
 msgstr "Onarım İşlem Türü"
 
@@ -1116,7 +1062,6 @@ msgstr "Onarım Siparişi"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
-#, fuzzy
 msgid "Repair Order(s)"
 msgstr "Onarım Sipariş(ler)i"
 
@@ -1138,7 +1083,6 @@ msgstr "Onarım Siparişleri"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
-#, fuzzy
 msgid "Repair Orders Analysis"
 msgstr "Onarım Siparişleri Analizi"
 
@@ -1149,7 +1093,6 @@ msgstr "Onarım Siparişleri Etiketleri"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__repair_properties_definition
-#, fuzzy
 msgid "Repair Properties"
 msgstr "Onarım Özellikleri"
 
@@ -1160,7 +1103,6 @@ msgstr "Onarım Referansı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_request
-#, fuzzy
 msgid "Repair Request"
 msgstr "Onarım Talebi"
 
@@ -1188,7 +1130,6 @@ msgstr "%snin onarım siparişleri"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repair_part_count
-#, fuzzy
 msgid "Repair part count"
 msgstr "Onarım parça sayısı"
 
@@ -1200,9 +1141,8 @@ msgstr "Onarıldı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repaired_count
-#, fuzzy
 msgid "Repaired count"
-msgstr "Onarılan sayı"
+msgstr "Onarılan sayısı"
 
 #. module: repair
 #. odoo-python
@@ -1265,19 +1205,16 @@ msgstr "Satış Sipariş Satırı"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__repair_request
-#, fuzzy
 msgid "Sale Order Line Description."
 msgstr "Satış Siparişi Satırı Açıklaması."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
-#, fuzzy
 msgid "Sale Order Line from which the Repair Order comes from."
 msgstr "Onarım Siparişinin geldiği Satış Siparişi Satırı."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
-#, fuzzy
 msgid "Sale Order from which the Repair Order comes from."
 msgstr "Onarım Siparişinin geldiği Satış Siparişi."
 
@@ -1304,7 +1241,6 @@ msgstr "Onarım Siparişlerini Ara"
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
-#, fuzzy
 msgid "Serial number is required for product to repair : %s"
 msgstr "Ürünün onarılabilmesi için seri numarası gereklidir: %s"
 
@@ -1315,7 +1251,6 @@ msgstr "Taslak olarak ayarla"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 
@@ -1390,13 +1325,11 @@ msgstr "Yarından sonraki gün"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
-#, fuzzy
 msgid "This is a repair note."
 msgstr "Bu bir onarım notudur."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_dest_id
-#, fuzzy
 msgid ""
 "This is the default destination location for the product to be repaired in "
 "repair orders with this operation type."
@@ -1406,7 +1339,6 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
-#, fuzzy
 msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
@@ -1416,7 +1348,6 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
-#, fuzzy
 msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
@@ -1426,7 +1357,6 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
-#, fuzzy
 msgid ""
 "This is the default source location for the product to be repaired in repair "
 "orders with this operation type."
@@ -1436,7 +1366,6 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
-#, fuzzy
 msgid ""
 "This is the location where the components of product to repair is located."
 msgstr "Bu, onarılacak ürün bileşenlerinin bulunduğu konumdur."
@@ -1449,22 +1378,19 @@ msgstr "Bu konum, onarılacak ürünün bulunduğu konumdur."
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
 #: model:ir.model.fields,help:repair.field_repair_order__recycle_location_id
-#, fuzzy
 msgid "This is the location where the repair parts are located."
 msgstr "Burası onarım parçalarının bulunduğu yerdir."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_dest_id
 #: model:ir.model.fields,help:repair.field_repair_order__product_location_dest_id
-#, fuzzy
 msgid "This is the location where the repaired product is located."
 msgstr "Bu, onarılan ürünün bulunduğu konumdur."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
-#, fuzzy
 msgid "To Repair"
-msgstr "Onarım için"
+msgstr "Onarılacak"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__today
@@ -1496,7 +1422,6 @@ msgstr "Aktarım"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
-#, fuzzy
 msgid "Transfer from which the product to be repaired is picked"
 msgstr "Onarılacak ürünün toplandığı transfer"
 
@@ -1600,29 +1525,25 @@ msgstr "Negatif miktar giremezsiniz."
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
-#, fuzzy
 msgid "You cannot cancel a Repair Order that's already been completed"
 msgstr "Zaten tamamlanmış olan bir Onarım Siparişini iptal edemezsiniz"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
-#, fuzzy
 msgid ""
 "You cannot create a quotation for a repair order that is already linked to "
 "an existing sale order.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"Jedeni satış siparişine zaten bağlı olan bir onarım siparişi için fiyat "
-"teklifi oluşturamazsınız.\n"
+"Bir satış siparişine bağlı onarım emri için teklif oluşturamazsınız.\n"
 "İlgili onarım sipariş(ler)i:\n"
 "%(ref_str)s"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
-#, fuzzy
 msgid ""
 "You need to define a customer for a repair order in order to create an "
 "associated quotation.\n"
@@ -1648,7 +1569,6 @@ msgstr "kimlik"
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/sale_order.py:0
-#, fuzzy
 msgid "sale_order_id"
 msgstr "sale_order_id"
 

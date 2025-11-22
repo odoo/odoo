@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-13 06:13+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-20 03:04+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/ko/>\n"
@@ -1597,7 +1597,7 @@ msgstr "날짜"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to_period
 msgid "Date Period End"
-msgstr ""
+msgstr "날짜 기간 종료"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from_period
@@ -3740,6 +3740,16 @@ msgid "Small Unemployment"
 msgstr "소규모 퇴직"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid ""
+"Some employees already have time off requests in hours that overlap with the "
+"selected period, Odoo cannot automatically adjust or split hourly leaves "
+"during batch generation. Conflicting time off:\n"
+"%s"
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
@@ -4818,7 +4828,8 @@ msgstr "휴가는 언제 누적되나요?"
 msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
-msgstr "직원이 활성화된 사용자 부서에 소속되었는지 또는 하위 부서에 소속되었는지 여부"
+msgstr ""
+"직원이 활성화된 사용자 부서에 소속되었는지 또는 하위 부서에 소속되었는지 여부"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
@@ -5090,16 +5101,6 @@ msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by "
 "the employee."
 msgstr "직원이 이미 사용한 휴가 기간 이하로 기간을 줄일 수 없습니다."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"You cannot refuse this allocation request since the employee has already "
-"taken leaves for it. Please refuse or delete those leaves first."
-msgstr ""
-"직원이 이미 휴가를 사용했으므로 이 할당 요청을 거부할 수 없습니다. 먼저 해당 "
-"휴가를 거부하거나 삭제하시기 바랍니다."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5457,6 +5458,13 @@ msgstr "유효 기간"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "승인"
+
+#~ msgid ""
+#~ "You cannot refuse this allocation request since the employee has already "
+#~ "taken leaves for it. Please refuse or delete those leaves first."
+#~ msgstr ""
+#~ "직원이 이미 휴가를 사용했으므로 이 할당 요청을 거부할 수 없습니다. 먼저 해"
+#~ "당 휴가를 거부하거나 삭제하시기 바랍니다."
 
 #~ msgid " days"
 #~ msgstr "일"

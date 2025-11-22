@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
 "PO-Revision-Date: 2025-10-31 12:50+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/payment/"
@@ -2069,6 +2069,11 @@ msgid "Please wait..."
 msgstr "Bitte warten ..."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Post-process"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
 msgid "PostFinance Pay"
 msgstr "PostFinance Pay"
@@ -2245,6 +2250,11 @@ msgstr "Revolut Pay"
 #: model:payment.method,name:payment.payment_method_rupay
 msgid "RuPay"
 msgstr "RuPay"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Run the post-processing step for this transaction."
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
@@ -3352,8 +3362,8 @@ msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
 msgstr ""
-"Ihr Zahlvorgang konnte für folgende Transaktionen nicht abgeschlossen werden:"
-" %(tx_refs)s"
+"Ihr Zahlvorgang konnte für folgende Transaktionen nicht abgeschlossen "
+"werden: %(tx_refs)s"
 
 #. module: payment
 #. odoo-python

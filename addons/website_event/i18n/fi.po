@@ -17,13 +17,14 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 17:56+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-11-18 14:05+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "website_event/fi/>\n"
 "Language: fi\n"
@@ -46,7 +47,7 @@ msgstr "'. Näytetään tulokset haulle '"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "(Max."
-msgstr ""
+msgstr "(Max."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -61,7 +62,7 @@ msgstr ","
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Cancelled</b>"
-msgstr ""
+msgstr "<b>Peruttu</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -111,6 +112,7 @@ msgstr "<i class=\"fa fa-ban me-2\"/>Ei julkaistu"
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>August 23, 2025"
 msgstr ""
+"<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>23. elokuuta 2025"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
@@ -130,7 +132,7 @@ msgstr "<i class=\"fa fa-check me-2\"/>Ilmoittautunut"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid "<i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>klo 20:15"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -194,7 +196,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Sijainti\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
@@ -202,6 +204,8 @@ msgid ""
 "<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los Angeles, "
 "CA, United States"
 msgstr ""
+"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los Angeles, "
+"CA, Yhdysvallat"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -280,6 +284,8 @@ msgid ""
 "<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" "
 "role=\"presentation\"/>Los Angeles, CA, United States</span>"
 msgstr ""
+"<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" role=\"presentation\""
+"/>Los Angeles, CA, Yhdysvallat</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
@@ -287,6 +293,8 @@ msgid ""
 "<span class=\"fw-bold text-uppercase\">AUG</span>\n"
 "                            <span class=\"fw-light lh-1\">23</span>"
 msgstr ""
+"<span class=\"fw-bold text-uppercase\">Elokuun</span>\n"
+"                            <span class=\"fw-light lh-1\">23.</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_badge_preview_data
@@ -301,6 +309,15 @@ msgid ""
 "long-arrow-right\" role=\"presentation\"/></span>\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
+"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
+"                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
+"                    <strong>Harmonia tähtien alla</strong>\n"
+"                    <span class=\"text-muted\">23. elokuuta 2025 - klo "
+"20:15</span>\n"
+"                    <span class=\"text-primary\">Rekisteröidy <i class="
+"\"fa fa-long-arrow-right\" role=\"presentation\"/></span>\n"
+"                </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -344,6 +361,8 @@ msgid ""
 "<span class=\"text-primary text-nowrap\">Register Now <i class=\"fa fa-long-"
 "arrow-right\"/></span>"
 msgstr ""
+"<span class=\"text-primary text-nowrap\">Rekisteröidy nyt <i class="
+"\"fa fa-long-arrow-right\"/></span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -366,12 +385,15 @@ msgid ""
 "<span><i class=\"fa fa-calendar me-2\" role=\"presentation\"/>August 23, "
 "2025 at 8:15 PM</span>"
 msgstr ""
+"<span><i class=\"fa fa-calendar me-2\" role=\"presentation\"/>23. elokuuta "
+"2025 klo 20:15</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
 msgid ""
 "<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM</span>"
 msgstr ""
+"<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>klo 20:15</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -380,6 +402,8 @@ msgid ""
 "<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Angeles, "
 "CA, United States</span>"
 msgstr ""
+"<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Angeles, "
+"CA, Yhdysvallat</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -390,6 +414,7 @@ msgstr "<span>Verkkotapahtumat</span>"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong> You cannot order more than available seats</strong>"
 msgstr ""
+"<strong> Et voi tilata vapaana olevien paikkojen määrää enempää</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -400,7 +425,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "<strong>8:15 PM</strong>"
-msgstr ""
+msgstr "<strong>klo 20:15</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
@@ -417,13 +442,13 @@ msgstr "<strong>Sijainti</strong>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "<strong>Los Angeles, CA, United States</strong>"
-msgstr ""
+msgstr "<strong>Los Angeles, CA, Yhdysvallat</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid "<strong>Time</strong>"
-msgstr ""
+msgstr "<strong>Aika</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
@@ -589,12 +614,12 @@ msgstr "Osallistujat"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
 msgid "August 23, 2025"
-msgstr ""
+msgstr "23. elokuuta 2025"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_entry_preview_data
 msgid "August 23, 2025 at 8:15 PM"
-msgstr ""
+msgstr "23. elokuuta 2025 klo 20:15"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
@@ -862,7 +887,7 @@ msgstr "Tapahtuman tiedot"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "Tapahtuman tiedot <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
@@ -1029,7 +1054,7 @@ msgstr "Alatunniste näkyvissä"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "Hanki liput <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1092,6 +1117,8 @@ msgid ""
 "Honoring outstanding accomplishments, dedication, and impact across all "
 "fields."
 msgstr ""
+"Kunnianosoitus erinomaisille saavutuksille, omistautumiselle sekä "
+"vaikuttavalle työlle monilla eri aloilla."
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_about_us
@@ -1178,7 +1205,7 @@ msgstr "Matti Meikäläinen"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "John Doen avatar"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
@@ -1256,6 +1283,8 @@ msgid ""
 "Melancholic melodies and textured soundscapes exploring memory and quiet "
 "distance."
 msgstr ""
+"Melankolisia melodioita ja kuvioituja äänimaisemia, jotka tutkivat muistoja "
+"sekä hiljaista etäisyyttä."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
@@ -1295,7 +1324,7 @@ msgstr "Seuraava"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Next Dates"
-msgstr ""
+msgstr "Seuraavat päivämäärät"
 
 #. module: website_event
 #. odoo-python
@@ -1450,6 +1479,7 @@ msgstr "Ilmoittaudu"
 msgid ""
 "Register <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 msgstr ""
+"Rekisteröidy <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
@@ -1472,17 +1502,19 @@ msgstr "Rekisteröidy nyt"
 msgid ""
 "Register Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
 msgstr ""
+"Rekisteröidy nyt <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
 msgid "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
-msgstr ""
+msgstr "Rekisteröidy<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid ""
 "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 msgstr ""
+"Rekisteröidy<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -1531,7 +1563,7 @@ msgstr "Ilmoittautuminen on suljettu"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Registrations not open"
-msgstr ""
+msgstr "Rekisteröityminen ei ole avoinna"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -1608,7 +1640,7 @@ msgstr "Näyte"
 #: code:addons/website_event/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 msgid "Scheduled Events"
-msgstr ""
+msgstr "Aikataulutetut tapahtumat"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -1632,7 +1664,7 @@ msgstr "Valitut vastaukset"
 #. odoo-javascript
 #: code:addons/website_event/static/src/interactions/website_event_slot_details.js:0
 msgid "Selected Date:"
-msgstr ""
+msgstr "Valittu päivämäärä:"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
@@ -1646,6 +1678,7 @@ msgstr "SEO-nimi"
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "Shaping tomorrow through ideas that transform how we live today."
 msgstr ""
+"Tulevaisuuden muovaaminen ideoilla, jotka mullistavat nykyisen elämäämme."
 
 #. module: website_event
 #. odoo-javascript
@@ -1658,7 +1691,7 @@ msgstr "Jaa"
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_option.xml:0
 msgid "Show location"
-msgstr ""
+msgstr "Näytä sijainti"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -2005,7 +2038,7 @@ msgstr "Alkaako tapahtuma tänään, jos se ei vielä ole käynnissä"
 #. module: website_event
 #: model:event.question,title:website_event.event_question_working_field
 msgid "Which field are you working in?"
-msgstr ""
+msgstr "Millä alalla työskentelet?"
 
 #. module: website_event
 #. odoo-javascript
