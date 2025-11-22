@@ -1,48 +1,51 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_sale
-# 
+# * pos_sale
+#
 # Translators:
 # Rita Bastos, 2025
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # Wil Odoo, 2025
 # Daniel Reis, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daniel Reis, 2025\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"PO-Revision-Date: 2025-11-21 02:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
+"pos_sale/pt/>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(impostos incl.)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
-msgstr ""
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "A new order has been created."
-msgstr ""
+msgstr "Um novo pedido foi criado."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Valor a pagar no PDV"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
@@ -53,13 +56,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Aplicar um pagamento de entrada (valor fixo)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Aplicar um pagamento de entrada (porcentagem)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -74,7 +77,7 @@ msgstr "Taxa de Câmbio"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.message_body
 msgid "Delivered from"
-msgstr ""
+msgstr "Entregue de"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
@@ -85,7 +88,7 @@ msgstr "Quantidade Entregue"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr ""
+msgstr "Deseja carregar os NS/lotes vinculados ao pedido de venda?"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -96,12 +99,12 @@ msgstr "Adiantamento"
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr ""
+msgstr "Pagamento de entrada (PDV)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr ""
+msgstr "Informações do pagamento de entrada"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -152,24 +155,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "Linked POS Orders"
-msgstr ""
+msgstr "Pedidos de PDV vinculados"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
 msgid "Linked Sale Order"
-msgstr ""
+msgstr "Pedido de venda vinculado"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 msgid "Linked Sale Orders"
-msgstr ""
+msgstr "Pedidos de venda vinculados"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "No down payment product"
-msgstr ""
+msgstr "Nenhum produto de entrada"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -185,7 +188,7 @@ msgstr "Abrir o Caixa"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Optional Products:"
-msgstr ""
+msgstr "Produtos opcionais:"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
@@ -196,12 +199,12 @@ msgstr "Ordem"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr ""
+msgstr "Linhas de pedidos transferidas para o ponto de venda"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr ""
+msgstr "Pedido do PDV"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -216,7 +219,7 @@ msgstr "Configuração do Ponto de Venda"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Linhas de pedido de Ponto de Venda"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -236,7 +239,7 @@ msgstr "Ponto de Vendas"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
 msgid "Pos Order Count"
-msgstr ""
+msgstr "Contagem de pedidos do PDV"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
@@ -258,13 +261,13 @@ msgstr "Orçamento/Encomenda"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "Carregamento de NS/lotes"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
 msgid "SO"
-msgstr ""
+msgstr "PV"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
@@ -303,12 +306,12 @@ msgstr "Equipa de Vendas"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr ""
+msgstr "Equipe de vendas (PDV)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales are reported to the following sales team"
-msgstr ""
+msgstr "As vendas são reportadas à seguinte equipe de vendas"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
@@ -329,18 +332,18 @@ msgstr "Caixas Abertos"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
 msgid "Set Sale Order"
-msgstr ""
+msgstr "Definir pedido de venda"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Settle the order"
-msgstr ""
+msgstr "Pagar o pedido"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Linha de origem de pedido de venda"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -352,7 +355,7 @@ msgstr "Estado"
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
+msgstr "A taxa da moeda para a moeda da taxa aplicável na data do pedido"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -360,17 +363,20 @@ msgstr ""
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
+"As vendas deste ponto de venda estarão relacionadas com esta equipe de "
+"vendas."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied when down payment is made"
-msgstr ""
+msgstr "Este produto será aplicado quando o pagamento de entrada for feito"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
 msgstr ""
+"Este produto será utilizado como pagamento de entrada em um pedido de venda."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
@@ -409,4 +415,4 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "from"
-msgstr ""
+msgstr "de"

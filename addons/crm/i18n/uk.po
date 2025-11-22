@@ -1,28 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm
+# * crm
 #
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-03 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"PO-Revision-Date: 2025-11-21 15:43+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/crm/uk/"
+">\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -84,7 +86,7 @@ msgstr "%(members_assigned)s ліди розпоідлені між продав
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "%s's opportunity"
-msgstr "нагода %s "
+msgstr "нагода %s"
 
 #. module: crm
 #. odoo-javascript
@@ -128,6 +130,8 @@ msgid ""
 "<i class=\"fa fa-star me-1\" aria-label=\"Opportunities\" role=\"img\" "
 "title=\"Opportunities\"/>"
 msgstr ""
+"<i class=\"fa fa-star me-1\" aria-label=\"Opportunities\" role=\"img\" title="
+"\"Opportunities\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -135,6 +139,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                Install Extension"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                Встановити розширення"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -199,7 +205,7 @@ msgstr "<span class=\"o_stat_text\"> Ліди</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\"> at </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\"> at </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -516,13 +522,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created and is not assigned to any team."
-msgstr ""
+msgstr "Новий лід створено та не призначено жодній команді."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created for the team \"%(team_name)s\"."
-msgstr ""
+msgstr "Для команди створено нового потенційного ліда \"%(team_name)s\"."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -577,6 +583,8 @@ msgid ""
 "Activities marked as Done on Leads will appear here, providing an overview "
 "of lead interactions."
 msgstr ""
+"Тут відображатимуться дії, позначені як «Виконано» для лідів, що забезпечить "
+"огляд взаємодій із лідами."
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -632,6 +640,9 @@ msgid ""
 "                    (e.g. \"Demo Preparation Process\", "
 "\"Qualification\", ...)"
 msgstr ""
+"Плани діяльності використовуються для призначення списку дій лише за кілька "
+"кліків\n"
+"(наприклад, «Процес підготовки до демонстрації», «Кваліфікація» тощо)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -819,7 +830,7 @@ msgstr "Правила призначення"
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr "Домен призначення для команди %(team)sмає невірний формат "
+msgstr "Домен призначення для команди %(team)sмає невірний формат"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -908,7 +919,7 @@ msgstr "Плани повторного доходу CRM"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "CRM Stages"
-msgstr "Стадії CRM "
+msgstr "Стадії CRM"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server
@@ -958,6 +969,8 @@ msgid ""
 "Check the Stage Tracker of Leads to identify bottlenecks in your Sales "
 "process."
 msgstr ""
+"Перевірте Відстеження етапів лідів, щоб виявити вузькі місця у вашому "
+"процесі продажів."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_leads
@@ -1213,7 +1226,7 @@ msgstr "Створити лід"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.mail_activity_plan_action_lead
 msgid "Create a Lead Activity Plan"
-msgstr ""
+msgstr "Створіть план дій лідів"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -1702,6 +1715,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"Для команди продажів немає нічого гіршого, ніж повний цикл лідів. На щастя, "
+"лише за кілька кліків ви можете генерувати ліди, спеціально орієнтовані на "
+"ваші потреби: розмір компанії, галузь тощо. Щоб допомогти вам протестувати "
+"цю функцію, ми пропонуємо вам 20 безкоштовних кредитів."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -2144,6 +2161,7 @@ msgstr "Мітки ліда"
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_day_count
 msgid "Lead assigned to this member this last day (lost one excluded)"
 msgstr ""
+"Лід призначено цьому учаснику цього останнього дня (втрачені не враховуються)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2203,7 +2221,7 @@ msgstr "Ліди (30 днів)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_day_count
 msgid "Leads (last 24h)"
-msgstr ""
+msgstr "Ліди (останні 24 години)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2294,7 +2312,7 @@ msgstr "Давайте <b>Заплануємо дію.</b>"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Let's get to work!"
-msgstr ""
+msgstr "Давайте візьмемося за роботу!"
 
 #. module: crm
 #. odoo-javascript
@@ -2404,6 +2422,9 @@ msgid ""
 "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
 "messages, and get AI-powered transcripts of your conversations."
 msgstr ""
+"Здійснюйте та отримуйте дзвінки з Odoo за допомогою дозвону Ringover. "
+"Відстежуйте дзвінки, SMS-повідомлення та отримуйте стенограми ваших розмов "
+"на основі штучного інтелекту."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2938,7 +2959,7 @@ msgstr "Нагода"
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
 #: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 msgid "Opportunity Count"
-msgstr ""
+msgstr "Підрахунок нагод"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -3003,7 +3024,7 @@ msgstr "Більше трьох років"
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_5_years
 msgid "Over 5 years "
-msgstr "Більше 5 років"
+msgstr "Більше 5 років "
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -3328,7 +3349,7 @@ msgstr "Відновлення"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Ringover VOIP Phone"
-msgstr ""
+msgstr "IP-телефонія Ringover"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3429,7 +3450,7 @@ msgstr "Пошук нагод"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Select at least two Leads/Opportunities from the list to merge them."
-msgstr ""
+msgstr "Виберіть щонайменше два ліди/нагоди зі списку, щоб об'єднати їх."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3853,7 +3874,7 @@ msgstr "Порада: конвертуйте вхідні електронні �
 #: model:digest.tip,name:crm.digest_tip_crm_1
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
-msgstr "Порада:  Чи знали ви, що Odoo має вбудоване отримання лідів?"
+msgstr "Порада: Чи знали ви, що Odoo має вбудоване отримання лідів?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
@@ -3865,7 +3886,7 @@ msgstr "Порада: Не витрачайте даремно час, запи�
 #: model:digest.tip,name:crm.digest_tip_crm_6
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
 msgid "Tip: Identify Bottlenecks at a glance"
-msgstr ""
+msgstr "Порада: Визначте вузькі місця з першого погляду"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
@@ -3885,7 +3906,7 @@ msgstr ""
 #: model:digest.tip,name:crm.digest_tip_crm_7
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
 msgid "Tip: Turn Sales Forecasting into Child's Play"
-msgstr ""
+msgstr "Порада: Перетворіть прогнозування продажів на дитячу забавку"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
@@ -3929,7 +3950,7 @@ msgstr "Відстеження"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Trailing 12 months"
-msgstr " Останні 12 місяців"
+msgstr "Останні 12 місяців"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_exceeded
@@ -4091,6 +4112,8 @@ msgid ""
 "Use the CRM Forecast Kanban to easily define when Opportunities are expected "
 "to be won."
 msgstr ""
+"Використовуйте Канбан прогнозів CRM, щоб легко визначити, коли очікується "
+"виграш потенційних нагод."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

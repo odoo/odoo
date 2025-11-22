@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_passkey
-# 
+# * auth_passkey
+#
 # Translators:
 # Wil Odoo, 2024
 # Aleš Pipan, 2025
-# 
+#
+# Jan Zorko <jan.zorko@implex.si>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:40+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Aleš Pipan, 2025\n"
-"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"PO-Revision-Date: 2025-11-12 09:50+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
+"auth_passkey/sl/>\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login
@@ -28,12 +32,12 @@ msgstr "- ali-"
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "<strong>Use your passkey to authenticate</strong>"
-msgstr "<strong>Za preverjanje pristnosti uporabite svoj geslo</strong>"
+msgstr "<strong>Za preverjanje pristnosti uporabite svoj ključ Passkey</strong>"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Add Passkey"
-msgstr "Dodaj geslo"
+msgstr "Dodaj ključ Passkey"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users_identitycheck__auth_method
@@ -43,7 +47,7 @@ msgstr "Metoda avtorizacije"
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users__auth_passkey_key_ids
 msgid "Auth Passkey Key"
-msgstr "Avtorizacijsko geslo"
+msgstr "Avtorizacijski ključ Passkey"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_create_view_form
@@ -60,17 +64,17 @@ msgstr "Ustvari"
 #. odoo-python
 #: code:addons/auth_passkey/models/res_users.py:0
 msgid "Create Passkey"
-msgstr "Ustvari geslo"
+msgstr "Ustvari ključ Passkey"
 
 #. module: auth_passkey
 #: model:ir.actions.act_window,name:auth_passkey.action_auth_passkey_key_create
 msgid "Create Passkey Wizard"
-msgstr "Čarovnik za ustvarjanje gesla"
+msgstr "Čarovnik za ustvarjanje ključa Passkey"
 
 #. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_auth_passkey_key_create
 msgid "Create a Passkey"
-msgstr "Ustvarite geslo"
+msgstr "Ustvarite ključ Passkey"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__create_uid
@@ -120,8 +124,8 @@ msgid ""
 "Incorrect Passkey. Please provide a valid passkey or use a different "
 "authentication method."
 msgstr ""
-"Napačno geslo. Vnesite veljavno geslo ali uporabite drug način preverjanja "
-"pristnosti."
+"Napačni ključ Passkey. Vnesite veljavni ključ Passkey ali uporabite drug "
+"način preverjanja pristnosti."
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__write_uid
@@ -144,7 +148,7 @@ msgstr "Nazadnje uporabljeno:"
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login
 msgid "Log in with Passkey"
-msgstr "Prijava z geslom"
+msgstr "Prijava s ključem Passkey"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__name
@@ -161,13 +165,13 @@ msgstr "Ali pa izberite drugo metodo:"
 #: model:ir.model,name:auth_passkey.model_auth_passkey_key
 #: model:ir.model.fields.selection,name:auth_passkey.selection__res_users_identitycheck__auth_method__webauthn
 msgid "Passkey"
-msgstr "Geslo"
+msgstr "Ključ Passkey"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Passkeys"
-msgstr "Gesla"
+msgstr "Ključi Passkey"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
@@ -175,8 +179,8 @@ msgid ""
 "Passkeys are a replacement for your username and password, offering a more "
 "secure way of logging in."
 msgstr ""
-"Gesla so nadomestilo za vaše uporabniško ime in geslo ter ponujajo varnejši "
-"način prijave."
+"Ključi Passkey so nadomestilo za vaše uporabniško ime in geslo ter ponujajo "
+"varnejši način prijave."
 
 #. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_res_users_identitycheck
@@ -197,7 +201,7 @@ msgstr "Preimenuj"
 #. odoo-python
 #: code:addons/auth_passkey/models/auth_passkey_key.py:0
 msgid "Rename Passkey"
-msgstr "Preimenuj geslo"
+msgstr "Preimenuj ključ Passkey"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_rename
@@ -224,12 +228,12 @@ msgstr "Identifikator poverilnice mora biti edinstven."
 #. odoo-python
 #: code:addons/auth_passkey/models/res_users.py:0
 msgid "Unknown passkey"
-msgstr "Neznano geslo"
+msgstr "Neznani ključ Passkey"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "Use Passkey"
-msgstr "Uporabite geslo"
+msgstr "Uporabite ključ Passkey"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey

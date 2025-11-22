@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-30 10:49+0000\n"
+"POT-Creation-Date: 2025-11-14 18:37+0000\n"
+"PO-Revision-Date: 2025-11-20 13:45+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "hr_holidays/ja/>\n"
@@ -436,7 +436,7 @@ msgstr "累積休暇 (今後):"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr "発生割当"
+msgstr "累積割当"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -473,38 +473,38 @@ msgstr "休暇累積プラン"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
 msgid "Accrual Time Off: Updates the number of time off"
-msgstr "見越休暇:休暇の数を更新します"
+msgstr "累積休暇:休暇の数を更新"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity
 msgid "Accrual Validity"
-msgstr "繰越休暇の有効性"
+msgstr "累積休暇の有効性"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid "Accrual Validity Count"
-msgstr "累積有効数"
+msgstr "累積休暇有効数"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "Accrual Validity Type"
-msgstr "累積有効タイプ"
+msgstr "累積休暇有効タイプ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
 msgid "Accruals"
-msgstr "休暇累積"
+msgstr "累積休暇"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual_count
 msgid "Accruals count"
-msgstr "休暇累積数"
+msgstr "累積休暇数"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrued_gain_time
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__accrued_gain_time
 msgid "Accrued Gain Time"
-msgstr "累積取得時間"
+msgstr "累積休暇取得時間"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -800,7 +800,7 @@ msgstr "既に累積済です"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Amount"
-msgstr "金額"
+msgstr "数量"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1015,7 +1015,7 @@ msgstr "残高"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Balance at the"
-msgstr "以下での収支"
+msgstr "以下での残高"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
@@ -1066,7 +1066,7 @@ msgstr "従業員の承認者による"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "従業員の承認者または休暇担当者による"
+msgstr "従業員の承認者および休暇担当者による"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
@@ -2198,7 +2198,7 @@ msgstr "休暇タイプが期間を延長します"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
 msgid "Left"
-msgstr "左"
+msgstr "残"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2291,7 +2291,7 @@ msgstr "承認準備完了とする"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
 msgid "Max Leaves"
-msgstr "最大の葉"
+msgstr "最大の休暇"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
@@ -4145,12 +4145,12 @@ msgstr "有効期間"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Start"
-msgstr "検証開始"
+msgstr "有効開始"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Stop"
-msgstr "検証中断"
+msgstr "有効終了"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -4384,16 +4384,6 @@ msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by "
 "the employee."
 msgstr "従業員が既に取得した休暇の期間より短くすることはできません。"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"You cannot refuse this allocation request since the employee has already "
-"taken leaves for it. Please refuse or delete those leaves first."
-msgstr ""
-"従業員がすでに休暇を取得しているため、この割当申請を否認することはできませ"
-"ん。まず、これらの休暇を否認または削除して下さい。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4725,3 +4715,10 @@ msgstr "検証"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "検証済"
+
+#~ msgid ""
+#~ "You cannot refuse this allocation request since the employee has already "
+#~ "taken leaves for it. Please refuse or delete those leaves first."
+#~ msgstr ""
+#~ "従業員がすでに休暇を取得しているため、この割当申請を否認することはできませ"
+#~ "ん。まず、これらの休暇を否認または削除して下さい。"

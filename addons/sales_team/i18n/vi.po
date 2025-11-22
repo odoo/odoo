@@ -1,30 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-11-21 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -65,8 +69,7 @@ msgstr "Thêm một thành viên"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid ""
-"Add members to automatically assign their documents to this sales team."
+msgid "Add members to automatically assign their documents to this sales team."
 msgstr ""
 "Thêm thành viên để tự động chuyển tài liệu của họ cho bộ phận sales này. "
 
@@ -77,8 +80,8 @@ msgid ""
 "Adding %(user_name)s in this team will remove them from %(team_names)s. "
 "Working in multiple teams? Activate the option under Configuration>Settings."
 msgstr ""
-"Việc thêm %(user_name)s vào bộ phận này sẽ xóa họ khỏi %(team_names)s. Người"
-" dùng làm việc trong nhiều nhóm? Kích hoạt tùy chọn trong Cấu hình>Cài đặt."
+"Việc thêm %(user_name)s vào bộ phận này sẽ xóa họ khỏi %(team_names)s. Người "
+"dùng làm việc trong nhiều nhóm? Kích hoạt tùy chọn trong Cấu hình>Cài đặt."
 
 #. module: sales_team
 #. odoo-python
@@ -232,8 +235,7 @@ msgstr "Thành viên yêu thích"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid ""
-"Favorite teams to display them in the dashboard and access them easily."
+msgid "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
 "Chọn bộ phận yêu thích để hiển thị các đội đó trên bảng điều khiển và truy "
 "cập dễ dàng."
@@ -280,8 +282,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
-"Nếu đúng, người dùng có thể thuộc về nhiều bộ phận sales. Nếu không, tư cách"
-" thành viên sẽ chỉ giới hạn cho một bộ phận sales duy nhất. "
+"Nếu đúng, người dùng có thể thuộc về nhiều bộ phận sales. Nếu không, tư cách "
+"thành viên sẽ chỉ giới hạn cho một bộ phận sales duy nhất. "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -301,8 +303,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
-"Nếu trường đang hoạt động được đặt là sai, bạn sẽ được phép ẩn bộ phận sales"
-" mà không cần xóa. "
+"Nếu trường đang hoạt động được đặt là sai, bạn sẽ được phép ẩn bộ phận sales "
+"mà không cần xóa. "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -596,6 +598,14 @@ msgid "The default company for this user."
 msgstr "Công ty mặc định cho người dùng này."
 
 #. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
@@ -629,8 +639,7 @@ msgstr "Mô hình biểu đồ không xác định cho bộ phận sales: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid ""
-"Use Sales Teams to organize your sales departments and draw up reports."
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr "Sử dụng bộ phận sales để tổ chức phòng sales và tạo báo cáo. "
 
 #. module: sales_team
@@ -656,6 +665,14 @@ msgstr ""
 #: model:ir.model,name:sales_team.model_res_users
 msgid "User"
 msgstr "Người dùng"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -705,11 +722,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"You are trying to create duplicate membership(s). We found that "
-"%(duplicates)s already exist(s)."
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
 msgstr ""
-"Bạn đang tạo (các) tư cách thành viên trùng lặp. Chúng tôi thấy "
-"%(duplicates)s đã tồn tại. "
+"Bạn đang tạo (các) tư cách thành viên trùng lặp. Chúng tôi thấy %"
+"(duplicates)s đã tồn tại. "
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -740,8 +757,8 @@ msgstr ""
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
 msgstr ""
-"người dùng sẽ có quyền truy cập tới cấu hình bán hàng cũng như báo cáo thống"
-" kê. "
+"người dùng sẽ có quyền truy cập tới cấu hình bán hàng cũng như báo cáo thống "
+"kê. "
