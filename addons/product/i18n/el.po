@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-11 02:17+0000\n"
-"PO-Revision-Date: 2025-11-08 16:51+0000\n"
+"PO-Revision-Date: 2025-11-21 02:34+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-18/product/el/"
 ">\n"
@@ -45,7 +45,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Παραλλαγές Είδους"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
@@ -71,6 +71,10 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
+"%(base)s με μία %(discount)s %% %(discount_type)s και %(surcharge)s έξτρα "
+"κόστος\n"
+"Παράδειγμα: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -79,24 +83,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
+"%(item_name)s: ημεριμηνία ολοκληρωσης (%(end_date)s) θα πρέπει να είναι μετά "
+"την ημερομηνία έναρξης (%(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s σε %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% έκπτωση σε %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% έκπτωση στην τιμή πώλησης"
 
 #. module: product
 #. odoo-python
@@ -155,6 +161,13 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Απευθείας: Όλες οι πιθανές παραλλαγές δημιουργούνται μόλις προστεθούν η "
+"ιδιότιτα και οι τιμές της σ΄ένα προϊόν.\n"
+"        - Δυναμικά: Κάθε παραλλαγή δημιουργείται μόνο όταν οι αντίστοιχες "
+"ιδιότητες και τιμές προστεθούν σε εντολή πώλησης.\n"
+"        - Ποτέ: Παραλλαγές δεν δημιουργούνται ποτέ γι΄αυτή την ιδιότητα.\n"
+"        Σημείωση: αυτό δεν μπορεί να αλλάξει εφόσον η ιδιότητα "
+"χρησιμοποείται σε προϊόν."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -174,7 +187,7 @@ msgstr "10"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 Τεμάχια"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -262,7 +275,7 @@ msgstr "<span class=\"o_stat_text\"> Είδη</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Είδη</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -280,6 +293,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
 msgstr ""
+"<span>Όλες οι γενικές ρυθμίσεις γι' αυτό το είδος διαχειρίζονται σε</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -300,6 +314,10 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Προειδοποίηση</strong>: προσθέτοντας ή διαγράφοντας παραλλαγές\n"
+"                        θα διαγράψει και θα ξαναδημιουργήσει υπάρχουσες "
+"παραλλαγές και θα οδηγήσει\n"
+"                        στην απώλεια των παραμετροποιήσεων τους."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
@@ -310,7 +328,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "Ένας συνδυασμός δεν μπορεί να περιέχει διπλοεγγραφές ειδών."
 
 #. module: product
 #. odoo-python
@@ -322,7 +340,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "Ένας συνδυασμός πρέπει να περιέχει τουλάχιστον ένα προϊόν."
 
 #. module: product
 #. odoo-python
@@ -365,12 +383,14 @@ msgid ""
 "A pricelist item with \"Other Pricelist\" as base must have a "
 "base_pricelist_id."
 msgstr ""
+"Ένας τιμοκατάλογος που έχει ώς βάση \"Άλλος Τιμοκατάλογος\" πρέπει να έχει  "
+"base_pricelist_id."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Ένα είδος χρησιμοποιεί ήδη αυτό το barcode"
 
 #. module: product
 #. odoo-python
@@ -424,7 +444,7 @@ msgstr "Σε Ισχύ"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Ενεργά Είδη"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
@@ -464,19 +484,19 @@ msgstr "Προσθήκη"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr ""
+msgstr "Προσθέστε Είδη"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Προσθέστε Είδη στην αναφορά τιμοκαταλόγου"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add a quantity"
-msgstr ""
+msgstr "Προσθέστε μία ποσότητα"
 
 #. module: product
 #. odoo-javascript
@@ -485,22 +505,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Προσθέστε είδη χρησιμοποιώντας το κουμπί \"Προσθήκη Ειδών\" πάνω δεξία\n"
+"                                για να τα συμπεριλάβετε στην αναφορά."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Προσθήκη σε όλα τα είδη"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Προσθήκη σε υπάρχοντα είδη"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Προσθήκη σε είδη"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -516,7 +538,7 @@ msgstr "Όλες οι κατηγορίες"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Όλες οι Ετικέτες Είδους"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
@@ -739,12 +761,12 @@ msgstr "Βασισμένο στο"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Based price"
-msgstr ""
+msgstr "Αρχική τιμή"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr ""
+msgstr "Βασικοί Τιμοκατάλογοι"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -790,12 +812,12 @@ msgstr "Κατηγορία"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Category: %s"
-msgstr ""
+msgstr "Κατηγορία: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Άθροισμα/SHA1"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
@@ -930,7 +952,7 @@ msgstr "Υπολογισμός τιμής"
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "Καρέκλα Συνεδρίασης"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
@@ -991,12 +1013,12 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Γωνιακό Γραφείο Αριστερό Κάθισμα"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr ""
+msgstr "Γωνιακό Γραφείο Δεξί Κάθισμα"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
@@ -1024,7 +1046,7 @@ msgstr "Ομάδες Χωρών"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr ""
+msgstr "Δημιουργία νέου τιμοκαταλόγου"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -1037,13 +1059,13 @@ msgstr "Δημιουργήστε ένα νέο προϊόν"
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "Δημιουργία νέας παραλλαγής είδους"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "Δημιουργία είδους"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
@@ -1133,12 +1155,12 @@ msgstr "Προσωποποιημένο"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr ""
+msgstr "Προσαρμοσμένη Τιμή"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Αναφορά Πελάτη"
 
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
@@ -1164,12 +1186,12 @@ msgstr "Προεπιλογή"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "Προεπιλεγμένη Έξτρα Τιμή"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "Η Προεπιλγμένη Έξτρα Τιμή Αλλάχτηκε"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1192,7 +1214,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Ορίστε νέα ετικέτα"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1202,7 +1224,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "Ορίστε την μονάδα μέτρησης βάρους"
 
 #. module: product
 #. odoo-javascript
@@ -1226,12 +1248,12 @@ msgstr "Περιγραφή"
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr ""
+msgstr "Συνδυασμός γραφείου"
 
 #. module: product
 #: model:product.template,name:product.desk_organizer_product_template
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Οργάνσωση Γραφείου"
 
 #. module: product
 #: model:product.template,name:product.desk_pad_product_template
@@ -1273,7 +1295,7 @@ msgstr "Έκπτωση (%)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "Εκπτωτική Τιμή"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
@@ -1328,12 +1350,12 @@ msgstr "Έγγραφα"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Αριθμός Εγγράφων"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "Έγγραφα αυτή της παραλλαγής"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1344,12 +1366,12 @@ msgstr "Λήψη"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Download examples"
-msgstr ""
+msgstr "Κατεβάστε παραδείγματα"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
-msgstr ""
+msgstr "Συρτάρι"
 
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
@@ -1374,17 +1396,17 @@ msgstr "Dymo"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr ""
+msgstr "Δυναμικά"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr ""
+msgstr "Κάθε τιμή πρέπει να ορίζεται μόνο μία φορά ανά ιδιότητα ανά προϊόν."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "Eco-friendly Ξύλινη Καρέκλα"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -2762,7 +2784,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_tag_action
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr ""
+msgstr "Ετικέτες Είδους"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id

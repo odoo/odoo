@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_timesheet_holidays
-# 
+# * project_timesheet_holidays
+#
 # Translators:
 # Daniel Reis, 2025
 # Rita Bastos, 2025
 # Wil Odoo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:24+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"PO-Revision-Date: 2025-11-21 02:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
+"project_timesheet_holidays/pt/>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -81,7 +85,7 @@ msgstr "Interno"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Internal Project"
-msgstr ""
+msgstr "Projeto interno"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -115,6 +119,9 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"O projeto padrão usado ao gerar planilhas de horas automaticamente por "
+"solicitações de folga. Você pode especificar outro projeto individualmente "
+"para cada tipo de folga."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -122,6 +129,9 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"A tarefa padrão usada ao gerar planilhas de horas automaticamente por "
+"solicitações de folga. Você pode especificar outra tarefa individualmente "
+"para cada tipo de folga."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -137,23 +147,23 @@ msgstr "Ausência"
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 msgid "Time Off (%(index)s/%(total)s)"
-msgstr ""
+msgstr "Folga (%(index)s/%(total)s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "Tarefa de folga"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Tipo de folga"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Total de tipos de folga"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -164,7 +174,7 @@ msgstr "Folhas de Horas"
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "View Time Off"
-msgstr ""
+msgstr "Ver folga"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -173,12 +183,15 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Não é possível criar planilhas de horas para uma tarefa que esteja vinculada "
+"a um tipo de folga. Em vez disso, use o aplicativo Folga para solicitar "
+"novas folgas."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "You cannot delete timesheets that are linked to global time off."
-msgstr ""
+msgstr "Não é possível excluir planilhas de horas vinculadas a folgas globais."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -187,6 +200,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Não é possível excluir planilhas de horas vinculadas a solicitações de "
+"folga. Em vez disso, cancele sua solicitação de folga no aplicativo Folga."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -195,3 +210,6 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Não é possível modificar planilhas de horas vinculadas a solicitações de "
+"folga. Em vez disso, use o aplicativo Folga para modificar suas solicitações "
+"de folga."

@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
 # Hamed Mohammadi <hamed@dehongi.com>, 2025
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_import
@@ -53,8 +53,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
-"یک ستون در فایل پیدا شد؛ این معمولاً به این معنی است که جداکننده فایل نادرست"
-" است."
+"یک ستون در فایل پیدا شد؛ این معمولاً به این معنی است که جداکننده فایل نادرست "
+"است."
 
 #. module: base_import
 #. odoo-javascript
@@ -86,8 +86,8 @@ msgstr "اجازه دهید با زیربخش‌ها تطابق پیدا کند.
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "یک مشکل ناشناخته در حین وارد کردن پیش آمد (احتمالاً قطع اتصال، تجاوز به حد "
@@ -156,8 +156,8 @@ msgstr "ستون %(column)s حاوی مقادیر نادرست است (مقدا�
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr "ستون %(column)s شامل مقادیر نادرست است. خطا در خط %(line)d: %(error)s"
 
 #. module: base_import
@@ -181,11 +181,10 @@ msgstr "نظرها"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"نمی‌توان URL را بازیابی کرد.: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"نمی‌توان URL را بازیابی کرد.: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -302,13 +301,13 @@ msgstr "خطا در حین وارد کردن سوابق: جداکننده متن
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"خطا در حین وارد کردن سوابق: همه ردیف‌ها باید هم اندازه باشند، اما ردیف عنوان"
-" دارای %(title_row_entries)d eورودی است در حالی که ردیف اول دارای "
-"%(first_row_entries)d. است. شما ممکن است نیاز داشته باشید کاراکتر جداکننده "
-"را تغییر دهید."
+"خطا در حین وارد کردن سوابق: همه ردیف‌ها باید هم اندازه باشند، اما ردیف عنوان "
+"دارای %(title_row_entries)d eورودی است در حالی که ردیف اول دارای %"
+"(first_row_entries)d. است. شما ممکن است نیاز داشته باشید کاراکتر جداکننده را "
+"تغییر دهید."
 
 #. module: base_import
 #. odoo-javascript
@@ -399,8 +398,8 @@ msgstr "قالب بندی"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "داده‌های تصویر نامعتبر پیدا شده است، تصاویر باید به‌عنوان URL یا داده‌های "
 "کدگذاری شده با base64 وارد شوند."
@@ -439,7 +438,9 @@ msgid ""
 "                    simpler especially when the file has many columns."
 msgstr ""
 "اگر فایل حاوی\n"
-"نام ستون ها، Odoo می تواند تشخیص خودکار فیلد مربوط به ستون را امتحان کند. این امر واردات را ساده تر می کند، به خصوص زمانی که فایل دارای ستون های زیادی باشد."
+"نام ستون ها، Odoo می تواند تشخیص خودکار فیلد مربوط به ستون را امتحان کند. "
+"این امر واردات را ساده تر می کند، به خصوص زمانی که فایل دارای ستون های زیادی "
+"باشد."
 
 #. module: base_import
 #. odoo-javascript
@@ -448,8 +449,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
-"اگر مدل از openchatter استفاده کند، ردیابی تاریخچه در حین واردات اشتراک‌ها "
-"را تنظیم کرده و اعلان‌ها را ارسال می‌کند، اما منجر به واردات کندتر خواهد شد."
+"اگر مدل از openchatter استفاده کند، ردیابی تاریخچه در حین واردات اشتراک‌ها را "
+"تنظیم کرده و اعلان‌ها را ارسال می‌کند، اما منجر به واردات کندتر خواهد شد."
 
 #. module: base_import
 #. odoo-python
@@ -785,6 +786,22 @@ msgid "The file will be imported by batches"
 msgstr "فایل به صورت دسته ای وارد می شود"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -817,10 +834,11 @@ msgstr "ردیابی تاریخچه در هنگام ورود"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"نمی‌توان فایل '{extension}' را بارگذاری کرد: نیاز به ماژول پایتون "
-"'{modname}' دارد."
+"نمی‌توان فایل '{extension}' را بارگذاری کرد: نیاز به ماژول پایتون '{modname}' "
+"دارد."
 
 #. module: base_import
 #. odoo-python
@@ -828,8 +846,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"فرمت فایل \"{}\" پشتیبانی نمی‌شود، import فقط از فرمت‌های CSV، ODS، XLS و "
-"XLSX پشتیبانی می‌کند."
+"فرمت فایل \"{}\" پشتیبانی نمی‌شود، import فقط از فرمت‌های CSV، ODS، XLS و XLSX "
+"پشتیبانی می‌کند."
 
 #. module: base_import
 #. odoo-javascript
@@ -854,22 +872,22 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
-"از HH برای ساعت‌ها در سیستم ۲۴ ساعته استفاده کنید، و از II به همراه 'p' برای"
-" سیستم ۱۲ ساعته استفاده کنید. شما می‌توانید از یک فرمت سفارشی علاوه بر "
-"پیشنهادات ارائه‌شده استفاده کنید. برای اجازه دادن به اودو برای حدس زدن فرمت،"
-" آن را خالی بگذارید (توصیه‌شده)."
+"از HH برای ساعت‌ها در سیستم ۲۴ ساعته استفاده کنید، و از II به همراه 'p' برای "
+"سیستم ۱۲ ساعته استفاده کنید. شما می‌توانید از یک فرمت سفارشی علاوه بر "
+"پیشنهادات ارائه‌شده استفاده کنید. برای اجازه دادن به اودو برای حدس زدن فرمت، "
+"آن را خالی بگذارید (توصیه‌شده)."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "از YYYY برای نمایش سال، از MM برای ماه و از DD برای روز استفاده کنید. "
 "جداکننده‌هایی مانند نقطه، اسلش یا خط تیره را شامل کنید. شما می‌توانید از یک "

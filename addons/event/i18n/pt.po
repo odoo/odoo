@@ -11,13 +11,14 @@
 # Rita Bastos, 2025
 # Maitê Dietze, 2025
 # Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:38+0000\n"
-"PO-Revision-Date: 2025-11-05 17:18+0000\n"
-"Last-Translator: Humberto Sousa <humberto.sousa@smartimprove.pt>\n"
+"POT-Creation-Date: 2025-11-14 18:38+0000\n"
+"PO-Revision-Date: 2025-11-15 18:10+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/event/"
 "pt/>\n"
 "Language: pt\n"
@@ -1220,10 +1221,10 @@ msgid ""
 "out=\"object.sale_order_id.name\"/>\n"
 "                        and was placed on <t t-"
 "out=\"object.sale_order_id.date_order.date()\"/>\n"
-"                        <t t-if=\"object.sale_order_line_id.price_unit\"> "
+"                        <t t-if=\"object.sale_order_line_id.price_total\"> "
 "for an amount of\n"
 "                            <t t-"
-"out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': "
+"out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': "
 "'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
 "                        </t>.\n"
 "                    </div>\n"
@@ -3018,6 +3019,11 @@ msgid ""
 "                to chat with experienced players and trainers once the "
 "tournament is over!"
 msgstr ""
+"Se você não sabe nada sobre hóquei, esta é uma ótima introdução para este "
+"esporte maravilhoso, porque você poderá ver alguns processos de treinamento, "
+"além de ter tempo\n"
+"                para conversar com jogadores experientes e treinadores "
+"quando o torneio terminar."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -3130,12 +3136,12 @@ msgstr "João da SILVA"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "John Doe"
-msgstr ""
+msgstr "João Silva"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times!"
-msgstr ""
+msgstr "Junte-se a nós para a maior corrida de balões de todos os tempos!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -3595,6 +3601,8 @@ msgstr "Online se não definido"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Abra o seletor de intervalo de datas.<br/>Escolha uma data de início e de "
+"término para seu evento."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3699,7 +3707,7 @@ msgstr "Por favor, introduzir um segredo de base64 válido"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Escaneie novamente."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3955,7 +3963,7 @@ msgstr "Bilhete de Página Inteira com HTML responsivo"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "Rue de la Paix 123"
-msgstr ""
+msgstr "Rue de la Paix 123"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -3972,7 +3980,7 @@ msgstr "Erro de Envio de SMS"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "Digitalize ou toque"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4006,12 +4014,12 @@ msgstr "Hora agendada"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "E-mails do agendador"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you!"
-msgstr ""
+msgstr "Fãs de hóquei e simpatizantes, este torneio é para vocês!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4028,7 +4036,7 @@ msgstr "Seleciona participante"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "Selecione a impressora..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4048,7 +4056,7 @@ msgstr "Vende bilhetes no teu website"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "Venda de ingressos no Ponto de Venda"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4233,7 +4241,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "Inscrito com sucesso!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
@@ -4375,7 +4383,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
-msgstr ""
+msgstr "A segurança dos participantes e dos aeronautas vem em primeiro lugar!"
 
 #. module: event
 #. odoo-python
@@ -4443,6 +4451,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
 msgstr ""
+"Esse é o lugar perfeito para passar um bom dia com sua família. Temos "
+"certeza de que você sairá com belas lembranças!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -4470,7 +4480,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "Este ingresso é para outro evento!"
 
 #. module: event
 #. odoo-javascript
@@ -4507,7 +4517,7 @@ msgstr "Tipo de Ticket"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "Ingresso já digitalizado!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -4544,12 +4554,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "Ingressos no PDV"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "Ingressos em Vendas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
@@ -4818,6 +4828,8 @@ msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
+"Para quando o evento está programado (expresso em seu fuso horário local na "
+"visualização de formulário)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -4917,7 +4929,7 @@ msgstr "ex.: \"Tens alguma restrição alimentar?\""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr ""
+msgstr "ex: \"Promoção\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -5035,7 +5047,7 @@ msgstr "amanhã"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
 
 #~ msgid ""
 #~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # KeyVillage, 2024
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2024
@@ -15,19 +15,19 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2025
 # Milena Georgieva, 2025
 # Veselina Slavkova, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import
@@ -96,14 +96,14 @@ msgstr "Разреши съпоставяне с подполета"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "Възникна неизвестен проблем по време на импортирането (възможно е загуба на "
-"връзка, надвишен лимит на данни или надвишени ограничения на паметта). Моля,"
-" опитайте отново, в случай че проблемът е временен. Ако проблемът "
-"продължава, опитайте да разделите файла, вместо да го импортирате наведнъж."
+"връзка, надвишен лимит на данни или надвишени ограничения на паметта). Моля, "
+"опитайте отново, в случай че проблемът е временен. Ако проблемът продължава, "
+"опитайте да разделите файла, вместо да го импортирате наведнъж."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -162,18 +162,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Column %(column)s contains incorrect values (value: %(value)s)"
-msgstr ""
-"Колоната %(column)s съдържа неправилни стойности (стойност: %(value)s)"
+msgstr "Колоната %(column)s съдържа неправилни стойности (стойност: %(value)s)"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
-"Колоната %(column)s съдържа неправилни стойности. Грешка в ред %(line)d: "
-"%(error)s"
+"Колоната %(column)s съдържа неправилни стойности. Грешка в ред %(line)d: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -196,11 +195,10 @@ msgstr "Коментари"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Не може да се извлече URL адрес: %(url)s [%(field_name)s: L%(line_number)d]:"
-" %(error)s"
+"Не може да се извлече URL адрес: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -255,8 +253,7 @@ msgstr "Десетичен разделител:"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch import"
 msgstr ""
-"Определя колко мегабайта могат да бъдат импортирани във всеки партиден "
-"импорт"
+"Определя колко мегабайта могат да бъдат импортирани във всеки партиден импорт"
 
 #. module: base_import
 #. odoo-javascript
@@ -321,8 +318,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Грешка при импортиране на записи: всички редове трябва да са с еднакъв "
 "размер, но заглавният ред има %(title_row_entries)d записа, докато първият "
@@ -419,8 +416,8 @@ msgstr "Форматиране"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "Открити са невалидни данни за изображения, изображенията трябва да бъдат "
 "импортирани или като URL адреси, или като данни, кодирани в base64."
@@ -811,6 +808,22 @@ msgid "The file will be imported by batches"
 msgstr "Файлът ще бъде импортиран на партиди."
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -843,7 +856,8 @@ msgstr "Проследете историята в хода на въвежда�
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 "Не можете да заредите \"{extension}\" файл: изисква се модур Pyton "
 "\"{modname}\""
@@ -879,8 +893,8 @@ msgstr "Качете вашите файлове"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 "Използвайте HH за часове в 24-часова система, използвайте II в комбинация с "
 "'p' за 12-часова система. Можете да използвате персонализиран формат в "
@@ -891,10 +905,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "Използвайте YYYY, за да представите годината, MM за месеца и DD за деня. "
 "Включете разделители като точка, наклонена черта или тире. Можете да "

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_check_printing
+# * account_check_printing
 #
 # Translators:
 # NumerSpiral HBG, 2025
@@ -11,27 +11,29 @@
 # Pilar Vargas, 2025
 # Wil Odoo, 2025
 # Daniel Reis, 2025
-#
+# "Pedro Silva (Exo)" <pedrocs@exo.pt>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-03 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daniel Reis, 2025\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"PO-Revision-Date: 2025-11-15 18:10+0000\n"
+"Last-Translator: \"Pedro Silva (Exo)\" <pedrocs@exo.pt>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
+"account_check_printing/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr ""
+msgstr "%(journal)s: Sequência de Numeração de Cheques"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -49,11 +51,13 @@ msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
 msgstr ""
+"Ajuste as margens das verificações para as adequar às configurações da "
+"impressora."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 msgid "Amount in Words"
-msgstr "Montante em Palavras"
+msgstr "Montante por Extenso"
 
 #. module: account_check_printing
 #. odoo-python
@@ -109,7 +113,7 @@ msgstr "Margem do Topo do Cheque"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "Os valores de verificação só podem consistir em dígitos"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -186,7 +190,7 @@ msgstr "Ir para o painel de configuração"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
 msgid "ID"
-msgstr "Id."
+msgstr "ID"
 
 #. module: account_check_printing
 #. odoo-python
@@ -235,25 +239,25 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
 "partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Manual: pagar ou ser pago por qualquer método fora do Odoo.\n"
-"Provedores de pagamento: cada provedor de pagamento tem seu próprio método "
+"Manual: Pague ou Seja pago por qualquer método fora do Odoo.\n"
+"Provedores de pagamento: Cada provedor de pagamento tem o seu próprio método "
 "de pagamento. Solicite uma transação em/para um cartão graças a um token de "
-"pagamento salvo pelo usuário ao comprar ou assinar online.\n"
-"Cheque: pague contas com cheque e imprima-o no Odoo.\n"
-"Depósito em lote: colete vários cheques de clientes de uma só vez, gerando e "
-"enviando um depósito em lote ao seu banco. É necessário o módulo "
-"account_batch_payment.\n"
-"Transferência de crédito SEPA: Pague na zona SEPA enviando um arquivo de "
-"transferência de crédito SEPA para o seu banco. O módulo account_sepa é "
+"pagamento guardado pelo parceiro ao comprar ou assinar online.\n"
+"Cheque: Pagar faturas com cheque e imprimi-lo a partir do Odoo.\n"
+"Depósito em lote: Recolha vários cheques de clientes ao mesmo tempo gerando "
+"e enviando um depósito em lote ao seu banco. O módulo account_batch_payment "
+"é necessário.\n"
+"Transferência de Crédito SEPA: Pague na zona SEPA enviando um arquivo de "
+"Transferência a Crédito SEPA ao seu banco. O módulo account_sepa é "
 "necessário.\n"
-"Débito direto SEPA: receba pagamentos na zona SEPA graças a um mandato que "
-"seu usuário lhe concederá. O módulo account_sepa é necessário.\n"
+"Débito Direto SEPA: Seja pago na zona SEPA graças a um mandato que o seu "
+"parceiro lhe terá concedido. O módulo account_sepa é necessário.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "Canhoto de Cheque Multi-Páginas"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -266,7 +270,7 @@ msgstr "Número de Cheque Seguinte"
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "O próximo número de cheque deve conter apenas números."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -296,7 +300,7 @@ msgid ""
 "and not have already been reconciled"
 msgstr ""
 "Os pagamentos a imprimir como um cheque devem ter selecionado 'Cheque' como "
-"método de pagamento e não terem sido já reconciliados."
+"método de pagamento e não terem sido já reconciliados"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -326,7 +330,7 @@ msgstr "Imprimir Cheques"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr ""
+msgstr "Imprimir Etiqueta de Data"
 
 #. module: account_check_printing
 #. odoo-python
@@ -355,6 +359,9 @@ msgid ""
 "checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"Selecione o formato correspondente ao papel de cheque em que imprimirá os "
+"seus cheques.\n"
+"Para desabilitar o recurso de impressão, selecione 'Nenhum'."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -369,7 +376,7 @@ msgstr "Número sequencial do próximo cheque impresso."
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "Mostrar Número do Cheque"
 
 #. module: account_check_printing
 #. odoo-python
@@ -378,6 +385,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"Ocorreu um erro com o Layout do Cheque. Selecione outro layout nas "
+"Configurações de Faturação/Contabilidade e tente novamente."
 
 #. module: account_check_printing
 #. odoo-python
@@ -386,6 +395,8 @@ msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
 msgstr ""
+"O número de cheque que introduziu (%(num)s) excede o valor máximo permitido "
+"de %(max)d. Por favor, introduza um número mais pequeno."
 
 #. module: account_check_printing
 #. odoo-python
@@ -394,6 +405,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"Os seguintes números já estão a ser usados:\n"
+"%s"
 
 #. module: account_check_printing
 #. odoo-python
@@ -423,6 +436,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"Esta opção permite-lhe imprimir detalhes do cheque em várias páginas, caso "
+"eles não caibam numa única página."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -431,6 +446,9 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Esta opção permite-lhe imprimir a etiqueta de data no cheque conforme o CPA."
+"\n"
+"Desabilite isto se o seu cheque pré-impresso incluir a etiqueta de data."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -447,7 +465,7 @@ msgstr "Enviar não selecionados"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "Anular Cheque"
 
 #. module: account_check_printing
 #. odoo-python
@@ -456,3 +474,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Tem que escolher um layout de cheque. Para isso, vá a Configurações de "
+"Faturação/Contabilidade, procure por 'Layout de cheques' e defina um."

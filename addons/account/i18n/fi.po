@@ -50,13 +50,14 @@
 # Jessica Jakara, 2025
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-08-28 09:52+0000\n"
-"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 06:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/account/"
 "fi/>\n"
 "Language: fi\n"
@@ -245,18 +246,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) tulisi olla tilityyppiä \"%"
-"(receivable)s\" tai \"%(payable)s\", ja molempien vaihtoehtojen \"%"
-"(allow_reconciliation)s\" ja \"%(non_trade)s\" tulisi olla käytössä."
 
 #. module: account
 #. odoo-python
@@ -1035,6 +1024,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Voit valita, miten haluat meidän lähettävän laskusi "
+"ja missä sähköisessä muodossa.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2445,6 +2438,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Suoriteperusteinen kirjaus luotu %(date)s: %(accrual_entry)s.                "
+"Ja sen vastakirjaus: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3941,6 +3936,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"Erälaskun lähettäminen ei ole käytettävissä. Aktivoi tehtävien ajastus "
+"(cron) lähettääksesi laskuja erinä."
 
 #. module: account
 #. odoo-python
@@ -3949,6 +3946,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"Erälaskun lähettäminen ei ole käytettävissä. Ota yhteyttä järjestelmän "
+"ylläpitäjään aktivoidaksesi tehtävien ajastuksen (cron) ja lähettääksesi "
+"laskuja erinä."
 
 #. module: account
 #. odoo-javascript
@@ -6245,7 +6245,7 @@ msgstr "Tuotteen myynnissä käytettävät oletusverot"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "%(record)s:n 'company_id' -oletusarvo ei ole kokonaisluku"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -8065,7 +8065,7 @@ msgstr "Globaali lukituspäivä"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Siirry cron-konfiguraatioon"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -8149,6 +8149,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Ryhmittely-ominaisuutta ei tueta '%(engine)s'-moduulissa. Poista "
+"ryhmittelyarvo kohdasta '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -9896,7 +9898,7 @@ msgstr "Kesäkuu"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "KPI-palveluntarjoaja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -15708,7 +15710,7 @@ msgstr "Maa, jonka veroraportteja käytetään tälle yritykselle"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "Valuuttakurssin on oltava ehdottomasti positiivinen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -19681,6 +19683,15 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Maksukuitti (viite {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) tulisi olla tilityyppiä \"%"
+#~ "(receivable)s\" tai \"%(payable)s\", ja molempien vaihtoehtojen \"%"
+#~ "(allow_reconciliation)s\" ja \"%(non_trade)s\" tulisi olla käytössä."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

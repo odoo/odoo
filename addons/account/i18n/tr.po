@@ -51,13 +51,14 @@
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2025.
 # MAHAMADASIF ANSARI <maan@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-10-16 08:31+0000\n"
-"Last-Translator: MAHAMADASIF ANSARI <maan@odoo.com>\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 06:40+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/account/"
 "tr/>\n"
 "Language: tr\n"
@@ -245,18 +246,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s), \"%(receivable)s\" veya \"%(payable)s\" "
-"türünde bir hesap olmalı ve hem \"%(allow_reconciliation)s\", hem de \"%"
-"(non_trade)s\" seçenekleri etkin olmalıdır."
 
 #. module: account
 #. odoo-python
@@ -1038,6 +1027,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Faturalarınızı nasıl ve hangi elektronik formatta "
+"göndermemizi istediğinizi seçebilirsiniz.\n"
+"                   </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2451,6 +2444,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"%(date)s tarihinde oluşturulan tahakkuk kaydı: %"
+"(accrual_entry)s.                Ve ters kaydı: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3945,6 +3940,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"Toplu fatura gönderimi kullanılamıyor. Lütfen faturaların toplu gönderimini "
+"etkinleştirmek için cron'u etkinleştirin."
 
 #. module: account
 #. odoo-python
@@ -3953,6 +3950,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"Toplu fatura gönderimi kullanılamıyor. Toplu fatura gönderimini "
+"etkinleştirmek üzere cron'u etkinleştirmek için lütfen sistem yöneticinizle "
+"iletişime geçin."
 
 #. module: account
 #. odoo-javascript
@@ -6240,7 +6240,7 @@ msgstr "Ürünü satarken kullanılan varsayılan vergiler"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "%(record)s için 'company_id' için varsayılan değer bir tamsayı değil"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -8064,7 +8064,7 @@ msgstr "Genel Kilit Tarihi"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Cron yapılandırmasına gidin"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -12462,7 +12462,7 @@ msgstr "Banka hesabı tanımlanmamış iş ortaklarına ait ödemeler atlanacakt
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Bu fatura ile mutabakatı sağlanmış ödemeler."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13137,7 +13137,7 @@ msgstr "Denkleştirilmiş Fatura Türü"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Uzlaştırılmış Ödemeler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -19681,6 +19681,16 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Ödeme Makbuzu (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s), \"%(receivable)s\" veya \"%"
+#~ "(payable)s\" türünde bir hesap olmalı ve hem \"%"
+#~ "(allow_reconciliation)s\", hem de \"%(non_trade)s\" seçenekleri etkin "
+#~ "olmalıdır."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

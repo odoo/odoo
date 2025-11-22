@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Martin Trigaux, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2025
 # Camille Dantinne <cmd@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Camille Dantinne <cmd@odoo.com>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import
@@ -75,8 +75,8 @@ msgstr "Geavanceerd"
 msgid ""
 "After each batch import, this delay is applied to avoid unthrottled calls"
 msgstr ""
-"Na elke batchimport wordt deze vertraging toegepast om onvertraagde oproepen"
-" te voorkomen"
+"Na elke batchimport wordt deze vertraging toegepast om onvertraagde oproepen "
+"te voorkomen"
 
 #. module: base_import
 #. odoo-javascript
@@ -89,8 +89,8 @@ msgstr "Matching met subvelden toestaan"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "Er is een onbekend probleem opgetreden tijdens het importeren (mogelijk "
@@ -161,8 +161,8 @@ msgstr "Kolom %(column)s bevat een incorrecte waarde (waarde: %(value)s)"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
 "Kolom %(column)s bevat  incorrecte waarde. Fout in regel %(line)d: %(error)s"
 
@@ -187,8 +187,7 @@ msgstr "Opmerkingen"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
 "Kon URL niet ophalen: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
@@ -310,12 +309,12 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"Fout bij het importeren van records: alle rijen moeten even groot zijn, maar"
-" de titelrij heeft %(title_row_entries)d invoeren terwijl de eerste rij er "
-"%(first_row_entries)d heeft. Mogelijk moet je het scheidingsteken wijzigen."
+"Fout bij het importeren van records: alle rijen moeten even groot zijn, maar "
+"de titelrij heeft %(title_row_entries)d invoeren terwijl de eerste rij er %"
+"(first_row_entries)d heeft. Mogelijk moet je het scheidingsteken wijzigen."
 
 #. module: base_import
 #. odoo-javascript
@@ -407,8 +406,8 @@ msgstr "Opmaak"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "Foutieve afbeelding data gevonden, afbeeldingen moeten geïmporteerd worden "
 "als URL's of base64-geëncodeerde data."
@@ -447,9 +446,11 @@ msgid ""
 "                    simpler especially when the file has many columns."
 msgstr ""
 "Als het bestand bevat\n"
-"                    de kolomnamen, kan Odoo proberen de . automatisch te detecteren\n"
+"                    de kolomnamen, kan Odoo proberen de . automatisch te "
+"detecteren\n"
 "                    veld dat overeenkomt met de kolom. Dit maakt invoer\n"
-"                    eenvoudiger, vooral wanneer het bestand veel kolommen heeft."
+"                    eenvoudiger, vooral wanneer het bestand veel kolommen "
+"heeft."
 
 #. module: base_import
 #. odoo-javascript
@@ -799,6 +800,22 @@ msgid "The file will be imported by batches"
 msgstr "Het bestand wordt in batches geïmporteerd"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -831,10 +848,11 @@ msgstr "Volg geschiedenis tijdens importeren"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Het \"{extension}\" bestand kon niet geladen worden: de module \"{modname}\""
-" vereist Python."
+"Het \"{extension}\" bestand kon niet geladen worden: de module \"{modname}\" "
+"vereist Python."
 
 #. module: base_import
 #. odoo-python
@@ -868,8 +886,8 @@ msgstr "Je bestanden uploaden"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 "Gebruik UU voor uren in een 24-uurssysteem, gebruik II in samenhang met 'p' "
 "voor een 12-uurssysteem. Je kunt een gepersonaliseerd formaat gebruiken "
@@ -880,10 +898,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "Gebruik JJJJ voor het jaartal, MM voor de maand en DD voor de dag. Gebruik "
 "scheidingstekens zoals een punt, schuine streep of streepje. Je kunt een "
@@ -932,8 +950,7 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
-"Je kunt een bestand niet testen of opnieuw laden voordat de import hervat "
-"is."
+"Je kunt een bestand niet testen of opnieuw laden voordat de import hervat is."
 
 #. module: base_import
 #. odoo-python

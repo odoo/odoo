@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event
+# * event
 #
 # Translators:
 # Gautam Hingrajiya, 2024
@@ -9,30 +9,33 @@
 # Manav Shah, 2025
 # Ujjawal Pathak, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ujjawal Pathak, 2025\n"
-"Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"POT-Creation-Date: 2025-11-14 18:38+0000\n"
+"PO-Revision-Date: 2025-11-15 18:10+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/event/hi/>"
+"\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr ""
+msgstr "# इवेंट"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# भेजा गया"
 
 #. module: event
 #. odoo-python
@@ -1162,10 +1165,10 @@ msgid ""
 "out=\"object.sale_order_id.name\"/>\n"
 "                        and was placed on <t t-"
 "out=\"object.sale_order_id.date_order.date()\"/>\n"
-"                        <t t-if=\"object.sale_order_line_id.price_unit\"> "
+"                        <t t-if=\"object.sale_order_line_id.price_total\"> "
 "for an amount of\n"
 "                            <t t-"
-"out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': "
+"out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': "
 "'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
 "                        </t>.\n"
 "                    </div>\n"
@@ -1445,7 +1448,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
+msgstr "टिकट का ब्यौरा जो आप ग्राहकों को बताना चाहते हैं।"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1546,7 +1549,7 @@ msgstr ""
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
 msgid "Age"
-msgstr ""
+msgstr "उम्र"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__lang
@@ -1586,7 +1589,7 @@ msgstr "जवाब"
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "जवाब का विश्लेषण"
 
 #. module: event
 #. odoo-javascript
@@ -1595,7 +1598,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Answers"
-msgstr ""
+msgstr "जवाब"
 
 #. module: event
 #. odoo-javascript
@@ -1652,14 +1655,14 @@ msgstr "अटैचमेंट काउंट"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr ""
+msgstr "उपस्थिति"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__done
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr ""
+msgstr "शामिल हुए"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
@@ -1671,7 +1674,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr ""
+msgstr "प्रतिभागी"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_ids
@@ -1687,7 +1690,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 msgid "Attendee Name"
-msgstr ""
+msgstr "शामिल हुए लोगों का नाम"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
@@ -1710,7 +1713,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
-msgstr ""
+msgstr "प्रतिभागी"
 
 #. module: event
 #. odoo-javascript
@@ -1727,7 +1730,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr ""
+msgstr "बैज"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
@@ -1758,7 +1761,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Badges"
-msgstr ""
+msgstr "बैज"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -1771,7 +1774,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__barcode
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Barcode"
-msgstr ""
+msgstr "बारकोड"
 
 #. module: event
 #: model:ir.actions.client,name:event.event_barcode_action_main_view
@@ -1816,13 +1819,13 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "बुक हो चुका"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__partner_id
 msgid "Booked by"
-msgstr ""
+msgstr "इन्होंने बुक किया"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
@@ -1846,7 +1849,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Campaign"
-msgstr ""
+msgstr "कैंपेन"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -1948,18 +1951,18 @@ msgstr "संस्था"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Company Logo"
-msgstr ""
+msgstr "कंपनी लोगो"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__company_name
 msgid "Company Name"
-msgstr ""
+msgstr "कंपनी का नाम"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Compose Email"
-msgstr ""
+msgstr "ईमेल लिखें"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_2
@@ -1970,7 +1973,7 @@ msgstr ""
 #: model:event.event,name:event.event_2
 #: model_terms:event.event,description:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "आर्किटेक्ट के लिए कॉन्फ्रेंस"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2012,7 +2015,7 @@ msgstr "संपर्क"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "जारी रखें"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2145,7 +2148,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Discover more"
-msgstr ""
+msgstr "ज़्यादा जानें"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_meet
@@ -2265,7 +2268,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr ""
+msgstr "इवेंट"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
@@ -2289,7 +2292,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr ""
+msgstr "इवेंट के खत्म होने की तारीख"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2349,7 +2352,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr ""
+msgstr "इवेंट के लिए रजिस्ट्रेशन"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration_answer
@@ -2360,7 +2363,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Event Registrations"
-msgstr ""
+msgstr "इवेंट के लिए रजिस्ट्रेशन"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -2400,7 +2403,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
-msgstr ""
+msgstr "इवेंट शुरू होने की तारीख"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag
@@ -2458,13 +2461,13 @@ msgstr ""
 #: model:ir.model,name:event.model_event_event_ticket
 #: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
 msgid "Event Ticket"
-msgstr ""
+msgstr "इवेंट टिकट"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "इवेंट टाइप"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -2513,7 +2516,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr ""
+msgstr "इवेंट"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
@@ -2561,7 +2564,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Exhibition"
-msgstr ""
+msgstr "एग्ज़िबिशन"
 
 #. module: event
 #: model:event.event,subtitle:event.event_3
@@ -2578,7 +2581,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "कानबान में फ़ोल्ड किया गया"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -2693,7 +2696,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Maps"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
@@ -2723,12 +2726,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "ग्रीन कानबान लेबल"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "ग्रे कानबान लेबल"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2774,13 +2777,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Home"
-msgstr ""
+msgstr "घर"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__hours
 msgid "Hours"
-msgstr ""
+msgstr "घंटे"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -2885,7 +2888,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__now
 msgid "Immediately"
-msgstr ""
+msgstr "तुरंत"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -2920,13 +2923,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Install"
-msgstr ""
+msgstr "इंस्टॉल करें"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
-msgstr ""
+msgstr "इंटरवल"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3011,32 +3014,32 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "कानबान ब्लॉक किए जाने की व्याख्या"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "कानबान ब्लॉक किए जाने की व्याख्या"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "कानबान स्टेट"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "कानबान स्टेट लेबल"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "कानबान मान्य होने की व्याख्या"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Key"
-msgstr ""
+msgstr "कुंजी"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
@@ -3046,7 +3049,7 @@ msgstr "भाषा"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Last 30 days"
-msgstr ""
+msgstr "पिछले 30 दिन"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
@@ -3140,7 +3143,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__notification_type__mail
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__template_ref__mail_template
 msgid "Mail"
-msgstr ""
+msgstr "मेल"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
@@ -3187,7 +3190,7 @@ msgstr "अनिवार्य"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "ज़रूरी जवाब"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -3202,7 +3205,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Marketing"
-msgstr ""
+msgstr "मार्केटिंग"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -3230,7 +3233,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Medium"
-msgstr ""
+msgstr "मीडियम"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -3253,7 +3256,7 @@ msgstr "महीने"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
 msgid "Music"
-msgstr ""
+msgstr "म्यूज़िक"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
@@ -3310,7 +3313,7 @@ msgstr "अगली गतिविधि का प्रकार"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "अभी तक कोई जवाब नहीं!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
@@ -3328,7 +3331,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "नामपद्धति"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -3397,7 +3400,7 @@ msgstr "ऐसे मैसेज की संख्या जिनमें �
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Objectives"
-msgstr ""
+msgstr "उद्देश्य"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -3474,7 +3477,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Organizer"
-msgstr ""
+msgstr "आयोजक"
 
 #. module: event
 #: model:event.event,subtitle:event.event_7
@@ -3509,7 +3512,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Participant"
-msgstr ""
+msgstr "प्रतिभागी"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3527,7 +3530,7 @@ msgstr "फ़ोन"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
-msgstr ""
+msgstr "फ़ोन नंबर"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -3593,7 +3596,7 @@ msgstr "क्यूआर को"
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Question"
-msgstr ""
+msgstr "सवाल"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__question_type
@@ -3614,7 +3617,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Questions"
-msgstr ""
+msgstr "सवाल"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
@@ -3636,7 +3639,7 @@ msgstr "रेटिंग"
 #: model:event.stage,legend_done:event.event_stage_done
 #: model:event.stage,legend_done:event.event_stage_new
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "अगले स्टेज के लिए तैयार"
 
 #. module: event
 #. odoo-javascript
@@ -3647,7 +3650,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "रेड कानबान लेबल"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
@@ -3655,7 +3658,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registered"
-msgstr ""
+msgstr "रजिस्टर किया गया"
 
 #. module: event
 #. odoo-python
@@ -3668,14 +3671,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_pivot
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr ""
+msgstr "रजिस्ट्रेशन"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr ""
+msgstr "रजिस्ट्रेशन की तारीख"
 
 #. module: event
 #: model:ir.actions.client,name:event.event_action_install_kiosk_pwa
@@ -3739,7 +3742,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
 msgid "Registrations"
-msgstr ""
+msgstr "रजिस्ट्रेशन"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_open
@@ -3855,7 +3858,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Secret"
-msgstr ""
+msgstr "सीक्रेट"
 
 #. module: event
 #. odoo-javascript
@@ -3877,7 +3880,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "सलेक्शन"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3963,13 +3966,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_sold_out
 msgid "Sold Out"
-msgstr ""
+msgstr "अब उपलब्ध नहीं है"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_source_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Source"
-msgstr ""
+msgstr "सोर्स"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__specific_question_ids
@@ -3980,7 +3983,7 @@ msgstr ""
 #: model:event.tag,name:event.event_tag_category_2_tag_3
 #: model:event.type,name:event.event_type_2
 msgid "Sport"
-msgstr ""
+msgstr "खेल"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
@@ -3996,7 +3999,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__name
 msgid "Stage Name"
-msgstr ""
+msgstr "स्टेज का नाम"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
@@ -4009,7 +4012,7 @@ msgstr ""
 #: model:event.event.ticket,name:event.event_3_ticket_0
 #: model:event.event.ticket,name:event.event_7_ticket_1
 msgid "Standard"
-msgstr ""
+msgstr "स्टैंडर्ड"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -4093,7 +4096,7 @@ msgstr "टैग"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Taken"
-msgstr ""
+msgstr "ली गई"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
@@ -4117,7 +4120,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Template"
-msgstr ""
+msgstr "टेंप्लेट"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__text_box
@@ -4286,7 +4289,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket"
-msgstr ""
+msgstr "टिकट"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
@@ -4303,7 +4306,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket Type"
-msgstr ""
+msgstr "टिकट टाइप"
 
 #. module: event
 #. odoo-javascript
@@ -4314,7 +4317,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "टिकट टाइप"
 
 #. module: event
 #. odoo-javascript
@@ -4332,7 +4335,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Tickets"
-msgstr ""
+msgstr "टिकट"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -4352,7 +4355,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
-msgstr ""
+msgstr "टाइमज़ोन"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__title
@@ -4389,7 +4392,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Training"
-msgstr ""
+msgstr "ट्रेनिंग"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_3
@@ -4425,7 +4428,7 @@ msgstr "रिकॉर्ड में जो अलग तरह की गत
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__draft
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unconfirmed"
-msgstr ""
+msgstr "अभी पुष्टि नहीं हुई है"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration__state
@@ -4436,6 +4439,11 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"पुष्टि नहीं हुई: वे रजिस्ट्रेशन जो लंबित हैं और किसी कार्रवाई का इंतज़ार कर रहे हैं (खास तौर "
+"पर सेल की स्थिति के साथ).\n"
+"रजिस्टर किया गया: वे रजिस्ट्रेशन जिन्हें ग्राहक ले चुके हैं.\n"
+"उपस्थित: वे रजिस्ट्रेशन जिनके लिए उपस्थित व्यक्ति ने इवेंट में भाग लिया.\n"
+"रद्द किया गया: वे रजिस्ट्रेशन जिन्हें मैन्युअल तरीके से रद्द किया गया है"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4464,12 +4472,12 @@ msgstr "यूनिट"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "आज से आने वाले इवेंट"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "अपकमिंग/रनिंग"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -4520,7 +4528,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Venue"
-msgstr ""
+msgstr "जगह"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
@@ -4578,13 +4586,13 @@ msgstr "वेबसाइट कम्यूनिकेशन हिस्ट�
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__weeks
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__weeks
 msgid "Weeks"
-msgstr ""
+msgstr "सप्ताह"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Welcome to"
-msgstr ""
+msgstr "स्वागत है"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0

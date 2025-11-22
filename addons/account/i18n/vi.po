@@ -9,13 +9,14 @@
 # Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-09-05 22:20+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 06:40+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/"
 "account/vi/>\n"
 "Language: vi\n"
@@ -202,18 +203,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) phải là tài khoản thuộc loại \"%"
-"(receivable)s\" hoặc \"%(payable)s\", đồng thời cả hai tuỳ chọn \"%"
-"(allow_reconciliation)s\" và \"%(non_trade)s\" phải được bật."
 
 #. module: account
 #. odoo-python
@@ -591,6 +580,9 @@ msgid ""
 "                        <span>Please make sure that this is a wanted "
 "behavior.</span>"
 msgstr ""
+"<br/>\n"
+"                        <span>Hãy đảm bảo rằng đây là hành vi có chủ đích.</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1040,6 +1032,8 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">hoặc</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1391,6 +1385,8 @@ msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
 msgstr ""
+"<span>Một hoặc nhiều tài khoản ngân hàng được đặt cho đối tác này cũng đang "
+"được sử dụng cho đối tác khác:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1427,7 +1423,7 @@ msgstr "<span>Thuế</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span>The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Tài khoản ngân hàng này có thể là bản sao của</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4255,7 +4251,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "Không thể xác định các hóa đơn trong tệp PDF đã tạo: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -6915,7 +6911,7 @@ msgstr "Điều khoản đến hạn"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
 msgid "Duplicate Bank Partner"
-msgstr ""
+msgstr "Sao chép đối tác ngân hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
@@ -7329,7 +7325,7 @@ msgstr "Sổ nhật ký bị loại trừ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
 #: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
 msgid "Expected Currency Rate"
-msgstr ""
+msgstr "Tỷ giá tiền tệ dự kiến"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -9582,7 +9578,7 @@ msgstr "Trước đây là '%(previous)s' và bây giờ là '%(current)s'."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "Các mục thiếu phân bổ phân tích"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -9834,7 +9830,7 @@ msgstr "Tháng 6"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "Nhà cung cấp KPI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -12071,7 +12067,7 @@ msgstr "Không thể gộp các đối tác được sử dụng trong các bút
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners with same bank"
-msgstr ""
+msgstr "Đối tác có cùng ngân hàng"
 
 #. module: account
 #. odoo-python
@@ -12484,7 +12480,7 @@ msgstr "Rủi ro lừa đảo: Trung bình"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
 msgid "Pick the rate on a certain date"
-msgstr ""
+msgstr "Chọn tỷ giá tại một ngày cụ thể"
 
 #. module: account
 #. odoo-python
@@ -13168,7 +13164,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Refresh currency rate to the invoice date"
-msgstr ""
+msgstr "Làm mới tỷ giá tiền tệ theo ngày của hóa đơn"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -13507,7 +13503,7 @@ msgstr "Đã đảo"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
-msgstr ""
+msgstr "Đã đảo vào"
 
 #. module: account
 #. odoo-python
@@ -15602,6 +15598,7 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"Đối tác thương mại đã được cập nhật cho tất cả bút toán kế toán liên quan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15649,7 +15646,7 @@ msgstr "Quốc gia quy định báo cáo thuế mà công ty này sử dụng"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "Tỷ giá tiền tệ bắt buộc phải là số dương."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -15831,6 +15828,8 @@ msgid ""
 "The following entries are unbalanced:\n"
 "\n"
 msgstr ""
+"Các bút toán sau không cân đối:\n"
+"\n"
 
 #. module: account
 #. odoo-python
@@ -18440,6 +18439,8 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"Bạn không thể tạo thanh toán cho các bút toán thuộc những chi nhánh khác "
+"nhau nếu không có quyền truy cập vào công ty mẹ."
 
 #. module: account
 #. odoo-python
@@ -19634,6 +19635,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Biên lai thanh toán (Mã {{ object.name or "
 "'Không có' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) phải là tài khoản thuộc loại \"%"
+#~ "(receivable)s\" hoặc \"%(payable)s\", đồng thời cả hai tuỳ chọn \"%"
+#~ "(allow_reconciliation)s\" và \"%(non_trade)s\" phải được bật."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

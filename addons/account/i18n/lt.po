@@ -45,13 +45,14 @@
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025
 # Gustas Putvinskas <gustas@vialaurea.com>, 2025.
 # Gailius Kazlauskas <gailius@vialaurea.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-11-07 09:06+0000\n"
-"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.com>\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 06:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/"
 "account/lt/>\n"
 "Language: lt\n"
@@ -59,8 +60,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 :"
-" n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: account
@@ -223,15 +224,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4032,7 +4024,7 @@ msgstr "Negalima sukurti pardavimo dokumento ne pardavimo žurnale"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr ""
+msgstr "Negalima sukurti kaupimo įrašo iš užsakymų, kurių valiutos skiriasi."
 
 #. module: account
 #. odoo-python
@@ -4556,6 +4548,9 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
+"Kableliais atskirtas laukų iš „account.move.line“ (Žurnalo eilutė) sąrašas. "
+"Nurodžius, ši eilutė sugeneruos subeilutes, sugrupuotas pagal nurodytus "
+"raktus."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -4572,7 +4567,7 @@ msgstr "Komercinio partnerio šalis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr ""
+msgstr "Komunikacijos standartas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
@@ -4688,7 +4683,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
 msgid "Company Storno Accounting"
-msgstr ""
+msgstr "Įmonės stornavimo apskaita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_vat_placeholder
@@ -4710,12 +4705,12 @@ msgstr "Įmonė, susieta su šiuo žurnalu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
 msgid "Composite Report"
-msgstr ""
+msgstr "Sudėtinė ataskaita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__engine
 msgid "Computation Engine"
-msgstr ""
+msgstr "Skaičiavimo variklis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end
@@ -4736,7 +4731,7 @@ msgstr "Konfigūracija"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Configuration review"
-msgstr ""
+msgstr "Konfigūracijos peržiūra"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_fiscal_year
@@ -8839,7 +8834,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_has_outstanding
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
-msgstr ""
+msgstr "Sąskaitoje yra neapmokėta suma"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8865,7 +8860,7 @@ msgstr "S/F mokėjimas internetu"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
-msgstr ""
+msgstr "Neapmokėtos kredito ir debeto operacijos sąskaitos valdiklyje"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
@@ -8882,7 +8877,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_payments_widget
 msgid "Invoice Payments Widget"
-msgstr ""
+msgstr "Sąskaitos apmokėjimo valdiklis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
@@ -9264,7 +9259,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_valid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_valid
 msgid "Is Valid"
-msgstr ""
+msgstr "Galioja"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -10073,7 +10068,7 @@ msgstr "Mokėjimas rankiniu būdu"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Manual entry"
-msgstr ""
+msgstr "Manual entry"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_line_ids
@@ -10515,7 +10510,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_multi_company
 msgid "Multi-Company"
-msgstr ""
+msgstr "Kelios įmonės"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
@@ -10526,7 +10521,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Multi-ledger"
-msgstr ""
+msgstr "Kelių buhalterijos didžioji knygų"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -10768,7 +10763,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Nebuvo pateiktas joks priedas"
 
 #. module: account
 #. odoo-python
@@ -11136,7 +11131,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Įvedimo į darbą proceso žingsnis"
 
 #. module: account
 #. odoo-javascript
@@ -13208,7 +13203,7 @@ msgstr "Atšaukti"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__revoked
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Revoked"
-msgstr ""
+msgstr "Atšaukta"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__right
@@ -14535,7 +14530,7 @@ msgstr "Mokesčių apskaičiavimas"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "Mokesčių šalis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_code
@@ -15026,6 +15021,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Mokesčių identifikacijos numeris. Vertės čia bus tikrinamos pagal šalies "
+"formatą. Galite naudoti '/' norėdami nurodyti, kad partneris yra "
+"neapmokestinamas."
 
 #. module: account
 #. odoo-python
