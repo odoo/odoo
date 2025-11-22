@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Wichanon Jamwutthipreecha, 2025
@@ -8,19 +8,22 @@
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:36+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
+"PO-Revision-Date: 2025-11-22 13:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-2/account/"
+"th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -197,15 +200,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -640,6 +634,45 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        เรียน\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        นี่คือ\n"
+"        <t t-if=\"object.name\">\n"
+"            ใบลดหนี้ของคุณ <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ใบลดหนี้\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (เลขที่อ้างอิง: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
+"        </t>\n"
+"        เป็นเงินจำนวน <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        จาก <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        โปรดติดต่อเราหากคุณมีคำถาม\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -797,6 +830,30 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        เรียน <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
+"        ขอขอบคุณสำหรับการชำระเงินของคุณ\n"
+"        นี่คือใบเสร็จรับเงินของคุณ <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"เป็นจำนวน\n"
+"         <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> จาก <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        โปรดติดต่อเราหากคุณมีคำถาม\n"
+"        <br/><br/>\n"
+"        ขอแสดงความนับถือ\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1376,7 +1433,7 @@ msgstr "<span>คำเตือน: เอกสารนี้อาจซ้�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">ที่อยู่จัดส่ง</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4717,7 +4774,7 @@ msgstr "รหัสประเทศทางการเงินของบ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "ตัวแทนทะเบียนบริษัท"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -5021,7 +5078,7 @@ msgstr "สร้างการชำระเงิน"
 #. module: account
 #: model:ir.model,website_form_label:account.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "สร้างลูกค้า"
 
 #. module: account
 #. odoo-python
@@ -7120,7 +7177,7 @@ msgstr ""
 #. module: account
 #: model:res.country.group,name:account.europe_vat
 msgid "European Union VAT"
-msgstr ""
+msgstr "ภาษีมูลค่าเพิ่มสหภาพยุโรป"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__decimal_separator
@@ -13908,7 +13965,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "ขายและซื้อสินค้าในหน่วยวัดหรือบรรจุภัณฑ์ที่แตกต่างกัน"
 
 #. module: account
 #. odoo-python
@@ -13959,6 +14016,9 @@ msgid ""
 "Any file extension will be accepted.\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"ส่งอีเมลแยกต่างหากสำหรับใบแจ้งหนี้แต่ละฉบับ\n"
+"รับไฟล์นามสกุลใดก็ได้\n"
+"Odoo จะแปลเฉพาะไฟล์ PDF และ XML เท่านั้น"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -14207,7 +14267,7 @@ msgstr "ตั้งค่าบัญชีธนาคาร"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Credit Card Account"
-msgstr ""
+msgstr "ตั้งค่าบัญชีบัตรเครดิต"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -15464,7 +15524,7 @@ msgstr "ประเทศที่จะใช้รายงานภาษี
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "อัตราสกุลเงินจะต้องเป็นบวกเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -17030,6 +17090,8 @@ msgid ""
 "limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"แจ้งเตือนเมื่อสร้างใบแจ้งหนี้และใบสั่งขายสำหรับพันธมิตรที่มียอดลูกหนี้รวมเกินขีดจำกัด                               "
+"ตั้งค่ามากกว่า 0.0 เพื่อเปิดใช้งานการตรวจสอบวงเงินเครดิต"
 
 #. module: account
 #. odoo-python
@@ -17155,7 +17217,7 @@ msgstr "สหรัฐอเมริกา (ทั่วไป)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "หน่วยและบรรจุภัณฑ์"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

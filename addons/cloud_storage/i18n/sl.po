@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* cloud_storage
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Aleš Pipan, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -72,6 +73,13 @@ msgid "Display Name"
 msgstr "Prikazani naziv"
 
 #. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid ""
+"Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
+msgstr ""
+
+#. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP usmerjanje"
@@ -92,8 +100,8 @@ msgstr "Najmanjša velikost datoteke (v bajtih)"
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
 msgstr ""
-"Najmanjša velikost (v bajtih) za priloge, ki jih je treba shraniti v shrambo"
-" v oblaku"
+"Najmanjša velikost (v bajtih) za priloge, ki jih je treba shraniti v shrambo "
+"v oblaku"
 
 #. module: cloud_storage
 #. odoo-python
@@ -130,9 +138,12 @@ msgstr ""
 #: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid ""
 "webclient can upload files larger than the minimum file size\n"
-"        (in bytes) as url attachments to the server and then upload the file to\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
 "        the cloud storage."
 msgstr ""
-"Spletni odjemalec lahko naloži datoteke, večje od minimalne velikosti datoteke\n"
-"        (v bajtih) kot priloge URL-jev na strežnik in nato naložite datoteko na\n"
+"Spletni odjemalec lahko naloži datoteke, večje od minimalne velikosti "
+"datoteke\n"
+"        (v bajtih) kot priloge URL-jev na strežnik in nato naložite datoteko "
+"na\n"
 "        shrambo v oblaku."

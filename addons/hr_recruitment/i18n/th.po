@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment
+# * hr_recruitment
 #
 # Translators:
 # Wichanon Jamwutthipreecha, 2025
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-29 18:36+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-11-22 10:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-2/"
+"hr_recruitment/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -257,6 +260,33 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        เรียน<br/><br/>\n"
+"        ขอขอบคุณสำหรับความสนใจและการสละเวลาของคุณ<br/>\n"
+"        เราขอให้คุณโชคดีกับอาชีพการงานในอนาคต\n"
+"        <br/><br/>\n"
+"        Best<br/>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            <t t-if=\"object.user_id\">\n"
+"                -- <br/>\n"
+"                <strong t-out=\"object.user_id.name or ''\">Marc "
+"Demo</strong><br/>\n"
+"                อีเมล: <t t-out=\"object.user_id.email or ''\""
+">mark.brown23@example.com</t><br/>\n"
+"                เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                -- <br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/"
+">\n"
+"                ทีม HR<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -834,7 +864,7 @@ msgstr "นำไปใช้เมื่อ"
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_hr_applicant
 msgid "Apply for a Job"
-msgstr ""
+msgstr "สมัครงาน"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2083,7 +2113,7 @@ msgstr "กิจกรรมล่าสุด"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position"
-msgstr ""
+msgstr "มาสร้างตำแหน่งงานกันเถอะ"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3192,6 +3222,8 @@ msgid ""
 "in this job position. The Recruiter is automatically added to all meetings "
 "with the Applicant."
 msgstr ""
+"ผู้สรรหาจะเป็นค่าเริ่มต้นสำหรับฟิลด์ของผู้สรรหาผู้สมัครทั้งหมดในตำแหน่งงานนี้ "
+"ผู้สรรหาจะถูกเพิ่มในการประชุมทั้งหมดกับผู้สมัครโดยอัตโนมัติ"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3668,7 +3700,7 @@ msgstr "แอปพลิเคชันอื่นๆ"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_list
 msgid "talent pool"
-msgstr ""
+msgstr "กลุ่มความสามารถพิเศษ"
 
 #~ msgid ""
 #~ "The Recruiter will be the default value for all Applicants in this "

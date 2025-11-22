@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_hr_recruitment
-# 
+# * website_hr_recruitment
+#
 # Translators:
 # Maria Muntean, 2024
 # Wil Odoo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2025-11-22 13:09+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/"
+"website_hr_recruitment/ro/>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -34,12 +38,21 @@ msgid ""
 "            <h6>4 Days after Interview</h6>\n"
 "        "
 msgstr ""
+"\n"
+"            <span class=\"text-muted small\">Timp de răspuns</span>\n"
+"            <h6>2 zile lucrătoare</h6>\n"
+"            <span class=\"text-muted small\">Proces</span>\n"
+"            <h6>1 apel telefonic</h6>\n"
+"            <h6>1 interviu la sediu</h6>\n"
+"            <span class=\"text-muted small\">Zile până la ofertă</span>\n"
+"            <h6>4 zile după interviu</h6>\n"
+"        "
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid " In case of issue, contact %(contact_infos)s"
-msgstr ""
+msgstr " În caz de problemă, contactați %(contact_infos)s"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -207,12 +220,16 @@ msgstr ""
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the false state."
 msgstr ""
+"O etichetă pe care se poate face clic pentru comutator. Conține text pentru "
+"starea falsă."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the true state."
 msgstr ""
+"O etichetă pe care se poate face clic pentru comutator. Conține text pentru "
+"starea adevărată."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -271,6 +288,8 @@ msgid ""
 "An application already exists for %(value)s. Duplicates might be rejected. "
 "%(recruiter_contact)s"
 msgstr ""
+"O aplicație există deja pentru %(value)s. Duplicatele pot fi respinse. "
+"%(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -280,7 +299,7 @@ msgstr "Candidat"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Application Info"
-msgstr ""
+msgstr "Informații aplicație"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -424,6 +443,13 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Fiecare angajat are șansa să vadă impactul muncii sale.\n"
+"                    Poți aduce o contribuție reală la succesul companiei.\n"
+"                    <br/>\n"
+"                    De-a lungul anului sunt organizate frecvent diverse "
+"activități, precum sesiuni săptămânale\n"
+"                    de sport, evenimente de team building, întâlniri lunare "
+"și multe altele"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -747,7 +773,7 @@ msgstr "Responsabilități"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Restricționează la un anumit website."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
@@ -778,7 +804,7 @@ msgstr "Setați dacă cererea este publicată pe site-ul web al societății."
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "Share Job"
-msgstr ""
+msgstr "Distribuie jobul"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -821,7 +847,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "The job link has been copied to the clipboard."
-msgstr ""
+msgstr "Linkul către job a fost copiat în clipboard."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -833,7 +859,7 @@ msgstr "Oferta de muncă a fost închisă."
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
 msgid "The profile that you gave us doesn't seems like a linkedin profile"
-msgstr ""
+msgstr "Profilul pe care ni l-ați furnizat nu pare a fi un profil LinkedIn"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -848,12 +874,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "ToggleLabeled"
-msgstr ""
+msgstr "Comutator cu etichetă"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
 msgid "Tracker URL"
-msgstr ""
+msgstr "URL tracker"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -891,6 +917,8 @@ msgid ""
 "We found a recent application with a similar name, email, phone number. You "
 "can continue if it's not a mistake."
 msgstr ""
+"Am găsit o aplicație recentă cu un nume, email sau număr de telefon similar. "
+"Puteți continua dacă nu este o greșeală."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -899,6 +927,9 @@ msgid ""
 "We've found a previous closed application in our system within the last 6 "
 "months. Please consider before applying in order not to duplicate efforts."
 msgstr ""
+"Am găsit o aplicație anterioară închisă în sistemul nostru în ultimele 6 "
+"luni. Vă rugăm să țineți cont de acest lucru înainte de a aplica pentru a nu "
+"dubla eforturile."
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
@@ -988,11 +1019,13 @@ msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the Jobs list page..."
 msgstr ""
+"ex. Rezumați poziția în una sau două rânduri care vor fi afișate pe pagina "
+"cu lista de joburi..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "e.g. https://www.linkedin.com/in/fpodoo"
-msgstr ""
+msgstr "ex. https://www.linkedin.com/in/fpodoo"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -1002,12 +1035,12 @@ msgstr "info@yourcompany.example.com"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
 msgid "job URL"
-msgstr ""
+msgstr "URL job"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "open position"
-msgstr ""
+msgstr "poziție liberă"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index

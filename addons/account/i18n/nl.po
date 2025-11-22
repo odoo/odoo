@@ -9,13 +9,14 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 # Camille Dantinne <cmd@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:36+0000\n"
-"PO-Revision-Date: 2025-09-04 01:00+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
+"PO-Revision-Date: 2025-11-22 13:12+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-2/account/"
 "nl/>\n"
 "Language: nl\n"
@@ -205,18 +206,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) moet een account zijn van het type \"%"
-"(receivable)s\" of \"%(payable)s\" met beide opties \"%"
-"(allow_reconciliation)s\" en \"%(non_trade)s\" ingeschakeld."
 
 #. module: account
 #. odoo-python
@@ -990,6 +979,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Je kan kiezen hoe je je verkoopfacturen wil "
+"verzenden en in welk elektronisch formaat.\n"
+"                   </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2395,6 +2388,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Toegerekende boeking gemaakt op %(date)s: %(accrual_entry)s.                "
+"En de terugboeking: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3917,6 +3912,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"Batchverzending van verkoopfacturen is niet beschikbaar. Activeer de "
+"crontaak om batchverzendingen van facturen mogelijk te maken."
 
 #. module: account
 #. odoo-python
@@ -3925,6 +3922,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"Batchverzending van verkoopfacturen is niet beschikbaar. Contacteer de "
+"systeembeheerder om de crontaak te activeren die batchverzendingen van "
+"facturen mogelijk maakt."
 
 #. module: account
 #. odoo-javascript
@@ -6268,7 +6268,7 @@ msgstr "Standaard btw-tarief gebruikt bij productverkoop"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "Standaardwaarde voor 'company_id' voor %(record)s is geen geheel getal"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -8160,7 +8160,7 @@ msgstr "Globale vergrendelingsdatum"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Ga naar cron-configuratie"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -10036,7 +10036,7 @@ msgstr "Juni"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "KPI-provider"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -12666,7 +12666,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Betalingen die zijn afgeletterd met deze verkoopfactuur."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13344,7 +13344,7 @@ msgstr "Type afgeletterde facturen"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Afgeletterde betalingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -15931,7 +15931,7 @@ msgstr "Het land waarvandaan de btw-aangiften voor dit bedrijf worden gebruikt"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "De wisselkoers moet altijd positief zijn."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -20000,6 +20000,15 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Betaalbewijs (Ref {{ object.name or 'nvt' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) moet een account zijn van het type \"%"
+#~ "(receivable)s\" of \"%(payable)s\" met beide opties \"%"
+#~ "(allow_reconciliation)s\" en \"%(non_trade)s\" ingeschakeld."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

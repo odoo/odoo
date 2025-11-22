@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sms
+# * sms
 #
 # Translators:
 # Larisa_nexterp, 2024
@@ -8,20 +8,23 @@
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-05 18:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2025-11-22 13:06+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/sms/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -57,13 +60,13 @@ msgstr "%s destinatari nevalizi"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
-msgstr ""
+msgstr "+1 555-555-555"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid ", fits in"
-msgstr ""
+msgstr ", încape în"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -71,6 +74,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
 msgstr ""
+"<i class=\"fa fa-warning\"/> A apărut o eroare la contul dvs. Vă rugăm să "
+"contactați suportul pentru mai multe informații..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -78,6 +83,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Nu puteți trimite SMS-uri cât timp contul dvs. "
+"nu este înregistrat."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -85,6 +92,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Register"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Înregistrează"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -92,6 +101,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Setează nume expeditor"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -107,7 +118,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Previzualizare</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -125,6 +136,8 @@ msgstr ""
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">Nicio "
+"înregistrare</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -148,6 +161,23 @@ msgid ""
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                Mesajul va fi trimis ca SMS către "
+"destinatarii șablonului\n"
+"                                și nu va apărea în istoricul mesajelor.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'note'\">\n"
+"                                SMS-ul nu va fi trimis, va fi postat doar "
+"ca\n"
+"                                notă internă în istoricul mesajelor.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'comment'\">\n"
+"                                SMS-ul va fi trimis ca SMS către "
+"destinatarii\n"
+"                                șablonului și va fi postat și ca notă "
+"internă\n"
+"                                în istoricul mesajelor.\n"
+"                            </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -166,7 +196,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 msgid "A record for this UUID already exists"
-msgstr ""
+msgstr "Există deja o înregistrare pentru acest UUID"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -188,18 +218,20 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
 msgid "Alternate way to identify a SMS record, used for delivery reports"
 msgstr ""
+"Mod alternativ de identificare a unei înregistrări SMS, folosit pentru "
+"rapoartele de livrare"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "A apărut o eroare la trimiterea unui SMS"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS on “%(record_name)s”"
-msgstr ""
+msgstr "A apărut o eroare la trimiterea unui SMS pe „%(record_name)s”"
 
 #. module: sms
 #. odoo-python
@@ -208,6 +240,8 @@ msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
 msgstr ""
+"A apărut o eroare necunoscută. Vă rugăm să contactați suportul Odoo dacă "
+"această eroare persistă."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -303,7 +337,7 @@ msgstr "Alege un exemplu"
 #: code:addons/sms/wizard/sms_account_code.py:0
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Choose your sender name"
-msgstr ""
+msgstr "Alegeți numele expeditorului"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -314,7 +348,7 @@ msgstr "Închide"
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Companii"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -337,7 +371,7 @@ msgstr "Conținut"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
 msgid "Country Not Supported"
-msgstr ""
+msgstr "Țară neacceptată"
 
 #. module: sms
 #. odoo-javascript
@@ -345,13 +379,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "Este necesară înregistrarea specifică țării"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Country-specific registration required."
-msgstr ""
+msgstr "Este necesară înregistrarea specifică țării."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -486,6 +520,8 @@ msgstr "Activare SMS"
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
 msgstr ""
+"Introduceți un număr de telefon pentru a primi un SMS cu un cod de "
+"verificare."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -632,7 +668,7 @@ msgstr "Credit insuficient"
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
 msgid "Invalid Destination"
-msgstr ""
+msgstr "Destinație invalidă"
 
 #. module: sms
 #. odoo-python
@@ -642,6 +678,9 @@ msgid ""
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"Număr de telefon invalid. Vă rugăm să vă asigurați că respectați formatul "
+"internațional, adică semnul plus (+), apoi codul țării, codul orașului și "
+"numărul local de telefon. De exemplu: +1 555-555-555"
 
 #. module: sms
 #. odoo-python
@@ -697,7 +736,7 @@ msgstr "Ultima actualizare pe"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "Leagă SMS de modelele de urmărire mailing/SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -707,7 +746,7 @@ msgstr "Mesaj prin e-mail"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
 msgid "Mail Notification"
-msgstr ""
+msgstr "Notificare e-mail"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
@@ -717,7 +756,7 @@ msgstr "E-mail prin SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__to_delete
 msgid "Marked for deletion"
-msgstr ""
+msgstr "Marcat pentru ștergere"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -772,7 +811,7 @@ msgstr "Nu a fost livrat"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
 msgid "Note only"
-msgstr ""
+msgstr "Doar notă"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -780,6 +819,8 @@ msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
+"Rețineți că acest lucru nu este obligatoriu, dacă nu setați un nume de "
+"expeditor, SMS-ul dvs. va fi trimis de pe un cod scurt."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -929,19 +970,19 @@ msgstr "Înregistrați"
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
-msgstr ""
+msgstr "Înregistrează cont"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Register now."
-msgstr ""
+msgstr "Înregistrează-te acum."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
-msgstr ""
+msgstr "Înregistrează-ți contul SMS"
 
 #. module: sms
 #. odoo-javascript
@@ -1013,12 +1054,12 @@ msgstr "SMS ("
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
 msgid "SMS (with note)"
-msgstr ""
+msgstr "SMS (cu notă)"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
 msgid "SMS (without note)"
-msgstr ""
+msgstr "SMS (fără notă)"
 
 #. module: sms
 #. odoo-javascript
@@ -1029,17 +1070,17 @@ msgstr ""
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "Asistent înregistrare număr telefon cont SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
 msgid "SMS Account Sender Name Wizard"
-msgstr ""
+msgstr "Asistent nume expeditor cont SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "Asistent cod verificare cont SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1079,7 +1120,7 @@ msgstr "Eroare livrare SMS"
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failure: %(modelName)s"
-msgstr ""
+msgstr "Eroare SMS: %(modelName)s"
 
 #. module: sms
 #. odoo-javascript
@@ -1090,7 +1131,7 @@ msgstr "Eșecuri SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id_int
 msgid "SMS ID"
-msgstr ""
+msgstr "ID SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -1153,7 +1194,7 @@ msgstr "Șabloanele SMS au fost resetate"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
-msgstr ""
+msgstr "Urmăritori SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1165,16 +1206,18 @@ msgstr "Conținut SMS"
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "SMS template model of %(action_name)s does not match action model."
 msgstr ""
+"Modelul șablonului SMS pentru %(action_name)s nu corespunde modelului "
+"acțiunii."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
 msgid "SMS trackers"
-msgstr ""
+msgstr "Urmăritori SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__sms_uuid
 msgid "SMS uuid"
-msgstr ""
+msgstr "UUID SMS"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
@@ -1231,7 +1274,7 @@ msgstr "Trimitere SMS (%s)"
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send SMS As"
-msgstr ""
+msgstr "Trimite SMS ca"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1246,7 +1289,7 @@ msgstr "Trimiteți SMS în lot"
 #. module: sms
 #: model:iap.service,description:sms.iap_service_sms
 msgid "Send SMS to your contacts directly from your database."
-msgstr ""
+msgstr "Trimite SMS contactelor tale direct din baza de date."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1266,13 +1309,13 @@ msgstr "Trimiteți la numerele"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Send verification code"
-msgstr ""
+msgstr "Trimite cod de verificare"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
 msgid "Sender Name"
-msgstr ""
+msgstr "Nume expeditor"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
@@ -1284,6 +1327,8 @@ msgstr "Trimitere Eșecuri"
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Sending SMS can only be done on a not transient mail.thread model"
 msgstr ""
+"Trimiterea SMS-urilor se poate face doar pe un model mail.thread non-"
+"tranzitoriu"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
@@ -1306,7 +1351,7 @@ msgstr "Eroare server"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Set sender name"
-msgstr ""
+msgstr "Setează nume expeditor"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1335,7 +1380,7 @@ msgstr "Mod Single"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Skip for now"
-msgstr ""
+msgstr "Sari peste pentru moment"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1390,6 +1435,8 @@ msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
+"Serviciul SMS nu este disponibil momentan pentru utilizatori noi, iar "
+"înregistrările de conturi noi sunt suspendate."
 
 #. module: sms
 #. odoo-python
@@ -1401,13 +1448,13 @@ msgstr "Mesajele SMS nu au putut fi retrimise."
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The content of the message violates rules applied by our providers."
-msgstr ""
+msgstr "Conținutul mesajului încalcă regulile aplicate de furnizorii noștri."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The destination country is not supported."
-msgstr ""
+msgstr "Țara de destinație nu este acceptată."
 
 #. module: sms
 #. odoo-python
@@ -1425,7 +1472,7 @@ msgstr "Cu tipul de document cu acest șablon se poate utiliza"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "Codul de verificare este incorect."
 
 #. module: sms
 #. odoo-python
@@ -1437,19 +1484,19 @@ msgstr "Nu există mesaje SMS de retrimis."
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This SMS has been removed as the number was already used."
-msgstr ""
+msgstr "Acest SMS a fost eliminat deoarece numărul a fost deja folosit."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "Acest cont are deja un nume de expeditor și nu poate fi modificat."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "Acesta este numele care va fi afișat ca expeditor al SMS-ului."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1463,7 +1510,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "Acest număr de telefon/cont a fost interzis pe serviciul nostru."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1495,6 +1542,19 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
+"Tipul acțiunii de server. Următoarele valori sunt disponibile:\n"
+"- 'Actualizare Înregistrare': actualizează valorile unei înregistrări\n"
+"- 'Creează Activitate': creează o activitate (Discuss)\n"
+"- 'Trimite Email': postează un mesaj, o notă sau trimite un email (Discuss)\n"
+"- 'Trimite SMS': trimite SMS, le înregistrează în documente (SMS)- 'Adaugă/"
+"Elimină Urmăritori': adaugă sau elimină urmăritori la o înregistrare "
+"(Discuss)\n"
+"- 'Creează Înregistrare': creează o înregistrare nouă cu valori noi\n"
+"- 'Execută Cod': un bloc de cod Python care va fi executat\n"
+"- 'Trimite Notificare Webhook': trimite o solicitare POST către un sistem "
+"extern, cunoscut și ca Webhook\n"
+"- 'Multi Acțiuni': definește o acțiune care declanșează mai multe alte "
+"acțiuni de server\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1504,7 +1564,7 @@ msgstr "UUID"
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_sms_uuid_unique
 msgid "UUID must be unique"
-msgstr ""
+msgstr "UUID trebuie să fie unic"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown
@@ -1574,7 +1634,7 @@ msgstr "Avertizare"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "Nu am putut găsi contul dvs. în baza noastră de date."
 
 #. module: sms
 #. odoo-python
@@ -1583,6 +1643,8 @@ msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
 msgstr ""
+"Nu am reușit să vă contactăm la numărul de telefon. Dacă ați solicitat mai "
+"multe coduri recent, vă rugăm să încercați din nou mai târziu."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
@@ -1595,6 +1657,7 @@ msgid ""
 "Will automatically be deleted, while notifications will not be deleted in "
 "any case."
 msgstr ""
+"Va fi șters automat, în timp ce notificările nu vor fi șterse în niciun caz."
 
 #. module: sms
 #. odoo-javascript
@@ -1626,7 +1689,7 @@ msgstr "Nu aveți suficiente credite pe contul dvs. IAP."
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "Ați încercat de prea multe ori. Vă rugăm să încercați mai târziu."
 
 #. module: sms
 #. odoo-javascript
@@ -1640,7 +1703,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
-msgstr ""
+msgstr "Contul dvs. SMS a fost înregistrat cu succes."
 
 #. module: sms
 #. odoo-python
@@ -1650,6 +1713,8 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
 msgstr ""
+"Numele expeditorului trebuie să aibă între 3 și 11 caractere și să conțină "
+"doar caractere alfanumerice."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1659,18 +1724,22 @@ msgid ""
 "                        It must fit your company name, and you aren't "
 "allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"Numele expeditorului trebuie să aibă între 3 și 11 caractere și să conțină "
+"doar caractere alfanumerice.\n"
+"                        Trebuie să corespundă numelui companiei dvs., iar "
+"după înregistrare nu mai poate fi modificat, alegeți-l cu atenție."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "Contul dvs. SMS nu a fost încă activat."
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "characters"
-msgstr ""
+msgstr "caractere"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:37+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sales_team
@@ -34,8 +34,12 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"รูป\" aria-label=\"อีเมล\" title=\"อีเมล\"/>"
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"รูป\" aria-label=\"อีเมล\" "
+"title=\"อีเมล\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -82,8 +86,7 @@ msgstr "เพิ่มสมาชิกในทีม"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid ""
-"Add members to automatically assign their documents to this sales team."
+msgid "Add members to automatically assign their documents to this sales team."
 msgstr "เพิ่มสมาชิกเพื่อมอบหมายเอกสารให้กับทีมขายนี้โดยอัตโนมัติ"
 
 #. module: sales_team
@@ -237,8 +240,7 @@ msgstr "สมาชิกโปรด"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid ""
-"Favorite teams to display them in the dashboard and access them easily."
+msgid "Favorite teams to display them in the dashboard and access them easily."
 msgstr "ทีมโปรดเพื่อแสดงในแดชบอร์ดและเข้าถึงได้ง่าย"
 
 #. module: sales_team
@@ -284,8 +286,7 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
-"หากเป็นจริง ผู้ใช้อาจอยู่ในทีมขายหลายทีม มิฉะนั้น "
-"การเป็นสมาชิกจะจำกัดให้ทีมขายเพียงทีมเดียว"
+"หากเป็นจริง ผู้ใช้อาจอยู่ในทีมขายหลายทีม มิฉะนั้น การเป็นสมาชิกจะจำกัดให้ทีมขายเพียงทีมเดียว"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -304,9 +305,7 @@ msgstr "ถ้าเลือก ข้อความบางข้อคว�
 msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
-msgstr ""
-"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" "
-"จะอนุญาตให้คุณซ่อนทีมขายโดยไม่ต้องลบออก"
+msgstr "หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" จะอนุญาตให้คุณซ่อนทีมขายโดยไม่ต้องลบออก"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -348,9 +347,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
-msgstr ""
-"ทีมขายผู้ใช้หลัก "
-"ใช้สำหรับไปป์ไลน์หรือตั้งทีมขายในการออกใบแจ้งหนี้หรือสมัครสมาชิก"
+msgstr "ทีมขายผู้ใช้หลัก ใช้สำหรับไปป์ไลน์หรือตั้งทีมขายในการออกใบแจ้งหนี้หรือสมัครสมาชิก"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -594,13 +591,20 @@ msgid "The default company for this user."
 msgstr "บริษัทที่เป็นค่าเริ่มต้นสำหรับผู้ใช้รายนี้"
 
 #. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
-"สิ่งเหล่านี้แสดงถึงหมวดหมู่ต่างๆ ของสิ่งที่คุณต้องทำ (เช่น \"โทร\" หรือ "
-"\"เตรียมการประชุม\")"
+"สิ่งเหล่านี้แสดงถึงหมวดหมู่ต่างๆ ของสิ่งที่คุณต้องทำ (เช่น \"โทร\" หรือ \"เตรียมการประชุม\")"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -627,8 +631,7 @@ msgstr "โมเดลกราฟที่ไม่ได้กำหนดส
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid ""
-"Use Sales Teams to organize your sales departments and draw up reports."
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr "ใช้ทีมขายเพื่อจัดระเบียบแผนกขายและจัดทำรายงาน"
 
 #. module: sales_team
@@ -646,14 +649,20 @@ msgstr ""
 msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
-msgstr ""
-"ใช้แท็กเพื่อจัดการและติดตามโอกาสของคุณ (โครงสร้างผลิตภัณฑ์ ประเภทการขาย "
-"และอื่น ๆ )"
+msgstr "ใช้แท็กเพื่อจัดการและติดตามโอกาสของคุณ (โครงสร้างผลิตภัณฑ์ ประเภทการขาย และอื่น ๆ )"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "User"
 msgstr "ผู้ใช้"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -705,8 +714,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"You are trying to create duplicate membership(s). We found that "
-"%(duplicates)s already exist(s)."
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
 msgstr "คุณกำลังพยายามสร้างสมาชิกซ้ำ เราพบว่า%(duplicates)s นั้นมีอยู่แล้ว"
 
 #. module: sales_team
@@ -734,6 +743,6 @@ msgstr "ผู้ใช้จะสามารถเข้าถึงข้อ
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
 msgstr "ผู้ใช้จะมีสิทธิ์เข้าถึงการกำหนดค่าการขายและรายงานสถิติ"

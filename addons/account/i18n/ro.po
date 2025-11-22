@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Corina Calin, 2024
@@ -16,21 +16,23 @@
 # Camille Dantinne <cmd@odoo.com>, 2025
 # Wil Odoo, 2025
 # Thomas Becquevort, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:36+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thomas Becquevort, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
+"PO-Revision-Date: 2025-11-22 13:12+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/"
+"account/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -43,6 +45,13 @@ msgid ""
 "        Select 'General' for miscellaneous operations journals.\n"
 "        "
 msgstr ""
+"\n"
+"        Selectați 'Vânzare' pentru jurnalele de facturi către clienți.\n"
+"        Selectați 'Achiziție' pentru jurnalele de facturi către furnizori.\n"
+"        Selectați 'Numerar', 'Bancă' sau 'Card de credit' pentru jurnalele "
+"folosite la plăți către clienți sau furnizori.\n"
+"        Selectați 'General' pentru jurnalele de operațiuni diverse.\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -58,12 +67,22 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Grup de taxe: taxa este un set de sub-taxe.\n"
+"    - Fixă: valoarea taxei rămâne aceeași indiferent de preț.\n"
+"    - Procent: valoarea taxei este un procent din preț:\n"
+"        ex: 100 * (1 + 10%) = 110 (preț neinclus)\n"
+"        ex: 110 / (1 + 10%) = 100 (preț inclus)\n"
+"    - Procent cu taxă inclusă: valoarea taxei este o diviziune a prețului:\n"
+"        ex: 180 / (1 - 10%) = 200 (preț neinclus)\n"
+"        ex: 200 * (1 - 10%) = 180 (preț inclus)\n"
+"        "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " for '%s'"
-msgstr ""
+msgstr " pentru '%s'"
 
 #. module: account
 #. odoo-python
@@ -129,12 +148,14 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s (detached by %(user)s on %(date)s)%"
+"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
-msgstr ""
+msgstr "%(exception)s pentru %(user)s%(end_datetime_string)s%(reason)s."
 
 #. module: account
 #. odoo-python
@@ -195,15 +216,6 @@ msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
 msgstr "%(tax_name)s (rotunjire)"
@@ -238,13 +250,13 @@ msgstr "%s (copie)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part"
-msgstr ""
+msgstr "%s - partea privată"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part (taxes)"
-msgstr ""
+msgstr "%s - partea privată (taxe)"
 
 #. module: account
 #. odoo-python
@@ -257,12 +269,12 @@ msgstr "%s nu este un câmp stocat"
 #: code:addons/account/models/company.py:0
 #: code:addons/account/models/partner.py:0
 msgid "%s, or / if not applicable"
-msgstr ""
+msgstr "%s, sau / dacă nu este aplicabil"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
 msgid "(Un)Block Payment"
-msgstr ""
+msgstr "(De)Blochează plata"
 
 #. module: account
 #. odoo-python
@@ -329,6 +341,9 @@ msgid ""
 "    --\n"
 "    <br/>"
 msgstr ""
+"<br/>\n"
+"    --\n"
+"    <br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -354,14 +369,14 @@ msgstr "... (%(nb_of_values)s altul,altele)"
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr ""
+msgstr "... (Vezi tot)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #: code:addons/account/models/partner.py:0
 msgid "/ if not applicable"
-msgstr ""
+msgstr "/ dacă nu este aplicabil"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
@@ -547,22 +562,22 @@ msgstr "50 USD"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "50.00 EUR"
-msgstr ""
+msgstr "50.00 EUR"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "534677881234"
-msgstr ""
+msgstr "534677881234"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "9.00"
-msgstr ""
+msgstr "9.00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
 msgid "90 days, on the 10th"
-msgstr ""
+msgstr "90 de zile, pe data de 10"
 
 #. module: account
 #. odoo-python
@@ -581,6 +596,9 @@ msgid ""
 "                        <span>Please make sure that this is a wanted "
 "behavior.</span>"
 msgstr ""
+"<br/>\n"
+"                        <span>Vă rugăm să vă asigurați că aceasta este o "
+"acțiune dorită.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -632,6 +650,45 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is your\n"
+"        <t t-if=\"object.name\">\n"
+"            credit note <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            credit note\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (with reference: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"        </t>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -728,6 +785,30 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
+"        Thank you for your payment.\n"
+"        Here is your payment receipt <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"amounting\n"
+"        to <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <br/><br/>\n"
+"        Best regards,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -780,6 +861,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Processing Payment</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Procesare plată\" "
+"title=\"Procesare plată\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Procesare plată</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -803,6 +888,11 @@ msgid ""
 "                        You also have the option to disable the feature for "
 "all vendors in the accounting settings."
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
+"                        Nu vă faceți griji, puteți schimba această setare "
+"oricând din formularul furnizorului.\n"
+"                        Aveți și opțiunea de a dezactiva funcția pentru toți "
+"furnizorii din setările de contabilitate."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -823,6 +913,8 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Alias Domain"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configurează domeniul "
+"alias"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -832,6 +924,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                                                      Puteți alege cum "
+"doriți să vă trimitem facturile și în ce format electronic.\n"
+"                                             </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -873,6 +969,8 @@ msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
 msgstr ""
+"<span class=\"figure-caption\">Nu ratați niciodată un termen limită, cu "
+"extrase și alerte automate.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -880,6 +978,8 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">sau</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -907,7 +1007,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "<span class=\"o_form_label\">Changed Lock Date:</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Data modificării blocării:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -916,6 +1016,9 @@ msgid ""
 "                                        Audit\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Audit\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -986,6 +1089,9 @@ msgid ""
 "                                <i>inclusive, to make them immutable</i>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"text-muted ms-2\">\n"
+"                                <i>inclusiv, pentru a le face imuabile</i>\n"
+"                            </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
@@ -994,6 +1100,9 @@ msgid ""
 "                                <i>Secure entries up to</i>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                <i>Asigură înregistrările până la</i>\n"
+"                            </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1042,11 +1151,12 @@ msgstr "<span class=\"text-warning\">Risc mediu</span>: Iban"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Ciornă</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
-msgstr ""
+msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1072,7 +1182,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "<span invisible=\"user_id\">everyone</span>"
-msgstr ""
+msgstr "<span invisible=\"user_id\">toată lumea</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1082,7 +1192,7 @@ msgstr "<span role=\"separator\">Nou</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Reconciliere</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1128,7 +1238,7 @@ msgstr "<span> scade pe </span>"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "<span> on </span>"
-msgstr ""
+msgstr "<span> la </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1138,7 +1248,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>1</span>"
-msgstr ""
+msgstr "<span>1</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1148,12 +1258,12 @@ msgstr "<span>5.00</span>"
 #. module: account
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
-msgstr ""
+msgstr "<span><b>Felicitări!</b> Ai parcurs toți pașii acestui tur.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>=</span>"
-msgstr ""
+msgstr "<span>=</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1209,6 +1319,8 @@ msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
 msgstr ""
+"<span>Unul sau mai multe conturi bancare setate la acest partener sunt "
+"folosite și de alții:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1245,7 +1357,7 @@ msgstr "<span>Taxe</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span>The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Contul bancar ar putea fi un duplicat al</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1266,6 +1378,8 @@ msgstr "<span>Aceasta este o previzualizare a Termene și amp; Condiții.</span>
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<span>This payment has the same partner, amount and date as </span>"
 msgstr ""
+"<span>Această plată are același partener, aceeași sumă și aceeași dată ca </"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1281,12 +1395,12 @@ msgstr "<span>Vizualizare</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Warning: this document might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Atenție: acest document ar putea fi un duplicat al</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Adresă de livrare</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1296,12 +1410,12 @@ msgstr "<strong class=\"mr16\">Subtotal</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date</strong>"
-msgstr ""
+msgstr "<strong>Data notei de credit</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code</strong>"
-msgstr ""
+msgstr "<strong>Cod client</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1311,7 +1425,7 @@ msgstr "<strong>Data</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date</strong>"
-msgstr ""
+msgstr "<strong>Data livrării</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1331,7 +1445,7 @@ msgstr "<strong>Sold final</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>Incoterm</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1346,12 +1460,12 @@ msgstr "<strong>Data Factură</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Receipt Date</strong>"
-msgstr ""
+msgstr "<strong>Data primirii</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference</strong>"
-msgstr ""
+msgstr "<strong>Referință</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1400,6 +1514,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>Avertisment:</strong> Odată ce Urmărirea Auditului este activată, nu "
+"mai poate fi dezactivată dacă există elemente de jurnal existente."
 
 #. module: account
 #. odoo-python
@@ -1424,6 +1540,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique per company."
 msgstr ""
+"Numele grupului de registre trebuie să fie unic pentru fiecare companie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -1447,6 +1564,9 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Un cont bancar cu numărul de cont %(number)s există deja pentru partenerul %"
+"(partner)s, dar este arhivat. Vă rugăm să îl dezarhivați în loc să creați "
+"unul nou."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1468,6 +1588,9 @@ msgid ""
 "You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Un extras de credit este un rezumat al tuturor tranzacțiilor financiare care "
+"au loc într-o anumită perioadă pe un cont de credit. Ar trebui să primiți "
+"acest extras periodic de la banca dumneavoastră."
 
 #. module: account
 #. odoo-python
@@ -1512,6 +1635,8 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 msgid "A new Hard Lock Date must be posterior (or equal) to the previous one."
 msgstr ""
+"O nouă dată de blocare strictă trebuie să fie ulterioară (sau egală) cu cea "
+"precedentă."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1543,6 +1668,8 @@ msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
+"O plată cu un cont restant nu poate fi confirmată fără o înregistrare în "
+"jurnal."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1573,6 +1700,7 @@ msgstr "Un titlu de secțiune"
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "A single exception must change exactly one lock date field."
 msgstr ""
+"O singură excepție trebuie să modifice exact un câmp de dată de blocare."
 
 #. module: account
 #. odoo-python
@@ -1608,24 +1736,24 @@ msgstr "O avertizare poate fi setată pe un partener (Contabilitate)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
-msgstr ""
+msgstr "Partener cu sumă anormală"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_amount_warning
 msgid "Abnormal Amount Warning"
-msgstr ""
+msgstr "Avertisment sumă anormală"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
 msgid "Abnormal Date Partner"
-msgstr ""
+msgstr "Partener cu dată anormală"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_date_warning
 msgid "Abnormal Date Warning"
-msgstr ""
+msgstr "Avertisment dată anormală"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -1668,6 +1796,8 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
+"Contul %(account)s va fi împărțit în %(num_accounts)s, câte unul pentru "
+"fiecare companie:\n"
 
 #. module: account
 #. odoo-python
@@ -1676,6 +1806,8 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The "
 "unmerge operation only splits an account based on its companies."
 msgstr ""
+"Contul %s nu poate fi separat deoarece aparține deja unei singure companii. "
+"Operațiunea de separare împarte un cont doar pe baza companiilor sale."
 
 #. module: account
 #. odoo-python
@@ -1692,12 +1824,16 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"Contul %s este de tip plătibil, dar este folosit într-o operațiune de "
+"vânzare."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Account %s is of receivable type, but is used in a purchase operation."
 msgstr ""
+"Contul %s este de tip de încasat, dar este folosit într-o operațiune de "
+"cumpărare."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1751,7 +1887,7 @@ msgstr "Grupurile de conturi cu aceeași granularitate nu se pot suprapune"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
 msgid "Account Has Hashed Entries"
-msgstr ""
+msgstr "Contul are înregistrări hash-uite"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -1783,12 +1919,12 @@ msgstr "Grupul Jurnalului de Conturi"
 #: model:ir.model,name:account.model_account_lock_exception
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Account Lock Exception"
-msgstr ""
+msgstr "Excepție blocare cont"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
 msgid "Account Map"
-msgstr ""
+msgstr "Hartă conturi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1809,12 +1945,12 @@ msgstr "Cont Mutare Trimitere"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Account Move Send Batch Wizard"
-msgstr ""
+msgstr "Asistent trimitere lot note contabile"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
-msgstr ""
+msgstr "Asistent trimitere notă contabilă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -1842,7 +1978,7 @@ msgstr "Cont datorii"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Substituent prefix cont"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -1942,6 +2078,8 @@ msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate "
 "codes: %s"
 msgstr ""
+"Codurile conturilor trebuie să fie unice. Nu puteți crea conturi cu aceste "
+"coduri duplicate: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -1978,12 +2116,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
 msgid "Account merge wizard"
-msgstr ""
+msgstr "Asistent de fuziune conturi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
 msgid "Account merge wizard line"
-msgstr ""
+msgstr "Linie asistent fuziune conturi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2043,7 +2181,7 @@ msgstr "Cont folosit pentru a muta perioada unei cheltuieli"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr ""
+msgstr "Cont folosit pentru a înregistra partea privată a cheltuielilor mixte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -2161,13 +2299,13 @@ msgstr "Prefix conturi"
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_distribution_model_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_distribution_model_tree_inherit
 msgid "Accounts Prefixes"
-msgstr ""
+msgstr "Prefixuri conturi"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Accounts successfully merged!"
-msgstr ""
+msgstr "Conturile au fost fuzionate cu succes!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
@@ -2233,7 +2371,7 @@ msgstr "Acțiune necesară"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__actionable_errors
 msgid "Actionable Errors"
-msgstr ""
+msgstr "Erori acționabile"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2243,7 +2381,7 @@ msgstr "Activați pista de audit"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Activate auto-validation"
-msgstr ""
+msgstr "Activează validarea automată"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2342,7 +2480,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "Adaugă o descriere articolului tău."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2420,13 +2558,13 @@ msgstr "Adjustarea sumei"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Adjusting Entries"
-msgstr ""
+msgstr "Înregistrări de ajustare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_count
 msgid "Adjusting Entries Count"
-msgstr ""
+msgstr "Număr înregistrări de ajustare"
 
 #. module: account
 #. odoo-python
@@ -2444,19 +2582,19 @@ msgstr "Adjustarea intrării"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_label
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_label
 msgid "Adjusting Entry Origin Label"
-msgstr ""
+msgstr "Etichetă origine înregistrare de ajustare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_move_ids
 msgid "Adjusting Entry Origin Moves"
-msgstr ""
+msgstr "Mișcări origine înregistrare de ajustare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_moves_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_moves_count
 msgid "Adjusting Entry Origin Moves Count"
-msgstr ""
+msgstr "Număr mișcări origine înregistrare de ajustare"
 
 #. module: account
 #. odoo-python
@@ -2507,6 +2645,9 @@ msgid ""
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
+"După ce imporți trei facturi pentru un furnizor fără modificări, Odoo va "
+"sugera validarea automată a facturilor viitoare. Poți activa sau dezactiva "
+"această funcție oricând din profilul furnizorului."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -2560,12 +2701,12 @@ msgstr "Toate conturile de pe linii trebuie să fie de același tip."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "All bank & cash journals"
-msgstr ""
+msgstr "Toate jurnalele bancare și de numerar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "All moves that will be hashed"
-msgstr ""
+msgstr "Toate mișcările care vor fi hash-uite"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -2586,11 +2727,14 @@ msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
 msgstr ""
+"Toate mișcările ne-hash-uite înainte de data selectată care nu sunt "
+"protejate de Data de Blocare Strictă."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
 msgstr ""
+"Toate liniile de extras bancar nereconciliate înainte de data selectată."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2630,13 +2774,13 @@ msgstr "Jurnale permise"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "UM permise"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "Allows out payments"
-msgstr ""
+msgstr "Permite plăți de ieșire"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2651,7 +2795,7 @@ msgstr "Vă permite sa folosiți contabilitatea analitică."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Already Paid:"
-msgstr ""
+msgstr "Deja plătit:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -2836,6 +2980,8 @@ msgid ""
 "An error occurred when computing the inalterability. A gap has been detected "
 "in the sequence."
 msgstr ""
+"A apărut o eroare la calcularea inalterabilității. A fost detectată o lipsă "
+"în secvență."
 
 #. module: account
 #. odoo-python
@@ -2844,6 +2990,8 @@ msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
 msgstr ""
+"A apărut o eroare la calcularea inalterabilității. Toate înregistrările "
+"trebuie reconciliate."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2922,7 +3070,7 @@ msgstr "Precizie analitică"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_reporting
 msgid "Analytic Report"
-msgstr ""
+msgstr "Raport analitic"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_analytic_reporting
@@ -2951,6 +3099,9 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"Orice înregistrare până la și inclusiv această dată va fi amânată pentru o "
+"dată ulterioară, în conformitate cu secvența jurnalului. Această dată de "
+"blocare este ireversibilă și nu permite nicio excepție."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -2958,6 +3109,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"Orice înregistrare până la și inclusiv această dată va fi amânată pentru o "
+"dată ulterioară, în conformitate cu secvența jurnalului."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -2966,6 +3119,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"Orice înregistrare cu taxe până la și inclusiv această dată va fi amânată "
+"pentru o dată ulterioară, în conformitate cu secvența jurnalului. Data de "
+"blocare fiscală este setată automat când se postează închiderea fiscală."
 
 #. module: account
 #. odoo-python
@@ -2991,6 +3147,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Orice înregistrare de achiziție anterioară sau inclusiv această dată va fi "
+"amânată pentru o dată ulterioară, în conformitate cu secvența jurnalului."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -2998,6 +3156,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Orice înregistrare de vânzare anterioară sau inclusiv această dată va fi "
+"amânată pentru o dată ulterioară, în conformitate cu secvența jurnalului."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3063,23 +3223,23 @@ msgstr "Arhivat"
 #. odoo-javascript
 #: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
 msgid "Are you sure you want to delete these records?"
-msgstr ""
+msgstr "Sigur doriți să ștergeți aceste înregistrări?"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
-msgstr ""
+msgstr "Sunteți sigur? Aceasta va efectua următoarele operațiuni:\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
 msgid "Ask after 3 validations without edits"
-msgstr ""
+msgstr "Întreabă după 3 validări fără modificări"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Ask me later"
-msgstr ""
+msgstr "Întreabă-mă mai târziu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__asset
@@ -3144,7 +3304,7 @@ msgstr "Atașamente"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_activated
 msgid "Audit Log Activated"
-msgstr ""
+msgstr "Jurnal de audit activat"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -3159,7 +3319,7 @@ msgstr "Pista de audit"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr ""
+msgstr "Mesaje jurnal de audit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -3179,7 +3339,7 @@ msgstr "Validare automată"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__autocheck_on_post
 msgid "Auto-Check on Post"
-msgstr ""
+msgstr "Verificare automată la postare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3207,7 +3367,7 @@ msgstr "Postare automată"
 #: model:ir.model.fields,field_description:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_users__autopost_bills
 msgid "Auto-post bills"
-msgstr ""
+msgstr "Postează automat facturile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
@@ -3222,6 +3382,8 @@ msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
 msgstr ""
+"Postarea automată a fost dezactivată pentru această factură deoarece a fost "
+"detectat un potențial duplicat."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3233,7 +3395,7 @@ msgstr "Validare automată"
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_config_settings__autopost_bills
 msgid "Auto-validate bills"
-msgstr ""
+msgstr "Validare automată a facturilor"
 
 #. module: account
 #. odoo-python
@@ -3261,7 +3423,7 @@ msgstr "Secvență Automată"
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,help:account.field_res_users__autopost_bills
 msgid "Automatically post bills for this trusted partner"
-msgstr ""
+msgstr "Postează automat facturile pentru acest partener de încredere"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -3273,12 +3435,12 @@ msgstr "Automatizare"
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Autopost Bills"
-msgstr ""
+msgstr "Postare automată a facturilor"
 
 #. module: account
 #: model:ir.model,name:account.model_account_autopost_bills_wizard
 msgid "Autopost Bills Wizard"
-msgstr ""
+msgstr "Asistent postare automată a facturilor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -3289,7 +3451,7 @@ msgstr "Disponibilitate"
 #: model:ir.model.fields,field_description:account.field_res_partner__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_users__available_invoice_template_pdf_report_ids
 msgid "Available Invoice Template Pdf Report"
-msgstr ""
+msgstr "Raport PDF șablon factură disponibil"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
@@ -3319,7 +3481,7 @@ msgstr "Linie de metodă de plată disponibilă"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__available_pdf_report_ids
 msgid "Available Pdf Report"
-msgstr ""
+msgstr "Raport PDF disponibil"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -3329,7 +3491,7 @@ msgstr "Prețul mediu ponderat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "BE71096123456769"
-msgstr ""
+msgstr "BE71096123456769"
 
 #. module: account
 #. odoo-python
@@ -3341,13 +3503,13 @@ msgstr "BILL"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Bill"
-msgstr ""
+msgstr "Înapoi la factură"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
-msgstr ""
+msgstr "Înapoi la factură"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3403,7 +3565,7 @@ msgstr "Bancă și numerar"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
-msgstr ""
+msgstr "Conturile de bancă și numerar nu pot fi partajate între companii."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -3415,7 +3577,7 @@ msgstr "Cont bancar"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Contul bancar %(link)s cu numărul %(number)s a fost arhivat"
 
 #. module: account
 #. odoo-python
@@ -3498,7 +3660,7 @@ msgstr "Mișcările reconciliate ale băncii prestabilite"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bank Setup"
-msgstr ""
+msgstr "Configurare bancă"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -3509,7 +3671,7 @@ msgstr "Extras de cont"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_extract
 msgid "Bank Statement Digitization"
-msgstr ""
+msgstr "Digitizarea extrasului de bancă"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -3590,7 +3752,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
-msgstr ""
+msgstr "Tranzacții și plăți bancare:"
 
 #. module: account
 #. odoo-python
@@ -3669,7 +3831,7 @@ msgstr "De bază"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
-msgstr ""
+msgstr "Secvență de plăți în loturi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3701,13 +3863,13 @@ msgstr "Înainte"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "Înainte de data următoarei plăți"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Belongs to the same company as %s."
-msgstr ""
+msgstr "Aparține aceleiași companii ca %s."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -3769,7 +3931,7 @@ msgstr "Analiză facturi achiziție"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Late"
-msgstr ""
+msgstr "Facturi întârziate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3814,7 +3976,7 @@ msgstr "Mesaj de blocare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Conținutul mesajului este același cu template-ul"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3924,7 +4086,7 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Poate edita conținutul"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
@@ -3990,12 +4152,12 @@ msgstr "Factură anulată"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Credit Note"
-msgstr ""
+msgstr "Notă de credit proformă anulată"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Invoice"
-msgstr ""
+msgstr "Factură proformă anulată"
 
 #. module: account
 #. odoo-python
@@ -4004,6 +4166,8 @@ msgid ""
 "Cannot change Price Tax computation method on a company that has already "
 "started invoicing."
 msgstr ""
+"Nu se poate schimba metoda de calcul a taxei pe preț pentru o companie care "
+"a început deja facturarea."
 
 #. module: account
 #. odoo-python
@@ -4023,6 +4187,8 @@ msgstr "Nu se poate crea un document de vânzare într-un jurnal fără vânzare
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Nu se poate crea o înregistrare de constatare pentru comenzi în valute "
+"diferite."
 
 #. module: account
 #. odoo-python
@@ -4064,7 +4230,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "Nu s-au putut identifica facturi in PDF-ul generat: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -4078,6 +4244,8 @@ msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
+"Creați facturi, înregistrați plăți și țineți evidența discuțiilor cu "
+"furnizorii dvs."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
@@ -4102,7 +4270,7 @@ msgstr "Cont Numerar"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_53
 msgid "Cash Bakery"
-msgstr ""
+msgstr "Numerar brutărie"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_55
@@ -4148,7 +4316,7 @@ msgstr "Cont de tranziție a bazei de numerar"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_52
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "Numerar magazin haine"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4206,7 +4374,7 @@ msgstr "Cont de pierdere cu reducere de numerar"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_51
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "Numerar magazin mobilă"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -4217,7 +4385,7 @@ msgstr "Registre de casă"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_54
 msgid "Cash Restaurant"
-msgstr ""
+msgstr "Numerar Restaurant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4268,7 +4436,7 @@ msgstr "Catalog"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
 msgid "Categories"
-msgstr ""
+msgstr "Categorii"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__category
@@ -4290,7 +4458,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
 msgid "Chains To Hash With Gaps"
-msgstr ""
+msgstr "Lanțuri de criptat cu goluri"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
@@ -4312,7 +4480,7 @@ msgstr "Schimbați eticheta omologului care va păstra diferența de plată"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date
 msgid "Changed Lock Date"
-msgstr ""
+msgstr "Dată blocare modificată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__chart_template
@@ -4358,7 +4526,7 @@ msgstr "Verificare"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Check Partner(s) Email(s)"
-msgstr ""
+msgstr "Verifică emailul partenerului/partenerilor"
 
 #. module: account
 #. odoo-python
@@ -4450,7 +4618,7 @@ msgstr "Localitate"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__clearing_number
 msgid "Clearing Number"
-msgstr ""
+msgstr "Număr de compensare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -4461,13 +4629,13 @@ msgstr "Click"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Click here to add a description to your product."
-msgstr ""
+msgstr "Apasă aici pentru a adăuga o descriere produsului tău."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Click or press enter to add a description"
-msgstr ""
+msgstr "Apasă sau apasă Enter pentru a adăuga o descriere"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -4493,7 +4661,7 @@ msgstr "Cod"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_mapping_ids
 msgid "Code Mapping"
-msgstr ""
+msgstr "Mapare cod"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -4513,7 +4681,7 @@ msgstr "Prefix Start Cod"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
 msgid "Code Store"
-msgstr ""
+msgstr "Stocare cod"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4534,7 +4702,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__color
 msgid "Color"
-msgstr ""
+msgstr "Color"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__color
@@ -4645,7 +4813,7 @@ msgstr "Companie"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_company_id
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_company_id
 msgid "Company "
-msgstr ""
+msgstr "Companie "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -4684,7 +4852,7 @@ msgstr "Codul fiscal al țării companiei"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Substituent registru companie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -4694,7 +4862,7 @@ msgstr "Compania Storno Contabilitate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_vat_placeholder
 msgid "Company Vat Placeholder"
-msgstr ""
+msgstr "Substituent TVA companie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -4766,29 +4934,29 @@ msgstr "Confirmă"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm Entries"
-msgstr ""
+msgstr "Confirmă înregistrările"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm them now"
-msgstr ""
+msgstr "Confirmă-le acum"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Connect your bank. Match invoices automatically."
-msgstr ""
+msgstr "Conectează-ți banca. Potrivește facturile automat."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Consider paying in %(btn_start)sinstallments%(btn_end)s instead."
-msgstr ""
+msgstr "Ia în considerare plata în %(btn_start)srate%(btn_end)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
-msgstr ""
+msgstr "Ia în considerare plata %(btn_start)sîntregii sume%(btn_end)s."
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -4808,12 +4976,14 @@ msgid ""
 "Contains either the section name or error message, depending on the line "
 "type."
 msgstr ""
+"Conține fie numele secțiunii, fie mesajul de eroare, în funcție de tipul "
+"liniei."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Contains hashed entries, but %s also has hashed entries."
-msgstr ""
+msgstr "Conține înregistrări criptate, dar și %s are înregistrări criptate."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body
@@ -4823,13 +4993,13 @@ msgstr "Conținuturi"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
 msgid "Cool, it looks like you don't have any amount to settle."
-msgstr ""
+msgstr "Super, se pare că nu aveți nicio sumă de decontat."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr ""
+msgstr "Date corupte la înregistrarea jurnalului cu id %(id)s (%(name)s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -4872,22 +5042,22 @@ msgstr "Nu s-au putut încărca fișierele"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
-msgstr ""
+msgstr "Elemente corespondente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__counterpart_type
 msgid "Counterpart Type"
-msgstr ""
+msgstr "Tip corespondent"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart buttons"
-msgstr ""
+msgstr "Butoane corespondente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart rules"
-msgstr ""
+msgstr "Reguli corespondente"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
@@ -4975,7 +5145,7 @@ msgstr "Creați intrări în jurnal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Create Only"
-msgstr ""
+msgstr "Doar creare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -4990,19 +5160,19 @@ msgstr "Creați plăți"
 #. module: account
 #: model:ir.model,website_form_label:account.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Creează un client"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_wizard.py:0
 msgid "Create a Mail Template"
-msgstr ""
+msgstr "Creează un șablon de email"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create a bill manually"
-msgstr ""
+msgstr "Creează o factură manual"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -5109,12 +5279,15 @@ msgid ""
 "                    adjustments, ensuring compliance with diverse "
 "regulations."
 msgstr ""
+"Creează câte grupuri de registre ai nevoie pentru a menține registre "
+"separate pentru GAAP local, IFRS sau ajustări fiscale,\n"
+"                    asigurând conformitatea cu diverse reglementări."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create bill manually"
-msgstr ""
+msgstr "Creează factură manual"
 
 #. module: account
 #. odoo-python
@@ -5141,12 +5314,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create manually"
-msgstr ""
+msgstr "Creează manual"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create new account"
-msgstr ""
+msgstr "Creează cont nou"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -5157,13 +5330,13 @@ msgstr "Creați prima rotunjire de numerar"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Create the product."
-msgstr ""
+msgstr "Creează produsul."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_move_ids
 msgid "Created Adjusting Entries"
-msgstr ""
+msgstr "Înregistrări de ajustare create"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -5306,7 +5479,7 @@ msgstr "Card de credit"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Credit Card: Balance"
-msgstr ""
+msgstr "Card de credit: Sold"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit_limit
@@ -5364,7 +5537,7 @@ msgstr "Note de credit"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_credit_statement_tree
 msgid "Credit Statements"
-msgstr ""
+msgstr "Extrase de credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit_to_invoice
@@ -5452,7 +5625,7 @@ msgstr "Curs Valutar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__currency_translation
 msgid "Currency Translation"
-msgstr ""
+msgstr "Conversie valutară"
 
 #. module: account
 #. odoo-python
@@ -5523,12 +5696,12 @@ msgstr "Funcție Python personalizată"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__custom_user_amount
 msgid "Custom User Amount"
-msgstr ""
+msgstr "Sumă personalizată utilizator"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__custom_user_currency_id
 msgid "Custom User Currency"
-msgstr ""
+msgstr "Monedă personalizată utilizator"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__customer
@@ -5664,13 +5837,13 @@ msgstr "Tăiere"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label}"
-msgstr ""
+msgstr "Cut-off {label}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label} {percent}%"
-msgstr ""
+msgstr "Cut-off {label} {percent}%"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -5701,7 +5874,7 @@ msgstr "Verificare Inalterabilitate Date"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "Raportul de Verificare a Inalterabilității Datelor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5816,7 +5989,7 @@ msgstr "Zile după data facturii"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_end_of_month_on_the
 msgid "Days end of month on the"
-msgstr ""
+msgstr "Zile final de lună pe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
@@ -5876,7 +6049,7 @@ msgstr "Secvență de plată dedicată"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_amount
 msgid "Deductibility"
-msgstr ""
+msgstr "Deducibilitate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -5954,7 +6127,7 @@ msgstr "Taxa de vânzare implicită"
 #: model:ir.model.fields,field_description:account.field_res_company__account_price_include
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_price_include
 msgid "Default Sales Price Include"
-msgstr ""
+msgstr "Preț de vânzare implicit cu taxe incluse"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tax_ids
@@ -5998,29 +6171,32 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
+"Implicit dacă prețul de vânzare folosit pe produs și facturi pentru această "
+"companie include taxele."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied when creating new products."
-msgstr ""
+msgstr "Taxe implicite aplicate la crearea de produse noi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product"
-msgstr ""
+msgstr "Taxe implicite folosite la achiziția produsului"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product"
-msgstr ""
+msgstr "Taxe implicite folosite la vânzarea produsului"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
 msgstr ""
+"Valoare implicită pentru'company_id' for %(record)s nu este un număr întreg"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -6048,6 +6224,8 @@ msgid ""
 "Define which company can select the multi-ledger in report filters. If none "
 "is provided, available for all companies"
 msgstr ""
+"Definește ce companie poate selecta multi-registrul în filtrele de raport. "
+"Dacă nu este specificată, este disponibil pentru toate companiile."
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -6126,7 +6304,7 @@ msgstr "Cont de stoc demonstrativ"
 #. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "Depending moves"
-msgstr ""
+msgstr "Mișcări dependente"
 
 #. module: account
 #. odoo-python
@@ -6152,6 +6330,7 @@ msgstr "Descriere"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Description on invoice (e.g. Payment terms: 30 days after invoice date)"
 msgstr ""
+"Descriere pe factură (ex: Termen de plată: 30 zile de la data facturii)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__note
@@ -6187,6 +6366,7 @@ msgid ""
 "Determines whether the price you use on the product and invoices includes "
 "this tax."
 msgstr ""
+"Determină dacă prețul folosit pe produs și facturi include această taxă."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_account_id
@@ -6225,7 +6405,7 @@ msgstr "Semn de direcție"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__disable_merge_button
 msgid "Disable Merge Button"
-msgstr ""
+msgstr "Dezactivează butonul de fuziune"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__disabled
@@ -6315,13 +6495,13 @@ msgstr "Suma reducerii în valută"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Discount of %(amount)s if paid today"
-msgstr ""
+msgstr "Reducere de %(amount)s dacă se plătește astăzi"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Discount of %(amount)s if paid within %(days)s days"
-msgstr ""
+msgstr "Reducere de %(amount)s dacă se plătește în %(days)s zile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -6331,7 +6511,7 @@ msgstr "Afișează prefixul contului"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
 msgid "Display Alias Fields"
-msgstr ""
+msgstr "Afișează câmpurile alias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -6341,12 +6521,12 @@ msgstr "Afișează suma"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
-msgstr ""
+msgstr "Afișează zilele din luna următoare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
-msgstr ""
+msgstr "Afișează postare forțată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -6358,18 +6538,18 @@ msgstr "Afișați avertisment valutar inactiv"
 #: model:ir.model.fields,field_description:account.field_res_partner__display_invoice_edi_format
 #: model:ir.model.fields,field_description:account.field_res_users__display_invoice_edi_format
 msgid "Display Invoice Edi Format"
-msgstr ""
+msgstr "Afișează formatul EDI al facturii"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__display_invoice_template_pdf_report_id
 #: model:ir.model.fields,field_description:account.field_res_users__display_invoice_template_pdf_report_id
 msgid "Display Invoice Template Pdf Report"
-msgstr ""
+msgstr "Afișează șablonul PDF al facturii"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
 msgid "Display Mapping Tab"
-msgstr ""
+msgstr "Afișează fila de mapare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -6462,7 +6642,7 @@ msgstr "Nume afișat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_pdf_report_id
 msgid "Display Pdf Report"
-msgstr ""
+msgstr "Afișează raportul PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_qr_code
@@ -6495,7 +6675,7 @@ msgstr "Tipul de afișare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__placeholder_code
 msgid "Display code"
-msgstr ""
+msgstr "Afișează codul"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__preview_ready
@@ -6516,7 +6696,7 @@ msgstr "Distribuție"
 #: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Cont analitic de distribuție"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -6614,7 +6794,7 @@ msgstr "Ciornă"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr ""
+msgstr "Ciornă (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -6666,12 +6846,12 @@ msgstr "Plată ciornă"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Credit Note"
-msgstr ""
+msgstr "Notă de credit proformă ciornă"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Invoice"
-msgstr ""
+msgstr "Factură proformă ciornă"
 
 #. module: account
 #. odoo-python
@@ -6695,31 +6875,31 @@ msgstr "Notă credit furnizor ciornă"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Drag & drop"
-msgstr ""
+msgstr "Trage și plasează"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop and let the AI process your bills automatically."
-msgstr ""
+msgstr "Plasează și lasă AI-ul să proceseze automat facturile."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr ""
+msgstr "Plasează pentru a crea înregistrări jurnal cu atașamente."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to import transactions"
-msgstr ""
+msgstr "Plasează pentru a importa tranzacții"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to import your invoices."
-msgstr ""
+msgstr "Plasează pentru a importa facturile."
 
 #. module: account
 #. odoo-python
@@ -6759,13 +6939,13 @@ msgstr "Termeni datorați"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
 msgid "Duplicate Bank Partner"
-msgstr ""
+msgstr "Duplicat Partener Bancă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_payment_ids
 msgid "Duplicate Payment"
-msgstr ""
+msgstr "Plată duplicat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
@@ -6776,13 +6956,13 @@ msgstr "Număr de parteneri de cont bancar duplicat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Documente duplicate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Duplicated Payments"
-msgstr ""
+msgstr "Plăți duplicate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -6830,12 +7010,12 @@ msgstr "Reducere anticipată"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Early Discount Gain"
-msgstr ""
+msgstr "Câștig din reducere anticipată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Early Discount Loss"
-msgstr ""
+msgstr "Pierdere din reducere anticipată"
 
 #. module: account
 #. odoo-python
@@ -6884,7 +7064,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "Reduceri pentru plată anticipată:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -6906,7 +7086,7 @@ msgstr "Schimb Electronic de Date"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
-msgstr ""
+msgstr "Format electronic"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -6923,7 +7103,7 @@ msgstr "Șabloane de e-mail"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Email bills"
-msgstr ""
+msgstr "Trimite facturi pe e-mail"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
@@ -6983,7 +7163,7 @@ msgstr "Sold final"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Enter a description"
-msgstr ""
+msgstr "Introduceți o descriere"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -7000,7 +7180,7 @@ msgstr "Număr înregistrări"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "Înregistrările sunt criptate corect"
 
 #. module: account
 #. odoo-python
@@ -7049,7 +7229,7 @@ msgstr "Nume intrare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr ""
+msgstr "Epd nevalidat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
@@ -7087,6 +7267,9 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Eroare la încărcarea localizării: lipsește eticheta de taxă %(tag_name)s "
+"pentru țara %(country_name)s. Probabil ar trebui să actualizați mai întâi "
+"aplicația de localizare."
 
 #. module: account
 #. odoo-python
@@ -7097,12 +7280,12 @@ msgstr "Eroare!"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
 msgid "European (RF83INV202400001)"
-msgstr ""
+msgstr "European (RF83INV202400001)"
 
 #. module: account
 #: model:res.country.group,name:account.europe_vat
 msgid "European Union VAT"
-msgstr ""
+msgstr "TVA Uniunea Europeană"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__decimal_separator
@@ -7142,7 +7325,7 @@ msgstr "Exemplu:"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Exception"
-msgstr ""
+msgstr "Excepție"
 
 #. module: account
 #. odoo-javascript
@@ -7167,7 +7350,7 @@ msgstr "Mișcare Schimb Valutar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr ""
+msgstr "Înregistrări diferențe de curs:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -7178,7 +7361,7 @@ msgstr "Jurnale excluse"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
 #: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
 msgid "Expected Currency Rate"
-msgstr ""
+msgstr "Curs valutar așteptat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -7256,12 +7439,12 @@ msgstr "Valoare externă"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__extra_edi_checkboxes
 msgid "Extra Edi Checkboxes"
-msgstr ""
+msgstr "Bife EDI suplimentare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__extra_edis
 msgid "Extra Edis"
-msgstr ""
+msgstr "EDI-uri suplimentare"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -7341,7 +7524,7 @@ msgstr "Câmp"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Field Value"
-msgstr ""
+msgstr "Valoare câmp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__figure_type
@@ -7353,7 +7536,7 @@ msgstr "Tipul figurii"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr ""
+msgstr "Completează detaliile produsului sau vezi sugestia."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -7364,7 +7547,7 @@ msgstr "Filtru Multivat"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "Filtrează după cont sau după numele afișat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7375,7 +7558,7 @@ msgstr "Contabilitate financiară"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Prefixuri conturi financiare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -7453,7 +7636,7 @@ msgstr "Codurile fiscale de țară"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_country_group__exclude_state_ids
 msgid "Fiscal Exceptions"
-msgstr ""
+msgstr "Excepții fiscale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -7611,13 +7794,15 @@ msgstr "Pictogramă Font awesome, de ex. fa-sarcini"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid "For any other question, write to"
-msgstr ""
+msgstr "Pentru oricare altă întrebare, scrie-ți către"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "For new invoices, please ensure a PDF or electronic invoice file is attached"
 msgstr ""
+"Pentru facturi noi, vă rugăm să vă asigurați că PDF-ul sau factura "
+"electronică este atașată"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -7718,6 +7903,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Formulă de forma line_code.expression_label. Aceasta permite setarea țintei "
+"transferului pentru această expresie (pe o expresie etichetată "
+"_carryover_*), dacă este diferită de linia părinte."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -7727,7 +7915,7 @@ msgstr "De la"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
 msgid "From Invoice"
-msgstr ""
+msgstr "Din factură"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -7762,7 +7950,7 @@ msgstr "Din etichetă"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "From last fiscal year"
-msgstr ""
+msgstr "Din anul fiscal precedent"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
@@ -7806,7 +7994,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__full
 msgid "Full Amount"
-msgstr ""
+msgstr "Sumă integrală"
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -7817,7 +8005,7 @@ msgstr "Reconciliere completă"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__odoo
 msgid "Full Reference (INV/2024/00001)"
-msgstr ""
+msgstr "Referință completă (INV/2024/00001)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7828,7 +8016,7 @@ msgstr "Activități viitoare"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Future-dated"
-msgstr ""
+msgstr "Dată viitoare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7850,12 +8038,12 @@ msgstr "Gaură"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "Generate"
-msgstr ""
+msgstr "Generează"
 
 #. module: account
 #. odoo-python
@@ -7877,7 +8065,7 @@ msgstr "Raport fiscal generic"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Get Paid online. Send electronic invoices."
-msgstr ""
+msgstr "Încasează online. Trimite facturi electronice."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -7894,7 +8082,7 @@ msgstr "Obțineți avertizări la facturarea anumitor clienți"
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
-msgstr ""
+msgstr "Dată de blocare globală"
 
 #. module: account
 #. odoo-python
@@ -7905,7 +8093,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "Go to the accounting settings"
-msgstr ""
+msgstr "Mergi la setările de contabilitate"
 
 #. module: account
 #. odoo-python
@@ -7956,12 +8144,12 @@ msgstr "Grupați plățile"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Group Payments Number Sequence"
-msgstr ""
+msgstr "Secvență număr plăți de grup"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
 msgid "Group by name?"
-msgstr ""
+msgstr "Grupează după nume?"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
@@ -7991,11 +8179,13 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Funcționalitatea groupby nu este suportată de motorul '%(engine)s'. Vă rugăm "
+"să eliminați valoarea groupby de pe '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
 msgid "Grouping Key"
-msgstr ""
+msgstr "Cheie de grupare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
@@ -8005,7 +8195,7 @@ msgstr "Comparație de creștere"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
 msgid "Hard Lock Date"
-msgstr ""
+msgstr "Dată de blocare definitivă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -8015,7 +8205,7 @@ msgstr "Are intrări contabile"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
 msgid "Has Entries"
-msgstr ""
+msgstr "Are înregistrări"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
@@ -8052,12 +8242,12 @@ msgstr "Are avertisment privind transferul de bani"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
 msgid "Has Negative Factor"
-msgstr ""
+msgstr "Are factor negativ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
 msgid "Has Posted Entries"
-msgstr ""
+msgstr "Are înregistrări postate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -8078,7 +8268,7 @@ msgstr "Are linii de declarație"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__hash_date
 msgid "Hash All Entries"
-msgstr ""
+msgstr "Criptează toate înregistrările"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
@@ -8088,7 +8278,7 @@ msgstr "Rezultatul integrității hash PDF"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Hey there !"
-msgstr ""
+msgstr "Salut!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -8098,6 +8288,10 @@ msgid ""
 "    Your email has been discarded. the e-mail address you have used only "
 "accepts new invoices:"
 msgstr ""
+"Bună,\n"
+"    <br/><br/>\n"
+"    E-mailul tău a fost respins. Adresa de e-mail folosită acceptă doar "
+"facturi noi:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -8132,6 +8326,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
+"Cea mai recentă dată astfel încât toate înregistrările postate înainte "
+"(inclusiv) de această dată sunt securizate. Sunt luate în considerare doar "
+"înregistrările după data de blocare definitivă."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -8142,7 +8339,7 @@ msgstr "Cel mai mare nume"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "Partea de împărțire orizontală"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8430,6 +8627,9 @@ msgid ""
 "the related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"Dacă această opțiune nu este bifată, înseamnă că utilizatorul nu era sigur "
+"de toate informațiile la momentul creării înregistrării și că aceasta "
+"trebuie verificată din nou."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8440,6 +8640,10 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
+"Dacă este bifat, când o înregistrare este postată, toate mișcările din "
+"secvență până la ultima înregistrare criptată vor fi criptate retroactiv. "
+"Criptarea poate fi efectuată și la cerere prin asistentul de securizare a "
+"înregistrărilor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8490,29 +8694,29 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
 msgid "Ignore Abnormal Amount"
-msgstr ""
+msgstr "Ignoră suma anormală"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_date
 msgid "Ignore Abnormal Date"
-msgstr ""
+msgstr "Ignoră data anormală"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_amount
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_amount
 msgid "Ignore Abnormal Invoice Amount"
-msgstr ""
+msgstr "Ignoră suma anormală a facturii"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr ""
+msgstr "Ignoră data anormală a facturii"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr ""
+msgstr "Ignoră alertele viitoare"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -8574,7 +8778,7 @@ msgstr "Importați extrasele dvs. bancare în QIF"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "In Currency"
-msgstr ""
+msgstr "În monedă"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__in_payment
@@ -8588,7 +8792,7 @@ msgstr "În plată"
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__in_process
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "In Process"
-msgstr ""
+msgstr "În proces"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -8608,7 +8812,7 @@ msgstr "Pentru a valida această factură, trebuie"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In payment"
-msgstr ""
+msgstr "În plată"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -8625,7 +8829,7 @@ msgstr "Inalterabilitate Hash"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "Secvență fără goluri pentru inalterabilitate #"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -8752,12 +8956,12 @@ msgstr "Introduceți termenii & condițiile aici ..."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_amount
 msgid "Installments Switch Amount"
-msgstr ""
+msgstr "Sumă comutare rate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_html
 msgid "Installments Switch Html"
-msgstr ""
+msgstr "Comutare rate HTML"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -8789,6 +8993,8 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"Cont intermediar folosit la transferul banilor între două conturi de "
+"lichidități"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_group
@@ -8858,6 +9064,7 @@ msgstr ""
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
 msgstr ""
+"Câmp intern pentru a scurta crearea expression_ids pentru motorul tax_tags"
 
 #. module: account
 #. odoo-javascript
@@ -8895,6 +9102,9 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
 "for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"Interval poștal invalid, trebuie să configurați atât valorile „De la”, cât "
+"și „Până la” pentru intervalul poștal, iar „Până la” trebuie să fie mai mare "
+"decât „De la”."
 
 #. module: account
 #. odoo-python
@@ -8991,7 +9201,7 @@ msgstr "Data facturii"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
 msgid "Invoice Digitization"
-msgstr ""
+msgstr "Digitalizare facturi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -9001,13 +9211,13 @@ msgstr "Data scadentă a facturii"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__invoice_edi_format
 msgid "Invoice Edi Format"
-msgstr ""
+msgstr "Format EDI factură"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format_store
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format_store
 msgid "Invoice Edi Format Store"
-msgstr ""
+msgstr "Format EDI factură stocat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -9050,7 +9260,7 @@ msgstr "Widget de Facturi Credite Restante"
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
 msgid "Invoice PDF"
-msgstr ""
+msgstr "Factură PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -9092,6 +9302,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
+"Distribuția facturii și a notei de credit trebuie să aibă un factor total "
+"(+) egal cu 100."
 
 #. module: account
 #. odoo-python
@@ -9100,6 +9312,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
 msgstr ""
+"Distribuția facturii și a notei de credit trebuie să aibă un factor total "
+"(-) egal cu 100."
 
 #. module: account
 #. odoo-python
@@ -9133,7 +9347,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Invoice line discounts:"
-msgstr ""
+msgstr "Reduceri pe linia facturii:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -9152,13 +9366,13 @@ msgstr "Factură plătită"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice report"
-msgstr ""
+msgstr "Raport factură"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_sending_method
 msgid "Invoice sending"
-msgstr ""
+msgstr "Trimitere factură"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -9238,7 +9452,7 @@ msgstr "Facturi greșite"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices late"
-msgstr ""
+msgstr "Facturi întârziate"
 
 #. module: account
 #. odoo-python
@@ -9305,7 +9519,7 @@ msgstr "Facturare Aplicație Legacy"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_with_gaps_in_sequence_filter
 msgid "Irregular Sequences"
-msgstr ""
+msgstr "Secvențe neregulate"
 
 #. module: account
 #. odoo-python
@@ -9314,6 +9528,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
+"Neregularități cauzate de facturi ciornă, anulate sau șterse cu număr de "
+"secvență de la ultima dată de blocare."
 
 #. module: account
 #. odoo-python
@@ -9322,6 +9538,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
+"Neregularități cauzate de facturi ciornă, anulate sau șterse cu număr de "
+"secvență de la ultima dată de blocare."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -9338,7 +9556,7 @@ msgstr "Între"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Este instalat planul de conturi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -9349,12 +9567,12 @@ msgstr "Este complet"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Este Editor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
-msgstr ""
+msgstr "Este înregistrare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -9383,7 +9601,7 @@ msgstr "Creșterea este bună atunci când este pozitivă"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_imported
 msgid "Is Imported"
-msgstr ""
+msgstr "Este importat"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -9394,7 +9612,7 @@ msgstr "Mai mică de"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_manually_modified
 #: model:ir.model.fields,field_description:account.field_account_move__is_manually_modified
 msgid "Is Manually Modified"
-msgstr ""
+msgstr "Este modificat manual"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
@@ -9421,7 +9639,7 @@ msgstr "Este rambursare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__is_register_payment_on_draft
 msgid "Is Register Payment On Draft"
-msgstr ""
+msgstr "Este plată înregistrată pe ciornă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
@@ -9431,12 +9649,12 @@ msgstr "Este aceeași monedă"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__is_selected
 msgid "Is Selected"
-msgstr ""
+msgstr "Este selectat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_sent
 msgid "Is Sent"
-msgstr ""
+msgstr "Este trimis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_storno
@@ -9468,13 +9686,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "It looks like you've successfully validated the last"
-msgstr ""
+msgstr "Se pare că ați validat cu succes ultimele"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "It seems there is some depending closing move to be posted"
-msgstr ""
+msgstr "Se pare că există o notă de închidere dependentă care trebuie postată"
 
 #. module: account
 #. odoo-python
@@ -9486,7 +9704,7 @@ msgstr "A fost anterior '%(previous)s' și acum este '%(current)s'."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "Elemente cu distribuție analitică lipsă"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -9524,12 +9742,12 @@ msgstr "Jurnal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Journal (Sequence Prefix)"
-msgstr ""
+msgstr "Jurnal (Prefix Secvență)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Journal Account"
-msgstr ""
+msgstr "Cont Jurnal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
@@ -9560,7 +9778,7 @@ msgstr "Intrări în jurnal după dată"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "Note contabile de hashuit"
 
 #. module: account
 #. odoo-javascript
@@ -9678,6 +9896,8 @@ msgid ""
 "Journal items where the account allows reconciliation no matter the residual "
 "amount"
 msgstr ""
+"Elemente de jurnal unde contul permite reconcilierea indiferent de suma "
+"reziduală"
 
 #. module: account
 #. odoo-python
@@ -9740,7 +9960,7 @@ msgstr "Iunie"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "Furnizor KPI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -9815,12 +10035,12 @@ msgstr "Etichetă în factură"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 msgid "Label on PoS Receipts"
-msgstr ""
+msgstr "Etichetă pe bonurile PoS"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__lang
 msgid "Language"
-msgstr ""
+msgstr "Limba"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -9983,29 +10203,29 @@ msgstr "Activități întârziate"
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 #: model_terms:ir.ui.view,arch_db:account.setup_credit_card_account_wizard
 msgid "Leave empty to create new"
-msgstr ""
+msgstr "Lăsați gol pentru a crea unul nou"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__journal_group_id
 msgid "Ledger"
-msgstr ""
+msgstr "Registru"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_ids
 msgid "Ledger Group"
-msgstr ""
+msgstr "Grup registru"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
 msgid "Ledger group"
-msgstr ""
+msgstr "Grup registru"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Ledger group allows managing multiple accounting standards."
-msgstr ""
+msgstr "Grupul de registre permite gestionarea mai multor standarde contabile."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__left
@@ -10015,12 +10235,12 @@ msgstr "Stânga"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Left to Pay:"
-msgstr ""
+msgstr "Rămas de plată:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
 msgid "Legal Notes"
-msgstr ""
+msgstr "Note legale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -10042,7 +10262,7 @@ msgstr "Mai puțină plată"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Let artificial intelligence scan your bill. Pay easily."
-msgstr ""
+msgstr "Lasă inteligența artificială să scaneze factura. Plătește ușor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10140,12 +10360,12 @@ msgstr "Blocare"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Lock Date Exception %s"
-msgstr ""
+msgstr "Excepție dată de blocare %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
 msgid "Lock Date Field"
-msgstr ""
+msgstr "Câmp dată de blocare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
@@ -10196,7 +10416,7 @@ msgstr "DIVERSE"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__made_sequence_gap
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_gap
 msgid "Made Sequence Gap"
-msgstr ""
+msgstr "Gol de secvență creat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_attachments_widget
@@ -10206,7 +10426,7 @@ msgstr "Widget pentru atașamente la e-mail"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "Șablon de e-mail"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_tracking_value
@@ -10249,6 +10469,7 @@ msgstr "Creează intrări de acumulare"
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "Make sure you first activate the audit trail in the accounting settings"
 msgstr ""
+"Asigură-te că ai activat mai întâi pista de audit în setările contabile"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_management_menu
@@ -10258,7 +10479,7 @@ msgstr "Management"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__manual
 msgid "Manual"
-msgstr ""
+msgstr "Manual"
 
 #. module: account
 #: model:account.payment.method,name:account.account_payment_method_manual_in
@@ -10348,12 +10569,12 @@ msgstr "Manual"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
-msgstr ""
+msgstr "Mapare"
 
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
 msgid "Mapping of account codes per company"
-msgstr ""
+msgstr "Mapare coduri cont pe companie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -10432,7 +10653,7 @@ msgstr "Elemente jurnal potrivite"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__matched_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__matched_payment_ids
 msgid "Matched Payments"
-msgstr ""
+msgstr "Plăți potrivite"
 
 #. module: account
 #. odoo-python
@@ -10482,7 +10703,7 @@ msgstr "Data maximă a Liniilor Potrivite"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__max_hash_date
 msgid "Max Hash Date"
-msgstr ""
+msgstr "Dată maximă hash"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -10517,7 +10738,7 @@ msgstr "Îmbină"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Merge Accounts"
-msgstr ""
+msgstr "Îmbină conturi"
 
 #. module: account
 #: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
@@ -10527,7 +10748,7 @@ msgstr "Expert partener îmbinare"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
 msgid "Merge accounts"
-msgstr ""
+msgstr "Îmbină conturi"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -10609,7 +10830,7 @@ msgstr "'active_model' lipsește in context."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__missing_account_partners
 msgid "Missing Account Partners"
-msgstr ""
+msgstr "Parteneri fără cont"
 
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_1
@@ -10617,6 +10838,8 @@ msgid ""
 "Missing a document for a banking statement? Use the Documents apps to "
 "request it and let the owner upload it at the right place."
 msgstr ""
+"Lipsește un document pentru un extras bancar? Folosește aplicația Documente "
+"pentru a-l solicita și lasă proprietarul să-l încarce la locul potrivit."
 
 #. module: account
 #. odoo-python
@@ -10643,7 +10866,7 @@ msgstr "Nume model"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Models"
-msgstr ""
+msgstr "Modele"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__biggest_tax
@@ -10700,7 +10923,7 @@ msgstr "Linie mișcare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "Move To Hash"
-msgstr ""
+msgstr "Mișcare de criptat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_type
@@ -10721,13 +10944,13 @@ msgstr "Multi Companie"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 msgid "Multi-Ledger"
-msgstr ""
+msgstr "Multi-registru"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Multi-ledger"
-msgstr ""
+msgstr "Multi-registru"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -10783,7 +11006,7 @@ msgstr "Nume"
 #: model:ir.model.fields,field_description:account.field_account_journal__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr ""
+msgstr "Substituent nume"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -10800,7 +11023,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "Cel mai apropiat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -10835,7 +11058,7 @@ msgstr "Valoarea negativă a câmpului sumă dacă tipul de plată este de ieși
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "Grupuri de taxe imbricate nu sunt permise."
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -10855,7 +11078,7 @@ msgstr "Niciodată"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Never for this vendor"
-msgstr ""
+msgstr "Niciodată pentru acest furnizor"
 
 #. module: account
 #. odoo-python
@@ -10928,7 +11151,7 @@ msgstr "Următorul tip de activitate"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__next
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Next Installment"
-msgstr ""
+msgstr "Următoarea rată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__next_payment_date
@@ -10936,7 +11159,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_date
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Next Payment Date"
-msgstr ""
+msgstr "Data următoarei plăți"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__no
@@ -10999,12 +11222,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No outstanding account could be found to make the payment"
-msgstr ""
+msgstr "Nu s-a găsit niciun cont de plată pentru a efectua plata"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
-msgstr ""
+msgstr "Fără înregistrări de plată în jurnal"
 
 #. module: account
 #. odoo-python
@@ -11021,17 +11244,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
 msgid "Non Deductible Products"
-msgstr ""
+msgstr "Produse nedeductibile"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product_total
 msgid "Non Deductible Products Total"
-msgstr ""
+msgstr "Total produse nedeductibile"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_tax
 msgid "Non Deductible Tax"
-msgstr ""
+msgstr "Taxă nedeductibilă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -11068,7 +11291,7 @@ msgstr "Active imobilizate"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Non-trade %s"
-msgstr ""
+msgstr "Non-comercial %s"
 
 #. module: account
 #. odoo-python
@@ -11098,7 +11321,7 @@ msgstr "Nescadent"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
 msgid "Not Hashable Unlocked Move"
-msgstr ""
+msgstr "Mișcare deblocată necriptabilă"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
@@ -11112,25 +11335,25 @@ msgstr "Neplătită"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Not Secured"
-msgstr ""
+msgstr "Nesecurizat"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__not_sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Not Sent"
-msgstr ""
+msgstr "Netrimis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Not hashed"
-msgstr ""
+msgstr "Nehashat"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Not sure... Help me!"
-msgstr ""
+msgstr "Nu sunt sigur... Ajută-mă!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note
@@ -11179,17 +11402,17 @@ msgstr "Noiembrie"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Now, we'll create your first invoice"
-msgstr ""
+msgstr "Acum vom crea prima ta factură"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_bank
 msgid "Num Journals Without Account Bank"
-msgstr ""
+msgstr "Număr de jurnale fără cont bancar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_credit
 msgid "Num Journals Without Account Credit"
-msgstr ""
+msgstr "Număr de jurnale fără cont de credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -11217,7 +11440,7 @@ msgstr "Număr de acțiuni"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__nb_unmodified_bills
 msgid "Number of bills previously unmodified from this partner"
-msgstr ""
+msgstr "Număr de facturi anterioare nemodificate de la acest partener"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
@@ -11283,7 +11506,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__number
 msgid "Numbers only (202400001)"
-msgstr ""
+msgstr "Numai cifre (202400001)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__value
@@ -11473,6 +11696,7 @@ msgstr "Numai intrările de jurnal postate/anulate pot fi resetate la schiță."
 #: code:addons/account/models/account_move_line.py:0
 msgid "Only vendor bills allow for deductibility of product/services."
 msgstr ""
+"Numai facturile furnizor permit deductibilitatea produselor/serviciilor."
 
 #. module: account
 #. odoo-python
@@ -11581,6 +11805,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
+"Limba de traducere opțională (cod ISO) pentru a selecta când se trimite un e-"
+"mail. Dacă nu este setată, versiunea în limba engleză va fi folosită. "
+"Aceasta ar trebui să fie de obicei o expresie substituentă care oferă limba "
+"potrivită, de exemplu {{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -11611,7 +11839,7 @@ msgstr "Facturi Originale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__company_lock_date
 msgid "Original Lock Date"
-msgstr ""
+msgstr "Data Originală de Blocare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -11745,13 +11973,13 @@ msgstr "Restanță"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__overdue
 msgid "Overdue Amount"
-msgstr ""
+msgstr "Sumă restantă"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Overdue invoices"
-msgstr ""
+msgstr "Facturi restante"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11769,6 +11997,8 @@ msgid ""
 "Overrides the Company's default on whether the price you use on the product "
 "and invoices includes this tax."
 msgstr ""
+"Suprascrie setarea implicită a companiei privind includerea acestei taxe în "
+"prețul produsului și pe facturi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11778,7 +12008,7 @@ msgstr "Conturi P&L"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "PAY001"
-msgstr ""
+msgstr "PLT001"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_pdf_report_id
@@ -11795,12 +12025,12 @@ msgstr "Fișier PDF"
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
-msgstr ""
+msgstr "PDF fără plată"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Invoicing"
-msgstr ""
+msgstr "Facturare electronică PEPPOL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -11911,7 +12141,7 @@ msgstr "Partener"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
 msgid "Partner Company Registry Placeholder"
-msgstr ""
+msgstr "Substituent registru companie partener"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -11966,7 +12196,7 @@ msgstr "Tip partener"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_vat_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_vat_placeholder
 msgid "Partner Vat Placeholder"
-msgstr ""
+msgstr "Substituent TVA partener"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
@@ -11996,7 +12226,7 @@ msgstr "Parteneri"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_missing_account_list_view
 msgid "Partners Missing a bank account"
-msgstr ""
+msgstr "Parteneri fără cont bancar"
 
 #. module: account
 #. odoo-python
@@ -12009,7 +12239,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners with same bank"
-msgstr ""
+msgstr "Parteneri cu aceeași bancă"
 
 #. module: account
 #. odoo-python
@@ -12087,7 +12317,7 @@ msgstr "Comunicări de Plată"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_count
 #: model:ir.model.fields,field_description:account.field_account_move__payment_count
 msgid "Payment Count"
-msgstr ""
+msgstr "Număr plăți"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -12170,7 +12400,7 @@ msgstr "Încasare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
 msgid "Payment Receipt Title"
-msgstr ""
+msgstr "Titlu chitanță de plată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -12288,7 +12518,7 @@ msgstr "Condiții de plată: 45 de zile"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_90days_on_the_10th
 msgid "Payment terms: 90 days, on the 10th"
-msgstr ""
+msgstr "Termen de plată: 90 zile, pe data de 10"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
@@ -12341,13 +12571,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "Payments related to partners with no bank account specified will be skipped."
-msgstr ""
+msgstr "Plățile legate de parteneri fără cont bancar specificat vor fi omise."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Plăți care au fost reconciliate cu această factură."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -12365,7 +12595,7 @@ msgstr "Procentaj"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 msgid "Percentage Tax Included"
-msgstr ""
+msgstr "Taxă procentuală inclusă"
 
 #. module: account
 #. odoo-python
@@ -12420,7 +12650,7 @@ msgstr "Risc de phishing: mediu"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
 msgid "Pick the rate on a certain date"
-msgstr ""
+msgstr "Alege cursul la o anumită dată"
 
 #. module: account
 #. odoo-python
@@ -12474,7 +12704,7 @@ msgstr "Vă rugăm să utilizați următoarea comunicare pentru plata dvs.:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__pos_receipt_label
 msgid "PoS receipt label"
-msgstr ""
+msgstr "Etichetă chitanță PoS"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url
@@ -12538,7 +12768,7 @@ msgstr "Subtotal Precedent"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__preferred_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
-msgstr ""
+msgstr "Linie metodă de plată preferată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
@@ -12548,7 +12778,7 @@ msgstr "Prag pentru grupuri de prefix"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__prefix_placeholder
 msgid "Prefix Placeholder"
-msgstr ""
+msgstr "Substituent prefix"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
@@ -12582,7 +12812,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_prepaid_expenses
 msgid "Prepaid Expenses"
-msgstr ""
+msgstr "Cheltuieli plătite în avans"
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -12637,7 +12867,7 @@ msgstr "Preț"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
 msgid "Price Include"
-msgstr ""
+msgstr "Preț cu taxe incluse"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12665,7 +12895,7 @@ msgstr "Imprimați cecuri pentru a vă plăti furnizorii"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_id
 msgid "Private Share Account"
-msgstr ""
+msgstr "Cont acțiuni private"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
@@ -12736,7 +12966,7 @@ msgstr "Produse de primit"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Professional %"
-msgstr ""
+msgstr "% profesional"
 
 #. module: account
 #. odoo-javascript
@@ -12753,34 +12983,34 @@ msgstr "Cont Profit"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
-msgstr ""
+msgstr "Notă de credit proformă"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "Factură proformă"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Bill"
-msgstr ""
+msgstr "Factură proformă furnizor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Credit Note"
-msgstr ""
+msgstr "Notă de credit proformă furnizor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "Linie metodă de plată la încasare implicită"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "Linie metodă de plată la plată implicită"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -12792,12 +13022,12 @@ msgstr "Achiziție"
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__purchase_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__purchase_lock_date
 msgid "Purchase Lock Date"
-msgstr ""
+msgstr "Dată blocare achiziții"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__purchase_lock_date
 msgid "Purchase Lock date"
-msgstr ""
+msgstr "Dată blocare achiziții"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
@@ -12826,7 +13056,7 @@ msgstr "Taxa de cumparare"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr ""
+msgstr "Taxe achiziție"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -12972,7 +13202,7 @@ msgstr "Încasăre"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Receive invoices"
-msgstr ""
+msgstr "Primește facturile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
@@ -12994,13 +13224,13 @@ msgstr "Data recunoașterii"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
-msgstr ""
+msgstr "Recalcularea tuturor taxelor pe baza acestei poziții fiscale"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Reconcilable"
-msgstr ""
+msgstr "Reconciliabilă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -13027,7 +13257,7 @@ msgstr "Tip Facturi Reconciliate"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Plăți reconciliate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -13069,7 +13299,7 @@ msgstr "Înregistrări"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Recursion found for tax “%s”."
-msgstr ""
+msgstr "Recursivitate găsită pentru taxa “%s”."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -13162,12 +13392,12 @@ msgstr "Respins"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__res_ids
 msgid "Related Document IDs"
-msgstr ""
+msgstr "ID-uri document asociat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Modelul Documentului Asociat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__related_moves
@@ -13184,7 +13414,7 @@ msgstr "Suma Taxelor Asociate"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__exchange_diff_partial_ids
 #: model:ir.model.fields,field_description:account.field_account_move__exchange_diff_partial_ids
 msgid "Related reconciliation"
-msgstr ""
+msgstr "Reconciliere asociată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
@@ -13219,7 +13449,7 @@ msgstr "Îndepărtat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model de redare"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -13357,7 +13587,7 @@ msgstr "Limitați la propunerile care au aceeași monedă ca linia de extras."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Restricted"
-msgstr ""
+msgstr "Restricționat"
 
 #. module: account
 #. odoo-python
@@ -13462,7 +13692,7 @@ msgstr "Inversat"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
-msgstr ""
+msgstr "Stornat la data de"
 
 #. module: account
 #. odoo-python
@@ -13474,7 +13704,7 @@ msgstr "Examinare"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Review Chart of Accounts"
-msgstr ""
+msgstr "Revizuiește planul de conturi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -13528,7 +13758,7 @@ msgstr "Formă Rotunjire"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_tree_view
 msgid "Rounding List"
-msgstr ""
+msgstr "Listă rotunjiri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding_method
@@ -13564,7 +13794,7 @@ msgstr "Sold Cumulativ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_iso20022
 msgid "SEPA Credit Transfer / ISO20022"
-msgstr ""
+msgstr "Transfer Credit SEPA / ISO20022"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13588,7 +13818,7 @@ msgstr "Eroare livrare SMS"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "SO123"
-msgstr ""
+msgstr "SO123"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -13645,7 +13875,7 @@ msgstr "Cheltuieli de Vânzare"
 #: model:ir.model.fields,field_description:account.field_res_company__sale_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__sale_lock_date
 msgid "Sales Lock Date"
-msgstr ""
+msgstr "Dată blocare vânzări"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -13668,7 +13898,7 @@ msgstr "Taxă Vânzări"
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Sales Taxes"
-msgstr ""
+msgstr "Taxe vânzare"
 
 #. module: account
 #. odoo-python
@@ -13690,7 +13920,7 @@ msgstr "Agent de vânzări"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Same Account as product"
-msgstr ""
+msgstr "Același cont ca produsul"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -13742,7 +13972,7 @@ msgstr "Scanează-mă cu aplicația ta bancară."
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_qr_code_preview
 msgid "Scan this QR Code with<br/>your banking application"
-msgstr ""
+msgstr "Scanează acest cod QR cu<br/>aplicația ta bancară"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -13788,7 +14018,7 @@ msgstr "Caută mișcare"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Search Statements"
-msgstr ""
+msgstr "Caută extrase"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_search
@@ -13799,14 +14029,14 @@ msgstr "Cautati Taxele"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Search a name or Tax ID..."
-msgstr ""
+msgstr "Caută un nume sau CIF..."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.js:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Search a product"
-msgstr ""
+msgstr "Caută un produs"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_label
@@ -13847,27 +14077,27 @@ msgstr "Secțiuni"
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Entries"
-msgstr ""
+msgstr "Securizează înregistrări"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_secure_entries_wizard
 #: model:ir.model,name:account.model_account_secure_entries_wizard
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Journal Entries"
-msgstr ""
+msgstr "Securizează note contabile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Secure Posted Entries with Hash"
-msgstr ""
+msgstr "Securizează înregistrările postate cu hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,field_description:account.field_account_move__secured
 msgid "Secured"
-msgstr ""
+msgstr "Securizat"
 
 #. module: account
 #. odoo-python
@@ -13875,12 +14105,14 @@ msgstr ""
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
+"Securizarea acestor înregistrări va securiza și înregistrările după data "
+"selectată."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Securing these entries will create at least one gap in the sequence."
-msgstr ""
+msgstr "Securizarea acestor înregistrări va crea cel puțin un gol în secvență."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -13899,7 +14131,7 @@ msgstr "Vedeți toate activitățile"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "See items"
-msgstr ""
+msgstr "Vezi elemente"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -13928,7 +14160,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Select a type"
-msgstr ""
+msgstr "Selectați un tip"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13983,6 +14215,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Vindeți și cumpărați produse în unități de măsură sau ambalaje diferite"
 
 #. module: account
 #. odoo-python
@@ -14007,7 +14240,7 @@ msgstr "Plată"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Send a bill to"
-msgstr ""
+msgstr "Trimite o factură către"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14035,6 +14268,9 @@ msgid ""
 "Any file extension will be accepted.\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"Trimiteți un e-mail separat pentru fiecare factură.\n"
+"Orice extensie de fișier va fi acceptată.\n"
+"Doar fișierele PDF și XML vor fi interpretate de Odoo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -14056,17 +14292,17 @@ msgstr "Trimiteți factura clientului și verificați ce va primi."
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sending_data
 #: model:ir.model.fields,field_description:account.field_account_move__sending_data
 msgid "Sending Data"
-msgstr ""
+msgstr "Se trimit date"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__sending_method_checkboxes
 msgid "Sending Method Checkboxes"
-msgstr ""
+msgstr "Bife metode de trimitere"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__sending_methods
 msgid "Sending Methods"
-msgstr ""
+msgstr "Metode de trimitere"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -14195,30 +14431,34 @@ msgstr "Servicii"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Set Company Data"
-msgstr ""
+msgstr "Setează datele companiei"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
 msgid "Set Periods"
-msgstr ""
+msgstr "Setează perioadele"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Set a date. The moves will be secured up to including this date."
 msgstr ""
+"Setează o dată. Înregistrările vor fi securizate până la această dată "
+"inclusiv."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
-msgstr ""
+msgstr "Setează un preț."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Setează o valoare mai mare decât 0.0 pentru a activa verificarea limitei de "
+"credit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14283,13 +14523,13 @@ msgstr "Setări"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Bank Account"
-msgstr ""
+msgstr "Configurare cont bancar"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Credit Card Account"
-msgstr ""
+msgstr "Configurare cont de card de credit"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -14308,7 +14548,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
 msgid "Show Aba Routing"
-msgstr ""
+msgstr "Afișează ruta ABA"
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -14346,7 +14586,7 @@ msgstr "Afișați toate funcțiile din contabilitate"
 #. module: account
 #: model:res.groups,name:account.group_account_secured
 msgid "Show Inalterability Features"
-msgstr ""
+msgstr "Afișează funcțiile de inalterabilitate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -14363,7 +14603,7 @@ msgstr "Afișare Cont Bancar Partener"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_payment_difference
 msgid "Show Payment Difference"
-msgstr ""
+msgstr "Afișează diferența de plată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
@@ -14400,7 +14640,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show draft entries"
-msgstr ""
+msgstr "Afișează înregistrările ciornă"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -14506,7 +14746,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Standard communication"
-msgstr ""
+msgstr "Comunicare standard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -14533,7 +14773,7 @@ msgstr "Extras"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Extras %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -14600,7 +14840,7 @@ msgstr "Stare"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__status_in_payment
 #: model:ir.model.fields,field_description:account.field_account_move__status_in_payment
 msgid "Status In Payment"
-msgstr ""
+msgstr "Stare în plată"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_state
@@ -14624,7 +14864,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_statusbar_secured/account_move_statusbar_secured.js:0
 msgid "Status with secured indicator for Journal Entries"
-msgstr ""
+msgstr "Stare cu indicator de securizare pentru note contabile"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_sales_tax
@@ -14712,7 +14952,7 @@ msgstr "Jurnal Adecvat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_batch_wizard__summary_data
 msgid "Summary Data"
-msgstr ""
+msgstr "Date sumare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
@@ -14904,7 +15144,7 @@ msgstr "Mesajul datei de închidere a taxei"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
 msgid "Tax Map"
-msgstr ""
+msgstr "Mapare taxă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -14990,7 +15230,7 @@ msgstr "Etichete fiscale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
 msgid "Tax Tags Formula Shortcut"
-msgstr ""
+msgstr "Scurtătură formulă etichete fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
@@ -15039,6 +15279,8 @@ msgid ""
 "Tax names must be unique!\n"
 "%(taxes)s"
 msgstr ""
+"Numele taxelor trebuie să fie unice!\n"
+"%(taxes)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
@@ -15081,12 +15323,12 @@ msgstr "Taxe Aplicate"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__taxes_legal_notes
 #: model:ir.model.fields,field_description:account.field_account_move__taxes_legal_notes
 msgid "Taxes Legal Notes"
-msgstr ""
+msgstr "Note legale taxe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Taxes are also displayed in local currency on invoices"
-msgstr ""
+msgstr "Taxele sunt afișate și în moneda locală pe facturi"
 
 #. module: account
 #. odoo-python
@@ -15102,7 +15344,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_tax_company_currency
 msgid "Taxes in company currency"
-msgstr ""
+msgstr "Taxe în moneda companiei"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15129,16 +15371,18 @@ msgid ""
 "Technical field giving the date the company lock date at the time the "
 "exception was created."
 msgstr ""
+"Câmp tehnic ce indică data de blocare a companiei la momentul creării "
+"excepției."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date
 msgid "Technical field giving the date the lock date was changed to."
-msgstr ""
+msgstr "Câmp tehnic ce indică data la care a fost schimbată data de blocare."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date_field
 msgid "Technical field identifying the changed lock date"
-msgstr ""
+msgstr "Câmp tehnic ce identifică data de blocare modificată"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -15190,13 +15434,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__template_name
 msgid "Template Name"
-msgstr ""
+msgstr "Denumire Șablon"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_wizard.py:0
 msgid "Template creation from composer requires a valid model."
-msgstr ""
+msgstr "Crearea unui șablon din compozitor necesită un model valid."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -15267,6 +15511,12 @@ msgid ""
 "To maintain date-based sequences, select entries and use the resequence "
 "option from the actions menu, available in developer mode."
 msgstr ""
+"Câmpul de dată %(date_field)s (%(date)s) introdus nu este aliniat cu numărul "
+"de secvență existent (%(sequence)s). Șterge numărul de secvență pentru a "
+"continua.\n"
+"Pentru a menține secvențele bazate pe dată, selectează înregistrările și "
+"folosește opțiunea de resecvențiere din meniul de acțiuni, disponibil în "
+"modul dezvoltator."
 
 #. module: account
 #. odoo-python
@@ -15275,6 +15525,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"Șablonul de diagramă %s nu trebuie selectat direct. În schimb, trebuie să "
+"selectați direct șablonul de diagramă legat de țara dvs."
 
 #. module: account
 #. odoo-python
@@ -15283,6 +15535,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"Disponibilitatea este setată la „Country Matches”, dar câmpul Country nu "
+"este setat."
 
 #. module: account
 #. odoo-python
@@ -15298,6 +15552,8 @@ msgid ""
 "The Early Payment Discount functionality can only be used with payment terms "
 "using a single 100% line. "
 msgstr ""
+"Funcționalitatea de discount pentru plata anticipată poate fi folosită doar "
+"cu termene de plată care folosesc o singură linie de 100%. "
 
 #. module: account
 #. odoo-python
@@ -15309,7 +15565,7 @@ msgstr "Reducerea pentru plată anticipată trebuie să fie strict pozitivă."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "The Hard Lock Date cannot be removed."
-msgstr ""
+msgstr "Data de blocare strictă nu poate fi eliminată."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -15439,6 +15695,9 @@ msgid ""
 "data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"Suma pentru %(partner_name)s pare neobișnuită. Pe baza datelor istorice, "
+"suma așteptată este %(mean)s (± %(wiggle)s).\n"
+"Vă rugăm să verificați dacă această sumă este corectă."
 
 #. module: account
 #. odoo-python
@@ -15479,6 +15738,10 @@ msgid ""
 "(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"Frecvența de facturare pentru %(partner_name)s pare neobișnuită. Pe baza "
+"datelor istorice, data estimată a următoarei facturi nu este înainte de %"
+"(expected_date)s (la fiecare %(mean)s (± %(wiggle)s) zile).\n"
+"Vă rugăm să verificați dacă această dată este corectă."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
@@ -15508,6 +15771,8 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid "The code must be set for every company to which this account belongs."
 msgstr ""
+"Codul trebuie să fie setat pentru fiecare companie căreia îi aparține acest "
+"cont."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
@@ -15530,6 +15795,8 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"Partenerul comercial a fost actualizat pentru toate înregistrările contabile "
+"asociate."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15543,6 +15810,7 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the "
 "group."
 msgstr ""
+"Codul de țară al codului TVA străin nu se potrivește cu nicio țară din grup."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15575,7 +15843,7 @@ msgstr "Țara în care se utilizează rapoartele fiscale din această companie"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "Rata valutară trebuie să fie strict pozitivă."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -15606,12 +15874,14 @@ msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"Data este setată înainte de: %(lock_date_info)s. Nota contabilă va fi "
+"înregistrată la data %(invoice_date)s la postare."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "The date selected is protected by: %(lock_date_info)s."
-msgstr ""
+msgstr "Data selectată este protejată de: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__fiscalyear_lock_date
@@ -15619,6 +15889,8 @@ msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
 msgstr ""
+"Data la care este setată Data de Blocare Globală prin această excepție. Dacă "
+"data de blocare nu este modificată, se setează la data maximă."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__purchase_lock_date
@@ -15626,6 +15898,8 @@ msgid ""
 "The date the Purchase Lock Date is set to by this exception. If the lock "
 "date is not changed it is set to the maximal date."
 msgstr ""
+"Data la care este setată Data de Blocare Achiziții prin această excepție. "
+"Dacă data de blocare nu este modificată, se setează la data maximă."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__sale_lock_date
@@ -15633,6 +15907,8 @@ msgid ""
 "The date the Sale Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
+"Data la care este setată Data de Blocare Vânzări prin această excepție. Dacă "
+"data de blocare nu este modificată, se setează la data maximă."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__tax_lock_date
@@ -15640,6 +15916,8 @@ msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
+"Data la care este setată Data de Blocare Fiscală prin această excepție. Dacă "
+"data de blocare nu este modificată, se setează la data maximă."
 
 #. module: account
 #. odoo-python
@@ -15657,7 +15935,7 @@ msgstr "Numărul de zile adaugate trebuie sa fie intre 0 și 31"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The deductibility must be a value between 0 and 100."
-msgstr ""
+msgstr "Deducibilitatea trebuie să fie o valoare între 0 și 100."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -15682,13 +15960,13 @@ msgstr "Intrarea %(name)s (id %(id)s) trebuie să fie în schiță."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry is not balanced."
-msgstr ""
+msgstr "Înregistrarea nu este echilibrată."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr ""
+msgstr "Înregistrarea este securizată cu un hash inalterabil."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15749,6 +16027,8 @@ msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
 msgstr ""
+"Următoarele conturi trebuie să fie atribuite la cel puțin o companie:\n"
+"%(accounts)s"
 
 #. module: account
 #. odoo-python
@@ -15757,6 +16037,8 @@ msgid ""
 "The following entries are unbalanced:\n"
 "\n"
 msgstr ""
+"Următoarele înregistrări sunt dezechilibrate:\n"
+"\n"
 
 #. module: account
 #. odoo-python
@@ -15765,6 +16047,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though "
 "it was detected as eligible: "
 msgstr ""
+"Următoarea eroare a împiedicat generarea codului QR pentru '%(candidate)s', "
+"deși acesta a fost detectat ca eligibil: "
 
 #. module: account
 #. odoo-python
@@ -15826,7 +16110,7 @@ msgstr "Factura conține deja linii, nu a fost actualizată din atașament."
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "The invoice having been sent, the button has changed priority."
-msgstr ""
+msgstr "După ce factura a fost trimisă, butonul și-a schimbat prioritatea."
 
 #. module: account
 #. odoo-python
@@ -15929,6 +16213,9 @@ msgid ""
 "Please change the journal entry date or the following lock dates to proceed: "
 "%(lock_date_info)s."
 msgstr ""
+"Operațiunea este refuzată deoarece ar afecta o declarație fiscală deja "
+"emisă. Vă rugăm să schimbați data notei contabile sau următoarele date de "
+"blocare pentru a continua: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -16148,7 +16435,7 @@ msgstr "Secțiunile definite într-un raport nu pot avea secțiuni în sine."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
 msgid "The selected Date"
-msgstr ""
+msgstr "Data selectată"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -16178,6 +16465,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is "
 "set for invoices."
 msgstr ""
+"Trimiterea facturilor nu este configurată corect, asigurați-vă că raportul "
+"folosit este setat pentru facturi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16240,6 +16529,11 @@ msgid ""
 "The month detected here is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Secvența va reporni de la 1 la începutul fiecărei luni.\n"
+"Anul de început financiar detectat aici este '%(year)s'.\n"
+"Anul de sfârșit financiar detectat aici este '%(year_end)s'.\n"
+"Luna detectată aici este '%(month)s'.\n"
+"Numărul incremental în acest caz este '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -16369,6 +16663,8 @@ msgid ""
 "There are entries that cannot be hashed. They can be protected by the Hard "
 "Lock Date."
 msgstr ""
+"Există înregistrări care nu pot fi criptate (hash). Acestea pot fi protejate "
+"prin Data de Blocare Strictă (Hard Lock Date)."
 
 #. module: account
 #. odoo-python
@@ -16380,13 +16676,13 @@ msgstr "Nu există elemente de jurnal în starea de proiect pentru a posta."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "There are payments in progress. Make sure you don't pay twice."
-msgstr ""
+msgstr "Există plăți în curs. Asigurați-vă că nu plătiți de două ori."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
-msgstr ""
+msgstr "Există încă înregistrări ciornă înainte de data selectată."
 
 #. module: account
 #. odoo-python
@@ -16395,6 +16691,8 @@ msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
 msgstr ""
+"Există încă înregistrări ciornă în perioada pe care doriți să o blocați "
+"strict. Trebuie să le postați sau să le ștergeți."
 
 #. module: account
 #. odoo-python
@@ -16404,6 +16702,9 @@ msgid ""
 "The entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
+"Există încă linii de extras bancar nereconciliate înainte de data selectată. "
+"Înregistrările din jurnalele cu prefixele respective nu vor fi securizate: %"
+"(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -16431,6 +16732,8 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Nu există încă nicio notă contabilă marcată pentru inalterabilitatea datelor "
+"contabile."
 
 #. module: account
 #. odoo-python
@@ -16447,13 +16750,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "There is no template that applies to invoices."
-msgstr ""
+msgstr "Nu există niciun șablon care să se aplice facturilor."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "There is no template that applies to this move type."
-msgstr ""
+msgstr "Nu există niciun șablon care să se aplice acestui tip de mutare."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -16517,7 +16820,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
-msgstr ""
+msgstr "Acest cont a fost separat din %(account_name)s (%(company_name)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -16566,7 +16869,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "This can only be used on accounts."
-msgstr ""
+msgstr "Aceasta poate fi folosită doar pe conturi."
 
 #. module: account
 #. odoo-python
@@ -16581,6 +16884,8 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Acest document este protejat de un hash. Prin urmare, nu puteți edita "
+"următoarele câmpuri: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -16660,7 +16965,7 @@ msgstr "Această factură este trimisă în fundal."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "This is the Audit Trail Report"
-msgstr ""
+msgstr "Acesta este raportul pistei de audit"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -16680,25 +16985,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the full amount."
-msgstr ""
+msgstr "Aceasta este suma integrală."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the next unreconciled installment."
-msgstr ""
+msgstr "Aceasta este următoarea rată nereconciliată."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the overdue amount."
-msgstr ""
+msgstr "Aceasta este suma restantă."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr ""
+msgstr "Această notă contabilă a fost securizată."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -16724,6 +17029,9 @@ msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
 msgstr ""
+"Această înregistrare nu a putut fi blocată deoarece există o altă "
+"înregistrare cu același prefix de secvență și cu un număr mai mare. Este "
+"posibil să fie nevoie să reordonați secvența."
 
 #. module: account
 #. odoo-python
@@ -16786,13 +17094,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
-msgstr ""
+msgstr "Această setare nu poate fi modificată după ce a fost creată o factură."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "Această eroare specifică a apărut în timpul importului:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16800,6 +17108,8 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"Aceasta va actualiza toate taxele și conturile pe baza poziției fiscale "
+"selectate."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -16822,13 +17132,15 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_country_group__exclude_state_ids
 msgid "Those states are ignored by the fiscal positions"
-msgstr ""
+msgstr "Aceste state sunt ignorate de pozițiile fiscale"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
 msgid ""
 "Tick this checkbox if you want accounts to be grouped by name for merging."
 msgstr ""
+"Bifați această opțiune dacă doriți ca conturile să fie grupate după nume "
+"pentru comasare."
 
 #. module: account
 #: model:digest.tip,name:account.digest_tip_account_0
@@ -16842,7 +17154,7 @@ msgstr ""
 #: model:digest.tip,name:account.digest_tip_account_1
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_1
 msgid "Tip: Stop chasing the Documents you need"
-msgstr ""
+msgstr "Sfat: Nu mai alergați după documentele de care aveți nevoie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -16879,6 +17191,8 @@ msgstr "De validat"
 msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" email"
 msgstr ""
+"Pentru a adăuga informații la o factură trimisă anterior, răspundeți la e-"
+"mailul „trimis”"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16910,6 +17224,9 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s "
 "in order to validate it."
 msgstr ""
+"Pentru a înregistra plăți cu %(method_name)s, contul bancar al "
+"destinatarului trebuie validat manual. Accesați contul bancar al "
+"partenerului %(partner)s pentru validare."
 
 #. module: account
 #. odoo-python
@@ -17087,7 +17404,7 @@ msgstr "Suma totală pe care trebuie să o plătiți acestui furnizor."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Total for the installments before %(date)s."
-msgstr ""
+msgstr "Total pentru ratele înainte de %(date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total_currency
@@ -17110,7 +17427,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Trade %s"
-msgstr ""
+msgstr "Transferă %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -17125,7 +17442,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Transaction Feeds"
-msgstr ""
+msgstr "Fluxuri de tranzacții"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
@@ -17190,6 +17507,9 @@ msgid ""
 "limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Declanșați alerte la crearea facturilor și comenzilor de vânzare pentru "
+"partenerii cu o sumă totală de încasat ce depășește o limită. Setați o "
+"valoare mai mare decât 0.0 pentru a activa verificarea limitei de credit."
 
 #. module: account
 #. odoo-python
@@ -17279,12 +17599,12 @@ msgstr "Expandează tot"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Înregistrări necriptate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Înregistrări necriptate"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -17295,7 +17615,7 @@ msgstr "Identificator unic pentru această linie."
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "buc"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
@@ -17311,12 +17631,12 @@ msgstr "Preț unitar:"
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "Statele Unite ale Americii (Generic)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Unități și ambalaje"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17327,12 +17647,12 @@ msgstr "Debifați ca trimis"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Unmerge"
-msgstr ""
+msgstr "Dezîmparte"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
 msgid "Unmerge account"
-msgstr ""
+msgstr "Dezîmparte contul"
 
 #. module: account
 #. odoo-javascript
@@ -17376,7 +17696,7 @@ msgstr "Nereconciliat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "Unreconciled Bank Statement Line"
-msgstr ""
+msgstr "Linie de extras bancar nereconciliată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
@@ -17412,12 +17732,12 @@ msgstr "Valoare fără taxe cu semn"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_in_currency_signed
 msgid "Untaxed Amount Signed Currency"
-msgstr ""
+msgstr "Valoare fără taxe cu semn în valută"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal_currency
 msgid "Untaxed Amount in Currency"
-msgstr ""
+msgstr "Valoare fără taxe în valută"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -17493,12 +17813,12 @@ msgstr "Încărcați facturi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Use Bill Reference"
-msgstr ""
+msgstr "Folosește referința facturii"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__cta
 msgid "Use CTA"
-msgstr ""
+msgstr "Folosește CTA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -17550,7 +17870,7 @@ msgstr "Utilizare la închiderea taxelor"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
 msgid "Use the most recent rate at the date of the report"
-msgstr ""
+msgstr "Folosește cel mai recent curs la data raportului"
 
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
@@ -17630,7 +17950,7 @@ msgstr "Utilizator"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_fiscalyear_lock_date
 msgid "User Fiscalyear Lock Date"
-msgstr ""
+msgstr "Dată de blocare an fiscal utilizator"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__user_groupby
@@ -17640,7 +17960,7 @@ msgstr "Gruparea utilizatorilor după"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_hard_lock_date
 msgid "User Hard Lock Date"
-msgstr ""
+msgstr "Dată de blocare strictă utilizator"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
@@ -17651,17 +17971,17 @@ msgstr "Utilizatorul are un cont bancar de validare de grup"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_purchase_lock_date
 msgid "User Purchase Lock Date"
-msgstr ""
+msgstr "Dată de blocare achiziții utilizator"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_sale_lock_date
 msgid "User Sale Lock Date"
-msgstr ""
+msgstr "Dată de blocare vânzări utilizator"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_tax_lock_date
 msgid "User Tax Lock Date"
-msgstr ""
+msgstr "Dată de blocare taxe utilizator"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
@@ -17686,7 +18006,7 @@ msgstr "TVA-ul necesar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
-msgstr ""
+msgstr "Valabil pentru"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17725,7 +18045,7 @@ msgstr "Validat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating"
-msgstr ""
+msgstr "Se validează"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -17758,7 +18078,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
 msgid "Values that created the draft cash-basis entry"
-msgstr ""
+msgstr "Valorile care au creat intrarea cash-basis de ciornă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -17869,12 +18189,16 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Facturile furnizorilor pot fi pre-generate pe baza comenzilor de achiziție\n"
+"sau a recepțiilor. Acest lucru vă permite să controlați facturile\n"
+"pe care le primiți de la furnizor în funcție de documentul de ciornă\n"
+"din Odoo."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Verificați prețul și actualizați dacă este necesar."
 
 #. module: account
 #. odoo-javascript
@@ -17893,7 +18217,7 @@ msgstr "Vedeți partenerii(s)"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Vizibil pentru toți"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -17901,6 +18225,8 @@ msgid ""
 "Want to make your life even easier and automate bill validation from this "
 "vendor ?"
 msgstr ""
+"Vrei să-ți faci viața și mai ușoară și să automatizezi validarea facturilor "
+"de la acest furnizor?"
 
 #. module: account
 #. odoo-javascript
@@ -18031,6 +18357,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"Când se țintește o expresie pentru report, eticheta acelei expresii trebuie "
+"să înceapă cu _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -18069,7 +18397,7 @@ msgstr "Cu potrivirea partenerilor"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "With residual"
-msgstr ""
+msgstr "Cu restant"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -18084,12 +18412,12 @@ msgstr "Asistent"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "Linie asistent"
 
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr ""
+msgstr "Lucru în curs"
 
 #. module: account
 #. odoo-javascript
@@ -18118,7 +18446,7 @@ msgstr "Valoare greșită de credit sau de debit în înregistrarea contabilă!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr ""
+msgstr "Format XML"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -18129,7 +18457,7 @@ msgstr "Anual"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "You are about to send"
-msgstr ""
+msgstr "Ești pe cale să trimiți"
 
 #. module: account
 #. odoo-python
@@ -18181,7 +18509,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You can not reconcile cancelled entries."
-msgstr ""
+msgstr "Nu poți reconcilia intrările anulate."
 
 #. module: account
 #. odoo-python
@@ -18211,7 +18539,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Puteți genera doar documente de vânzare."
 
 #. module: account
 #. odoo-python
@@ -18252,7 +18580,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
-msgstr ""
+msgstr "Nu puteți bloca o factură plătită."
 
 #. module: account
 #. odoo-python
@@ -18303,6 +18631,8 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"Nu puteți crea plăți pentru înregistrări care aparțin unor sucursale "
+"diferite fără acces la compania principală."
 
 #. module: account
 #. odoo-python
@@ -18331,7 +18661,7 @@ msgstr "Nu puteți șterge un raport care are variante."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Nu puteți genera facturi care nu sunt postate."
 
 #. module: account
 #. odoo-python
@@ -18400,6 +18730,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"Nu puteți reseta la ciornă aceste note contabile. Trebuie să solicitați o "
+"anulare în schimb."
 
 #. module: account
 #. odoo-python
@@ -18408,6 +18740,8 @@ msgid ""
 "You can't unlink this company from this account since there are some journal "
 "items linked to it."
 msgstr ""
+"Nu puteți disocia această companie de acest cont deoarece există articole de "
+"jurnal asociate cu acesta."
 
 #. module: account
 #. odoo-python
@@ -18415,6 +18749,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
 msgstr ""
+"Nu puteți adăuga sau modifica înregistrări anterioare sau inclusiv la: %"
+"(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -18442,6 +18778,8 @@ msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
 msgstr ""
+"Nu puteți crea o poziție fiscală cu o țară din afara grupului de țări "
+"selectat."
 
 #. module: account
 #. odoo-python
@@ -18490,6 +18828,7 @@ msgstr "Nu puteți șterge o linie fiscală, deoarece ar afecta raportul fiscal"
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
+"Nu puteți șterge articole de jurnal care aparțin unei note contabile blocate."
 
 #. module: account
 #. odoo-python
@@ -18518,6 +18857,8 @@ msgstr ""
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending flow."
 msgstr ""
+"Nu puteți șterge acest șablon de e-mail, este folosit în fluxul de trimitere "
+"a facturilor."
 
 #. module: account
 #. odoo-python
@@ -18533,7 +18874,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot deprecate an account that is used in a tax distribution."
-msgstr ""
+msgstr "Nu puteți dezactiva un cont folosit într-o distribuție de taxe."
 
 #. module: account
 #. odoo-python
@@ -18563,7 +18904,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "You cannot duplicate a Lock Date Exception."
-msgstr ""
+msgstr "Nu puteți duplica o excepție de dată de blocare."
 
 #. module: account
 #. odoo-python
@@ -18585,6 +18926,9 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"Nu puteți edita jurnalul unei note contabile dacă a fost deja postată, cu "
+"excepția cazului în care numele este eliminat sau setat la \"/\". Acest "
+"lucru poate crea un gol în secvență."
 
 #. module: account
 #. odoo-python
@@ -18594,6 +18938,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"Nu puteți edita jurnalul unei note contabile cu un număr de secvență "
+"atribuit, decât dacă numele este eliminat sau setat la \"/\". Acest lucru "
+"poate crea un gol în secvență."
 
 #. module: account
 #. odoo-python
@@ -18659,6 +19006,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"Nu puteți modifica următoarele câmpuri doar pentru citire pe o notă "
+"contabilă postată: %s"
 
 #. module: account
 #. odoo-python
@@ -18699,13 +19048,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot register payments for miscellaneous entries."
-msgstr ""
+msgstr "Nu puteți înregistra plăți pentru note diverse."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
 msgid "You cannot remove parts of the audit trail."
-msgstr ""
+msgstr "Nu puteți elimina părți din jurnalul de audit."
 
 #. module: account
 #. odoo-python
@@ -18731,7 +19080,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr ""
+msgstr "Nu puteți reseta la ciornă o notă contabilă blocată."
 
 #. module: account
 #. odoo-python
@@ -18751,6 +19100,8 @@ msgstr "Nu puteți reseta în ciornă o intrare jurnală de diferență de schim
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
 msgstr ""
+"Nu puteți revoca excepțiile de la data de blocare. Solicitați ajutorul cuiva "
+"cu rolul 'Consilier'."
 
 #. module: account
 #. odoo-python
@@ -18769,6 +19120,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Nu puteți seta un partener ca adresă de facturare pentru altul dacă au un %"
+"(vat_label)s diferit."
 
 #. module: account
 #. odoo-python
@@ -18784,7 +19137,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
+msgstr "Nu puteți schimba tipul unui document care a fost deja postat."
 
 #. module: account
 #. odoo-python
@@ -18805,6 +19158,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"Nu puteți folosi câmpul carryover_target într-o expresie care nu are "
+"eticheta ce începe cu _carryover_"
 
 #. module: account
 #. odoo-python
@@ -18852,6 +19207,8 @@ msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
 msgstr ""
+"Nu aveți dreptul să efectuați această operațiune deoarece nu aveți acces la "
+"următoarele companii: %s."
 
 #. module: account
 #. odoo-python
@@ -18895,7 +19252,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr ""
+msgstr "Trebuie să selectați cel puțin 2 conturi."
 
 #. module: account
 #. odoo-python
@@ -19003,12 +19360,12 @@ msgstr "activați moneda facturii"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "amounts for"
-msgstr ""
+msgstr "sume pentru"
 
 #. module: account
 #. odoo-javascript
@@ -19039,20 +19396,20 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "bills for"
-msgstr ""
+msgstr "facturi pentru"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "de către %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__email
 msgid "by Email"
-msgstr ""
+msgstr "prin e-mail"
 
 #. module: account
 #. odoo-python
@@ -19080,7 +19437,7 @@ msgstr "inchideți"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
-msgstr ""
+msgstr "date pentru"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -19090,7 +19447,7 @@ msgstr "datorată dacă este plătită înainte"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "e-Invoicing & Email"
-msgstr ""
+msgstr "e-Facturare & Email"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -19114,7 +19471,7 @@ msgstr "ex. GEBABEBB"
 #: code:addons/account/models/account_analytic_distribution_model.py:0
 #: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
-msgstr ""
+msgstr "ex. %(prefix)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -19160,13 +19517,13 @@ msgstr "e.g. https://www.odoo.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "ex. compania-mea.com"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format
 msgid "eInvoice format"
-msgstr ""
+msgstr "Format factură electronică"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -19177,12 +19534,12 @@ msgstr "intrări"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "everyone"
-msgstr ""
+msgstr "toată lumea"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
+msgstr "ies din intervalul tipic."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -19205,12 +19562,12 @@ msgstr "aici"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "in"
-msgstr ""
+msgstr "în"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
@@ -19235,13 +19592,13 @@ msgstr "în procent"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "in_invoice"
-msgstr ""
+msgstr "factură de intrare"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "invoice(s)"
-msgstr ""
+msgstr "factură(i)"
 
 #. module: account
 #. odoo-python
@@ -19253,7 +19610,7 @@ msgstr "facturi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "is a key action. Have you reviewed everything?"
-msgstr ""
+msgstr "este o acțiune cheie. Ați verificat totul?"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -19284,24 +19641,24 @@ msgstr "legislație."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this customer."
-msgstr ""
+msgstr "enumerate mai jos pentru acest client."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this vendor."
-msgstr ""
+msgstr "enumerate mai jos pentru acest furnizor."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "move_id"
-msgstr ""
+msgstr "id_mișcare"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "move_type"
-msgstr ""
+msgstr "tip mișcare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19339,7 +19696,7 @@ msgstr "din"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "out_invoice"
-msgstr ""
+msgstr "factură de ieșire"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -19366,13 +19723,13 @@ msgstr "amânarea la {new_date}"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "private part"
-msgstr ""
+msgstr "parte privată"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "private part (taxes)"
-msgstr ""
+msgstr "parte privată (taxe)"
 
 #. module: account
 #. odoo-python
@@ -19402,7 +19759,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "reversed"
-msgstr ""
+msgstr "inversat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
@@ -19440,7 +19797,7 @@ msgstr "de încredere"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "încearcă exemplul nostru"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19479,7 +19836,7 @@ msgstr "conturi bancare nesigure"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will auto-confirm on their respective dates."
-msgstr ""
+msgstr "se vor confirma automat la datele respective."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19493,7 +19850,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "without making any corrections."
-msgstr ""
+msgstr "fără a face nicio corecție."
 
 #. module: account
 #. odoo-python
@@ -19502,6 +19859,8 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"{amount} ({debit_credit}) din <strong>{account_source_name}</strong> au fost "
+"transferați la <strong>{account_target_name}</strong> prin {link}"
 
 #. module: account
 #. odoo-python
@@ -19528,6 +19887,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Chitanță de plată (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) ar trebui să fie un cont de tip \"%"
+#~ "(receivable)s\" sau \"%(payable)s\" cu ambele opțiuni \"%"
+#~ "(allow_reconciliation)s\" și \"%(non_trade)s\" activate."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

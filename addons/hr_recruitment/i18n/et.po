@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment
-# 
+# * hr_recruitment
+#
 # Translators:
 # Siim Raasuke, 2024
 # Leaanika Randmets, 2024
@@ -19,20 +19,22 @@
 # Anna, 2024
 # JanaAvalah, 2024
 # Stevin Lilla, 2024
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"PO-Revision-Date: 2025-11-22 13:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s18-2/"
+"hr_recruitment/et/>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__accepted_applications_count
@@ -703,6 +705,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Language Test\", \"Prepare Offer\", ...)"
 msgstr ""
+"Tegevusplaanide abil saab määrata tegevuste loendi vaid paari klõpsuga\n"
+"                    (nt 'Keele test', 'Pakkumise ettevalmistamine' jne).\""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_schedule
@@ -910,6 +914,8 @@ msgid ""
 "Applications received from this Email won't be linked to a contact.There "
 "will be no email address set on the Applicant either."
 msgstr ""
+"Sellelt e-posti aadressilt saabunud avaldusi ei seota ühegi kontaktiga. "
+"Kandidaadi andmetes ei määrata ka e-posti aadressi."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
@@ -1245,7 +1251,7 @@ msgstr "Loo värbamistegevuse plaan"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Create a new rule to process emails from specific job boards."
-msgstr ""
+msgstr "Loo uus reegel, et töödelda e-kirju konkreetsetelt tööportaalidelt."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1325,6 +1331,7 @@ msgid ""
 "Define a regex: Extract the applicant's name from the email's subject or "
 "body."
 msgstr ""
+"Määra regulaaravaldis: eralda kandidaadi nimi e-kirja pealkirjast või sisust."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1680,7 +1687,7 @@ msgstr "Kanbanis volditud"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "Folded in Recruitment Pipe:"
-msgstr ""
+msgstr "Kokku volditud värbamistorus:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
@@ -1942,6 +1949,8 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job offers on LinkedIn, Monster, etc."
 msgstr ""
+"Saabuvad e-kirjad loovad automaatselt kandideerimisavaldusi. Kasuta seda "
+"otse kandideerimisteks või tööpakkumiste postitamisel LinkedIni jms kaudu."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__mobile_blacklisted
@@ -3215,6 +3224,8 @@ msgstr "Spämm"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Specific jobs that use this stage. Other jobs will not use this stage."
 msgstr ""
+"Selle etapi kasutamiseks on määratud konkreetsed ametikohad. Teised "
+"ametikohad seda etappi ei kasuta."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3350,6 +3361,7 @@ msgid ""
 "The candidate is linked to an employee, to avoid losing information, archive"
 " it instead."
 msgstr ""
+"Kandidaat on juba töötajaga seotud. Arhiveeri kandidaat, et andmed ei kaoks."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -3636,6 +3648,8 @@ msgstr "Kes saavad kandidaatidele ligi"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Without a regex: The applicant's name will be the email's subject."
 msgstr ""
+"Kui regulaaravaldist pole määratud, kasutatakse kandidaadi nimena e-kirja "
+"teemat."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3670,6 +3684,9 @@ msgid ""
 "You can't select Send email option.\n"
 "The email will not be sent to the following applicant(s) as they don't have an email address:"
 msgstr ""
+"Meili saatmist ei saa valida.\n"
+"Järgmistele kandidaatidele ei saa kirja saata, kuna neil puudub e-posti "
+"aadress:"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3677,6 +3694,7 @@ msgstr ""
 msgid ""
 "You cannot create an applicant in a different company than the candidate"
 msgstr ""
+"Kandideerimisavaldust ei saa luua teise ettevõtte alla kui kandidaat kuulub"
 
 #. module: hr_recruitment
 #. odoo-python
