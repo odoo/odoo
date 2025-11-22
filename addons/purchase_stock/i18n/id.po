@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 21:59+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-11-20 06:11+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/id/>\n"
 "Language: id\n"
@@ -43,6 +43,7 @@ msgstr "%(value)s untuk %(quantity)s %(unit)s dari %(bills)s"
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid "%(value)s for %(quantity)s %(unit)s from %(quotation)s (not billed)"
 msgstr ""
+"%(value)s untuk %(quantity)s %(unit)s dari %(quotation)s (tidak ditagih)"
 
 #. module: purchase_stock
 #. odoo-python
@@ -54,7 +55,7 @@ msgstr "+ %d hari"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %s day(s)"
-msgstr ""
+msgstr "+ %s hari"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -150,7 +151,7 @@ msgstr "Tindakan"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Add All"
-msgstr ""
+msgstr "Tambahkan Semua"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -438,6 +439,11 @@ msgid ""
 " Set a reference period to estimate sales, and use the percentage to take "
 "into account seasonality and the increase/decrease of business."
 msgstr ""
+"Dapatkan rekomendasi produk untuk dibeli di %(vendorName)s berdasarkan stok "
+"di tangan, kuantitas mendatang, dan volume sales yang diharapkan.\n"
+"\n"
+" Tetapkan periode referensi untuk mengestimasi sales, dan gunakan persentase "
+"untuk memperhitungkan musim dan peningkatan/pengurangan bisnis."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -449,7 +455,7 @@ msgstr "Pergi kembali ke SPB untuk membuat tagihan vendor."
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Received Not Invoiced"
-msgstr ""
+msgstr "Barang Diterima Tidak Difaktur"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_rfq
@@ -578,7 +584,7 @@ msgstr "Transfer berikutnya yang terdampak:"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "No Vendor Found"
-msgstr ""
+msgstr "Tidak ada Vendor yang Ditemukan"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
@@ -773,7 +779,7 @@ msgstr "Penerimaan"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Receipt Date"
-msgstr ""
+msgstr "Tanggal Kwitansi"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
@@ -837,7 +843,7 @@ msgstr "Minta pemasok Anda untuk mengirim langsung ke pelanggan Anda"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 msgid "Requests for quotation :"
-msgstr ""
+msgstr "RFQ:"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -995,7 +1001,7 @@ msgstr "Replenishment order berikut telah dibuat"
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "The purchase order %s this receipt is linked to was cancelled."
-msgstr ""
+msgstr "Pesanan pembelian %s yang terhubung ke kwitansi ini dibatalkan."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1065,7 +1071,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/product.py:0
 msgid "This product has the \"Buy\" route checked but is not purchasable."
-msgstr ""
+msgstr "Produk ini memiliki rute \"Beli\" dicentang tapi tidak dapat dibeli."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id

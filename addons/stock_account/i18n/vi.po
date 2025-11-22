@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 19:10+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -92,6 +92,7 @@ msgstr "Thông tin kế toán"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Accrual"
 msgstr ""
 
@@ -410,8 +411,10 @@ msgid "Display Serial & Lot Number on Invoices"
 msgstr "Hiển thị số sê-ri và số lô trên hóa đơn"
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Ending Stock"
 msgstr ""
 
@@ -501,8 +504,10 @@ msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "Nếu được chọn, định giá sẽ cụ thể theo số Lô/sê-ri."
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Initial Balance"
 msgstr "Dư đầu kỳ"
 
@@ -527,6 +532,7 @@ msgstr "Vị trí kiểm kho"
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
 msgstr "Thất thoát tồn kho"
 
@@ -572,6 +578,14 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_external
 msgid "Is valued outside the company"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"It exists closing entries after the selected date. Cancel them before "
+"generate an entry prior to them"
 msgstr ""
 
 #. module: stock_account
@@ -887,8 +901,10 @@ msgid "Stock Valuation Account"
 msgstr "Tài khoản định giá tồn kho"
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Stock Variation"
 msgstr ""
@@ -1070,8 +1086,8 @@ msgid ""
 "        Used to compute margins on sale orders."
 msgstr ""
 "Giá trị của sản phẩm (được tính tự động trong AVCO).\n"
-"        Được sử dụng để định giá sản phẩm khi không biết chi phí mua hàng ("
-"ví dụ: điều chỉnh tồn kho).\n"
+"        Được sử dụng để định giá sản phẩm khi không biết chi phí mua hàng "
+"(ví dụ: điều chỉnh tồn kho).\n"
 "        Được sử dụng để tính toán lợi nhuận trên các đơn bán hàng."
 
 #. module: stock_account

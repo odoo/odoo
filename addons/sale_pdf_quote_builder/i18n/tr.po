@@ -5,13 +5,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-11-12 15:03+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "sale_pdf_quote_builder/tr/>\n"
 "Language: tr\n"
@@ -32,7 +33,6 @@ msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-#, fuzzy
 msgid "<i class=\"fa fa-arrow-right\"/> Link to the demo video"
 msgstr "<i class=\"fa fa-arrow-right\"/> Demo videosunun bağlantısı"
 
@@ -49,24 +49,22 @@ msgstr "<span>Belge Türü:</span>"
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
-#, fuzzy
 msgid ""
 "A form field set as used in product documents can't be linked to a quotation "
 "document."
 msgstr ""
-"Ürün belgelerinde kullanılan bir form alanı seti, bir fiyat teklifi "
+"rün belgelerinde kullanılmak üzere ayarlanmış bir form alanı, bir teklif "
 "belgesine bağlanamaz."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
-#, fuzzy
 msgid ""
 "A form field set as used in quotation documents can't be linked to a product "
 "document."
 msgstr ""
-"Teklif belgelerinde kullanılan bir form alanı seti, bir ürün belgesine "
-"bağlanamaz."
+"Teklif belgelerinde kullanılmak üzere ayarlanmış bir form alanı, bir ürün "
+"belgesine bağlanamaz."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -81,7 +79,6 @@ msgstr "Etkin"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__add_by_default
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
-#, fuzzy
 msgid "Add By Default"
 msgstr "Varsayılan Olarak Ekle"
 
@@ -146,7 +143,6 @@ msgstr "Mevcut ürün belgeleri"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_quotation_document_ids
-#, fuzzy
 msgid "Available Quotation Documents"
 msgstr "Mevcut Teklif Belgeleri"
 
@@ -298,19 +294,16 @@ msgstr "Form Alanları Dahil"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
-#, fuzzy
 msgid "Form field name must be unique for a given document type."
-msgstr "Form alanı adı, belirli bir belge türü için benzersiz olmalıdır."
+msgstr "Form alanı adı, belirli bir belge türü için benzersiz/tek olmalıdır."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
-#, fuzzy
 msgid "Form fields of inside quotation documents."
 msgstr "Teklif belgelerinin içindeki form alanları."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__has_thumbnail
-#, fuzzy
 msgid "Has Thumbnail"
 msgstr "Küçük Resim Var"
 
@@ -357,16 +350,14 @@ msgstr "ID"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__add_by_default
-#, fuzzy
 msgid ""
 "If checked, this header or footer will be added by default on new quotes."
 msgstr ""
-"İşaretlenirse, bu üstbilgi veya altbilgi yeni alıntılarda varsayılan olarak "
+"İşaretlenirse, bu üstbilgi veya altbilgi yeni tekliflerde varsayılan olarak "
 "eklenecektir."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__active
-#, fuzzy
 msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
@@ -396,14 +387,12 @@ msgstr "İndekslenen İçerik"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on_sale__inside
-#, fuzzy
 msgid "Inside quote pdf"
-msgstr "Inside alıntı pdf"
+msgstr "Teklif İçi PDF’i"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
-#, fuzzy
 msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
@@ -414,28 +403,25 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
-#, fuzzy
 msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
-"Geçersiz form alanı adı %(field_name)s. Yalnızca alfanümerik sayılar, kısa "
-"çizgiler veya alt çizgiler içermelidir."
+"Geçersiz form alanı adı %(field_name)s. Sadece harf, rakam, tire veya alt "
+"çizgi içerebilir."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
-#, fuzzy
 msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
-"Geçersiz yol %(path)s. Yalnızca alfanümerik sayılar, kısa çizgiler, alt "
-"çizgiler veya noktalar içermelidir."
+"Geçersiz yol %(path)s. Sadece harfler, rakamlar, tireler, alt çizgiler veya "
+"noktalar içerebilir."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
-#, fuzzy
 msgid "Is Pdf Quote Builder Available"
 msgstr "Pdf Teklif Oluşturucu Mevcut mu"
 
@@ -447,12 +433,11 @@ msgstr "Bu genel belgemi"
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/utils.py:0
-#, fuzzy
 msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
-"Görünüşe göre bu pdf'yi bir alıntı içinde işleyemiyoruz. Ya şifrelenmiş ya "
+"Görünüşe göre bu pdf'yi bir teklif içinde işleyemiyoruz. Ya şifrelenmiş ya "
 "da desteklemediğimiz bir formatta kodlanmış."
 
 #. module: sale_pdf_quote_builder
@@ -474,7 +459,6 @@ msgstr "Son Güncelleme"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
-#, fuzzy
 msgid "Mark fields as safe to fill in the quote."
 msgstr "Teklifi doldurmak için alanları güvenli olarak işaretleyin."
 
@@ -497,14 +481,12 @@ msgstr "Hayır"
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, fuzzy
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "Bir teklifin içine yalnızca PDF belgeleri eklenebilir."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
-#, fuzzy
 msgid "Only PDF documents can be used as header or footer."
 msgstr "Üstbilgi veya altbilgi olarak yalnızca PDF belgeleri kullanılabilir."
 
@@ -520,13 +502,12 @@ msgstr "Yol"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
-#, fuzzy
 msgid ""
 "Personalize your quotes with catchy header and footer pages\n"
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
-"Akılda kalıcı üstbilgi ve altbilgi sayfaları ile alıntılarınızı "
+"Akılda kalıcı üstbilgi ve altbilgi sayfaları ile tekliflerinizi "
 "kişiselleştirin\n"
 "                <br>\n"
 "                satışlarınızı artırmak için."
@@ -534,7 +515,6 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
-#, fuzzy
 msgid "Please use only relational fields until the last value of your path."
 msgstr ""
 "Lütfen yolunuzun son değerine kadar yalnızca ilişkisel alanları kullanın."
@@ -554,13 +534,11 @@ msgstr "Ürün Dokümanı"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
-#, fuzzy
 msgid "Product Documents"
 msgstr "Ürün Belgeleri"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-#, fuzzy
 msgid ""
 "Provide header pages and footer pages to compose an attractive quotation "
 "with more information\n"
@@ -574,10 +552,10 @@ msgid ""
 "settings. <br/>"
 msgstr ""
 "Daha fazla bilgi içeren çekici bir teklif oluşturmak için üstbilgi sayfaları "
-"ve altbilgi sayfaları sağlayın\n"
+"ve altbilgi sayfaları ekleyin\n"
 "                        Şirketiniz, ürünleriniz ve hizmetleriniz hakkında. <"
 "br/>\n"
-"                        Tekliflerinizin pdf'si, başlık sayfaları, ürün "
+"                        Tekliflerinizin pdf'i, başlık sayfaları, ürün "
 "açıklamaları bir araya getirilerek oluşturulacaktır,\n"
 "                        teklifin ayrıntıları ve ardından altbilgi sayfaları. "
 "<br/>\n"
@@ -591,13 +569,11 @@ msgstr "Teklif / Sipariş"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
-#, fuzzy
 msgid "Quotation Document"
 msgstr "Teklif Belgesi"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__quotation_document_ids
-#, fuzzy
 msgid "Quotation Documents"
 msgstr "Teklif Belgeleri"
 
@@ -614,7 +590,6 @@ msgstr "Teklif Şablonları"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_quotation_document
-#, fuzzy
 msgid "Quotation's Headers & Footers"
 msgstr "Teklifin Üstbilgileri ve Altbilgileri"
 
@@ -626,7 +601,6 @@ msgstr "Teklif Oluşturucu"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-#, fuzzy
 msgid "Quote Builder Demo Video"
 msgstr "Teklif Oluşturucu Demo Videosu"
 
@@ -695,19 +669,16 @@ msgstr "Saklanan Dosya adı"
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
-#, fuzzy
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
 msgstr "%(field_name)s alanı modelde mevcut değil %(model_name)s"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
-#, fuzzy
 msgid "The form field name as written in the PDF."
 msgstr "PDF'de yazıldığı şekliyle form alanı adı."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
-#, fuzzy
 msgid ""
 "The path to follow to dynamically fill the form field. \n"
 "Leave empty to be able to customized it in the quotation form."
@@ -717,7 +688,6 @@ msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
-#, fuzzy
 msgid ""
 "The product documents for this order line that will be merged in the PDF "
 "quote."
@@ -732,7 +702,6 @@ msgstr "Tema Şablonu"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
-#, fuzzy
 msgid "This document"
 msgstr "Bu belge"
 
@@ -748,7 +717,6 @@ msgstr "Tip"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
-#, fuzzy
 msgid "Upload quotation headers and footers"
 msgstr "Teklif üstbilgilerini ve altbilgilerini yükleme"
 
@@ -759,7 +727,6 @@ msgstr "Url"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
-#, fuzzy
 msgid "Visible to all"
 msgstr "Herkes tarafından görülebilir"
 
@@ -776,10 +743,9 @@ msgstr "Websitesi"
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, fuzzy
 msgid "When attached inside a quote, the document must be a file, not a URL."
 msgstr ""
-"Bir alıntının içine eklendiğinde, belge bir URL değil, bir dosya olmalıdır."
+"Bir teklifin içine eklendiğinde, belge bir URL değil, bir dosya olmalıdır."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python

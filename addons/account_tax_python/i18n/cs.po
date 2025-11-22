@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_tax_python
+# * account_tax_python
 #
 # Translators:
 # milda dvorak <milda.dvorak@optimal4.cz>, 2022
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
 # David Kliment <daklime@gmail.com>, 2022
 # Jiří Podhorecký, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-11-16 10:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
@@ -37,6 +39,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Daňová skupina: Daň je skupinou dílčích daní.\n"
+"- Pevná: Výše daně zůstává stejná bez ohledu na cenu.\n"
+"- Procentní: Výše daně je % z ceny:\n"
+"100 * (1 + 10%) = 110 (bez ceny).\n"
+"Např. 110 / (1 + 10%) = 100 (včetně ceny).\n"
+"- Procentní sazba daně včetně daně: Výše daně je dělením ceny:\n"
+"např. 180 / (1 - 10%) = 200 (bez započtení ceny)\n"
+"např. 200 * (1 - 10%) = 180 (cena je zahrnuta)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
@@ -57,7 +69,7 @@ msgstr ""
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovací název"
 
 #. module: account_tax_python
 #. odoo-python
@@ -68,7 +80,7 @@ msgstr ""
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
 msgid "Formula"
-msgstr ""
+msgstr "Vzorec"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
@@ -78,7 +90,7 @@ msgstr ""
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_tax_python
 #. odoo-python
@@ -90,7 +102,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid formula"
-msgstr ""
+msgstr "Neplatný vzorec"
 
 #. module: account_tax_python
 #. odoo-python

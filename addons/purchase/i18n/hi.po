@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 17:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/purchase/"
@@ -1491,8 +1491,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"अंतर्राष्ट्रीय वाणिज्यिक शर्तें, अंतर्राष्ट्रीय व्यापार में इस्तेमाल होने वाले नियमों की एक सूची हैं"
-". ये नियम पहले से तय होते हैं और इनका उपयोग यह स्पष्ट करने के लिए किया जाता है कि "
+"अंतर्राष्ट्रीय वाणिज्यिक शर्तें, अंतर्राष्ट्रीय व्यापार में इस्तेमाल होने वाले नियमों की एक सूची "
+"हैं. ये नियम पहले से तय होते हैं और इनका उपयोग यह स्पष्ट करने के लिए किया जाता है कि "
 "अंतर्राष्ट्रीय सौदों में खरीदार और विक्रेता की क्या जिम्मेदारियां और लागतें होंगी।"
 
 #. module: purchase
@@ -1704,10 +1704,8 @@ msgid "Message for Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
 msgstr ""
 
@@ -2251,6 +2249,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Purchase History for %s"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
+msgid "Purchase Line Warn Msg"
 msgstr ""
 
 #. module: purchase
@@ -3185,6 +3189,12 @@ msgstr "रिकॉर्ड में जो अलग तरह की गत
 msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
 msgstr ""
 
 #. module: purchase

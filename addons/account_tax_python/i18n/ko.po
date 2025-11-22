@@ -6,12 +6,13 @@
 # Martin Trigaux, 2022
 #
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 11:24+0000\n"
+"PO-Revision-Date: 2025-11-17 19:01+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "account_tax_python/ko/>\n"
@@ -57,6 +58,12 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"세금 금액을 계산합니다.\n"
+"\n"
+":param base: float, 세금이 적용되는 실제 금액\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
@@ -66,13 +73,13 @@ msgstr "사용자 지정 수식"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Field '%s' is not accessible"
-msgstr ""
+msgstr "'%s' 필드에 액세스할 수 없습니다."
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
@@ -82,7 +89,7 @@ msgstr "수식"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "공식 디코딩된 정보"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
@@ -93,7 +100,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid AST node: %s"
-msgstr ""
+msgstr "잘못된 AST 노드: %s"
 
 #. module: account_tax_python
 #. odoo-python
@@ -105,31 +112,31 @@ msgstr "잘못된 수식"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Kwargs are not allowed"
-msgstr ""
+msgstr "Kwargs 함수 미허용"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only int, float or None are allowed as constant values"
-msgstr ""
+msgstr "상수 값으로는 int, float 또는 None 값만 입력할 수 있습니다."
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Only primitive types are allowed in python tax formula context."
-msgstr ""
+msgstr "파이썬 세금 수식에서는 기본 유형만 입력할 수 있습니다."
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only product['string'] read-access is allowed"
-msgstr ""
+msgstr "product['string'] 읽기 권한만 허용"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only read access to identifiers is allowed"
-msgstr ""
+msgstr "식별자에 대해서는 읽기 권한만 허용됩니다."
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -145,13 +152,13 @@ msgstr "세금 계산"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown function call"
-msgstr ""
+msgstr "알 수 없는 함수 호출"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
-msgstr ""
+msgstr "알 수 없는 식별자: %s"
 
 #~ msgid ""
 #~ "\n"

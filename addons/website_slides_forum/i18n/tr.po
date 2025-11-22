@@ -15,13 +15,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-12 13:06+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "website_slides_forum/tr/>\n"
 "Language: tr\n"
@@ -40,7 +41,6 @@ msgstr "(Yukarıdaki bölüm Stackoverflow’un SSS’inden uyarlanmıştır.)"
 #. module: website_slides_forum
 #: model_terms:forum.forum,welcome_message:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,welcome_message:website_slides_forum.forum_forum_demo_channel_2
-#, fuzzy
 msgid ""
 "<a class=\"btn btn-primary forum_register_url o_translate_inline\" href=\"/"
 "web/login\">Sign up</a>"
@@ -168,7 +168,6 @@ msgstr ""
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
-#, fuzzy
 msgid ""
 "<span class=\"flex-grow-1\">What kind of questions can I ask here?</span>"
 msgstr "<span class=\"flex-grow-1\">Burada ne tür sorular sorabilirim?</span>"
@@ -176,21 +175,18 @@ msgstr "<span class=\"flex-grow-1\">Burada ne tür sorular sorabilirim?</span>"
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
-#, fuzzy
 msgid "<span class=\"flex-grow-1\">What should I avoid in my answers?</span>"
 msgstr "<span class=\"flex-grow-1\">Cevaplarımda nelerden kaçınmalıyım?</span>"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
-#, fuzzy
 msgid "<span class=\"flex-grow-1\">What should I avoid in my questions?</span>"
 msgstr "<span class=\"flex-grow-1\">Sorularımda nelerden kaçınmalıyım?</span>"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
-#, fuzzy
 msgid ""
 "<span class=\"flex-grow-1\">Why can other people edit my questions/answers?</"
 "span>"
@@ -200,7 +196,6 @@ msgstr ""
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_breadcrumb
-#, fuzzy
 msgid "<strong>Forum</strong>"
 msgstr "<strong>Forum</strong>"
 
@@ -211,7 +206,6 @@ msgstr "Bahçeciliğin Temelleri"
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.forum_all_all_entries
-#, fuzzy
 msgid "Check out our courses <i class=\"fa fa-long-arrow-right\"/>"
 msgstr "Kurslarımıza göz atın <i class=\"fa fa-long-arrow-right\"/>"
 
@@ -270,7 +264,6 @@ msgstr "Bu foruma bağlı kursu kurs formunda düzenleyin."
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_2
-#, fuzzy
 msgid ""
 "For example, if you ask an interesting question or give a helpful answer, "
 "your input will be upvoted. On the other hand if the answer is misleading - "
@@ -279,12 +272,16 @@ msgid ""
 "accumulated for a question or answer per day. The table given at the end "
 "explains reputation point requirements for each type of moderation task."
 msgstr ""
-"Örneğin, ilginç bir soru sorarsanız veya yararlı bir cevap verirseniz, "
-"girdiniz yukarı oylanacaktır. Öte yandan, cevap yanıltıcı ise - aşağı "
-"oylanacaktır. Her lehte oy 10 puan kazandıracak, her aleyhte oy 2 puan "
-"eksiltecektir. Bir soru veya cevap için günde biriktirilebilecek 200 puan "
-"sınırı vardır. Sonda verilen tablo, her bir moderasyon görevi türü için "
-"itibar puanı gereksinimlerini açıklamaktadır."
+"Örneğin, ilginç bir soru sorarsanız veya yardımcı bir cevap verirseniz, "
+"girdiniz olumlu oy alacaktır (upvoted). Öte yandan, cevap yanıltıcı ise "
+"olumsuz oy alacaktır (downvoted).\n"
+"\n"
+"Verilen her olumlu oy, 10 puan kazandırırken; verilen her olumsuz oy, 2 puan "
+"düşürecektir. Bir soru veya cevap için günlük biriktirilebilecek maksimum "
+"puan limiti 200'dür.\n"
+"\n"
+"Sonda verilen tablo, her bir moderasyon görevi türü için gereken itibar "
+"puanı şartlarını açıklamaktadır"
 
 #. module: website_slides_forum
 #: model:ir.model,name:website_slides_forum.model_forum_forum
@@ -413,9 +410,8 @@ msgstr "Kursu Göster:"
 #. module: website_slides_forum
 #. odoo-javascript
 #: code:addons/website_slides_forum/static/src/website_builder/slides_forum_page_option_plugin.js:0
-#, fuzzy
 msgid "Slides Forum Snippet Options"
-msgstr "Slaytlar Forum Parçacık Seçenekleri"
+msgstr "Slaytlar Forum Parçacığı Seçenekleri"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0

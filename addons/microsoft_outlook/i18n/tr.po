@@ -4,13 +4,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-12 15:03+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "microsoft_outlook/tr/>\n"
 "Language: tr\n"
@@ -29,7 +30,6 @@ msgstr "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
-#, fuzzy
 msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Outlook account"
@@ -39,7 +39,6 @@ msgstr ""
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
-#, fuzzy
 msgid ""
 "<span invisible=\"server_type != 'outlook' or not "
 "microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
@@ -49,12 +48,11 @@ msgstr ""
 "<span invisible="
 "\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class="
 "\"badge text-bg-success\">\n"
-"                        Outlook Belirteci Geçerli\n"
+"                        Outlook Tokeni Geçerli\n"
 "                   </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
-#, fuzzy
 msgid ""
 "<span invisible=\"smtp_authentication != 'outlook' or not "
 "microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
@@ -64,7 +62,7 @@ msgstr ""
 "<span invisible="
 "\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" "
 "class=\"badge text-bg-success\">\n"
-"                        Outlook Belirteci Geçerli\n"
+"                        Outlook Tokeni Geçerli\n"
 "                   </span>"
 
 #. module: microsoft_outlook
@@ -158,7 +156,6 @@ msgstr "Gelen Posta Sunucusu"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
-#, fuzzy
 msgid ""
 "Incorrect Connection Security for Outlook mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
@@ -185,27 +182,24 @@ msgstr "Outlook posta sunucusunu yalnızca yönetici bağlayabilirsiniz."
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
-#, fuzzy
 msgid "Oops, we could not authenticate you. Please try again later."
-msgstr "Oops, kimliğinizi doğrulayamadık. Lütfen daha sonra tekrar deneyin."
+msgstr "Eyvah, kimliğinizi doğrulayamadık. Lütfen daha sonra tekrar deneyin."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/controllers/main.py:0
-#, fuzzy
 msgid ""
 "Oops, you're creating an authorization to send from %(email_login)s but your "
 "address is %(email_server)s. Make sure your addresses match!"
 msgstr ""
-"Oops, %(email_login)s adresinden göndermek için bir yetkilendirme "
+"Eyvah, %(email_login)s adresinden göndermek için bir yetkilendirme "
 "oluşturuyorsunuz ancak adresiniz %(email_server)s. Adreslerinizin "
 "eşleştiğinden emin olun!"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__outgoing_mail_server_type
-#, fuzzy
 msgid "Outgoing Mail Server Type"
-msgstr "Giden Posta Sunucusu Türü"
+msgstr "Giden E-posta Sunucusu Türü"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__res_users__outgoing_mail_server_type__outlook
@@ -264,14 +258,12 @@ msgstr "Lütfen kullanmadan önce Outlook hesabınıza bağlanın."
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
-#, fuzzy
 msgid "Please enter a valid email address."
 msgstr "Lütfen geçerli bir e-posta adresi girin."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
-#, fuzzy
 msgid ""
 "Please fill the \"Username\" field with your Outlook/Office365 username "
 "(your email address). This should be the same account as the one used for "
@@ -284,7 +276,6 @@ msgstr ""
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
-#, fuzzy
 msgid ""
 "Please leave the password field empty for Outlook mail server “%s”. The "
 "OAuth process does not require it"
@@ -300,7 +291,6 @@ msgstr "İncele"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
-#, fuzzy
 msgid "SSL is required for server “%s”."
 msgstr "\"%s\" sunucusu için SSL gereklidir."
 

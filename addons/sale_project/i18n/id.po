@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-31 02:30+0000\n"
+"PO-Revision-Date: 2025-11-20 06:11+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/id/>\n"
@@ -161,6 +161,9 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"Project harus didefinisikan di quotation %(order)s atau di formulir produk "
+"yang membuat tugas saat dipesan.\n"
+"Produk berikut membutuhkan project untuk menaruh tugasnya: %(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -231,18 +234,20 @@ msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
 msgstr ""
+"Mengonversi templat ini menjadi project reguler akan membatalkan linknya "
+"dari produk-produk terkait."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold"
-msgstr ""
+msgstr "Harga Pokok Penjualan"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Harga Pokok Penjualan Barang-Barang"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -253,13 +258,13 @@ msgstr "Buat Project"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Buat Pesanan Penjualan"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
-msgstr ""
+msgstr "Buat Project"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
@@ -448,7 +453,7 @@ msgstr "Dalam Proses"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Internal link"
-msgstr ""
+msgstr "Link internal"
 
 #. module: sale_project
 #. odoo-python
@@ -597,7 +602,7 @@ msgstr "Layanan Plumbing"
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Portal Pesanan Penjualan"
 
 #. module: sale_project
 #. odoo-python
@@ -816,7 +821,7 @@ msgstr "Cari di Faktur"
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Cari di Item Pesanan Penjualan"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -884,7 +889,7 @@ msgstr "Kegiatan analisis"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "Pesanan Penjualan harus memiliki setidaknya satu produk layanan."
 
 #. module: sale_project
 #. odoo-python
@@ -923,6 +928,8 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
 msgstr ""
+"Project tidak dapat dibuat karena Pesanan Penjualan harus dikonfirmasi atau "
+"sudah terhubung ke project."
 
 #. module: sale_project
 #. odoo-python
@@ -1011,19 +1018,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "[Project] %(task_name)s"
-msgstr ""
+msgstr "[Project] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "delivered_manual"
-msgstr ""
+msgstr "delivered_manual"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
-msgstr ""
+msgstr "sale_line_id"
 
 #~ msgid ""
 #~ "<span class=\"o_stat_text\">Customer</span>\n"

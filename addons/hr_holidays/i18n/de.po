@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 21:52+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-18 08:55+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/de/>\n"
 "Language: de\n"
@@ -3847,6 +3847,21 @@ msgid "Small Unemployment"
 msgstr "Sonderurlaub"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid ""
+"Some employees already have time off requests in hours that overlap with the "
+"selected period, Odoo cannot automatically adjust or split hourly leaves "
+"during batch generation. Conflicting time off:\n"
+"%s"
+msgstr ""
+"Einige Mitarbeiter haben bereits Urlaubsanträge in Stunden, die sich mit dem "
+"ausgewählten Zeitraum überschneiden. Odoo kann stundenweise Abwesenheiten "
+"während der Stapelgenerierung nicht automatisch anpassen oder aufteilen. "
+"Problematische Abwesenheiten :\n"
+"%s"
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
@@ -5272,19 +5287,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"You cannot refuse this allocation request since the employee has already "
-"taken leaves for it. Please refuse or delete those leaves first."
-msgstr ""
-"Sie können diesen Antrag auf Urlaubsanspruch nicht ablehnen, da der "
-"Mitarbeiter bereits Urlaub davon genommen hat. Bitte lehnen Sie diese "
-"Urlaubstage zuerst ab oder löschen Sie sie."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-#, fuzzy
 msgid ""
 "You do not have any allocation for this time off type.\n"
 "Please request an allocation before submitting your time off request."
@@ -5652,6 +5655,14 @@ msgstr "gültig bis"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validieren"
+
+#~ msgid ""
+#~ "You cannot refuse this allocation request since the employee has already "
+#~ "taken leaves for it. Please refuse or delete those leaves first."
+#~ msgstr ""
+#~ "Sie können diesen Antrag auf Urlaubsanspruch nicht ablehnen, da der "
+#~ "Mitarbeiter bereits Urlaub davon genommen hat. Bitte lehnen Sie diese "
+#~ "Urlaubstage zuerst ab oder löschen Sie sie."
 
 #~ msgid ""
 #~ "\n"

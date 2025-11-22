@@ -26,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-14 09:43+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-17 17:22+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/account/"
 "fr/>\n"
@@ -232,18 +232,6 @@ msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) doit être un compte de type \"%"
-"(receivable)s\" ou \"%(payable)s\" avec les deux options \"%"
-"(allow_reconciliation)s\" et \"%(non_trade)s\" activées."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
 msgstr "%(tax_name)s (arrondi)"
@@ -321,13 +309,13 @@ msgstr "'%(filename)s' (type=%(type)s)"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "(*) Marchandises livrées non facturées (évaluation perpétuelle)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "(*) Marchandises facturées non livrées (évaluation perpétuelle)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -2716,12 +2704,6 @@ msgid "Account Move Count"
 msgstr "Nombre d’écritures comptables"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__line_ids
-msgid "Account Move Line Items"
-msgstr "Lignes d'écriture comptable"
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Renversement de l'écriture comptable"
@@ -3137,6 +3119,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Écriture d’accumulation créée le %(date)s: %(accrual_entry)s.                "
+"Et son écriture d’inversion : %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3351,8 +3335,6 @@ msgid "Add a rounding line"
 msgstr "Ajouter une ligne d'arrondi"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
 msgstr "Ajouter une section"
@@ -4776,6 +4758,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"L’envoi groupé de factures est indisponible. Veuillez activer la tâche "
+"planifiée (cron) pour permettre l’envoi groupé des factures."
 
 #. module: account
 #. odoo-python
@@ -4784,6 +4768,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"L’envoi groupé de factures est indisponible. Veuillez contacter votre "
+"administrateur système pour activer la tâche planifiée (cron) permettant "
+"l’envoi groupé des factures."
 
 #. module: account
 #. odoo-javascript
@@ -8623,7 +8610,7 @@ msgstr "Expiré"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Export ZIP"
-msgstr ""
+msgstr "Exporter en ZIP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -9386,7 +9373,7 @@ msgstr "Date de verrouillage globale"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Aller à la configuration du cron"
 
 #. module: account
 #. odoo-python
@@ -9603,6 +9590,8 @@ msgstr ""
 "les nouvelles factures :"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
 msgstr "Masquer la structure"
@@ -9614,6 +9603,8 @@ msgid "Hide Post Button"
 msgstr "Masquer le bouton Comptabiliser"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
 msgstr "Masquer les prix"
@@ -10554,6 +10545,8 @@ msgstr "Dernier jour de l'exercice fiscal est invalide"
 msgid ""
 "Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s"
 msgstr ""
+"Formule invalide pour l’expression \"%(label)s\" de la ligne \"%(line)s\" : %"
+"(formula)s"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_inventory_valuation
@@ -11281,8 +11274,8 @@ msgstr "Libellé d'écriture comptable"
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
 #: model:ir.actions.act_window,name:account.action_account_moves_all_tree
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11290,6 +11283,12 @@ msgstr "Libellé d'écriture comptable"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
 msgstr "Écritures comptables"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+msgid "Journal Items (DEPRECATED)"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -16412,6 +16411,12 @@ msgid "Show Accounting Features - Readonly"
 msgstr "Afficher les fonctionnalités de comptabilité - Lecture seule"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Composition"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -16483,6 +16488,12 @@ msgstr "Afficher l'écart de règlement"
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
 msgstr "Afficher les détails des conditions de paiement"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Prices"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -17673,6 +17684,13 @@ msgid ""
 msgstr ""
 "La disponibilité est définie sur « Correspondances de pays », mais le champ "
 "Pays n'est pas défini."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+"La date de facturation/remboursement est requise pour valider ce document."
 
 #. module: account
 #. odoo-python
@@ -22059,6 +22077,18 @@ msgstr ""
 "or 'n/a' }})"
 
 #~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) doit être un compte de type \"%"
+#~ "(receivable)s\" ou \"%(payable)s\" avec les deux options \"%"
+#~ "(allow_reconciliation)s\" et \"%(non_trade)s\" activées."
+
+#~ msgid "Account Move Line Items"
+#~ msgstr "Lignes d'écriture comptable"
+
+#~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
 #~ "And its reverse entry: %(reverse_entry)s."
 #~ msgstr ""
@@ -23575,10 +23605,6 @@ msgstr ""
 #~ "Vous devrez effacer les %(sequence_field)s de %(model)s pour continuer.\n"
 #~ "Ce faisant, vous souhaiterez peut-être remettre en séquence vos écritures "
 #~ "afin de maintenir une séquence continue basée sur la date."
-
-#~ msgid "The Bill/Refund date is required to validate this document."
-#~ msgstr ""
-#~ "La date de facturation/remboursement est requise pour valider ce document."
 
 #~ msgid "The Months and Days of the Payment Terms lines must be positive."
 #~ msgstr ""

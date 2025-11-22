@@ -29,13 +29,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 14:55+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-21 14:44+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/calendar/"
 "tr/>\n"
 "Language: tr\n"
@@ -81,7 +82,6 @@ msgstr "%s daveti kabul etmedi"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
-#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
 "\n"
@@ -327,7 +327,7 @@ msgstr ""
 "            Toplantı tarihi <strong t-out=\"object.event_id.name or ''\"> </"
 "t><t t-out=\"organizer.partner_id.name or ''\"> Colleen Diaz tarafından "
 "oluşturulan</strong> <t t-if=\"organizer\">Proje Yönetimi teklifinin takibi</"
-"t> olarak belirlenmiştir.\n"
+"t> tarihine ayarlanmıştır.\n"
 "           <t t-out="
 "\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/"
 "2021 saat (11:00:00 - 11:30:00) (Avrupa/Brüksel)</t>.\n"
@@ -339,19 +339,11 @@ msgstr ""
 "display: inline-block; padding: 7px 14px; color: {{"
 "organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
 "none; background-color: {{organizer.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius: 3px;\">{{ object.event_id.id }}\" t-attf-style="
-"\"display: inline-block; padding: 7px 14px; color: {{"
-"organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
-"none; background-color: {{organizer.company_id.email_secondary_color or "
 "'#875A7B'}}; border-radius: 3px;\">\n"
-"            Accept</a>\n"
+"            Kabul Et</a>\n"
 "        <a t-attf-href=\"/calendar/meeting/decline?token={{ "
 "object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\""
 "display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{"
-"organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
-"none; background-color: {{organizer.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius: 3px;\">{{ object.event_id.id }} \" t-attf-style="
-"\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{"
 "organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
 "none; background-color: {{organizer.company_id.email_secondary_color or "
 "'#875A7B'}}; border-radius: 3px;\">\n"
@@ -359,10 +351,7 @@ msgstr ""
 "        <a t-attf-href=\"/calendar/meeting/view?token={{ object.access_token "
 "}}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; "
 "margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; "
-"background-color: #E7E9ED; border-radius: 3px;\">{{ object.event_id.id }} \" "
-"t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"background-color: #E7E9ED; border-radius: 3px;\">{\n"
 "            Görünüm</a>\n"
 "    </div>\n"
 "   <div style=\"margin: 16px 0 0;\">\n"
@@ -402,8 +391,8 @@ msgstr ""
 "                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 "></td>\n"
 "                <td style=\"padding-top: 6px;\"> <t t-out=\""
-"object.recurrence_id.get_recurrence_name() or ''\"> Her 1 Haftada Bir, 3 "
-"etkinlik için</t></td>\n"
+"object.recurrence_id.get_recurrence_name() or ''\"> Her Hafta, 3 etkinlik "
+"için</t></td>\n"
 "           </tr>\n"
 "            <tr t-if="
 "\"not object.event_id.allday and object.event_id.duration\">\n"
@@ -411,16 +400,14 @@ msgstr ""
 ">Süre</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
 "(object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\""
-">%02d ' % (object.event_id.duration,round(object.event_id.duration*60)%60)) "
-"veya ''\">0H30</t></td>\n"
+">30DK</t></td>\n"
 "           </tr>\n"
 "            <tr t-if=\"object.event_id.location\">\n"
 "               <td style="
 "\"width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;\""
 ">Konum</td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
-"                   <t t-out=\"object.event_id.location or ''\">Bruxelles</t>"
-"\n"
+"                   <t t-out=\"object.event_id.location or ''\">Brüksel</t>\n"
 "                    <a target=\"_blank\" t-if=\"not is_online or is_online "
 "and object.event_id.location != "
 "object.event_id.appointment_type_id.location_id.name\" t-attf-href="
@@ -433,14 +420,14 @@ msgstr ""
 "                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">\n"
 "                    <t t-if=\"object.event_id.videocall_source == 'discuss'\""
-"></t>\n"
-"                    <t t-else=\"\"> ile katılın Katıl</t>\n"
+">ile Katılın</t>\n"
+"                    <t t-else=\"\">Katıl</t>\n"
 "                </td>\n"
 "               <td style=\"padding-top: 6px;\">\n"
 "                    <a t-attf-href=\"object.event_id.videocall_location\" "
 "target=\"_blank\" style=\"color: #008f8c;\">\n"
 "                       <t t-if="
-"\"object.event_id.videocall_source == 'discuss'\">Odoo Discuss</t>\n"
+"\"object.event_id.videocall_source == 'discuss'\">Odoo Sohbet</t>\n"
 "                        <t t-else=\"\">Görüntülü toplantı</t>\n"
 "                    </a>\n"
 "               </td>\n"
@@ -458,7 +445,7 @@ msgstr ""
 "\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee != object\">\n"
 "               <span style=\"margin-left: 5px;\" t-out=\""
-"attendee.common_name or ''\">Mitchell Yönetici</span>\n"
+"attendee.common_name or ''\">Mitchell Admin</span>\n"
 "            </t>\n"
 "           <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">Sen</span>\n"
@@ -477,7 +464,7 @@ msgstr ""
 "        Teşekkür ederiz!\n"
 "       <t t-if=\"organizer.signature\">\n"
 "            <span style=\"display: block; margin-top: 8px;\"><t t-out="
-"\"organizer.signature or ''\">Mitchell Yönetici</t></span>\n"
+"\"organizer.signature or ''\">Mitchell Admin</t></span>\n"
 "       </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -485,7 +472,6 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
-#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
 "    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()"
@@ -679,7 +665,7 @@ msgstr ""
 "   </h1>\n"
 "    <p style=\"margin: 0;\">\n"
 "       <span style=\"display: block; margin-bottom: 8px;\">Merhaba <t t-out="
-"\"object.common_name or ''\">Ahşap Köşe</t>,</span>\n"
+"\"object.common_name or ''\">Wood Corner</t>,</span>\n"
 "\n"
 "        <t t-if=\"not target_responsible\">\n"
 "           <t t-if=\"not object.event_id.user_id.active\">\n"
@@ -706,23 +692,13 @@ msgstr ""
 "object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
 "decoration: none; background-color: {{"
 "object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;\">{{object.event_id.id}}\" t-attf-style=\"display: "
-"inline-block; padding: 7px 14px; color: {{"
-"object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
-"decoration: none; background-color: {{"
-"object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
 "border-radius: 3px;\">\n"
-"            Accept</a>\n"
+"            Kabul et</a>\n"
 "        <a t-attf-href=\"/calendar/meeting/"
 "decline?token={{object.access_token}}&amp;id={{object.event_id.id}}"
 "\" t-attf-style=\"display: inline-block; margin-left: 6px; padding: 7px 14px;"
 " color: {{object.event_id.user_id.company_id.email_primary_color or "
 "'#FFFFFF'}}; text-decoration: none; background-color: {{"
-"object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;\">{{object.event_id.id}} \" t-attf-style=\"display: "
-"inline-block; margin-left: 6px; padding: 7px 14px; color: {{"
-"object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
-"decoration: none; background-color: {{"
 "object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
 "border-radius: 3px;\">\n"
 "            Reddet</a>\n"
@@ -730,9 +706,7 @@ msgstr ""
 "view?token={{object.access_token}}&amp;id={{object.event_id.id}}"
 "\" t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px "
 "14px; color: #111827; text-decoration: none; background-color: #E7E9ED; "
-"border-radius: 3px;\">{{object.event_id.id}} \" t-attf-style=\"display: "
-"inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-"
-"decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
+"border-radius: 3px;\">\n"
 "            Görünüm</a>\n"
 "    </div>\n"
 "   <div style=\"margin: 16px 0 0;\">\n"
@@ -772,8 +746,8 @@ msgstr ""
 "               <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">Ne zaman</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\""
-"object.recurrence_id.get_recurrence_name() or ''\"> Her 1 Haftada Bir, 3 "
-"etkinlik için</t></td>\n"
+"object.recurrence_id.get_recurrence_name() or ''\"> Her Hafta, 3 etkinlik "
+"için</t></td>\n"
 "           </tr>\n"
 "            <tr t-if="
 "\"not object.event_id.allday and object.event_id.duration\">\n"
@@ -781,16 +755,14 @@ msgstr ""
 ">Süre</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
 "(object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\""
-">%02d ' % (object.event_id.duration,round(object.event_id.duration*60)%60)) "
-"veya ''\">0H30</t></td>\n"
+">30DK</t></td>\n"
 "           </tr>\n"
 "            <tr t-if=\"object.event_id.location\">\n"
 "               <td style="
 "\"width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;\""
 ">Konum</td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
-"                   <t t-out=\"object.event_id.location or ''\">Bruxelles</t>"
-"\n"
+"                   <t t-out=\"object.event_id.location or ''\">Brüksel</t>\n"
 "                    <a target=\"_blank\" t-if=\"not is_online or is_online "
 "and object.event_id.location != "
 "object.event_id.appointment_type_id.location_id.name\" t-attf-href="
@@ -803,15 +775,16 @@ msgstr ""
 "                <td style=\"width: 100px; padding-top: 6px;color: #676F7B;\">"
 "\n"
 "                    <t t-if="
-"\"object.get_base_url() in object.event_id.videocall_location\"></t>\n"
-"                    <t t-else=\"\"> ile katılın Katıl</t>\n"
+"\"object.get_base_url() in object.event_id.videocall_location\">ile "
+"katılın</t>\n"
+"                    <t t-else=\"\">Katıl</t>\n"
 "                </td>\n"
 "               <td style=\"padding-top: 6px;\">\n"
 "                    <a t-attf-href=\"object.event_id.videocall_location\" "
 "target=\"_blank\" style=\"color: #008f8c;\">\n"
 "                       <t t-if="
 "\"object.get_base_url() in object.event_id.videocall_location\">Odoo "
-"Discuss</t>\n"
+"Sohbet</t>\n"
 "                        <t t-else=\"\">Görüntülü toplantı</t>\n"
 "                    </a>\n"
 "               </td>\n"
@@ -829,7 +802,7 @@ msgstr ""
 "\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee != object\">\n"
 "               <span style=\"margin-left: 5px;\" t-out=\""
-"attendee.common_name or ''\">Mitchell Yönetici</span>\n"
+"attendee.common_name or ''\">Mitchell Admin</span>\n"
 "            </t>\n"
 "           <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">Sen</span>\n"
@@ -848,7 +821,7 @@ msgstr ""
 "        Teşekkür ederiz!\n"
 "       <t t-if=\"object.event_id.user_id.signature\">\n"
 "            <span style=\"display: block; margin-top: 8px;\"><t t-out="
-"\"object.event_id.user_id.signature or ''\">Mitchell Yönetici</t></span>\n"
+"\"object.event_id.user_id.signature or ''\">Mitchell Admin</t></span>\n"
 "       </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -856,7 +829,6 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_update
-#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
@@ -1041,21 +1013,20 @@ msgstr ""
 "                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 "></td>\n"
 "                <td style=\"padding-top: 6px;\"> <t t-out=\""
-"object.recurrence_id.get_recurrence_name() or ''\"> Her 1 Haftada Bir, 3 "
-"etkinlik için</t></td>\n"
+"object.recurrence_id.get_recurrence_name() or ''\"> Her Hafta, 3 etkinlik "
+"için</t></td>\n"
 "           </tr>\n"
 "            <tr t-if=\"not object.allday and object.duration\">\n"
 "               <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">Süre</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
-"(object.duration,round(object.duration*60)%60))"
-"\">%02d ' % (object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+"(object.duration,round(object.duration*60)%60))\">30DK</t></td>\n"
 "           </tr>\n"
 "            <tr t-if=\"object.location\">\n"
 "               <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">Konum</td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
-"                   <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                   <t t-out=\"object.location or ''\">Brüksel</t>\n"
 "                    <a target=\"_blank\" t-if=\"not is_online or is_online "
 "and object.location != object.appointment_type_id.location_id.name\" t-attf-"
 "href=\"http://maps.google.com/maps?oi=map&amp;q={{object.location}}\" style"
@@ -1066,14 +1037,15 @@ msgstr ""
 "            <tr t-if=\"object.videocall_location\">\n"
 "                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">\n"
-"                    <t t-if=\"object.videocall_source == 'discuss'\"></t>\n"
-"                    <t t-else=\"\"> ile katılın Katıl</t>\n"
+"                    <t t-if=\"object.videocall_source == 'discuss'\">ile "
+"katılın</t>\n"
+"                    <t t-else=\"\"> Katıl</t>\n"
 "                </td>\n"
 "               <td style=\"padding-top: 6px;\">\n"
 "                    <a t-attf-href=\"object.videocall_location\" target="
 "\"_blank\" style=\"color: #008f8c;\">\n"
 "                       <t t-if=\"object.videocall_source == 'discuss'\">Odoo "
-"Discuss</t>\n"
+"Sohbet</t>\n"
 "                        <t t-else=\"\">Görüntülü toplantı</t>\n"
 "                    </a>\n"
 "               </td>\n"
@@ -1091,7 +1063,7 @@ msgstr ""
 "\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee.common_name\">\n"
 "               <span style=\"margin-left: 5px\" t-out="
-"\"attendee.common_name or ''\">Mitchell Yönetici</span>\n"
+"\"attendee.common_name or ''\">Mitchell Admin</span>\n"
 "            </t>\n"
 "           <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">Sen</span>\n"
@@ -1110,7 +1082,7 @@ msgstr ""
 "        Teşekkür ederiz!\n"
 "       <t t-if=\"object.user_id.signature\">\n"
 "            <span style=\"display: block; margin-top: 8px;\"><t t-out="
-"\"object.user_id.signature or ''\">Mitchell Yönetici</t></span>\n"
+"\"object.user_id.signature or ''\">Mitchell Admin</t></span>\n"
 "       </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1118,7 +1090,6 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
-#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
@@ -1308,24 +1279,12 @@ msgstr ""
 "14px; color: {{object.event_id.user_id.company_id.email_primary_color or "
 "'#FFFFFF'}}; text-decoration: none; background-color: {{"
 "object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;"
-"\">{{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style="
-"\"display: inline-block; padding: 7px 14px; color: {{"
-"object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
-"decoration: none; background-color: {{"
-"object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
 "border-radius: 3px;\">\n"
-"            Accept</a>\n"
+"            Kabul Et</a>\n"
 "        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else "
 "'meeting' }}/decline?token={{ object.access_token }}&amp;id={{ "
 "object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: "
 "6px; padding: 7px 14px; color: {{"
-"object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
-"decoration: none; background-color: {{"
-"object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;"
-"\">{{ object.access_token }} &amp;id={{ object.event_id.id }}\" t-attf-style="
-"\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{"
 "object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
 "decoration: none; background-color: {{"
 "object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
@@ -1334,10 +1293,7 @@ msgstr ""
 "        <a t-attf-href=\"/calendar/meeting/view?token={{ object.access_token "
 "}}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; "
 "margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; "
-"background-color: #E7E9ED; border-radius: 3px;\">{{ object.event_id.id }} \" "
-"t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
-"color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
-"radius: 3px;\">\n"
+"background-color: #E7E9ED; border-radius: 3px;\">\n"
 "            Görünüm</a>\n"
 "    </div>\n"
 "   <div style=\"margin: 16px 0 0;\">\n"
@@ -1378,8 +1334,8 @@ msgstr ""
 ">Ne zaman</td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
 "                   <t t-out="
-"\"object.recurrence_id.get_recurrence_name() or ''\">Her 1 Haftada Bir, 3 "
-"etkinlik için</t>\n"
+"\"object.recurrence_id.get_recurrence_name() or ''\">Her Hafta, 3 etkinlik "
+"için</t>\n"
 "                </td>\n"
 "           </tr>\n"
 "            <tr t-if="
@@ -1389,8 +1345,7 @@ msgstr ""
 "                <td style=\"padding-top: 6px;\">\n"
 "                   <t t-out=\"('%dH%02d' % "
 "(object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\""
-">%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) "
-"veya ''\">0H30</t>\n"
+">30DK</t>\n"
 "                </td>\n"
 "           </tr>\n"
 "            <tr t-if=\"object.event_id.location\">\n"
@@ -1398,8 +1353,7 @@ msgstr ""
 "\"width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;\""
 ">Konum</td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
-"                   <t t-out=\"object.event_id.location or ''\">Bruxelles</t>"
-"\n"
+"                   <t t-out=\"object.event_id.location or ''\">Brüksel</t>\n"
 "                    <a target=\"_blank\" t-if=\"not is_online or is_online "
 "and object.event_id.location != "
 "object.event_id.appointment_type_id.location_id.name\" t-attf-href="
@@ -1412,15 +1366,16 @@ msgstr ""
 "                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">\n"
 "                    <t t-if="
-"\"object.get_base_url() in object.event_id.videocall_location\"></t>\n"
-"                    <t t-else=\"\"> ile katılın Katıl</t>\n"
+"\"object.get_base_url() in object.event_id.videocall_location\">ile "
+"katılın</t>\n"
+"                    <t t-else=\"\"> Katıl</t>\n"
 "                </td>\n"
 "               <td style=\"padding-top: 6px;\">\n"
 "                    <a t-attf-href=\"object.event_id.videocall_location\" "
 "target=\"_blank\" style=\"color: #008f8c;\">\n"
 "                       <t t-if="
 "\"object.get_base_url() in object.event_id.videocall_location\">Odoo "
-"Discuss</t>\n"
+"Sohbet</t>\n"
 "                        <t t-else=\"\">Görüntülü toplantı</t>\n"
 "                    </a>\n"
 "               </td>\n"
@@ -1438,7 +1393,7 @@ msgstr ""
 "\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee != object\">\n"
 "               <span style=\"margin-left: 5px;\" t-out=\""
-"attendee.common_name or ''\">Mitchell Yönetici</span>\n"
+"attendee.common_name or ''\">Mitchell Admin</span>\n"
 "            </t>\n"
 "           <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">Sen</span>\n"
@@ -1457,7 +1412,7 @@ msgstr ""
 "        Teşekkür ederiz!\n"
 "       <t t-if=\"object.event_id.user_id.signature\">\n"
 "            <span style=\"display: block; margin-top: 8px;\"><t t-out="
-"\"object.event_id.user_id.signature or ''\">Mitchell Yönetici</t></span>\n"
+"\"object.event_id.user_id.signature or ''\">Mitchell Admin</t></span>\n"
 "       </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1465,7 +1420,6 @@ msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_delete_event
-#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
 "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
@@ -1559,9 +1513,9 @@ msgstr ""
 "   <p style=\"margin: 0;\">\n"
 "        Merhaba,<br/>\n"
 "        <span style=\"display: block; margin-top: 8px;\">\n"
-"            Bu, </t><t t-out=\"event_organizer or ''\">Colleen Diaz</t> "
-"tarafından düzenlenen <strong t-out=\"event_name or ''\">Follow-up for Proje "
-"Yönetimi proposal</strong> <t t-if=\"event_organizer\">etkinliğinin iptal "
+"            Bu mail </t><t t-out=\"event_organizer or ''\">Colleen Diaz</t> "
+"tarafından düzenlenen <strong t-out=\"event_name or ''\"> Proje Yönetimi "
+"Teklif Takibi</strong> <t t-if=\"event_organizer\">etkinliğinin iptal "
 "edildiğini ve takviminizden kaldırıldığını bildirmek içindir.\n"
 "       </span>\n"
 "    </p>\n"
@@ -1601,14 +1555,13 @@ msgstr ""
 "               <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">Süre</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
-"(object.duration,round(object.duration*60)%60))"
-"\">%02d ' % (object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+"(object.duration,round(object.duration*60)%60))\">30DK</t></td>\n"
 "           </tr>\n"
 "            <tr t-if=\"object.location\">\n"
 "               <td style=\"width: 100px; padding-top: 6px; color: #676F7B;\""
 ">Konum</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
-"or ''\"> Bruxelles</t></td>\n"
+"or ''\"> Brüksel</t></td>\n"
 "           </tr>\n"
 "        </table>\n"
 "   </div>\n"
@@ -1624,7 +1577,6 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
 "hidden=\"true\"/>"
@@ -1634,55 +1586,46 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-clock-o text-600\" title=\"Dates\"/>"
 msgstr "<i class=\"fa fa-clock-o text-600\" title=\"Dates\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-lock text-600\" title=\"Visibility\"/>"
 msgstr "<i class=\"fa fa-lock text-600\" title=\"Visibility\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-map text-600\" title=\"Location\"/>"
 msgstr "<i class=\"fa fa-map text-600\" title=\"Location\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-remove\" title=\"Remove\"/>"
 msgstr "<i class=\"fa fa-remove\" title=\"Remove\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-sticky-note mt-2 text-600\" title=\"Notes\"/>"
 msgstr "<i class=\"fa fa-sticky-note mt-2 text-600\" title=\"Notes\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-tag text-600\" title=\"Booking Name\"/>"
 msgstr "<i class=\"fa fa-tag text-600\" title=\"Booking Name\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-user mt-1 text-600\" title=\"Participants\"/>"
 msgstr "<i class=\"fa fa-user mt-1 text-600\" title=\"Participants\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<i class=\"fa fa-video-camera text-600\" title=\"Videocall URL\"/>"
 msgstr "<i class=\"fa fa-video-camera text-600\" title=\"Videocall URL\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<span class=\"fa fa-plus me-1\"/>Video"
 msgstr "<span class=\"fa fa-plus me-1\"/>Video"
 
@@ -1719,25 +1662,21 @@ msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> veya </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "<span invisible=\"not recurrency\" class=\"mx-1\">Repeat:</span>"
 msgstr "<span invisible=\"not recurrency\" class=\"mx-1\">Tekrarla:</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "<span title=\"Clear meeting\" class=\"fa fa-times\"/>"
 msgstr "<span title=\"Clear meeting\" class=\"fa fa-times\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "<span title=\"Join video call\" class=\"fa fa-sign-in\"/>"
 msgstr "<span title=\"Join video call\" class=\"fa fa-sign-in\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "<span> guests</span>"
 msgstr "<span> misafirler</span>"
 
@@ -1748,13 +1687,11 @@ msgstr "<span> saat</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "<span>All day</span>"
 msgstr "<span>Tüm gün</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-#, fuzzy
 msgid "<span>Are you sure you want to delete this event? <br/></span>"
 msgstr "<span>Bu etkinliği silmek istediğinizden emin misiniz? <br/></span>"
 
@@ -1833,7 +1770,6 @@ msgstr "Aktivite zamanlama planı Sihirbazı"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "Add Title"
 msgstr "Başlık Ekle"
 
@@ -1844,7 +1780,6 @@ msgstr "Açıklama ekle"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "Add notes about this meeting..."
 msgstr "Bu toplantı hakkında notlar ekleyin..."
 
@@ -1925,7 +1860,6 @@ msgstr "Müsait/Meşgul"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "Awaiting"
 msgstr "Bekliyor"
 
@@ -2032,7 +1966,6 @@ msgstr "Takvim Ayarları"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "Calendar description"
 msgstr "Takvim açıklaması"
 
@@ -2043,7 +1976,6 @@ msgstr "Takvim: Güncelleme Tarihi"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
-#, fuzzy
 msgid "Calendar: Event Deleted"
 msgstr "Takvim Etkinlik Silindi"
 
@@ -2180,7 +2112,6 @@ msgstr "Sayı"
 
 #. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
-#, fuzzy
 msgid "Create a Customer"
 msgstr "Müşteri Oluşturma"
 
@@ -2320,7 +2251,6 @@ msgstr "Bu etkinliği sil"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
-#, fuzzy
 msgid "Deleted event: {{ object.name }}"
 msgstr "Silinmiş olay: {{ object.name }}"
 
@@ -2432,7 +2362,6 @@ msgstr "Edit recurring event"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__effective_privacy
-#, fuzzy
 msgid "Effective Privacy"
 msgstr "Etkili Gizlilik"
 
@@ -2491,7 +2420,6 @@ msgstr "Etkinlik Alarmı Yöneticisi"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
-#, fuzzy
 msgid "Event Cancel Wizard"
 msgstr "Etkinlik İptal Sihirbazı"
 
@@ -2607,7 +2535,6 @@ msgstr "%(until)s tarihine kadar her %(interval)s yılda bir"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
-#, fuzzy
 msgid "Feedback: %s"
 msgstr "Geri bildirim: %s"
 
@@ -2669,7 +2596,6 @@ msgstr "Cuma"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "Going?"
 msgstr "Gidiyor musun?"
 
@@ -2780,7 +2706,6 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
-#, fuzzy
 msgid "Internal users only"
 msgstr "Yalnızca dahili kullanıcılar"
 
@@ -2904,7 +2829,6 @@ msgstr "Belirli aralıklarla olayın kendiliğinden tekrarlamasına izin ver"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "Linked to"
 msgstr "Bağlantılı"
 
@@ -3151,7 +3075,6 @@ msgstr "Toplantıyı hatırlatmak için tüm katılımcılara gönderilen bildir
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__notify_responsible
-#, fuzzy
 msgid "Notify Responsible"
 msgstr "Sorumluyu Bilgilendirin"
 
@@ -3216,17 +3139,16 @@ msgstr "Seçenek"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_popover_delete_wizard__lang
-#, fuzzy
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
-"Ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
-"sağlayan bir yer tutucu ifade olmalıdır, örneğin {{ object.partner_id.lang "
-"}}."
+"Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu) "
+"ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yer tutucu ifadeyle olmalıdır, örneğin {{ "
+"object.partner_id.lang }}."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3236,7 +3158,6 @@ msgstr "Seçenekler"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
-#, fuzzy
 msgid "Organized by"
 msgstr "Tarafından düzenlenmiştir"
 
@@ -3315,7 +3236,6 @@ msgstr "Özel"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__private
-#, fuzzy
 msgid "Private by default"
 msgstr "Varsayılan olarak özel"
 
@@ -3329,7 +3249,6 @@ msgstr "Genel"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__public
-#, fuzzy
 msgid "Public by default"
 msgstr "Varsayılan olarak halka açık"
 
@@ -3459,7 +3378,6 @@ msgstr "Planla"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-#, fuzzy
 msgid "Schedule a meeting in your calendar"
 msgstr "Takviminizde bir toplantı planlayın"
 
@@ -3511,7 +3429,6 @@ msgstr "İleti Gönder"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
-#, fuzzy
 msgid "Send and delete"
 msgstr "Gönder ve sil"
 
@@ -3532,15 +3449,14 @@ msgstr "Program değişirse tüm katılımcılara gönderilir"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid ""
 "Set whether you're available for other simultaneous events and the privacy "
 "of this event to others. Manage your default privacy in your user "
 "preferences."
 msgstr ""
 "Diğer eşzamanlı etkinlikler için uygun olup olmadığınızı ve bu etkinliğin "
-"başkaları için gizliliğini ayarlayın. Kullanıcı tercihlerinizden varsayılan "
-"gizliliğinizi yönetin."
+"gizliliğini ayarlayın. Kullanıcı tercihlerinizden varsayılan gizliliğinizi "
+"yönetin."
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.calendar_settings_action
@@ -3817,7 +3733,6 @@ msgstr "\"Bu Etkinlik\" seçeneğiyle yinelenme kaydedilemiyor"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
-#, fuzzy
 msgid "Unavailable Attendees"
 msgstr "Müsait Olmayan Katılımcılar"
 
@@ -3840,7 +3755,6 @@ msgstr "Bitiş"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
 #: model:mail.template,description:calendar.calendar_template_meeting_update
-#, fuzzy
 msgid "Used to manually notify attendees"
 msgstr "Katılımcıları manuel olarak bilgilendirmek için kullanılır"
 
@@ -3861,7 +3775,6 @@ msgstr "Kullanıcı ayarları"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "User default"
 msgstr "Kullanıcı varsayılanı"
 
@@ -3911,7 +3824,6 @@ msgstr "Hafta"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__description
-#, fuzzy
 msgid ""
 "When synchronization with an external calendar is active, this description "
 "is synchronized         with the one of the associated meeting in that "
@@ -3924,7 +3836,6 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__effective_privacy
-#, fuzzy
 msgid "Whether the event is private, considering the user privacy"
 msgstr "Kullanıcı gizliliği göz önünde bulundurularak olayın özel olup olmadığı"
 

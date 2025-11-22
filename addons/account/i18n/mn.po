@@ -35,9 +35,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-10 15:46+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-17 10:56+0000\n"
+"Last-Translator: Bayarkhuu Bataa <bbayarkhuu@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-19/"
 "account/mn/>\n"
 "Language: mn\n"
@@ -162,8 +162,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s ( %(user)s ээс %(date)s-д "
-"салбарласан)%(attachment_extension)s"
+"%(attachment_name)s ( %(user)s ээс %(date)s-д салбарласан)%"
+"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -203,8 +203,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Нэхэмжлэл үүссэн, "
-"%(quantity_received)s хэмжээгээр, нэгж бүрийн %(unit_price)s үнээр хүлээн "
+"%(order)s - %(order_line)s; %(quantity_billed)s Нэхэмжлэл үүссэн, %"
+"(quantity_received)s хэмжээгээр, нэгж бүрийн %(unit_price)s үнээр хүлээн "
 "авсан"
 
 #. module: account
@@ -214,8 +214,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s тоогоор нэхэмжилсэн, "
-"%(quantity_delivered)s тоогоор  %(unit_price)s нэгж бүрийн үнээр хүргэгдсэн"
+"%(order)s - %(order_line)s; %(quantity_invoiced)s тоогоор нэхэмжилсэн, %"
+"(quantity_delivered)s тоогоор  %(unit_price)s нэгж бүрийн үнээр хүргэгдсэн"
 
 #. module: account
 #. odoo-python
@@ -235,18 +235,6 @@ msgstr ""
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) нь \"%(receivable)s\" эсвэл "
-"\"%(payable)s\" төрөлтэй данс байх ёстой бөгөөд \"%(allow_reconciliation)s\" "
-"болон \"%(non_trade)s\" гэсэн тохиргоонууд идэвхтэй байх шаардлагатай."
 
 #. module: account
 #. odoo-python
@@ -815,8 +803,8 @@ msgid ""
 "behavior.</span>"
 msgstr ""
 "<br/>\n"
-"                        <span>Энэ таны хүлээсэн үр дүнтэй нийцэж байна "
-"уу.</span>"
+"                        <span>Энэ таны хүлээсэн үр дүнтэй нийцэж байна уу.</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1103,8 +1091,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Paid</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" role="
-"\"img\"/>\n"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Төлсөн</span>"
 
@@ -1129,8 +1117,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Processing Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title="
-"\"Processing Payment\" role=\"img\"/>\n"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
+"title=\"Processing Payment\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Төлбөр шалгагдаж байна</span>"
 
@@ -1142,8 +1130,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Waiting for Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role="
-"\"img\"/>\n"
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+"role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Төлбөр хүлээж байна</span>"
 
@@ -1228,10 +1216,10 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" class"
-"=\"text-muted\">Итгэмжлэгдээгүй</span>\n"
-"                            <span invisible=\"not allow_out_payment\" class"
-"=\"text-success\">Итгэмжлэгдсэн</span>\n"
+"                            <span invisible=\"allow_out_payment\" "
+"class=\"text-muted\">Итгэмжлэгдээгүй</span>\n"
+"                            <span invisible=\"not allow_out_payment\" "
+"class=\"text-success\">Итгэмжлэгдсэн</span>\n"
 "                        </span>"
 
 #. module: account
@@ -1433,8 +1421,8 @@ msgid ""
 "invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Нэхэмжлэл</span>\n"
-"                                        <span invisible="
-"\"reconciled_invoices_type == 'invoice'\"> Буцаан олголт</span>"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Буцаан олголт</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1524,8 +1512,8 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Сайн ажиллалаа!</b>Та энэхүү аяллын бүх алхмуудыг дамжсан "
-"байна.</span>"
+"<span><b>Сайн ажиллалаа!</b>Та энэхүү аяллын бүх алхмуудыг дамжсан байна.</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1645,8 +1633,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
 msgstr ""
-"<span>Энэ бол таны Үйлчилгээний Нөхцөлүүдийн урьдчилсан танилцуулга "
-"юм.</span>"
+"<span>Энэ бол таны Үйлчилгээний Нөхцөлүүдийн урьдчилсан танилцуулга юм.</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -2150,8 +2138,8 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
-"%(account)s данс нь компани бүрийн хувьд %(num_accounts)s болгон хуваагдана:"
-"\n"
+"%(account)s данс нь компани бүрийн хувьд %(num_accounts)s болгон "
+"хуваагдана:\n"
 
 #. module: account
 #. odoo-python
@@ -2298,12 +2286,6 @@ msgstr "Дансны харгалзаа"
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
 msgid "Account Move Count"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__line_ids
-msgid "Account Move Line Items"
 msgstr ""
 
 #. module: account
@@ -2933,8 +2915,6 @@ msgid "Add a rounding line"
 msgstr "Мөнгөний нарийвчлалын мөр нэмэх"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
 msgstr "Бүлэг нэмэх"
@@ -9095,6 +9075,8 @@ msgstr ""
 "имэйл хүлээн авах хаяг зөвхөн шинэ нэхэмжлэх хүлээн авахад ашиглагддаг:"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
 msgstr ""
@@ -9106,6 +9088,8 @@ msgid "Hide Post Button"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
 msgstr ""
@@ -10744,8 +10728,8 @@ msgstr "Гүйлгээний утга"
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
 #: model:ir.actions.act_window,name:account.action_account_moves_all_tree
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10753,6 +10737,12 @@ msgstr "Гүйлгээний утга"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
 msgstr "Журналын бичилтүүд"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+msgid "Journal Items (DEPRECATED)"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -13589,12 +13579,12 @@ msgstr ""
 #. module: account
 #: model:account.group,name:account.2_us_group_61
 msgid "Payroll Expenses"
-msgstr ""
+msgstr "Цалингийн зардал"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payroll_tax
 msgid "Payroll Tax"
-msgstr ""
+msgstr "Цалингийн татвар"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_pension
@@ -15771,6 +15761,12 @@ msgid "Show Accounting Features - Readonly"
 msgstr "Санхүүгийн боломжууд - Зөвхөн харах"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Composition"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -15841,6 +15837,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Prices"
 msgstr ""
 
 #. module: account
@@ -16697,7 +16699,8 @@ msgstr ""
 msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
-msgstr "Татвар хаах бичилтийн үед компанийн ашигт ашиглах татварын урсгал данс."
+msgstr ""
+"Татвар хаах бичилтийн үед компанийн ашигт ашиглах татварын урсгал данс."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -16870,8 +16873,8 @@ msgstr ""
 "prefix3, seq, suffix. \n"
 "Prefix* бүлгүүд нь жил, сар болон өсөх дарааллын дугаар (seq)-ийн хоорондох "
 "тусгаарлагчид юм. Жишээ:\n"
-"^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d"
-"{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_technology
@@ -17005,6 +17008,14 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+"Нийлүүлэгчийн нэхэмжлэл/буцаалт батлахын тулд та заавал нэхэмжилсэн огноог "
+"оруулах ёстой."
 
 #. module: account
 #. odoo-python
@@ -17204,8 +17215,8 @@ msgid ""
 "Please verify if this date is accurate."
 msgstr ""
 "%(partner_name)s-ийн төлбөрийн давтамж ердийнхөөс өөр харагдаж байна. Таны "
-"түүхэн өгөгдлийн дагуу дараагийн нэхэмжлэхийн хүлээгдэж буй огноо "
-"%(expected_date)s-с өмнө байх ёсгүй (дундаж: %(mean)s (± %(wiggle)s) хоног "
+"түүхэн өгөгдлийн дагуу дараагийн нэхэмжлэхийн хүлээгдэж буй огноо %"
+"(expected_date)s-с өмнө байх ёсгүй (дундаж: %(mean)s (± %(wiggle)s) хоног "
 "тутамд). \n"
 "Энэ огноо зөв эсэхийг шалгана уу."
 
@@ -17320,8 +17331,8 @@ msgid ""
 "(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
-"Одоогийн нийт дүн %(current_total)s байгаа бол хүлээгдэж буй дүн "
-"%(expected_total)s байна. Нэхэмжлэх эсвэл төлбөрийг батлахын тулд, түүний "
+"Одоогийн нийт дүн %(current_total)s байгаа бол хүлээгдэж буй дүн %"
+"(expected_total)s байна. Нэхэмжлэх эсвэл төлбөрийг батлахын тулд, түүний "
 "мөрүүдийг эсвэл хүлээгдэж буй нийт дүнг (татвар орсон) тааруулж засварлана "
 "уу."
 
@@ -17860,8 +17871,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"Дараалал хэзээ ч дахин эхлэхгүй. Энэ тохиолдолд өсөх дугаар нь "
-"'%(formatted_seq)s' байна."
+"Дараалал хэзээ ч дахин эхлэхгүй. Энэ тохиолдолд өсөх дугаар нь '%"
+"(formatted_seq)s' байна."
 
 #. module: account
 #. odoo-python
@@ -18046,8 +18057,8 @@ msgid ""
 "(prefix_info)s"
 msgstr ""
 "Сонгосон огнооноос өмнө тохируулагдаагүй банкны хуулгын мөрүүд байна. "
-"Тэдгээрийг агуулсан журналын угтвартай бичилтүүд баталгаажихгүй: "
-"%(prefix_info)s"
+"Тэдгээрийг агуулсан журналын угтвартай бичилтүүд баталгаажихгүй: %"
+"(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -18380,7 +18391,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
-msgstr "Энэ хөдөлгөөн %(date)s -нд автоматаар батлагдахаар тохируулагдсан байна"
+msgstr ""
+"Энэ хөдөлгөөн %(date)s -нд автоматаар батлагдахаар тохируулагдсан байна"
 
 #. module: account
 #. odoo-python
@@ -18695,8 +18707,8 @@ msgstr "Батлагдсан дүн"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Нийт төлөх дүн (борлуулалтын захиалгыг болон энэ баримтыг багтаасан): "
-"%(total_credit)s"
+"Нийт төлөх дүн (борлуулалтын захиалгыг болон энэ баримтыг багтаасан): %"
+"(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -19710,7 +19722,8 @@ msgstr "Тэмдэглэвэл, 0 утгууд энэ багана дээр ха
 #: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
 msgid ""
 "When checked, 0 values will not show when displaying this expression's value."
-msgstr "Тэмдэглэвэл, энэхүү илэрхийллийн утгыг харуулахад 0 утгууд харагдахгүй."
+msgstr ""
+"Тэмдэглэвэл, энэхүү илэрхийллийн утгыг харуулахад 0 утгууд харагдахгүй."
 
 #. module: account
 #. odoo-python
@@ -19950,8 +19963,8 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
-"Төлбөрийн дутуу авлага/төлбөрийн данс нь аль компанийн тохиргоонд, эсвэл "
-"%(journal)s журнал дахь %(payment_method)s төлбөрийн аргад тохируулагдаагүй "
+"Төлбөрийн дутуу авлага/төлбөрийн данс нь аль компанийн тохиргоонд, эсвэл %"
+"(journal)s журнал дахь %(payment_method)s төлбөрийн аргад тохируулагдаагүй "
 "тохиолдолд шинэ төлбөр үүсгэх боломжгүй."
 
 #. module: account
@@ -20007,8 +20020,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%"
 "(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
-"Нэг журналд ижил төлбөрийн төрөл (%(payment_type)s) болон ижил нэртэй "
-"(%(name)s) хоёр төлбөрийн аргын мөр байж болохгүй."
+"Нэг журналд ижил төлбөрийн төрөл (%(payment_type)s) болон ижил нэртэй (%"
+"(name)s) хоёр төлбөрийн аргын мөр байж болохгүй."
 
 #. module: account
 #. odoo-python
@@ -20073,8 +20086,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
 msgstr ""
-"Энэ огнооноос өмнө болон түүнтэй хамт бичилтүүдийг нэмэх/өөрчлөх боломжгүй: "
-"%(lock_date_info)s."
+"Энэ огнооноос өмнө болон түүнтэй хамт бичилтүүдийг нэмэх/өөрчлөх боломжгүй: %"
+"(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -20326,8 +20339,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
-"Батлагдсан бичилт дээрх дараах унших боломжгүй талбаруудыг өөрчлөх боломжгүй:"
-" %s."
+"Батлагдсан бичилт дээрх дараах унших боломжгүй талбаруудыг өөрчлөх "
+"боломжгүй: %s."
 
 #. module: account
 #. odoo-python
@@ -21210,8 +21223,8 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Буцаан олголт (Лавлах {{ object.name or 'n/a' "
-"}})"
+"{{ object.company_id.name }} Буцаан олголт (Лавлах {{ object.name or 'n/"
+"a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -21240,6 +21253,15 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) нь \"%(receivable)s\" эсвэл \"%"
+#~ "(payable)s\" төрөлтэй данс байх ёстой бөгөөд \"%(allow_reconciliation)s\" "
+#~ "болон \"%(non_trade)s\" гэсэн тохиргоонууд идэвхтэй байх шаардлагатай."
 
 #~ msgid "Warning"
 #~ msgstr "Анхааруулга"
@@ -22141,11 +22163,6 @@ msgstr ""
 
 #~ msgid "TaxCloud"
 #~ msgstr "TaxCloud"
-
-#~ msgid "The Bill/Refund date is required to validate this document."
-#~ msgstr ""
-#~ "Нийлүүлэгчийн нэхэмжлэл/буцаалт батлахын тулд та заавал нэхэмжилсэн "
-#~ "огноог оруулах ёстой."
 
 #~ msgid "The account %s (%s) is deprecated."
 #~ msgstr "%s (%s) данс ашиглагдахаа больсон."

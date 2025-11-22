@@ -16,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-10 15:46+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-20 16:10+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "account/vi/>\n"
 "Language: vi\n"
@@ -214,18 +214,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) phải là tài khoản thuộc loại \"%"
-"(receivable)s\" hoặc \"%(payable)s\", đồng thời cả hai tuỳ chọn \"%"
-"(allow_reconciliation)s\" và \"%(non_trade)s\" phải được bật."
 
 #. module: account
 #. odoo-python
@@ -2679,12 +2667,6 @@ msgid "Account Move Count"
 msgstr "Số bút toán kế toán"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__line_ids
-msgid "Account Move Line Items"
-msgstr "Dòng bút toán kế toán"
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Đảo bút toán kế toán"
@@ -3309,8 +3291,6 @@ msgid "Add a rounding line"
 msgstr "Thêm một dòng làm tròn"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
 msgstr "Thêm phần"
@@ -3453,7 +3433,7 @@ msgstr "Lối tắt công thức tổng hợp"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_airfare
 msgid "Airfare"
-msgstr ""
+msgstr "Vé máy bay"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__alerts
@@ -9476,6 +9456,8 @@ msgstr ""
 "đơn mới:"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
 msgstr ""
@@ -9487,6 +9469,8 @@ msgid "Hide Post Button"
 msgstr "Ẩn nút vào sổ"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
 msgstr ""
@@ -11114,8 +11098,8 @@ msgstr "Nhãn hạng mục bút toán"
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
 #: model:ir.actions.act_window,name:account.action_account_moves_all_tree
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11123,6 +11107,12 @@ msgstr "Nhãn hạng mục bút toán"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
 msgstr "Hạng mục bút toán"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+msgid "Journal Items (DEPRECATED)"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -13206,6 +13196,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Ngôn ngữ dịch thuật tùy chọn (mã ISO) để chọn khi gửi email. Nếu không được "
+"thiết lập, ngôn ngữ của đối tác chính sẽ được sử dụng. Đây thường là một "
+"biểu thức giữ chỗ cung cấp ngôn ngữ phù hợp, ví dụ: "
+"{{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -16166,6 +16160,12 @@ msgid "Show Accounting Features - Readonly"
 msgstr "Xem các tính năng kế toán - Chỉ xem"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Composition"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -16237,6 +16237,12 @@ msgstr "Hiện chênh lệch thanh toán"
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
 msgstr "Hiển thị chi tiết điều khoản thanh toán"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Prices"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -16596,7 +16602,7 @@ msgstr "Tiêu đề..."
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_subsection
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Subsection"
-msgstr ""
+msgstr "Tiểu mục"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_subtotal
@@ -17408,6 +17414,12 @@ msgid ""
 msgstr ""
 "Tính khả dụng được đặt là 'Quốc gia trùng khớp' nhưng trường Quốc gia chưa "
 "được thiết lập."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The Bill/Refund date is required to validate this document."
+msgstr "Ngày lập hóa đơn / hoàn tiền là bắt buộc để xác thực tài liệu này."
 
 #. module: account
 #. odoo-python
@@ -19766,7 +19778,7 @@ msgstr "Ngày khoá thuế cho người dùng"
 #: model:account.account,name:account.2_account_account_us_utilities
 #: model:account.group,name:account.2_us_group_64
 msgid "Utilities"
-msgstr ""
+msgstr "Tiện ích"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_utilities
@@ -21676,6 +21688,18 @@ msgid ""
 msgstr ""
 
 #~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) phải là tài khoản thuộc loại \"%"
+#~ "(receivable)s\" hoặc \"%(payable)s\", đồng thời cả hai tuỳ chọn \"%"
+#~ "(allow_reconciliation)s\" và \"%(non_trade)s\" phải được bật."
+
+#~ msgid "Account Move Line Items"
+#~ msgstr "Dòng bút toán kế toán"
+
+#~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
 #~ "And its reverse entry: %(reverse_entry)s."
 #~ msgstr ""
@@ -23125,9 +23149,6 @@ msgstr ""
 #~ "Bạn sẽ cần xóa %(model)s's %(sequence_field)s để tiếp tục.\n"
 #~ "Khi làm như vậy, bạn có thể muốn sắp xếp lại các mục nhập của mình để duy "
 #~ "trì trình tự liên tục dựa trên ngày tháng."
-
-#~ msgid "The Bill/Refund date is required to validate this document."
-#~ msgstr "Ngày lập hóa đơn / hoàn tiền là bắt buộc để xác thực tài liệu này."
 
 #~ msgid "The Months and Days of the Payment Terms lines must be positive."
 #~ msgstr "Tháng và Ngày của dòng Điều khoản thanh toán phải là số dương."

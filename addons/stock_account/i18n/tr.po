@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
 "PO-Revision-Date: 2025-11-12 15:00+0000\n"
 "Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -47,8 +47,8 @@ msgstr " [%s'de hesaplandı]"
 #, fuzzy
 msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
 msgstr ""
-"%(lot)s %(old_price)s adresinden %(new_price)s adresine fiyat güncellemesi "
-"%(user)s"
+"%(lot)s %(old_price)s adresinden %(new_price)s adresine fiyat güncellemesi %"
+"(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -108,6 +108,7 @@ msgstr "Muhasebe Bilgisi"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 #, fuzzy
 msgid "Accrual"
 msgstr "Tahakkuk"
@@ -447,8 +448,10 @@ msgid "Display Serial & Lot Number on Invoices"
 msgstr "Faturalarda Seri Numara & Lotları Göster"
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 #, fuzzy
 msgid "Ending Stock"
 msgstr "Bitiş Stoku"
@@ -550,8 +553,10 @@ msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "İşaretlenirse, değerleme Lot/Seri numarasına göre spesifik olacaktır."
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Initial Balance"
 msgstr "Başlangıç Bakiyesi"
 
@@ -577,6 +582,7 @@ msgstr "Stok Konumları"
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
 msgstr "Envanter Zararı"
 
@@ -630,6 +636,14 @@ msgstr "Şirket içinde değer görür"
 #, fuzzy
 msgid "Is valued outside the company"
 msgstr "Şirket dışında değer görür"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"It exists closing entries after the selected date. Cancel them before "
+"generate an entry prior to them"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -742,8 +756,8 @@ msgstr ""
 "Periyodik: Muhasebe girişleri envanter değerleme raporunda manuel olarak "
 "önerilir.\n"
 "        Sürekli: Bir ürün faturalandırıldığında veya fatura edildiğinde "
-"envanterini değerlemek için otomatik olarak bir muhasebe girişi oluşturulur."
-"\n"
+"envanterini değerlemek için otomatik olarak bir muhasebe girişi "
+"oluşturulur.\n"
 "        "
 
 #. module: stock_account
@@ -973,8 +987,10 @@ msgid "Stock Valuation Account"
 msgstr "Stok Değerleme Hesabı"
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 #, fuzzy
 msgid "Stock Variation"

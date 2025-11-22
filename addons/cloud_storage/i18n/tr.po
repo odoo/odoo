@@ -5,13 +5,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 15:05+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-21 14:47+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "cloud_storage/tr/>\n"
 "Language: tr\n"
@@ -23,7 +24,6 @@ msgstr ""
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-#, fuzzy
 msgid "<span>MB</span>"
 msgstr "<span>MB</span>"
 
@@ -40,28 +40,24 @@ msgstr "Bulut Depolama"
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
-#, fuzzy
 msgid "Cloud Storage Provider for new attachments"
 msgstr "Yeni ekler için Bulut Depolama Sağlayıcısı"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/models/ir_attachment.py:0
-#, fuzzy
 msgid "Cloud Storage is not enabled"
 msgstr "Bulut Depolama etkin değil"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/controllers/attachment.py:0
-#, fuzzy
 msgid "Cloud storage configuration has been changed. Please refresh the page."
 msgstr "Bulut depolama yapılandırması değiştirildi. Lütfen sayfayı yenileyin."
 
 #. module: cloud_storage
 #. odoo-javascript
 #: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
-#, fuzzy
 msgid "Cloud storage error"
 msgstr "Bulut depolama hatası"
 
@@ -78,6 +74,13 @@ msgid "Display Name"
 msgstr "İsim Göster"
 
 #. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid ""
+"Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
+msgstr ""
+
+#. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
@@ -91,38 +94,32 @@ msgstr "ID"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-#, fuzzy
 msgid "Minimum File Size"
 msgstr "Minimum Dosya Boyutu"
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size_mb
-#, fuzzy
 msgid "Minimum File Size (MB)"
 msgstr "Minimum Dosya Boyutu (MB)"
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
-#, fuzzy
 msgid "Minimum File Size (bytes)"
 msgstr "Minimum Dosya Boyutu (bayt)"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-#, fuzzy
 msgid "Minimum size for attachments to be stored in the cloud storage"
 msgstr "Bulut depolama alanında depolanacak ekler için minimum boyut"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/models/res_config_settings.py:0
-#, fuzzy
 msgid "Please configure the Cloud Storage before enabling it"
 msgstr "Lütfen etkinleştirmeden önce Bulut Depolamayı yapılandırın"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-#, fuzzy
 msgid "Select the cloud storage provider to store new attachments."
 msgstr "Yeni ekleri depolamak için bulut depolama sağlayıcısını seçin."
 
@@ -134,7 +131,6 @@ msgstr "Tip"
 #. module: cloud_storage
 #. odoo-javascript
 #: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
-#, fuzzy
 msgid "You are not allowed to upload file to the cloud storage"
 msgstr "Bulut depolama alanına dosya yüklemenize izin verilmiyor"
 
@@ -149,7 +145,6 @@ msgstr ""
 
 #. module: cloud_storage
 #: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
-#, fuzzy
 msgid ""
 "webclient can upload files larger than the minimum file size\n"
 "        (in bytes) as url attachments to the server and then upload the file "
@@ -159,4 +154,4 @@ msgstr ""
 "webclient minimum dosya boyutundan daha büyük dosyaları yükleyebilir\n"
 "        (bayt cinsinden) url ekleri olarak sunucuya gönderin ve ardından "
 "dosyayı\n"
-"        bulut depolama."
+"        bulut depolama alanına yükleyin."

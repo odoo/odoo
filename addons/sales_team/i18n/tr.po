@@ -23,13 +23,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-13 13:12+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "sales_team/tr/>\n"
 "Language: tr\n"
@@ -42,14 +43,12 @@ msgstr ""
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
-#, fuzzy
 msgid "%(user_name)s already in other teams (%(team_names)s)."
 msgstr "%(user_name)s zaten diğer takımlarda (%(team_names)s)."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-#, fuzzy
 msgid "%(user_names)s already in other teams (%(team_names)s)."
 msgstr "%(user_names)s zaten diğer takımlarda (%(team_names)s)."
 
@@ -65,19 +64,17 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-#, fuzzy
 msgid "<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
-msgstr "<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
+msgstr ""
+"<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-#, fuzzy
 msgid "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"Email\"/>"
 msgstr "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-#, fuzzy
 msgid "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
 msgstr "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
 
@@ -105,9 +102,8 @@ msgstr "Aksiyon Gerekiyor"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-#, fuzzy
 msgid "Activate \"Multi-team\""
-msgstr "\"Çoklu takım \"ı etkinleştirin"
+msgstr "\"Çoklu Takım \"ı etkinleştirin"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -139,9 +135,8 @@ msgstr "Yönetici"
 #. module: sales_team
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
-#, fuzzy
 msgid "An error occurred while activating the Multi-Team option."
-msgstr "Çoklu Ekip seçeneği etkinleştirilirken bir hata oluştu."
+msgstr "Çoklu Takım seçeneği etkinleştirilirken bir hata oluştu."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
@@ -621,6 +616,14 @@ msgid "The default company for this user."
 msgstr "Bu kullanıcı için varsayılan şirket."
 
 #. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
@@ -680,6 +683,14 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
 msgstr "Kullanıcı Şirket"
@@ -711,7 +722,6 @@ msgstr "Bu ekibe atanan kullanıcılar."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-#, fuzzy
 msgid "Visible to all"
 msgstr "Herkes tarafından görülebilir"
 
@@ -723,7 +733,6 @@ msgstr "Websitesi"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-#, fuzzy
 msgid "Working in multiple teams?"
 msgstr "Birden fazla ekipte mi çalışıyorsunuz?"
 

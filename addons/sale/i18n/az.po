@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"POT-Creation-Date: 2025-11-21 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 19:16+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-19/sale/"
@@ -687,9 +687,9 @@ msgid ""
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title="
-"\"This product is archived\" invisible="
-"\"state not in ['draft', 'sent'] or not is_product_archived\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"This "
+"product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
+"is_product_archived\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -697,9 +697,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o p-2\" title="
-"\"Values set here are company-specific.\" groups=\"base.group_multi_company\""
-"/>"
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -728,8 +727,8 @@ msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
-"<span invisible=\"advance_payment_method != 'percentage'\" class="
-"\"oe_inline\">%</span>"
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -999,8 +998,8 @@ msgid ""
 msgstr ""
 "Fəaliyyət planları bir neçə kliklə fəaliyyətlərin siyahısını təyin etmək "
 "üçün istifadə olunur\n"
-"                (məsələn, \"Çatdırılma cədvəli\", "
-"\"Sifarişin ödənilməsinin izlənməsi\", ...)"
+"                (məsələn, \"Çatdırılma cədvəli\", \"Sifarişin ödənilməsinin "
+"izlənməsi\", ...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3329,8 +3328,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Təklif müştəri tərəfindən təsdiqləndikdən sonra o, satış sifarişinə "
-"çevrilir.<br> Siz faktura yarada və ödənişi yığa biləcəksiniz."
+"Təklif müştəri tərəfindən təsdiqləndikdən sonra o, satış sifarişinə çevrilir."
+"<br> Siz faktura yarada və ödənişi yığa biləcəksiniz."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -3831,7 +3830,8 @@ msgstr "Məhsul Çeşidləri"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr "Məhsul qiymətləri %s qiymət siyahısına uyğun olaraq yenidən hesablanıb."
+msgstr ""
+"Məhsul qiymətləri %s qiymət siyahısına uyğun olaraq yenidən hesablanıb."
 
 #. module: sale
 #. odoo-python
@@ -4171,6 +4171,12 @@ msgid "Sale Information"
 msgstr "Satış Məlumatı"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
+msgid "Sale Line Warn Msg"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__sale_order_id
 #: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
@@ -4317,10 +4323,8 @@ msgid "Sales Order Line"
 msgstr "Satış Sifarişi Sətri"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
 msgid "Sales Order Line Warning"
 msgstr ""
 
@@ -5240,8 +5244,8 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Bu hesabat satış sifarişləriniz üzrə təhlil aparır. Analiz satış "
-"gəlirlərinizi yoxlayın və onu müxtəlif qrup meyarlarına görə çeşidləyin ("
-"satıcı, tərəfdaş, məhsul və s.) Bu hesabatdan hələ fakturasız satışlar üzrə "
+"gəlirlərinizi yoxlayın və onu müxtəlif qrup meyarlarına görə çeşidləyin "
+"(satıcı, tərəfdaş, məhsul və s.) Bu hesabatdan hələ fakturasız satışlar üzrə "
 "təhlil aparmaq üçün istifadə edin. Əgər dövriyyənizi təhlil etmək "
 "istəyirsinizsə, Mühasibat proqramında Faktura Təhlili hesabatından istifadə "
 "etməlisiniz."
@@ -5250,7 +5254,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
-msgstr "Bu, hazırda seçilmiş fiskal mövqeyə əsasən bütün vergiləri yeniləyəcək."
+msgstr ""
+"Bu, hazırda seçilmiş fiskal mövqeyə əsasən bütün vergiləri yeniləyəcək."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5625,8 +5630,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"Siz bütün sifarişləri seçə və toplu olaraq hesab-faktura verə "
-"bilərsiniz,<br> və ya hər sifarişi yoxlayın və onları bir-bir hesablayın."
+"Siz bütün sifarişləri seçə və toplu olaraq hesab-faktura verə bilərsiniz,"
+"<br> və ya hər sifarişi yoxlayın və onları bir-bir hesablayın."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type

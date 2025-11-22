@@ -29,13 +29,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 15:00+0000\n"
-"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
+"PO-Revision-Date: 2025-11-20 13:21+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/project/"
 "tr/>\n"
 "Language: tr\n"
@@ -47,9 +48,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-#, fuzzy
 msgid " All internal users and invited portal users"
-msgstr " Tüm dahili kullanıcılar ve davetli portal kullanıcıları"
+msgstr " Tüm iç kullanıcılar ve davetli portal kullanıcıları"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -127,7 +127,6 @@ msgstr "%(partner_name)s Görevler"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#, fuzzy
 msgid ""
 "%(warning_messages)s\n"
 "Are you sure you want to continue?"
@@ -192,16 +191,14 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
-#, fuzzy
 msgid ""
 "<b>Log internal notes</b> and use @<b>mentions</b> to notify your colleagues."
 msgstr ""
-"<b>Dahili notları</b> adresine kaydedin ve iş arkadaşlarınızı bilgilendirmek "
-"için @<b>mention'larını</b> kullanın."
+"<b>İç Notları Kaydet</b> kaydedin ve iş arkadaşlarınızı bilgilendirmek için "
+"@<b>mention'larını</b> kullanın."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
-#, fuzzy
 msgid ""
 "<div>\n"
 "    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
@@ -422,7 +419,6 @@ msgstr ""
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
-#, fuzzy
 msgid ""
 "<div>\n"
 "    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
@@ -445,7 +441,7 @@ msgstr ""
 "<div>\n"
 "    Sayın <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
 "Freeman</t>,<br/>\n"
-"    \"<strong t-out=\"object.name or ''\">Renovations</strong>\" Proje "
+"    \"<strong t-out=\"object.name or ''\">Renovasyonlar</strong>\" Proje "
 "Yönetimi'ni başarıyla tamamladığımızı bildirmekten memnuniyet duyuyorum.\n"
 "   <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
@@ -462,7 +458,6 @@ msgstr ""
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
-#, fuzzy
 msgid ""
 "<div>\n"
 "    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
@@ -505,7 +500,6 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
 "invisible=\"rating_avg &lt; 3.66\" title=\"Happy\"/>\n"
@@ -526,7 +520,6 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#, fuzzy
 msgid "<i class=\"fa fa-lightbulb-o pe-2\" title=\"Info\"/>"
 msgstr "<i class=\"fa fa-lightbulb-o pe-2\" title=\"Info\"/>"
 
@@ -537,7 +530,6 @@ msgstr "<i class=\"fa fa-lock\"/> Özel"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#, fuzzy
 msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
 msgstr "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
 
@@ -620,7 +612,6 @@ msgstr "<span class=\"o_stat_text\">Alt görevler</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
 msgid ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
 "                                            <i class=\"fa fa-lightbulb-o "
@@ -652,7 +643,6 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-#, fuzzy
 msgid "<span>Progress</span>"
 msgstr "<span>İlerleme</span>"
 
@@ -663,7 +653,6 @@ msgstr "<span>Raporlama</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-#, fuzzy
 msgid "<span>Status</span>"
 msgstr "<span>Durum</span>"
 
@@ -684,7 +673,6 @@ msgstr "<strong>Dönüm Noktası:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
-#, fuzzy
 msgid "<strong>Priority:</strong>"
 msgstr "<strong>Öncelik:</strong>"
 
@@ -806,7 +794,6 @@ msgstr "Aktiviteler"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
-#, fuzzy
 msgid "Activities of"
 msgstr "Faaliyetleri"
 
@@ -862,14 +849,12 @@ msgstr "Aktivite  Türü"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
-#, fuzzy
 msgid "Add Milestones"
 msgstr "Kilometre Taşları Ekleme"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
-#, fuzzy
 msgid "Add Sub-task"
 msgstr "Alt Görev Ekleme"
 
@@ -918,7 +903,6 @@ msgstr "Göreviniz hazır olduğunda ekleyin."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_followers_edit_action_from_task
-#, fuzzy
 msgid "Add/Remove Followers"
 msgstr "Takipçi Ekle/Kaldır"
 
@@ -929,7 +913,6 @@ msgstr "Yönetici"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-#, fuzzy
 msgid "Administrator can manage the employees' schedule"
 msgstr "Yönetici çalışanların programını yönetebilir"
 
@@ -1123,13 +1106,11 @@ msgstr "Görevinize bir sorumlu atayın"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
-#, fuzzy
 msgid "Assign at project creation"
 msgstr "Proje Yönetimi oluşturma sırasında atama"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_roles_action
-#, fuzzy
 msgid ""
 "Assign roles to tasks in your project templates.\n"
 "                When creating a new project from the template, choose who "
@@ -1267,23 +1248,20 @@ msgstr "Ortalama Derecelendirme (1-5)"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-#, fuzzy
 msgid "Average Rating: Happy"
 msgstr "Ortalama Puan: Mutlu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-#, fuzzy
 msgid "Average Rating: Neutral"
-msgstr "Ortalama Değerlendirme: Nötr"
+msgstr "Ortalama Puan: Nötr"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-#, fuzzy
 msgid "Average Rating: Unhappy"
-msgstr "Ortalama Değerlendirme: Mutsuz"
+msgstr "Ortalama Puan: Mutsuz"
 
 #. module: project
 #. odoo-javascript
@@ -1299,7 +1277,6 @@ msgstr "Bakiye"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/account_analytic_account.py:0
-#, fuzzy
 msgid ""
 "Before we can bid farewell to these accounts, you need to tidy up the "
 "projects linked to them by removing their existing tasks!"
@@ -1471,7 +1448,6 @@ msgstr "Projedeki ortak çalışanlar paylaşıldı"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_status
-#, fuzzy
 msgid ""
 "Collect feedback from your customers by sending them a rating request when a "
 "task enters a certain stage. To do so, define a rating email template on the "
@@ -1482,11 +1458,11 @@ msgid ""
 "long as the task remains in the stage."
 msgstr ""
 "Bir görev belirli bir aşamaya girdiğinde müşterilerinize bir değerlendirme "
-"isteği göndererek onlardan geri bildirim toplayın. Bunu yapmak için, aşamada "
-"bir derecelendirme e-posta şablonu tanımlayın.\n"
-"Aşama değiştirirken derecelendirme: bir görev aşamaya ulaştığında otomatik "
+"isteği göndererek onlardan geri bildirim toplayın. Bunu yapmak için, ilgili "
+"aşamada bir derecelendirme e-posta şablonu tanımlayın.\n"
+"Aşama değiştirirken puanlama: bir görev ilgili aşamaya ulaştığında otomatik "
 "olarak bir e-posta gönderilecektir.\n"
-"Periyodik derecelendirme: Görev aşamada kaldığı sürece düzenli aralıklarla "
+"Periyodik puanlama: Görev aşamada kaldığı sürece düzenli aralıklarla "
 "otomatik olarak bir e-posta gönderilecektir."
 
 #. module: project
@@ -1526,7 +1502,6 @@ msgstr "Firma"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
-#, fuzzy
 msgid "Complete"
 msgstr "Tamamlandı"
 
@@ -1608,7 +1583,6 @@ msgstr "Göreve/Alt Göreve dönüştür"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_convert_project_to_template
 #: model:ir.actions.server,name:project.action_server_convert_to_template
-#, fuzzy
 msgid "Convert to Template"
 msgstr "Şablona Dönüştür"
 
@@ -1646,9 +1620,8 @@ msgstr "Oluşturma Tarihi"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_res_partner
-#, fuzzy
 msgid "Create a Customer"
-msgstr "Müşteri Oluşturma"
+msgstr "Müşteri Oluştur"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -1658,7 +1631,6 @@ msgstr "Proje Oluştur"
 #. module: project
 #. odoo-python
 #: code:addons/project/wizard/project_template_create_wizard.py:0
-#, fuzzy
 msgid "Create a Project from Template %s"
 msgstr "Şablondan Proje Yönetimi Oluşturma %s"
 
@@ -1709,7 +1681,6 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
-#, fuzzy
 msgid "Create tasks by email:"
 msgstr "E-posta ile görevler oluşturun:"
 
@@ -1901,21 +1872,19 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
-#, fuzzy
 msgid ""
 "Day count before tasks in this stage become stale. Set to 0 to "
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
-"Bu aşamadaki görevler bayatlamadan önceki gün sayısı. Devre dışı bırakmak "
-"için 0 olarak ayarlayın Bu parametrenin değiştirilmesi, bu değişiklikten "
-"önce en son güncellenen kaynakların çürüme durumunu/tarihini "
-"etkilemeyecektir."
+"Bu aşamadaki görevlerin süresinin dolmasına kalan gün sayısı. Devre dışı "
+"bırakmak için 0 olarak ayarlayın. Bu parametrenin değiştirilmesi, bu "
+"değişiklikten önce en son güncellenen kaynakların devre dışı kalma durumunu/"
+"tarihini etkilemeyecektir."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
-#, fuzzy
 msgid "Day count since this resource was last updated"
 msgstr "Bu kaynağın son güncellenmesinden bu yana geçen gün sayısı"
 
@@ -1929,9 +1898,8 @@ msgstr "Gün"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
-#, fuzzy
 msgid "Days Rotting"
-msgstr "Çürüyen Günler"
+msgstr "Atıl Kalınan Günler"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1940,9 +1908,8 @@ msgstr "# Zaman Sınırı Günü"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
-#, fuzzy
 msgid "Days to rot"
-msgstr "Çürümeye kalan günler"
+msgstr "Atıl kalmaya kalan günler"
 
 #. module: project
 #. odoo-python
@@ -2177,9 +2144,8 @@ msgstr "Taslak"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_list_to_plan/project_task_calendar_list_to_plan.xml:0
-#, fuzzy
 msgid "Drag Tasks to Schedule"
-msgstr "Görevleri Zamanlamaya Sürükleyin"
+msgstr "Görevleri Takvime Sürükleyin"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2206,7 +2172,6 @@ msgstr "Düzenle"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
-#, fuzzy
 msgid "Edit Milestones"
 msgstr "Kilometre Taşlarını Düzenle"
 
@@ -2371,7 +2336,6 @@ msgstr "Takip Et"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
-#, fuzzy
 msgid "Follow and comment on tasks in your projects"
 msgstr "Proje Yönetiminizdeki görevleri takip edin ve yorum yapın"
 
@@ -2439,9 +2403,8 @@ msgstr "Alt göreve bir <b>ad</b> verin"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/search/control_panel/control_panel.xml:0
-#, fuzzy
 msgid "Go back to 'My Projects'"
-msgstr "'Proje Yönetimi'm'e geri dönün"
+msgstr "'Proje Yönetimi'ne geri dönün"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2462,14 +2425,13 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#, fuzzy
 msgid ""
 "Grant users access by adding them as followers — either to the project or "
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
 "Kullanıcıları takipçi olarak ekleyerek onlara erişim izni verin - projeye "
-"veya bireysel görevlere. Dahili kullanıcılar atandıkları görevlere otomatik "
+"veya bireysel görevlere. İç kullanıcılar atandıkları görevlere otomatik "
 "olarak erişim kazanır."
 
 #. module: project
@@ -2504,9 +2466,8 @@ msgstr "Mesaj Var"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
-#, fuzzy
 msgid "Has Template Ancestor"
-msgstr "Şablon Atası Var"
+msgstr "Ana Şablonu Var"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2650,18 +2611,16 @@ msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
-#, fuzzy
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
 "Etkinleştirilirse, bu aşama proje yönetiminizin Kanban ve Liste "
-"görünümlerinde katlanmış olarak görüntülenir. Katlanmış bir aşamadaki proje "
-"yönetimi kapalı olarak kabul edilir."
+"görünümlerinde dosyalanmış olarak görüntülenir. Dosyalanmış bir aşamadaki "
+"proje yönetimi kapalı olarak kabul edilir."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
-#, fuzzy
 msgid ""
 "If set, a rating request will automatically be sent by email to the customer "
 "when the task reaches this stage. \n"
@@ -2703,7 +2662,6 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
 msgid "Import Template for Tasks"
 msgstr "Görevler için Şablonu İçe Aktar"
 
@@ -2757,21 +2715,18 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-#, fuzzy
 msgid "Invalid Display Name"
-msgstr "Geçersiz Ekran Adı"
+msgstr "Geçersiz Görüntüleme Adı"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
-#, fuzzy
 msgid "Invited internal and portal users"
-msgstr "Davet edilen dahili ve portal kullanıcıları"
+msgstr "Davet edilen iç ve portal kullanıcıları"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
-#, fuzzy
 msgid "Invited internal users"
-msgstr "Davet edilen dahili kullanıcılar"
+msgstr "Davet edilen iç kullanıcılar"
 
 #. module: project
 #. odoo-javascript
@@ -2943,7 +2898,6 @@ msgstr "Sonra"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
-#, fuzzy
 msgid "Let's create a regular <b>project</b>."
 msgstr "Normal bir <b>projesi oluşturalım</b>."
 
@@ -3369,13 +3323,11 @@ msgstr "Henüz veri yok!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_action
-#, fuzzy
 msgid "No milestones found. Let's create one!"
 msgstr "Hiçbir kilometre taşı bulunamadı. Hadi bir tane yaratalım!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_roles_action
-#, fuzzy
 msgid "No project role found. Let's create one!"
 msgstr "Proje Yönetimi rolü bulunamadı. Hadi bir tane oluşturalım!"
 
@@ -3747,13 +3699,11 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
 msgid "Private tasks cannot be converted into templates"
 msgstr "Özel görevler şablonlara dönüştürülemez"
 
 #. module: project
 #: model:project.project,name:project.project_template_1
-#, fuzzy
 msgid "Product Launch Campaign"
 msgstr "Ürün Lansman Kampanyası"
 
@@ -3824,7 +3774,6 @@ msgstr "Proje Adı"
 #. module: project
 #: model:ir.model,name:project.model_project_role
 #: model:ir.model.fields,field_description:project.field_project_template_role_to_users_map__role_id
-#, fuzzy
 msgid "Project Role"
 msgstr "Proje Yönetimi Rolü"
 
@@ -3832,7 +3781,6 @@ msgstr "Proje Yönetimi Rolü"
 #: model:ir.actions.act_window,name:project.project_roles_action
 #: model:ir.model.fields,field_description:project.field_project_task__role_ids
 #: model:ir.ui.menu,name:project.project_menu_config_project_roles
-#, fuzzy
 msgid "Project Roles"
 msgstr "Proje Yönetimi Rolleri"
 
@@ -3874,7 +3822,6 @@ msgstr "Proje Aşaması Silme Sihirbazı"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
-#, fuzzy
 msgid "Project Stage: Send rating"
 msgstr "Proje Yönetimi Aşaması: Değerlendirme gönder"
 
@@ -3902,7 +3849,6 @@ msgstr "Proje Görevleri"
 
 #. module: project
 #: model:ir.model,name:project.model_project_template_create_wizard
-#, fuzzy
 msgid "Project Template create Wizard"
 msgstr "Proje Yönetimi Şablonu Oluşturma Sihirbazı"
 
@@ -3933,7 +3879,6 @@ msgstr "Proje Görünürlüğü"
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 #: model:ir.model.fields,help:project.field_task_share_wizard__project_privacy_visibility
-#, fuzzy
 msgid ""
 "Project and Task Visibility:\n"
 "- Invited internal users: Can access only the project or tasks they follow. "
@@ -3968,8 +3913,8 @@ msgstr ""
 "Portal Erişim Düzeyleri:\n"
 "- Salt okunur: Portal kullanıcıları portalları aracılığıyla görevleri görür "
 "ancak bunları düzenleyemez.\n"
-"- Düzenle (sınırlı): Portal kullanıcıları kanban/liste görünümlerine erişir "
-"ve takip edilen görevlerdeki sınırlı alanları düzenleyebilir.\n"
+"- Düzenleme (sınırlı): Portal kullanıcıları kanban/liste görünümlerine "
+"erişir ve takip edilen görevlerdeki sınırlı alanları düzenleyebilir.\n"
 "- Düzenleme: Yukarıdaki ile aynı, tüm görevlere erişim.\n"
 "\n"
 "Diğer Kurallar:\n"
@@ -3981,14 +3926,12 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/actions/client_actions.js:0
-#, fuzzy
 msgid "Project converted to template."
 msgstr "Proje Yönetimi şablona dönüştürüldü."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#, fuzzy
 msgid "Project created from template %(name)s."
 msgstr "Proje Yönetimi %(name)s şablonundan oluşturulmuştur."
 
@@ -3999,7 +3942,6 @@ msgstr "Proje Açıklaması..."
 
 #. module: project
 #: model:ir.model,name:project.model_project_template_role_to_users_map
-#, fuzzy
 msgid "Project role to users mapping"
 msgstr "Proje Yönetimi rolü ile kullanıcı eşleştirmesi"
 
@@ -4022,16 +3964,14 @@ msgstr "Proje görevleri"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
 msgid "Project: %(project_name)s"
 msgstr "Proje Yönetimi: %(project_name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
 msgid "Project: %(project_name)s, Stage: %(stage_name)s"
-msgstr "Proje Yönetimi: %(project_name)s, Sahne: %(stage_name)s"
+msgstr "Proje Yönetimi: %(project_name)s, Aşama: %(stage_name)s"
 
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
@@ -4398,23 +4338,20 @@ msgstr "Gelirler"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/actions/client_actions.js:0
-#, fuzzy
 msgid "Revert to Project"
 msgstr "Proje Yönetimi'ne Geri Dön"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__role_to_users_ids
-#, fuzzy
 msgid "Role To Users"
-msgstr "Kullanıcılara Rol"
+msgstr "Kullanıcılara Rol Tanımla"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, fuzzy
 msgid "Rotting"
-msgstr "Çürüme"
+msgstr "Atıl Kalma"
 
 #. module: project
 #. odoo-javascript
@@ -4542,7 +4479,6 @@ msgstr "Davetiyeleri Gönder"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
-#, fuzzy
 msgid "Send a customer rating request"
 msgstr "Müşteri değerlendirme talebi gönderin"
 
@@ -4620,14 +4556,12 @@ msgstr "Görevi Paylaş"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
-#, fuzzy
 msgid "Show Sub-Tasks"
 msgstr "Alt Görevleri Göster"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 
@@ -4640,14 +4574,12 @@ msgstr "Kapatılmış görevleri göster"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.js:0
-#, fuzzy
 msgid "Show sub-tasks"
 msgstr "Alt görevleri göster"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.js:0
-#, fuzzy
 msgid "Show sub-tasks & top menu"
 msgstr "Alt görevleri ve üst menüyü göster"
 
@@ -4761,7 +4693,6 @@ msgstr "Aşama Sahibi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
-#, fuzzy
 msgid "Stage Rating Status"
 msgstr "Aşama Derecelendirme Durumu"
 
@@ -4970,7 +4901,6 @@ msgstr "Görev Tekrarı"
 
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
-#, fuzzy
 msgid "Task Sharing"
 msgstr "Görev Paylaşımı"
 
@@ -4997,7 +4927,6 @@ msgstr "Görev Aşamaları"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 #: model_terms:ir.ui.view,arch_db:project.view_task_template_search_form
-#, fuzzy
 msgid "Task Templates"
 msgstr "Görev Şablonları"
 
@@ -5045,7 +4974,6 @@ msgstr "Görev iptal edildi"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/actions/client_actions.js:0
-#, fuzzy
 msgid "Task converted to template"
 msgstr "Görev şablona dönüştürüldü"
 
@@ -5125,7 +5053,6 @@ msgstr "Yinelemedeki Görevler"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
-#, fuzzy
 msgid "Tasks.test"
 msgstr "Görevler.test"
 
@@ -5138,28 +5065,24 @@ msgstr "Şablon"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
-#, fuzzy
 msgid "Template Has Dates"
 msgstr "Şablonda Tarihler Var"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#, fuzzy
 msgid "Template converted back to regular project."
 msgstr "Şablon normal proje yönetimine geri dönüştürüldü."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
 msgid "Template converted back to regular task"
 msgstr "Şablon normal göreve geri dönüştürüldü"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#, fuzzy
 msgid "Template created from %s."
 msgstr "Şablon %s adresinden oluşturulmuştur."
 
@@ -5405,7 +5328,6 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#, fuzzy
 msgid ""
 "This project is currently a template. Would you like to convert it back into "
 "a regular project?"
@@ -5442,7 +5364,6 @@ msgstr "Bu görev, tamamlanmamış başka bir görev tarafından engelleniyor"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/actions/client_actions.js:0
-#, fuzzy
 msgid ""
 "This task is currently a template. Would you like to convert it back into a "
 "regular task?"
@@ -5554,7 +5475,6 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#, fuzzy
 msgid ""
 "To give portal users access to your project, add them as followers. For task "
 "access, add them as followers for each task."
@@ -5714,7 +5634,6 @@ msgstr "Takibi Bırak"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-#, fuzzy
 msgid "Unhappy face"
 msgstr "Mutsuz yüz"
 
@@ -5820,7 +5739,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
-#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -5837,7 +5755,7 @@ msgstr ""
 "Yeni görevler belirlemek için başlıkta bu anahtar kelimeleri kullanın:\n"
 "\n"
 "        30h Göreve 30 saat ayırın\n"
-"        #tags Görevdeki etiketleri ayarlayın\n"
+"        #etiketler Görevdeki etiketleri ayarlayın\n"
 "        kullanıcı Görevi bir kullanıcıya atayın\n"
 "        ! Görevi orta öncelikli olarak ayarlayın\n"
 "        !! Görevi yüksek öncelikli olarak ayarlayın\n"
@@ -5860,7 +5778,6 @@ msgstr "Kullanıcı ayarları"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-#, fuzzy
 msgid "User can user the your employees' schedule"
 msgstr "Kullanıcı, çalışanlarınızın programını kullanabilir"
 
@@ -5892,7 +5809,6 @@ msgstr "Görünürlük"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
-#, fuzzy
 msgid "Visible to all"
 msgstr "Herkes tarafından görülebilir"
 
@@ -5948,7 +5864,6 @@ msgstr "Hafta"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__role_ids
-#, fuzzy
 msgid ""
 "When you create a project from a template, you can choose which employee "
 "takes each role. These employees will be added to the tasks, along with "
@@ -6016,7 +5931,6 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
-#, fuzzy
 msgid "Write a task name"
 msgstr "Bir görev adı yazın"
 
@@ -6070,7 +5984,6 @@ msgstr "Alt görevleri kanban kartından açabilirsiniz!"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
-#, fuzzy
 msgid "You cannot convert this task into a sub-task because it is recurrent."
 msgstr ""
 "Bu görevi bir alt göreve dönüştüremezsiniz çünkü tekrarlayan bir görevdir."
@@ -6167,7 +6080,6 @@ msgstr "rumuz"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#, fuzzy
 msgid "analytic"
 msgstr "analitik"
 
@@ -6200,7 +6112,6 @@ msgstr "düğmesi."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_list
-#, fuzzy
 msgid "e.g. Developer"
 msgstr "örn. geliştirici"
 
@@ -6374,7 +6285,6 @@ msgstr "Fikrinizin mevcut durumunun ne olduğunu belirtmek için."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
-#, fuzzy
 msgid "when reaching this stage"
 msgstr "bu aşamaya ulaşıldığında"
 
@@ -6394,7 +6304,6 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#, fuzzy
 msgid "{{0}} Milestones reached out of {{1}}"
 msgstr "{{0}} Ulaşılan kilometre taşları {{1}}"
 

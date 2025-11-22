@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_totp_mail
+# * auth_totp_mail
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 09:07+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2025-11-16 15:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
+"auth_totp_mail/fa/>\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -22,6 +25,8 @@ msgid ""
 ".\n"
 "                <br/>"
 msgstr ""
+".\n"
+"                <br/>"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -106,6 +111,9 @@ msgid ""
 "                To login, enter below the six-digit authentication code just "
 "sent via email to"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"               برای ورود کد اعتبارسنجی شش رقمی که با ایمیل برایتان ارسال شده "
+"را وارد کنید"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -132,22 +140,23 @@ msgstr ""
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
 msgstr ""
+"یک دستگاه مورد اعتماد به تازگی از حساب شما حذف شده است: %(device_names)s"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
 msgid "All users"
-msgstr ""
+msgstr "همه کاربر ان"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
 msgid "Authentication Device"
-msgstr ""
+msgstr "دستگاه اعتبارسنجی"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "نمی‌توان ایمیل فرستاد: کاربر %s نشانی ایمیلی ندارد."
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -157,24 +166,24 @@ msgstr ""
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "تنظیمات پیکربندی"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "نام نمایشی"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
-msgstr ""
+msgstr "فقط کارمندان"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Enable 2FA"
-msgstr ""
+msgstr "فعال‌سازی 2FA"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
@@ -183,23 +192,26 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
+"اعتبارسنجی دو عاملی را با ایمیل برای کارمندان یا تمام کاربران (از جمله "
+"کاربران پورتال) اجرا کنید، در صورتی که آنها روش دیگری را برای اعتبارسنجی دو "
+"عاملی فعال نکرده باشند."
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr ""
+msgstr "اجرای اعتبارسنجی دو عاملی"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "شناسه"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr ""
+msgstr "دعوت‌نامه برای فعال‌سازی احراز هویت دو مرحله‌ای در حساب Odoo شما"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -208,104 +220,106 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
+"دعوت‌نامه برای استفاده از احراز هویت دو مرحله‌ای برای کاربر(ان) زیر ارسال شد: "
+"%s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr ""
+msgstr "دعوت‌ برای استفاده از احراز هویت دو مرحله‌ای"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr ""
+msgstr "دعوت برای استفاده از اعتبارسنجی دو عاملی"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Learn More"
-msgstr ""
+msgstr "بیشتر بدانید"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "برقراری ارتباط جدید با حساب شما"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr ""
+msgstr "تنظیمات احراز هویت دو مرحله‌ای را باز کنید."
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Re-send email"
-msgstr ""
+msgstr "ارسال مجدد ایمیل"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security"
-msgstr ""
+msgstr "امنیت"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Activated"
-msgstr ""
+msgstr "به روزرسانی امنیتی: احراز هویت دو مرحله‌ای فعال شد"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Deactivated"
-msgstr ""
+msgstr "به روزرسانی امنیتی: احراز هویت دو مرحله‌ای غیرفعال شد"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 msgid "Security Update: Device Removed"
-msgstr ""
+msgstr "به‌روز رسانی امنیتی: دستگاه حذف شد"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr ""
+msgstr "تنظیمات: دعوت‌نامه برای احراز هویت دو مرحله‌ای"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr ""
+msgstr "تنظیمات: ورود جدید برای اعتبارسنجی 2 عاملی"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "اعتبارسنجی دو مرحله‌ای"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr ""
+msgstr "سیاست اجرای اعتبارسنجی دو عاملی"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been activated on your account"
-msgstr ""
+msgstr "احراز هویت دو مرحله‌ای در حساب شما فعال شده است."
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr ""
+msgstr "احراز هویت دو مرحله‌ای در حساب شما غیرفعال شده است."
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
 msgid "User"
-msgstr ""
+msgstr "کاربر"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "اعتبارسنجی ناموفق، لطفاً کد 6 رقمی را بازبینی کنید"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -314,13 +328,15 @@ msgid ""
 "authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"فعال‌سازی اعتبارسنجی دو عاملی از طریق یک برنامه‌ی اعتبارسنجی برای تقویت امنیت "
+"حساب شما، به شدت توصیه می‌شود.  <br/>"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr ""
+msgstr "کد اعتبارسنجی دو عاملی شما"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "activating Two-factor Authentication"
-msgstr ""
+msgstr "فعال‌سازی اعتبارسنجی دو عاملی"
