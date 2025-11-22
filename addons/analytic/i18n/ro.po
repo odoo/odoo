@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic
-# 
+# * analytic
+#
 # Translators:
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
@@ -11,20 +11,23 @@
 # Wil Odoo, 2024
 # Lyall Kindmurr, 2024
 # Larisa_nexterp, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larisa_nexterp, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2025-11-13 18:36+0000\n"
+"PO-Revision-Date: 2025-11-15 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-17/"
+"analytic/ro/>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: analytic
 #. odoo-python
@@ -560,11 +563,13 @@ msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "În Odoo, comenzile de vânzare și proiectele sunt implementate utilizând\n"
-"               conturi analitice. Puteți urmări costurile și veniturile pentru a vă analiza\n"
+"               conturi analitice. Puteți urmări costurile și veniturile "
+"pentru a vă analiza\n"
 "                cu ușurință marjele."
 
 #. module: analytic
@@ -792,14 +797,19 @@ msgstr "Cercetare și dezvoltare"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Veniturile vor fi create automat atunci când creați facturi de\n"
-"                client. Facturile de client pot fi create pe baza comenzilor de\n"
-"                vânzări (facturi cu preț fix), pe baza timpii (bazate pe munca\n"
-"                efectuată) sau pe baza cheltuielilor (de exemplu, facturarea\n"
+"                client. Facturile de client pot fi create pe baza comenzilor "
+"de\n"
+"                vânzări (facturi cu preț fix), pe baza timpii (bazate pe "
+"munca\n"
+"                efectuată) sau pe baza cheltuielilor (de exemplu, "
+"facturarea\n"
 "                cheltuielilor de călătorie)."
 
 #. module: analytic
@@ -886,6 +896,20 @@ msgid "Subplans"
 msgstr "Subplanuri"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Parametru de sistem"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
 msgid "Time Off"
 msgstr "Concediu"
@@ -926,8 +950,8 @@ msgstr "Afișare"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
 "Stai! Această modificare ar șterge datele tale curente. Hai să evităm asta, "
 "bine?"

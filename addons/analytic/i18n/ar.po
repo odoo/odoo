@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic
-# 
+# * analytic
+#
 # Translators:
 # Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"POT-Creation-Date: 2025-11-13 18:36+0000\n"
+"PO-Revision-Date: 2025-11-15 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-17/analytic/"
+"ar/>\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: analytic
 #. odoo-python
@@ -554,7 +557,8 @@ msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "في أودو، يتم تشغيل أوامر البيع والمشاريع باستخدام\n"
@@ -786,13 +790,17 @@ msgstr "البحث والتطوير "
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "سوف يتم تسجيل الأرباح تلقائيًا عند إنشاء\n"
-"                فواتير للعملاء. يمكن إنشاء فواتير العملاء بناءً على أوامر البيع\n"
-"                (فواتير بأسعار ثابتة)، أو الجداول الزمنية (بناءً على العمل المنجز) أو\n"
+"                فواتير للعملاء. يمكن إنشاء فواتير العملاء بناءً على أوامر "
+"البيع\n"
+"                (فواتير بأسعار ثابتة)، أو الجداول الزمنية (بناءً على العمل "
+"المنجز) أو\n"
 "                النفقات (مثل إعادة إصدار فواتير لتكاليف السفر). "
 
 #. module: analytic
@@ -848,8 +856,8 @@ msgid ""
 "it will automatically take this as an analytic account)"
 msgstr ""
 "اختر فئة شريك سيتم استخدام التوزيع التحليلي من أجلها (مثال: إنشاء فاتورة "
-"عميل جديدة أو أمر بيع إذا قمنا بتحديد هذا الشريك، سيقوم تلقائياً بأخذه كحساب"
-" تحليلي) "
+"عميل جديدة أو أمر بيع إذا قمنا بتحديد هذا الشريك، سيقوم تلقائياً بأخذه كحساب "
+"تحليلي) "
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -876,6 +884,20 @@ msgstr "أنظمة سبارك"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
 msgstr "الخطط الفرعية "
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "معيار النظام"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -918,8 +940,8 @@ msgstr "أداة العرض"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr "مهلاً! إجراء هذا التغيير سيمحو بياناتك الحالية. فلنتجنب ذلك، حسناً؟ "
 
 #. module: analytic

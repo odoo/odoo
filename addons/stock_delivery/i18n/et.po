@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_delivery
-# 
+# * stock_delivery
+#
 # Translators:
 # Egon Raamat <egon@avalah.ee>, 2023
 # Helen Sulaoja <helen@avalah.ee>, 2023
@@ -21,20 +21,22 @@
 # Tairi Tiimann, 2024
 # Stevin Lilla, 2024
 # Algo Kärp <algokarp@gmail.com>, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:34+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2025\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"PO-Revision-Date: 2025-11-20 17:49+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-17/"
+"stock_delivery/et/>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -120,7 +122,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Rakendub transpordiviisidele"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
@@ -138,6 +140,8 @@ msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
 msgstr ""
+"Tarne tühistamist ei ole võimalik tagasi võtta. Kas olete kindel, et soovite "
+"jätkata?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -167,7 +171,7 @@ msgstr "Ettevõte"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Hind: %(price).2f%(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -234,7 +238,7 @@ msgstr ""
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr ""
+msgstr "Ülekande käigus tekkis viga seoses vedajaga"
 
 #. module: stock_delivery
 #. odoo-python
@@ -285,7 +289,7 @@ msgstr "Viimati uuendatud"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Manual actions might be needed."
-msgstr ""
+msgstr "Võidakse vajada manuaalseid tegevusi."
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -382,6 +386,10 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
+"Päritolureeglid määravad kindlaks kaupade päritolu — mitte seda, kust kaupu "
+"on saadetud, vaid kus need on toodetud või valmistatud.\n"
+"Seega tähistab ‘päritolu’ kaupade \"majanduslikku päritoluriiki\" "
+"rahvusvahelises kaubanduses."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -416,6 +424,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
 msgstr ""
+"Saadetis üle antud transpordifirmale %(carrier_name)s, saadetise "
+"jälgimisnumber %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -491,7 +501,7 @@ msgstr ""
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr ""
+msgstr "Pakki ei saa luua, kuna korjes olevate toodete kogukaal on null %s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -508,18 +518,20 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Teie paki kaal ületab selle pakitüübi lubatut maksimaalse kaalu. Palun "
+"valige teine pakenditüüp."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "Sobivat tarnereeglit ei leitud."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr ""
+msgstr "Kõigi pakis olevate toodete kogukaal."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
@@ -544,7 +556,7 @@ msgstr "Pakendi kogukaal."
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr ""
+msgstr "Korjes olevate toodete kogukaal."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -571,7 +583,7 @@ msgstr "Jälgimise URL"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Saadetise jälgimislingid:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -622,11 +634,14 @@ msgid ""
 "carriers (i.e. check that all of their transfers have a carrier assigned and"
 " are using the same carrier)."
 msgstr ""
+"Tooteid ei saa pakendada samasse pakki, kui neil on erinevad vedajad ("
+"kontrollige, et kõikidel ülekannetel oleks määratud vedaja ja et see oleks "
+"sama)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "Teil on mitu jälgimislinki, need kõik on saadaval logis."
 
 #. module: stock_delivery
 #. odoo-python

@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-06 18:35+0000\n"
+"POT-Creation-Date: 2025-11-13 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 17:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
@@ -721,8 +721,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Paid</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" role="
-"\"img\"/>\n"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Төлсөн</span>"
 
@@ -747,8 +747,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Waiting for Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role="
-"\"img\"/>\n"
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+"role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Төлбөр хүлээж байна</span>"
 
@@ -815,10 +815,10 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" class"
-"=\"text-muted\">Итгэмжлэгдээгүй</span>\n"
-"                            <span invisible=\"not allow_out_payment\" class"
-"=\"text-success\">Итгэмжлэгдсэн</span>\n"
+"                            <span invisible=\"allow_out_payment\" "
+"class=\"text-muted\">Итгэмжлэгдээгүй</span>\n"
+"                            <span invisible=\"not allow_out_payment\" "
+"class=\"text-success\">Итгэмжлэгдсэн</span>\n"
 "                        </span>"
 
 #. module: account
@@ -1011,8 +1011,8 @@ msgid ""
 "invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Нэхэмжлэл</span>\n"
-"                                        <span invisible="
-"\"reconciled_invoices_type == 'invoice'\"> Буцаан олголт</span>"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Буцаан олголт</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1020,8 +1020,8 @@ msgid ""
 "<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
 "o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
-"<span invisible=\"rule_type != 'invoice_matching'\" class="
-"\"o_form_label o_td_label\">Тохирч буй нэхэмжлэл/төлбөр</span>"
+"<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
+"o_td_label\">Тохирч буй нэхэмжлэл/төлбөр</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1204,8 +1204,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
 msgstr ""
-"<span>Энэ бол таны Үйлчилгээний Нөхцөлүүдийн урьдчилсан танилцуулга "
-"юм.</span>"
+"<span>Энэ бол таны Үйлчилгээний Нөхцөлүүдийн урьдчилсан танилцуулга юм.</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13827,7 +13827,8 @@ msgstr ""
 msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
-msgstr "Татвар хаах бичилтийн үед компанийн ашигт ашиглах татварын урсгал данс."
+msgstr ""
+"Татвар хаах бичилтийн үед компанийн ашигт ашиглах татварын урсгал данс."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -13978,8 +13979,8 @@ msgstr ""
 "prefix3, seq, suffix. \n"
 "Prefix* бүлгүүд нь жил, сар болон өсөх дарааллын дугаар (seq)-ийн хоорондох "
 "тусгаарлагчид юм. Жишээ:\n"
-"^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d"
-"{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14410,13 +14411,6 @@ msgstr "Хүргүүлэх хаяг нь татварын байршлыг то�
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
 msgstr "Нэхэмжлэх үүсгэсэн баримт(ууд)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "The entry %s (id %s) is using accounts from a different company."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16644,7 +16638,8 @@ msgstr "Тэмдэглэвэл, 0 утгууд энэ багана дээр ха
 #: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
 msgid ""
 "When checked, 0 values will not show when displaying this expression's value."
-msgstr "Тэмдэглэвэл, энэхүү илэрхийллийн утгыг харуулахад 0 утгууд харагдахгүй."
+msgstr ""
+"Тэмдэглэвэл, энэхүү илэрхийллийн утгыг харуулахад 0 утгууд харагдахгүй."
 
 #. module: account
 #. odoo-python
@@ -18091,8 +18086,8 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Буцаан олголт (Лавлах {{ object.name or 'n/a' "
-"}})"
+"{{ object.company_id.name }} Буцаан олголт (Лавлах {{ object.name or 'n/"
+"a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice

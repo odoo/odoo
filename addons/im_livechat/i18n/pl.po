@@ -1,25 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* im_livechat
-# 
+# * im_livechat
+#
 # Translators:
 # Damian Ratus, 2024
 # Wil Odoo, 2024
 # Marta Wacławek, 2025
-# 
+#
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"PO-Revision-Date: 2025-11-13 10:53+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
+"im_livechat/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
+"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -58,12 +63,12 @@ msgstr "# rozmówców"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
-msgstr "% Szczęśliwy"
+msgstr "% Zadowolonych"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
 msgid "% of Happiness"
-msgstr "% szczęśliwych"
+msgstr "% zadowolenia"
 
 #. module: im_livechat
 #. odoo-python
@@ -73,6 +78,8 @@ msgid ""
 "%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
 "response in your message."
 msgstr ""
+"%(new_line)sTyp %(bold_start)s:skrót%(bold_end)s do wstawienia szybkiej "
+"odpowiedzi w Twojej wiadomości."
 
 #. module: im_livechat
 #. odoo-python
@@ -102,9 +109,11 @@ msgid ""
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
 "* \"Pokaż\" wyświetla przycisk czatu na stronach.\n"
-"* \"Pokaż z powiadomieniem\" to \"Pokaż\" z dodatkiem tekstu unoszącego się zaraz obok przycisku\n"
-"* \"Otwórz automatycznie\" wyświetla przycisk i automatycznie otwiera panel konwersacji.\n"
-"* \"Schowaj\" ukrywa przycisk  czatu na stronach.\n"
+"* \"Pokaż z powiadomieniem\" to \"Pokaż\" z dodatkiem tekstu unoszącego się "
+"zaraz obok przycisku\n"
+"* \"Otwórz automatycznie\" wyświetla przycisk i automatycznie otwiera panel "
+"konwersacji.\n"
+"* \"Schowaj\" ukrywa przycisk czatu na stronach.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -119,7 +128,7 @@ msgstr "1 to poniedziałek, 7 to niedziela"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
 msgid "<i class=\"fa fa-mail-reply me-2\" title=\"Reply\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-mail-reply me-2\" title=\"Odpowiedz\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -127,8 +136,8 @@ msgid ""
 "<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
 "ratings\" role=\"img\" aria-label=\"Happy face\"/>"
 msgstr ""
-"<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
-"ratings\" role=\"img\" aria-label=\"Happy face\"/>"
+"<i class=\"fa fa-smile-o text-success\" title=\"Procent pozytywnych ocen\" "
+"role=\"img\" aria-label=\"Zadowolona twarz\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -170,8 +179,12 @@ msgid ""
 "<span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>\n"
 "                    <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>"
 msgstr ""
-"<span>Wskazówka: Przynajmniej jedna interakcja (pytanie, email, ...) potrzebna jest zanim Bot będzie mógł wykonać bardziej złożone akcje (przekaż operatorowi, ...). </span>\n"
-"                    <span>Użyj zasad kanału jeśli chcesz, aby Bot wchodził w interakcję z osobami odwiedzającymi tylko kiedy żaden operator nie jest dostępny.</span>"
+"<span>Wskazówka: Potrzebna jest przynajmniej jedna interakcja (pytanie, "
+"email, ...) zanim Bot będzie mógł wykonać bardziej złożone akcje (przekaż "
+"operatorowi, ...). </span>\n"
+"                    <span>Użyj zasad kanału jeśli chcesz, aby Bot wchodził w "
+"interakcję z osobami odwiedzającymi tylko kiedy żaden operator nie jest "
+"dostępny.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -180,9 +193,9 @@ msgid ""
 "the Bot can perform more complex actions (Forward to an Operator, "
 "...).</span>"
 msgstr ""
-"<span>Wskazówka: Przynajmniej jedna interakcja (pytanie, email, ...) "
-"potrzebna jest zanim Bot będzie mógł wykonać bardziej złożone akcje (przekaż"
-" operatorowi, ...).</span>"
+"<span>Wskazówka: Potrzebna jest przynajmniej jedna interakcja (pytanie, "
+"email, ...) zanim Bot będzie mógł wykonać bardziej złożone akcje (przekaż "
+"operatorowi, ...).</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -190,8 +203,8 @@ msgid ""
 "<span>Tip: Plan further steps for the Bot in case no operator is "
 "available.</span>"
 msgstr ""
-"<span>Wskazówka: Zaplanuj dalsze kroki dla Bota w razie gdyby żaden operator"
-" nie był dostępny.</span>"
+"<span>Wskazówka: Zaplanuj dalsze kroki dla Bota w razie gdyby żaden operator "
+"nie był dostępny.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -210,7 +223,8 @@ msgid ""
 "                                       If the visitor is also the operator, the session will always be answered."
 msgstr ""
 "Sesja pozostaje bez odpowiedzi jeśli operator nie odpowiedział. \n"
-"                                       Jeśli wizytujący jest także operatorem, sesja zawsze będzie miała odpowiedź."
+"                                       Jeśli wizytujący jest także "
+"operatorem, sesja zawsze będzie miała odpowiedź."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
@@ -310,12 +324,12 @@ msgstr "Przeciętna wiadomość"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__rating
 msgid "Average rating"
-msgstr ""
+msgstr "Średnia ocena"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__rating
 msgid "Average rating given by the visitor"
-msgstr ""
+msgstr "Średnia ocena przyznana przez odwiedzającego"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
@@ -331,7 +345,7 @@ msgstr "średni czas podania pierwszej odpowiedzi do odwiedzającego"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Bad Ratings"
-msgstr ""
+msgstr "Złe oceny"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__operator_partner_id
@@ -351,7 +365,7 @@ msgstr "Kolor tekstu przycisków"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
 msgid "Canned Responses"
-msgstr "Odpowiedzi szablonowe"
+msgstr "Szybkie odpowiedzi"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_id
@@ -416,7 +430,7 @@ msgid ""
 msgstr ""
 "Czat między dwiema osobami jest prywatny i unikalny. Grupa jest prywatna "
 "wśród osób zaproszonych. Do kanału można dołączać bez ograniczeń (w "
-"zależności od jego ustawień). "
+"zależności od jego ustawień)."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -500,7 +514,7 @@ msgstr "Konfiguracja"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Configure Channel"
-msgstr ""
+msgstr "Skonfiguruj kanał"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -629,12 +643,12 @@ msgstr "Domyślny kolor tekstu przycisku czatu"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
 msgid "Default text displayed on the Livechat Support Button"
-msgstr "Domyślny tekst wyświetlany na przycisku pomocy Livechat"
+msgstr "Domyślny tekst wyświetlany na przycisku pomocy Czatu na żywo"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__title_color
 msgid "Default title color of the channel once open"
-msgstr "Domyślny kolor tytułu kanału otwartego"
+msgstr "Domyślny kolor tytułu raz otwartego kanału"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -650,8 +664,8 @@ msgid ""
 "taken into account."
 msgstr ""
 "Zdefiniuj reguły dla swojego kanału wsparcia. Możesz zastosować akcję dla "
-"danego adresu URL oraz dla każdego kraju.<br/>Aby zidentyfikować kraj, GeoIP"
-" musi być zainstalowany na twoim serwerze, w przeciwnym razie kraje reguły "
+"danego adresu URL oraz dla każdego kraju.<br/>Aby zidentyfikować kraj, na "
+"twoim serwerze musi być zainstalowane GeoIP, w przeciwnym razie kraje reguły "
 "nie będą brane pod uwagę."
 
 #. module: im_livechat
@@ -718,7 +732,7 @@ msgstr "Czas trwania"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Duration of Session (min)"
-msgstr ""
+msgstr "Czas trwania sesji (min)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
@@ -803,7 +817,7 @@ msgstr "Pole do wprowadzania dowolnego tekstu"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
 msgid "Free Input (Multi-Line)"
-msgstr "Pole do wprowadzania dowolnego tekstu (wielolinijkowego)"
+msgstr "Pole do wprowadzania dowolnego tekstu (wielowierszowego)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -811,13 +825,13 @@ msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
-"Nakazano znalezienie pasującej reguły. Jeśli 2 reguły są pasujące dla danego"
-" adresu url/kraju, zostanie wybrana ta o najniższej sekwencji."
+"Nakazano znalezienie pasującej reguły. Jeśli 2 reguły są pasujące dla danego "
+"adresu url/kraju, zostanie wybrana ta o najniższej sekwencji."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Good Ratings"
-msgstr ""
+msgstr "Dobre oceny"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -892,8 +906,7 @@ msgstr "Jak używać widżetu Live Chat?"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr ""
-"Ojej, wygląda na to, że żaden z naszych operatorów nie jest dostępny 🙁"
+msgstr "Ojej, wygląda na to, że żaden z naszych operatorów nie jest dostępny 🙁"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
@@ -983,7 +996,7 @@ msgstr "Czy kategoria czat na żywo jest włączona"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_active
 msgid "Is livechat ongoing?"
-msgstr "Czy czat na żywo jest włączony?"
+msgstr "Czy czat na żywo wciąż trwa?"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
@@ -1003,12 +1016,12 @@ msgstr "Dołącz do kanału"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
 msgid "Kpi Livechat Conversations Value"
-msgstr "Wartość KPI rozmowy czatu "
+msgstr "Wartość KPI rozmowy czatu"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating_value
 msgid "Kpi Livechat Rating Value"
-msgstr "Wartość oceny kpi czatu na żywo"
+msgstr "Wartość oceny czatu na żywo KPI"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response_value
@@ -1209,7 +1222,7 @@ msgstr "Wiadomości"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Messages per session"
-msgstr ""
+msgstr "Wiadomości wg. sesji"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -1384,7 +1397,7 @@ msgstr "Nazwa nadrzędnego autora"
 #: model:ir.model.fields,field_description:im_livechat.field_mail_mail__parent_body
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__parent_body
 msgid "Parent Body"
-msgstr ""
+msgstr "Główna treść wiadomości"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1499,7 +1512,7 @@ msgstr "Ocena kanału czatu"
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/transcript_sender.xml:0
 #, python-format
 msgid "Receive a copy of this conversation."
-msgstr "Otrzymaj kopię tej konwersacji"
+msgstr "Otrzymaj kopię tej konwersacji."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
@@ -1522,7 +1535,7 @@ msgstr "Powiązana wiadomość mailowa"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
 msgid "Replied to"
-msgstr ""
+msgstr "Odpowiedź"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -1570,7 +1583,7 @@ msgstr "Ocena satysfakcji"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
-msgstr "Zapisz kanał, aby uzyskać widget konfiguracyjny."
+msgstr "Zapisz kanał, aby uzyskać widżet konfiguracyjny."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1649,7 +1662,7 @@ msgstr "Sekwencja"
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 msgid "Session Date"
-msgstr "Data Sesji"
+msgstr "Data sesji"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
@@ -1777,10 +1790,10 @@ msgid ""
 " these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
 "Reguła będzie stosowana tylko dla tych krajów. Przykład: jeśli wybierzesz "
-"\"Belgia\" i \"Stany Zjednoczone\" i ustawisz akcję jako \"Ukryj\", przycisk"
-" czatu zostanie ukryty w określonym adresie URL przed odwiedzającymi "
-"znajdującymi się w tych 2 krajach. Ta funkcja wymaga GeoIP zainstalowanego "
-"na twoim serwerze."
+"\"Belgia\" i \"Stany Zjednoczone\" i ustawisz akcję jako \"Ukryj\", przycisk "
+"czatu zostanie ukryty w określonym adresie URL przed odwiedzającymi "
+"znajdującymi się w tych 2 krajach. Ta funkcja wymaga zainstalowania GeoIP na "
+"Twoim serwerze."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -1798,8 +1811,8 @@ msgid ""
 "The visitor will be redirected to this link upon clicking the option (note "
 "that the script will end if the link is external to the livechat website)."
 msgstr ""
-"Odwiedzający zostanie przekierowany na ten link po kliknięciu opcji (zauważ,"
-" że skrypt zakończy się, jeśli link jest zewnętrzny)."
+"Odwiedzający zostanie przekierowany na ten link po kliknięciu opcji (zauważ, "
+"że skrypt zakończy się, jeśli link jest zewnętrzny)."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat
@@ -1839,8 +1852,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
 msgid "This username will be used as your name in the livechat channels."
-msgstr ""
-"Ta nazwa użytkownika używana będzie jako twoja nazwa w kanałach czatu."
+msgstr "Ta nazwa użytkownika używana będzie jako twoja nazwa w kanałach czatu."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__time_to_answer
@@ -1872,12 +1884,12 @@ msgstr "Kolor tytułu"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Treated sessions"
-msgstr ""
+msgstr "Obsłużone sesje"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
-msgstr "URL Regex"
+msgstr "Wyrażenie regularne URL"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__web_page
@@ -1973,7 +1985,7 @@ msgstr "Kanał czatu na stronie"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__website_message_ids
 msgid "Website Messages"
-msgstr "Wiadomości"
+msgstr "Wiadomości ze strony internetowej"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__website_message_ids
@@ -2003,14 +2015,13 @@ msgstr "Czego szukasz?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Widget"
-msgstr "Widget"
+msgstr "Widżet"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
-msgstr ""
-"Czy mógłbyś zostawić swój adres e-mail, abyśmy mogli się do Ciebie odezwać?"
+msgstr "Czy chcesz podać swój adres e-mail, abyśmy mogli się do Ciebie odezwać?"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -2041,8 +2052,9 @@ msgid ""
 "                visitors to talk in real time with your operators."
 msgstr ""
 "Możesz utworzyć kanał dla każdej strony internetowej, na której \n"
-"                chcesz zintegrować widget czatu umożliwiając\n"
-"                odwiedzającym rozmawianie w czasie rzeczywistym z twoimi operatorami."
+"                chcesz zintegrować widżet czatu umożliwiając\n"
+"                odwiedzającym rozmawianie w czasie rzeczywistym z twoimi "
+"operatorami."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
@@ -2069,7 +2081,7 @@ msgstr "np. \"W czym mogę pomóc?\""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "e.g. /contactus"
-msgstr "np. /contactus"
+msgstr "np. /kontakt"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
