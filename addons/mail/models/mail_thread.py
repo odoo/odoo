@@ -11,6 +11,7 @@ import hmac
 import json
 import lxml
 import logging
+import textwrap
 import time
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
@@ -3706,7 +3707,7 @@ class MailThread(models.AbstractModel):
         # record, model
         if not model_description:
             model_description = record_wlang._get_model_description(msg_vals['model'] if 'model' in msg_vals else message.model)
-        record_name = force_record_name or message.with_context(lang=lang).record_name
+        record_name = textwrap.shorten(force_record_name or message.with_context(lang=lang).record_name or '', width=100, placeholder='...')
 
         # tracking: in case of missing value, perform search (skip only if sure we don't have any)
         check_tracking = msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self)
