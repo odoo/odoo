@@ -70,11 +70,11 @@ class MailFollowersEdit(models.TransientModel):
             "reply_to": self.env.user.email_formatted,
             "reply_to_force_new": True,
             "subject": len(documents) > 1 and self.env._(
-                "Invitation to follow %(document_model)s.",
+                "You’ve been added as a follower of %(count)s %(document_model)s.",
+                count=len(documents),
                 document_model=model_name,
             ) or self.env._(
-                "Invitation to follow %(document_model)s: %(document_name)s",
-                document_model=model_name,
+                "You’ve been added as a follower of %(document_name)s",
                 document_name=documents.display_name,
             )
         }
