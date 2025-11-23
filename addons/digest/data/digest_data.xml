@@ -121,6 +121,14 @@
             .kpi_border_col {
                 color: #374151;
             }
+            .kpi_tip {
+                background-color: #d1ecf1;
+                border-radius: 5px;
+                color: #09414a;
+            }
+            .kpi_tip_icon {
+                width: auto;
+            }
             .kpi_value_label {
                 display: inline-block;
                 margin-bottom: 10px;
@@ -374,6 +382,12 @@
                                                                 kpi_subtitle="kpi_info['kpi_col3']['col_subtitle']"/>
                                                         </div>
                                                     </td>
+                                                </tr>
+                                            </table>
+                                            <table t-if="kpi_info.get('kpi_tip')" class="kpi_tip">
+                                                <tr>
+                                                    <td class="kpi_tip_icon">💡</td>
+                                                    <td t-out="kpi_info['kpi_tip']"/>
                                                 </tr>
                                             </table>
                                         </td>

@@ -71,4 +71,10 @@ class MailingMailing(models.Model):
             'col_subtitle': _('LEADS'),
         }
         values['kpi_data'][1]['kpi_name'] = 'lead'
+        if not self.crm_lead_count:
+            values['kpi_data'][1]['kpi_tip'] = Markup("{crm_lead_tip_text} <a href='{doc_url}'>{doc_url_text}</a>").format(
+                    crm_lead_tip_text=_("Looking to turn your mailings into leads? Use your sales team's email as the reply-to address."),
+                    doc_url='https://www.odoo.com/documentation/latest/applications/sales/crm/acquire_leads/email_manual.html',
+                    doc_url_text=_('Learn More'),
+                )
         return values
