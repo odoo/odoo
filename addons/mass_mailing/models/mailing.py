@@ -1313,7 +1313,7 @@ class MailingMailing(models.Model):
                     'kpi_name': 'trace',
                 },
             ],
-            'tips': [random_tip] if random_tip else False,
+            'tips': [random_tip] if random_tip else [],
             'formatted_date': formatted_date,
         }
 
