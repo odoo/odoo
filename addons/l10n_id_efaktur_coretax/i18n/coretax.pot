@@ -6,8 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< 3697ee7c0d3815886e4fd78ad355d3949914ddf0:addons/l10n_id_efaktur_coretax/i18n/coretax.pot
 "POT-Creation-Date: 2025-02-06 02:23+0000\n"
 "PO-Revision-Date: 2025-02-06 02:23+0000\n"
+||||||| ab174cc161719d81ccf16d0eba523a6ea53d81b2:addons/l10n_id_efaktur_coretax/i18n/l10n_id_efaktur_coretax.pot
+"POT-Creation-Date: 2025-11-13 15:33+0000\n"
+"PO-Revision-Date: 2025-11-13 15:33+0000\n"
+=======
+"POT-Creation-Date: 2025-11-27 15:08+0000\n"
+"PO-Revision-Date: 2025-11-27 15:08+0000\n"
+>>>>>>> 8d3cb4c53870a5b0d76b10251d8db0fcefe5794d:addons/l10n_id_efaktur_coretax/i18n/l10n_id_efaktur_coretax.pot
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -450,10 +458,30 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,help:l10n_id_efaktur_coretax.field_res_partner__l10n_id_tku
 #: model:ir.model.fields,help:l10n_id_efaktur_coretax.field_res_users__l10n_id_tku
+<<<<<<< 3697ee7c0d3815886e4fd78ad355d3949914ddf0:addons/l10n_id_efaktur_coretax/i18n/coretax.pot
 msgid "Branch Number of your company, 000000 is the default for headquarters"
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
+||||||| ab174cc161719d81ccf16d0eba523a6ea53d81b2:addons/l10n_id_efaktur_coretax/i18n/l10n_id_efaktur_coretax.pot
+msgid "Branch Number of your company, leave empty for headquarters"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Cannot mix VAT subject and Non-VAT subject items in the same invoice with "
+"this kode transaksi."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+=======
+msgid "Branch Number of your company, leave empty for headquarters"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+>>>>>>> 8d3cb4c53870a5b0d76b10251d8db0fcefe5794d:addons/l10n_id_efaktur_coretax/i18n/l10n_id_efaktur_coretax.pot
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_product_code__code
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_uom_code__code
 msgid "Code"
@@ -660,6 +688,7 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+<<<<<<< 3697ee7c0d3815886e4fd78ad355d3949914ddf0:addons/l10n_id_efaktur_coretax/i18n/coretax.pot
 #, python-format
 msgid "Invoice %s does not contain any taxes"
 msgstr ""
@@ -719,6 +748,61 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+||||||| ab174cc161719d81ccf16d0eba523a6ea53d81b2:addons/l10n_id_efaktur_coretax/i18n/l10n_id_efaktur_coretax.pot
+msgid "Invoice %s does not contain any taxes"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %s doesn't contain the Additional info and Facility Stamp yet (Kode "
+"07)"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %s doesn't contain the Additional info and Facility Stamp yet (Kode "
+"08)"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s is in draft state"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s is not under Indonesian company"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_res_partner__l10n_id_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_res_users__l10n_id_kode_transaksi
+msgid "Invoice Transaction Code"
+
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+#, python-format
+msgid "Invoice %s: can only have one STLG group."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+#, python-format
+msgid "Invoice %s: can only have one tax group (excluding STLG)."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+=======
+>>>>>>> 8d3cb4c53870a5b0d76b10251d8db0fcefe5794d:addons/l10n_id_efaktur_coretax/i18n/l10n_id_efaktur_coretax.pot
 msgid ""
 "Invoice %(inv)s: line '%(line)s' contains both Luxury-Goods and Non-Luxury-"
 "Goods taxes."
@@ -753,6 +837,58 @@ msgstr ""
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
 msgid ""
 "Invoice %(inv)s: transaction code %(kode)s must always have tax amount 0%%."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s does not contain any taxes"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %s doesn't contain the Additional info and Facility Stamp yet (Kode "
+"07)"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %s doesn't contain the Additional info and Facility Stamp yet (Kode "
+"08)"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s is in draft state"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s is not under Indonesian company"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s: can only have one STLG group."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s: can only have one tax group (excluding STLG)."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_res_partner__l10n_id_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_res_users__l10n_id_kode_transaksi
+msgid "Invoice Transaction Code"
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
@@ -926,7 +1062,6 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move_line.py:0
-#, python-format
 msgid "Price for line '%s' cannot be a negative amount. Please check again."
 msgstr ""
 
@@ -1050,7 +1185,6 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
-#, python-format
 msgid "Unable to download E-faktur for the following reason(s):"
 msgstr ""
 
