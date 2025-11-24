@@ -98,7 +98,7 @@ export class ShortCutPlugin extends Plugin {
         }
         const precedingText = blockEl.textContent.substring(0, spaceOffset - 1);
         const matchedShortcut = this.getResource("shorthands").find(({ pattern }) =>
-            pattern.test(precedingText)
+            pattern.test(precedingText.trim())
         );
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
