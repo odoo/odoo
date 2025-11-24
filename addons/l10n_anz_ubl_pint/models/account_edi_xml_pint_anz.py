@@ -147,7 +147,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         for tax_total_val in vals['vals']['tax_total_vals']:
             for tax_subtotal_val in tax_total_val.get('tax_subtotal_vals', ()):
                 if tax_subtotal_val['tax_category_vals']['tax_category_code'] not in ANZ_TAX_CATEGORIES:
-                    constraints['sg_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
+                    constraints['anz_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
 
         # Tax category of type "Not subject to tax" must have tax amount 0
         count_outside_of_scope_breakdown = 0
@@ -190,6 +190,28 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
     # EXPORT: New (dict_to_xml) helpers
     # -------------------------------------------------------------------------
 
+    def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
+        # EXTENDS account.edi.xml.ubl_bis3
+        grouping_key = super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        grouping_key['scheme_id'] = 'GST'
+
+        # A business not registered for GST cannot issue tax invoices.
+        # In this case, the tax category code should be O (Outside scope of tax).
+        # See https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_category_code
+        supplier = vals['supplier']
+        if not supplier.vat:
+            grouping_key['tax_category_code'] = 'O'
+
+        # As of PINT A-NZ v1.1.0: [aligned-ibrp-o-05-aunz] tax categories of type "Not Subject to tax" (i.e. tax_category_code == 'O') must NOT have
+        # tax rate ('cbc:Percent').
+        if (
+            grouping_key['tax_category_code'] == 'O'
+            and not grouping_key['percent']
+        ):
+            grouping_key['percent'] = None
+
+        return grouping_key
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_header_nodes(document_node, vals)
@@ -197,32 +219,6 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # see https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_identifying_the_a_nz_billing_specialisation
         document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['pint_anz']}
         document_node['cbc:ProfileID'] = {'_text': 'urn:peppol:bis:billing'}
-
-        invoice = vals['invoice']
-        if invoice.currency_id != invoice.company_id.currency_id:
-            # see https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_in_accounting_currency
-            document_node['cbc:TaxCurrencyCode'] = {'_text': invoice.company_id.currency_id.name}  # accounting currency
-
-    def _get_tax_category_code(self, customer, supplier, tax):
-        """ See https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_category_code """
-        # OVERRIDE account_edi_ubl_cii
-        # A business not registered for GST cannot issue tax invoices.
-        # In this case, the tax category code should be O (Outside scope of tax).
-        if not supplier.vat:
-            return 'O'
-        return super()._get_tax_category_code(customer, supplier, tax)
-
-    def _get_tax_category_node(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        tax_category_node = super()._get_tax_category_node(vals)
-        tax_category_node['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
-
-        # As of PINT A-NZ v1.1.0: [aligned-ibrp-o-05-aunz] tax categories of type "Not Subject to tax" (i.e. tax_category_code == 'O') must NOT have
-        # tax rate ('cbc:Percent').
-        if tax_category_node['cbc:ID']['_text'] == 'O' and float_is_zero(tax_category_node['cbc:Percent']['_text'], precision_digits=2):
-            del tax_category_node['cbc:Percent']
-
-        return tax_category_node
 
     def _get_party_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -237,21 +233,6 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
 
         return party_node
 
-    def _add_invoice_tax_total_nodes(self, document_node, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_tax_total_nodes(document_node, vals)
-
-        # if company currency != invoice currency, need to add a TaxTotal section in the company currency
-        # see https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_in_accounting_currency
-        document_node['cac:TaxTotal'] = [document_node['cac:TaxTotal']]
-
-        company_currency = vals['invoice'].company_id.currency_id
-        if vals['invoice'].currency_id != company_currency:
-            self._add_tax_total_node_in_company_currency(document_node, vals)
-
-            # Remove the tax subtotals from the TaxTotal in company currency
-            document_node['cac:TaxTotal'][1]['cac:TaxSubtotal'] = None
-
     def _export_invoice_constraints_new(self, invoice, vals):
         # EXTENDS account_edi_ubl_cii
         constraints = super()._export_invoice_constraints_new(invoice, vals)
@@ -259,13 +240,13 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # Tax category must be filled on the line, with a value from SG categories.
         tax_total_node = vals['document_node']['cac:TaxTotal'][0]
         for tax_subtotal_node in tax_total_node['cac:TaxSubtotal']:
-            if tax_subtotal_node['cac:TaxCategory']['cbc:ID']['_text'] not in ANZ_TAX_CATEGORIES:
-                constraints['sg_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
+            if any(tax_category_node['cbc:ID']['_text'] not in ANZ_TAX_CATEGORIES for tax_category_node in tax_subtotal_node['cac:TaxCategory']):
+                constraints['anz_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
 
         # Tax category of type "Not subject to tax" must have tax amount 0
         count_outside_of_scope_breakdown = 0
         for tax_subtotal in tax_total_node['cac:TaxSubtotal']:
-            if tax_subtotal['cac:TaxCategory']['cbc:ID']['_text'] != 'O':
+            if any(tax_category_node['cbc:ID']['_text'] != 'O' for tax_category_node in tax_subtotal['cac:TaxCategory']):
                 continue
             count_outside_of_scope_breakdown += 1
 

@@ -3,14 +3,14 @@
 
 from lxml import etree
 from odoo import fields, Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
 from odoo.tools.safe_eval import datetime
 
 
 @tagged('post_install', '-at_install')
-class TestAccountEdiUblCii(AccountTestInvoicingCommon):
+class TestAccountEdiUblCii(TestUblCiiCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -39,12 +39,6 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
             'xsi': "http://www.w3.org/2001/XMLSchema-instance",
         }
-
-    def import_attachment(self, attachment, journal=None):
-        journal = journal or self.company_data["default_journal_purchase"]
-        return self.env['account.journal'] \
-            .with_context(default_journal_id=journal.id) \
-            ._create_document_from_attachment(attachment.id)
 
     def test_export_import_product(self):
         products = self.env['product.product'].create([{
@@ -193,7 +187,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             })
 
         # Import the document for the first time
-        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+        bill = self._import_as_attachment_on(attachment=xml_attachment)
 
         # Ensure the first tax is retrieved as there isn't any prediction that could be leverage
         self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_1)
@@ -203,7 +197,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         bill.action_post()
 
         # Import the bill again and ensure the prediction did his work
-        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+        bill = self._import_as_attachment_on(attachment=xml_attachment)
         self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
 
     def test_peppol_eas_endpoint_compute(self):
@@ -241,15 +235,8 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
-        partner = self.env['res.partner'].create({
-            'name': "My Belgian Partner",
-            'vat': "BE0477472701",
-            'peppol_eas': "0208",
-            'peppol_endpoint': "0477472701",
-            'email': "mypartner@email.com",
-        })
         invoice = self.env['account.move'].create({
-            'partner_id': partner.id,
+            'partner_id': self.partner_be.id,
             'move_type': 'out_invoice',
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
         })
@@ -265,14 +252,14 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'email': "mypartner@email.com",
         })
         # Change the fields of the partner, keep the peppol fields
-        partner.update({
+        self.partner_be.update({
             'name': "Turlututu",
             'email': False,
             'vat': False,
         })
         # The partner should be retrieved based on the peppol fields
-        imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
-        self.assertEqual(imported_invoice.partner_id, partner)
+        imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
+        self.assertEqual(imported_invoice.partner_id, self.partner_be)
 
     def test_import_partner_postal_address(self):
         " Test importing postal address when creating new partner from UBL xml."
@@ -294,7 +281,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         partner_match = self.env['res.partner']._retrieve_partner(**partner_vals)
         self.assertFalse(partner_match)
 
-        bill = self.import_attachment(xml_attachment)
+        bill = self._import_as_attachment_on(attachment=xml_attachment)
 
         self.assertRecordValues(bill.partner_id, [partner_vals])
         self.assertEqual(bill.partner_id.contact_address,
@@ -413,6 +400,31 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         new_invoice = invoice.journal_id._create_document_from_attachment(xml_attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
+    def test_import_partner_fields(self):
+        """ We are going to import the e-invoice and check partner is correctly imported."""
+        self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        bill = self._import_as_attachment_on(attachment=xml_attachment)
+
+        self.assertRecordValues(bill.partner_id, [{
+            'name': "ALD Automotive LU",
+            'phone': False,
+            'email': 'adl@test.com',
+            'vat': 'LU12977109',
+            'street': '270 rte d\'Arlon',
+            'street2': False,
+            'city': 'Strassen',
+            'zip': '8010',
+        }])
+
     def test_import_discount(self):
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
@@ -434,7 +446,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
             'name': 'test_invoice.xml',
         })
-        imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
+        imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
         for line in imported_invoice.invoice_line_ids:
             self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
 
