@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         # Post entries.
         res = super()._post(soft)
 
-        self.line_ids._get_stock_moves()._set_value()
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in)._set_value()
 
         return res
 
