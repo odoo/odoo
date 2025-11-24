@@ -1,0 +1,25 @@
+/* CAMTEL Audit Log Styling */
+
+/* Ensure table headers render properly even when list is empty */
+.o_list_view .o_list_table thead th {
+    min-height: 40px;
+    vertical-align: middle;
+    padding: 8px 4px;
+}
+
+/* Ensure column headers have proper text rendering */
+.o_list_view .o_list_table thead th .o_column_title {
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+/* Fix for audit log list view headers */
+.o_audit_log_view .o_list_table thead {
+    background-color: #f8f9fa;
+}
+
+.o_audit_log_view .o_list_table thead th {
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
