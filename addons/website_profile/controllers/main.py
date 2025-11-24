@@ -229,11 +229,34 @@ class WebsiteProfile(http.Controller):
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args=kwargs)
 
-            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-            user_values = self._prepare_all_users_values(users)
-
             # Get karma position for users (only website_published)
             position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+
+            if group_by:
+                to_date = fields.Date.today()
+                if group_by == 'week':
+                    from_date = to_date - relativedelta(weeks=1)
+                elif group_by == 'month':
+                    from_date = to_date - relativedelta(months=1)
+                else:
+                    from_date = None
+                users = request.env['res.users']._get_users_by_tracking_karma_gain(
+                    dom,
+                    from_date=from_date,
+                    to_date=to_date,
+                    limit=pager['offset'],
+                    offset=self._users_per_page,
+                )
+                users = User.sudo().browse(user['user_id'] for user in users)
+            else:
+                users = User.sudo().search(
+                    dom,
+                    limit=self._users_per_page,
+                    offset=pager['offset'],
+                    order='karma DESC, id DESC',
+                )
+
+            user_values = self._prepare_all_users_values(users)
             position_map = self._get_position_map(position_domain, users, group_by)
 
             max_position = max([user_data['karma_position'] for user_data in position_map.values()], default=1)
