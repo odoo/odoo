@@ -4828,34 +4828,28 @@ class MailThread(models.AbstractModel):
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
         self.ensure_one()
         store = Store()
-        self._message_followers_to_store(store, after, limit, filter_recipients)
+        followers_fields = self._get_store_message_followers_fields(after, limit, filter_recipients)
+        store.add(self, followers_fields, as_thread=True)
         return store.get_result()
 
-    def _message_followers_to_store(self, store: Store, after=None, limit=100, filter_recipients=False, reset=False):
-        self.ensure_one()
-        domain = Domain([
-            ("res_id", "=", self.id),
-            ("res_model", "=", self._name),
-            ("partner_id", "!=", self.env.user.partner_id.id),
-        ])
+    def _get_store_message_followers_fields(self, after=None, limit=100, filter_recipients=False, reset=False):
+        domain = Domain("res_id", "in", self.id)
+        domain &= Domain("res_model", "=", self._name)
+        domain &= Domain("partner_id", "!=", self.env.user.partner_id.id)
         if filter_recipients:
-            subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
-            domain &= Domain([
-                ("subtype_ids", "=", subtype_id),
-                ("partner_id.active", "=", True),
-            ])
+            mt_comment_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
+            domain &= Domain("subtype_ids", "=", mt_comment_id)
+            domain &= Domain("partner_id.active", "=", True)
         if after:
             domain &= Domain("id", ">", after)
-        store.add(
-            self,
-            {
-                "recipients" if filter_recipients else "followers": Store.Many(
-                    self.env["mail.followers"].search(domain, limit=limit, order="id ASC"),
-                    mode="ADD" if not reset else "REPLACE",
-                ),
-            },
-            as_thread=True,
+        followers = self.env["mail.followers"].search_fetch(domain, limit=limit, order="id ASC")
+        followers_by_tid = defaultdict(
+            self.env["mail.followers"].browse,
+            followers.grouped("res_id"),
         )
+        field_name = "recipients" if filter_recipients else "followers"
+        mode = "ADD" if not reset else "REPLACE"
+        return [Store.Many(field_name, value=lambda t: followers_by_tid[t.id], mode=mode)]
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
@@ -5004,64 +4998,71 @@ class MailThread(models.AbstractModel):
     # STORE
     # ------------------------------------------------------
 
-    def _thread_to_store(self, store: Store, fields, *, request_list=None):
-        is_request = request_list is not None
-        request_list = request_list or []
-        store.add_records_fields(self, fields, as_thread=True)
-        for thread in self:
-            res = {}
-            if is_request and store.target.is_current_user(self.env):
-                res["hasReadAccess"] = thread.sudo(False).has_access("read")
-                res["hasWriteAccess"] = thread.sudo(False).has_access("write")
-                res["canPostOnReadonly"] = self._mail_post_access == "read"
-            if (
-               "activities" in request_list
-                and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])
-            ):
-                res["activities"] = Store.Many(thread.with_context(active_test=True).activity_ids)
-            if "attachments" in request_list:
-                res["attachments"] = Store.Many(thread._get_mail_thread_data_attachments())
-                res["areAttachmentsLoaded"] = True
-                res["isLoadingAttachments"] = False
-            if "contact_fields" in request_list:
-                res["primary_email_field"] = thread._mail_get_primary_email_field()
-                res["partner_fields"] = thread._mail_get_partner_fields()
-            if "followers" in request_list:
-                res["followersCount"] = self.env["mail.followers"].search_count(
-                    [("res_id", "=", thread.id), ("res_model", "=", self._name)]
-                )
-                self_follower = self.env["mail.followers"].search(
-                    [
-                        ("res_id", "=", thread.id),
-                        ("res_model", "=", self._name),
-                        ["partner_id", "=", self.env.user.partner_id.id],
-                    ]
-                )
-                res["selfFollower"] = Store.One(self_follower)
-                thread._message_followers_to_store(store, reset=True)
-                subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
-                res["recipientsCount"] = self.env["mail.followers"].search_count(
-                    [
-                        ("res_id", "=", thread.id),
-                        ("res_model", "=", self._name),
-                        ("partner_id", "!=", self.env.user.partner_id.id),
-                        ("subtype_ids", "=", subtype_id),
-                        ("partner_id.active", "=", True),
-                    ]
-                )
-                thread._message_followers_to_store(store, filter_recipients=True, reset=True)
-            if "display_name" in request_list:
-                res["display_name"] = thread.display_name
-            if "scheduledMessages" in request_list:
-                res["scheduledMessages"] = Store.Many(self.env['mail.scheduled.message'].search([
-                    ['model', '=', self._name], ['res_id', '=', thread.id]
-                ]))
-            if "suggestedRecipients" in request_list:
-                res["suggestedRecipients"] = thread._message_get_suggested_recipients(
-                    reply_discussion=True, no_create=True,
-                )
-            if res:
-                store.add(thread, res, as_thread=True)
+    def _get_store_thread_fields(self, target: Store.Target, request_list):
+        res = []
+        if target.is_current_user(self.env):
+            res.append(Store.Attr("hasReadAccess", lambda t: t.sudo(False).has_access("read")))
+            res.append(Store.Attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write")))
+            res.append({"canPostOnReadonly": self._mail_post_access == "read"})
+        if "activities" in request_list and isinstance(self, self.env.registry["mail.activity.mixin"]):
+            res.append(Store.Many("activities", value=lambda t: t.with_context(active_test=True).activity_ids))
+        if "attachments" in request_list:
+            res.append(Store.Many("attachments", value=lambda t: t._get_mail_thread_data_attachments()))
+            res.append({"areAttachmentsLoaded": True, "isLoadingAttachments": False})
+        if "contact_fields" in request_list:
+            res.append(Store.Attr("primary_email_field", lambda t: t._mail_get_primary_email_field()))
+            res.append(Store.Attr("partner_fields", lambda t: t._mail_get_partner_fields()))
+        if "followers" in request_list:
+            count_by_tid = {"groupby": ["res_id"], "aggregates": ["__count"]}
+            domain = Domain("res_id", "in", self.ids) & Domain("res_model", "=", self._name)
+            # follower count
+            follower_count = self.env["mail.followers"]._read_group(domain, **count_by_tid)
+            follower_count_by_tid = defaultdict(int, follower_count)
+            res.append(Store.Attr("followersCount", lambda t: follower_count_by_tid[t.id]))
+            # follower of current user
+            self_partner_domain = Domain("partner_id", "=", self.env.user.partner_id.id)
+            self_followers = self.env["mail.followers"].search_fetch(domain & self_partner_domain)
+            self_follower_by_tid = defaultdict(
+                self.env["mail.followers"].browse,
+                self_followers.grouped("res_id"),
+            )
+            res.append(Store.One("selfFollower", value=lambda t: self_follower_by_tid[t.id]))
+            # follower list with limit
+            res.extend(self._get_store_message_followers_fields(reset=True))
+            # recipient count
+            mt_comment_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
+            recipient_count = self.env["mail.followers"]._read_group(
+                domain
+                & ~self_partner_domain
+                & Domain("subtype_ids", "=", mt_comment_id)
+                & Domain("partner_id.active", "=", True),
+                **count_by_tid,
+            )
+            recipient_count_by_tid = defaultdict(int, recipient_count)
+            res.append(Store.Attr("recipientsCount", lambda t: recipient_count_by_tid[t.id]))
+            # recipient list with limit
+            res.extend(self._get_store_message_followers_fields(filter_recipients=True, reset=True))
+        if "display_name" in request_list:
+            res.append("display_name")
+        if "scheduledMessages" in request_list:
+            domain = Domain("model", "=", self._name) & Domain("res_id", "in", self.ids)
+            scheduled_messages = self.env["mail.scheduled.message"].search_fetch(domain)
+            messages_by_tid = defaultdict(
+                self.env["mail.scheduled.message"].browse,
+                scheduled_messages.grouped("res_id"),
+            )
+            res.append(Store.Many("scheduledMessages", value=lambda t: messages_by_tid[t.id]))
+        if "suggestedRecipients" in request_list:
+            res.append(
+                Store.Attr(
+                    "suggestedRecipients",
+                    lambda t: t._message_get_suggested_recipients(
+                        reply_discussion=True,
+                        no_create=True,
+                    ),
+                ),
+            )
+        return res
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
