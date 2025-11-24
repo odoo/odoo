@@ -2,42 +2,50 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanCoverImageDialog">
-        <Dialog title.translate="Set a Cover Image" size="'lg'">
-            <div t-if="attachments.length" class="o_kanban_cover_container bg-100">
+        <Dialog title.translate="Set a Cover Image" size="'md'">
+            <div t-if="attachments.length" class="o_kanban_cover_container grid gap-3 gap-lg-2">
                 <t t-foreach="attachments" t-as="attachment" t-key="attachment.id">
-                    <div class="o_kanban_cover_image position-relative d-inline-block m-2 border bg-white o_cursor_pointer" t-att-class="{
-                        'o_selected border-primary': state.selectedAttachmentId === attachment.id,
-                    }">
+                    <div class="o_kanban_cover_image position-relative overflow-hidden g-col-6 g-col-md-4 g-col-lg-3 border bg-white w-auto cursor-pointer rounded ratio ratio-1x1"
+                         t-att-class="{
+                            'o_selected border-2': state.selectedAttachmentId === attachment.id
+                         }"
+                    >
                         <img t-attf-src="/web/image/{{attachment.id}}?unique=1"
-                            class="position-absolute start-0 end-0 top-0 bottom-0 mw-100 mh-100 m-auto"
+                            class="object-fit-cover h-100 w-100"
                             alt="Attachment"
-                            t-on-click="() => this.selectAttachment(attachment, false)"
-                            t-on-dblclick="() => this.selectAttachment(attachment, true)"
+                            t-on-click="() => this.selectAttachment(attachment, true)"
                         />
                     </div>
                 </t>
             </div>
             <t t-else="">There is no available image to be set as cover.</t>
             <t t-set-slot="footer" t-slot-scope="dialog">
-                <button t-if="attachments.length" class="btn btn-primary" t-on-click="setCover" t-att-disabled="!state.selectedAttachmentId">
-                    Select
-                </button>
                 <FileInput
                     autoOpen="!attachments.length"
                     acceptedFileExtensions="'image/*'"
                     onUpload.bind="onUpload"
                     resModel="props.record.resModel"
                     resId="props.record.resId">
-                        <button class="btn btn-primary w-auto" t-on-click="uploadImage">
-                            Upload and Set
+                        <button
+                            class="btn btn-primary"
+                            t-on-click="uploadImage"
+                        >
+                            <i class="fa fa-cloud-upload me-1" aria-hidden="true"/>
+                            Upload New
                         </button>
                 </FileInput>
-                <button t-if="hasCoverImage" class="btn btn-secondary" t-on-click="removeCover">
-                    Remove Cover Image
-                </button>
-                <button class="btn btn-secondary" t-on-click="dialog.close">
+                <button class="btn btn-secondary d-none d-md-inline-block" t-on-click="dialog.close">
                     Discard
                 </button>
+
+                <t t-if="hasCoverImage">
+                    <button
+                        t-if="hasCoverImage"
+                        class="btn btn-danger ms-auto" t-on-click="removeCover"
+                    >
+                        Remove Cover
+                    </button>
+                </t>
             </t>
         </Dialog>
     </t>
