@@ -1584,6 +1584,7 @@ class AccountMove(models.Model):
             rate=rate,
             sign=sign,
             special_mode=False if is_invoice else 'total_excluded',
+            name=product_line.name,
         )
 
     def _prepare_epd_base_line_for_taxes_computation(self, epd_line):
