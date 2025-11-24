@@ -26,7 +26,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
     chart_template = False
     country_code = False
-    extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
+    extra_tags = ['SAVE_XML', *(['-standard', 'external'] if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else [])]
 
     @classmethod
     def safe_copy(cls, record):
