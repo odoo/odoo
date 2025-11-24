@@ -63,4 +63,40 @@
             </div>
         </xpath>
     </template>
+
+    <template id="external_layout_center" inherit_id="web.external_layout_center">
+        <!-- support for custom header -->
+        <xpath expr="//table" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//table" position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="external_layout_dual" inherit_id="web.external_layout_dual">
+        <!-- support for custom header -->
+        <xpath expr="//table" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//table" position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="external_layout_lines" inherit_id="web.external_layout_lines">
+        <!-- support for custom header -->
+        <xpath expr="//table" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//table" position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+    </template>
 </odoo>

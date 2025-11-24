@@ -32,4 +32,22 @@
             <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
     </template>
+    <template id="l10n_sa_external_layout_center" inherit_id="web.external_layout_center">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_dual" inherit_id="web.external_layout_dual">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_lines" inherit_id="web.external_layout_lines">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
 </odoo>
