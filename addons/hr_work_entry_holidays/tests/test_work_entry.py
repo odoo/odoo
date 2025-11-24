@@ -193,7 +193,9 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         self.employee_external.resource_calendar_id.company_id = False
         work_entries = self.employee_external.generate_work_entries(self.start.date(), self.end.date())
         work_entries.action_validate()
-        leave = self.create_leave(datetime.today(), datetime.today(), employee_id=self.employee_external.id)
+        leave_start_date = datetime(2025, 11, 24, 8)
+        leave_end_date = datetime(2025, 11, 24, 17)
+        leave = self.create_leave(leave_start_date, leave_end_date, employee_id=self.employee_external.id)
         leave.with_user(self.env.user).action_approve()
         leave_resource_calendar_leave = self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave.id)])
 
@@ -202,7 +204,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         self.assertIsNotNone(leave_work_entry)
 
         self.env["hr.work.entry.regeneration.wizard"].regenerate_work_entries(
-            slots=[{"date": datetime.today(), "employee_id": self.employee_external.id}],
+            slots=[{"date": leave_start_date, "employee_id": self.employee_external.id}],
             record_ids=leave_work_entry.ids,
         )
         leave_work_entry = self.env['hr.work.entry'].search([('employee_id', '=', self.employee_external.id), ('work_entry_type_id', '=', leave.holiday_status_id.work_entry_type_id.id)])
