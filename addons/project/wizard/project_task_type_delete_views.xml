@@ -19,7 +19,7 @@
                 <footer>
                     <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or tasks_count == 0" data-hotkey="q"/>
                     <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="tasks_count &gt; 0" data-hotkey="w"/>
-                    <button string="Discard" special="cancel" data-hotkey="x" />
+                    <button special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
@@ -41,7 +41,7 @@
                 </div>
                 <footer>
                     <button string="Confirm" type="object" name="action_confirm" class="btn btn-primary" data-hotkey="q"/>
-                    <button string="Discard" special="cancel" data-hotkey="x" />
+                    <button special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
@@ -57,7 +57,7 @@
                 </div>
                 <footer>
                     <button string="Confirm" type="object" name="action_unarchive_task" class="btn btn-primary"/>
-                    <button string="Discard" special="cancel"/>
+                    <button special="cancel"/>
                 </footer>
             </form>
         </field>

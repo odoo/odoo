@@ -39,7 +39,7 @@ beforeEach(() => {
                 </sheet>
                 <footer>
                     <button name="action_convert_to_task" string="Convert to Task" type="object" class="btn-primary"/>
-                    <button string="Discard" special="cancel"/>
+                    <button special="cancel"/>
                 </footer>
             </form>`,
     };
