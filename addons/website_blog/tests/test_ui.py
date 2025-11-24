@@ -63,6 +63,10 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_context_and_social_media", login="admin")
 
+    def test_blog_post_page_horizontal_alignment(self):
+        self.env.ref('website_blog.opt_blog_post_comment').active = True
+        self.start_tour(self.env["website"].get_client_action_url(self.blog_post.website_url), "blog_post_page_horizontal_alignment", login="admin")
+
     def test_blog_social_image(self):
         with MockRequest(self.env, website=self.env.ref('base.default_website'), url_root='http://example.com'):
             meta = self.blog_post.get_website_meta()
