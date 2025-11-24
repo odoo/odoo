@@ -984,7 +984,7 @@ class PropertiesDefinition(Field):
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default', 'suffix',
         'selection', 'tags', 'domain', 'view_in_cards', 'fold_by_default',
-        'currency_field'
+        'currency_field', 'hidden',
     )
     # those keys will be removed if the types does not match
     PROPERTY_PARAMETERS_MAP = {
@@ -994,6 +994,47 @@ class PropertiesDefinition(Field):
         'selection': {'selection'},
         'tags': {'tags'},
     }
+
+    def set_properties_visibility(self, definition, property_names, hidden: bool):
+        """
+        Set visibility of properties in the definition.
+        :param definition: List of property definitions
+        :param property_names: List of property names to modify (or single string)
+        :param hidden: True to hide properties, False to show them
+        :return: Updated definition with modified property visibility
+        """
+        if not definition:
+            return definition
+        if isinstance(property_names, str):
+            property_names = [property_names]
+        property_names_set = set(property_names)
+        new_def = []
+        current_sep = None
+        current_group = []
+
+        def flush_group():
+            if current_sep:
+                sep_copy = current_sep.copy()
+                sep_copy["hidden"] = bool(current_group) and all(p.get("hidden") for p in current_group)
+                new_def.append(sep_copy)
+            new_def.extend(current_group)
+
+        for prop in definition:
+            if prop.get("type") == "separator":
+                flush_group()
+                current_sep = prop
+                current_group = []
+            else:
+                prop_copy = prop.copy()
+                if prop_copy.get('name') in property_names_set:
+                    if hidden:
+                        prop_copy['hidden'] = True
+                    else:
+                        prop_copy.pop('hidden', None)
+                current_group.append(prop_copy)
+
+        flush_group()
+        return new_def
 
     def convert_to_column(self, value, record, values=None, validate=True):
         """Convert the value before inserting it in database.
