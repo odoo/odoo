@@ -1,4 +1,22 @@
 .modal .o_kanban_cover_container .o_kanban_cover_image {
-    height: 120px;
-    width: 120px;
+    img {
+        object-position: center 25%;
+        transform: scale(0.98);
+    }
+
+    &:hover, &.o_selected {
+        --border-color: #{$o-action};
+    }
+
+    &.o_selected {
+        &:after {
+            @include o-position-absolute(.5rem, .5rem);
+            overflow: hidden;
+            border-radius: 100%;
+            font: normal normal normal 1rem/0.87 FontAwesome;
+            color: $o-action;
+            backdrop-filter: brightness(100);
+            content: "\f058"; //fa-check-circle
+        }
+    }
 }

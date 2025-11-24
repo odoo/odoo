@@ -1,7 +1,6 @@
 import { after, beforeEach, expect, getFixture, resize, test } from "@odoo/hoot";
 import {
     click,
-    dblclick,
     drag,
     edit,
     hover,
@@ -6105,7 +6104,7 @@ test(`kanban should ask to scroll to top on page changes (mobile)`, async () => 
 
 test.tags("desktop");
 test("set cover image", async () => {
-    expect.assertions(9);
+    expect.assertions(8);
 
     IrAttachment._records = [
         {
@@ -6171,8 +6170,8 @@ test("set cover image", async () => {
         message: "Initially there is no image.",
     });
 
+    // The image is immediately assigned on click
     await contains(".modal .o_kanban_cover_image img").click();
-    await contains(".modal .btn-primary:first-child").click();
 
     expect('img[data-src*="/web/image/1"]').toHaveCount(1);
 
@@ -6182,11 +6181,10 @@ test("set cover image", async () => {
     await contains(coverButton).click();
 
     expect(".modal .o_kanban_cover_image").toHaveCount(1);
-    expect(".modal .btn:contains(Select)").toHaveCount(1);
     expect(".modal .btn:contains(Discard)").toHaveCount(1);
-    expect(".modal .btn:contains(Remove Cover Image)").toHaveCount(0);
+    expect(".modal .btn:contains(Remove Cover)").toHaveCount(0);
 
-    await dblclick(".modal .o_kanban_cover_image img"); // doesn't work
+    await contains(".modal .o_kanban_cover_image img").click(); // Assign the image as cover in one click
     await animationFrame();
 
     expect('img[data-src*="/web/image/2"]').toHaveCount(1);
@@ -6314,11 +6312,10 @@ test("unset cover image", async () => {
     ).toHaveCount(1);
 
     expect(".modal .o_kanban_cover_image").toHaveCount(1);
-    expect(".modal .btn:contains(Select)").toHaveCount(1);
     expect(".modal .btn:contains(Discard)").toHaveCount(1);
-    expect(".modal .btn:contains(Remove Cover Image)").toHaveCount(1);
+    expect(".modal .btn:contains(Remove Cover)").toHaveCount(1);
 
-    await contains(".modal .btn-secondary").click(); // click on "Remove Cover Image" button
+    await contains(".modal .btn-danger").click(); // click on "Remove Cover" button
 
     expect(queryAll("img", { root: getKanbanRecord({ index: 0 }) })).toHaveCount(0, {
         message: "The cover image should be removed.",
@@ -6329,7 +6326,7 @@ test("unset cover image", async () => {
     expect(queryText(coverButton)).toBe("Set Cover Image");
     await contains(coverButton).click();
 
-    await dblclick(".modal .o_kanban_cover_image img"); // doesn't work
+    await contains(".modal .o_kanban_cover_image img").click(); // Assign the image as cover in one click
     await animationFrame();
 
     expect(queryAll("img", { root: getKanbanRecord({ index: 1 }) })).toHaveCount(0, {
