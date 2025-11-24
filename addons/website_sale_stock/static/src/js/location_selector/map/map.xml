@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_stock.locationSelector.map">
+        <div class="o_location_selector_map w-100 flex-grow-1" t-custom-ref="map"/>
+    </t>
+
+    <t t-name="website_sale_stock.locationSelector.map.marker">
+        <t t-call="website_sale_stock.locationSelector.map.pinIndicator">
+            <t t-set="number" t-value="number"/>
+        </t>
+    </t>
+</templates>

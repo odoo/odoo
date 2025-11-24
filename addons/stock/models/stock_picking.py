@@ -622,8 +622,8 @@ class StockPicking(models.Model):
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
     partner_id = fields.Many2one(
-        'res.partner', 'Contact',
-        check_company=True, index='btree_not_null')
+        'res.partner', 'Contact', check_company=True, index='btree_not_null', tracking=True
+    )
     company_id = fields.Many2one(
         'res.company', string='Company', related='picking_type_id.company_id',
         readonly=True, store=True, index=True)

@@ -89,10 +89,7 @@
         </div>
     </template>
 
-    <template id="in_store_delivery_method" inherit_id="website_sale.delivery_method">
-        <xpath expr="//t[@t-set='is_pickup_needed']" position="attributes">
-            <attribute name="t-value" add="dm.delivery_type=='in_store'" separator=" or "/>
-        </xpath>
+    <template id="in_store_delivery_method" inherit_id="website_sale_stock.pickup_delivery_method">
         <t t-set="pickup_location_data" position="after">
             <t t-if="not pickup_location_data and default_pickup_locations.get(dm.id)">
                 <t

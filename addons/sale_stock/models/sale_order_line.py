@@ -231,7 +231,9 @@ class SaleOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
-        lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
+        lines.filtered(
+            lambda line: line.state == 'sale' and line.product_id.type == 'consu'
+        )._action_launch_stock_rule()
         return lines
 
     def write(self, vals):
