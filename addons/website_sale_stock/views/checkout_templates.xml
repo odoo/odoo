@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+     <template id="pickup_address_on_checkout" inherit_id="website_sale.address_on_checkout">
+         <t t-set="use_delivery_as_billing" position="attributes">
+             <attribute
+                 name="t-value"
+                 add="not order.partner_shipping_id.pickup_location_data"
+                 separator=" and "
+             />
+         </t>
+         <div name="address_summary_container" position="replace">
+             <t t-if="order.partner_shipping_id.pickup_location_data">
+                <p t-att-class="delivery_title_classes">Deliver to pickup point</p>
+                <div
+                    class="fw-bold" t-out="order.partner_shipping_id.pickup_location_data.get('name', '')"
+                />
+                <div t-out="order.partner_shipping_id.pickup_location_data.get('street', '')"/>
+                <div
+                    t-out="order.partner_shipping_id.pickup_location_data.get('city', '')
+                            + ' ' + order.partner_shipping_id.pickup_location_data.get('zip_code','')"
+                />
+            </t>
+             <t t-else="">$0</t>
+         </div>
+     </template>
+
+</odoo>
