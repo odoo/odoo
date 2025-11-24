@@ -35,7 +35,19 @@ class Project(models.Model):
             domain + [('analytic_distribution', 'in', self.account_id.ids)],
             ['balance', 'parent_state', 'company_currency_id', 'analytic_distribution', 'move_id', 'date'],
         )
+<<<<<<< 40bf517ab81dd761d224b00a0b11738ec5cc54fb
         if account_move_lines:
+||||||| 3b2f7ab7be03e208c68aef4b969b2a3016f35b1b
+        query_string, query_param = query.select('balance', 'parent_state', 'account_move_line.company_currency_id', 'account_move_line.analytic_distribution', 'move_id', 'account_move_line.date')
+        self._cr.execute(query_string, query_param)
+        bills_move_line_read = self._cr.dictfetchall()
+        if bills_move_line_read:
+=======
+        query_string, query_param = query.select('account_move_line.balance', 'account_move_line.parent_state', 'account_move_line.company_currency_id', 'account_move_line.analytic_distribution', 'account_move_line.move_id', 'account_move_line.date')
+        self._cr.execute(query_string, query_param)
+        bills_move_line_read = self._cr.dictfetchall()
+        if bills_move_line_read:
+>>>>>>> d446a8d3dd1362d0083cb96e81256d434a86cf57
             # Get conversion rate from currencies to currency of the current company
             amount_invoiced = amount_to_invoice = 0.0
             for move_line in account_move_lines:
