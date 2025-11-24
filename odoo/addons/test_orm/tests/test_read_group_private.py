@@ -2,7 +2,7 @@ from odoo import Command, fields
 from odoo.tests import common, new_test_user, tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPrivateReadGroup(common.TransactionCase):
 
     @classmethod
@@ -1521,3 +1521,56 @@ class TestPrivateReadGroup(common.TransactionCase):
                     RelatedBase._read_group([], [fname_chain], ['__count']),
                     [('bar_a', 1), (False, 4)],
                 )
+
+
+@tagged('at_install', '-post_install')
+class TestPublicReadGroup(common.TransactionCase):
+
+    def test_public_read_group(self):
+        User = self.env['test_read_group.user']
+        mario, luigi = User.create([{'name': 'Mario'}, {'name': 'Luigi'}])
+        tasks = self.env['test_read_group.task'].create([
+            {   # both users
+                'name': "Super Mario Bros.",
+                'user_ids': [Command.set((mario + luigi).ids)],
+            },
+            {   # mario only
+                'name': "Paper Mario",
+                'user_ids': [Command.set(mario.ids)],
+            },
+            {   # luigi only
+                'name': "Luigi's Mansion",
+                'user_ids': [Command.set(luigi.ids)],
+            },
+            {   # no user
+                'name': 'Donkey Kong',
+            },
+        ])
+        self.assertEqual(
+            tasks.read_group([], ['user_ids'], ['__count']),
+            [
+                (mario.id, 2),
+                (luigi.id, 2),
+                (False, 1),
+            ],
+        )
+
+        orders = self.env['test_read_group.order'].create([
+            {
+                'name': 'order 1',
+            },
+            {
+                'name': 'order 2',
+            },
+            {
+                'name': 'order 3',
+            },
+        ])
+        orders[1:].many2one_id = orders[0]
+        self.assertEqual(
+            orders.read_group([], ['many2one_id'], ['many2one_id:array_agg', 'name:min']),
+            [
+                (orders[0].id, orders[0].ids * 2, 'order 2'),
+                (False, [None], 'order 1'),
+            ],
+        )

@@ -36,7 +36,7 @@ import warnings
 from collections import defaultdict, deque
 from collections.abc import Callable, Iterable, Mapping
 from inspect import getmembers
-from operator import itemgetter
+from operator import call, itemgetter
 
 import psycopg2.errors
 import psycopg2.extensions
@@ -1913,8 +1913,9 @@ class BaseModel(metaclass=MetaModel):
 
         return result
 
+    @typing.final
     @api.model
-    def _read_group(
+    def read_group(
         self,
         domain: DomainType,
         groupby: Sequence[str] = (),
@@ -1929,6 +1930,69 @@ class BaseModel(metaclass=MetaModel):
 
         :param domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
                 list to match all records.
+        :param groupby: list of groupby descriptions by which the records will be grouped.
+                A groupby description is either a field (then it will be grouped by that field)
+                or a string `'field:granularity'`. Right now, the only supported granularities
+                are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
+                date/datetime fields.
+                Additionally integer date parts are also supported:
+                `'year_number'`, `'quarter_number'`, `'month_number'`, `'iso_week_number'`, `'day_of_year'`, `'day_of_month'`,
+                'day_of_week', 'hour_number', 'minute_number' and 'second_number'.
+        :param aggregates: list of aggregates specification.
+                Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
+                The possible aggregation functions are the ones provided by
+                `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_,
+                `'count_distinct'` with the expected meaning and `'recordset'` to act like `'array_agg'`
+                (with ids deduplicated and without NULL values).
+        :param having: A domain where the valid "fields" are the aggregates.
+        :param offset: optional number of groups to skip
+        :param limit: optional max number of groups to return
+        :param order: optional ``order by`` specification, for
+                overriding the natural sort ordering of the groups,
+                see also :meth:`~.search`.
+        :return: list of tuples containing in the order the groups values and aggregates values (flatten):
+                `[(groupby_1_value, ... , aggregate_1_value_aggregate, ...), ...]`.
+
+        :raise AccessError: if user is not allowed to access requested information
+        """
+        groups = self._read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
+        if not groups:
+            return groups
+        # check the first line for data types, transform records into ids (id for groupby, ids for aggregates)
+        decoders = []
+        for i, value in enumerate(groups[0]):
+            if isinstance(value, BaseModel):
+                if i < len(groupby):
+                    decoders.append(lambda v: v.id)
+                else:
+                    decoders.append(lambda v: v.ids)
+            else:
+                decoders.append(None)
+        if any(decoders):
+            decoders = [d or (lambda x: x) for d in decoders]
+            groups = [
+                # much faster version of :
+                # tuple(dec(val) for dec, val in zip(decoders, group))
+                tuple(map(call, decoders, group))
+                for group in groups
+            ]
+        return groups
+
+    @api.model
+    def _read_group(
+        self,
+        domain: DomainType,
+        groupby: Sequence[str] = (),
+        aggregates: Sequence[str] = (),
+        having: DomainType = (),
+        offset: int = 0,
+        limit: int | None = None,
+        order: str | None = None,
+    ) -> list[tuple]:
+        """ Get fields aggregations specified by ``aggregates`` grouped by the given ``groupby``
+        fields where record are filtered by the ``domain``.
+
+        :param domain: :ref:`A search domain <reference/orm/domains>`.
         :param groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
                 or a string `'field:granularity'`. Right now, the only supported granularities
