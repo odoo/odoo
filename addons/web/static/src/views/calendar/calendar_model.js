@@ -4,6 +4,7 @@ import {
     deserializeDate,
     deserializeDateTime,
 } from "@web/core/l10n/dates";
+import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -609,10 +610,24 @@ export class CalendarModel extends Model {
         const serializeFn = this.dateStartType === "date" ? serializeDate : serializeDateTime;
         const formattedEnd = serializeFn(data.range.end);
         const formattedStart = serializeFn(data.range.start);
-        return [
-            [fieldMapping.date_start, "<=", formattedEnd],
-            [fieldMapping.date_stop, ">=", formattedStart],
-        ];
+        return Domain.and([
+            [[fieldMapping.date_start, "<=", formattedEnd]],
+            Domain.or([
+                // The `date_stop` data uses the same field as the `date_start`
+                // one if not defined.
+                [[fieldMapping.date_stop, ">=", formattedStart]],
+                // Take care of records without a "stop date" (might be ongoing,
+                // might be a start entry without a planned ending, might be an
+                // incomplete record, ...): in any case, we want it to be
+                // displayed as a short line at start time, as if the calendar
+                // was configured without a `date_stop` data.
+                // Notice that we only do that if the `date_stop` data was
+                // defined, as otherwise this is the same condition as above.
+                fieldMapping.date_stop !== fieldMapping.date_start
+                    ? [[fieldMapping.date_start, ">=", formattedStart]]
+                    : undefined,
+            ]),
+        ]).toList();
     }
 
     //--------------------------------------------------------------------------
