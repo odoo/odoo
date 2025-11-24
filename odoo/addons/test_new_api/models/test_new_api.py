@@ -464,6 +464,7 @@ class Related(models.Model):
     foo_bar_sudo_id = fields.Many2one(string='foo_bar_sudo_id', related='foo_id.bar_id', related_sudo=True)
     foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
 
+    foo_float_id = fields.Float(related='foo_id.test_float')
 
 class RelatedFoo(models.Model):
     _name = _description = 'test_new_api.related_foo'
@@ -472,6 +473,7 @@ class RelatedFoo(models.Model):
     bar_id = fields.Many2one('test_new_api.related_bar')
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
 
+    test_float = fields.Float(digits='ORM Precision')
 
 class RelatedBar(models.Model):
     _name = _description = 'test_new_api.related_bar'

@@ -298,6 +298,10 @@ class SaleProductConfiguratorController(Controller):
             combination_ids=combination.ids,
         )
         product_or_template = product or product_template
+        ptals = product_template.attribute_line_ids
+        attrs_map = dict(zip(ptals.ids, ptals.attribute_id.read(['id', 'name', 'display_type'])))
+        ptavs = ptals.product_template_value_ids.filtered(lambda p: p.ptav_active or combination and p.id in combination.ids)
+        ptavs_map = dict(zip(ptavs.ids, ptavs.read(['name', 'html_color', 'image', 'is_custom'])))
 
         values = dict(
             product_tmpl_id=product_template.id,
@@ -314,10 +318,10 @@ class SaleProductConfiguratorController(Controller):
             quantity=quantity,
             attribute_lines=[dict(
                 id=ptal.id,
-                attribute=dict(**ptal.attribute_id.read(['id', 'name', 'display_type'])[0]),
+                attribute=dict(**attrs_map[ptal.id]),
                 attribute_values=[
                     dict(
-                        **ptav.read(['name', 'html_color', 'image', 'is_custom'])[0],
+                        **ptavs_map[ptav.id],
                         price_extra=self._get_ptav_price_extra(
                             ptav, currency, so_date, product_or_template
                         ),

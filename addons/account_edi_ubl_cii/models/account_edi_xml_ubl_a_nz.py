@@ -27,6 +27,8 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
         for vals in vals_list:
@@ -37,6 +39,8 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
         vals.setdefault('party_tax_scheme_vals', [])
 
@@ -52,6 +56,8 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_partner_party_legal_entity_vals_list(partner)
 
         for vals in vals_list:
@@ -69,6 +75,8 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
     def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_tax_category_list(customer, supplier, taxes)
         for vals in vals_list:
             vals['tax_scheme_vals'] = {'id': 'GST'}
@@ -76,6 +84,8 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_21
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({
@@ -83,3 +93,45 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
         })
 
         return vals
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_21
+        super()._add_invoice_header_nodes(document_node, vals)
+        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['ubl_a_nz']}
+
+    def _get_party_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        party_node = super()._get_party_node(vals)
+        partner = vals['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.country_code == 'AU' and commercial_partner.vat:
+            vat = commercial_partner.vat.replace(" ", "")
+            party_node['cbc:EndpointID']['_text'] = vat
+            party_node['cac:PartyTaxScheme'][0]['cbc:CompanyID']['_text'] = vat
+            party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
+                '_text': vat,
+                'schemeID': '0151',
+            }
+
+        elif commercial_partner.country_code == 'NZ':
+            party_node['cbc:EndpointID']['_text'] = commercial_partner.company_registry
+            party_node['cac:PartyTaxScheme'][0]['cbc:CompanyID']['_text'] = commercial_partner.company_registry
+            party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
+                '_text': commercial_partner.company_registry,
+                'schemeID': '0088',
+            }
+
+        party_node['cac:PartyTaxScheme'][0]['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
+
+        return party_node
+
+    def _get_tax_category_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        tax_category_node = super()._get_tax_category_node(vals)
+        tax_category_node['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
+        return tax_category_node

@@ -22,6 +22,8 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
         vals['vals']['customization_id'] = self._get_customization_ids()['xrechnung']
         if not vals['vals'].get('buyer_reference'):
@@ -30,6 +32,8 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
 
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         constraints = super()._export_invoice_constraints(invoice, vals)
 
         constraints.update({
@@ -41,6 +45,8 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
 
         if not vals.get('endpoint_id') and partner.email:
@@ -50,3 +56,25 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
             })
 
         return vals
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_header_nodes(document_node, vals)
+        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['xrechnung']}
+        if not document_node['cbc:BuyerReference']['_text']:
+            document_node['cbc:BuyerReference']['_text'] = 'N/A'
+
+    def _get_party_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        party_node = super()._get_party_node(vals)
+        partner = vals['partner']
+        if not party_node.get('cbc:EndpointID', {}).get('_text') and partner.email:
+            party_node['cbc:EndpointID'] = {
+                '_text': partner.email,
+                'schemeID': 'EM'
+            }
+        return party_node
