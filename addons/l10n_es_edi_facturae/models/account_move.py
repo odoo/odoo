@@ -40,6 +40,32 @@ COUNTRY_CODE_MAP = {
     "AX": "ALA", "AZ": "AZE", "IE": "IRL", "ID": "IDN", "UA": "UKR", "QA": "QAT", "MZ": "MOZ"
 }
 REVERSED_COUNTRY_CODE = {v: k for k, v in COUNTRY_CODE_MAP.items()}
+#  The reason type should be exactly the fields given below.
+#  We cannot rely on the translated Selection since a single character difference would render the XML incorrect.
+SPANISH_CREDIT_REASON_TYPE = {
+    '01': 'Número de la factura',
+    '02': 'Serie de la factura',
+    '03': 'Fecha expedición',
+    '04': 'Nombre y apellidos/Razón Social-Emisor',
+    '05': 'Nombre y apellidos/Razón Social-Receptor',
+    '06': 'Identificación fiscal Emisor/obligado',
+    '07': 'Identificación fiscal Receptor',
+    '08': 'Domicilio Emisor/Obligado',
+    '09': 'Domicilio Receptor',
+    '10': 'Detalle Operación',
+    '11': 'Porcentaje impositivo a aplicar',
+    '12': 'Cuota tributaria a aplicar',
+    '13': 'Fecha/Periodo a aplicar',
+    '14': 'Clase de factura',
+    '15': 'Literales legales',
+    '16': 'Base imponible',
+    '80': 'Cálculo de cuotas repercutidas',
+    '81': 'Cálculo de cuotas retenidas',
+    '82': 'Base imponible modificada por devolución de envases / embalajes',
+    '83': 'Base imponible modificada por descuentos y bonificaciones',
+    '84': 'Base imponible modificada por resolución firme, judicial o administrativa',
+    '85': 'Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso',
+}
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -147,8 +173,7 @@ class AccountMove(models.Model):
             tax_period = refunded_invoice._l10n_es_edi_facturae_get_tax_period()
 
             reason_code = self.l10n_es_edi_facturae_reason_code or '10'
-            reason_description = [label for code, label in self._fields['l10n_es_edi_facturae_reason_code'].selection
-                                  if code == reason_code][0]
+            reason_description = SPANISH_CREDIT_REASON_TYPE[reason_code]
             return {
                 'refunded_invoice_record': refunded_invoice,
                 'ReasonCode': reason_code,

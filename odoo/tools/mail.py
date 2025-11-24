@@ -257,6 +257,8 @@ def html_normalize(src, filter_callback=None):
         for el in doc.iter(tag=etree.Element):
             tag_quote(el)
 
+    doc = html.fromstring(html.tostring(doc))
+
     if filter_callback:
         doc = filter_callback(doc)
 
