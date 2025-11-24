@@ -600,7 +600,7 @@ class WebsiteForum(WebsiteProfile):
 
         return request.render("website_forum.moderation_queue", values)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', methods=['POST'], auth="user", website=True)
     def post_accept(self, forum, post, **kwargs):
         slug = request.env['ir.http']._slug
         if post.state == 'flagged':
@@ -614,7 +614,7 @@ class WebsiteForum(WebsiteProfile):
         post.validate()
         return request.redirect(url)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", methods=['POST'], website=True)
     def post_refuse(self, forum, post, **kwargs):
         post._refuse()
         return self.question_ask_for_close(forum, post)
