@@ -58,7 +58,7 @@ class TestPeppolParticipant(TransactionCase):
         }
 
     @classmethod
-    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+    def _request_handler(cls, s: Session, r: PreparedRequest, **kw):
         response = Response()
         response.status_code = 200
 
