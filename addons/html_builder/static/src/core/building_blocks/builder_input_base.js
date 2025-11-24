@@ -14,6 +14,7 @@ export const textInputBasePassthroughProps = {
     inputClasses: { type: String, optional: true },
     prefix: { type: String, optional: true },
     prefixIcon: { type: String, optional: true },
+    selectTextOnFocus: { type: Boolean, optional: true },
 };
 
 // Abstract Component
@@ -59,6 +60,9 @@ export class BuilderInputBase extends Component {
     }
 
     onFocus(ev) {
+        if (this.props.selectTextOnFocus) {
+            this.inputRef.el.select();
+        }
         this.props.onFocus?.(ev);
     }
 

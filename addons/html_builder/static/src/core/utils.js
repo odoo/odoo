@@ -790,8 +790,10 @@ export function useInputBuilderComponent({
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
-        const actionValue =
-            getAction(actionId).getValue({ editingElement, params: actionParam }) || defaultValue;
+        let actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
+        if (actionValue === undefined) {
+            actionValue = defaultValue;
+        }
         return {
             value: actionValue,
         };
