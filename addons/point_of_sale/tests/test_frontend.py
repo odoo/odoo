@@ -3169,6 +3169,18 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.start_pos_tour("test_sync_from_ui_one_by_one", login="pos_user")
             self.assertEqual(sync_counter['count'], 6)
 
+    def test_valid_change_on_receipt(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.pos_user.write({'lang': 'fr_FR'})
+        self.env['product.template'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
+
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, "test_valid_change_on_receipt", login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

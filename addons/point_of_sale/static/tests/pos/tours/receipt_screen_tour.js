@@ -252,3 +252,18 @@ registry.category("web_tour.tours").add("test_auto_validate_force_done", {
             ReceiptScreen.receiptIsThere(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_valid_change_on_receipt", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm(),
+            ProductScreen.addOrderline("Test Product", "1"),
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "10,0" })),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("+10"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptChangeAmountIs("-10"),
+        ].flat(),
+});
