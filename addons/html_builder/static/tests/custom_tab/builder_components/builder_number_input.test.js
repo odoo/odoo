@@ -198,6 +198,40 @@ test("input should remove invalid char", async () => {
     expect(".options-container:last input").toHaveValue("67 67 67");
 });
 
+test("should select input value on focus only if selectTextOnFocus prop is set", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.innerHTML;
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target-1";
+            static template = xml`<BuilderNumberInput action="'customAction'" selectTextOnFocus="true"/>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target-2";
+            static template = xml`<BuilderNumberInput action="'customAction'"/>`;
+        }
+    );
+    await setupHTMLBuilder(`
+                <div class="test-options-target-1">10</div>
+                <div class="test-options-target-2">10</div>
+            `);
+    await contains(":iframe .test-options-target-1").click();
+    await contains(".options-container input").click();
+    expect(window.getSelection().toString()).toBe("10");
+
+    await contains(":iframe .test-options-target-2").click();
+    await contains(".options-container input").click();
+    expect(window.getSelection().toString()).toBe("");
+});
+
 describe("default value", () => {
     test("should use the default value when there is no value onChange", async () => {
         addBuilderAction({

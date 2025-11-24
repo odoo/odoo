@@ -3,7 +3,8 @@
 
 <t t-name="html_builder.BuilderRange">
     <BuilderComponent>
-        <div class="o-hb-range d-flex flex-row flex-nowrap align-items-center"
+        <div
+            t-attf-class="o-hb-range d-flex flex-row flex-nowrap align-items-center {{ props.withNumberInput ? 'me-2' : '' }}"
             t-att-data-action-id="info.actionId"
             t-att-data-action-param="info.actionParam"
             t-att-data-action-value="info.actionValue"
@@ -13,19 +14,33 @@
             t-att-data-attribute-action="info.attributeAction"
             t-att-data-attribute-action-value="info.attributeActionValue">
             <input
-            type="range"
-            class="o-hb-rangeInput"
-            t-ref="inputRef"
-            t-att-class="className"
-            t-att-min="min"
-            t-att-max="max"
-            t-att-step="props.step"
-            t-att-value="rangeInputValue"
-            t-on-change="onChange"
-            t-on-input="onInput"
-            t-on-keydown="onKeydown" />
-            <output t-if="props.displayRangeValue" t-out="displayValue" class="ms-1"/>
+                type="range"
+                class="o-hb-rangeInput"
+                t-ref="inputRefRange"
+                t-att-class="className"
+                t-att-min="min"
+                t-att-max="max"
+                t-att-step="props.step"
+                t-att-value="inputValueRange"
+                t-on-change="onChangeRange"
+                t-on-input="onInputRange"
+                t-on-keydown="onKeydownRange"/>
+            <output t-if="props.displayRangeValue" t-out="displayValueRange" class="ms-1" />
         </div>
+        <BuilderNumberInputBase
+            t-if="props.withNumberInput"
+            t-props="textInputBaseProps"
+            inputRef="inputRefNumber"
+            value="displayValueNumber"
+            classes="'o-hb-input-field-number justify-content-end'"
+            inputClasses="'o-hb-input-number text-end'"
+            commit="commit"
+            preview="preview"
+            clampValue.bind="clampValue"
+            onKeydown.bind="onKeydownNumber"
+            selectTextOnFocus="true">
+            <span class="o-hb-input-field-unit" t-out="props.unit"/>
+        </BuilderNumberInputBase>
     </BuilderComponent>
 </t>
 
