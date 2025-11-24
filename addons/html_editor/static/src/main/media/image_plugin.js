@@ -165,6 +165,7 @@ export class ImagePlugin extends Plugin {
                         this.updateImageParams();
                     },
                 },
+                isAvailable: () => this.config.allowImageResize ?? true,
             },
             {
                 id: "image_transform",
