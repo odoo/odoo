@@ -111,7 +111,8 @@ export function changeOption(
 ) {
     const noPalette = allowPalette
         ? ""
-        : !document.querySelector(".o_popover .o_font_color_selector") && ".o_customize_tab";
+        : !document.querySelector(".o_popover .o_font_color_selector") &&
+          ".o-tab-content > [role='tabpanel']";
     const option_block = `${noPalette} [data-container-title='${blockName}']`;
     return {
         trigger: `${option_block} ${actionId}, ${option_block} [data-action-id="${actionId}"]`,

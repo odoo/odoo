@@ -1,5 +1,6 @@
 import { areCssValuesEqual } from "@html_builder/utils/utils_css";
 import {
+    changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     clickOnSave,
     goToTheme,
@@ -138,17 +139,88 @@ registerWebsitePreviewTour(
         },
         ...clickOnEditAndWaitEditMode(),
         ...goToTheme(),
+        ...changeOptionInPopover("Website", "Page Layout", "Boxed"),
         {
-            trigger: "div[data-label='Background'] button[data-action-value='NONE'].active",
+            content: "Wait for the background color picker",
+            trigger: "[data-label='Background'] button.o_we_color_preview",
         },
         {
-            content: "Click on the Background Image selection",
-            trigger: "div[data-label='Background'] button[data-action-value='image']:not(.active)",
+            content: "Add a body background image",
+            trigger:
+                "div[data-label='Page Layout'] button[data-action-id='toggleBodyBgImage']:not(.active)",
             run: "click",
         },
         {
-            content: "The media dialog should open",
-            trigger: ".o_select_media_dialog",
+            content: "Pick the test image",
+            trigger: ".o_select_media_dialog .o_button_area[aria-label='bg_test.png']",
+            run: "click",
+        },
+        {
+            content: "Wait for image options to be visible",
+            trigger:
+                ".o_theme_tab button[data-action-id='replaceBodyBgImage'], .o_theme_tab button[data-action-id='removeBodyBgImage']",
+        },
+        ...changeOptionInPopover("Website", "Position", "Repeat pattern"),
+        {
+            content: "Set pattern width",
+            trigger: ".o_theme_tab [data-action-param='body-image-pattern-width'] > input",
+            run: "edit 123 && click body",
+        },
+        {
+            content: "Ensure pattern width applied",
+            trigger: ":iframe #wrapwrap",
+            async run({ anchor, waitUntil }) {
+                let size = "";
+                try {
+                    await waitUntil(
+                        () => {
+                            size = getComputedStyle(anchor).backgroundSize;
+                            return size.includes("123px");
+                        },
+                        {
+                            timeout: 8000,
+                        }
+                    );
+                } catch {
+                    throw new Error(`Expected background-size width to be 123px, got ${size}`);
+                }
+            },
+        },
+        {
+            content: "Set pattern height",
+            trigger: ".o_theme_tab [data-action-param='body-image-pattern-height'] > input",
+            run: "edit 77 && click body",
+        },
+        {
+            content: "Ensure pattern size applied",
+            trigger: ":iframe #wrapwrap",
+            async run({ anchor, waitUntil }) {
+                let size = "";
+                try {
+                    await waitUntil(
+                        () => {
+                            size = getComputedStyle(anchor).backgroundSize;
+                            return size.includes("123px") && size.includes("77px");
+                        },
+                        {
+                            timeout: 8000,
+                        }
+                    );
+                } catch {
+                    throw new Error(
+                        `Expected background-size to include 123px and 77px, got ${size}`
+                    );
+                }
+            },
+        },
+        {
+            content: "Remove the body background image",
+            trigger: ".o_theme_tab button[data-action-id='removeBodyBgImage']",
+            run: "click",
+        },
+        {
+            content: "Image controls should be hidden",
+            trigger: ".o_theme_tab :not(:has(button[data-action-id='replaceBodyBgImage'])",
         },
     ]
 );

@@ -186,15 +186,29 @@ $-seen-urls: ();
 
 @mixin body-image-bg-style() {
     background-image: url("#{str-slice(o-website-value('body-image'), 1)}");
-    background-position: center;
     background-attachment: fixed;
     @if o-website-value('body-image-type') == 'pattern' {
-        background-size: auto;
+        $pattern-width: o-website-value('body-image-pattern-width');
+        $pattern-height: o-website-value('body-image-pattern-height');
+        $pattern-size: auto;
+
+        @if $pattern-width and $pattern-height {
+            $pattern-size: $pattern-width $pattern-height;
+        } @else if $pattern-width {
+            $pattern-size: $pattern-width;
+        } @else if $pattern-height {
+            $pattern-size: auto $pattern-height;
+        }
+
+        background-size: $pattern-size;
         background-repeat: repeat;
     } @else {
         background-size: cover;
         background-repeat: no-repeat;
     }
+
+    background-position: o-website-value('body-image-background-position') or center;
+
 };
 
 // Manage custom offcanvas such as the one used for mobile mega menu nav

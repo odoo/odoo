@@ -29,23 +29,62 @@
         </BuilderRow>
         <BuilderRow label.translate="Page Layout">
             <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'layout'">
-                <BuilderSelectItem actionValue="'full'" id="'layout_full_opt'">Full</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'boxed'">Boxed</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'framed'">Framed</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'postcard'">Postcard</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'full'" id="'layout_full_opt'" label.translate="Full">
+                    <Image attrs="{ style: 'margin-top: 10px !important;' }"
+                         src="'/website/static/src/img/snippets_options/page_layout_full.svg'"/>
+                    <span>Full</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem actionValue="'boxed'" label.translate="Boxed">
+                    <Image attrs="{ style: 'margin-top: 10px !important;' }"
+                         src="'/website/static/src/img/snippets_options/page_layout_boxed.svg'"/>
+                    <span>Boxed</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem actionValue="'framed'" label.translate="Framed">
+                    <Image attrs="{ style: 'margin-top: 10px !important;' }"
+                         src="'/website/static/src/img/snippets_options/page_layout_framed.svg'"/>
+                    <span>Framed</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem actionValue="'postcard'" label.translate="Postcard">
+                    <Image attrs="{ style: 'margin-top: 10px !important;' }"
+                         src="'/website/static/src/img/snippets_options/page_layout_postcard.svg'"/>
+                    <span>Postcard</span>
+                </BuilderSelectItem>
             </BuilderSelect>
+            <BuilderButton
+                action="'toggleBodyBgImage'"
+                id="'body_bg_image_opt'"
+                title.translate="Image"
+                preview="false"
+                className="'ms-auto fa fa-fw fa-camera px-2'"
+            />
         </BuilderRow>
-        <BuilderRow label.translate="Background" level="1">
-            <BuilderColorPicker t-if="!this.isActiveItem('layout_full_opt')"
-                enabledTabs="['solid', 'custom']"
+        <BuilderRow label.translate="Background" level="1" t-if="!this.isActiveItem('layout_full_opt')">
+            <BuilderColorPicker enabledTabs="['solid', 'custom']"
                 action="'customizeWebsiteColor'"
                 actionParam="'body'"/>
-            <BuilderButtonGroup action="'customizeBodyBgType'">
-                <BuilderButton title.translate="Image" actionValue="'image'" className="'fa fa-fw fa-camera'"/>
-                <BuilderButton title.translate="Pattern" actionValue="'pattern'" className="'fa fa-fw fa-th'"/>
-                <BuilderButton title.translate="None" actionValue="'NONE'" className="'fa fa-fw fa-ban'"/>
-            </BuilderButtonGroup>
         </BuilderRow>
+        <BuilderRow label.translate="Image" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
+            <BuilderButton action="'replaceBodyBgImage'" title.translate="Replace Image" preview="false" type="'global'">
+                Replace
+            </BuilderButton>
+            <BuilderButton action="'removeBodyBgImage'" preview="false" icon="'oi-close'" className="'btn-danger-color-hover'"/>
+            <ImageSize/>
+        </BuilderRow>
+        <BuilderRow label.translate="Position" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
+            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'body-image-type'" preview="false">
+                <BuilderSelectItem actionValue="'image'">Cover</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'pattern'" id="'body_bg_repeat_opt'">Repeat pattern</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
+        </BuilderRow>
+        <BuilderContext t-if="isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
+            <BuilderRow label.translate="Width" level="2">
+                <BuilderNumberInput actionParam="'body-image-pattern-width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Height" level="2">
+                <BuilderNumberInput actionParam="'body-image-pattern-height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
+            </BuilderRow>
+        </BuilderContext>
     </BuilderContext>
 </t>
 

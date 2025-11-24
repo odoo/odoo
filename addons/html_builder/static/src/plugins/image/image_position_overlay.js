@@ -23,8 +23,10 @@ export class ImagePositionOverlay extends Component {
          */
         getDelta: { type: Function },
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        history: Object,
+        history: { type: Object, optional: true },
+        scrollToElement: { type: Boolean, optional: true },
     };
+    static defaultProps = { scrollToElement: true };
 
     setup() {
         this.overlayRef = useRef("overlay");
@@ -63,18 +65,21 @@ export class ImagePositionOverlay extends Component {
                 left: (position[0] / 100) * delta.x || 0,
                 top: (position[1] / 100) * delta.y || 0,
             };
-            // Make sure the editing element is visible
-            const rect = this.props.targetEl.getBoundingClientRect();
-            const isEditingElEntirelyVisible =
-                rect.top >= 0 &&
-                rect.bottom <= this.props.targetEl.ownerDocument.defaultView.innerHeight;
-            if (!isEditingElEntirelyVisible) {
-                await scrollTo(this.props.targetEl, { extraOffset: 50 });
+            if (this.props.scrollToElement) {
+                // Make sure the editing element is visible
+                const rect = this.props.targetEl.getBoundingClientRect();
+                const isEditingElEntirelyVisible =
+                    rect.top >= 0 &&
+                    rect.bottom <= this.props.targetEl.ownerDocument.defaultView.innerHeight;
+                if (!isEditingElEntirelyVisible) {
+                    await scrollTo(this.props.targetEl, { extraOffset: 50 });
+                }
             }
         });
 
         onMounted(() => {
-            this.reloadSavePoint = this.props.history.makeSavePoint();
+            const makeSavePoint = this.props.history?.makeSavePoint;
+            this.reloadSavePoint = makeSavePoint ? makeSavePoint() : () => {};
             this.dimensionOverlay();
             this.props.targetEl.classList.add("o_we_image_positioning");
         });
@@ -88,6 +93,7 @@ export class ImagePositionOverlay extends Component {
         });
 
         onWillUnmount(() => {
+            this.props.targetEl.classList.remove("o_we_image_positioning");
             this.builderOverlayContainerEl.style.clipPath = "";
             this.tooltip.dispose();
         });
@@ -181,7 +187,9 @@ export class ImagePositionOverlay extends Component {
             ${scaledRect.left}px ${scaledRect.top}px)
         `;
         this.overlayMaskRef.el.style.clipPath = clipPath;
-        this.builderOverlayContainerEl.style.clipPath = clipPath;
+        if (this.builderOverlayContainerEl) {
+            this.builderOverlayContainerEl.style.clipPath = clipPath;
+        }
 
         // The overlay covers the whole iframe excluding the scrollbar.
         Object.assign(this.overlayRef.el.style, {

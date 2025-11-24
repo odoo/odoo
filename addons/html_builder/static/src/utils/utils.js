@@ -13,26 +13,20 @@ export function getSnippetName(snippetEl) {
     if (snippetEl.dataset.name) {
         return snippetEl.dataset.name;
     }
-    if (snippetEl.matches("img")) {
-        return _t("Image");
-    }
-    if (snippetEl.matches(".fa")) {
-        return _t("Icon");
-    }
-    if (snippetEl.matches(".media_iframe_video")) {
-        return _t("Video");
-    }
-    if (snippetEl.parentNode?.matches(".row")) {
-        return _t("Column");
-    }
-    if (snippetEl.matches("#wrapwrap > main")) {
-        return _t("Page Options");
-    }
-    if (snippetEl.matches(".btn")) {
-        return _t("Button");
-    }
-    if (snippetEl.matches("[data-snippet=s_website_form]")) {
-        return _t("Form");
+    const snippetNameRules = [
+        { selector: "img", name: _t("Image") },
+        { selector: ".fa", name: _t("Icon") },
+        { selector: ".media_iframe_video", name: _t("Video") },
+        { selector: ".row > *", name: _t("Column") },
+        { selector: "#wrapwrap > main", name: _t("Page Options") },
+        { selector: ".btn", name: _t("Button") },
+        { selector: "[data-snippet=s_website_form]", name: _t("Form") },
+        { selector: "#wrapwrap", name: _t("Website") },
+    ];
+    for (const { selector, name } of snippetNameRules) {
+        if (snippetEl.matches(selector)) {
+            return name;
+        }
     }
     return _t("Block");
 }
