@@ -192,7 +192,8 @@ export class ImagePlugin extends Plugin {
                         this.updateImageParams();
                     },
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: (selection) =>
+                    isHtmlContentSupported(selection) && (this.config.allowImageResize ?? true),
             },
             {
                 id: "image_transform",
