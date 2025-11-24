@@ -522,7 +522,7 @@ class CustomerPortal(Controller):
             ).create(address_values)
         elif not self._are_same_addresses(address_values, partner_sudo):
             # If name is not changed then pop it from the address_values, as it affects the bank account holder name
-            if address_values['name'].strip() == partner_sudo.name.strip():
+            if address_values['name'].strip() == (partner_sudo.name or '').strip():
                 address_values.pop('name')
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
 
