@@ -119,6 +119,8 @@ class TestAvatarCardTour(MailCommon, HttpCase):
 
     @users("admin", "hr_user")
     def test_avatar_card_tour_multi_company(self):
+        # Clear existing activities to avoid interference with the test
+        self.env["mail.activity"].with_user(self.env.user).search([]).unlink()
         self._setup_channel(self.env.user)
         self.start_tour(
             f"/odoo/res.partner/{self.user_employee_c2.partner_id.id}",
