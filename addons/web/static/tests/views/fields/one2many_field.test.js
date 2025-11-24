@@ -542,7 +542,7 @@ test('O2M with buttons with attr "special" in dialog close the dialog', async ()
                         <form>
                             <field name="bar"/>
                             <footer>
-                                <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
+                                <button special="cancel" data-hotkey="x" class="btn-secondary"/>
                             </footer>
                         </form>
                     </field>
@@ -552,7 +552,7 @@ test('O2M with buttons with attr "special" in dialog close the dialog', async ()
     await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_dialog").toHaveCount(1);
 
-    expect(".modal .btn").toHaveText("Cancel");
+    expect(".modal .btn").toHaveText("Discard");
 
     await contains(".modal .btn").click();
     expect(".o_dialog").toHaveCount(0);

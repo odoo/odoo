@@ -25,7 +25,6 @@ export class CategoryAdd extends Interaction {
                 formEl.submit();
                 return true;
             },
-            cancelLabel: _t("Cancel"),
             cancel: () => { },
             channelId,
         });

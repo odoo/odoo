@@ -74,7 +74,7 @@ export class OrderWidget extends Component {
     get leftButton() {
         const back = this.shouldGoBack();
         return {
-            name: back ? _t("Back") : _t("Cancel"),
+            name: back ? _t("Back") : _t("Discard"),
             icon: back ? "oi oi-chevron-left btn-back" : "btn-close btn-cancel",
         };
     }
