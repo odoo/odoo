@@ -228,14 +228,14 @@ list of filtered posts (by date or tag).
 ============================================================================ -->
 <template id="blog_post_content" name="Blog post content">
     <t t-if="opt_blog_post_breadcrumb and not opt_blog_post_regular_cover" t-call="website_blog.post_breadcrumbs"
-        additionnal_classes.f="mb-3 bg-transparent"/>
+        additionnal_classes.f="mb-3 bg-transparent o_container_as_first"/>
     <t t-if="not opt_blog_post_regular_cover">
-        <t t-call="website_blog.blog_post_info"/>
+        <t t-call="website_blog.blog_post_info" align_class.f="o_container_as_first"/>
     </t>
     <div t-field="blog_post.content"
         class="o_wblog_post_content_field o_wblog_read_text"/>
 
-    <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="css_editable_mode_hidden text-muted" id="o_wblog_post_tags">
+    <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="css_editable_mode_hidden text-muted o_container_as_first" id="o_wblog_post_tags">
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
@@ -289,9 +289,9 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_content" active="False">
     <xpath expr="//div[@id='o_wblog_post_tags']" position="after">
-        <div class="container">
-            <div t-attf-class="mx-auto o_container_small">
-                <div id="o_wblog_post_comments" t-attf-class="pt-4">
+        <div class="o_container_as_first">
+            <div class="mx-auto">
+                <div id="o_wblog_post_comments" class="pt-4">
                     <div groups="base.group_public" class="small mb-4">
                         <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
                     </div>
@@ -313,8 +313,8 @@ list of filtered posts (by date or tag).
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
         <div t-if="next_post" class="mt-5">
             <t t-if="opt_blog_post_regular_cover">
-                <div class="container">
-                    <div t-attf-class="mb-4 mx-auto #{ 'o_wblog_read_with_sidebar' if opt_blog_post_sidebar else 'o_container_small' }">
+                <div t-att-class="'container' if opt_blog_post_sidebar else 'o_container_as_first'">
+                    <div class="mb-4 mx-auto">
                         <hr/>
                         <div class="d-flex text-end py-4">
                             <div class="flex-grow-1 pe-3">
