@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="action_aw_onboarding" model="ir.actions.client">
+        <field name="name">ActivityWatch Onboarding</field>
+        <field name="tag">aw_onboarding</field>
+    </record>
+
     <record id="action_aw_local_config" model="ir.actions.client">
         <field name="name">ActivityWatch Local Config</field>
         <field name="tag">frequency_viewer</field>
@@ -127,6 +132,12 @@
                     groups="base.group_no_one"
                     action="action_aw_local_config"
                     sequence="100"
+                />
+                <menuitem id="menu_aw_onboarding"
+                    name="AW Onboarding"
+                    groups="base.group_no_one"
+                    action="action_aw_onboarding"
+                    sequence="200"
                 />
             </menuitem>
         </menuitem>
