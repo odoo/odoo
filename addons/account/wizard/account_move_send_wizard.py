@@ -162,7 +162,7 @@ class AccountMoveSendWizard(models.TransientModel):
                 for edi_key in self._get_default_extra_edis(wizard.move_id)
             }
 
-    @api.depends('move_id', 'sending_methods')
+    @api.depends('sending_methods')
     def _compute_invoice_edi_format(self):
         for wizard in self:
             wizard.invoice_edi_format = self._get_default_invoice_edi_format(wizard.move_id, sending_methods=wizard.sending_methods or {})
@@ -331,9 +331,9 @@ class AccountMoveSendWizard(models.TransientModel):
     def _get_sending_settings(self):
         self.ensure_one()
         send_settings = {
-            'sending_methods': self.sending_methods or [],
+            'sending_methods': set(self.sending_methods or []),
             'invoice_edi_format': self.invoice_edi_format,
-            'extra_edis': self.extra_edis or [],
+            'extra_edis': set(self.extra_edis or []),
             'pdf_report': self.pdf_report_id,
             'author_user_id': self.env.user.id,
             'author_partner_id': self.env.user.partner_id.id,
