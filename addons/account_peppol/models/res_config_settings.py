@@ -241,7 +241,7 @@ class ResConfigSettings(models.TransientModel):
 
         self._call_peppol_proxy(
             endpoint='/api/peppol/1/send_verification_code',
-            params={'message': _("Your confirmation code is")},
+            params={'message': _("Your Peppol activation code in Odoo is")},
         )
         self.account_peppol_proxy_state = 'sent_verification'
 
