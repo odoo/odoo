@@ -3,13 +3,14 @@
 # * l10n_ro_edi
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-03 15:46+0000\n"
-"PO-Revision-Date: 2025-11-08 09:22+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-11-24 10:46+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18-l10n/"
 "l10n_ro_edi/ro/>\n"
 "Language: ro\n"
@@ -28,6 +29,10 @@ msgid ""
 "                - Validated: Sent & validated by the SPV\n"
 "                - Error: Sending error or validation error from the SPV"
 msgstr ""
+"- Trimis: Trimis cu succes către SPV, în așteptarea validării\n"
+"                - Validat: Trimis și validat de către SPV\n"
+"                - Eroare: Eroare la trimitere sau eroare de validare de la "
+"SPV"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -36,6 +41,9 @@ msgid ""
 "                                        Login or Sign Up if you don't have "
 "an account yet"
 msgstr ""
+".\n"
+"                                        Conectați-vă sau înregistrați-vă "
+"dacă nu aveți încă un cont"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -46,6 +54,11 @@ msgid ""
 "                                <span class=\"fa fa-lg fa-building-o\" "
 "title=\"Values set here are company-specific.\"/>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                    Detalii E-Factura\n"
+"                                </span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title="
+"\"Valorile setate aici sunt specifice companiei.\"/>"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_access_token
@@ -57,7 +70,7 @@ msgstr "Token de acces"
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_access_expiry_date
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_access_expiry_date
 msgid "Access Token Expiry Date"
-msgstr ""
+msgstr "Data de expirare a tokenului de acces"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -66,6 +79,8 @@ msgid ""
 "Access key not found. Please try again.\n"
 "Response: %s"
 msgstr ""
+"Cheia de acces nu a fost găsită. Vă rugăm să încercați din nou.\n"
+"Răspuns: %s"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -77,7 +92,7 @@ msgstr "Jetonul de acces este interzis"
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/ciusro_document.py:0
 msgid "Access token is unauthorized."
-msgstr ""
+msgstr "Tokenul de acces nu este autorizat."
 
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move_send
@@ -92,7 +107,7 @@ msgstr "Asistent trimitere notă contabilă"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Activate test environment for sending E-Factura to SPV"
-msgstr ""
+msgstr "Activați mediul de testare pentru trimiterea E-Factura către SPV"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__attachment_id
@@ -108,7 +123,7 @@ msgstr "CIUS RO"
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "CIUS-RO XML attachment not found."
-msgstr ""
+msgstr "Atașament XML CIUS-RO nu a fost găsit."
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -126,7 +141,7 @@ msgstr "ID Client"
 #: code:addons/l10n_ro_edi/controllers/main.py:0
 #: code:addons/l10n_ro_edi/models/res_company.py:0
 msgid "Client ID and Client Secret field must be filled."
-msgstr ""
+msgstr "Câmpurile ID client și Secret client trebuie completate."
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_client_secret
@@ -152,7 +167,7 @@ msgstr "Contactați"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Copy the generated Client ID and Client Secret to the fields below"
-msgstr ""
+msgstr "Copiați Client ID și Client Secret generate în câmpurile de mai jos"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__create_uid
@@ -169,6 +184,8 @@ msgstr "Creat la"
 msgid ""
 "Data needed to generate token for sending RO-CIUS to Romanian government"
 msgstr ""
+"Date necesare pentru generarea token-ului pentru trimiterea RO-CIUS către "
+"autoritățile din România"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__datetime
@@ -184,6 +201,7 @@ msgstr "Nume afișat"
 #: model:ir.model,name:l10n_ro_edi.model_l10n_ro_edi_document
 msgid "Document object for tracking CIUS-RO XML sent to E-Factura"
 msgstr ""
+"Document pentru urmărirea fișierelor XML CIUS-RO trimise către E-Factura"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_form_inherit_l10n_ro_edi
@@ -193,14 +211,14 @@ msgstr "Descarcă"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_form_inherit_l10n_ro_edi
 msgid "E-Factura"
-msgstr ""
+msgstr "E- Factură"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_index
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_index
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_loading
 msgid "E-Factura Index"
-msgstr ""
+msgstr "Index E- Factură"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
@@ -217,11 +235,13 @@ msgid ""
 "E-Factura has been sent and is now being validated by the SPV with index "
 "key: %s"
 msgstr ""
+"E-Factura a fost trimisă și este acum în curs de validare de către SPV cu \""
+"\"cheia de index: %s"
 
 #. module: l10n_ro_edi
 #: model:ir.actions.server,name:l10n_ro_edi.ir_cron_l10n_ro_edi_refresh_access_token_ir_actions_server
 msgid "E-Factura: Refresh Access Token"
-msgstr ""
+msgstr "E-Factura: Reîmprospătare Token de Acces"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sending_failed
@@ -231,78 +251,78 @@ msgstr "Eroare"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
 msgid "Error E-Factura"
-msgstr ""
+msgstr "Eroare E-Factura"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid "Error when building the CIUS-RO E-Factura XML"
-msgstr ""
+msgstr "Eroare la construirea XML-ului CIUS-RO E-Factura"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/controllers/main.py:0
 #: code:addons/l10n_ro_edi/models/res_company.py:0
 msgid "Error when converting response to json: %s"
-msgstr ""
+msgstr "Eroare la convertirea răspunsului în json: %s"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/controllers/main.py:0
 #: code:addons/l10n_ro_edi/models/res_company.py:0
 msgid "Error when decoding the access token payload: %s"
-msgstr ""
+msgstr "Eroare la decodificarea conținutului token-ului de acces: %s"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Error when generating token:"
-msgstr ""
+msgstr "Eroare la generarea token-ului:"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/controllers/main.py:0
 msgid "Error when processing the response: %s"
-msgstr ""
+msgstr "Eroare la procesarea răspunsului: %s"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/res_company.py:0
 msgid "Error when refreshing the access token: %s"
-msgstr ""
+msgstr "Eroare la reîmprospătarea token-ului de acces: %s"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid "Error when sending CIUS-RO E-Factura to the SPV"
-msgstr ""
+msgstr "Eroare la trimiterea CIUS-RO E-Factura către SPV"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "Error when trying to download the E-Factura answer from the SPV: %s"
-msgstr ""
+msgstr "Eroare la încercarea de a descărca răspunsul E-Factura de la SPV: %s"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "Error when trying to fetch the E-Factura from the SPV: %s"
-msgstr ""
+msgstr "Eroare la încercarea de a prelua E-Factura de la SPV: %s"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "Error when trying to send the E-Factura to the SPV: %s"
-msgstr ""
+msgstr "Eroare la încercarea de a trimite E-Factura către SPV: %s"
 
 #. module: l10n_ro_edi
 #: model:ir.actions.server,name:l10n_ro_edi.l10n_ro_edi_action_fetch_ciusro_status
 msgid "Fetch E-Factura Status"
-msgstr ""
+msgstr "Preia Starea E-Factura"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_form_inherit_l10n_ro_edi
 msgid "Fetch status"
-msgstr ""
+msgstr "Preia starea"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -310,12 +330,16 @@ msgid ""
 "Fill \"Callback URL 1\" with the following URL:\n"
 "                                                <br/>"
 msgstr ""
+"Completează \"Callback URL 1\" cu următorul URL:\n"
+"                                                <br/>"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid ""
 "Fill \"Denumire Aplicatie\" with any desired name for your registration data"
 msgstr ""
+"Completează \"Denumire Aplicatie\" cu orice nume dorit pentru datele tale de "
+"înregistrare"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -325,7 +349,7 @@ msgstr "Generare token"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Generate a new Client data"
-msgstr ""
+msgstr "Generează date noi de Client"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -335,7 +359,7 @@ msgstr "Mergi la"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Go to \"Editare profil Oauth\""
-msgstr ""
+msgstr "Mergi la \"Editare profil Oauth\""
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__id
@@ -345,7 +369,7 @@ msgstr "ID"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "In \"Serviciu\", select the option \"E-Factura\""
-msgstr ""
+msgstr "În \"Serviciu\", selectează opțiunea \"E-Factura\""
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__invoice_id
@@ -355,17 +379,17 @@ msgstr "Factură"
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move
 msgid "Journal Entry"
-msgstr "Înregistrare jurnal"
+msgstr "Notă contabilă"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_certificate
 msgid "Key Certificate"
-msgstr ""
+msgstr "Certificat Cheie"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_signature
 msgid "Key Signature"
-msgstr ""
+msgstr "Cheie Semnătură"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_attachment_id
@@ -443,6 +467,8 @@ msgid ""
 "Response (code=%(status_code)s) to %(url)s failed:\n"
 "%(text)s"
 msgstr ""
+"Răspunsul (cod=%(status_code)s) către %(url)s a eșuat:\n"
+"%(text)s"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__res_partner__invoice_edi_format__ciusro
@@ -452,7 +478,7 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Romanian E-Factura"
-msgstr ""
+msgstr "E-Factura Română"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -468,7 +494,7 @@ msgstr ""
 #: code:addons/l10n_ro_edi/models/account_move_send.py:0
 #: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
 msgid "Send E-Factura to SPV"
-msgstr ""
+msgstr "Trimite E-Factura către SPV"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sent
@@ -491,12 +517,12 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
 msgid "Sent E-Factura"
-msgstr ""
+msgstr "E-Factura Trimisă"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Submit the form by clicking on \"Generare Client ID\""
-msgstr ""
+msgstr "Trimite formularul făcând clic pe \"Generare Client ID\""
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -505,6 +531,8 @@ msgid ""
 "The following invoice(s) are waiting for answer from the Romanian SPV: %s.We "
 "won't send them again."
 msgstr ""
+"Următoarea(e) factură(i) așteaptă răspuns de la SPV-ul român: %s. Nu le vom "
+"trimite din nou."
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -523,12 +551,16 @@ msgid ""
 "The following partner's city name is invalid: %s. If partner's state is "
 "București, the city name must be 'SECTORX', where X is a number between 1-6."
 msgstr ""
+"Numele orașului partenerului următor este invalid: %s. Dacă județul "
+"partenerului este București, numele orașului trebuie să fie 'SECTORX', unde "
+"X este un număr între 1-6."
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/ciusro_document.py:0
 msgid "There is something wrong with the SPV. Please try again later."
 msgstr ""
+"Există ceva în neregulă cu SPV-ul. Te rugăm să încerci din nou mai târziu."
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -538,6 +570,9 @@ msgid ""
 "                                        Romania connected with an ANAF "
 "account"
 msgstr ""
+"Pentru a beneficia de această funcție, trebuie să ai un token USB de "
+"semnătură \"\"digitală din\n"
+"                                        România conectat la un cont ANAF"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -546,12 +581,14 @@ msgid ""
 "Token not found.\n"
 "Response: %s"
 msgstr ""
+"Token negăsit.\n"
+"Răspuns: %s"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_test_env
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_test_env
 msgid "Use Test Environment"
-msgstr ""
+msgstr "Utilizează Mediu de Testare"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_validated
@@ -562,7 +599,7 @@ msgstr "Validat"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
 msgid "Validated E-Factura"
-msgstr ""
+msgstr "E-Factura Validată"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -576,12 +613,14 @@ msgid ""
 "With the digital signature USB token inserted, generate the token using the "
 "button below"
 msgstr ""
+"Cu token-ul USB de semnătură digitală introdus, generează token-ul folosind "
+"butonul de mai jos"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
 msgid "You can't send now. Invoice is waiting for an answer."
-msgstr ""
+msgstr "Nu poți trimite acum. Factura așteaptă un răspuns."
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -593,7 +632,7 @@ msgstr "Ai atins limita de cereri. Vă rugăm să încercați din nou mai târzi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_client_id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_client_id
 msgid "eFactura Client ID"
-msgstr ""
+msgstr "eFactura Client ID"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__invoice_edi_format
@@ -604,4 +643,4 @@ msgstr "Format factură electronică"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "https://pfinternet.anaf.ro/"
-msgstr ""
+msgstr "https://pfinternet.anaf.ro/"
