@@ -50,7 +50,7 @@ class ProductValue(models.Model):
 
     def _compute_current_value_details(self):
         for product_value in self:
-            if not product_value.move_id:
+            if not (product_value.move_id and product_value.move_id.quantity):
                 product_value.current_value_details = False
                 continue
             move = product_value.move_id
