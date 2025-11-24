@@ -148,6 +148,7 @@ export class HardwareProxy extends EventBus {
             const response = await browser
                 .fetch(`${url}/hw_proxy/hello`, {
                     signal: timeoutController.signal,
+                    targetAddressSpace: odoo.use_lna ? "local" : undefined,
                 })
                 .catch(() => ({}));
             if (response.ok) {
