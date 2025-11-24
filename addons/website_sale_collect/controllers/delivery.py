@@ -2,10 +2,10 @@
 
 from odoo.http import request, route
 
-from odoo.addons.website_sale.controllers.delivery import Delivery
+from odoo.addons.website_sale_stock.controllers.location_selector import LocationSelector
 
 
-class InStoreDelivery(Delivery):
+class InStoreDelivery(LocationSelector):
     @route()
     def website_sale_get_pickup_locations(self, **kwargs):
         """Override of `website_sale` to set the pickup in store delivery method on the order in
@@ -15,11 +15,7 @@ class InStoreDelivery(Delivery):
         if kwargs.get("product_id"):  # Called from the product page.
             order_sudo = request.cart
             in_store_dm = request.website.sudo().in_store_dm_id
-            if not order_sudo:  # Pickup location requested without a cart creation.
-                # Create a temporary order to fetch pickup locations.
-                temp_order = request.env["sale.order"].new({"carrier_id": in_store_dm.id})
-                return temp_order.sudo()._get_pickup_locations(**kwargs)  # Skip super
-            if order_sudo.carrier_id.delivery_type != "in_store":
+            if order_sudo and order_sudo.carrier_id.delivery_type != "in_store":
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         return super().website_sale_get_pickup_locations(**kwargs)
 
@@ -29,7 +25,7 @@ class InStoreDelivery(Delivery):
         one.
 
         This route is called from location selector on /product and is distinct from
-        /website_sale/set_pickup_location as the latter is only called from the checkout page after
+        /website_sale_stock/set_pickup_location as the latter is only called from the checkout page after
         the delivery method is selected.
 
         :param str pickup_location_data: The JSON-formatted pickup location data.
@@ -39,7 +35,7 @@ class InStoreDelivery(Delivery):
         if order_sudo.carrier_id.delivery_type != "in_store":
             in_store_dm = request.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
-        order_sudo._set_pickup_location(pickup_location_data)
+        order_sudo.set_pickup_location(pickup_location_data)
 
     def _get_additional_delivery_context(self):
         """Override of `website_sale` to include the default pickup location data for in-store

@@ -12,13 +12,18 @@ Then it can be made specific at the product level.
     """,
     "depends": ["website_sale", "sale_stock", "stock_delivery"],
     "data": [
+        "views/checkout_templates.xml",
+        "views/delivery_form.xml",
         "views/product_template_views.xml",
         "views/res_config_settings_views.xml",
         "views/sale_order_views.xml",
+        "views/stock_picking_views.xml",
         "views/website_sale_stock_templates.xml",
         "views/wishlist_templates.xml",
         "data/template_email.xml",
         "data/ir_cron_data.xml",
+        # Wizards
+        "wizard/choose_delivery_carrier_views.xml",
     ],
     "demo": ["data/website_sale_stock_demo.xml"],
     "auto_install": True,
@@ -32,6 +37,11 @@ Then it can be made specific at the product level.
             "website_sale_stock/static/src/js/product_configurator_dialog/*",
             "website_sale_stock/static/src/xml/**/*",
             "website_sale_stock/static/src/scss/**/*",
+            "website_sale_stock/static/src/js/location_selector/**/*",
+        ],
+        "web.assets_backend": [
+            "website_sale_stock/static/src/js/location_selector/**/*",
+            "website_sale_stock/static/src/js/pickup_location_many2one/**/*",
         ],
         "web.assets_tests": [
             "website_sale_stock/static/tests/tours/*",

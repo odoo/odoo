@@ -153,10 +153,6 @@
             # comparison
             "website_sale/static/src/js/product_row/*",
             "website_sale/static/src/js/product_comparison_bottom_bar/*",
-            # Location selector components are defined in `delivery` to share the codebase with the
-            # backend.
-            "delivery/static/src/js/location_selector/**/*",
-            "website_sale/static/src/js/location_selector/**/*",
         ],
         "web._assets_primary_variables": ["website_sale/static/src/scss/primary_variables.scss"],
         "web.assets_backend": [
@@ -202,7 +198,6 @@
             "website_sale/static/tests/builder/**/*",
         ],
         "web.assets_unit_tests_setup": [
-            "delivery/static/src/js/location_selector/**/*",
             "website_sale/static/src/interactions/**/*",
             "website_sale/static/src/js/product_row/*",
             "website_sale/static/src/js/product_comparison_bottom_bar/*",
