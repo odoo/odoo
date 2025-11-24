@@ -1523,16 +1523,14 @@ test("set a required many2many_tags and save directly", async () => {
     def = new Deferred();
     await clickFieldDropdown("timmy");
     await clickFieldDropdownItem("timmy", "gold");
-    expect(".o_tag").toHaveCount(1);
-    expect(".o_tag").toHaveText("", {
-        message: "The tag is displayed, but the web read is not finished yet",
-    });
+    expect(".o_tag").toHaveCount(0);
 
     await clickSave();
     expect("[name='timmy']").not.toHaveClass("o_field_invalid");
 
     def.resolve();
     await animationFrame();
+    expect(".o_tag").toHaveCount(1);
     expect(".o_tag").toHaveText("gold");
 });
 
