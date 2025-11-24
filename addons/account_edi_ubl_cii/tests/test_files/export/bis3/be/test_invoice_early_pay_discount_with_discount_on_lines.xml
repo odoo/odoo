@@ -2,8 +2,8 @@
 	<cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
 	<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
 	<cbc:ID>___ignore___</cbc:ID>
-	<cbc:IssueDate>2017-01-01</cbc:IssueDate>
-	<cbc:DueDate>2017-01-31</cbc:DueDate>
+	<cbc:IssueDate>___ignore___</cbc:IssueDate>
+	<cbc:DueDate>___ignore___</cbc:DueDate>
 	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
 	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
 	<cac:OrderReference>
@@ -48,7 +48,7 @@
 		<cac:Party>
 			<cbc:EndpointID schemeID="0208">0477472701</cbc:EndpointID>
 			<cac:PartyName>
-				<cbc:Name>partner_a</cbc:Name>
+				<cbc:Name>partner_be</cbc:Name>
 			</cac:PartyName>
 			<cac:PostalAddress>
 				<cbc:StreetName>Rue des Bourlottes 9</cbc:StreetName>
@@ -65,11 +65,11 @@
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>partner_a</cbc:RegistrationName>
+				<cbc:RegistrationName>partner_be</cbc:RegistrationName>
 				<cbc:CompanyID>BE0477472701</cbc:CompanyID>
 			</cac:PartyLegalEntity>
 			<cac:Contact>
-				<cbc:Name>partner_a</cbc:Name>
+				<cbc:Name>partner_be</cbc:Name>
 			</cac:Contact>
 		</cac:Party>
 	</cac:AccountingCustomerParty>
@@ -86,7 +86,7 @@
 		</cac:DeliveryLocation>
 		<cac:DeliveryParty>
 			<cac:PartyName>
-				<cbc:Name>partner_a</cbc:Name>
+				<cbc:Name>partner_be</cbc:Name>
 			</cac:PartyName>
 		</cac:DeliveryParty>
 	</cac:Delivery>
@@ -121,7 +121,6 @@
 		<cac:TaxCategory>
 			<cbc:ID>E</cbc:ID>
 			<cbc:Percent>0.0</cbc:Percent>
-			<cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
 			<cac:TaxScheme>
 				<cbc:ID>VAT</cbc:ID>
 			</cac:TaxScheme>
@@ -169,7 +168,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>41.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">1482.15</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">3615.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -193,7 +195,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>41.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">5077.44</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">12384.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -217,7 +222,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">623.02</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">1597.50</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -241,7 +249,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">86.87</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">222.75</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -265,7 +276,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">431.73</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">1107.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -289,7 +303,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-			<cbc:Amount currencyID="EUR">155.02</cbc:Amount>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
+			<cbc:Amount currencyID="EUR">155.03</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">397.50</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -313,7 +330,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">209.62</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">537.50</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -337,7 +357,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">312.00</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">800.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -361,7 +384,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">539.66</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">1383.75</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -385,7 +411,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">194.69</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">499.20</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -409,7 +438,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">194.69</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">499.20</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -433,7 +465,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">176.20</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">451.80</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -457,7 +492,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">418.39</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">1072.80</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -481,7 +519,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">699.19</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">1792.80</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -505,7 +546,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">292.03</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">748.80</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -529,7 +573,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">98.75</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">253.20</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -553,7 +600,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">226.04</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">579.60</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -577,7 +627,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">271.44</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">696.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -601,7 +654,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">188.37</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">483.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -625,7 +681,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">280.80</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">720.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -649,7 +708,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">187.20</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">480.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -673,7 +735,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">135.13</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">346.50</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -697,7 +762,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">79.17</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">203.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -721,7 +789,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">250.03</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">641.10</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -745,7 +816,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">47.74</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">122.40</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -769,7 +843,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">47.74</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">122.40</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
@@ -793,7 +870,10 @@
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+			<cbc:MultiplierFactorNumeric>39.0</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">45.63</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">117.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>

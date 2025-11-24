@@ -28,7 +28,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
     chart_template = False
     country_code = False
-    extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
+    extra_tags = ['SAVE_XML', *(['-standard', 'external'] if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else [])]
 
     @classmethod
     def safe_copy(cls, record):
@@ -392,7 +392,9 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def ensure_installed(cls, module_name: str):
-        if cls.env['ir.module.module']._get(module_name).state != 'installed':
+        module = cls.env['ir.module.module']._get(module_name)
+        assert module, f"Module '{module}' does not exist!"
+        if module.state != 'installed':
             raise SkipTest(f"Module required for the test is not installed ({module_name})")
 
     # -------------------------------------------------------------------------

@@ -2,8 +2,9 @@ from lxml import etree
 
 from odoo import _, models, Command
 from odoo.tools import html2plaintext
-from odoo.tools.float_utils import float_is_zero, float_round, float_repr
+from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 
 
@@ -13,48 +14,9 @@ UBL_NAMESPACES = {
 }
 
 
-class FloatFmt(float):
-    """ A float with a given precision.
-    The precision is used when formatting the float.
-    """
-    def __new__(cls, value, min_dp=2, max_dp=None):
-        return super().__new__(cls, value)
-
-    def __init__(self, value, min_dp=2, max_dp=None):
-        self.min_dp = min_dp
-        self.max_dp = max_dp
-
-    def __str__(self):
-        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
-            return "<FloatFmt()>"
-        self_float = float(self)
-        min_dp_int = int(self.min_dp)
-        if self.max_dp is None:
-            return float_repr(self_float, min_dp_int)
-        else:
-            # Format the float to between self.min_dp and self.max_dp decimal places.
-            # We start by formatting to self.max_dp, and then remove trailing zeros,
-            # but always keep at least self.min_dp decimal places.
-            max_dp_int = int(self.max_dp)
-            amount_max_dp = float_repr(self_float, max_dp_int)
-            num_trailing_zeros = len(amount_max_dp) - len(amount_max_dp.rstrip('0'))
-            return float_repr(self_float, max(max_dp_int - num_trailing_zeros, min_dp_int))
-
-    def __repr__(self):
-        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
-            return "<FloatFmt()>"
-        self_float = float(self)
-        min_dp_int = int(self.min_dp)
-        if self.max_dp is None:
-            return f"FloatFmt({self_float!r}, {min_dp_int!r})"
-        else:
-            max_dp_int = int(self.max_dp)
-            return f"FloatFmt({self_float!r}, {min_dp_int!r}, {max_dp_int!r})"
-
-
-class AccountEdiXmlUbl_20(models.AbstractModel):
-    _name = 'account.edi.xml.ubl_20'
-    _inherit = ['account.edi.common']
+class AccountEdiXmlUBL20(models.AbstractModel):
+    _name = "account.edi.xml.ubl_20"
+    _inherit = 'account.edi.ubl'
     _description = "UBL 2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):
@@ -161,9 +123,9 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
     def _get_invoice_node(self, vals):
         self._add_invoice_config_vals(vals)
         self._add_invoice_base_lines_vals(vals)
-        self._setup_base_lines(vals)
         self._add_invoice_currency_vals(vals)
         self._add_invoice_tax_grouping_function_vals(vals)
+        self._setup_base_lines(vals)
         self._add_invoice_monetary_totals_vals(vals)
 
         document_node = {}
@@ -177,11 +139,11 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             self._add_invoice_payment_means_nodes(document_node, vals)
             self._add_invoice_payment_terms_nodes(document_node, vals)
 
+        self._add_invoice_line_nodes(document_node, vals)
         self._add_invoice_allowance_charge_nodes(document_node, vals)
         self._add_invoice_exchange_rate_nodes(document_node, vals)
         self._add_invoice_tax_total_nodes(document_node, vals)
         self._add_invoice_monetary_total_nodes(document_node, vals)
-        self._add_invoice_line_nodes(document_node, vals)
         return document_node
 
     def _add_invoice_config_vals(self, vals):
@@ -306,8 +268,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
 
     def _add_invoice_base_lines_vals(self, vals):
         invoice = vals['invoice']
-        base_lines, _tax_lines = invoice._get_rounded_base_and_tax_lines()
-        vals['base_lines'] = base_lines
+        vals['base_lines'], _tax_lines = invoice._get_rounded_base_and_tax_lines()
 
     def _setup_base_lines(self, vals):
         base_lines = vals['base_lines']
