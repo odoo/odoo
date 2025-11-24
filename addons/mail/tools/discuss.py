@@ -110,18 +110,11 @@ class Store:
                     else []
                 )
         fields = Store._format_fields(fields) + Store._format_fields(extra_fields)
-        if as_thread:
-            if hasattr(records, "_thread_to_store"):
-                records._thread_to_store(self, fields, **kwargs)
-            else:
-                assert not kwargs
-                self.add_records_fields(records, fields, as_thread=True)
+        if not as_thread and hasattr(records, "_to_store"):
+            records._to_store(self, fields, **kwargs)
         else:
-            if hasattr(records, "_to_store"):
-                records._to_store(self, fields, **kwargs)
-            else:
-                assert not kwargs
-                self.add_records_fields(records, fields)
+            assert not kwargs
+            self.add_records_fields(records, fields, as_thread=as_thread)
         return self
 
     def add_global_values(self, **values):
