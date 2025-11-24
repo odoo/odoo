@@ -100,10 +100,12 @@ export function getImageSrc(el) {
     // The plugin transfer the `src` on a `span`, but parallax can be achieved via other means.
     // example: CSS variables without this DOM manipulation.
     // Decouple.
-    if (el.querySelector(".s_parallax_bg")) {
-        el = el.querySelector(".s_parallax_bg");
+    const parallaxEl = el.querySelector(":scope > .s_parallax_bg_wrap > .s_parallax_bg");
+    if (parallaxEl) {
+        el = parallaxEl;
     }
-    const url = backgroundImageCssToParts(el.style.backgroundImage).url;
+    const backgroundImage = el.style.backgroundImage || getComputedStyle(el).backgroundImage;
+    const url = backgroundImageCssToParts(backgroundImage).url;
     return url && getBgImageURLFromURL(url);
 }
 

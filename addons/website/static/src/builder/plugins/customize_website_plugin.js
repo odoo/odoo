@@ -1,4 +1,4 @@
-import { isCSSVariable, setBuilderCSSVariables } from "@html_builder/utils/utils_css";
+import { isCSSVariable, setBuilderCSSVariables, getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
@@ -12,6 +12,8 @@ import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { renderToElement } from "@web/core/utils/render";
 import { CompositeAction } from "@html_builder/core/composite_action_plugin";
+import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
+import { loadImage } from "@html_editor/utils/image_processing";
 
 /**
  * @typedef { Object } CustomizeWebsiteShared
@@ -62,12 +64,15 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
             AddLanguageAction,
-            CustomizeBodyBgTypeAction,
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
             PreviewableWebsiteConfigAction,
             TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
+            ToggleBodyBgImageAction,
+            ReplaceBodyBgImageAction,
+            RemoveBodyBgImageAction,
+            BodyBgPositionOverlayAction,
         },
         color_combination_getters: withSequence(5, (el, actionParam) => {
             const combination = actionParam.combinationColor;
@@ -474,80 +479,141 @@ export class AddLanguageAction extends BuilderAction {
     }
 }
 
-export class CustomizeBodyBgTypeAction extends BuilderAction {
-    static id = "customizeBodyBgType";
+export class ToggleBodyBgImageAction extends BuilderAction {
+    static id = "toggleBodyBgImage";
     static dependencies = ["builderActions", "history", "customizeWebsite"];
-    isApplied({ value }) {
-        const getAction = this.dependencies.builderActions.getAction;
-        const currentValue = getAction("customizeBodyBgType").getValue();
-        // NONE has no extra quote, other values have
-        return [`'${value}'`, value].includes(currentValue);
+    isApplied() {
+        return !!this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
     }
-    getValue() {
-        const bgImage = getComputedStyle(this.document.querySelector("#wrapwrap"))[
-            "background-image"
-        ];
-        if (bgImage === "none") {
-            return "NONE";
+    async applyConfigWithLoader(config) {
+        this.services.ui.block({ delay: 2500 });
+        try {
+            await this.setBodyBgConfig(config);
+        } finally {
+            this.services.ui.unblock();
         }
-        const style = getHtmlStyle(this.document);
-        return getCSSVariableValue("body-image-type", style);
     }
-    async load({ editingElement: el, params, value, historyImageSrc }) {
-        const getAction = this.dependencies.builderActions.getAction;
-        const oldValue = getAction("customizeBodyBgType").getValue({ params });
-        const oldImageSrc =
-            this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
-        let imageSrc = "";
-        if (value === "NONE") {
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                "body-image-type": "'image'",
-                "body-image": "",
-            });
-        } else {
-            const imageEl = historyImageSrc || (await getAction("replaceBgImage").load({ el }));
-            if (imageEl) {
-                imageSrc = imageEl.src;
-                await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                    "body-image-type": `'${value}'`,
-                    "body-image": `'${imageSrc}'`,
-                });
-            } else {
-                imageSrc = NO_IMAGE_SELECTION;
-            }
+    async setBodyBgConfig(config) {
+        // Store the current body bg selection (image + type).
+        const variables = {
+            "body-image-type": `'${config.type}'`,
+            "body-image": config.image ? `'${config.image}'` : "",
+        };
+        if (!config.image) {
+            // Reset stored variables when removing the image entirely.
+            variables["body-image-background-position"] = "";
+            variables["body-image-pattern-width"] = "";
+            variables["body-image-pattern-height"] = "";
         }
-        return { imageSrc, oldImageSrc, oldValue };
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables);
+        this.dispatchTo("trigger_dom_updated");
     }
-    apply({ editingElement, params, value, loadResult: { imageSrc, oldImageSrc, oldValue } }) {
-        if (imageSrc === NO_IMAGE_SELECTION) {
+    getCurrentConfig() {
+        return {
+            type:
+                this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image-type") ||
+                "image",
+            image: this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image") || "",
+        };
+    }
+    async applyConfig(oldConfig, newConfig) {
+        await this.applyConfigWithLoader(newConfig);
+        this.dependencies.history.addCustomMutation({
+            apply: () => this.applyConfigWithLoader(newConfig),
+            revert: () => this.applyConfigWithLoader(oldConfig),
+        });
+    }
+    async apply({ editingElement: el } = {}) {
+        const getAction = this.dependencies.builderActions.getAction;
+        const { type: currentType, image: currentImage } = this.getCurrentConfig();
+        const oldConfig = { type: currentType, image: currentImage };
+
+        const imageEl = await getAction("replaceBgImage").load({ el });
+        if (!imageEl) {
             return;
         }
-        const getAction = this.dependencies.builderActions.getAction;
-        this.dependencies.history.addCustomMutation({
-            apply: () => {
-                this.services.ui.block({ delay: 2500 });
-                getAction("customizeBodyBgType")
-                    .load({ editingElement, params, value, historyImageSrc: imageSrc })
-                    .then(() => {
-                        this.dispatchTo("trigger_dom_updated");
-                    })
-                    .finally(() => this.services.ui.unblock());
-            },
-            revert: () => {
-                this.services.ui.block({ delay: 2500 });
-                getAction("customizeBodyBgType")
-                    .load({
-                        editingElement,
-                        params,
-                        value: oldValue,
-                        historyImageSrc: oldImageSrc,
-                    })
-                    .then(() => {
-                        this.dispatchTo("trigger_dom_updated");
-                    })
-                    .finally(() => this.services.ui.unblock());
-            },
+        const newConfig = { type: currentType, image: imageEl.src };
+        await this.applyConfig(oldConfig, newConfig);
+    }
+    async clean() {
+        const { type: currentType, image: currentImage } = this.getCurrentConfig();
+        const oldConfig = { type: currentType, image: currentImage };
+        const newConfig = { type: "image", image: "" };
+        await this.applyConfig(oldConfig, newConfig);
+    }
+}
+
+export class ReplaceBodyBgImageAction extends BuilderAction {
+    static id = "replaceBodyBgImage";
+    static dependencies = ["builderActions"];
+    apply(context) {
+        return this.dependencies.builderActions.getAction("toggleBodyBgImage").apply(context);
+    }
+}
+
+export class RemoveBodyBgImageAction extends BuilderAction {
+    static id = "removeBodyBgImage";
+    static dependencies = ["builderActions"];
+    apply() {
+        return this.dependencies.builderActions.getAction("toggleBodyBgImage").clean();
+    }
+}
+
+export class BodyBgPositionOverlayAction extends BuilderAction {
+    static id = "bodyBgPositionOverlay";
+    static dependencies = [
+        "overlayButtons",
+        "history",
+        "backgroundPositionOption",
+        "customizeWebsite",
+    ];
+    setup() {
+        this.withLoadingEffect = false;
+        this.canTimeout = false;
+    }
+    async apply({ editingElement }) {
+        const imageEl = await loadImage(getBgImageURLFromEl(editingElement));
+        const clearInlinePosition = () => {
+            // Remove inline position used for preview once value is stored in
+            // variables.
+            editingElement.style.backgroundPosition = "";
+        };
+        const setBackgroundPosition = async (value) => {
+            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                "body-image-background-position": value,
+            });
+            clearInlinePosition();
+        };
+        const bgPosition = await new Promise((resolve) => {
+            const removeOverlay = this.services.overlay.add(ImagePositionOverlay, {
+                targetEl: editingElement,
+                close: (position) => {
+                    removeOverlay();
+                    resolve(position);
+                },
+                onDrag: (percentPosition) => {
+                    // Live preview via inline style; cleared on apply/discard.
+                    editingElement.style.backgroundPosition = `${percentPosition.left}% ${percentPosition.top}%`;
+                },
+                getDelta: () =>
+                    this.dependencies.backgroundPositionOption.getDelta(editingElement, imageEl),
+                getPosition: () => getComputedStyle(editingElement).backgroundPosition,
+                editable: this.editable,
+                scrollToElement: false,
+            });
         });
+        if (bgPosition) {
+            const currentPosition =
+                this.dependencies.customizeWebsite.getWebsiteVariableValue(
+                    "body-image-background-position"
+                ) || "";
+            this.dependencies.history.applyCustomMutation({
+                apply: () => setBackgroundPosition(bgPosition),
+                revert: () => setBackgroundPosition(currentPosition),
+            });
+        } else {
+            clearInlinePosition();
+        }
     }
 }
 

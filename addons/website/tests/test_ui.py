@@ -395,6 +395,13 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_version_1', login='admin')
 
     def test_08_website_style_custo(self):
+        self.env['ir.attachment'].create({
+            'public': True,
+            'type': 'url',
+            'url': '/web/image/123/bg_test.png',
+            'name': 'bg_test.png',
+            'mimetype': 'image/png',
+        })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
     def test_09_website_edit_link_popover(self):
