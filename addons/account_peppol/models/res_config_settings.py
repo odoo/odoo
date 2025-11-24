@@ -71,7 +71,139 @@ class ResConfigSettings(models.TransientModel):
             endpoint='/api/peppol/1/update_user',
             params=params,
         )
+<<<<<<< 2ba87c611b13d454a2d029b8f6859c47c5bbb3fc
         return True
+||||||| a1a0835286c6b452b4d6ba1ab2211e9d1820400b
+
+    def button_send_peppol_verification_code(self):
+        """
+        Request user verification via SMS
+        Calls the /send_verification_code to send the 6-digit verification code
+        """
+        self.ensure_one()
+
+        # update contact details in case the user made changes
+        self.button_update_peppol_user_data()
+
+        self._call_peppol_proxy(
+            endpoint='/api/peppol/1/send_verification_code',
+            params={'message': _("Your confirmation code is")},
+        )
+        self.account_peppol_proxy_state = 'sent_verification'
+
+    def button_check_peppol_verification_code(self):
+        """
+        Calls /verify_phone_number to compare user's input and the
+        code generated on the IAP server
+        """
+        self.ensure_one()
+
+        if len(self.account_peppol_verification_code) != 6:
+            raise ValidationError(_("The verification code should contain six digits."))
+
+        self._call_peppol_proxy(
+            endpoint='/api/peppol/1/verify_phone_number',
+            params={'verification_code': self.account_peppol_verification_code},
+        )
+        self.account_peppol_proxy_state = 'pending'
+        self.account_peppol_verification_code = False
+        # in case they have already been activated on the IAP side
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger()
+
+    def button_cancel_peppol_registration(self):
+        """
+        Sets the peppol registration to canceled
+        - If the user is active on the SMP, we can't just cancel it.
+          They have to request a migration key using the `button_migrate_peppol_registration` action
+          or deregister.
+        - 'not_registered', 'rejected', 'canceled' proxy states mean that canceling the registration
+          makes no sense, so we don't do it
+        - Calls the IAP server first before setting the state as canceled on the client side,
+          in case they've been activated on the IAP side in the meantime
+        """
+        self.ensure_one()
+        # check if the participant has been already registered
+        self.account_peppol_edi_user._peppol_get_participant_status()
+        if not tools.config['test_enable'] and not modules.module.current_test:
+            self.env.cr.commit()
+
+        if self.account_peppol_proxy_state == 'active':
+            raise UserError(_("Can't cancel an active registration. Please request a migration or deregister instead."))
+
+        if self.account_peppol_proxy_state in {'not_registered', 'rejected', 'canceled'}:
+            raise UserError(_(
+                "Can't cancel registration with this status: %s", self.account_peppol_proxy_state
+            ))
+
+        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
+        self.account_peppol_proxy_state = 'not_registered'
+        self.account_peppol_edi_user.unlink()
+=======
+
+    def button_send_peppol_verification_code(self):
+        """
+        Request user verification via SMS
+        Calls the /send_verification_code to send the 6-digit verification code
+        """
+        self.ensure_one()
+
+        # update contact details in case the user made changes
+        self.button_update_peppol_user_data()
+
+        self._call_peppol_proxy(
+            endpoint='/api/peppol/1/send_verification_code',
+            params={'message': _("Your Peppol activation code in Odoo is")},
+        )
+        self.account_peppol_proxy_state = 'sent_verification'
+
+    def button_check_peppol_verification_code(self):
+        """
+        Calls /verify_phone_number to compare user's input and the
+        code generated on the IAP server
+        """
+        self.ensure_one()
+
+        if len(self.account_peppol_verification_code) != 6:
+            raise ValidationError(_("The verification code should contain six digits."))
+
+        self._call_peppol_proxy(
+            endpoint='/api/peppol/1/verify_phone_number',
+            params={'verification_code': self.account_peppol_verification_code},
+        )
+        self.account_peppol_proxy_state = 'pending'
+        self.account_peppol_verification_code = False
+        # in case they have already been activated on the IAP side
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger()
+
+    def button_cancel_peppol_registration(self):
+        """
+        Sets the peppol registration to canceled
+        - If the user is active on the SMP, we can't just cancel it.
+          They have to request a migration key using the `button_migrate_peppol_registration` action
+          or deregister.
+        - 'not_registered', 'rejected', 'canceled' proxy states mean that canceling the registration
+          makes no sense, so we don't do it
+        - Calls the IAP server first before setting the state as canceled on the client side,
+          in case they've been activated on the IAP side in the meantime
+        """
+        self.ensure_one()
+        # check if the participant has been already registered
+        self.account_peppol_edi_user._peppol_get_participant_status()
+        if not tools.config['test_enable'] and not modules.module.current_test:
+            self.env.cr.commit()
+
+        if self.account_peppol_proxy_state == 'active':
+            raise UserError(_("Can't cancel an active registration. Please request a migration or deregister instead."))
+
+        if self.account_peppol_proxy_state in {'not_registered', 'rejected', 'canceled'}:
+            raise UserError(_(
+                "Can't cancel registration with this status: %s", self.account_peppol_proxy_state
+            ))
+
+        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
+        self.account_peppol_proxy_state = 'not_registered'
+        self.account_peppol_edi_user.unlink()
+>>>>>>> b541fa04999046258c941f609cb62eb1d0becde4
 
     @handle_demo
     def button_peppol_smp_registration(self):
