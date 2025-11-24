@@ -35,6 +35,7 @@ export class CustomerDisplayPosAdapter {
                         data: this.data,
                     },
                 }),
+                targetAddressSpace: odoo.use_lna ? "local" : undefined,
             }).catch(() => {
                 console.log("Failed to send data to customer display");
             });

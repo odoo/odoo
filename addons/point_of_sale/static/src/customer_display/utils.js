@@ -25,6 +25,7 @@ export function openProxyCustomerDisplay(
                 pos_id: configId,
             },
         }),
+        targetAddressSpace: odoo.use_lna ? "local" : undefined,
     })
         .then(() => {
             notificationService?.add(_t("Connection successful"), { type: "success" });
