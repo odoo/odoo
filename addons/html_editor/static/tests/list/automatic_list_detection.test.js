@@ -13,6 +13,14 @@ test("typing '1. ' should create number list", async () => {
     expect(getContent(el)).toBe(`<ol><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol>`);
 });
 
+test("typing '1. ' should create number list (with whitespace)", async () => {
+    const { el, editor } = await setupEditor(`<p>
+        []abc
+    </p>`);
+    await insertText(editor, "1. ");
+    expect(unformat(getContent(el))).toBe(unformat(`<ol><li>[]abc</li></ol>`));
+});
+
 test("typing '1) ' should create number list", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
     await insertText(editor, "1) ");
