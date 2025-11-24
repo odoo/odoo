@@ -74,6 +74,7 @@ class ProductTemplate(models.Model):
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        autonomous_lang=True
     )
 
     alternative_product_ids = fields.Many2many(
