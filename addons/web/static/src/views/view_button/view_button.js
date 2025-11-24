@@ -1,4 +1,5 @@
 import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
@@ -72,7 +73,7 @@ export class ViewButton extends Component {
         this.tooltip = JSON.stringify({
             debug: Boolean(odoo.debug),
             button: {
-                string: this.props.string,
+                string: this.buttonLabel,
                 help: this.clickParams.help,
                 context: this.clickParams.context,
                 invisible: this.props.attrs.invisible,
@@ -88,6 +89,13 @@ export class ViewButton extends Component {
             model: this.props.record && this.props.record.resModel,
         });
         this.dropdownControl = useDropdownCloser();
+    }
+
+    get buttonLabel() {
+        if (this.props.string === undefined && this.clickParams.special === "cancel") {
+            return _t("Discard");
+        }
+        return this.props.string;
     }
 
     get clickParams() {
