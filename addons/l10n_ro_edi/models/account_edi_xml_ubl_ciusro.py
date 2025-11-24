@@ -148,13 +148,16 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     # EXPORT: New (dict_to_xml) helpers
     # -------------------------------------------------------------------------
 
+    def _ubl_add_values_tax_currency_code(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        self._ubl_add_values_tax_currency_code_company_currency(vals)
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_header_nodes(document_node, vals)
         document_node['cbc:CustomizationID'] = {
             '_text': 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
         }
-        document_node['cbc:TaxCurrencyCode'] = {'_text': 'RON'}
 
     def _get_address_node(self, vals):
         address_node = super()._get_address_node(vals)
@@ -193,18 +196,6 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             party_node['cac:PartyLegalEntity']['cbc:CompanyID']['_text'] = vat_replacement
 
         return party_node
-
-    def _add_document_tax_total_nodes(self, document_node, vals):
-        super()._add_document_tax_total_nodes(document_node, vals)
-
-        document_node['cac:TaxTotal'] = [document_node['cac:TaxTotal']]
-
-        company_currency = vals['invoice'].company_id.currency_id
-        if vals['invoice'].currency_id != company_currency:
-            self._add_tax_total_node_in_company_currency(document_node, vals)
-
-            # Remove the tax subtotals from the TaxTotal in company currency
-            document_node['cac:TaxTotal'][1]['cac:TaxSubtotal'] = None
 
     def _export_invoice_constraints_new(self, invoice, vals):
         constraints = super()._export_invoice_constraints_new(invoice, vals)
