@@ -324,6 +324,7 @@ export class PropertiesField extends Component {
                     name: property.name,
                     elements: [],
                     isFolded: property.value ?? property.fold_by_default,
+                    hidden: property.hidden,
                 });
             } else {
                 groupedProperties.at(-1).elements.push(property);
