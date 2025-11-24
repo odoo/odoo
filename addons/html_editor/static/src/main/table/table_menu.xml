@@ -12,9 +12,12 @@
                 <div t-on-pointerdown.stop="() => {}">
                     <t t-foreach="items" t-as="item" t-key="item_index">
                         <DropdownItem onSelected="() => this.onSelected(item)">
-                            <div class="user-select-none" t-att-name="item.name">
-                                <span t-if="item.icon" class="me-2 fa" t-att-class="item.icon"/>
-                                <span t-esc="item.text"/>
+                            <div class="user-select-none d-flex align-items-center" t-att-name="item.name">
+                                <span t-if="item.icon"
+                                    class="fa text-center"
+                                    style="width:16px;"
+                                    t-att-class="item.icon"/>
+                                <span class="ms-2" t-esc="item.text"/>
                             </div>
                         </DropdownItem>
                     </t>
