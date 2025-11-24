@@ -707,10 +707,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 with cr.savepoint(flush=False):
                     func(cr)
         except Exception as e:
+            message = f"Unable to post-process the constraint: {e.args[0]}"
             if self._is_install:
-                _schema.error(*e.args)
+                _schema.error(message, *e.args[1:])
             else:
-                _schema.info(*e.args)
+                _schema.info(message, *e.args[1:])
                 self._constraint_queue[key] = func
 
     def finalize_constraints(self, cr: Cursor) -> None:
