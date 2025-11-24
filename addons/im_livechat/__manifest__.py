@@ -174,7 +174,6 @@ Help your customers with this chat, and analyse their feedback.
             'web_tour/static/src/tour_utils.js',
             "web/static/tests/legacy/helpers/cleanup.js",
             "web/static/tests/legacy/helpers/utils.js",
-            "web/static/tests/legacy/utils.js",
             "im_livechat/static/tests/tours/support/*",
         ],
         'im_livechat.embed_assets_unit_tests': [

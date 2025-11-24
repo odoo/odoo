@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { dragenterFiles, dropFiles, inputFiles } from "@web/../tests/utils";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -31,7 +30,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Add one file in composer",
             trigger: ".o-mail-Composer button[title='Attach Files']",
-            async run() {
+            async run({ inputFiles }) {
                 const files = [new File(["hello, world"], "file1.txt", { type: "text/plain" })];
                 await inputFiles(".o-mail-Composer .o_input_file", files);
             },
@@ -97,11 +96,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Drop a file on the full composer",
-            trigger: ".o_mail_composer_form_view",
-            async run() {
+            trigger: ".o_mail_composer_form_view .o_form_renderer",
+            async run({ dragFiles }) {
                 const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
-                await dragenterFiles(".o_mail_composer_form_view .o_form_renderer", files);
-                await dropFiles(".o-Dropzone", files);
+                const dropFiles = await dragFiles(files);
+                await dropFiles(".o-Dropzone");
             },
         },
         {
@@ -122,10 +121,13 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             content: "Verify admin template is NOT listed",
             trigger: ".mail-composer-template-dropdown.popover",
             run() {
-                const hasAdminTemplate = [...document.querySelectorAll('.o-dropdown-item')]
-                    .some(item => item.textContent.includes("Test template for admin"));
+                const hasAdminTemplate = [...document.querySelectorAll(".o-dropdown-item")].some(
+                    (item) => item.textContent.includes("Test template for admin")
+                );
                 if (hasAdminTemplate) {
-                    console.error("Template assigned to the admin is visible to a non-assigned user! This should not happen.");
+                    console.error(
+                        "Template assigned to the admin is visible to a non-assigned user! This should not happen."
+                    );
                 }
             },
         },

@@ -1,6 +1,5 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { dragenterFiles } from "@web/../tests/utils";
 
 const CLICK_ON_CHAT_STEP = "click-on-chat-action";
 
@@ -46,9 +45,12 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         },
         {
             trigger: ".o-mail-Meeting [title='Chat']:not(:has(.badge))",
-            async run({ waitFor }) {
+        },
+        {
+            trigger: ".o-mail-Meeting .o-mail-ActionPanel",
+            async run({ dragFiles, waitFor }) {
                 const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
-                await dragenterFiles(".o-mail-Meeting .o-mail-ActionPanel", files);
+                await dragFiles(files);
                 // Ensure other dropzones such as discuss or chat window dropzones are not active in meeting view.
                 await waitFor(".o-Dropzone", { only: true });
             },
