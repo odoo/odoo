@@ -330,10 +330,13 @@
                                                     t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                                     <span t-if="not hide_prices" t-out="grouped_line['price_subtotal']" t-options="{'widget': 'float', 'decimal_precision': 'Product Price'}" class="text-nowrap">9.00</span>
                                                 </td>
-                                                <td name="td_discount_grouped" t-if="display_discount and grouped_line['display_type'] == 'product'" colspan="1" class="d-none d-md-table-cell"/>
+                                                <td name="td_discount_grouped"
+                                                    t-if="display_discount and grouped_line['display_type'] == 'product'"
+                                                    colspan="1"
+                                                    t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"/>
                                                 <td name="td_taxes_grouped"
                                                     colspan="1"
-                                                    t-if="(display_taxes and grouped_line['display_type'] in ('line_section', 'line_subsection') and grouped_line.get('taxes')) or grouped_line['display_type'] == 'product'"
+                                                    t-if="display_taxes and (grouped_line['display_type'] == 'product' or grouped_line.get('taxes'))"
                                                     t-attf-class="text-end {{'d-none d-md-table-cell' if report_type == 'html' else ''}}">
                                                     <span t-if="grouped_line.get('taxes')" t-out="','.join(grouped_line['taxes'])" id="grouped_line_tax_ids">Tax 15%</span>
                                                 </td>
