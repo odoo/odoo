@@ -616,7 +616,8 @@ class StockPicking(models.Model):
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
-        check_company=True, index='btree_not_null')
+        check_company=True, index='btree_not_null', tracking=True)
+    zip = fields.Char(related='partner_id.zip', string='Zip', search="_search_zip")
     company_id = fields.Many2one(
         'res.company', string='Company', related='picking_type_id.company_id',
         readonly=True, store=True, index=True)
@@ -945,6 +946,9 @@ class StockPicking(models.Model):
         }
         for picking in self:
             picking.has_scrap_move = picking._origin in result
+
+    def _search_zip(self, operator, value):
+        return [('partner_id.zip', operator, value)]
 
     def _compute_packages_count(self):
         done_pickings = self.filtered(lambda picking: picking.state == 'done')

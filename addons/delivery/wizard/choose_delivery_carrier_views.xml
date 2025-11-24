@@ -18,7 +18,7 @@
                         <field name="order_id" invisible="1"/>
                         <field name='delivery_price' invisible="1"/>
                         <label for="display_price"/>
-                        <div class="o_row">
+                        <div class="o_row" name="display_price">
                             <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not carrier_id"/>
                             <button name="update_price" type="object" invisible="delivery_type in ('fixed', 'base_on_rule')">
                                 <i class="oi oi-arrow-right me-1"/>Get rate

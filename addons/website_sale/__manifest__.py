@@ -71,6 +71,9 @@
         'views/website_sale_visitor_views.xml',
         'views/website_views.xml',
 
+        # Wizards
+        'wizard/choose_delivery_carrier_views.xml',
+
         # Website snippets
         'templates/snippets/snippets.xml',
         'templates/snippets/product_snippet_template_data.xml',
@@ -177,6 +180,7 @@
             'website_sale/static/src/js/date_filter_button/**/*',
             'website_sale/static/src/views/**/*',
             'website_sale/static/src/js/location_selector/**/*',
+            'website_sale/static/src/js/pickup_location_many2one/**/*',
         ],
         'web.assets_web_dark': [
             'website_sale/static/src/js/dashboard/**/*.dark.scss',

@@ -7,21 +7,22 @@ from .delivery import Delivery
 class LocationSelector(Delivery):
 
     @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
-    def website_sale_get_pickup_locations(self, order_id=None, **kwargs):
+    def website_sale_get_pickup_locations(self, res_model=None, res_id=None, **kwargs):
         """ Fetch the record or the order from the request and return the pickup locations close to a given zip code.
 
-        :param int order_id: The sales order, as a `sale.order` id.
+        :param str res_model: The model of the calling record, either `sale.order`, `stock.picking` or `choose.delivery.carrier`.
+        :param int res_id: The id of the calling record.
         :return: The close pickup locations data.
         :rtype: dict
         """
-        order = request.env['sale.order'].browse(order_id).sudo() if order_id else request.cart
+        record = request.env[res_model].browse(res_id).sudo() if res_id else request.cart
         if request.geoip.country_code:
             country = request.env['res.country'].search(
                 [('code', '=', request.geoip.country_code)], limit=1,
             )
         else:
-            country = order.partner_id.country_id
-        return order._get_pickup_locations(country=country, **kwargs)
+            country = record.partner_id.country_id
+        return record.carrier_id._get_pickup_locations(country=country, **kwargs)
 
     @route('/website_sale/set_pickup_location', type='jsonrpc', auth='public', website=True)
     def website_sale_set_pickup_location(self, pickup_location_data):
@@ -32,5 +33,5 @@ class LocationSelector(Delivery):
         :rtype: dict
         """
         order_sudo = request.cart
-        order_sudo._set_pickup_location(pickup_location_data)
+        order_sudo.set_pickup_location(pickup_location_data)
         return self._order_summary_values(order_sudo)

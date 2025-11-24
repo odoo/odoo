@@ -8,7 +8,7 @@ from odoo.addons.website_sale.controllers.location_selector import LocationSelec
 class InStoreDelivery(LocationSelector):
 
     @route()
-    def website_sale_get_pickup_locations(self, order_id=None, **kwargs):
+    def website_sale_get_pickup_locations(self, res_model=None, res_id=None, **kwargs):
         """ Override of `website_sale` to set the pickup in store delivery method on the order in
         order to retrieve pickup locations when called from the product page. If there is no order
         create a temporary one to display pickup locations.
@@ -17,12 +17,10 @@ class InStoreDelivery(LocationSelector):
             order_sudo = request.cart
             in_store_dm = request.website.sudo().in_store_dm_id
             if not order_sudo:  # Pickup location requested without a cart creation.
-                # Create a temporary order to fetch pickup locations.
-                temp_order = request.env['sale.order'].new({'carrier_id': in_store_dm.id})
-                return temp_order.sudo()._get_pickup_locations(**kwargs)  # Skip super
+                return in_store_dm._get_pickup_locations(**kwargs)  # Skip super
             elif order_sudo.carrier_id.delivery_type != 'in_store':
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
-        return super().website_sale_get_pickup_locations(order_id=order_id, **kwargs)
+        return super().website_sale_get_pickup_locations(res_model=res_model, res_id=res_id, **kwargs)
 
     @route('/shop/set_click_and_collect_location', type='jsonrpc', auth='public', website=True)
     def shop_set_click_and_collect_location(self, pickup_location_data):
@@ -40,7 +38,7 @@ class InStoreDelivery(LocationSelector):
         if order_sudo.carrier_id.delivery_type != 'in_store':
             in_store_dm = request.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
-        order_sudo._set_pickup_location(pickup_location_data)
+        order_sudo.set_pickup_location(pickup_location_data)
 
     def _get_additional_delivery_context(self):
         """ Override of `website_sale` to include the default pickup location data for in-store

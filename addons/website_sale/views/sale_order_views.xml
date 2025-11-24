@@ -296,6 +296,21 @@
             <field name="team_id" position="after">
                 <field name="website_id" invisible="not website_id" groups="website.group_multi_website"/>
             </field>
+            <field name="user_id" position="after">
+                <field name="carrier_id" invisible="1"/> <!-- will be used by pickup_location_field widget-->
+            </field>
+            <label for='partner_shipping_id' position="attributes">
+                <attribute name="invisible" add="is_pickup_delivery" separator="or"/>
+            </label>
+            <label for='partner_shipping_id' position="after">
+                <label for="partner_shipping_id" string="Pickup Point" invisible="not is_pickup_delivery"/>
+            </label>
+            <field name='partner_shipping_id' position="attributes">
+                <attribute name="invisible" add="is_pickup_delivery" separator="or"/>
+            </field>
+            <field name='partner_shipping_id' position="after">
+                <field name="partner_shipping_id" invisible="not is_pickup_delivery" widget="pickup_location_many2one" context="{'partner_zip_code': partner_zip_code}"/>
+            </field>
         </field>
     </record>
 </odoo>

@@ -12,6 +12,8 @@ export class LocationSelectorDialog extends Component {
     static template = 'website_sale.locationSelector.dialog';
     static props = {
         isFrontend: { type: Boolean, optional: true },
+        parentModel: { type: String, optional: true },
+        parentId: { type: Number, optional: true },
         zipCode: String,
         selectedLocationId: { type: String, optional: true },
         save: Function,
@@ -81,7 +83,11 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     _getLocationsParams() {
-        return { zip_code: this.state.zipCode };
+        return { 
+            zip_code: this.state.zipCode,
+            res_model: this.props.parentModel,
+            res_id: this.props.parentId
+         };
     }
 
     //--------------------------------------------------------------------------

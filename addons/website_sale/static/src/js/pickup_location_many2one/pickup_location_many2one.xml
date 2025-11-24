@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website_sale.PickupLocationField">
+        <div class="d-flex align-items-center">
+            <Many2One t-props="m2oProps"/>
+            <button
+                type="button"
+                class="btn btn-secondary px-2 py-1 ms-2"
+                tabindex="-1"
+                draggable="false"
+                t-on-click="onSelectLocation"
+                t-att-disabled="isButtonDisabled()"
+            >
+                <i t-attf-class="fa {{this.state.isLoading ? 'fa-circle-o-notch fa-spin' : 'fa-pencil'}}"/>
+            </button>
+        </div>
+    </t>
+</templates>
