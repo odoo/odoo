@@ -800,6 +800,7 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_id,
             'currency_id': self.order_id.currency_id or company.currency_id,
             'rate': self.order_id.currency_rate,
+            'name': self.name,
         }
         if self._is_global_discount():
             base_values['special_type'] = 'global_discount'
