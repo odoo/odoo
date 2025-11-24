@@ -1,4 +1,8 @@
-import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("shop_editor", {
     url: "/shop",
@@ -49,3 +53,42 @@ registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
     content: "Check that the ribbon was properly saved",
     trigger: ':iframe .oe_product:first .o_ribbon:contains("Sale")',
 }]);
+
+registerWebsitePreviewTour("shop_editor_no_alternative_products_visibility_tour", {
+    url: "/shop",
+    edition: false,
+}, () => [
+    {
+        content: "Select the product with alternative products",
+        trigger: ':iframe form.oe_product_cart:has(.o_wsale_product_information_text a[content="product_with_alternative"]) a',
+        run: "click",
+    },
+    ...clickOnEditAndWaitEditMode(),
+    {
+        trigger: ':iframe .s_dynamic_snippet_title h4',
+        run: "click",
+    },
+    {
+        content: "Edit the alternative products section header",
+        trigger: `:iframe .container[contenteditable="true"] h4`,
+        run: function () {
+            this.anchor.textContent = "Edited Alternative"
+            this.anchor.dispatchEvent(new Event("input", { bubbles: true }));
+        },
+    },
+    ...clickOnSave(),
+    {
+        content: "Navigate back to shop page",
+        trigger: ':iframe .breadcrumb-item a',
+        run: "click",
+    },
+    {
+        content: "Select the product without alternative products",
+        trigger: ':iframe form.oe_product_cart:has(.o_wsale_product_information_text a[content="product_without_alternative"]) a',
+        run: "click",
+    },
+    {
+        content: "Ensure alternative products section is hidden",
+        trigger: ':iframe .s_dynamic_snippet_products:not(:visible)',
+    }
+]);
