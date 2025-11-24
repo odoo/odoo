@@ -119,6 +119,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 WHERE payment.payment_method_id = method.id
                     AND payment.id IN %(payment_ids)s
                 GROUP BY method.name, method.is_cash_count, payment.session_id, method.id, journal_id
+                ORDER BY method.id, payment.session_id
             """, method_name=method_name, payment_ids=tuple(payment_ids)))
             payments = self.env.cr.dictfetchall()
         else:
