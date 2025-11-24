@@ -73,7 +73,7 @@ $google-font-path: './google';
 
 @mixin google-font($family, $type, $weight, $style, $file_type) {
     @font-face {
-        $style_name: if($weight == 400 and $style == italic, "Italic", "#{$type}#{if($style != normal, $style, "")}");
+        $style_name: if($weight == 400 and $style == italic, "Italic", "#{$type}#{if($style != normal, 'Italic', '')}");
         $format: if($file_type == 'ttf', 'truetype', $file_type);
         $file_name: "#{$family}-#{$style_name}.#{$file_type}";
 
