@@ -3,6 +3,17 @@ import { Mutex } from "./concurrency";
 const VERSION_TABLE = "__DBVersion__";
 const VERSION_KEY = "__version__";
 
+export class IDBQuotaExceededError extends Error {}
+
+function formatStorageSize(size) {
+    const units = ["b", "Kb", "Mb", "Gb"];
+    while (size >= 1000 && units.length > 1) {
+        size /= 1000;
+        units.splice(0, 1);
+    }
+    return `${size.toFixed(2)}${units[0]}`;
+}
+
 export class IndexedDB {
     constructor(name, version) {
         this.name = name;
@@ -43,7 +54,7 @@ export class IndexedDB {
         this._tables.add(table);
         return this.execute((db) => {
             if (db) {
-                this._write(db, table, key, value);
+                return this._write(db, table, key, value);
             }
         });
     }
@@ -127,7 +138,7 @@ export class IndexedDB {
     }
 
     async _execute(callback, idbVersion) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const request = indexedDB.open(this.name, idbVersion);
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
@@ -144,10 +155,22 @@ export class IndexedDB {
                     const version = db.version + 1;
                     return this._execute(callback, version).then(resolve);
                 }
-                Promise.resolve(callback(db)).then((result) => {
-                    db.close();
-                    resolve(result);
-                });
+                Promise.resolve(callback(db))
+                    .then(resolve)
+                    .catch(async (e) => {
+                        if (e.name === "QuotaExceededError") {
+                            const { quota, usage } = await navigator.storage.estimate();
+                            console.error(
+                                `IndexedDB error: Quota Exceeded (${formatStorageSize(
+                                    usage
+                                )} out of ${formatStorageSize(quota)} used)`
+                            );
+                            reject(new IDBQuotaExceededError());
+                        } else {
+                            reject(e);
+                        }
+                    })
+                    .finally(() => db.close());
             };
             request.onerror = (event) => {
                 console.error(`IndexedDB error: ${event.target.error?.message}`);
@@ -158,14 +181,15 @@ export class IndexedDB {
 
     async _write(db, table, key, record) {
         return new Promise((resolve, reject) => {
+            // AAB: do we care about write performance?
             // Relaxed durability improves the write performances
             // https://nolanlawson.com/2021/08/22/speeding-up-indexeddb-reads-and-writes/
             // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/durability
             const transaction = db.transaction(table, "readwrite", { durability: "relaxed" });
-            const objectStore = transaction.objectStore(table);
-            const request = objectStore.put(record, key); // put to allow updates
-            request.onsuccess = resolve;
-            transaction.onerror = () => reject(transaction.error);
+            transaction.objectStore(table).put(record, key); // put to allow updates
+            transaction.onerror = (ev) => reject(ev.target.error); // firefox (DOMException)
+            transaction.onabort = (ev) => reject(ev.target.error); // chrome (QuotaExceededError)
+            transaction.oncomplete = resolve;
 
             // Force the changes to be committed to the database asap
             // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/commit
