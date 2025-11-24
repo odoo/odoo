@@ -168,3 +168,21 @@ test("execute action in new window - 2", async () => {
     await contains("a[type=action]").click({ ctrlKey: true });
     expect.verifySteps([{ newWindow: true }]);
 });
+
+test("default label for button special cancel", async () => {
+    class MyComponent extends Component {
+        static components = { ViewButton };
+        static template = xml`
+                <div t-ref="root" class="myComponent">
+                    <ViewButton tag="'button'" clickParams="{ special:'cancel' }"/>
+                </div>`;
+        static props = ["*"];
+        setup() {
+            const rootRef = useRef("root");
+            useViewButtons(rootRef);
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect("button[special=cancel]").toHaveText("Discard");
+});
