@@ -1643,14 +1643,15 @@
                     <filter string="To Check" name="to_check" domain="[('checked', '=', False), ('state', '!=', 'draft')]"/>
                     <separator/>
                     <!-- not_paid & partial -->
-                    <filter name="open" string="To pay" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
+                    <filter name="open" string="To pay" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial')), ('move_type', '!=', 'entry')]"/>
                     <!-- in_payment & paid -->
                     <filter name="in_payment" string="In payment" domain="[('state', '=', 'posted'), ('payment_state', '=', 'in_payment')]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
                         ('invoice_date_due', '&lt;', time.strftime('%Y-%m-%d')),
                         ('state', '=', 'posted'),
-                        ('payment_state', 'in', ('not_paid', 'partial'))
+                        ('payment_state', 'in', ('not_paid', 'partial')),
+                        ('move_type', '!=', 'entry')
                     ]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
