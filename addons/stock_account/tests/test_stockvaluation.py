@@ -2936,3 +2936,16 @@ class TestStockValuation(TestStockValuationCommon):
         move.picked = True
         move.with_user(self.inventory_user)._action_done()
         self.assertEqual(move.state, 'done')
+
+    def test_product_value_details_computation_with_move_zero_quantity(self):
+        """Test that the current value details computation is skipped when the move quantity is zero."""
+        move = self._make_in_move(self.product_avco, 0.0)
+        self.assertEqual(move.quantity, 0.0)
+
+        product_value = self.env['product.value'].create({
+            'move_id': move.id,
+            'value': move.value_manual,
+        })
+        product_value_form = Form(product_value)
+
+        self.assertFalse(product_value_form.current_value_details)
