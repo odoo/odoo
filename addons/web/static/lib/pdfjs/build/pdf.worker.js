@@ -354,7 +354,7 @@ function info(msg) {
 }
 function warn(msg) {
   if (verbosity >= VerbosityLevel.WARNINGS) {
-    console.warn(`Warning: ${msg}`);
+    console.log(`Warning: ${msg}`);
   }
 }
 function unreachable(msg) {
