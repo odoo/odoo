@@ -8,11 +8,10 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, setInputFiles, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
-import { inputFiles } from "@web/../tests/utils";
 import { getService, mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -124,7 +123,8 @@ test("Adding attachments", async () => {
     await click(`${env1.selector} .o-mail-Message button[title='Edit']`);
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer button[title='More Actions']`);
     await click(`${env1.selector} .o_popover button[name='upload-files']`);
-    await inputFiles(`${env1.selector} .o-mail-Message .o-mail-Composer .o_input_file`, [file]);
+    await click(`${env1.selector} .o-mail-Message .o-mail-Composer .o_input_file`);
+    await setInputFiles([file]);
     await contains(
         `${env1.selector} .o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt) .fa-check`
     );
