@@ -288,6 +288,22 @@ describe("restaurant pos_store.js", () => {
             { count: 2, name: "Category 2" },
             { count: 1, name: "Message" },
         ]);
+        // when order is not selected
+        store.selectedOrderUuid = false;
+        expect(store.categoryCount).toBeEmpty();
+    });
+
+    test("_computeCategoryCount", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        expect(store._computeCategoryCount()).toEqual([
+            { count: 3, name: "Category 1" },
+            { count: 2, name: "Category 2" },
+        ]);
+        expect(store._computeCategoryCount(order)).toEqual([
+            { count: 3, name: "Category 1" },
+            { count: 2, name: "Category 2" },
+        ]);
     });
 
     test("getDefaultSearchDetails", async () => {
