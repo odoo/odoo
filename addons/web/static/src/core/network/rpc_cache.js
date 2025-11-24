@@ -1,5 +1,5 @@
 import { Deferred } from "@web/core/utils/concurrency";
-import { IndexedDB } from "@web/core/utils/indexed_db";
+import { IDBQuotaExceededError, IndexedDB } from "@web/core/utils/indexed_db";
 import { deepCopy } from "../utils/objects";
 
 /**
@@ -24,6 +24,7 @@ function validateSettings({ type, update }) {
 }
 
 const CRYPTO_ALGO = "AES-GCM";
+const MAX_STORAGE_SIZE = 2 * 1024 * 1024 * 1024; // 2Gb
 
 class Crypto {
     constructor(secret) {
@@ -112,6 +113,15 @@ export class RPCCache {
         this.indexedDB = new IndexedDB(name, version + CRYPTO_ALGO);
         this.ramCache = new RamCache();
         this.pendingRequests = {};
+        this.checkSize(); // we want to control the disk space used by Odoo
+    }
+
+    async checkSize() {
+        const { usage } = await navigator.storage.estimate();
+        if (usage > MAX_STORAGE_SIZE) {
+            console.log(`Deleting indexedDB database as maximum storage size is reached`);
+            return this.indexedDB.deleteDatabase();
+        }
     }
 
     /**
@@ -155,7 +165,13 @@ export class RPCCache {
                     this.ramCache.write(table, key, Promise.resolve(result));
                     if (type === "disk") {
                         this.crypto.encrypt(result).then((encryptedResult) => {
-                            this.indexedDB.write(table, key, encryptedResult);
+                            this.indexedDB.write(table, key, encryptedResult).catch((e) => {
+                                if (e instanceof IDBQuotaExceededError) {
+                                    this.indexedDB.deleteDatabase();
+                                } else {
+                                    throw e;
+                                }
+                            });
                         });
                     }
                     return result;
