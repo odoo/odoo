@@ -4,15 +4,14 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class BuckarooCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.buckaroo = cls._prepare_provider('buckaroo', update_values={
-            'buckaroo_website_key': 'dummy',
-            'buckaroo_secret_key': 'test_key_123',
-        })
+        cls.buckaroo = cls._prepare_provider(
+            'buckaroo',
+            update_values={'buckaroo_website_key': 'dummy', 'buckaroo_secret_key': 'test_key_123'},
+        )
 
         # Override defaults
         cls.provider = cls.buckaroo

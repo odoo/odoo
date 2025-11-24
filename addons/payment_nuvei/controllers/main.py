@@ -11,7 +11,6 @@ from odoo.tools import consteq
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -35,9 +34,7 @@ class NuveiController(http.Controller):
         tx_data = data or {'invoice_id': tx_ref}
         tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('nuvei', tx_data)
         if tx_sudo:
-            self._verify_signature(
-                tx_sudo, data, error_access_token=error_access_token
-            )
+            self._verify_signature(tx_sudo, data, error_access_token=error_access_token)
             tx_sudo._process('nuvei', data)
         return request.redirect('/payment/status')
 
@@ -75,17 +72,17 @@ class NuveiController(http.Controller):
             ref = tx_sudo.reference
             if not payment_utils.check_access_token(error_access_token, ref):
                 _logger.warning("Received cancel/error with invalid access token.")
-                raise Forbidden()
+                raise Forbidden
         else:  # The payment went through.
             received_signature = payment_data.get('advanceResponseChecksum')
             if not received_signature:
                 _logger.warning("Received payment data with missing signature")
-                raise Forbidden()
+                raise Forbidden
 
             # Compare the received signature with the expected signature computed from the data.
             expected_signature = tx_sudo.provider_id._nuvei_calculate_signature(
-                payment_data, incoming=True,
+                payment_data, incoming=True
             )
             if not consteq(received_signature, expected_signature):
                 _logger.warning("Received payment data with invalid signature")
-                raise Forbidden()
+                raise Forbidden

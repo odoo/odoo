@@ -13,5 +13,5 @@ PAYMENT_STATUS_MAPPING = {
 # The codes of the payment methods to activate when DPO is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods
-    'dpo',
+    'dpo'
 }

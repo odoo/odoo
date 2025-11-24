@@ -8,7 +8,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.const import PAYMENT_STATUS_MAPPING
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -20,7 +19,7 @@ class PaymentTransaction(models.Model):
     paypal_type = fields.Char(string="PayPal Transaction Type")
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of `payment` to return the Paypal-specific processing values.
+        """Override of `payment` to return the Paypal-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -48,7 +47,7 @@ class PaymentTransaction(models.Model):
         return {'order_id': order_data['id']}
 
     def _paypal_prepare_order_payload(self):
-        """ Prepare the payload for the Paypal create order request.
+        """Prepare the payload for the Paypal create order request.
 
         :return: The requested payload to create a Paypal order.
         :rtype: dict
@@ -69,30 +68,20 @@ class PaymentTransaction(models.Model):
                 {
                     'reference_id': self.reference,
                     'description': f'{self.company_id.name}: {self.reference}',
-                    'amount': {
-                        'currency_code': self.currency_id.name,
-                        'value': self.amount,
-                    },
-                    'payee':  {
-                        'display_data': {
-                            'brand_name': self.provider_id.company_id.name,
-                        },
+                    'amount': {'currency_code': self.currency_id.name, 'value': self.amount},
+                    'payee': {
+                        'display_data': {'brand_name': self.provider_id.company_id.name},
                         'email_address': self.provider_id.paypal_email_account,
                     },
                     **shipping_address_vals,
-                },
+                }
             ],
             'payment_source': {
                 'paypal': {
-                    'experience_context': {
-                        'shipping_preference': shipping_preference,
-                    },
-                    'name': {
-                        'given_name': partner_first_name,
-                        'surname': partner_last_name,
-                    },
+                    'experience_context': {'shipping_preference': shipping_preference},
+                    'name': {'given_name': partner_first_name, 'surname': partner_last_name},
                     **invoice_address_vals,
-                },
+                }
             },
         }
         # PayPal does not accept None set to fields and to avoid users getting errors when email
@@ -117,15 +106,13 @@ class PaymentTransaction(models.Model):
         amount_data = payment_data.get('amount', {})
         amount = amount_data.get('value')
         currency_code = amount_data.get('currency_code')
-        return {
-            'amount': float(amount),
-            'currency_code': currency_code,
-        }
+        return {'amount': float(amount), 'currency_code': currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'paypal':
-            return super()._apply_updates(payment_data)
+            super()._apply_updates(payment_data)
+            return
 
         if not payment_data:
             self._set_canceled(state_message=_("The customer left the payment page."))
@@ -135,18 +122,23 @@ class PaymentTransaction(models.Model):
         txn_id = payment_data.get('id')
         txn_type = payment_data.get('txn_type')
         if not all((txn_id, txn_type)):
-            self._set_error(_(
-                "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
-                txn_id=txn_id, txn_type=txn_type
-            ))
+            self._set_error(
+                _(
+                    "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
+                    txn_id=txn_id,
+                    txn_type=txn_type,
+                )
+            )
             return
+
         self.provider_reference = txn_id
         self.paypal_type = txn_type
 
         # Force PayPal as the payment method if it exists.
-        self.payment_method_id = self.env['payment.method'].search(
-            [('code', '=', 'paypal')], limit=1
-        ) or self.payment_method_id
+        self.payment_method_id = (
+            self.env['payment.method'].search([('code', '=', 'paypal')], limit=1)
+            or self.payment_method_id
+        )
 
         # Update the payment state.
         payment_status = payment_data.get('status')
@@ -160,6 +152,7 @@ class PaymentTransaction(models.Model):
         else:
             _logger.info(
                 "Received data with invalid payment status (%s) for transaction %s.",
-                payment_status, self.reference
+                payment_status,
+                self.reference,
             )
             self._set_error(_("Received data with invalid payment status: %s", payment_status))

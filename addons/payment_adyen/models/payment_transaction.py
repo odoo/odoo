@@ -8,7 +8,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import const
 from odoo.addons.payment_adyen import utils as adyen_utils
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -18,7 +17,7 @@ class PaymentTransaction(models.Model):
     # === BUSINESS METHODS - PRE-PROCESSING === #
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of payment to return Adyen-specific processing values.
+        """Override of payment to return Adyen-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -38,8 +37,8 @@ class PaymentTransaction(models.Model):
                 processing_values['reference'],
                 converted_amount,
                 self.currency_id.id,
-                processing_values['partner_id']
-            )
+                processing_values['partner_id'],
+            ),
         }
 
     def _send_payment_request(self):
@@ -56,10 +55,7 @@ class PaymentTransaction(models.Model):
         )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
-            'amount': {
-                'value': converted_amount,
-                'currency': self.currency_id.name,
-            },
+            'amount': {'value': converted_amount, 'currency': self.currency_id.name},
             'applicationInfo': {
                 'externalPlatform': {
                     'name': 'Odoo',
@@ -69,9 +65,7 @@ class PaymentTransaction(models.Model):
             },
             'countryCode': partner_country_code,
             'reference': self.reference,
-            'paymentMethod': {
-                'storedPaymentMethodId': self.token_id.provider_ref,
-            },
+            'paymentMethod': {'storedPaymentMethodId': self.token_id.provider_ref},
             'shopperReference': self.token_id.adyen_shopper_reference,
             'recurringProcessingModel': 'Subscription',
             'shopperIP': payment_utils.get_customer_ip_address(),
@@ -80,11 +74,13 @@ class PaymentTransaction(models.Model):
             'shopperName': adyen_utils.format_partner_name(self.partner_name),
             'telephoneNumber': self.partner_phone,
             **adyen_utils.include_partner_addresses(self),
-            'lineItems': [{
-                'amountIncludingTax': converted_amount,
-                'quantity': '1',
-                'description': self.reference,
-            }],
+            'lineItems': [
+                {
+                    'amountIncludingTax': converted_amount,
+                    'quantity': '1',
+                    'description': self.reference,
+                }
+            ],
         }
 
         # Force the capture delay on Adyen side if the provider is not configured for capturing
@@ -104,7 +100,7 @@ class PaymentTransaction(models.Model):
             json=data,
             idempotency_key=payment_utils.generate_idempotency_key(
                 self, scope='payment_request_token'
-            )
+            ),
         )
         self._process('adyen', response_content)
 
@@ -119,28 +115,25 @@ class PaymentTransaction(models.Model):
         )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
-            'amount': {
-                'value': converted_amount,
-                'currency': self.currency_id.name,
-            },
+            'amount': {'value': converted_amount, 'currency': self.currency_id.name},
             'reference': self.reference,
         }
 
         response_content = self._send_api_request(
-            'POST',
-            '/payments/{}/captures',
-            json=data,
-            endpoint_param=self.provider_reference,
+            'POST', '/payments/{}/captures', json=data, endpoint_param=self.provider_reference
         )
 
         # Process the capture request response.
         status = response_content.get('status')
         formatted_amount = format_amount(self.env, self.amount, self.currency_id)
         if status == 'received':
-            self._log_message_on_linked_documents(_(
-                "The capture request of %(amount)s for transaction %(ref)s has been sent.",
-                amount=formatted_amount, ref=self.reference
-            ))
+            self._log_message_on_linked_documents(
+                _(
+                    "The capture request of %(amount)s for transaction %(ref)s has been sent.",
+                    amount=formatted_amount,
+                    ref=self.reference,
+                )
+            )
 
         # The PSP reference associated with this capture request is different from the PSP
         # reference associated with the original payment request.
@@ -156,19 +149,18 @@ class PaymentTransaction(models.Model):
             'reference': self.reference,
         }
         response_content = self._send_api_request(
-            'POST',
-            '/payments/{}/cancels',
-            json=data,
-            endpoint_param=self.provider_reference,
+            'POST', '/payments/{}/cancels', json=data, endpoint_param=self.provider_reference
         )
 
         # Process the void request response.
         status = response_content.get('status')
         if status == 'received':
-            self._log_message_on_linked_documents(_(
-                "A request was sent to void the transaction %(reference)s.",
-                reference=self.reference
-            ))
+            self._log_message_on_linked_documents(
+                _(
+                    "A request was sent to void the transaction %(reference)s.",
+                    reference=self.reference,
+                )
+            )
 
         # The PSP reference associated with this void request is different from the PSP
         # reference associated with the original payment request.
@@ -183,14 +175,11 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(
             -self.amount,  # The amount is negative for refund transactions
             self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name)
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
         )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
-            'amount': {
-                'value': converted_amount,
-                'currency': self.currency_id.name,
-            },
+            'amount': {'value': converted_amount, 'currency': self.currency_id.name},
             'reference': self.reference,
         }
         response_content = self._send_api_request(
@@ -234,9 +223,10 @@ class PaymentTransaction(models.Model):
             # void. We keep the second one only for child transactions. For full capture/void, no
             # child transaction are created. Thus, we first look for the source transaction before
             # checking if we need to find/create a child transaction.
-            source_tx = self.search(
-                [('provider_reference', '=', source_reference), ('provider_code', '=', 'adyen')]
-            )
+            source_tx = self.search([
+                ('provider_reference', '=', source_reference),
+                ('provider_code', '=', 'adyen'),
+            ])
             if source_tx:
                 payment_data_amount = payment_data.get('amount', {}).get('value')
                 converted_notification_amount = payment_utils.to_major_currency_units(
@@ -255,11 +245,14 @@ class PaymentTransaction(models.Model):
                         # If the void was requested expecting a certain amount but, in the meantime,
                         # others captures that Odoo was unaware of were done, the amount voided will
                         # be different from the amount of the existing transaction.
-                        tx._set_error(_(
-                            "The amount processed by Adyen for the transaction %s is different than"
-                            " the one requested. Another transaction is created with the correct"
-                            " amount.", tx.reference
-                        ))
+                        tx._set_error(
+                            _(
+                                "The amount processed by Adyen for the transaction %s is different"
+                                " than the one requested. Another transaction is created with the"
+                                " correct amount.",
+                                tx.reference,
+                            )
+                        )
                         tx = self.env['payment.transaction']
                     if not tx:  # Partial capture/void initiated from Adyen or with a wrong amount.
                         # Manually create a child transaction with a new reference. The reference of
@@ -272,14 +265,16 @@ class PaymentTransaction(models.Model):
             # The refund may be initiated from Adyen, so we can't trust the reference, which could
             # be identical to another existing transaction. We find the transaction based on the
             # provider reference.
-            tx = self.search(
-                [('provider_reference', '=', provider_reference), ('provider_code', '=', 'adyen')]
-            )
+            tx = self.search([
+                ('provider_reference', '=', provider_reference),
+                ('provider_code', '=', 'adyen'),
+            ])
             if not tx:  # The refund was initiated from Adyen
                 # Find the source transaction based on the original reference
-                source_tx = self.search(
-                    [('provider_reference', '=', source_reference), ('provider_code', '=', 'adyen')]
-                )
+                source_tx = self.search([
+                    ('provider_reference', '=', source_reference),
+                    ('provider_code', '=', 'adyen'),
+                ])
                 if source_tx:
                     # Manually create a refund transaction with a new reference. The reference of
                     # the refund transaction was personalized from Adyen and could be identical to
@@ -336,10 +331,7 @@ class PaymentTransaction(models.Model):
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
         )
         currency_code = amount_data.get('currency')
-        return {
-            'amount': amount,
-            'currency_code': currency_code,
-        }
+        return {'amount': amount, 'currency_code': currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of payment to update the transaction based on the payment data."""
@@ -382,7 +374,7 @@ class PaymentTransaction(models.Model):
         elif payment_state in const.RESULT_CODES_MAPPING['done']:
             if not self.provider_id.capture_manually:
                 self._set_done()
-            else:  # The payment was configured for manual capture.
+            else:  # The payment was configured for manual capture. # noqa: PLR5501
                 # Differentiate the state based on the event code.
                 if event_code == 'AUTHORISATION':
                     self._set_authorized()
@@ -399,7 +391,8 @@ class PaymentTransaction(models.Model):
             if event_code in ['AUTHORISATION', 'REFUND']:
                 _logger.warning(
                     "The transaction %s underwent an error. reason: %s.",
-                    self.reference, refusal_reason,
+                    self.reference,
+                    refusal_reason,
                 )
                 self._set_error(
                     _("An error occurred during the processing of your payment. Please try again.")
@@ -407,7 +400,8 @@ class PaymentTransaction(models.Model):
             elif event_code == 'CANCELLATION':
                 _logger.warning(
                     "The void of the transaction %s failed. reason: %s.",
-                    self.reference, refusal_reason,
+                    self.reference,
+                    refusal_reason,
                 )
                 if self.source_transaction_id:  # child tx => The event can't be retried.
                     self._set_error(_("The void of the transaction %s failed.", self.reference))
@@ -418,26 +412,25 @@ class PaymentTransaction(models.Model):
             else:  # 'CAPTURE', 'CAPTURE_FAILED'
                 _logger.warning(
                     "The capture of the transaction %s failed. reason: %s.",
-                    self.reference, refusal_reason,
+                    self.reference,
+                    refusal_reason,
                 )
                 if self.source_transaction_id:  # child_tx => The event can't be retried.
-                    self._set_error(_(
-                        "The capture of the transaction %s failed.", self.reference
-                    ))
+                    self._set_error(_("The capture of the transaction %s failed.", self.reference))
                 else:  # source tx with failed capture stays in its state, could be captured again
-                    self._log_message_on_linked_documents(_(
-                        "The capture of the transaction %s failed.", self.reference
-                    ))
+                    self._log_message_on_linked_documents(
+                        _("The capture of the transaction %s failed.", self.reference)
+                    )
         elif payment_state in const.RESULT_CODES_MAPPING['refused']:
             _logger.warning(
-                "the transaction %s was refused. reason: %s",
-                self.reference, refusal_reason
+                "the transaction %s was refused. reason: %s", self.reference, refusal_reason
             )
             self._set_error(_("Your payment was refused. Please try again."))
         else:  # Classify unsupported payment state as `error` tx state
             _logger.warning(
                 "received data for transaction %s with invalid payment state: %s",
-                self.reference, payment_state
+                self.reference,
+                payment_state,
             )
             self._set_error(
                 "Adyen: " + _("Received data with invalid payment state: %s", payment_state)

@@ -67,13 +67,13 @@ class PaymentCaptureWizard(models.TransientModel):
     @api.depends('authorized_amount', 'captured_amount', 'voided_amount')
     def _compute_available_amount(self):
         for wizard in self:
-            wizard.available_amount = wizard.authorized_amount \
-                                      - wizard.captured_amount \
-                                      - wizard.voided_amount
+            wizard.available_amount = (
+                wizard.authorized_amount - wizard.captured_amount - wizard.voided_amount
+            )
 
     @api.depends('available_amount')
     def _compute_amount_to_capture(self):
-        """ Set the default amount to capture to the amount available for capture. """
+        """Set the default amount to capture to the amount available for capture."""
         for wizard in self:
             wizard.amount_to_capture = wizard.available_amount
 
@@ -95,9 +95,11 @@ class PaymentCaptureWizard(models.TransientModel):
     @api.depends('transaction_ids')
     def _compute_has_draft_children(self):
         for wizard in self:
-            wizard.has_draft_children = bool(wizard.transaction_ids.child_transaction_ids.filtered(
-                lambda tx: tx.state == 'draft'
-            ))
+            wizard.has_draft_children = bool(
+                wizard.transaction_ids.child_transaction_ids.filtered(
+                    lambda tx: tx.state == 'draft'
+                )
+            )
 
     @api.depends('available_amount', 'amount_to_capture')
     def _compute_has_remaining_amount(self):
@@ -115,16 +117,23 @@ class PaymentCaptureWizard(models.TransientModel):
                 formatted_amount = format_amount(
                     self.env, wizard.available_amount, wizard.currency_id
                 )
-                raise ValidationError(_(
-                    "The amount to capture must be positive and cannot be superior to %s.",
-                    formatted_amount
-                ))
-            if not wizard.support_partial_capture \
-               and wizard.amount_to_capture != wizard.available_amount:
-                raise ValidationError(_(
-                    "Some of the transactions you intend to capture can only be captured in full. "
-                    "Handle the transactions individually to capture a partial amount."
-                ))
+                raise ValidationError(
+                    _(
+                        "The amount to capture must be positive and cannot be superior to %s.",
+                        formatted_amount,
+                    )
+                )
+
+            if (
+                not wizard.support_partial_capture
+                and wizard.amount_to_capture != wizard.available_amount
+            ):
+                raise ValidationError(
+                    _(
+                        "Some of the transactions you intend to capture can only be captured in"
+                        " full. Handle the transactions individually to capture a partial amount."
+                    )
+                )
 
     # === ACTION METHODS === #
 
@@ -143,9 +152,7 @@ class PaymentCaptureWizard(models.TransientModel):
             if remaining_amount_to_capture:
                 amount_to_capture = min(source_tx_remaining_amount, remaining_amount_to_capture)
                 # In sudo mode because we need to be able to read on provider fields.
-                processed_txs_sudo |= source_tx.sudo()._capture(
-                    amount_to_capture=amount_to_capture
-                )
+                processed_txs_sudo |= source_tx.sudo()._capture(amount_to_capture=amount_to_capture)
                 remaining_amount_to_capture -= amount_to_capture
                 source_tx_remaining_amount -= amount_to_capture
 

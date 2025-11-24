@@ -10,7 +10,7 @@ class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
     def _razorpay_get_limit_exceed_warning(self, amount, currency_id):
-        """ Return a warning message when the maximum payment amount is exceeded.
+        """Return a warning message when the maximum payment amount is exceeded.
 
         :param float amount: The amount to be paid.
         :param currency_id: The currency of the amount.

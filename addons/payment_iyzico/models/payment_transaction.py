@@ -10,7 +10,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_iyzico import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -34,9 +33,7 @@ class PaymentTransaction(models.Model):
         payload = self._iyzico_prepare_cf_initialize_payload()
         try:
             payment_link_data = self._send_api_request(
-                'POST',
-                'payment/iyzipos/checkoutform/initialize/auth/ecom',
-                json=payload,
+                'POST', 'payment/iyzipos/checkoutform/initialize/auth/ecom', json=payload
             )
         except ValidationError as error:
             self._set_error(str(error))
@@ -64,13 +61,15 @@ class PaymentTransaction(models.Model):
         return_url = f'{urljoin(base_url, const.PAYMENT_RETURN_ROUTE)}?{query_string_params}'
         return {
             # Dummy basket item as it is required in Iyzico.
-            'basketItems': [{
-                'id': self.id,
-                'price': self.amount,
-                'name': 'Odoo purchase',
-                'category1': 'Service',
-                'itemType': 'VIRTUAL',
-            }],
+            'basketItems': [
+                {
+                    'id': self.id,
+                    'price': self.amount,
+                    'name': 'Odoo purchase',
+                    'category1': 'Service',
+                    'itemType': 'VIRTUAL',
+                }
+            ],
             'billingAddress': {
                 'address': self.partner_address,
                 'contactName': self.partner_name,
@@ -104,10 +103,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'iyzico':
             return super()._extract_amount_data(payment_data)
 
-        return {
-            'amount': payment_data.get('price'),
-            'currency_code': payment_data.get('currency'),
-        }
+        return {'amount': payment_data.get('price'), 'currency_code': payment_data.get('currency')}
 
     def _apply_updates(self, payment_data):
         """Override of payment to update the transaction based on the payment data."""
@@ -136,14 +132,18 @@ class PaymentTransaction(models.Model):
         elif status in const.PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
         elif status in const.PAYMENT_STATUS_MAPPING['error']:
-            self._set_error(self.env._(
-                "An error occurred during processing of your payment (code %(code)s:"
-                " %(explanation)s). Please try again.",
-                code=status, explanation=payment_data.get('errorMessage'),
-            ))
+            self._set_error(
+                self.env._(
+                    "An error occurred during processing of your payment (code %(code)s:"
+                    " %(explanation)s). Please try again.",
+                    code=status,
+                    explanation=payment_data.get('errorMessage'),
+                )
+            )
         else:
             _logger.warning(
                 "Received data with invalid payment status (%s) for transaction with reference %s",
-                status, self.reference
+                status,
+                self.reference,
             )
             self._set_error(self.env._("Unknown status code: %s", status))

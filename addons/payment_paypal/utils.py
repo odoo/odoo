@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 def format_partner_address(partner):
-    """ Format the partner address values to PayPal address values. When provided, PayPal requires
+    """Format the partner address values to PayPal address values. When provided, PayPal requires
     at least a country code, so returns only an email address or an empty dict if partner lacks a
     `country_id`.
 
@@ -21,14 +22,12 @@ def format_partner_address(partner):
         'postal_code': partner.zip,
         'country_code': partner.country_code,
     }
-    address_vals.update(
-        address={key: value for key, value in address_mapping.items() if value},
-    )
+    address_vals.update(address={key: value for key, value in address_mapping.items() if value})
     return address_vals
 
 
 def format_shipping_address(tx_sudo):
-    """ Format the shipping address of the related sales order or invoice to the payload of the API
+    """Format the shipping address of the related sales order or invoice to the payload of the API
     request. If no related sales order or invoice exists, or the address is incomplete, the shipping
     address is not included.
 

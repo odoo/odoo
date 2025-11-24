@@ -1,14 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import tagged
+
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_redsys.tests.common import RedsysCommon
-
-from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
 class TestPaymentTransaction(RedsysCommon):
-
     def test_reference_uses_only_alphanumeric_chars(self):
         """The computed reference must be made of alphanumeric characters."""
         reference = self.env['payment.transaction']._compute_reference(provider_code='redsys')
@@ -33,18 +32,20 @@ class TestPaymentTransaction(RedsysCommon):
     def test_search_by_reference_returns_tx(self):
         """Test that the transaction is returned from the payment data."""
         tx = self._create_transaction('redirect')
-        self.assertEqual(tx, self.env['payment.transaction']._search_by_reference(
-            'redsys', self.merchant_parameters
-        ))
+        self.assertEqual(
+            tx,
+            self.env['payment.transaction']._search_by_reference(
+                'redsys', self.merchant_parameters
+            ),
+        )
 
     def test_extract_amount_data_returns_amount_and_currency(self):
         """Test that the amount and currency are returned from the payment data."""
         tx = self._create_transaction('redirect')
         amount_data = tx._extract_amount_data(self.merchant_parameters)
-        self.assertDictEqual(amount_data, {
-            'amount': self.amount,
-            'currency_code': self.currency_euro.name,
-        })
+        self.assertDictEqual(
+            amount_data, {'amount': self.amount, 'currency_code': self.currency_euro.name}
+        )
 
     def test_apply_updates_sets_payment_method(self):
         """Test that the payment method is updated according to the brand."""

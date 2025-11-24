@@ -15,7 +15,6 @@ from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
 from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
 
-
 _logger = get_payment_logger(__name__, const.SENSITIVE_KEYS)
 
 
@@ -23,7 +22,8 @@ class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     code = fields.Selection(
-        selection_add=[('stripe', "Stripe")], ondelete={'stripe': 'set default'})
+        selection_add=[('stripe', "Stripe")], ondelete={'stripe': 'set default'}
+    )
     stripe_publishable_key = fields.Char(
         string="Publishable Key",
         help="The key solely used to identify the account with Stripe",
@@ -31,15 +31,12 @@ class PaymentProvider(models.Model):
         copy=False,
     )
     stripe_secret_key = fields.Char(
-        string="Secret Key",
-        required_if_provider='stripe',
-        copy=False,
-        groups='base.group_system',
+        string="Secret Key", required_if_provider='stripe', copy=False, groups='base.group_system'
     )
     stripe_webhook_secret = fields.Char(
         string="Webhook Signing Secret",
-        help="If a webhook is enabled on your Stripe account, this signing secret must be set to "
-             "authenticate the messages sent from Stripe to Odoo.",
+        help="If a webhook is enabled on your Stripe account, this signing secret must be set to"
+        " authenticate the messages sent from Stripe to Odoo.",
         copy=False,
         groups='base.group_system',
     )
@@ -47,7 +44,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
+        """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'stripe').update({
             'support_express_checkout': True,
@@ -60,7 +57,7 @@ class PaymentProvider(models.Model):
 
     @api.constrains('state', 'stripe_publishable_key', 'stripe_secret_key')
     def _check_state_of_connected_account_is_never_test(self):
-        """ Check that the provider of a connected account can never been set to 'test'.
+        """Check that the provider of a connected account can never been set to 'test'.
 
         This constraint is defined in the present module to allow the export of the translation
         string of the `ValidationError` should it be raised by modules that would fully implement
@@ -75,13 +72,15 @@ class PaymentProvider(models.Model):
         """
         for provider in self:
             if provider.state == 'test' and provider._stripe_has_connected_account():
-                raise ValidationError(_(
-                    "You cannot set the provider to Test Mode while it is linked with your Stripe "
-                    "account."
-                ))
+                raise ValidationError(
+                    _(
+                        "You cannot set the provider to Test Mode while it is linked with your"
+                        " Stripe account."
+                    )
+                )
 
     def _stripe_has_connected_account(self):
-        """ Return whether the provider is linked to a connected Stripe account.
+        """Return whether the provider is linked to a connected Stripe account.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
@@ -94,7 +93,7 @@ class PaymentProvider(models.Model):
 
     @api.constrains('state')
     def _check_onboarding_of_enabled_provider_is_completed(self):
-        """ Check that the provider cannot be set to 'enabled' if the onboarding is ongoing.
+        """Check that the provider cannot be set to 'enabled' if the onboarding is ongoing.
 
         This constraint is defined in the present module to allow the export of the translation
         string of the `ValidationError` should it be raised by modules that would fully implement
@@ -106,13 +105,15 @@ class PaymentProvider(models.Model):
         """
         for provider in self:
             if provider.state == 'enabled' and provider._stripe_onboarding_is_ongoing():
-                raise ValidationError(_(
-                    "You cannot set the provider state to Enabled until your onboarding to Stripe "
-                    "is completed."
-                ))
+                raise ValidationError(
+                    _(
+                        "You cannot set the provider state to Enabled until your onboarding to"
+                        " Stripe is completed."
+                    )
+                )
 
     def _stripe_onboarding_is_ongoing(self):
-        """ Return whether the provider is linked to an ongoing onboarding to Stripe Connect.
+        """Return whether the provider is linked to an ongoing onboarding to Stripe Connect.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
@@ -126,7 +127,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'stripe':
             return super()._get_default_payment_method_codes()
@@ -135,7 +136,7 @@ class PaymentProvider(models.Model):
     # === ACTION METHODS === #
 
     def action_start_onboarding(self, menu_id=None):
-        """ Override of `payment` to create a Stripe Connect account and redirect the user to the
+        """Override of `payment` to create a Stripe Connect account and redirect the user to the
         next onboarding step.
 
         If the provider is already enabled, close the current window. Otherwise, generate a Stripe
@@ -156,7 +157,10 @@ class PaymentProvider(models.Model):
         if self.code != 'stripe':
             return super().action_start_onboarding(menu_id=menu_id)
 
-        if self._stripe_get_country(self.env.company.country_id.code) not in const.SUPPORTED_COUNTRIES:
+        if (
+            self._stripe_get_country(self.env.company.country_id.code)
+            not in const.SUPPORTED_COUNTRIES
+        ):
             raise RedirectWarning(
                 _(
                     "Stripe Connect is not available in your country, please use another payment"
@@ -181,11 +185,7 @@ class PaymentProvider(models.Model):
 
             account_link_url = self._stripe_create_account_link(connected_account['id'], menu_id)
             if account_link_url:
-                action = {
-                    'type': 'ir.actions.act_url',
-                    'url': account_link_url,
-                    'target': 'self',
-                }
+                action = {'type': 'ir.actions.act_url', 'url': account_link_url, 'target': 'self'}
             else:
                 action = {
                     'type': 'ir.actions.act_window',
@@ -196,7 +196,7 @@ class PaymentProvider(models.Model):
         return action
 
     def action_stripe_create_webhook(self):
-        """ Create a webhook and return a feedback notification.
+        """Create a webhook and return a feedback notification.
 
         Note: This action only works for instances using a public URL
 
@@ -213,11 +213,13 @@ class PaymentProvider(models.Model):
             notification_type = 'danger'
         else:
             webhook = self._send_api_request(
-                'POST', 'webhook_endpoints', data={
+                'POST',
+                'webhook_endpoints',
+                data={
                     'url': self._get_stripe_webhook_url(),
                     'enabled_events[]': const.HANDLED_WEBHOOK_EVENTS,
                     'api_version': const.API_VERSION,
-                }
+                },
             )
             self.stripe_webhook_secret = webhook.get('secret')
             message = _("You Stripe Webhook was successfully set up!")
@@ -231,11 +233,11 @@ class PaymentProvider(models.Model):
                 'sticky': False,
                 'type': notification_type,
                 'next': {'type': 'ir.actions.act_window_close'},  # Refresh the form to show the key
-            }
+            },
         }
 
     def action_stripe_verify_apple_pay_domain(self):
-        """ Verify the web domain with Stripe to enable Apple Pay.
+        """Verify the web domain with Stripe to enable Apple Pay.
 
         The domain is sent to Stripe API for them to verify that it is valid by making a request to
         the `/.well-known/apple-developer-merchantid-domain-association` route. If the domain is
@@ -249,9 +251,9 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         web_domain = url_parse(self.get_base_url()).netloc
-        response_content = self._send_api_request('POST', 'apple_pay/domains', data={
-            'domain_name': web_domain
-        })
+        response_content = self._send_api_request(
+            'POST', 'apple_pay/domains', data={'domain_name': web_domain}
+        )
         if not response_content['livemode']:
             # If test keys are used to send the request, Stripe will respond with an HTTP 200 but
             # will not register the domain. Ask the user to use live credentials.
@@ -272,7 +274,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
     def _stripe_get_publishable_key(self):
-        """ Return the publishable key of the provider.
+        """Return the publishable key of the provider.
 
         This getter allows fetching the publishable key from a QWeb template and through Stripe's
         utils.
@@ -306,17 +308,24 @@ class PaymentProvider(models.Model):
         if not is_validation:
             currency_name = currency and currency.name.lower()
         else:
-            currency_name = self.with_context(
-                validation_pm=payment_method_sudo  # Will be converted to a kwarg in master.
-            )._get_validation_currency().name.lower()
+            currency_name = (
+                self.with_context(
+                    validation_pm=payment_method_sudo  # Will be converted to a kwarg in master.
+                )
+                ._get_validation_currency()
+                .name.lower()
+            )
         partner = self.env['res.partner'].with_context(show_address=1).browse(partner_id).exists()
         inline_form_values = {
             'publishable_key': self._stripe_get_publishable_key(),
             'currency_name': currency_name,
-            'minor_amount': amount and payment_utils.to_minor_currency_units(
-                amount,
-                currency,
-                arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
+            'minor_amount': (
+                amount
+                and payment_utils.to_minor_currency_units(
+                    amount,
+                    currency,
+                    arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
+                )
             ),
             'capture_method': 'manual' if self.capture_manually else 'automatic',
             'billing_details': {
@@ -356,7 +365,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS - STRIPE CONNECT ONBOARDING === #
 
     def _stripe_fetch_or_create_connected_account(self):
-        """ Fetch the connected Stripe account and create one if not already done.
+        """Fetch the connected Stripe account and create one if not already done.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
@@ -369,7 +378,7 @@ class PaymentProvider(models.Model):
         return self._send_api_request('POST', 'accounts', json=proxy_payload, is_proxy_request=True)
 
     def _stripe_prepare_connect_account_payload(self):
-        """ Prepare the payload for the creation of a connected account in Stripe format.
+        """Prepare the payload for the creation of a connected account in Stripe format.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
@@ -395,7 +404,7 @@ class PaymentProvider(models.Model):
         }
 
     def _stripe_create_account_link(self, connected_account_id, menu_id):
-        """ Create an account link and return its URL.
+        """Create an account link and return its URL.
 
         An account link url is the beginning URL of Stripe Onboarding.
         This URL is only valid once, and can only be used once.
@@ -439,8 +448,8 @@ class PaymentProvider(models.Model):
         }
         return res
 
-    def _stripe_prepare_proxy_data(self, stripe_payload=None):
-        """ Prepare the contextual data passed to the proxy when making a request.
+    def _stripe_prepare_proxy_data(self, stripe_payload=None):  # noqa: ARG002
+        """Prepare the contextual data passed to the proxy when making a request.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
         Note: self.ensure_one()
@@ -501,7 +510,7 @@ class PaymentProvider(models.Model):
         return self._parse_proxy_response(response)
 
     def _get_stripe_extra_request_headers(self):
-        """ Return the extra headers for the Stripe API request.
+        """Return the extra headers for the Stripe API request.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 

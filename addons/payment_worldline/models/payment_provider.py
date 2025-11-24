@@ -11,7 +11,6 @@ from odoo.fields import Datetime
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_worldline import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -22,44 +21,32 @@ class PaymentProvider(models.Model):
         selection_add=[('worldline', "Worldline")], ondelete={'worldline': 'set default'}
     )
     worldline_pspid = fields.Char(
-        string="Worldline PSPID",
-        required_if_provider='worldline',
-        copy=False,
+        string="Worldline PSPID", required_if_provider='worldline', copy=False
     )
     worldline_api_key = fields.Char(
-        string="Worldline API Key",
-        required_if_provider='worldline',
-        copy=False,
+        string="Worldline API Key", required_if_provider='worldline', copy=False
     )
     worldline_api_secret = fields.Char(
-        string="Worldline API Secret",
-        required_if_provider='worldline',
-        copy=False,
+        string="Worldline API Secret", required_if_provider='worldline', copy=False
     )
     worldline_webhook_key = fields.Char(
-        string="Worldline Webhook Key",
-        required_if_provider='worldline',
-        copy=False,
+        string="Worldline Webhook Key", required_if_provider='worldline', copy=False
     )
     worldline_webhook_secret = fields.Char(
-        string="Worldline Webhook Secret",
-        required_if_provider='worldline',
-        copy=False,
+        string="Worldline Webhook Secret", required_if_provider='worldline', copy=False
     )
 
     # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
+        """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'worldline').update({
-            'support_tokenization': True,
-        })
+        self.filtered(lambda p: p.code == 'worldline').update({'support_tokenization': True})
 
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'worldline':
             return super()._get_default_payment_method_codes()
@@ -75,21 +62,22 @@ class PaymentProvider(models.Model):
         return f'{api_url}/v2/{self.worldline_pspid}/{endpoint}'
 
     def _worldline_get_api_url(self):
-        """ Return the URL of the API corresponding to the provider's state.
+        """Return the URL of the API corresponding to the provider's state.
 
         :return: The API URL.
         :rtype: str
         """
         if self.state == 'enabled':
-            return 'https://payment.direct.worldline-solutions.com'
+            api_url = 'https://payment.direct.worldline-solutions.com'
         else:  # 'test'
-            return 'https://payment.preprod.direct.worldline-solutions.com'
+            api_url = 'https://payment.preprod.direct.worldline-solutions.com'
+        return api_url
 
     def _build_request_headers(self, method, endpoint, *args, idempotency_key=None, **kwargs):
         """Override of `payment` to build the request headers."""
         if self.code != 'worldline':
             return super()._build_request_headers(
-               method, endpoint, *args, idempotency_key=idempotency_key, **kwargs
+                method, endpoint, *args, idempotency_key=idempotency_key, **kwargs
             )
 
         content_type = 'application/json; charset=utf-8' if method == 'POST' else ''
@@ -98,11 +86,7 @@ class PaymentProvider(models.Model):
             method, endpoint, content_type, dt, idempotency_key=idempotency_key
         )
         authorization_header = f'GCS v1HMAC:{self.worldline_api_key}:{signature}'
-        headers = {
-            'Authorization': authorization_header,
-            'Date': dt,
-            'Content-Type': content_type,
-        }
+        headers = {'Authorization': authorization_header, 'Date': dt, 'Content-Type': content_type}
         if method == 'POST' and idempotency_key:
             headers['X-GCS-Idempotence-Key'] = idempotency_key
         return headers
@@ -110,7 +94,7 @@ class PaymentProvider(models.Model):
     def _worldline_calculate_signature(
         self, method, endpoint, content_type, dt_rfc, idempotency_key=None
     ):
-        """ Compute the signature for the provided data.
+        """Compute the signature for the provided data.
 
         See https://docs.direct.worldline-solutions.com/en/integration/api-developer-guide/authentication.
 
@@ -138,5 +122,4 @@ class PaymentProvider(models.Model):
         """Override of `payment` to parse the error message."""
         if self.code != 'worldline':
             return super()._parse_response_error(response)
-        msg = ', '.join([error.get('message', '') for error in response.json().get('errors', [])])
-        return msg
+        return ', '.join([error.get('message', '') for error in response.json().get('errors', [])])

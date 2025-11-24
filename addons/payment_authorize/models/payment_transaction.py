@@ -9,7 +9,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -17,7 +16,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of payment to return an access token as provider-specific processing values.
+        """Override of payment to return an access token as provider-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -35,7 +34,7 @@ class PaymentTransaction(models.Model):
         }
 
     def _authorize_create_transaction_request(self, opaque_data):
-        """ Create an Authorize.Net payment transaction request.
+        """Create an Authorize.Net payment transaction request.
 
         Note: self.ensure_one()
 
@@ -47,8 +46,8 @@ class PaymentTransaction(models.Model):
         authorize_API = AuthorizeAPI(self.provider_id)
         if self.provider_id.capture_manually or self.operation == 'validation':
             return authorize_API.authorize(self, opaque_data=opaque_data)
-        else:
-            return authorize_API.auth_and_capture(self, opaque_data=opaque_data)
+
+        return authorize_API.auth_and_capture(self, opaque_data=opaque_data)
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Authorize."""
@@ -60,13 +59,15 @@ class PaymentTransaction(models.Model):
             res_content = authorize_API.authorize(self, token=self.token_id)
             _logger.info(
                 "authorize request response for transaction %s:\n%s",
-                self.reference, pprint.pformat(res_content)
+                self.reference,
+                pprint.pformat(res_content),
             )
         else:
             res_content = authorize_API.auth_and_capture(self, token=self.token_id)
             _logger.info(
                 "auth_and_capture request response for transaction %s:\n%s",
-                self.reference, pprint.pformat(res_content)
+                self.reference,
+                pprint.pformat(res_content),
             )
         self._process('authorize', {'response': res_content})
 
@@ -80,11 +81,15 @@ class PaymentTransaction(models.Model):
             self.source_transaction_id.provider_reference
         )
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
-            self._set_error(_(
-                "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
-                error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
-            ))
-            return
+            self._set_error(
+                _(
+                    "Could not retrieve the transaction details. (error code: %(error_code)s;"
+                    " error_details: %(error_message)s)",
+                    error_code=tx_details['err_code'],
+                    error_message=tx_details.get('err_msg'),
+                )
+            )
+            return None
 
         tx_status = tx_details.get('transaction', {}).get('transactionStatus')
         if tx_status in const.TRANSACTION_STATUS_MAPPING['voided']:
@@ -97,7 +102,9 @@ class PaymentTransaction(models.Model):
             # Immediately post-process the transaction as the post-processing will not be
             # triggered by a customer browsing the transaction from the portal.
             self.env.ref('payment.cron_post_process_payment_tx')._trigger()
-        elif any(tx_status in const.TRANSACTION_STATUS_MAPPING[k] for k in ('authorized', 'captured')):
+        elif any(
+            tx_status in const.TRANSACTION_STATUS_MAPPING[k] for k in ('authorized', 'captured')
+        ):
             if tx_status in const.TRANSACTION_STATUS_MAPPING['authorized']:
                 # The payment has not been settled on Authorize.net yet. It must be voided rather
                 # than refunded. Since the funds have not moved yet, we don't create a refund tx.
@@ -110,7 +117,8 @@ class PaymentTransaction(models.Model):
                 )
             _logger.info(
                 "refund request response for transaction %s:\n%s",
-                self.reference, pprint.pformat(res_content)
+                self.reference,
+                pprint.pformat(res_content),
             )
             data = {'reference': self.reference, 'response': res_content}
             self._process('authorize', data)
@@ -118,7 +126,8 @@ class PaymentTransaction(models.Model):
             err_msg = _(
                 "The transaction is not in a status to be refunded."
                 " (status: %(status)s, details: %(message)s)",
-                status=tx_status, message=tx_details.get('messages', {}).get('message'),
+                status=tx_status,
+                message=tx_details.get('messages', {}).get('message'),
             )
             _logger.warning(err_msg)
             self._set_error(err_msg)
@@ -135,7 +144,8 @@ class PaymentTransaction(models.Model):
         )
         _logger.info(
             "capture request response for transaction %s:\n%s",
-            self.reference, pprint.pformat(res_content)
+            self.reference,
+            pprint.pformat(res_content),
         )
         self._process('authorize', {'response': res_content})
 
@@ -148,7 +158,8 @@ class PaymentTransaction(models.Model):
         res_content = authorize_API.void(self.provider_reference)
         _logger.info(
             "void request response for transaction %s:\n%s",
-            self.reference, pprint.pformat(res_content)
+            self.reference,
+            pprint.pformat(res_content),
         )
         self._process('authorize', {'response': res_content})
 
@@ -165,11 +176,8 @@ class PaymentTransaction(models.Model):
 
         amount = tx_details.get('transaction', {}).get('authAmount')
         # Authorize supports only one currency per account.
-        currency = self.provider_id.available_currency_ids  # The currency has not been removed from the provider.
-        return {
-            'amount': float(amount),
-            'currency_code': currency.name,
-        }
+        currency = self.provider_id.available_currency_ids  # The currency is still linked.
+        return {'amount': float(amount), 'currency_code': currency.name}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
@@ -217,16 +225,15 @@ class PaymentTransaction(models.Model):
             _logger.info(
                 "Received data with invalid status (%(status)s) and error code (%(err)s) for "
                 "transaction %(ref)s.",
-                {
-                    'status': status_code,
-                    'err': error_code,
-                    'ref': self.reference,
-                },
+                {'status': status_code, 'err': error_code, 'ref': self.reference},
             )
-            self._set_error(_(
-                "Received data with status code \"%(status)s\" and error code \"%(error)s\".",
-                status=status_code, error=error_code
-            ))
+            self._set_error(
+                _(
+                    "Received data with status code \"%(status)s\" and error code \"%(error)s\".",
+                    status=status_code,
+                    error=error_code,
+                )
+            )
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""
@@ -242,7 +249,8 @@ class PaymentTransaction(models.Model):
         )
         _logger.info(
             "create_customer_profile request response for transaction %s:\n%s",
-            self.reference, pprint.pformat(cust_profile)
+            self.reference,
+            pprint.pformat(cust_profile),
         )
         if not cust_profile or 'payment_profile_id' not in cust_profile:  # Failed to fetch data.
             return {}

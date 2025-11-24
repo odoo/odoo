@@ -20,7 +20,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of payment to return Stripe-specific processing values.
+        """Override of payment to return Stripe-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -44,7 +44,8 @@ class PaymentTransaction(models.Model):
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Stripe."""
         if self.provider_code != 'stripe':
-            return super()._send_payment_request()
+            super()._send_payment_request()
+            return
 
         # Send the payment request to Stripe.
         payment_intent = self._stripe_create_intent()
@@ -54,13 +55,11 @@ class PaymentTransaction(models.Model):
 
         # Handle the payment request response
         payment_data = {'reference': self.reference}
-        StripeController._include_payment_intent_in_payment_data(
-            payment_intent, payment_data
-        )
+        StripeController._include_payment_intent_in_payment_data(payment_intent, payment_data)
         self._process('stripe', payment_data)
 
     def _stripe_create_intent(self):
-        """ Create and return a PaymentIntent or a SetupIntent object, depending on the operation.
+        """Create and return a PaymentIntent or a SetupIntent object, depending on the operation.
 
         :return: The created PaymentIntent or SetupIntent object or None if creation failed.
         :rtype: dict|None
@@ -68,7 +67,7 @@ class PaymentTransaction(models.Model):
         try:
             if self.operation == 'validation':
                 response = self._send_api_request(
-                    'POST', 'setup_intents', data=self._stripe_prepare_setup_intent_payload(),
+                    'POST', 'setup_intents', data=self._stripe_prepare_setup_intent_payload()
                 )
             else:  # 'online_direct', 'online_token', 'offline'.
                 response = self._send_api_request(
@@ -89,7 +88,7 @@ class PaymentTransaction(models.Model):
         return intent
 
     def _stripe_prepare_setup_intent_payload(self):
-        """ Prepare the payload for the creation of a SetupIntent object in Stripe format.
+        """Prepare the payload for the creation of a SetupIntent object in Stripe format.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
@@ -109,7 +108,7 @@ class PaymentTransaction(models.Model):
         return setup_intent_payload
 
     def _stripe_prepare_payment_intent_payload(self):
-        """ Prepare the payload for the creation of a PaymentIntent object in Stripe format.
+        """Prepare the payload for the creation of a PaymentIntent object in Stripe format.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
@@ -154,13 +153,15 @@ class PaymentTransaction(models.Model):
         return payment_intent_payload
 
     def _stripe_create_customer(self):
-        """ Create and return a Customer.
+        """Create and return a Customer.
 
         :return: The Customer
         :rtype: dict
         """
-        customer = self._send_api_request(
-            'POST', 'customers', data={
+        return self._send_api_request(
+            'POST',
+            'customers',
+            data={
                 'address[city]': self.partner_city or None,
                 'address[country]': self.partner_country_id.code or None,
                 'address[line1]': self.partner_address or None,
@@ -169,13 +170,12 @@ class PaymentTransaction(models.Model):
                 'description': f'Odoo Partner: {self.partner_id.name} (id: {self.partner_id.id})',
                 'email': self.partner_email or None,
                 'name': self.partner_name,
-                'phone': self.partner_phone and self.partner_phone[:20] or None,
-            }
+                'phone': (self.partner_phone and self.partner_phone[:20]) or None,
+            },
         )
-        return customer
 
     def _stripe_prepare_mandate_options(self):
-        """ Prepare the configuration options for setting up an eMandate along with an intent.
+        """Prepare the configuration options for setting up an eMandate along with an intent.
 
         :return: The Stripe-formatted payload for the mandate options.
         :rtype: dict
@@ -191,25 +191,29 @@ class PaymentTransaction(models.Model):
                 self.currency_id,
                 arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
             ),  # Use the specified amount, if any, or define the maximum amount of 15.000 INR.
-            f'{OPTION_PATH_PREFIX}[start_date]': int(round(
+            f'{OPTION_PATH_PREFIX}[start_date]': round(
                 (mandate_values.get('start_datetime') or fields.Datetime.now()).timestamp()
-            )),
+            ),
             f'{OPTION_PATH_PREFIX}[interval]': 'sporadic',
             f'{OPTION_PATH_PREFIX}[supported_types][]': 'india',
         }
         if mandate_values.get('end_datetime'):
-            mandate_options[f'{OPTION_PATH_PREFIX}[end_date]'] = int(round(
+            mandate_options[f'{OPTION_PATH_PREFIX}[end_date]'] = round(
                 mandate_values['end_datetime'].timestamp()
-            ))
+            )
         if mandate_values.get('recurrence_unit') and mandate_values.get('recurrence_duration'):
             mandate_options.update({
                 f'{OPTION_PATH_PREFIX}[interval]': mandate_values['recurrence_unit'],
                 f'{OPTION_PATH_PREFIX}[interval_count]': mandate_values['recurrence_duration'],
             })
         if self.operation == 'validation':
-            currency_name = self.provider_id.with_context(
-                validation_pm=self.payment_method_id  # Will be converted to a kwarg in master.
-            )._get_validation_currency().name.lower()
+            currency_name = (
+                self.provider_id.with_context(
+                    validation_pm=self.payment_method_id  # Will be converted to a kwarg in master.
+                )
+                ._get_validation_currency()
+                .name.lower()
+            )
             mandate_options[f'{OPTION_PATH_PREFIX}[currency]'] = currency_name
 
         return mandate_options
@@ -221,14 +225,16 @@ class PaymentTransaction(models.Model):
 
         # Send the refund request to Stripe.
         data = self._send_api_request(
-            'POST', 'refunds', data={
+            'POST',
+            'refunds',
+            data={
                 'payment_intent': self.source_transaction_id.provider_reference,
                 'amount': payment_utils.to_minor_currency_units(
                     -self.amount,  # Refund transactions' amount is negative, inverse it.
                     self.currency_id,
                     arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
                 ),
-            }
+            },
         )
 
         # Process the refund request response.
@@ -248,9 +254,7 @@ class PaymentTransaction(models.Model):
 
         # Process the capture request response.
         payment_data = {'reference': self.reference}
-        StripeController._include_payment_intent_in_payment_data(
-            payment_intent, payment_data
-        )
+        StripeController._include_payment_intent_in_payment_data(payment_intent, payment_data)
         self._process('stripe', payment_data)
 
     def _send_void_request(self):
@@ -265,14 +269,12 @@ class PaymentTransaction(models.Model):
 
         # Process the void request response.
         payment_data = {'reference': self.reference}
-        StripeController._include_payment_intent_in_payment_data(
-            payment_intent, payment_data
-        )
+        StripeController._include_payment_intent_in_payment_data(payment_intent, payment_data)
         self._process('stripe', payment_data)
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
-        """ Override of payment to find the transaction based on Stripe data.
+        """Override of payment to find the transaction based on Stripe data.
 
         :param str provider_code: The code of the provider that handled the transaction
         :param dict payment_data: The payment data sent by the provider
@@ -290,9 +292,10 @@ class PaymentTransaction(models.Model):
             # refund object that has no 'description' (the merchant reference) field. We thus search
             # the transaction by its provider reference which is the refund id for refund txs.
             refund_id = payment_data['object_id']  # The object is a refund.
-            tx = self.search(
-                [('provider_reference', '=', refund_id), ('provider_code', '=', 'stripe')]
-            )
+            tx = self.search([
+                ('provider_reference', '=', refund_id),
+                ('provider_code', '=', 'stripe'),
+            ])
         else:
             _logger.warning("Received data with missing merchant reference")
             tx = self
@@ -380,14 +383,17 @@ class PaymentTransaction(models.Model):
                     message = _("The customer left the payment page.")
                 self._set_error(message)
             else:
-                self._set_error(_(
-                    "The refund did not go through. Please log into your Stripe Dashboard to get "
-                    "more information on that matter, and address any accounting discrepancies."
-                ), extra_allowed_states=('done',))
+                self._set_error(
+                    _(
+                        "The refund did not go through. Please log into your Stripe Dashboard to"
+                        " get more information on that matter, and address any accounting"
+                        " discrepancies."
+                    ),
+                    extra_allowed_states=('done',),
+                )
         else:  # Classify unknown intent statuses as `error` tx state
             _logger.warning(
-                "Received invalid payment status (%s) for transaction %s.",
-                status, self.reference
+                "Received invalid payment status (%s) for transaction %s.", status, self.reference
             )
             self._set_error(_("Received data with invalid intent status: %s.", status))
 

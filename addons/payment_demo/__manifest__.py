@@ -13,17 +13,12 @@
         'views/payment_provider_views.xml',
         'views/payment_token_views.xml',
         'views/payment_transaction_views.xml',
-
         'data/payment_method_data.xml',
         'data/payment_provider_data.xml',  # Depends on `payment_method_demo`.
     ],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
-    'assets': {
-        'web.assets_frontend': [
-            'payment_demo/static/src/interactions/**/*',
-        ],
-    },
+    'assets': {'web.assets_frontend': ['payment_demo/static/src/interactions/**/*']},
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

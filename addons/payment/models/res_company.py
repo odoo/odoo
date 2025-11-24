@@ -33,8 +33,13 @@ class ResCompany(models.Model):
         companies = super().create(vals_list)
 
         # Duplicate installed providers in the new companies.
-        providers_sudo = self.env['payment.provider'].sudo().search(
-            [('company_id', '=', self.env.user.company_id.id), ('module_state', '=', 'installed')]
+        providers_sudo = (
+            self.env['payment.provider']
+            .sudo()
+            .search([
+                ('company_id', '=', self.env.user.company_id.id),
+                ('module_state', '=', 'installed'),
+            ])
         )
         for company in companies:
             if company.parent_id:  # The company is a branch.
@@ -59,9 +64,11 @@ class ResCompany(models.Model):
             return False
 
         # Install the onboarding module if needed.
-        onboarding_module = self.env['ir.module.module'].sudo().search(
-            [('name', '=', f'payment_{self.onboarding_payment_module}')]
-        )  # In sudo mode to search the onboarding module
+        onboarding_module = (
+            self.env['ir.module.module']
+            .sudo()  # In sudo mode to search the onboarding module.
+            .search([('name', '=', f'payment_{self.onboarding_payment_module}')])
+        )
         onboarding_module.filtered(lambda m: m.state == 'uninstalled').button_immediate_install()
 
         # Create a new env including the freshly installed module.
@@ -69,10 +76,13 @@ class ResCompany(models.Model):
 
         # Configure the provider.
         provider_code = self.onboarding_payment_module
-        provider = new_env['payment.provider'].search([
-            ('code', '=', provider_code),
-            *self.env['payment.provider']._check_company_domain(self),
-        ], limit=1)
+        provider = new_env['payment.provider'].search(
+            [
+                ('code', '=', provider_code),
+                *self.env['payment.provider']._check_company_domain(self),
+            ],
+            limit=1,
+        )
         if not provider:
             return False
 

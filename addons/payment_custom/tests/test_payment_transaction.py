@@ -10,27 +10,28 @@ from odoo.addons.payment_custom.tests.common import PaymentCustomCommon
 
 @tagged('-at_install', 'post_install')
 class TestPaymentTransaction(PaymentCustomCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         if 'product.product' not in cls.env:
-            raise unittest.SkipTest("requires product")
+            msg = "requires product"
+            raise unittest.SkipTest(msg)
 
         cls.provider = cls._prepare_provider(code='custom', custom_mode='wire_transfer')
         cls.product = cls.env['product.product'].create({
-            'name': "test product", 'list_price': cls.amount
+            'name': "test product",
+            'list_price': cls.amount,
         })
 
     def test_communication_based_on_transaction_reference(self):
-        """ Test that the payment communication falls back to the transaction reference when there
-        is no linked invoice or sales order. """
+        """Test that the payment communication falls back to the transaction reference when there
+        is no linked invoice or sales order."""
         tx = self._create_transaction(flow='direct', reference="test")
 
         self.assertEqual(tx._get_communication(), "test")
 
     def test_communication_for_invoice(self):
-        """ Test that the communication displayed is the invoice payment reference. """
+        """Test that the communication displayed is the invoice payment reference."""
         account_payment_module = self.env['ir.module.module']._get('account_payment')
         if account_payment_module.state != 'installed':
             self.skipTest("account_payment module is not installed")
@@ -49,7 +50,7 @@ class TestPaymentTransaction(PaymentCustomCommon):
         self.assertEqual(tx._get_communication(), "test")
 
     def test_communication_for_sale_order(self):
-        """ Test that the communication displayed is the sale order reference. """
+        """Test that the communication displayed is the sale order reference."""
         sale_module = self.env['ir.module.module']._get('sale')
         if sale_module.state != 'installed':
             self.skipTest("sale module is not installed")

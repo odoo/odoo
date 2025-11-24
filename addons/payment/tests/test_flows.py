@@ -14,9 +14,8 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 @tagged('post_install', '-at_install')
 class TestFlows(PaymentHttpCommon):
-
     def _test_flow(self, flow):
-        """ Simulate the given online payment flow and tests the tx values at each step.
+        """Simulate the given online payment flow and tests the tx values at each step.
 
         :param str flow: The online payment flow to test ('direct', 'redirect', or 'token')
         :return: The transaction created by the payment flow
@@ -31,7 +30,8 @@ class TestFlows(PaymentHttpCommon):
             if key in route_values:
                 self.assertEqual(val, route_values[key])
 
-        # Route values are taken from payment_context result of /pay route to correctly simulate the flow
+        # Route values are taken from payment_context result of /pay route to correctly simulate the
+        # flow.
         route_values = {
             k: payment_context[k]
             for k in [
@@ -77,17 +77,17 @@ class TestFlows(PaymentHttpCommon):
         if flow == 'redirect':
             # In redirect flow, we verify the rendering of the dummy test form
             redirect_form_info = self._extract_values_from_html_form(
-                processing_values['redirect_form_html'])
+                processing_values['redirect_form_html']
+            )
 
             # Test content of rendered dummy redirect form
             self.assertEqual(redirect_form_info['action'], 'dummy')
             # Public user since we didn't authenticate with a specific user
-            self.assertEqual(
-                redirect_form_info['inputs']['user_id'],
-                str(self.user.id))
+            self.assertEqual(redirect_form_info['inputs']['user_id'], str(self.user.id))
             self.assertEqual(
                 redirect_form_info['inputs']['view_id'],
-                str(self.dummy_provider.redirect_form_view_id.id))
+                str(self.dummy_provider.redirect_form_view_id.id),
+            )
 
         return tx_sudo
 
@@ -165,7 +165,7 @@ class TestFlows(PaymentHttpCommon):
         expected_values = {
             'partner_id': self.partner.id,
             'access_token': self._generate_test_access_token(self.partner.id, None, None),
-            'reference_prefix': expected_reference
+            'reference_prefix': expected_reference,
         }
         for key, val in payment_context.items():
             if key in expected_values:
@@ -265,7 +265,9 @@ class TestFlows(PaymentHttpCommon):
 
     def test_pay_wrong_currency(self):
         # Pay with a wrong currency --> Not found (404)
-        self.currency = self.env['res.currency'].browse(self.env['res.currency'].search([], order='id desc', limit=1).id + 1000)
+        self.currency = self.env['res.currency'].browse(
+            self.env['res.currency'].search([], order='id desc', limit=1).id + 1000
+        )
         route_values = self._prepare_pay_values()
         response = self._portal_pay(**route_values)
         self.assertEqual(response.status_code, 404)
@@ -287,9 +289,13 @@ class TestFlows(PaymentHttpCommon):
             'reference_prefix': 'whatever',
         })
         # Transaction step with a wrong flow --> UserError
-        with mute_logger("odoo.http"), self.assertRaises(
-            JsonRpcException,
-            msg='odoo.exceptions.UserError: The payment should either be direct, with redirection, or made by a token.',
+        with (
+            mute_logger("odoo.http"),
+            self.assertRaises(
+                JsonRpcException,
+                msg="odoo.exceptions.UserError: The payment should either be direct, with"
+                " redirection, or made by a token.",
+            ),
         ):
             self._portal_transaction(**transaction_values)
 
@@ -307,7 +313,13 @@ class TestFlows(PaymentHttpCommon):
         route_values['access_token'] = "abcde"
 
         # Transaction step with a wrong access token --> ValidationError
-        with mute_logger('odoo.http'), self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError: The access token is invalid.'):
+        with (
+            mute_logger('odoo.http'),
+            self.assertRaises(
+                JsonRpcException,
+                msg="odoo.exceptions.ValidationError: The access token is invalid.",
+            ),
+        ):
             self._portal_transaction(**route_values)
 
     def test_access_disabled_providers_tokens(self):
@@ -345,8 +357,7 @@ class TestFlows(PaymentHttpCommon):
         self.partner = self.portal_partner
         self.user = self.portal_user
         with patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._charge_with_token'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._charge_with_token'
         ) as patched:
             self._portal_transaction(
                 **self._prepare_transaction_values(self.payment_method_id, None, 'direct')
@@ -359,8 +370,7 @@ class TestFlows(PaymentHttpCommon):
         self.partner = self.portal_partner
         self.user = self.portal_user
         with patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._charge_with_token'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._charge_with_token'
         ) as patched:
             self._portal_transaction(
                 **self._prepare_transaction_values(self.payment_method_id, None, 'redirect')
@@ -373,8 +383,7 @@ class TestFlows(PaymentHttpCommon):
         self.partner = self.portal_partner
         self.user = self.portal_user
         with patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._charge_with_token'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._charge_with_token'
         ) as patched:
             self._portal_transaction(
                 **self._prepare_transaction_values(None, self._create_token().id, 'token')

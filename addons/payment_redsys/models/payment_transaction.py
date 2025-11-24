@@ -12,7 +12,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_redsys import const
 from odoo.addons.payment_redsys.controllers.main import RedsysController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -87,7 +86,7 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         return_url = urljoin(base_url, RedsysController._return_url)
         webhook_url = urljoin(base_url, RedsysController._webhook_url)
-        merchant_parameters = {
+        return {
             'DS_MERCHANT_AMOUNT': str(converted_amount),
             'DS_MERCHANT_CURRENCY': self.currency_id.iso_numeric,
             'DS_MERCHANT_MERCHANTCODE': self.provider_id.redsys_merchant_code,
@@ -108,9 +107,8 @@ class PaymentTransaction(models.Model):
                 'billAddrState': self.partner_state_id.code,
                 'cardholderName': self.partner_name,
                 'email': self.partner_email,
-            }
+            },
         }
-        return merchant_parameters
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -127,13 +125,12 @@ class PaymentTransaction(models.Model):
         amount = payment_utils.to_major_currency_units(
             float(payment_data.get('Ds_Amount', 0)), self.currency_id
         )
-        currency = self.env['res.currency'].search([
-            ('iso_numeric', '=', payment_data.get('Ds_Currency'))
-        ], limit=1).name
-        return {
-            'amount': amount,
-            'currency_code': currency,
-        }
+        currency = (
+            self.env['res.currency']
+            .search([('iso_numeric', '=', payment_data.get('Ds_Currency'))], limit=1)
+            .name
+        )
+        return {'amount': amount, 'currency_code': currency}
 
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
@@ -154,10 +151,13 @@ class PaymentTransaction(models.Model):
         elif status_code in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif status_code in const.PAYMENT_STATUS_MAPPING['error']:
-            self._set_error(_(
-                "An error occurred during the processing of your payment (%s). Please try again.",
-                payment_data.get('Ds_ErrorCode'),
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during the processing of your payment (%s). Please try"
+                    " again.",
+                    payment_data.get('Ds_ErrorCode'),
+                )
+            )
         else:
             _logger.warning("Received invalid payment status (%s).", status_code)
             self._set_error(_("Unknown status code: %s", status_code))

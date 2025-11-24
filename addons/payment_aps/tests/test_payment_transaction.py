@@ -10,15 +10,14 @@ from odoo.addons.payment_aps.tests.common import APSCommon
 
 @tagged('post_install', '-at_install')
 class TestPaymentTransaction(APSCommon):
-
     def test_reference_contains_only_valid_characters(self):
-        """ Test that transaction references are made of only alphanumerics and/or '-' and '_'. """
+        """Test that transaction references are made of only alphanumerics and/or '-' and '_'."""
         for prefix in (None, '', 'S0001', 'INV/20222/001', 'dummy ref'):
             reference = self.env['payment.transaction']._compute_reference('aps', prefix=prefix)
             self.assertRegex(reference, r'^[\w-]+$')
 
     def test_no_item_missing_from_rendering_values(self):
-        """ Test that the rendered values are conform to the transaction fields. """
+        """Test that the rendered values are conform to the transaction fields."""
         self.env['ir.config_parameter'].set_str('web.base.url', 'http://127.0.0.1:8069')
         self.patch(self, 'base_url', lambda: 'http://127.0.0.1:8069')
 
@@ -43,7 +42,7 @@ class TestPaymentTransaction(APSCommon):
 
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_no_input_missing_from_redirect_form(self):
-        """ Test that the no key is not omitted from the rendering values. """
+        """Test that the no key is not omitted from the rendering values."""
         tx = self._create_transaction(flow='redirect')
         expected_input_keys = [
             'command',
@@ -65,8 +64,8 @@ class TestPaymentTransaction(APSCommon):
         self.assertListEqual(list(form_info['inputs'].keys()), expected_input_keys)
 
     def test_processing_payment_data_confirms_transaction(self):
-        """ Test that the transaction state is set to 'done' when the payment data indicate a
-        successful payment. """
+        """Test that the transaction state is set to 'done' when the payment data indicate a
+        successful payment."""
         tx = self._create_transaction(flow='redirect')
         tx._apply_updates(self.payment_data)
         self.assertEqual(tx.state, 'done')

@@ -12,18 +12,12 @@
         'views/payment_adyen_templates.xml',
         'views/payment_form_templates.xml',
         'views/payment_provider_views.xml',
-
         'data/payment_provider_data.xml',  # Depends on views/payment_adyen_templates.xml
-
         'wizards/payment_capture_wizard_views.xml',
     ],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
-    'assets': {
-        'web.assets_frontend': [
-            'payment_adyen/static/src/interactions/payment_form.js',
-        ],
-    },
+    'assets': {'web.assets_frontend': ['payment_adyen/static/src/interactions/payment_form.js']},
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

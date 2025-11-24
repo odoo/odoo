@@ -8,7 +8,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob.controllers.main import PaymobController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -17,7 +16,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
-        """ Override of `payment` to ensure that Paymob references are unique.
+        """Override of `payment` to ensure that Paymob references are unique.
 
         :param str provider_code: The code of the provider handling the transaction.
         :param str prefix: The custom prefix used to compute the full reference.
@@ -40,7 +39,7 @@ class PaymentTransaction(models.Model):
         )
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return Paymob-specific rendering values.
+        """Override of `payment` to return Paymob-specific rendering values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -74,7 +73,7 @@ class PaymentTransaction(models.Model):
         return {'api_url': api_url, 'url_params': url_params}
 
     def _paymob_prepare_payment_request_payload(self):
-        """ Create the payload for the payment request based on the transaction values.
+        """Create the payload for the payment request based on the transaction values.
 
         :return: The request payload.
         :rtype: dict
@@ -131,10 +130,7 @@ class PaymentTransaction(models.Model):
         amount_cents = float(payment_data.get('amount_cents'))
         amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
         currency_code = payment_data.get('currency')
-        return {
-            'amount': amount,
-            'currency_code': currency_code,
-        }
+        return {'amount': amount, 'currency_code': currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
@@ -148,11 +144,13 @@ class PaymentTransaction(models.Model):
             self._set_done()
         else:
             _logger.info(
-                "Received data with unsuccessful payment status for transaction %s.",
-                self.reference
+                "Received data with unsuccessful payment status for transaction %s.", self.reference
             )
             message = payment_data.get('data.message')
-            self._set_error(_(
-                "An error occurred during the processing of your payment (%(msg)s). Please try"
-                " again.", msg=message
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during the processing of your payment (%(msg)s). Please try"
+                    " again.",
+                    msg=message,
+                )
+            )

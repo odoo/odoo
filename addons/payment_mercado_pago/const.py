@@ -2,7 +2,6 @@
 
 from odoo.tools import LazyTranslate
 
-
 _lt = LazyTranslate(__name__)
 
 PROXY_URL = 'https://mercadopago.api.odoo.com/api/mercado_pago/1'
@@ -53,17 +52,13 @@ CURRENCY_MAPPING = {
     'PE': 'PEN',  # Peru - Peruvian Sol
     'SV': 'USD',  # El Salvador - United States Dollar
     'UY': 'UYU',  # Uruguay - Uruguayan Peso
-    'VE': 'VES'   # Venezuela - Venezuelan Bolívar
+    'VE': 'VES',  # Venezuela - Venezuelan Bolívar
 }
 
 # Set of currencies where Mercado Pago's minor units deviates from the ISO 4217 standard.
 # See https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xls
 # vs. https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.
-CURRENCY_DECIMALS = {
-    'COP': 0,
-    'HNL': 0,
-    'NIO': 0,
-}
+CURRENCY_DECIMALS = {'COP': 0, 'HNL': 0, 'NIO': 0}
 
 # The codes of the payment methods to activate when Mercado Pago is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
@@ -125,7 +120,9 @@ ERROR_MESSAGE_MAPPING = {
     'cc_rejected_bad_filled_date': _lt("Check expiration date."),
     'cc_rejected_bad_filled_other': _lt("Check the data."),
     'cc_rejected_bad_filled_security_code': _lt("Check the card security code."),
-    'cc_rejected_blacklist': _lt("We were unable to process your payment, please use another card."),
+    'cc_rejected_blacklist': _lt(
+        "We were unable to process your payment, please use another card."
+    ),
     'cc_rejected_call_for_authorize': _lt("You must authorize the payment with this card."),
     'cc_rejected_card_disabled': _lt(
         "Call your card issuer to activate your card or use another payment method. The phone "
@@ -149,5 +146,7 @@ ERROR_MESSAGE_MAPPING = {
         "You have reached the limit of allowed attempts. Choose another card or other means of "
         "payment."
     ),
-    'cc_rejected_other_reason': _lt("Payment was not processed, use another card or contact issuer.")
+    'cc_rejected_other_reason': _lt(
+        "Payment was not processed, use another card or contact issuer."
+    ),
 }

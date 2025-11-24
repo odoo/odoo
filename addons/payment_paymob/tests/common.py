@@ -4,24 +4,29 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class PaymobCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         cls.country_egypt = cls.quick_ref('base.eg')
-        cls.paymob = cls._prepare_provider('paymob', update_values={
-            'paymob_public_key': 'dummy_pk',
-            'paymob_secret_key': 'dummy_sk',
-            'paymob_hmac_key': 'dummy_hmac',
-            'paymob_api_key': 'dummy_api_key',
-            'paymob_account_country_id': cls.country_egypt,
-        })
+        cls.paymob = cls._prepare_provider(
+            'paymob',
+            update_values={
+                'paymob_public_key': 'dummy_pk',
+                'paymob_secret_key': 'dummy_sk',
+                'paymob_hmac_key': 'dummy_hmac',
+                'paymob_api_key': 'dummy_api_key',
+                'paymob_account_country_id': cls.country_egypt,
+            },
+        )
 
         # Override default values
         cls.provider = cls.paymob
         cls.currency = cls._enable_currency('EGP')
-        cls.hmac_signature = '51860052ecc6d9f08ac30a549359019e2eee837913b5673094c242c817ddf57c055ba5e3e9c0894b1171e62c2d37cd55ff98a46a0e28e1ccf2e4a907e6683aa5'
+        cls.hmac_signature = (
+            '51860052ecc6d9f08ac30a549359019e2eee837913b5673094c242c817ddf57c055ba5e3e9c0894b1171e6'
+            '2c2d37cd55ff98a46a0e28e1ccf2e4a907e6683aa5'
+        )
 
         cls.order_id = '123DUMMY456'
 
@@ -65,19 +70,10 @@ class PaymobCommon(PaymentCommon):
             'is_refunded': False,
             'is_standalone_payment': True,
             'is_voided': False,
-            'order': {
-                'id': 123,
-                'merchant_order_id': cls.order_id,
-            },
+            'order': {'id': 123, 'merchant_order_id': cls.order_id},
             'owner': 12,
             'pending': False,
-            'source_data': {
-                'pan': '1111',
-                'sub_type': 'Visa',
-                'type': 'card'
-            },
+            'source_data': {'pan': '1111', 'sub_type': 'Visa', 'type': 'card'},
             'success': True,
-            'data': {
-                'message': 'Approved',
-            },
+            'data': {'message': 'Approved'},
         }

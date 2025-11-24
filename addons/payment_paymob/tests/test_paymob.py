@@ -12,10 +12,9 @@ from odoo.addons.payment_paymob.tests.common import PaymobCommon
 
 @tagged('post_install', '-at_install')
 class PaymobTest(PaymobCommon, PaymentHttpCommon):
-
     def test_no_item_missing_from_rendering_values(self):
-        """ Test that when the redirect flow is triggered, rendering_values contains the API_URL and
-        URL_PARAMS corresponding to the response of API request. """
+        """Test that when the redirect flow is triggered, rendering_values contains the API_URL and
+        URL_PARAMS corresponding to the response of API request."""
         tx = self._create_transaction('redirect')
         with patch(
             'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
@@ -29,11 +28,11 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         self.assertEqual(rendering_values['url_params']['clientSecret'], 'dummy_secret')
 
     def test_paymob_return_data(self):
-        """ Test the processing of the paymob return data. """
+        """Test the processing of the paymob return data."""
         tx = self._create_transaction('redirect')
         with patch(
             'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
-            return_value={'id': 'dummy_id'}
+            return_value={'id': 'dummy_id'},
         ):
             tx._get_specific_rendering_values(None)  # Set provider reference here
             self.assertEqual(tx.provider_reference, self.redirection_data['id'])
@@ -43,7 +42,7 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_paymob.controllers.main')
     def test_compute_signature(self):
-        """ Test the computation of the signature sent by paymob """
+        """Test the computation of the signature sent by paymob."""
         computed_hmac = PaymobController._compute_signature(
             self.redirection_data, self.provider.paymob_hmac_key
         )
@@ -51,13 +50,13 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_paymob.controllers.main')
     def test_normalize_webhook_data(self):
-        """ Test the normalization of the paymob webhook data """
+        """Test the normalization of the paymob webhook data."""
         normalized_data = PaymobController._normalize_response(
             self.webhook_data, self.hmac_signature
         )
         self.assertDictEqual(normalized_data, self.redirection_data)
 
     def test_change_paymob_account_country(self):
-        """ Test that changing the Paymob account country will change the currency accordingly. """
+        """Test that changing the Paymob account country will change the currency accordingly."""
         self.provider.paymob_account_country_id = self.quick_ref('base.sa')
         self.assertEqual(self.provider.available_currency_ids.name, 'SAR')

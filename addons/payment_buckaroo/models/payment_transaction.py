@@ -7,7 +7,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_buckaroo import const
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -15,7 +14,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of payment to return Buckaroo-specific rendering values.
+        """Override of payment to return Buckaroo-specific rendering values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -60,15 +59,13 @@ class PaymentTransaction(models.Model):
 
         amount = payment_data.get('brq_amount')
         currency_code = payment_data.get('brq_currency')
-        return {
-            'amount': float(amount),
-            'currency_code': currency_code,
-        }
+        return {'amount': float(amount), 'currency_code': currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'buckaroo':
-            return super()._apply_updates(payment_data)
+            super()._apply_updates(payment_data)
+            return
 
         # Update the provider reference.
         transaction_keys = payment_data.get('brq_transactions')
@@ -97,13 +94,17 @@ class PaymentTransaction(models.Model):
         elif status_code in const.STATUS_CODES_MAPPING['refused']:
             self._set_error(_("Your payment was refused (code %s). Please try again.", status_code))
         elif status_code in const.STATUS_CODES_MAPPING['error']:
-            self._set_error(_(
-                "An error occurred during processing of your payment (code %s). Please try again.",
-                status_code,
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during processing of your payment (code %s). Please try"
+                    " again.",
+                    status_code,
+                )
+            )
         else:
             _logger.warning(
                 "Received data with invalid payment status (%s) for transaction %s.",
-                status_code, self.reference
+                status_code,
+                self.reference,
             )
             self._set_error(_("Unknown status code: %s.", status_code))

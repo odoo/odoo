@@ -12,16 +12,11 @@
         'views/payment_form_templates.xml',
         'views/payment_provider_views.xml',
         'views/payment_transaction_views.xml',
-
         'data/payment_provider_data.xml',
     ],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
-    'assets': {
-        'web.assets_frontend': [
-            'payment_paypal/static/src/**/*',
-        ],
-    },
+    'assets': {'web.assets_frontend': ['payment_paypal/static/src/**/*']},
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

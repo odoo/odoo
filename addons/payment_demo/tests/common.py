@@ -4,7 +4,6 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class PaymentDemoCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

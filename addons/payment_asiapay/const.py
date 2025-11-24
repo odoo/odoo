@@ -11,7 +11,7 @@ API_URLS = {
         'pesopay': 'https://test.pesopay.com/b2cDemo/eng/payment/payForm.jsp',
         'siampay': 'https://test.siampay.com/b2cDemo/eng/payment/payForm.jsp',
         'paydollar': 'https://test.paydollar.com/b2cDemo/eng/payment/payForm.jsp',
-    }
+    },
 }
 
 # Mapping of currency ISO 4217 codes AsiaPay's currency codes.
@@ -128,27 +128,9 @@ PAYMENT_METHODS_MAPPING = {
 
 # The keys of the values to use in the calculation of the signature.
 SIGNATURE_KEYS = {
-    'outgoing': [
-        'merchant_id',
-        'reference',
-        'currency_code',
-        'amount',
-        'payment_type',
-    ],
-    'incoming': [
-        'src',
-        'prc',
-        'successcode',
-        'Ref',
-        'PayRef',
-        'Cur',
-        'Amt',
-        'payerAuth',
-    ],
+    'outgoing': ['merchant_id', 'reference', 'currency_code', 'amount', 'payment_type'],
+    'incoming': ['src', 'prc', 'successcode', 'Ref', 'PayRef', 'Cur', 'Amt', 'payerAuth'],
 }
 
 # Mapping of transaction states to AsiaPay success codes.
-SUCCESS_CODE_MAPPING = {
-    'done': ('0',),
-    'error': ('1',),
-}
+SUCCESS_CODE_MAPPING = {'done': ('0',), 'error': ('1',)}

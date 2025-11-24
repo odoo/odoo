@@ -9,15 +9,17 @@ from odoo.http import request
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_iyzico import const
 
-
 _logger = get_payment_logger(__name__)
 
 
 class IyzicoController(http.Controller):
-
     @http.route(
-        const.PAYMENT_RETURN_ROUTE, type='http', auth='public', methods=['POST'], csrf=False,
-        save_session=False
+        const.PAYMENT_RETURN_ROUTE,
+        type='http',
+        auth='public',
+        methods=['POST'],
+        csrf=False,
+        save_session=False,
     )
     def iyzico_return_from_payment(self, tx_ref='', **data):
         """Process the payment data sent by Iyzico after redirection from checkout.
@@ -68,8 +70,10 @@ class IyzicoController(http.Controller):
         :param str token: The iyzico transaction token to fetch transaction details.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'iyzico', {'reference': tx_ref}
+        tx_sudo = (
+            request.env['payment.transaction']
+            .sudo()
+            ._search_by_reference('iyzico', {'reference': tx_ref})
         )
         if not tx_sudo:
             return
@@ -79,7 +83,7 @@ class IyzicoController(http.Controller):
                 'payment/iyzipos/checkoutform/auth/ecom/detail',
                 json={
                     'conversationId': tx_sudo.reference,
-                    'locale': request.env.lang == 'tr_TR' and 'tr' or 'en',
+                    'locale': (request.env.lang == 'tr_TR' and 'tr') or 'en',
                     'token': token,
                 },
             )

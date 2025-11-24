@@ -11,7 +11,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_worldline import const
 from odoo.addons.payment_worldline.controllers.main import WorldlineController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -19,7 +18,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
-        """ Override of `payment` to ensure that Worldline requirement for references is satisfied.
+        """Override of `payment` to ensure that Worldline requirement for references is satisfied.
 
         Worldline requires for references to be at most 30 characters long.
 
@@ -44,7 +43,7 @@ class PaymentTransaction(models.Model):
         )
 
     def _get_specific_processing_values(self, processing_values):
-        """ Override of `payment` to redirect failed token-flow transactions.
+        """Override of `payment` to redirect failed token-flow transactions.
 
         If the financial institution insists on user authentication,
         this override will reset the transaction, and switch the flow to redirect.
@@ -63,15 +62,12 @@ class PaymentTransaction(models.Model):
         ):
             # Tokenized payment failed due to 3-D Secure authentication request.
             # Reset transaction to draft and switch to redirect flow.
-            self.write({
-                'state': 'draft',
-                'operation': 'online_redirect',
-            })
+            self.write({'state': 'draft', 'operation': 'online_redirect'})
             return {'force_flow': 'redirect'}
         return super()._get_specific_processing_values(processing_values)
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return Worldline-specific processing values.
+        """Override of `payment` to return Worldline-specific processing values.
 
         Note: self.ensure_one() from `_get_processing_values`.
 
@@ -86,7 +82,7 @@ class PaymentTransaction(models.Model):
         return {'api_url': checkout_session_data['redirectUrl']}
 
     def _worldline_create_checkout_session(self):
-        """ Create a hosted checkout session and return the response data.
+        """Create a hosted checkout session and return the response data.
 
         :return: The hosted checkout session data.
         :rtype: dict
@@ -122,25 +118,17 @@ class PaymentTransaction(models.Model):
                         'phoneNumber': self.partner_phone or '',
                     },
                     'personalInformation': {
-                        'name': {
-                            'firstName': first_name or '',
-                            'surname': last_name or '',
-                        },
+                        'name': {'firstName': first_name or '', 'surname': last_name or ''}
                     },
                 },
-                'references': {
-                    'descriptor': self.reference,
-                    'merchantReference': self.reference,
-                },
+                'references': {'descriptor': self.reference, 'merchantReference': self.reference},
             },
         }
         if self.payment_method_id.code in const.REDIRECT_PAYMENT_METHODS:
             payload['redirectPaymentMethodSpecificInput'] = {
                 'requiresApproval': False,  # Force the capture.
                 'paymentProductId': const.PAYMENT_METHODS_MAPPING[self.payment_method_id.code],
-                'redirectionData': {
-                    'returnUrl': return_url,
-                },
+                'redirectionData': {'returnUrl': return_url},
             }
         else:
             payload['cardPaymentMethodSpecificInput'] = {
@@ -152,19 +140,16 @@ class PaymentTransaction(models.Model):
                 payload['cardPaymentMethodSpecificInput']['paymentProductId'] = worldline_code
             else:
                 payload['hostedCheckoutSpecificInput']['paymentProductFilters'] = {
-                    'restrictTo': {
-                        'groups': ['cards'],
-                    },
+                    'restrictTo': {'groups': ['cards']}
                 }
 
-        checkout_session_data = self._send_api_request('POST', 'hostedcheckouts', json=payload)
-
-        return checkout_session_data
+        return self._send_api_request('POST', 'hostedcheckouts', json=payload)
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Worldline."""
         if self.provider_code != 'worldline':
-            return super()._send_payment_request()
+            super()._send_payment_request()
+            return
 
         # Prepare the payment request to Worldline.
         payload = {
@@ -179,9 +164,7 @@ class PaymentTransaction(models.Model):
                     'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
                     'currencyCode': self.currency_id.name,
                 },
-                'references': {
-                    'merchantReference': self.reference,
-                },
+                'references': {'merchantReference': self.reference},
             },
         }
 
@@ -193,7 +176,7 @@ class PaymentTransaction(models.Model):
                 json=payload,
                 idempotency_key=payment_utils.generate_idempotency_key(
                     self, scope='payment_request_token'
-                )
+                ),
             )
         except ValidationError as e:
             self._set_error(str(e))
@@ -218,20 +201,17 @@ class PaymentTransaction(models.Model):
 
         # In case of failed payment, paymentResult could be given as a separate key
         payment_result = payment_data.get('paymentResult', payment_data)
-        amount_of_money = payment_result.get('payment', {}).get('paymentOutput', {}).get(
-            'amountOfMoney', {}
+        amount_of_money = (
+            payment_result.get('payment', {}).get('paymentOutput', {}).get('amountOfMoney', {})
         )
         amount = payment_utils.to_major_currency_units(
             amount_of_money.get('amount', 0), self.currency_id
         )
         currency_code = amount_of_money.get('currencyCode')
-        return {
-            'amount': amount,
-            'currency_code': currency_code,
-        }
+        return {'amount': amount, 'currency_code': currency_code}
 
     def _apply_updates(self, payment_data):
-        """ Override of `payment' to process the transaction based on Worldline data.
+        """Override of `payment' to process the transaction based on Worldline data.
 
         Note: self.ensure_one()
 
@@ -262,12 +242,17 @@ class PaymentTransaction(models.Model):
         if not status:
             self._set_error(_("Received data with missing payment state."))
         elif status in const.PAYMENT_STATUS_MAPPING['pending']:
-            if status == 'AUTHORIZATION_REQUESTED' and self.operation in ('online_token', 'offline'):
+            if status == 'AUTHORIZATION_REQUESTED' and self.operation in (
+                'online_token',
+                'offline',
+            ):
                 self._set_error(status)
-            elif self.operation == 'validation' \
-                 and status in {'PENDING_CAPTURE', 'CAPTURE_REQUESTED'} \
-                 and has_token_data:
-                    self._set_done()
+            elif (
+                self.operation == 'validation'
+                and status in {'PENDING_CAPTURE', 'CAPTURE_REQUESTED'}
+                and has_token_data
+            ):
+                self._set_done()
             else:
                 self._set_pending()
         elif status in const.PAYMENT_STATUS_MAPPING['done']:
@@ -277,27 +262,30 @@ class PaymentTransaction(models.Model):
             if errors := payment_data.get('statusOutput', {}).get('errors'):
                 error_code = errors[0].get('errorCode')
             if status in const.PAYMENT_STATUS_MAPPING['cancel']:
-                self._set_canceled(_(
-                    "Transaction cancelled with error code %(error_code)s.",
-                    error_code=error_code,
-                ))
+                self._set_canceled(
+                    _(
+                        "Transaction cancelled with error code %(error_code)s.",
+                        error_code=error_code,
+                    )
+                )
             elif status in const.PAYMENT_STATUS_MAPPING['declined']:
-                self._set_error(_(
-                    "Transaction declined with error code %(error_code)s.",
-                    error_code=error_code,
-                ))
+                self._set_error(
+                    _("Transaction declined with error code %(error_code)s.", error_code=error_code)
+                )
             else:  # Classify unsupported payment status as the `error` tx state.
                 _logger.info(
                     "Received data with invalid payment status (%(status)s) for transaction with "
                     "reference %(ref)s.",
                     {'status': status, 'ref': self.reference},
                 )
-                self._set_error(_(
-                    "Received invalid transaction status %(status)s with error code "
-                    "%(error_code)s.",
-                    status=status,
-                    error_code=error_code,
-                ))
+                self._set_error(
+                    _(
+                        "Received invalid transaction status %(status)s with error code"
+                        " %(error_code)s.",
+                        status=status,
+                        error_code=error_code,
+                    )
+                )
 
     @staticmethod
     def _worldline_extract_payment_method_data(payment_data):
@@ -327,7 +315,4 @@ class PaymentTransaction(models.Model):
 
         # Padded with *
         payment_details = payment_method_data.get('card', {}).get('cardNumber', '')[-4:]
-        return {
-            'payment_details': payment_details,
-            'provider_ref': payment_method_data['token'],
-        }
+        return {'payment_details': payment_details, 'provider_ref': payment_method_data['token']}

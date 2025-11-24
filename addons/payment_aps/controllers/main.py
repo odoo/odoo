@@ -10,7 +10,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -71,7 +70,7 @@ class APSController(http.Controller):
         received_signature = payment_data.get('signature')
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data.
         expected_signature = tx_sudo.provider_id._aps_calculate_signature(
@@ -79,4 +78,4 @@ class APSController(http.Controller):
         )
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

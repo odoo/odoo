@@ -12,7 +12,6 @@ from odoo.addons.payment_mollie.tests.common import MollieCommon
 
 @tagged('post_install', '-at_install')
 class MollieTest(MollieCommon, PaymentHttpCommon):
-
     def test_payment_request_payload_values(self):
         tx = self._create_transaction(flow='redirect')
 
@@ -29,7 +28,9 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
 
         self.assertDictEqual(payload['amount'], {'currency': 'EUR', 'value': '1111.11'})
         self.assertDictEqual(payload['billingAddress'], expected_billing_address)
-        self.assertDictEqual(payload['lines'][0]['totalAmount'], {'currency': 'EUR', 'value': '1111.11'})
+        self.assertDictEqual(
+            payload['lines'][0]['totalAmount'], {'currency': 'EUR', 'value': '1111.11'}
+        )
         self.assertEqual(payload['description'], tx.reference)
 
     @mute_logger(
@@ -37,7 +38,7 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         'odoo.addons.payment_mollie.models.payment_transaction',
     )
     def test_webhook_notification_confirms_transaction(self):
-        """ Test the processing of a webhook notification. """
+        """Test the processing of a webhook notification."""
         tx = self._create_transaction('redirect')
         url = self._build_url(MollieController._webhook_url)
         with patch(

@@ -1,23 +1,21 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.payment import utils as payment_utils
 
 
 def format_partner_name(partner_name):
-    """ Format the partner name to comply with the payload structure of the API request.
+    """Format the partner name to comply with the payload structure of the API request.
 
     :param str partner_name: The name of the partner making the payment.
     :return: The formatted partner name.
     :rtype: dict
     """
     first_name, last_name = payment_utils.split_partner_name(partner_name)
-    return {
-        'firstName': first_name,
-        'lastName': last_name,
-    }
+    return {'firstName': first_name, 'lastName': last_name}
 
 
 def include_partner_addresses(tx_sudo):
-    """ Include the billing and delivery addresses of the related sales order to the payload of the
+    """Include the billing and delivery addresses of the related sales order to the payload of the
     API request.
 
     If no related sales order exists, the addresses are not included.
@@ -41,7 +39,7 @@ def include_partner_addresses(tx_sudo):
 
 
 def format_partner_address(partner):
-    """ Format the partner address to comply with the payload structure of the API request.
+    """Format the partner address to comply with the payload structure of the API request.
 
     :param res.partner partner: The partner making the payment.
     :return: The formatted partner address.

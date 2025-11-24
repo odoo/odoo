@@ -30,12 +30,15 @@ class PaymentTransaction(models.Model):
 
         :param str provider_code: The code of the provider handling the transaction.
         :param str prefix: The custom prefix used to compute the full reference.
+        :param str separator: The custom separator used to separate the prefix from the suffix.
         :return: The unique reference for the transaction.
         :rtype: str
         """
         if provider_code == 'toss_payments':
             prefix = payment_utils.singularize_reference_prefix()
-        return super()._compute_reference(provider_code, prefix=prefix, separator=separator, **kwargs)
+        return super()._compute_reference(
+            provider_code, prefix=prefix, separator=separator, **kwargs
+        )
 
     def _get_specific_processing_values(self, *args):
         """Override of `payment` to return Toss Payments-specific processing values.
@@ -55,7 +58,10 @@ class PaymentTransaction(models.Model):
             'partner_email': self.partner_email or "",
             'partner_phone': self.partner_phone,
             'success_url': urljoin(base_url, const.PAYMENT_SUCCESS_RETURN_ROUTE),
-            'fail_url': urljoin(base_url, f"{const.PAYMENT_FAILURE_RETURN_ROUTE}?access_token={payment_utils.generate_access_token(self.reference)}"),
+            'fail_url': urljoin(
+                base_url,
+                f"{const.PAYMENT_FAILURE_RETURN_ROUTE}?access_token={payment_utils.generate_access_token(self.reference)}",
+            ),
         }
 
     @api.model

@@ -5,7 +5,6 @@ from odoo import _, models
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_custom.controllers.main import CustomController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -13,7 +12,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of payment to return custom-specific rendering values.
+        """Override of payment to return custom-specific rendering values.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -24,13 +23,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'custom':
             return super()._get_specific_rendering_values(processing_values)
 
-        return {
-            'api_url': CustomController._process_url,
-            'reference': self.reference,
-        }
+        return {'api_url': CustomController._process_url, 'reference': self.reference}
 
     def _get_communication(self):
-        """ Return the communication the user should use for their transaction.
+        """Return the communication the user should use for their transaction.
 
         This communication might change according to the settings and the accounting localization.
 
@@ -58,13 +54,11 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'custom':
             return super()._apply_updates(payment_data)
 
-        _logger.info(
-            "Validated custom payment for transaction %s: set as pending.", self.reference
-        )
+        _logger.info("Validated custom payment for transaction %s: set as pending.", self.reference)
         self._set_pending()
 
     def _log_received_message(self):
-        """ Override of `payment` to remove custom providers from the recordset.
+        """Override of `payment` to remove custom providers from the recordset.
 
         :return: None
         """
@@ -72,7 +66,7 @@ class PaymentTransaction(models.Model):
         super(PaymentTransaction, other_provider_txs)._log_received_message()
 
     def _get_sent_message(self):
-        """ Override of payment to return a different message.
+        """Override of payment to return a different message.
 
         :return: The 'transaction sent' message
         :rtype: str
@@ -81,6 +75,6 @@ class PaymentTransaction(models.Model):
         if self.provider_code == 'custom':
             message = _(
                 "The customer has selected %(provider_name)s to make the payment.",
-                provider_name=self.provider_id.name
+                provider_name=self.provider_id.name,
             )
         return message
