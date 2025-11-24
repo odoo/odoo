@@ -709,3 +709,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_hiding_sidebar_header(self):
         self.start_tour("/", "hide_sidebar_header", login="admin")
+
+    def test_header_color_related_issue(self):
+        self.start_tour("/", "header_color_related_issue", login="admin")

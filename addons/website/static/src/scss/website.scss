@@ -217,6 +217,9 @@ body {
 }
 
 #wrapwrap {
+    header .nav-item > .dropdown-menu {
+        @extend .navbar-light
+    }
     @if o-website-value('body-image') {
         @include body-image-bg-style();
     }
@@ -393,7 +396,7 @@ body {
 // the selector is probably too specific and should rather be about extending
 // bootstrap if possible.
 #wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
-    .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge, .nav-item > .accordion-item * {
+    .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge, .nav-item > .accordion-item *, .o_extra_menu_items .dropdown-item, .nav-item > .dropdown-menu > li > .dropdown-item, .o_extra_menu_items .dropdown-menu > li > .dropdown-menu > li > .dropdown-item {
         $header-text-color: o-website-value('header-text-color');
         color: format-color($header-text-color) !important;
     }
@@ -1565,9 +1568,7 @@ $-transition-duration: 200ms;
             border-top: $border-width solid $border-color;
         }
         > a.dropdown-toggle {
-            background-color: $body-tertiary-bg;
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
-
             &.active {
                 color: inherit !important;
             }
@@ -1596,6 +1597,9 @@ $-transition-duration: 200ms;
         > .o_mega_menu_container_size {
             transform: unset;
         }
+    }
+    > li > *, &.dropdown-menu {
+        @extend .navbar-light
     }
 }
 
