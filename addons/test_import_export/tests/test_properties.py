@@ -236,8 +236,8 @@ class TestPropertiesExportImport(HttpCase):
                 'admin_property': {'date': '2025-11-09'}
             }
         ])
-        new_test_user(self.env, login='demo')
-        self.authenticate('demo', 'demoxxxx')
+        new_test_user(self.env, login='import_test')
+        self.authenticate('import_test', 'import_test')
         res = self.url_open(
             "/web/export/get_fields",
             data=json.dumps({"params": {"model": 'export.aggregator.one2many',
