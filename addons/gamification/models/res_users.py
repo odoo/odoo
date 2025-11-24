@@ -122,6 +122,47 @@ class Users(models.Model):
         self.env['gamification.karma.tracking'].sudo().create(create_values)
         return True
 
+    @api.model
+    def _get_user_ids_ranked_by_karma(self, user_domain, from_date=None, to_date=None, limit=30, offset=0):
+        """ Return the list of user_ids satisfying the domain, sorted by their
+        karma gain during the specified period.
+
+        This method is designed for the website leaderboard pagination. It
+        computes the ranking based on the sum of gamification.karma.tracking
+        values within the given dates."""
+
+        where_query = self.env['res.users']._where_calc(user_domain)
+        user_from_clause, user_where_clause, where_clause_params = where_query.get_sql()
+
+        params = []
+        if from_date:
+            date_from_condition = 'AND tracking.tracking_date >= %s::DATE'
+            params.append(from_date)
+        if to_date:
+            date_to_condition = "AND tracking.tracking_date < %s::DATE + interval '1' day"
+            params.append(to_date)
+        params.extend([limit, offset])
+
+        query = """
+            SELECT "res_users".id as user_id
+            FROM %(user_from_clause)s
+            LEFT JOIN "gamification_karma_tracking" as "tracking"
+                ON "res_users".id = "tracking".user_id
+            WHERE %(user_where_clause)s %(date_from_condition)s %(date_to_condition)s
+            GROUP BY "res_users".id
+            ORDER BY COALESCE(SUM("tracking".new_value - "tracking".old_value), 0) DESC, "res_users".id DESC
+            LIMIT %%s OFFSET %%s
+        """ % {
+            'user_from_clause': user_from_clause,
+            'user_where_clause': user_where_clause or (not from_date and not to_date and 'TRUE') or '',
+            'date_from_condition': date_from_condition if from_date else '',
+            'date_to_condition': date_to_condition if to_date else '',
+        }
+
+        self.env.cr.execute(query, tuple(where_clause_params + params))
+        res = self.env.cr.fetchall()
+        return [r[0] for r in res]
+
     def _get_tracking_karma_gain_position(self, user_domain, from_date=None, to_date=None):
         """ Get absolute position in term of gained karma for users. First a ranking
         of all users is done given a user_domain; then the position of each user
