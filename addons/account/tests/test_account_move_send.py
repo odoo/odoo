@@ -1109,7 +1109,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         expected_results = {
             'sending_methods': {'email'},
             'invoice_edi_format': False,
-            'extra_edis': {},
+            'extra_edis': set(),
             'pdf_report': self.env.ref('account.account_invoices'),
             'author_user_id': self.env.user.id,
             'author_partner_id': self.env.user.partner_id.id,
