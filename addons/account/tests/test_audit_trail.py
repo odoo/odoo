@@ -258,3 +258,12 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
 
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail."):
             attachment.datas = b'new data'
+
+        # Adding an attachment to the log notes should be allowed
+        another_attachment = self.env['ir.attachment'].create({
+            'name': 'doc.pdf',
+            'res_model': 'mail.compose.message',
+            # Ensures a bytes-like object with guessed mimetype = 'application/pdf' (checked in _except_audit_trail())
+            'datas': attachment.datas,
+        })
+        invoice.message_post(message_type='comment', attachment_ids=another_attachment.ids)
