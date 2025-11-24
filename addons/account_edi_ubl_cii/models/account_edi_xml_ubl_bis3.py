@@ -3,7 +3,8 @@ from markupsafe import Markup
 
 from odoo import _, api, models
 from odoo.addons.account.tools import dict_to_xml
-from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import FloatFmt, UBL_NAMESPACES
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 
 from stdnum.no import mva
 
@@ -61,6 +62,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             'cbc:UBLVersionID': None,
             'cbc:CustomizationID': {'_text': self._get_customization_ids()['ubl_bis3']},
             'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'},
+            'cbc:TaxCurrencyCode': {'_text': vals['tax_currency_code']},
         })
         # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID (code 0204)
         if invoice.commercial_partner_id.peppol_eas == '0204':
@@ -218,77 +220,235 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         return financial_account_node
 
     # -------------------------------------------------------------------------
-    # EXPORT: Templates for document amount nodes
+    # EXPORT: Gathering data
     # -------------------------------------------------------------------------
 
-    def _get_tax_subtotal_node(self, vals):
-        # Compute total tax amount
-        tax_subtotal_node = super()._get_tax_subtotal_node(vals)
-        tax_subtotal_node['cbc:Percent'] = None
-        return tax_subtotal_node
+    def _setup_base_lines(self, vals):
+        # OVERRIDE
+        AccountTax = self.env['account.tax']
+        company = vals['company']
 
-    def _get_tax_category_node(self, vals):
-        grouping_key = vals['grouping_key']
-        return {
-            'cbc:ID': {'_text': grouping_key['tax_category_code']},
-            'cbc:Percent': {'_text': grouping_key['amount']},
-            'cbc:TaxExemptionReasonCode': {'_text': grouping_key.get('tax_exemption_reason_code')},
-            'cbc:TaxExemptionReason': {'_text': grouping_key.get('tax_exemption_reason')},
-            'cac:TaxScheme': {
-                'cbc:ID': {'_text': 'VAT'}
-            }
-        }
+        # Avoid negative unit price.
+        for base_line in vals['base_lines']:
+            if base_line['price_unit'] < 0.0:
+                base_line['quantity'] *= -1
+                base_line['price_unit'] *= -1
 
-    # -------------------------------------------------------------------------
-    # EXPORT: Templates for document level allowance/charge nodes
-    # -------------------------------------------------------------------------
+        # Manage taxes for emptying.
+        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(vals['base_lines'], company, vals)
 
-    def _get_document_allowance_charge_node(self, vals):
-        allowance_charge_node = super()._get_document_allowance_charge_node(vals)
-        allowance_charge_node['cbc:MultiplierFactorNumeric'] = None
-        return allowance_charge_node
+        vals['_ubl_values'] = {}
+        for base_line in vals['base_lines']:
+            base_line['_ubl_values'] = {}
 
-    # -------------------------------------------------------------------------
-    # EXPORT: Templates for line nodes
-    # -------------------------------------------------------------------------
+        # Global rounding of tax_details using 6 digits.
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
 
-    def _add_document_line_amount_nodes(self, line_node, vals):
-        super()._add_document_line_amount_nodes(line_node, vals)
-        # We can't have negative unit prices, so we invert the signs of
-        # the unit price and quantity, resulting in the same amount in the end
-        quantity_tag = self._get_tags_for_document_type(vals)['line_quantity']
-        if vals['base_line']['price_unit'] < 0.0:
-            line_node[quantity_tag]['_text'] = -vals['base_line']['quantity']
+        # Turn recycling contribution taxes such as RECUPEL / AUVIBEL into allowance/charges.
+        self._ubl_add_base_line_ubl_values_allowance_charges_recycling_contribution(vals)
 
-    def _add_document_line_tax_total_nodes(self, line_node, vals):
-        # TaxTotal should not be used in BIS 3.0
-        pass
+        # Turn belgium excises taxes into allowance/charges.
+        self._ubl_add_base_line_ubl_values_allowance_charges_excise(vals)
 
-    def _add_document_line_tax_category_nodes(self, line_node, vals):
-        base_line = vals['base_line']
-        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
+        # Turn 'discount' field into allowance/charges.
+        self._ubl_add_base_line_ubl_values_allowance_charges_discount(vals)
 
-        line_node['cac:Item']['cac:ClassifiedTaxCategory'] = [
-            # [UBL-CR-600] A UBL invoice should not include the InvoiceLine Item ClassifiedTaxCategory TaxExemptionReasonCode
-            # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
-            # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
-            self._get_tax_category_node({
-                **vals,
-                'grouping_key': {
-                    **grouping_key,
-                    'tax_exemption_reason_code': None,
-                    'tax_exemption_reason': None,
-                }
-            })
-            for grouping_key in aggregated_tax_details
-            if grouping_key
+        # Add 'line_extension_amount' being the total without tax.
+        self._ubl_add_base_line_ubl_values_line_extension_amount(vals)
+
+        # Add 'price_amount' being the original price unit without tax.
+        self._ubl_add_base_line_ubl_values_price(vals)
+
+        # Add 'item' being information about item taxes.
+        self._ubl_add_base_line_ubl_values_item(vals)
+
+        # Add 'tax_currency_code'.
+        self._ubl_add_values_tax_currency_code(vals)
+
+        # Add 'tax_totals'.
+        self._ubl_add_values_tax_totals(vals)
+
+        # Add 'payable_rounding_amount' to manage cash rounding.
+        self._ubl_add_values_payable_rounding_amount(vals)
+
+        # Extract cash rounding lines.
+        vals['base_lines'] = [
+            base_line
+            for base_line in vals['base_lines']
+            if base_line not in vals['_ubl_values']['payable_rounding_base_lines']
         ]
 
-    def _add_document_line_price_nodes(self, line_node, vals):
-        super()._add_document_line_price_nodes(line_node, vals)
-        currency_suffix = vals['currency_suffix']
-        sign = 1 if vals['base_line']['price_unit'] >= 0.0 else -1
-        line_node['cac:Price']['cbc:PriceAmount']['_text'] = FloatFmt(sign * vals[f'gross_price_unit{currency_suffix}'], 1, 8)
+        # Add 'allowance_charge_early_payment' to manage the early payment discount.
+        self._ubl_add_values_allowance_charge_early_payment(vals)
+
+    def _add_invoice_line_vals(self, vals):
+        # OVERRIDE
+        # Those temporary values are wrongly computed and the similar data are added to the base lines in
+        # 'setup_base_lines' because we need to compute them on all lines at once instead of on each line
+        # separately.
+        pass
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Build Nodes
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_line_amount_nodes(self, line_node, vals):
+        # OVERRIDE
+        base_line = vals['base_line']
+        currency = vals['currency_id']
+
+        quantity_tag = self._get_tags_for_document_type(vals)['line_quantity']
+
+        line_node.update({
+            quantity_tag: {
+                '_text': base_line['quantity'],
+                'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+            },
+            'cbc:LineExtensionAmount': {
+                '_text': FloatFmt(base_line['_ubl_values']['line_extension_amount'], min_dp=currency.decimal_places),
+                'currencyID': currency.name,
+            },
+        })
+
+    def _add_invoice_line_allowance_charge_nodes(self, line_node, vals):
+        # OVERRIDE
+        base_line = vals['base_line']
+        ubl_values = base_line['_ubl_values']
+        allowance_charges_nodes = line_node['cac:AllowanceCharge'] = []
+
+        # Discount.
+        discount_values = ubl_values['allowance_charge_discount_currency']
+        if discount_values:
+            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_discount_node(vals, discount_values))
+
+        # Recycling contribution taxes.
+        for recycling_contribution_values in base_line['_ubl_values']['allowance_charges_recycling_contribution_currency']:
+            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_recycling_contribution_node(vals, recycling_contribution_values))
+
+        # Excise taxes.
+        for excise_values in base_line['_ubl_values']['allowance_charges_excise_currency']:
+            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_excise_node(vals, excise_values))
+
+    def _add_invoice_line_item_nodes(self, line_node, vals):
+        # OVERRIDE
+        item_values = vals['base_line']['_ubl_values']['item_currency']
+        line_node['cac:Item'] = self._ubl_get_line_item_node(vals, item_values)
+
+    def _add_invoice_line_tax_category_nodes(self, line_node, vals):
+        # OVERRIDE
+        pass
+
+    def _add_invoice_line_tax_total_nodes(self, line_node, vals):
+        # OVERRIDE
+        pass
+
+    def _add_invoice_line_price_nodes(self, line_node, vals):
+        # OVERRIDE
+        base_line = vals['base_line']
+        ubl_values = base_line['_ubl_values']
+
+        line_node['cac:Price'] = {
+            'cbc:PriceAmount': {
+                '_text': FloatFmt(ubl_values['price_amount_currency'], min_dp=1, max_dp=6),
+                'currencyID': vals['currency_name'],
+            },
+        }
+
+    def _add_invoice_allowance_charge_nodes(self, document_node, vals):
+        # OVERRIDE
+        ubl_values = vals['_ubl_values']
+        document_node['cac:AllowanceCharge'] = [
+            self._ubl_get_allowance_charge_early_payment(vals, early_payment_values)
+            for early_payment_values in ubl_values['allowance_charges_early_payment_currency']
+        ]
+
+    def _add_invoice_tax_total_nodes(self, document_node, vals):
+        # OVERRIDE
+        ubl_values = vals['_ubl_values']
+        company = vals['company']
+        company_currency = company.currency_id
+        currency = vals['currency_id']
+
+        tax_total_nodes = document_node['cac:TaxTotal'] = []
+        for tax_total in ubl_values['tax_totals_currency'].values():
+            tax_total_node = self._ubl_get_tax_total_node(vals, tax_total)
+            tax_total_nodes.append(tax_total_node)
+
+        # Only one subtotal expressed in foreign currency in case of multi currencies.
+        if currency != company_currency:
+            for tax_total in ubl_values['tax_totals'].values():
+                tax_total_node = self._ubl_get_tax_total_node(vals, tax_total)
+                tax_total_node['cac:TaxSubtotal'] = []
+                tax_total_nodes.append(tax_total_node)
+
+    def _add_invoice_monetary_total_vals(self, vals):
+        # OVERRIDE
+        pass
+
+    def _add_invoice_monetary_total_nodes(self, document_node, vals):
+        monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+        ubl_values = vals['_ubl_values']
+        invoice = vals['invoice']
+        line_tag = self._get_tags_for_document_type(vals)['document_line']
+
+        line_extension_amount = sum(
+            line_node['cbc:LineExtensionAmount']['_text']
+            for line_node in document_node[line_tag]
+        )
+        tax_amount = sum(
+            tax_total['cbc:TaxAmount']['_text']
+            for tax_total in document_node['cac:TaxTotal']
+            if tax_total['cbc:TaxAmount']['currencyID'] == vals['currency_id'].name
+        )
+        total_allowance = sum(
+            allowance_charge['cbc:Amount']['_text']
+            for allowance_charge in document_node['cac:AllowanceCharge']
+            if allowance_charge['cbc:ChargeIndicator']['_text'] == 'false'
+        )
+        total_charge = sum(
+            allowance_charge['cbc:Amount']['_text']
+            for allowance_charge in document_node['cac:AllowanceCharge']
+            if allowance_charge['cbc:ChargeIndicator']['_text'] == 'true'
+        )
+        payable_rounding_amount = ubl_values['payable_rounding_amount_currency']
+
+        document_node[monetary_total_tag] = {
+            'cbc:LineExtensionAmount': {
+                '_text': FloatFmt(line_extension_amount, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:TaxExclusiveAmount': {
+                '_text': FloatFmt(line_extension_amount, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:TaxInclusiveAmount': {
+                '_text': FloatFmt(line_extension_amount + tax_amount, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:AllowanceTotalAmount': {
+                '_text': FloatFmt(total_allowance, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            } if total_allowance else None,
+            'cbc:ChargeTotalAmount': {
+                '_text': FloatFmt(total_charge, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            } if total_charge else None,
+            'cbc:PrepaidAmount': {
+                '_text': FloatFmt(invoice.amount_total - invoice.amount_residual, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:PayableRoundingAmount': {
+                '_text': FloatFmt(payable_rounding_amount, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            } if payable_rounding_amount else None,
+            'cbc:PayableAmount': {
+                '_text': FloatFmt(invoice.amount_residual, min_dp=vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+        }
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
@@ -358,7 +518,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 break
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
-            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
+            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code'))) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
@@ -464,6 +624,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 ) if not mva.is_valid(vat) or len(vat) != 14 or vat[:2] != 'NO' or vat[-3:] != 'MVA' else "",
             })
         return constraints
+
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
 
     def _import_retrieve_partner_vals(self, tree, role):
         # EXTENDS account.edi.xml.ubl_20

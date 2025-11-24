@@ -29,6 +29,17 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
     # EXPORT: Templates
     # -------------------------------------------------------------------------
 
+    def _ubl_add_values_tax_currency_code(self, vals):
+        # OVERRIDE account.edi.xml.ubl_bis3
+        self._ubl_add_values_tax_currency_code_empty(vals)
+
+    def _add_invoice_tax_total_nodes(self, document_node, vals):
+        # OVERRIDE
+        document_node['cac:TaxTotal'] = [
+            self._ubl_get_tax_total_node(vals, tax_total)
+            for tax_total in vals['_ubl_values']['tax_totals_currency'].values()
+        ]
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_header_nodes(document_node, vals)
@@ -46,3 +57,11 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
                 'schemeID': 'EM'
             }
         return party_node
+
+    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
+        # EXTENDS account.edi.xml.ubl_bis3
+        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
+        discount_node['cbc:AllowanceChargeReason'] = None
+        discount_node['cbc:MultiplierFactorNumeric'] = None
+        discount_node['cbc:BaseAmount'] = None
+        return discount_node
