@@ -411,13 +411,12 @@ class TestPointOfSaleFlow(CommonPosTest):
         with patch.object(self.env.registry['bus.bus'], '_sendone') as mock_send:
             invoice.button_draft()
             mock_send.assert_called_with(self.env.user.partner_id, 'simple_notification', {
-                'type': 'warning',
-                'title': "Warning: Invoice Reset Risk",
-                'message': "This invoice is linked to a POS Order, resetting it to draft prevents closing the session. You should rather refund the order or create a credit note.",
+                'type': 'danger',
+                'message': "You can't reset this invoice to draft because the POS session is still open. Please close the ongoing session first, then try again.",
                 'sticky': True,
             })
 
-        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
 
         self.assertAlmostEqual(invoice.amount_total, order.amount_total, places=2)
 

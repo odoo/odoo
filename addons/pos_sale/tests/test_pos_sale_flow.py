@@ -1078,16 +1078,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         invoice = pos_order.account_move
         self.assertEqual(invoice.state, 'posted')
 
-        # when clicking on cancel button
+        # when clicking on draft button, it must keep posted because if the pos is open
+        # we cannot cancel the invoice.
         invoice.button_draft()
-        self.assertEqual(invoice.state, 'draft')
-        invoice.button_cancel()
-        self.assertEqual(invoice.state, 'cancel')
-
-        # when clicking on confirm button
-        invoice.button_draft()
-        self.assertEqual(invoice.state, 'draft')
-        invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
 
     def test_pos_order_and_invoice_amounts(self):
