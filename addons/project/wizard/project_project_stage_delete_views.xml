@@ -19,8 +19,8 @@
                 <footer>
                     <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or projects_count == 0" data-hotkey="q"/>
                     <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="projects_count &gt; 0" data-hotkey="w"/>
-                    <button string="Discard" special="cancel" data-hotkey="x" class="btn btn-primary" invisible="not (stages_active or projects_count)" />
-                    <button string="Discard" special="cancel" data-hotkey="x" invisible="stages_active or projects_count" />
+                    <button special="cancel" data-hotkey="x" class="btn btn-primary" invisible="not (stages_active or projects_count)" />
+                    <button special="cancel" data-hotkey="x" invisible="stages_active or projects_count" />
                 </footer>
             </form>
         </field>
@@ -36,7 +36,7 @@
                 </div>
                 <footer>
                     <button string="Confirm" type="object" name="action_unarchive_project" class="btn btn-primary"/>
-                    <button string="Discard" special="cancel"/>
+                    <button special="cancel"/>
                 </footer>
             </form>
         </field>

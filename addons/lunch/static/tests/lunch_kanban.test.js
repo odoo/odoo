@@ -81,7 +81,7 @@ class Order extends models.Model {
             </sheet>
             <footer>
                 <button name="add_to_cart" type="object" string="Add to cart" />
-                <button string="Discard" special="cancel"/>
+                <button special="cancel"/>
             </footer>
         </form>`,
     };
