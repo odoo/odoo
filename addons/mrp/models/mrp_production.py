@@ -1551,14 +1551,14 @@ class MrpProduction(models.Model):
                 raise UserError(_("You cannot set more than 1 lot per product"))
             self.lot_producing_ids = [Command.create(self._prepare_stock_lot_values())]
             if self.picking_type_id.auto_print_generated_mrp_lot:
-                return self._autoprint_generated_lot(self.lot_producing_ids[-1])
+                return self._autoprint_generated_lots(self.lot_producing_ids)
         elif self.product_tracking == 'serial':
             if self.product_qty == 1 and not self.lot_producing_ids:
                 self.lot_producing_ids = [Command.create(self._prepare_stock_lot_values())]
                 self.qty_producing = 1
                 (workorder or self).set_qty_producing()
                 if self.picking_type_id.auto_print_generated_mrp_lot:
-                    return self._autoprint_generated_lot(self.lot_producing_ids[-1])
+                    return self._autoprint_generated_lots(self.lot_producing_ids)
                 return
             action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_assign_serial_numbers")
             action['context'] = {
@@ -2155,6 +2155,18 @@ class MrpProduction(models.Model):
         self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
+
+        for production in self:
+            if production.product_tracking not in ['lot', 'serial'] or production.lot_producing_ids:
+                continue
+            if not production.qty_producing:
+                production.qty_producing = production.product_qty - production.qty_produced
+                production.set_qty_producing()
+            if production.product_tracking == 'lot':
+                production.lot_producing_ids = [Command.create(production._prepare_stock_lot_values())]
+            else:
+                production.lot_producing_ids = [Command.create(production._prepare_stock_lot_values()) for _ in range(int(production.qty_producing))]
+
         res = self.pre_button_mark_done()
         if res is not True:
             return res
@@ -2279,7 +2291,6 @@ class MrpProduction(models.Model):
     def pre_button_mark_done(self):
         self._button_mark_done_sanity_checks()
         production_auto_ids = set()
-        production_missing_lot_ids = set()
         for production in self:
             if not production.product_uom_id.is_zero(production.qty_producing):
                 production.move_raw_ids.filtered(
@@ -2288,13 +2299,6 @@ class MrpProduction(models.Model):
                 continue
             if production._auto_production_checks():
                 production_auto_ids.add(production.id)
-            elif not production.lot_producing_ids:
-                production_missing_lot_ids.add(production.id)
-
-        if production_missing_lot_ids:
-            if len(production_missing_lot_ids) > 1:
-                raise UserError(_("You need to generate Lot/Serial Number(s) to mark as done some productions"))
-            return self.env['mrp.production'].browse(production_missing_lot_ids).action_generate_serial()
 
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
         for production in productions_auto:
@@ -2871,13 +2875,11 @@ class MrpProduction(models.Model):
 
     def _set_quantities(self):
         self.ensure_one()
-        missing_lot_id_products = ""
-        if self.product_tracking in ('lot', 'serial') and not self.lot_producing_ids:
-            self.action_generate_serial()
         self.qty_producing = self.product_qty - self.qty_produced
         self._set_qty_producing()
         self._mark_byproducts_as_produced()
 
+        missing_lot_id_products = ""
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
                 continue
@@ -2952,14 +2954,14 @@ class MrpProduction(models.Model):
                     report_actions.append(action)
         return report_actions
 
-    def _autoprint_generated_lot(self, lot_id):
+    def _autoprint_generated_lots(self, lot_ids):
         self.ensure_one()
         if self.picking_type_id.generated_mrp_lot_label_to_print == 'pdf':
-            action = self.env.ref("stock.action_report_lot_label").report_action(lot_id.id, config=False)
+            action = self.env.ref("stock.action_report_lot_label").report_action(lot_ids, config=False)
             clean_action(action, self.env)
             return action
         elif self.picking_type_id.generated_mrp_lot_label_to_print == 'zpl':
-            action = self.env.ref("stock.label_lot_template").report_action(lot_id.id, config=False)
+            action = self.env.ref("stock.label_lot_template").report_action(lot_ids, config=False)
             clean_action(action, self.env)
             return action
 
