@@ -9,13 +9,12 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 @tagged('post_install', '-at_install')
 class TestMultiCompanyFlows(PaymentHttpCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company_a = cls.env.company # cls.company_data['company']
-        cls.company_b = cls.env.company.create({'name': "Payment Test Company"}) # cls.company_data_2['company']
+        cls.company_a = cls.env.company
+        cls.company_b = cls.env.company.create({'name': "Payment Test Company"})
 
         cls.user_company_a = cls.internal_user
         cls.user_company_b = cls.env['res.users'].create({
@@ -53,8 +52,9 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         for key, val in payment_context.items():
             if key in route_values:
                 if key == 'access_token':
-                    continue # access_token was modified due to the change of partner.
-                elif key == 'partner_id':
+                    continue  # access_token was modified due to the change of partner.
+
+                if key == 'partner_id':
                     # The partner is replaced by the partner of the user paying.
                     self.assertEqual(val, self.user_company_a.partner_id.id)
                 else:

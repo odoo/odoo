@@ -7,7 +7,6 @@ from odoo import fields, models
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_dpo import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -26,7 +25,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'dpo':
             return super()._get_default_payment_method_codes()
@@ -52,5 +51,4 @@ class PaymentProvider(models.Model):
             return super()._parse_response_content(response, **kwargs)
 
         root = ET.fromstring(response.content.decode('utf-8'))
-        transaction_data = {element.tag: element.text for element in root}
-        return transaction_data
+        return {element.tag: element.text for element in root}

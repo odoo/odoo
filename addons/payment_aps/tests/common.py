@@ -4,17 +4,19 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 class APSCommon(PaymentHttpCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.aps = cls._prepare_provider('aps', update_values={
-            'aps_merchant_identifier': '123456abc',
-            'aps_access_code': 'dummy',
-            'aps_sha_request': 'dummy',
-            'aps_sha_response': 'dummy',
-        })
+        cls.aps = cls._prepare_provider(
+            'aps',
+            update_values={
+                'aps_merchant_identifier': '123456abc',
+                'aps_access_code': 'dummy',
+                'aps_sha_request': 'dummy',
+                'aps_sha_response': 'dummy',
+            },
+        )
 
         cls.provider = cls.aps
 

@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir_http
-from . import payment_method
-from . import payment_provider
-from . import payment_token
-from . import payment_transaction
-from . import portal_entry
-from . import res_company
-from . import res_country
-from . import res_partner
+from . import (
+    ir_http,
+    payment_method,
+    payment_provider,
+    payment_token,
+    payment_transaction,
+    portal_entry,
+    res_company,
+    res_country,
+    res_partner,
+)

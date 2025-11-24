@@ -3,8 +3,6 @@
 import logging
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
-
 
 _logger = logging.getLogger(__name__)
 
@@ -14,10 +12,10 @@ class PaymentTransaction(models.Model):
 
     capture_manually = fields.Boolean(related='provider_id.capture_manually')
 
-    #=== ACTION METHODS ===#
+    # === ACTION METHODS ===#
 
     def action_demo_set_done(self):
-        """ Set the state of the demo transaction to 'done'.
+        """Set the state of the demo transaction to 'done'.
 
         Note: self.ensure_one()
 
@@ -31,7 +29,7 @@ class PaymentTransaction(models.Model):
         self._process('demo', payment_data)
 
     def action_demo_set_canceled(self):
-        """ Set the state of the demo transaction to 'cancel'.
+        """Set the state of the demo transaction to 'cancel'.
 
         Note: self.ensure_one()
 
@@ -45,7 +43,7 @@ class PaymentTransaction(models.Model):
         self._process('demo', payment_data)
 
     def action_demo_set_error(self):
-        """ Set the state of the demo transaction to 'error'.
+        """Set the state of the demo transaction to 'error'.
 
         Note: self.ensure_one()
 

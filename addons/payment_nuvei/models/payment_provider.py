@@ -7,16 +7,13 @@ from odoo import fields, models
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_nuvei import const
 
-
 _logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
-    code = fields.Selection(
-        selection_add=[('nuvei', "Nuvei")], ondelete={'nuvei': 'set default'}
-    )
+    code = fields.Selection(selection_add=[('nuvei', "Nuvei")], ondelete={'nuvei': 'set default'})
     nuvei_merchant_identifier = fields.Char(
         string="Nuvei Merchant Identifier",
         help="The code of the merchant account to use with this provider.",
@@ -40,7 +37,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return the supported currencies. """
+        """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'nuvei':
             supported_currencies = supported_currencies.filtered(
@@ -51,7 +48,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'nuvei':
             return super()._get_default_payment_method_codes()
@@ -61,12 +58,13 @@ class PaymentProvider(models.Model):
 
     def _nuvei_get_api_url(self):
         if self.state == 'enabled':
-            return 'https://secure.safecharge.com/ppp/purchase.do'
+            api_url = 'https://secure.safecharge.com/ppp/purchase.do'
         else:  # 'test'
-            return 'https://ppp-test.safecharge.com/ppp/purchase.do'
+            api_url = 'https://ppp-test.safecharge.com/ppp/purchase.do'
+        return api_url
 
     def _nuvei_calculate_signature(self, data, incoming=True):
-        """ Compute the signature for the provided data according to the Nuvei documentation.
+        """Compute the signature for the provided data according to the Nuvei documentation.
 
         :param dict data: The data to sign.
         :param bool incoming: If the signature must be generated for an incoming (Nuvei to Odoo) or

@@ -24,7 +24,7 @@ class StripeController(http.Controller):
     _return_url = '/payment/stripe/return'
     _webhook_url = '/payment/stripe/webhook'
     _apple_pay_domain_association_url = '/.well-known/apple-developer-merchantid-domain-association'
-    WEBHOOK_AGE_TOLERANCE = 10*60  # seconds
+    WEBHOOK_AGE_TOLERANCE = 10 * 60  # seconds
 
     @http.route(_return_url, type='http', methods=['GET'], auth='public')
     def stripe_return(self, **data):
@@ -82,8 +82,8 @@ class StripeController(http.Controller):
                     'event_type': event['type'],
                     'object_id': stripe_object['id'],
                 }
-                tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-                    'stripe', data
+                tx_sudo = (
+                    request.env['payment.transaction'].sudo()._search_by_reference('stripe', data)
                 )
 
                 if not tx_sudo:
@@ -165,7 +165,7 @@ class StripeController(http.Controller):
 
     @staticmethod
     def _create_refund_tx_from_refund(source_tx_sudo, refund_object):
-        """ Create a refund transaction based on Stripe data.
+        """Create a refund transaction based on Stripe data.
 
         :param recordset source_tx_sudo: The source transaction for which a refund is initiated, as
                                          a sudoed `payment.transaction` record.
@@ -197,24 +197,24 @@ class StripeController(http.Controller):
 
         notification_payload = request.httprequest.data.decode('utf-8')
         signature_entries = request.httprequest.headers['Stripe-Signature'].split(',')
-        signature_data = {k: v for k, v in [entry.split('=') for entry in signature_entries]}
+        signature_data = dict([entry.split('=') for entry in signature_entries])
 
         # Retrieve the timestamp from the data
         event_timestamp = int(signature_data.get('t', '0'))
         if not event_timestamp:
             _logger.warning("Received payment data with missing timestamp")
-            raise Forbidden()
+            raise Forbidden
 
         # Check if the timestamp is not too old
         if datetime.utcnow().timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
             _logger.warning("Received payment data with outdated timestamp: %s", event_timestamp)
-            raise Forbidden()
+            raise Forbidden
 
         # Retrieve the received signature from the data
         received_signature = signature_data.get('v1')
         if not received_signature:
             _logger.warning("Received payment data with missing signature")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data
         signed_payload = f'{event_timestamp}.{notification_payload}'
@@ -223,11 +223,11 @@ class StripeController(http.Controller):
         ).hexdigest()
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature")
-            raise Forbidden()
+            raise Forbidden
 
     @http.route(_apple_pay_domain_association_url, type='http', auth='public', csrf=False)
     def stripe_apple_pay_get_domain_association_file(self):
-        """ Get the domain association file for Stripe's Apple Pay.
+        """Get the domain association file for Stripe's Apple Pay.
 
         Stripe handles the process of "merchant validation" described in Apple's documentation for
         Apple Pay on the Web. Stripe and Apple will access this route to check the content of the

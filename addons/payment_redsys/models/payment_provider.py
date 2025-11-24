@@ -19,14 +19,10 @@ class PaymentProvider(models.Model):
         selection_add=[('redsys', "Redsys")], ondelete={'redsys': 'set default'}
     )
     redsys_merchant_code = fields.Char(
-        string="Redsys Merchant Code",
-        required_if_provider='redsys',
-        copy=False,
+        string="Redsys Merchant Code", required_if_provider='redsys', copy=False
     )
     redsys_merchant_terminal = fields.Char(
-        string="Redsys Merchant Terminal",
-        required_if_provider='redsys',
-        copy=False,
+        string="Redsys Merchant Terminal", required_if_provider='redsys', copy=False
     )
     redsys_secret_key = fields.Char(
         string="Redsys Secret Key",
@@ -48,9 +44,10 @@ class PaymentProvider(models.Model):
 
     def _redsys_get_api_url(self):
         if self.state == 'enabled':
-            return 'https://sis.redsys.es/sis/realizarPago'
+            api_url = 'https://sis.redsys.es/sis/realizarPago'
         else:  # 'test'
-            return 'https://sis-t.redsys.es:25443/sis/realizarPago'
+            api_url = 'https://sis-t.redsys.es:25443/sis/realizarPago'
+        return api_url
 
     def _redsys_calculate_signature(self, merchant_parameters, reference, secret_key):
         """Calculate the signature for the provided data.
@@ -74,5 +71,4 @@ class PaymentProvider(models.Model):
         # 3. Create HMAC-SHA256 using the derived key and merchant parameters.
         hmac_obj = hmac.new(derived_key, merchant_parameters.encode(), hashlib.sha256)
         # 4. Encode the HMAC result in Base64.
-        signature = base64.urlsafe_b64encode(hmac_obj.digest()).decode()
-        return signature
+        return base64.urlsafe_b64encode(hmac_obj.digest()).decode()

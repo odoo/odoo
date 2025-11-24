@@ -4,15 +4,13 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class DPOCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.dpo = cls._prepare_provider('dpo', update_values={
-            'dpo_company_token': '1A2Z3E4R',
-            'dpo_service_ref': '1234',
-        })
+        cls.dpo = cls._prepare_provider(
+            'dpo', update_values={'dpo_company_token': '1A2Z3E4R', 'dpo_service_ref': '1234'}
+        )
 
         cls.provider = cls.dpo
 

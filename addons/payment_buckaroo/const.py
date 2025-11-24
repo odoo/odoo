@@ -50,19 +50,10 @@ STATUS_CODES_MAPPING = {
     'done': (190,),
     'cancel': (890, 891),
     'refused': (690,),
-    'error': (490, 491, 492,),
+    'error': (490, 491, 492),
 }
 
 # The currencies supported by Buckaroo, in ISO 4217 format.
 # See https://support.buckaroo.eu/frequently-asked-questions
 # Last seen online: 7 November 2022.
-SUPPORTED_CURRENCIES = [
-    'EUR',
-    'GBP',
-    'PLN',
-    'DKK',
-    'NOK',
-    'SEK',
-    'CHF',
-    'USD',
-]
+SUPPORTED_CURRENCIES = ['EUR', 'GBP', 'PLN', 'DKK', 'NOK', 'SEK', 'CHF', 'USD']

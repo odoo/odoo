@@ -2,7 +2,6 @@
 
 from odoo.tools.translate import LazyTranslate
 
-
 _lt = LazyTranslate(__name__, default_lang='en_US')
 
 # The keys that are sensitive and should not be logged.
@@ -255,7 +254,7 @@ COUNTRY_NUMERIC_CODES = {
     'WF': '876',
     'WS': '882',
     'YE': '887',
-    'ZM': '894'
+    'ZM': '894',
 }
 
 # Mapping of ISO 4217 currency codes to their number of decimals.
@@ -536,7 +535,7 @@ CURRENCY_MINOR_UNITS = {
     'ZWD': 2,
     'ZWL': 2,
     'ZWN': 2,
-    'ZWR': 2
+    'ZWR': 2,
 }
 
 REPORT_REASONS_MAPPING = {

@@ -35,7 +35,7 @@ SUPPORTED_CURRENCIES = (
 # The codes of the payment methods to activate when Paypal is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
-    'paypal',
+    'paypal'
 }
 
 # Mapping of transaction states to PayPal payment statuses.
@@ -47,15 +47,8 @@ PAYMENT_STATUS_MAPPING = {
         'CREATED',
         'APPROVED',  # The buyer approved a checkout order.
     ),
-    'done': (
-        'COMPLETED',
-        'CAPTURED',
-    ),
-    'cancel': (
-        'DECLINED',
-        'DENIED',
-        'VOIDED',
-    ),
+    'done': ('COMPLETED', 'CAPTURED'),
+    'cancel': ('DECLINED', 'DENIED', 'VOIDED'),
     'error': ('FAILED',),
 }
 

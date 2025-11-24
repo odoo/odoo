@@ -7,10 +7,7 @@
     'summary': "A payment provider covering Turkey.",
     'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
-    'data': [
-        'data/payment_provider_data.xml',
-        'views/payment_provider_views.xml',
-    ],
+    'data': ['data/payment_provider_data.xml', 'views/payment_provider_views.xml'],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',

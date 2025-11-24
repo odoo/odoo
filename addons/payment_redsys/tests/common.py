@@ -7,15 +7,17 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 class RedsysCommon(PaymentCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.redsys = cls._prepare_provider('redsys', update_values={
-            'redsys_merchant_code': '99999999',
-            'redsys_merchant_terminal': '777',
-            'redsys_secret_key': 'a1b2c3d4e5f6g7h8a1b2c3d4e5f6g7h8',
-        })
+        cls.redsys = cls._prepare_provider(
+            'redsys',
+            update_values={
+                'redsys_merchant_code': '99999999',
+                'redsys_merchant_terminal': '777',
+                'redsys_secret_key': 'a1b2c3d4e5f6g7h8a1b2c3d4e5f6g7h8',
+            },
+        )
         cls.provider = cls.redsys
         cls.merchant_parameters = {
             'Ds_Order': 'Test Transaction',

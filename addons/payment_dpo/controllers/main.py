@@ -8,7 +8,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -17,7 +16,7 @@ class DPOController(http.Controller):
 
     @http.route(_return_url, type='http', auth='public', methods=['GET'])
     def dpo_return_from_checkout(self, **data):
-        """ Process the payment data sent by DPO after redirection.
+        """Process the payment data sent by DPO after redirection.
 
         :param dict data: The payment data.
         """
@@ -29,7 +28,7 @@ class DPOController(http.Controller):
 
     @staticmethod
     def _verify_and_process(data):
-        """ Verify and process the payment data sent by DPO.
+        """Verify and process the payment data sent by DPO.
 
         :param dict data: The payment data.
         :return: None

@@ -12,7 +12,6 @@ from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -20,7 +19,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return Mercado Pago-specific rendering values.
+        """Override of `payment` to return Mercado Pago-specific rendering values.
 
         Note: self.ensure_one() from `_get_rendering_values`.
 
@@ -60,27 +59,20 @@ class PaymentTransaction(models.Model):
         return_url = urljoin(base_url, const.PAYMENT_RETURN_ROUTE)
         payload.update({
             'auto_return': 'all',
-            'back_urls': {
-                'success': return_url,
-                'pending': return_url,
-                'failure': return_url,
-            },
-            'items': [{
-                'title': self.reference,
-                'quantity': 1,
-                'currency_id': self.currency_id.name,
-                'unit_price': self._mercado_pago_convert_amount(),
-            }],
+            'back_urls': {'success': return_url, 'pending': return_url, 'failure': return_url},
+            'items': [
+                {
+                    'title': self.reference,
+                    'quantity': 1,
+                    'currency_id': self.currency_id.name,
+                    'unit_price': self._mercado_pago_convert_amount(),
+                }
+            ],
             'payer': {
                 'name': self.partner_name,
                 'email': self.partner_email,
-                'phone': {
-                    'number': self.partner_phone,
-                },
-                'address': {
-                    'zip_code': self.partner_zip,
-                    'street_name': self.partner_address,
-                },
+                'phone': {'number': self.partner_phone},
+                'address': {'zip_code': self.partner_zip, 'street_name': self.partner_address},
             },
         })
         return payload
@@ -95,11 +87,13 @@ class PaymentTransaction(models.Model):
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         payload.update({
             'additional_info': {
-                'items': [{
-                    'title': self.reference,
-                    'quantity': 1,
-                    'unit_price': self._mercado_pago_convert_amount(),
-                }],
+                'items': [
+                    {
+                        'title': self.reference,
+                        'quantity': 1,
+                        'unit_price': self._mercado_pago_convert_amount(),
+                    }
+                ]
             },
             'payer': {
                 'first_name': first_name,
@@ -110,7 +104,7 @@ class PaymentTransaction(models.Model):
         return payload
 
     def _mercado_pago_prepare_base_request_payload(self):
-        """ Create the base payload for requests based on the transaction values.
+        """Create the base payload for requests based on the transaction values.
 
         :return: The base request payload.
         :rtype: dict
@@ -119,10 +113,7 @@ class PaymentTransaction(models.Model):
         sanitized_reference = url_quote(self.reference)
         # Append the reference to identify the transaction from the webhook payment data.
         webhook_url = urljoin(base_url, f'{const.WEBHOOK_ROUTE}/{sanitized_reference}')
-        return {
-            'external_reference': self.reference,
-            'notification_url': webhook_url,
-        }
+        return {'external_reference': self.reference, 'notification_url': webhook_url}
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Mercado Pago.
@@ -145,18 +136,13 @@ class PaymentTransaction(models.Model):
             'transaction_amount': self._mercado_pago_convert_amount(),
             'token': response_content['id'],
             'installments': 1,
-            'payer': {
-                'type': 'customer',
-                'id': self.token_id.mercado_pago_customer_id,
-            },
+            'payer': {'type': 'customer', 'id': self.token_id.mercado_pago_customer_id},
         }
         response_content = self._send_api_request(
             'POST',
             endpoint='/v1/payments',
             json=data,
-            idempotency_key=payment_utils.generate_idempotency_key(
-                self, scope='token_payment'
-            ),
+            idempotency_key=payment_utils.generate_idempotency_key(self, scope='token_payment'),
         )
         self._process('mercado_pago', response_content)
 
@@ -204,7 +190,8 @@ class PaymentTransaction(models.Model):
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'mercado_pago':
-            return super()._apply_updates(payment_data)
+            super()._apply_updates(payment_data)
+            return
 
         # Update the provider reference.
         payment_id = payment_data.get('id')
@@ -248,14 +235,17 @@ class PaymentTransaction(models.Model):
             status_detail = payment_data.get('status_detail')
             _logger.warning(
                 "Received data for transaction %s with status %s and error code: %s.",
-                self.reference, payment_status, status_detail
+                self.reference,
+                payment_status,
+                status_detail,
             )
             error_message = self._mercado_pago_get_error_msg(status_detail)
             self._set_error(error_message)
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
                 "Received data for transaction %s with invalid payment status: %s.",
-                self.reference, payment_status
+                self.reference,
+                payment_status,
             )
             self._set_error(_("Received data with invalid status: %s.", payment_status))
 
@@ -278,7 +268,7 @@ class PaymentTransaction(models.Model):
         payload = {
             'token': payment_data['token'],
             'issuer_id': int(payment_data['issuer_id']),
-            'payment_method_id': payment_data['payment_method_id']
+            'payment_method_id': payment_data['payment_method_id'],
         }
         response_content = self._send_api_request(
             'POST', f'/v1/customers/{customer_id}/cards', json=payload
@@ -294,7 +284,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _mercado_pago_get_error_msg(self, status_detail):
-        """ Return the error message corresponding to the payment status.
+        """Return the error message corresponding to the payment status.
 
         :param str status_detail: The status details sent by the provider.
         :return: The error message.

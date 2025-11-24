@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_flutterwave import const
-
 
 _logger = get_payment_logger(__name__)
 
@@ -37,17 +36,15 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
+        """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'flutterwave').update({
-            'support_tokenization': True,
-        })
+        self.filtered(lambda p: p.code == 'flutterwave').update({'support_tokenization': True})
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return the supported currencies. """
+        """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'flutterwave':
             supported_currencies = supported_currencies.filtered(
@@ -58,7 +55,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'flutterwave':
             return super()._get_default_payment_method_codes()
@@ -68,7 +65,7 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _get_compatible_providers(self, *args, is_validation=False, report=None, **kwargs):
-        """ Override of `payment` to filter out Flutterwave providers for validation operations. """
+        """Override of `payment` to filter out Flutterwave providers for validation operations."""
         providers = super()._get_compatible_providers(
             *args, is_validation=is_validation, report=report, **kwargs
         )

@@ -114,17 +114,10 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 }
 
 # The codes of payment methods that are not recognized by the orders API.
-FALLBACK_PAYMENT_METHOD_CODES = {
-    'emi_india',
-    'fpx',
-    'paylater_india',
-    'wallets_india',
-}
+FALLBACK_PAYMENT_METHOD_CODES = {'emi_india', 'fpx', 'paylater_india', 'wallets_india'}
 
 # The codes of payment methods that require redirection back to the website
-REDIRECT_PAYMENT_METHOD_CODES = {
-    'fpx',
-}
+REDIRECT_PAYMENT_METHOD_CODES = {'fpx'}
 
 # Mapping of payment method codes to Razorpay codes.
 PAYMENT_METHODS_MAPPING = {
@@ -134,10 +127,7 @@ PAYMENT_METHODS_MAPPING = {
 }
 
 # The maximum amount in INR that can be paid through an eMandate.
-MANDATE_MAX_AMOUNT = {
-    'card': 1000000,
-    'upi': 100000,
-}
+MANDATE_MAX_AMOUNT = {'card': 1000000, 'upi': 100000}
 
 # Mapping of transaction states to Razorpay's payment statuses.
 # See https://razorpay.com/docs/payments/payments#payment-life-cycle.

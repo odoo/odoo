@@ -13,7 +13,8 @@ class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     code = fields.Selection(
-        selection_add=[('buckaroo', "Buckaroo")], ondelete={'buckaroo': 'set default'})
+        selection_add=[('buckaroo', "Buckaroo")], ondelete={'buckaroo': 'set default'}
+    )
     buckaroo_website_key = fields.Char(
         string="Website Key",
         help="The key solely used to identify the website with Buckaroo",
@@ -30,7 +31,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS ===#
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return the supported currencies. """
+        """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'buckaroo':
             supported_currencies = supported_currencies.filtered(
@@ -41,7 +42,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS ===#
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'buckaroo':
             return super()._get_default_payment_method_codes()
@@ -50,7 +51,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS === #
 
     def _buckaroo_get_api_url(self):
-        """ Return the API URL according to the state.
+        """Return the API URL according to the state.
 
         Note: self.ensure_one()
 
@@ -59,12 +60,13 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         if self.state == 'enabled':
-            return 'https://checkout.buckaroo.nl/html/'
-        else:
-            return 'https://testcheckout.buckaroo.nl/html/'
+            api_url = 'https://checkout.buckaroo.nl/html/'
+        else:  # test
+            api_url = 'https://testcheckout.buckaroo.nl/html/'
+        return api_url
 
     def _buckaroo_generate_digital_sign(self, values, incoming=True):
-        """ Generate the shasign for incoming or outgoing communications.
+        """Generate the shasign for incoming or outgoing communications.
 
         :param dict values: The values used to generate the signature
         :param bool incoming: Whether the signature must be generated for an incoming (Buckaroo to
@@ -76,14 +78,16 @@ class PaymentProvider(models.Model):
             # Incoming communication values must be URL-decoded before checking the signature. The
             # key 'brq_signature' must be ignored.
             items = [
-                (k, urls.url_unquote_plus(v)) for k, v in values.items()
+                (k, urls.url_unquote_plus(v))
+                for k, v in values.items()
                 if k.lower() != 'brq_signature'
             ]
         else:
             items = values.items()
         # Only use items whose key starts with 'add_', 'brq_', or 'cust_' (case insensitive)
         filtered_items = [
-            (k, v) for k, v in items
+            (k, v)
+            for k, v in items
             if any(k.lower().startswith(key_prefix) for key_prefix in ('add_', 'brq_', 'cust_'))
         ]
         # Sort parameters by lower-cased key. Not upper-case because ord('A') < ord('_') < ord('a').

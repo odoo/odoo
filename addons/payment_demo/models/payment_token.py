@@ -18,7 +18,7 @@ class PaymentToken(models.Model):
     )
 
     def _build_display_name(self, *args, should_pad=True, **kwargs):
-        """ Override of `payment` to build the display name without padding.
+        """Override of `payment` to build the display name without padding.
 
         Note: self.ensure_one()
 

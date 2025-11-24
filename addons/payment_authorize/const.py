@@ -13,11 +13,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 }
 
 # Mapping of payment method codes to Authorize codes.
-PAYMENT_METHODS_MAPPING = {
-    'amex': 'americanexpress',
-    'diners': 'dinersclub',
-    'card': 'creditcard'
-}
+PAYMENT_METHODS_MAPPING = {'amex': 'americanexpress', 'diners': 'dinersclub', 'card': 'creditcard'}
 
 # Mapping of payment status on Authorize side to transaction statuses.
 # See https://developer.authorize.net/api/reference/index.html#transaction-reporting-get-transaction-details.

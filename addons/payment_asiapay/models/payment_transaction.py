@@ -9,7 +9,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_asiapay import const
 from odoo.addons.payment_asiapay.controllers.main import AsiaPayController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -18,7 +17,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
-        """ Override of `payment` to ensure that AsiaPay requirements for references are satisfied.
+        """Override of `payment` to ensure that AsiaPay requirements for references are satisfied.
 
         AsiaPay requirements for references are as follows:
         - References must be unique at provider level for a given merchant account.
@@ -47,7 +46,7 @@ class PaymentTransaction(models.Model):
         return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
 
     def _get_specific_rendering_values(self, processing_values):
-        """ Override of `payment` to return AsiaPay-specific rendering values.
+        """Override of `payment` to return AsiaPay-specific rendering values.
 
         Note: self.ensure_one() from `_get_processing_values`.
 
@@ -56,8 +55,9 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
+
         def get_language_code(lang_):
-            """ Return the language code corresponding to the provided lang.
+            """Return the language code corresponding to the provided lang.
 
             If the lang is not mapped to any language code, the country code is used instead. In
             case the country code has no match either, we fall back to English.
@@ -90,7 +90,7 @@ class PaymentTransaction(models.Model):
             'mpsMode': 'SCP',
             'successUrl': return_url,
             'failUrl': return_url,
-            'cancelUrl':  return_url,
+            'cancelUrl': return_url,
             'payType': 'N',
             'lang': get_language_code(lang),
             'payMethod': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 'ALL'),
@@ -98,10 +98,7 @@ class PaymentTransaction(models.Model):
         url_params['secureHash'] = self.provider_id._asiapay_calculate_signature(
             url_params, incoming=False
         )
-        return {
-            'api_url': self.provider_id._asiapay_get_api_url(),
-            'url_params': url_params,
-        }
+        return {'api_url': self.provider_id._asiapay_get_api_url(), 'url_params': url_params}
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -117,11 +114,8 @@ class PaymentTransaction(models.Model):
 
         amount = payment_data.get('Amt')
         # AsiaPay supports only one currency per account.
-        currency = self.provider_id.available_currency_ids  # The currency has not been removed from the provider.
-        return {
-            'amount': float(amount),
-            'currency_code': currency.name,
-        }
+        currency = self.provider_id.available_currency_ids  # The currency is still linked.
+        return {'amount': float(amount), 'currency_code': currency.name}
 
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
@@ -146,13 +140,21 @@ class PaymentTransaction(models.Model):
         if success_code in const.SUCCESS_CODE_MAPPING['done']:
             self._set_done()
         elif success_code in const.SUCCESS_CODE_MAPPING['error']:
-            self._set_error(_(
-                "An error occurred during the processing of your payment (success code %(success_code)s; primary "
-                "response code %(response_code)s). Please try again.", success_code=success_code, response_code=primary_response_code,
-            ))
+            self._set_error(
+                _(
+                    "An error occurred during the processing of your payment (success code"
+                    " %(success_code)s; primary response code %(response_code)s). Please try"
+                    " again.",
+                    success_code=success_code,
+                    response_code=primary_response_code,
+                )
+            )
         else:
             _logger.warning(
                 "Received data with invalid success code (%s) for transaction with primary response"
-                " code %s and reference %s.", success_code, primary_response_code, self.reference
+                " code %s and reference %s.",
+                success_code,
+                primary_response_code,
+                self.reference,
             )
             self._set_error(_("Unknown success code: %s", success_code))
