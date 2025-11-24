@@ -403,6 +403,12 @@ class PosConfig(models.Model):
             'self_ordering_mode': 'kiosk',
         })
 
+    def _load_restaurant_demo_data(self, with_demo_data=True):
+        self.ensure_one()
+        super()._load_restaurant_demo_data(with_demo_data)
+        if with_demo_data:
+            self.self_ordering_mode = 'mobile'
+
     def _generate_single_qr_code__(self, url):  # noqa: PLW3201
         qr = qrcode.QRCode(
             version=1,
