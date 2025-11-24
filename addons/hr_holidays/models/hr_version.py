@@ -31,7 +31,7 @@ class HrVersion(models.Model):
         created_versions = self.env['hr.version']
         try:
             for vals in vals_list:
-                if not 'employee_id' in vals or not 'resource_calendar_id' in vals:
+                if not 'employee_id' in vals or not 'resource_calendar_id' in vals or ('active' in vals and not vals['active']):
                     created_versions |= super().create(vals)
                     continue
                 leaves = self._get_leaves_from_vals(vals)
@@ -132,7 +132,7 @@ class HrVersion(models.Model):
     def _refuse_leave(self, leave, leaves_state):
         if leave.id not in leaves_state:
             leaves_state[leave.id] = leave.state
-        if leave.state != 'refuse':
+        if leave.state in ['confirm', 'validate', 'validate1']:
             leave.action_refuse()
         return leaves_state
 
