@@ -250,14 +250,14 @@ class ThreadController(http.Controller):
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_unsubscribe(partner_ids)
-        return Store().add(
-            thread, [], as_thread=True, request_list=["followers", "suggestedRecipients"]
-        ).get_result()
+        store = Store()
+        fields = thread._get_store_thread_fields(store.target, ["followers", "suggestedRecipients"])
+        return store.add(thread, fields, as_thread=True).get_result()
 
     @http.route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_subscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_subscribe(partner_ids)
-        return Store().add(
-            thread, [], as_thread=True, request_list=["followers", "suggestedRecipients"]
-        ).get_result()
+        store = Store()
+        fields = thread._get_store_thread_fields(store.target, ["followers", "suggestedRecipients"])
+        return store.add(thread, fields, as_thread=True).get_result()

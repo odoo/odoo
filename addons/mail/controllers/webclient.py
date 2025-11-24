@@ -63,13 +63,11 @@ class WebclientController(ThreadController):
                 **params.get("access_params", {}),
             )
             if not thread:
-                store.add(
-                    request.env[params["thread_model"]].browse(params["thread_id"]),
-                    {"hasReadAccess": False, "hasWriteAccess": False},
-                    as_thread=True,
-                )
+                thread = request.env[params["thread_model"]].browse(params["thread_id"])
+                fields = {"hasReadAccess": False, "hasWriteAccess": False}
             else:
-                store.add(thread, request_list=params["request_list"], as_thread=True)
+                fields = thread._get_store_thread_fields(store.target, params["request_list"])
+            store.add(thread, fields, as_thread=True)
 
     @classmethod
     def _process_request_for_logged_in_user(self, store: Store, name, params):
