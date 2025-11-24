@@ -1,4 +1,4 @@
-import { animationFrame, click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, edit, queryOne, waitFor } from "@odoo/hoot-dom";
 import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../../builder/website_helpers";
 import { expect, test } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
@@ -74,34 +74,20 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
         snippetSelector,
         "[data-icon-underline='always']"
     );
-    await setDropdownOption(
-        containerTitle,
-        "Size",
-        "Small",
-        snippetSelector,
-        " i:first-child.small_social_icon"
+
+    await click(
+        `[data-container-title='${containerTitle}'] [data-label='Size'] input[type='range']`
     );
-    await setDropdownOption(
-        containerTitle,
-        "Size",
-        "Medium",
-        snippetSelector,
-        " i:first-child:not(.small_social_icon):not(.fa-2x):not(.fa-3x)"
+    await edit("70");
+    await animationFrame();
+    expect(`${snippetSelector} > a > i`).toHaveStyle("--fa-icon-size: 4.375rem");
+
+    await click(
+        `[data-container-title='${containerTitle}'] [data-label='Size'] input[type='number']`
     );
-    await setDropdownOption(
-        containerTitle,
-        "Size",
-        "Large",
-        snippetSelector,
-        " i:first-child.fa-2x"
-    );
-    await setDropdownOption(
-        containerTitle,
-        "Size",
-        "Huge",
-        snippetSelector,
-        " i:first-child.fa-3x"
-    );
+    await edit("100");
+    await animationFrame();
+    expect(`${snippetSelector} > a > i`).toHaveStyle("--fa-icon-size: 6.25rem");
 }
 
 test("Social Media snippet options are correct", async () => {

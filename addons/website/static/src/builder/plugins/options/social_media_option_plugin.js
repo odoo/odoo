@@ -155,6 +155,7 @@ class SocialMediaOptionPlugin extends Plugin {
         ],
         so_content_addition_selector: [".s_share", ".s_social_media"],
         builder_actions: {
+            ResetSocialMediaIconSizeAction,
             DeleteSocialMediaLinkAction,
             ToggleRecordedSocialMediaLinkAction,
             EditRecordedSocialMediaLinkAction,
@@ -382,6 +383,15 @@ class SocialMediaOptionPlugin extends Plugin {
         } else {
             return link;
         }
+    }
+}
+
+export class ResetSocialMediaIconSizeAction extends BuilderAction {
+    static id = "resetSocialMediaIconSize";
+    apply({ editingElement }) {
+        [...editingElement.classList]
+            .filter((className) => /^fa-[2-5]x$/.test(className))
+            .forEach((className) => editingElement.classList.remove(className));
     }
 }
 

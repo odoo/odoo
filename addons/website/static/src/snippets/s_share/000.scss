@@ -1,6 +1,9 @@
 
 .s_share {
     user-select: none;
+    // Default icon size used by the builder RangeWithNumberInput control
+    // Inherit to icons so the option panel reads 40px initially
+    --fa-icon-size: 40px;
     $-size: map-get($spacers, 5);
     > * {
         display: inline-block;
@@ -14,6 +17,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            // Custom size via builder RangeWithNumberInput control
+            &.o_sm_custom_size {
+                // Always scale the icon glyph size, regardless of layout
+                // Keep roughly the default 16px glyph for a 40px disk (0.4 ratio)
+                font-size: calc(var(--fa-icon-size) * 0.4) !important;
+            }
+            // For non-stack layouts, also control the visual container
+            &.o_sm_custom_size:not(.fa-stack) {
+                width: var(--fa-icon-size) !important;
+                height: var(--fa-icon-size) !important;
+                line-height: var(--fa-icon-size) !important;
+            }
             &[class*="o_cc"] {
                 background-color: var(--o-cc-bg);
             }
