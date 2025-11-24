@@ -25,6 +25,7 @@ export class IoTLongpolling {
         this._delayedStartPolling(this.rpcDelay);
         this.notification = notification;
         this.orm = orm;
+        this.useLna = false;
     }
 
     /**
@@ -144,7 +145,7 @@ export class IoTLongpolling {
             if (this._listeners[iot_ip] && route === this.pollRoute) {
                 this._listeners[iot_ip].abortController = abortController;
             }
-            return await post(iot_ip, route, params, timeout, headers, abortController.signal);
+            return await post(iot_ip, route, params, timeout, headers, abortController.signal, this.useLna);
         } catch (error) {
             if (!fallback && error?.name !== "AbortError") {
                 this._doWarnFail(iot_ip);
@@ -213,6 +214,15 @@ export class IoTLongpolling {
                 type: "danger",
             }
         );
+    }
+
+    /**
+     * Enable/disable using Local Network Access.
+     * This forces HTTP on all IoT requests.
+     * @param {boolean} isLnaEnabled
+     */
+    setLna(isLnaEnabled) {
+        this.useLna = isLnaEnabled;
     }
 }
 
