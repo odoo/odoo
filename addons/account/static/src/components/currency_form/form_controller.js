@@ -21,7 +21,6 @@ export class CurrencyFormController extends FormController {
                         "This change cannot be undone without technical support."
                     ),
                     confirmLabel: _t("Confirm"),
-                    cancelLabel: _t("Cancel"),
                     confirm: () => resolve(true),
                     cancel: () => {
                         record.discard();

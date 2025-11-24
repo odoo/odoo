@@ -601,10 +601,10 @@ describe("Import view", () => {
             "/web/dataset/call_kw/base_import.import/parse_preview",
         ]);
 
-        // Click on 'Cancel' to go back to the previous view.
+        // Click on 'Discard' to go back to the previous view.
         await waitFor(".o_import_data_content");
         expect(".o_control_panel_main_buttons button").toHaveCount(4);
-        expect(".o_control_panel_main_buttons button:nth-of-type(3)").toHaveText("Cancel");
+        expect(".o_control_panel_main_buttons button:nth-of-type(3)").toHaveText("Discard");
         await contains(".o_control_panel_main_buttons button:nth-of-type(3)").click();
         await waitFor(".o_list_view");
     });

@@ -12032,7 +12032,7 @@ test(`editable list view: clicking on "Discard changes" in multi edition`, async
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: "blur" });
 
-    await clickModalButton({ text: "Cancel" });
+    await clickModalButton({ text: "Discard" });
 
     expect(`.modal`).toHaveCount(0, { message: "should not open modal" });
     expect(`.o_data_row:eq(0) .o_data_cell:eq(0)`).toHaveText("yop");
@@ -19780,7 +19780,7 @@ test(`multi_edit: edit field with operator with localization`, async () => {
         await waitFor(`.modal table [name=${field}]`);
         expect(`.modal table [name=${field}]`).toHaveText(text);
         expect(`.modal .alert`).toHaveCount(1);
-        await contains(".modal footer button:contains(cancel)").click();
+        await contains(".modal footer button:contains(Discard)").click();
     }
     await checkFieldValue("int_field", "+=100", "Int field + 100");
     await checkFieldValue("int_field", "-=00100", "Int field - 100");
@@ -20034,7 +20034,7 @@ test(`multi edition: edit date with operation`, async () => {
         await animationFrame();
         expect(`.modal .o_modal_changes [name=datetime]`).toHaveText(`Datetime ${operation.text}`);
         expect(`.modal .alert`).toHaveCount(1);
-        await contains(`.modal-dialog button:contains(cancel)`).click();
+        await contains(`.modal-dialog button:contains(Discard)`).click();
     }
 
     await contains(`th .o-checkbox`).click();

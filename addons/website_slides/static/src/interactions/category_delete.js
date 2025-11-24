@@ -26,7 +26,6 @@ export class CategoryDelete extends Interaction {
                 await this.waitFor(this.services.orm.unlink("slide.slide", [categoryId]));
                 window.location.reload();
             },
-            cancelLabel: _t("Cancel"),
             cancel: () => { },
         });
     }

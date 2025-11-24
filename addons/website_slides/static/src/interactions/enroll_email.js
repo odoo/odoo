@@ -41,7 +41,6 @@ export class EnrollEmail extends Interaction {
                 this.insert(newAlertEl, alertEl, "afterend");
                 alertEl.remove();
             },
-            cancelLabel: _t("Cancel"),
             cancel: () => { },
         });
     }

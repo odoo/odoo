@@ -26,7 +26,7 @@ export class WebsiteDialog extends Component {
         title: _t("Confirmation"),
         showFooter: true,
         primaryTitle: _t("Ok"),
-        secondaryTitle: _t("Cancel"),
+        secondaryTitle: _t("Discard"),
         showSecondaryButton: true,
         size: "md",
         closeOnClick: true,
