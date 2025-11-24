@@ -689,6 +689,8 @@ class BaseAutomation(models.Model):
             'uid': self.env.uid,
             'user': self.env.user,
             'model': model,
+            'context_today': safe_eval.datetime.datetime.today,
+            'relativedelta': safe_eval.dateutil.relativedelta.relativedelta,
         }
         if payload is not None:
             eval_context['payload'] = payload
@@ -1063,6 +1065,11 @@ class BaseAutomation(models.Model):
         # retrieve the domain and field
         domain = Domain.TRUE
         if automation.filter_domain:
+            # JS Framework added a non standard `to_utc` method on datetime
+            # e.g. `datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()`
+            # This function exists only client-side and is not available in Python's safe_eval,
+            # causing NameError during cron execution of automation rules.
+            domain = automation.filter_domain.replace('.to_utc()', '')
             eval_context = automation._get_eval_context()
             domain = Domain(safe_eval.safe_eval(automation.filter_domain, eval_context))
         Model = self.env[automation.model_name]
