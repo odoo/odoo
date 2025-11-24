@@ -226,17 +226,19 @@ list of filtered posts (by date or tag).
 ============================================================================ -->
 <template id="blog_post_content" name="Blog post content">
     <t t-if="opt_blog_post_breadcrumb and not opt_blog_post_regular_cover" t-call="website_blog.post_breadcrumbs">
-        <t t-set="additionnal_classes" t-value="'mb-3 bg-transparent'"></t>
+        <t t-set="additionnal_classes" t-value="'mb-3 bg-transparent o_container_as_first'"></t>
     </t>
     <t t-if="not opt_blog_post_regular_cover">
-        <t t-call="website_blog.blog_post_info"/>
+        <t t-call="website_blog.blog_post_info">
+            <t t-set="align_class" t-valuef="o_container_as_first"/>
+        </t>
     </t>
     <t t-set="editor_message">WRITE HERE OR DRAG BUILDING BLOCKS</t>
     <div t-field="blog_post.content"
         t-att-data-editor-message="editor_message"
         class="o_wblog_post_content_field o_wblog_read_text"/>
 
-    <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="css_editable_mode_hidden text-muted">
+    <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="css_editable_mode_hidden text-muted o_container_as_first">
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
@@ -293,7 +295,7 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_content" active="False">
     <xpath expr="//div[has_class('o_wblog_post_tags)']" position="after">
         <div class="container">
-            <div t-attf-class="mx-auto o_container_small">
+            <div t-attf-class="mx-auto o_container_as_first">
                 <div id="o_wblog_post_comments" t-attf-class="pt-4">
                     <div groups="base.group_public" class="small mb-4">
                         <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
