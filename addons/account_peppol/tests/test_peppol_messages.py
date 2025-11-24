@@ -161,7 +161,7 @@ class TestPeppolMessage(AccountTestInvoicingCommon):
         self.env.context = previous_context
 
     @classmethod
-    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+    def _request_handler(cls, s: Session, r: PreparedRequest, **kw):
         response = Response()
         response.status_code = 200
 
