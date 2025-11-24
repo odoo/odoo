@@ -1365,6 +1365,28 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.debug("No file %s found for template '%s'", model, module)
         return res
 
+    def _load_pre_defined_data(self, spec):
+        for company in self.env['res.company'].search([('chart_template', '!=', False)], order="parent_path"):
+            ChartTemplate = self.with_company(company)
+            pre_defined_data = {
+                model: {
+                    xmlid: filtered_vals
+                    for xmlid, vals in ChartTemplate._get_chart_template_model_data(company.chart_template, model).items()
+                    if (filtered_vals := {
+                        fname: value
+                        for fname, value in vals.items()
+                        if fname in fnames
+                    })
+                }
+                for model, fnames in spec.items()
+            }
+            ChartTemplate._pre_reload_data(company, {}, pre_defined_data, force_update=True)
+            ChartTemplate._load_data(pre_defined_data)
+
+    # --------------------------------------------------------------------------------
+    # Translation
+    # --------------------------------------------------------------------------------
+
     def _get_untranslatable_fields_target_language(self, template_code, company):
         """Return the code of the language we want to translate the untranslatable fields into.
         """
