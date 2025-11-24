@@ -74,6 +74,47 @@ patch(TourHelpers.prototype, {
     },
 
     /**
+     * Utils to drag and drop files in a dropzone. Different of drag_and_drop
+     * because we need to dragover on dropzone to render it visible.
+     * @param {File[]} files
+     */
+    async dragFiles(files) {
+        function createDataTransfer(files) {
+            return {
+                get files() {
+                    return files;
+                },
+                get items() {
+                    return [];
+                },
+                get types() {
+                    return ["Files"];
+                },
+                dropEffect: "all",
+                effectAllowed: "all",
+                getData: () => "",
+                setData: () => {},
+                clearData: () => {},
+            };
+        }
+
+        async function dragFilesEvent(type, element, files) {
+            const ev = new Event(type, { bubbles: true, cancelable: true });
+            Object.defineProperty(ev, "dataTransfer", { value: createDataTransfer(files) });
+            element.dispatchEvent(ev);
+            await hoot.animationFrame();
+        }
+
+        await dragFilesEvent("dragenter", this.anchor, files);
+        await dragFilesEvent("dragover", this.anchor, files);
+
+        return async (dropSelector) => {
+            const dropEl = hoot.queryFirst(dropSelector);
+            await dragFilesEvent("drop", dropEl, files);
+        };
+    },
+
+    /**
      * Starts a drag sequence on the active element (anchor) and drop it on the given **{@link Selector}**.
      * @param {Selector} selector
      * @param {hoot.PointerOptions} options
@@ -182,6 +223,19 @@ patch(TourHelpers.prototype, {
     },
 
     /**
+     * Waits until exactly one element matching the given `selector` is present in
+     * `options.target` and then inputs `files` on it.
+     *
+     * @param {string} selector
+     * @param {Object[]} files
+     */
+    async inputFiles(selector, files, options) {
+        const element = this._get_action_element(selector);
+        await hoot.click(element);
+        await hoot.setInputFiles(files, options);
+    },
+
+    /**
      * Only for input[type="range"]
      * @param {string|number} value
      * @param {Selector} selector
@@ -199,6 +253,17 @@ patch(TourHelpers.prototype, {
      */
     async press(...args) {
         await hoot.press(args.flatMap((arg) => typeof arg === "string" && arg.split("+")));
+    },
+
+    /**
+     * Performs a scroll event sequence.
+     * @param {Selector} selector
+     * @param {"top"|"bottom"} position
+     */
+    scroll(position, selector) {
+        const element = this._get_action_element(selector);
+        const top = position === "bottom" ? element.scrollHeight : 0;
+        element.scrollTop = top;
     },
 
     /**

@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { contains, scroll } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("mail_message_load_order_tour", {
     steps: () => [
@@ -9,9 +8,10 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
         },
         {
             trigger: ".o-mail-Thread .o-mail-Message:count(30)",
-            async run() {
-                await contains(".o-mail-Thread", { scroll: "bottom" });
-            },
+        },
+        {
+            trigger: ".o-mail-Thread",
+            run: "scroll bottom",
         },
         {
             trigger: "*[title='Pinned Messages']",
@@ -29,8 +29,8 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
             // are fetched after jumping to the message.
             trigger:
                 ".o-mail-Thread .o-mail-Message:count(31):first .o-mail-Message-textContent:not(:contains(31))",
-            async run() {
-                await contains(".o-mail-Thread", { scroll: 0 });
+            run({ scroll }) {
+                scroll("top", ".o-mail-Thread");
                 // ensure 1 - 31 are loaded in order: 30 below and the
                 // one we're loading messages around.
                 const messages = Array.from(
@@ -41,8 +41,11 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
                         throw new Error("Wrong message order after loading around");
                     }
                 }
-                await scroll(".o-mail-Thread", "bottom");
             },
+        },
+        {
+            trigger: ".o-mail-Thread",
+            run: "scroll bottom",
         },
         {
             // After jumping to the pinned message, the message range

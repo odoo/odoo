@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { inputFiles } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("course_review_modification", {
     url: "/slides",
@@ -143,11 +142,14 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: "#chatterRoot:shadow .dropdown-item:contains('Attach Files')",
-            async run() {
-                const text = new File(["test"], "test.txt", { type: "text/plain" });
-                await inputFiles(".o-mail-Message .o_input_file", [text], {
-                    target: document.querySelector("#chatterRoot").shadowRoot,
-                });
+            async run({ queryFirst }) {
+                //FIXME: Would prefer to use setInputFiles(), but it doesn't work at the moment because of the Shadow DOM (:shadow).
+                const file = new File(["test"], "test.txt", { type: "text/plain" });
+                const dataTransfer = new window.DataTransfer();
+                dataTransfer.items.add(file);
+                const el = queryFirst("#chatterRoot:shadow .o-mail-Composer .o_input_file");
+                el.files = dataTransfer.files;
+                el.dispatchEvent(new Event("change"));
             },
         },
         {
