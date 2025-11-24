@@ -214,8 +214,18 @@
                                 <t t-set="classes" t-value="'btn-outline-danger flex-grow-1'"/>
                             </t>
 
-                            <a t-else="" t-attf-href="#{ post_url }/validate" title="Validate" aria-label="Validate" class="btn btn-outline-success flex-grow-1"><i class="fa fa-check"/><span class="ms-2">Accept</span></a>
-                            <a t-if="queue_type == 'validation'" t-attf-href="#{ post_url }/refuse" title="Refuse" aria-label="Refuse" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Reject</span></a>
+                            <form t-else="" method="POST" t-attf-action="#{ post_url }/validate" title="Validate" aria-label="Validate">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <button type="submit" class="btn btn-outline-success w-100 flex-grow-1">
+                                    <i class="fa fa-check"/><span class="ms-2">Accept</span>
+                                </button>
+                            </form>
+                            <form t-if="queue_type == 'validation'" method="POST" t-attf-action="#{ post_url }/refuse" title="Refuse" aria-label="Refuse">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <button type="submit" class="btn btn-outline-danger w-100 flex-grow-1">
+                                    <i class="fa fa-times"/><span class="ms-2">Reject</span>
+                                </button>
+                            </form>
                             <a t-if="queue_type == 'flagged'" t-attf-href="#{ post_url }/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
                             <a t-if="queue_type == 'offensive'" href="#" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="fa fa-times"/><span class="ms-2">Offensive</span></a>
                         </div>
