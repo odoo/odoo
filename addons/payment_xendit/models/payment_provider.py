@@ -5,7 +5,6 @@ from odoo import fields, models
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_xendit import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -37,12 +36,12 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
+        """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'xendit').support_tokenization = True
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return the supported currencies. """
+        """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'xendit':
             supported_currencies = supported_currencies.filtered(
@@ -53,7 +52,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'xendit':
             return super()._get_default_payment_method_codes()
@@ -62,7 +61,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS === #
 
     def _get_redirect_form_view(self, is_validation=False):
-        """ Override of `payment` to avoid rendering the form view for validation operations.
+        """Override of `payment` to avoid rendering the form view for validation operations.
 
         Unlike other compatible payment methods in Xendit, `Card` is implemented using a direct
         flow. To avoid rendering a useless template, and also to avoid computing wrong values, this

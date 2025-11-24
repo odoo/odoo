@@ -49,6 +49,4 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     'discover',
 }
 
-PAYMENT_METHODS_MAPPING = {
-    'bank_transfer': 'banktransfer',
-}
+PAYMENT_METHODS_MAPPING = {'bank_transfer': 'banktransfer'}

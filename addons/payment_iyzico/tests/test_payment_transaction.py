@@ -15,7 +15,6 @@ from odoo.addons.payment_iyzico.tests.common import IyzicoCommon
 
 @tagged('post_install', '-at_install')
 class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
-
     def test_no_item_missing_from_cf_initialize_payload(self):
         """Test that the request values are conform to the transaction fields."""
         tx = self._create_transaction('redirect')
@@ -24,39 +23,44 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
         return_url = self._build_url(
             f'{const.PAYMENT_RETURN_ROUTE}?{url_encode({"tx_ref": tx.reference})}'
         )
-        self.assertDictEqual(request_payload, {
-            'basketItems': [{
-                'id': tx.id,
+        self.assertDictEqual(
+            request_payload,
+            {
+                'basketItems': [
+                    {
+                        'id': tx.id,
+                        'price': tx.amount,
+                        'name': 'Odoo purchase',
+                        'category1': 'Service',
+                        'itemType': 'VIRTUAL',
+                    }
+                ],
+                'billingAddress': {
+                    'address': tx.partner_address,
+                    'contactName': tx.partner_name,
+                    'city': tx.partner_city,
+                    'country': tx.partner_country_id.name,
+                },
+                'buyer': {
+                    'id': tx.partner_id.id,
+                    'name': first_name,
+                    'surname': last_name,
+                    'identityNumber': str(tx.partner_id.id).zfill(5),
+                    'email': tx.partner_email,
+                    'registrationAddress': tx.partner_address,
+                    'city': tx.partner_city,
+                    'country': tx.partner_country_id.name,
+                    'ip': '0',
+                },
+                'callbackUrl': return_url,
+                'conversationId': tx.reference,
+                'currency': tx.currency_id.name,
+                'locale': 'tr' if tx.env.lang == 'tr_TR' else 'en',
+                'paidPrice': tx.amount,
+                'paymentSource': 'ODOO',
                 'price': tx.amount,
-                'name': 'Odoo purchase',
-                'category1': 'Service',
-                'itemType': 'VIRTUAL',
-            }],
-            'billingAddress': {
-                'address': tx.partner_address,
-                'contactName': tx.partner_name,
-                'city': tx.partner_city,
-                'country': tx.partner_country_id.name,
             },
-            'buyer': {
-                'id': tx.partner_id.id,
-                'name': first_name,
-                'surname': last_name,
-                'identityNumber': str(tx.partner_id.id).zfill(5),
-                'email': tx.partner_email,
-                'registrationAddress': tx.partner_address,
-                'city': tx.partner_city,
-                'country': tx.partner_country_id.name,
-                'ip': '0',
-            },
-            'callbackUrl': return_url,
-            'conversationId': tx.reference,
-            'currency': tx.currency_id.name,
-            'locale': 'tr' if tx.env.lang == 'tr_TR' else 'en',
-            'paidPrice': tx.amount,
-            'paymentSource': 'ODOO',
-            'price': tx.amount,
-        })
+        )
 
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_no_input_missing_from_redirect_form(self):
@@ -89,19 +93,14 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
 
     def test_apply_updates_sets_card_payment_method(self):
         """Test that the card payment method brand is updated from the payment data."""
-        self.payment_data.update({
-            'cardType': 'CREDIT_CARD',
-            'cardAssociation': 'MASTER_CARD',
-        })
+        self.payment_data.update({'cardType': 'CREDIT_CARD', 'cardAssociation': 'MASTER_CARD'})
         tx = self._create_transaction(flow='redirect')
         tx._apply_updates(self.payment_data)
         self.assertEqual(tx.payment_method_id.code, 'mastercard')
 
     def test_apply_updates_sets_bank_transfer_payment_method(self):
         """Test that the bank transfer payment method is set if found in the payment data."""
-        self.payment_data.update({
-            'bankName': 'dummy',
-        })
+        self.payment_data.update({'bankName': 'dummy'})
         tx = self._create_transaction(flow='redirect')
         tx._apply_updates(self.payment_data)
         self.assertEqual(tx.payment_method_id.code, 'bank_transfer')

@@ -7,7 +7,6 @@ from odoo import fields, models
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_aps import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -46,7 +45,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'aps':
             return super()._get_default_payment_method_codes()
@@ -56,12 +55,13 @@ class PaymentProvider(models.Model):
 
     def _aps_get_api_url(self):
         if self.state == 'enabled':
-            return 'https://checkout.payfort.com/FortAPI/paymentPage'
+            api_url = 'https://checkout.payfort.com/FortAPI/paymentPage'
         else:  # 'test'
-            return 'https://sbcheckout.payfort.com/FortAPI/paymentPage'
+            api_url = 'https://sbcheckout.payfort.com/FortAPI/paymentPage'
+        return api_url
 
     def _aps_calculate_signature(self, data, incoming=True):
-        """ Compute the signature for the provided data according to the APS documentation.
+        """Compute the signature for the provided data according to the APS documentation.
 
         :param dict data: The data to sign.
         :param bool incoming: Whether the signature must be generated for an incoming (APS to Odoo)
@@ -71,5 +71,5 @@ class PaymentProvider(models.Model):
         """
         sign_data = ''.join([f'{k}={v}' for k, v in sorted(data.items()) if k != 'signature'])
         key = self.aps_sha_response if incoming else self.aps_sha_request
-        signing_string = ''.join([key, sign_data, key])
+        signing_string = f'{key}{sign_data}{key}'
         return hashlib.sha256(signing_string.encode()).hexdigest()

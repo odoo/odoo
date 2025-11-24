@@ -8,7 +8,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -17,8 +16,12 @@ class MollieController(http.Controller):
     _webhook_url = '/payment/mollie/webhook'
 
     @http.route(
-        _return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False,
-        save_session=False
+        _return_url,
+        type='http',
+        auth='public',
+        methods=['GET', 'POST'],
+        csrf=False,
+        save_session=False,
     )
     def mollie_return_from_checkout(self, **data):
         """Process the payment data sent by Mollie after redirection from checkout.

@@ -1,17 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # The currencies supported by Nuvei, in ISO 4217 format.
-SUPPORTED_CURRENCIES = [
-    'ARS',
-    'BRL',
-    'CAD',
-    'CLP',
-    'COP',
-    'MXN',
-    'PEN',
-    'USD',
-    'UYU',
-]
+SUPPORTED_CURRENCIES = ['ARS', 'BRL', 'CAD', 'CLP', 'COP', 'MXN', 'PEN', 'USD', 'UYU']
 
 # The codes of the payment methods to activate when Nuvei is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
@@ -27,14 +17,10 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 }
 
 # Some payment methods require no decimal points no matter the currency
-INTEGER_METHODS = [
-    'webpay',
-]
+INTEGER_METHODS = ['webpay']
 
 # Some payment methods require first and last name on customers to work.
-FULL_NAME_METHODS = [
-    'boleto',
-]
+FULL_NAME_METHODS = ['boleto']
 
 # Mapping of payment method codes to Nuvei codes.
 PAYMENT_METHODS_MAPPING = {
@@ -62,6 +48,6 @@ SIGNATURE_KEYS = [
 # Mapping of transaction states to Nuvei payment statuses.
 PAYMENT_STATUS_MAPPING = {
     'pending': ('pending',),
-    'done': ('approved', 'ok',),
-    'error': ('declined', 'error', 'fail',),
+    'done': ('approved', 'ok'),
+    'error': ('declined', 'error', 'fail'),
 }

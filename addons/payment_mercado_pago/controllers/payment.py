@@ -8,15 +8,12 @@ from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
-
 from odoo.addons.payment_mercado_pago import const
-
 
 _logger = get_payment_logger(__name__)
 
 
 class MercadoPagoPaymentController(http.Controller):
-
     @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
     def mercado_pago_payment(
         self, reference, transaction_amount, token, installments, payment_method_brand, issuer_id
@@ -31,8 +28,10 @@ class MercadoPagoPaymentController(http.Controller):
         :param int issuer_id: The issuer id of the card received from Mercado Pago.
         :rtype: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'mercado_pago', {'external_reference': reference}
+        tx_sudo = (
+            request.env['payment.transaction']
+            .sudo()
+            ._search_by_reference('mercado_pago', {'external_reference': reference})
         )
         payload = tx_sudo._mercado_pago_prepare_payment_request_payload()
         payload.update({
@@ -68,11 +67,14 @@ class MercadoPagoPaymentController(http.Controller):
         return request.redirect('/payment/status')
 
     @http.route(
-        f'{const.WEBHOOK_ROUTE}/<reference>', type='http', auth='public', methods=['POST'],
-        csrf=False
+        f'{const.WEBHOOK_ROUTE}/<reference>',
+        type='http',
+        auth='public',
+        methods=['POST'],
+        csrf=False,
     )
     def mercado_pago_webhook(self, reference, **_kwargs):
-        """ Process the payment data sent by Mercado Pago to the webhook.
+        """Process the payment data sent by Mercado Pago to the webhook.
 
         :param str reference: The transaction reference embedded in the webhook URL.
         :param dict _kwargs: The extra query parameters.
@@ -88,9 +90,10 @@ class MercadoPagoPaymentController(http.Controller):
         # (type of event) key as it is not populated for IPNs, and we don't want to process the
         # other types of events.
         if data.get('action') in ('payment.created', 'payment.updated'):
-            self._verify_and_process(
-                {'external_reference': reference, 'payment_id': data.get('data', {}).get('id')}
-            )  # Use 'external_reference' as the reference key like in the redirect data.
+            self._verify_and_process({
+                'external_reference': reference,
+                'payment_id': data.get('data', {}).get('id'),
+            })  # Use 'external_reference' as the reference key like in the redirect data.
         return ''  # Acknowledge the notification.
 
     @staticmethod
@@ -100,8 +103,8 @@ class MercadoPagoPaymentController(http.Controller):
         :param dict data: The payment data.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'mercado_pago', data
+        tx_sudo = (
+            request.env['payment.transaction'].sudo()._search_by_reference('mercado_pago', data)
         )
         if not tx_sudo:
             return

@@ -10,17 +10,15 @@ from odoo import _, fields
 from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
 
-
 _logger = logging.getLogger(__name__)
 
 
 class RazorpayController(Controller):
-
     OAUTH_RETURN_URL = '/payment/razorpay/oauth/return'
 
     @route(OAUTH_RETURN_URL, type='http', auth='user', methods=['GET'], website=True)
     def razorpay_return_from_authorization(self, **data):
-        """ Exchange the authorization code for an access token and redirect to the provider form.
+        """Exchange the authorization code for an access token and redirect to the provider form.
 
         :param dict data: The authorization code received from Razorpay, in addition to the provided
                           provider id and CSRF token that were sent back by the proxy.
@@ -41,7 +39,7 @@ class RazorpayController(Controller):
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):
             _logger.warning("CSRF token verification failed.")
-            raise Forbidden()
+            raise Forbidden
 
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
@@ -50,9 +48,9 @@ class RazorpayController(Controller):
             return request.redirect(redirect_url)
 
         # Fetch an access token using the authorization token.
-        proxy_payload = self.env['payment.provider']._prepare_json_rpc_payload(
-            {'authorization_code': authorization_code}
-        )
+        proxy_payload = self.env['payment.provider']._prepare_json_rpc_payload({
+            'authorization_code': authorization_code
+        })
         try:
             response_content = provider_sudo._send_api_request(
                 'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True

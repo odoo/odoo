@@ -3,13 +3,12 @@
 import json
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import const
-
 
 _logger = get_payment_logger(__name__)
 
@@ -17,8 +16,7 @@ _logger = get_payment_logger(__name__)
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
-    code = fields.Selection(
-        selection_add=[('adyen', "Adyen")], ondelete={'adyen': 'set default'})
+    code = fields.Selection(selection_add=[('adyen', "Adyen")], ondelete={'adyen': 'set default'})
     adyen_merchant_account = fields.Char(
         string="Merchant Account",
         help="The code of the merchant account to use with this provider",
@@ -47,9 +45,7 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
     adyen_api_url_prefix = fields.Char(
-        string="API URL Prefix",
-        help="The base URL for the API endpoints",
-        copy=False,
+        string="API URL Prefix", help="The base URL for the API endpoints", copy=False
     )
 
     # === CRUD METHODS === #
@@ -73,7 +69,7 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _adyen_extract_prefix_from_api_url(self, values):
-        """ Update the create or write values with the prefix extracted from the API URL.
+        """Update the create or write values with the prefix extracted from the API URL.
 
         :param dict values: The create or write values.
         :return: None
@@ -86,7 +82,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
+        """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'adyen').update({
             'support_manual_capture': 'partial',
@@ -97,7 +93,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS === #
 
     def _adyen_get_inline_form_values(self, pm_code, amount=None, currency=None):
-        """ Return a serialized JSON of the required values to render the inline form.
+        """Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
 
@@ -117,7 +113,7 @@ class PaymentProvider(models.Model):
         return json.dumps(inline_form_values)
 
     def _adyen_get_formatted_amount(self, amount=None, currency=None):
-        """ Return the amount in the format required by Adyen.
+        """Return the amount in the format required by Adyen.
 
         The formatted amount is a dict with keys 'value' and 'currency'.
 
@@ -127,16 +123,17 @@ class PaymentProvider(models.Model):
         :rtype: dict
         """
         currency_code = currency and currency.name
-        converted_amount = amount and currency_code and payment_utils.to_minor_currency_units(
-            amount, currency, const.CURRENCY_DECIMALS.get(currency_code)
+        converted_amount = (
+            amount
+            and currency_code
+            and payment_utils.to_minor_currency_units(
+                amount, currency, const.CURRENCY_DECIMALS.get(currency_code)
+            )
         )
-        return {
-            'value': converted_amount,
-            'currency': currency_code,
-        }
+        return {'value': converted_amount, 'currency': currency_code}
 
     def _adyen_compute_shopper_reference(self, partner_id):
-        """ Compute a unique reference of the partner for Adyen.
+        """Compute a unique reference of the partner for Adyen.
 
         This is used for the `shopperReference` field in communications with Adyen and stored in the
         `adyen_shopper_reference` field on `payment.token` if the payment method is tokenized.

@@ -11,7 +11,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import const
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -29,14 +28,10 @@ class PaymentProvider(models.Model):
         copy=False,
     )
     paypal_client_id = fields.Char(
-        string="PayPal Client ID",
-        required_if_provider='paypal',
-        copy=False,
+        string="PayPal Client ID", required_if_provider='paypal', copy=False
     )
     paypal_client_secret = fields.Char(
-        string="PayPal Client Secret",
-        copy=False,
-        groups='base.group_system',
+        string="PayPal Client Secret", copy=False, groups='base.group_system'
     )
     paypal_access_token = fields.Char(
         string="PayPal Access Token",
@@ -56,7 +51,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return the supported currencies. """
+        """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'paypal':
             supported_currencies = supported_currencies.filtered(
@@ -67,7 +62,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'paypal':
             return super()._get_default_payment_method_codes()
@@ -76,7 +71,7 @@ class PaymentProvider(models.Model):
     # === ACTION METHODS === #
 
     def action_paypal_create_webhook(self):
-        """ Create a new webhook.
+        """Create a new webhook.
 
         Note: This action only works for instances using a public URL.
 
@@ -90,7 +85,7 @@ class PaymentProvider(models.Model):
             )
         data = {
             'url': urls.urljoin(base_url, PaypalController._webhook_url),
-            'event_types': [{'name': event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS]
+            'event_types': [{'name': event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS],
         }
         webhook_data = self._send_api_request('POST', '/v1/notifications/webhooks', json=data)
         self.paypal_webhook_id = webhook_data.get('id')
@@ -122,7 +117,7 @@ class PaymentProvider(models.Model):
         return self._paypal_get_api_url() + endpoint
 
     def _paypal_get_api_url(self):
-        """ Return the API URL according to the provider state.
+        """Return the API URL according to the provider state.
 
         Note: self.ensure_one()
 
@@ -132,9 +127,10 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         if self.state == 'enabled':
-            return 'https://api-m.paypal.com'
-        else:
-            return 'https://api-m.sandbox.paypal.com'
+            api_url = 'https://api-m.paypal.com'
+        else:  # test
+            api_url = 'https://api-m.sandbox.paypal.com'
+        return api_url
 
     def _build_request_headers(
         self, *args, idempotency_key=None, is_refresh_token_request=False, **kwargs
@@ -160,7 +156,7 @@ class PaymentProvider(models.Model):
         return headers
 
     def _paypal_fetch_access_token(self):
-        """ Generate a new access token if it's expired, otherwise return the existing access token.
+        """Generate a new access token if it's expired, otherwise return the existing access token.
 
         :return: A valid access token.
         :rtype: str
@@ -178,9 +174,8 @@ class PaymentProvider(models.Model):
                 raise ValidationError(_("Could not generate a new access token."))
             self.write({
                 'paypal_access_token': access_token,
-                'paypal_access_token_expiry': fields.Datetime.now() + timedelta(
-                    seconds=response_content['expires_in']
-                ),
+                'paypal_access_token_expiry': fields.Datetime.now()
+                + timedelta(seconds=response_content['expires_in']),
             })
         return self.paypal_access_token
 

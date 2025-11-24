@@ -17,28 +17,34 @@ from odoo.addons.payment_adyen.tests.common import AdyenCommon
 
 @tagged('post_install', '-at_install')
 class AdyenTest(AdyenCommon, PaymentHttpCommon):
-
     def test_processing_values(self):
         tx = self._create_transaction(flow='direct')
-        with mute_logger('odoo.addons.payment.models.payment_transaction'), \
+        with (
+            mute_logger('odoo.addons.payment.models.payment_transaction'),
             patch(
                 'odoo.addons.payment.utils.generate_access_token',
-                new=self._generate_test_access_token
-            ):
+                new=self._generate_test_access_token,
+            ),
+        ):
             processing_values = tx._get_processing_values()
 
         converted_amount = 111111
         self.assertEqual(
-            payment_utils.to_minor_currency_units(self.amount, self.currency),
-            converted_amount,
+            payment_utils.to_minor_currency_units(self.amount, self.currency), converted_amount
         )
         self.assertEqual(processing_values['converted_amount'], converted_amount)
         with patch(
             'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
         ):
-            self.assertTrue(payment_utils.check_access_token(
-                processing_values['access_token'], self.reference, converted_amount, self.currency.id, self.partner.id
-            ))
+            self.assertTrue(
+                payment_utils.check_access_token(
+                    processing_values['access_token'],
+                    self.reference,
+                    converted_amount,
+                    self.currency.id,
+                    self.partner.id,
+                )
+            )
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_send_refund_request(self):
@@ -51,25 +57,25 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         # Send the refund request
         with patch(
             'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
-            new=lambda *args, **kwargs: {'pspReference': "refund_reference", 'status': "received"}
+            return_value={'pspReference': "refund_reference", 'status': "received"},
         ):
             tx._refund()
 
         refund_tx = self.env['payment.transaction'].search([('source_transaction_id', '=', tx.id)])
         self.assertTrue(
             refund_tx,
-            msg="Refunding an Adyen transaction should always create a refund transaction."
+            msg="Refunding an Adyen transaction should always create a refund transaction.",
         )
         self.assertTrue(
             refund_tx.state == 'draft',
-            msg="A refund request as been made, but the state of the refund tx stays as 'draft' "
-                "until a success notification is sent"
+            msg="A refund request as been made, but the state of the refund tx stays as 'draft'"
+            " until a success notification is sent",
         )
         self.assertNotEqual(
             refund_tx.provider_reference,
             tx.provider_reference,
-            msg="The provider reference of the refund transaction should be different from that of "
-                "the source transaction."
+            msg="The provider reference of the refund transaction should be different from that of"
+            " the source transaction.",
         )
 
     def test_search_by_reference_returns_refund_tx(self):
@@ -82,7 +88,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             provider_reference=self.psp_reference,
             amount=-source_tx.amount,
             operation='refund',
-            source_transaction_id=source_tx.id
+            source_transaction_id=source_tx.id,
         )
         data = dict(
             self.webhook_notification_payload,
@@ -112,7 +118,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         refund_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertTrue(
             refund_tx,
-            msg="If no refund tx is found with received refund data, a refund tx should be created"
+            msg="If no refund tx is found with received refund data, a refund tx should be created",
         )
         self.assertNotEqual(refund_tx, source_tx)
         self.assertEqual(refund_tx.source_transaction_id, source_tx)
@@ -126,7 +132,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             'direct',
             reference='CaptureTx',
             provider_reference=self.psp_reference,
-            amount=source_tx.amount-10,
+            amount=source_tx.amount - 10,
             operation=source_tx.operation,
             source_transaction_id=source_tx.id,
         )
@@ -135,7 +141,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             amount={
                 'currency': self.currency.name,
                 'value': payment_utils.to_minor_currency_units(
-                    source_tx.amount-10, capture_tx.currency_id
+                    source_tx.amount - 10, capture_tx.currency_id
                 ),
             },
             eventCode='CAPTURE',
@@ -210,7 +216,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         void_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertTrue(
             void_tx,
-            msg="If no child tx is found with received void data, a child tx should be created."
+            msg="If no child tx is found with received void data, a child tx should be created.",
         )
         self.assertNotEqual(void_tx, source_tx)
         self.assertEqual(void_tx.source_transaction_id, source_tx)
@@ -228,8 +234,8 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertEqual(
             tx.state,
             'authorized',
-            msg="A capture request as been made, but the state of the transaction stays as "
-                "'authorized' until a success notification is sent",
+            msg="A capture request as been made, but the state of the transaction stays as"
+            " 'authorized' until a success notification is sent",
         )
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
@@ -245,14 +251,14 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertEqual(
             tx.state,
             'authorized',
-            msg="A partial capture request as been made, but the state of the source transaction "
-                "stays as 'authorized' until the full amount is either done or canceled.",
+            msg="A partial capture request as been made, but the state of the source transaction"
+            " stays as 'authorized' until the full amount is either done or canceled.",
         )
         self.assertEqual(
             tx.child_transaction_ids[0].state,
             'draft',
-            msg="A partial capture request as been made, but the state of the child transaction "
-                "stays as 'draft' until a success notification is sent.",
+            msg="A partial capture request as been made, but the state of the child transaction"
+            " stays as 'draft' until a success notification is sent.",
         )
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
@@ -269,7 +275,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             tx.state,
             'authorized',
             msg="A void request as been made, but the state of the transaction stays as"
-                " 'authorized' until a success notification is sent",
+            " 'authorized' until a success notification is sent",
         )
 
     def test_extract_token_values_maps_fields_correctly(self):
@@ -279,14 +285,17 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 'recurring.recurringDetailReference': 'token_reference',
                 'cardSummary': '4242',
                 'recurring.shopperReference': 'partner_reference',
-            },
+            }
         }
         token_values = tx._extract_token_values(payment_data)
-        self.assertDictEqual(token_values, {
-            'provider_ref': 'token_reference',
-            'payment_details': '4242',
-            'adyen_shopper_reference': 'partner_reference',
-        })
+        self.assertDictEqual(
+            token_values,
+            {
+                'provider_ref': 'token_reference',
+                'payment_details': '4242',
+                'adyen_shopper_reference': 'partner_reference',
+            },
+        )
 
     def test_application_info_passed_in_payment_request(self):
         """Ensure applicationInfo is added correctly to the payment request payload."""
@@ -298,18 +307,22 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 return_value=dict(),
             ) as mock_make_request,
         ):
-            self.make_jsonrpc_request('/payment/adyen/payments', params={
-                'provider_id': tx.provider_id.id,
-                'reference': tx.reference,
-                'converted_amount': 1,
-                'currency_id': tx.currency_id.id,
-                'partner_id': tx.partner_id.id,
-                'payment_method': {'type': 'scheme'},
-                'access_token': 'dummy',
-            })
+            self.make_jsonrpc_request(
+                '/payment/adyen/payments',
+                params={
+                    'provider_id': tx.provider_id.id,
+                    'reference': tx.reference,
+                    'converted_amount': 1,
+                    'currency_id': tx.currency_id.id,
+                    'partner_id': tx.partner_id.id,
+                    'payment_method': {'type': 'scheme'},
+                    'access_token': 'dummy',
+                },
+            )
         application_info = mock_make_request.call_args.kwargs['json'].get('applicationInfo')
         self.assertDictEqual(
-            application_info, {
+            application_info,
+            {
                 'externalPlatform': {
                     'name': 'Odoo',
                     'version': release.version,
@@ -328,7 +341,8 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             tx._send_payment_request()
         application_info = mock_make_request.call_args.kwargs['json'].get('applicationInfo')
         self.assertDictEqual(
-            application_info, {
+            application_info,
+            {
                 'externalPlatform': {
                     'name': 'Odoo',
                     'version': release.version,
@@ -350,7 +364,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             tx.state,
             'authorized',
             msg="The authorization succeeded, the manual capture is enabled, the tx state should be"
-                " 'authorized'.",
+            " 'authorized'.",
         )
 
     def test_webhook_notification_captures_transaction(self):
@@ -358,63 +372,75 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference, amount=9.99
         )
-        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
-            'NotificationRequestItem': dict(
-                self.webhook_notification_payload,
-                amount={
-                    'currency': self.currency.name,
-                    'value': payment_utils.to_minor_currency_units(9.99, tx.currency_id),
-                },
-                eventCode='CAPTURE',
-            )
-        }])
+        payload = dict(
+            self.webhook_notification_batch_data,
+            notificationItems=[
+                {
+                    'NotificationRequestItem': dict(
+                        self.webhook_notification_payload,
+                        amount={
+                            'currency': self.currency.name,
+                            'value': payment_utils.to_minor_currency_units(9.99, tx.currency_id),
+                        },
+                        eventCode='CAPTURE',
+                    )
+                }
+            ],
+        )
         self._webhook_notification_flow(payload)
         self.assertEqual(
-            tx.state, 'done',
-            msg="The capture succeeded, the tx state should be 'done'.",
+            tx.state, 'done', msg="The capture succeeded, the tx state should be 'done'."
         )
 
     def test_webhook_notification_cancels_transaction(self):
         tx = self._create_transaction(
             'direct', state='pending', provider_reference=self.original_reference, amount=9.99
         )
-        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
-            'NotificationRequestItem': dict(
-                self.webhook_notification_payload,
-                amount={
-                    'currency': self.currency.name,
-                    'value': payment_utils.to_minor_currency_units(9.99, tx.currency_id),
-                },
-                eventCode='CANCELLATION',
-            )
-        }])
+        payload = dict(
+            self.webhook_notification_batch_data,
+            notificationItems=[
+                {
+                    'NotificationRequestItem': dict(
+                        self.webhook_notification_payload,
+                        amount={
+                            'currency': self.currency.name,
+                            'value': payment_utils.to_minor_currency_units(9.99, tx.currency_id),
+                        },
+                        eventCode='CANCELLATION',
+                    )
+                }
+            ],
+        )
         self._webhook_notification_flow(payload)
         self.assertEqual(
-            tx.state,
-            'cancel',
-            msg="The cancellation succeeded, the tx state should be 'cancel'.",
+            tx.state, 'cancel', msg="The cancellation succeeded, the tx state should be 'cancel'."
         )
 
     def test_webhook_notification_refunds_transaction(self):
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.original_reference
         )
-        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
-            'NotificationRequestItem': dict(
-                self.webhook_notification_payload,
-                amount={
-                    'currency': self.currency.name,
-                    'value': payment_utils.to_minor_currency_units(
-                        self.amount, source_tx.currency_id
-                    ),
-                },
-                eventCode='REFUND',
-            )
-        }])
-        self._webhook_notification_flow(payload)
-        refund_tx = self.env['payment.transaction'].search(
-            [('source_transaction_id', '=', source_tx.id)]
+        payload = dict(
+            self.webhook_notification_batch_data,
+            notificationItems=[
+                {
+                    'NotificationRequestItem': dict(
+                        self.webhook_notification_payload,
+                        amount={
+                            'currency': self.currency.name,
+                            'value': payment_utils.to_minor_currency_units(
+                                self.amount, source_tx.currency_id
+                            ),
+                        },
+                        eventCode='REFUND',
+                    )
+                }
+            ],
         )
+        self._webhook_notification_flow(payload)
+        refund_tx = self.env['payment.transaction'].search([
+            ('source_transaction_id', '=', source_tx.id)
+        ])
         self.assertEqual(
             refund_tx.state,
             'done',
@@ -423,41 +449,61 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_failed_webhook_authorization_notification_leaves_transaction_in_draft(self):
         tx = self._create_transaction('direct')
-        payload = dict(self.webhook_notification_batch_data, notificationItems=[
-            {'NotificationRequestItem': dict(self.webhook_notification_payload, success='false')}
-        ])
+        payload = dict(
+            self.webhook_notification_batch_data,
+            notificationItems=[
+                {
+                    'NotificationRequestItem': dict(
+                        self.webhook_notification_payload, success='false'
+                    )
+                }
+            ],
+        )
         self._webhook_notification_flow(payload)
         self.assertEqual(
-            tx.state, 'draft',
-            msg="The authorization failed, as we don't support failed authorization, the tx state "
-                "should still be 'draft'.",
+            tx.state,
+            'draft',
+            msg="The authorization failed, as we don't support failed authorization, the tx state"
+            " should still be 'draft'.",
         )
 
     def test_failed_webhook_capture_notification_leaves_transaction_authorized(self):
         tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
         )
-        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
-            'NotificationRequestItem': dict(
-                self.webhook_notification_payload, eventCode='CAPTURE', success='false'
-            )
-        }])
+        payload = dict(
+            self.webhook_notification_batch_data,
+            notificationItems=[
+                {
+                    'NotificationRequestItem': dict(
+                        self.webhook_notification_payload, eventCode='CAPTURE', success='false'
+                    )
+                }
+            ],
+        )
         self._webhook_notification_flow(payload)
         self.assertEqual(
-            tx.state, 'authorized',
+            tx.state,
+            'authorized',
             msg="The capture failed, the tx state should still be 'authorized'.",
         )
 
     def test_failed_webhook_cancellation_notification_leaves_transaction_authorized(self):
         tx = self._create_transaction('direct', state='authorized')
-        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
-            'NotificationRequestItem': dict(
-                self.webhook_notification_payload, eventCode='CANCELLATION', success='false'
-            )
-        }])
+        payload = dict(
+            self.webhook_notification_batch_data,
+            notificationItems=[
+                {
+                    'NotificationRequestItem': dict(
+                        self.webhook_notification_payload, eventCode='CANCELLATION', success='false'
+                    )
+                }
+            ],
+        )
         self._webhook_notification_flow(payload)
         self.assertEqual(
-            tx.state, 'authorized',
+            tx.state,
+            'authorized',
             msg="The cancellation failed, the tx state should still be 'authorized'.",
         )
 
@@ -465,23 +511,28 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.original_reference
         )
-        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
-            'NotificationRequestItem': dict(
-                self.webhook_notification_payload,
-                amount={
-                    'currency': self.currency.name,
-                    'value': payment_utils.to_minor_currency_units(
-                        self.amount, source_tx.currency_id
-                    ),
-                },
-                eventCode='REFUND',
-                success='false',
-            )
-        }])
+        payload = dict(
+            self.webhook_notification_batch_data,
+            notificationItems=[
+                {
+                    'NotificationRequestItem': dict(
+                        self.webhook_notification_payload,
+                        amount={
+                            'currency': self.currency.name,
+                            'value': payment_utils.to_minor_currency_units(
+                                self.amount, source_tx.currency_id
+                            ),
+                        },
+                        eventCode='REFUND',
+                        success='false',
+                    )
+                }
+            ],
+        )
         self._webhook_notification_flow(payload)
         refund_tx = self.env['payment.transaction'].search([
-            ('source_transaction_id', '=', source_tx.id)]
-        )
+            ('source_transaction_id', '=', source_tx.id)
+        ])
         self.assertEqual(
             refund_tx.state,
             'error',
@@ -491,29 +542,30 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def _webhook_notification_flow(self, payload):
-        """ Send a notification to the webhook, ignore the signature, and check the response. """
+        """Send a notification to the webhook, ignore the signature, and check the response."""
         url = self._build_url(AdyenController._webhook_url)
         with patch('odoo.addons.payment_adyen.controllers.main.AdyenController._verify_signature'):
             response = self._make_json_request(url, data=payload).json()
         self.assertEqual(
-            response, '[accepted]', msg="The webhook should always respond '[accepted]'",
+            response, '[accepted]', msg="The webhook should always respond '[accepted]'"
         )
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
-        """ Test that receiving a webhook notification triggers a signature check. """
+        """Test that receiving a webhook notification triggers a signature check."""
         self._create_transaction('direct')
         url = self._build_url(AdyenController._webhook_url)
-        with patch(
-            'odoo.addons.payment_adyen.controllers.main.AdyenController._verify_signature'
-        ) as signature_check_mock, patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
+        with (
+            patch(
+                'odoo.addons.payment_adyen.controllers.main.AdyenController._verify_signature'
+            ) as signature_check_mock,
+            patch('odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'),
         ):
             self._make_json_request(url, data=self.webhook_notification_batch_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_webhook_notification_with_valid_signature(self):
-        """ Test the verification of a webhook notification with a valid signature. """
+        """Test the verification of a webhook notification with a valid signature."""
         tx = self._create_transaction('direct')
         self._assert_does_not_raise(
             Forbidden, AdyenController._verify_signature, self.webhook_notification_payload, tx
@@ -521,14 +573,14 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_missing_signature(self):
-        """ Test the verification of a webhook notification with a missing signature. """
+        """Test the verification of a webhook notification with a missing signature."""
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': None})
         tx = self._create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_invalid_signature(self):
-        """ Test the verification of a webhook notification with an invalid signature. """
+        """Test the verification of a webhook notification with an invalid signature."""
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': 'dummy'})
         tx = self._create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_signature, payload, tx)
@@ -541,5 +593,5 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             'phone': '0032 12 34 56 78',
         })
         test_address = adyen_utils.format_partner_address(test_partner)
-        for key in ('city', 'country', 'stateOrProvince', 'street',):
+        for key in ('city', 'country', 'stateOrProvince', 'street'):
             self.assertTrue(test_address.get(key))

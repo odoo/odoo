@@ -52,8 +52,6 @@ class TestProcessingFlows(TossPaymentsCommon, PaymentHttpCommon):
         """Test that failing to initiate a payment set the transaction in error."""
         tx = self._create_transaction('direct')
         url = self._build_url(const.PAYMENT_FAILURE_RETURN_ROUTE)
-        # Generate DB secret to verify the request is coming from Toss Payments since we
-        # don't have paymentKey in the failure return URL to verify the request via API call.
         access_token = payment_utils.generate_access_token(tx.reference, env=self.env)
         error_data = {
             'code': 'ERR',

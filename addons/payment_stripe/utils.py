@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 def get_publishable_key(provider_sudo):
-    """ Return the publishable key for Stripe.
+    """Return the publishable key for Stripe.
 
     Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
@@ -14,7 +15,7 @@ def get_publishable_key(provider_sudo):
 
 
 def get_secret_key(provider_sudo):
-    """ Return the secret key for Stripe.
+    """Return the secret key for Stripe.
 
     Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
@@ -27,7 +28,7 @@ def get_secret_key(provider_sudo):
 
 
 def get_webhook_secret(provider_sudo):
-    """ Return the webhook secret for Stripe.
+    """Return the webhook secret for Stripe.
 
     Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
@@ -40,7 +41,7 @@ def get_webhook_secret(provider_sudo):
 
 
 def include_shipping_address(tx_sudo):
-    """ Include the shipping address of the related sales order or invoice to the payload of the API
+    """Include the shipping address of the related sales order or invoice to the payload of the API
     request. If no related sales order or invoice exists, the addres is not included.
 
     Note: `self.ensure_one()`
@@ -54,14 +55,14 @@ def include_shipping_address(tx_sudo):
     if 'sale_order_ids' in tx_sudo._fields and tx_sudo.sale_order_ids:
         order = tx_sudo.sale_order_ids[:1]
         return format_shipping_address(order.partner_shipping_id)
-    elif 'invoice_ids' in tx_sudo._fields and tx_sudo.invoice_ids:
+    if 'invoice_ids' in tx_sudo._fields and tx_sudo.invoice_ids:
         invoice = tx_sudo.invoice_ids[:1]
         return format_shipping_address(invoice.partner_shipping_id)
     return {}
 
 
 def format_shipping_address(shipping_partner):
-    """ Format the shipping address to comply with the payload structure of the API request.
+    """Format the shipping address to comply with the payload structure of the API request.
 
     :param res.partner shipping_partner: The shipping partner.
     :return: The formatted shipping address.

@@ -11,9 +11,8 @@ from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 
 @tagged('-at_install', 'post_install')
 class TestProcessingFlows(PaymentDemoCommon, PaymentHttpCommon):
-
     def test_portal_payment_triggers_processing(self):
-        """ Test that paying from the frontend triggers the processing of the payment data. """
+        """Test that paying from the frontend triggers the processing of the payment data."""
         self._create_transaction(flow='direct')
         url = self._build_url(PaymentDemoController._simulation_url)
         with patch(

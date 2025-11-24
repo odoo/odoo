@@ -13,7 +13,6 @@ from odoo.http import request
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob import const
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -47,8 +46,10 @@ class PaymobController(http.Controller):
             "Notification received from Paymob with data:\n%s", pprint.pformat(payment_data)
         )
         normalized_data = self._normalize_response(payment_data, data.get('hmac'))
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-            'paymob', normalized_data
+        tx_sudo = (
+            request.env['payment.transaction']
+            .sudo()
+            ._search_by_reference('paymob', normalized_data)
         )
         if tx_sudo:
             self._verify_signature(data, tx_sudo)
@@ -99,18 +100,18 @@ class PaymobController(http.Controller):
         received_signature = payment_data.get('hmac', '')
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the payload.
         hmac_key = tx_sudo.provider_id.paymob_hmac_key
         expected_signature = self._compute_signature(payment_data, hmac_key)
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden
 
     @staticmethod
     def _compute_signature(payload, hmac_key):
-        """ Compute the signature from the payload.
+        """Compute the signature from the payload.
 
         See https://developers.paymob.com/pak/manage-callback/hmac-calculation.
 

@@ -7,15 +7,9 @@
     'summary': "A Nigerian payment provider covering several African countries.",
     'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
-    'data': [
-        'views/payment_provider_views.xml',
-
-        'data/payment_provider_data.xml',
-    ],
+    'data': ['views/payment_provider_views.xml', 'data/payment_provider_data.xml'],
     'assets': {
-        'web.assets_frontend': [
-            'payment_flutterwave/static/src/interactions/payment_form.js',
-        ],
+        'web.assets_frontend': ['payment_flutterwave/static/src/interactions/payment_form.js']
     },
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',

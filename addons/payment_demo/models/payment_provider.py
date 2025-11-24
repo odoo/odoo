@@ -14,7 +14,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
+        """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'demo').update({
             'support_express_checkout': True,
@@ -33,7 +33,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS ===#
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'demo':
             return super()._get_default_payment_method_codes()

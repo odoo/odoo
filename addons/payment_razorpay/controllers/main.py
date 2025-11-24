@@ -11,7 +11,6 @@ from odoo.http import request
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay.const import HANDLED_WEBHOOK_EVENTS
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -20,12 +19,7 @@ class RazorpayController(http.Controller):
     _webhook_url = '/payment/razorpay/webhook'
 
     @http.route(
-        _return_url,
-        type='http',
-        auth='public',
-        methods=['POST'],
-        csrf=False,
-        save_session=False,
+        _return_url, type='http', auth='public', methods=['POST'], csrf=False, save_session=False
     )
     def razorpay_return_from_checkout(self, reference, **data):
         """Process the payment data sent by Razorpay after redirection from checkout.
@@ -44,8 +38,10 @@ class RazorpayController(http.Controller):
         _logger.info("Handling redirection from Razorpay with data:\n%s", pprint.pformat(data))
         if all(f'razorpay_{key}' in data for key in ('order_id', 'payment_id', 'signature')):
             # Check the integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-                'razorpay', {'description': reference}
+            tx_sudo = (
+                request.env['payment.transaction']
+                .sudo()
+                ._search_by_reference('razorpay', {'description': reference})
             )  # Use the same key as for webhook notifications' data.
             self._verify_signature(data, data.get('razorpay_signature'), tx_sudo)
             tx_sudo._process('razorpay', data)
@@ -71,8 +67,10 @@ class RazorpayController(http.Controller):
             entity_data = data['payload'].get(entity_type, {}).get('entity', {})
             entity_data.update(entity_type=entity_type)
             received_signature = request.httprequest.headers.get('X-Razorpay-Signature')
-            tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
-                'razorpay', entity_data
+            tx_sudo = (
+                request.env['payment.transaction']
+                .sudo()
+                ._search_by_reference('razorpay', entity_data)
             )
             if tx_sudo:
                 self._verify_signature(
@@ -83,9 +81,7 @@ class RazorpayController(http.Controller):
         return request.make_json_response('')
 
     @staticmethod
-    def _verify_signature(
-        payment_data, received_signature, tx_sudo, is_redirect=True
-    ):
+    def _verify_signature(payment_data, received_signature, tx_sudo, is_redirect=True):
         """Check that the received signature matches the expected one.
 
         :param dict|bytes payment_data: The payment data.
@@ -99,15 +95,14 @@ class RazorpayController(http.Controller):
         # Check for the received signature.
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature.
         expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
             payment_data, is_redirect=is_redirect
         )
-        if (
-            expected_signature is None
-            or not hmac.compare_digest(received_signature, expected_signature)
+        if expected_signature is None or not hmac.compare_digest(
+            received_signature, expected_signature
         ):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

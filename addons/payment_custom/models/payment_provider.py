@@ -23,7 +23,8 @@ class PaymentProvider(models.Model):
         required_if_provider='custom',
     )
     qr_code = fields.Boolean(
-        string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
+        string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer."
+    )
 
     # === CRUD METHODS ===#
 
@@ -34,7 +35,7 @@ class PaymentProvider(models.Model):
         return providers
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'custom' or self.custom_mode != 'wire_transfer':
             return super()._get_default_payment_method_codes()
@@ -43,23 +44,31 @@ class PaymentProvider(models.Model):
     # === ACTION METHODS ===#
 
     def action_recompute_pending_msg(self):
-        """ Recompute the pending message to include the existing bank accounts. """
+        """Recompute the pending message to include the existing bank accounts."""
         account_payment_module = self.env['ir.module.module']._get('account_payment')
         if account_payment_module.state == 'installed':
             for provider in self.filtered(lambda p: p.custom_mode == 'wire_transfer'):
                 company_id = provider.company_id.id
-                accounts = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(company_id),
-                    ('type', '=', 'bank'),
-                ]).bank_account_id
-                account_names = "".join(f"<li><pre>{account.display_name}</pre></li>" for account in accounts)
-                provider.pending_msg = f'<div>' \
-                    f'<h5>{_("Please use the following transfer details")}</h5>' \
-                    f'<p><br></p>' \
-                    f'<h6>{_("Bank Account") if len(accounts) == 1 else _("Bank Accounts")}</h6>' \
-                    f'<ul>{account_names}</ul>'\
-                    f'<p><br></p>' \
+                accounts = (
+                    self.env['account.journal']
+                    .search([
+                        *self.env['account.journal']._check_company_domain(company_id),
+                        ('type', '=', 'bank'),
+                    ])
+                    .bank_account_id
+                )
+                account_names = "".join(
+                    f"<li><pre>{account.display_name}</pre></li>" for account in accounts
+                )
+                provider.pending_msg = (
+                    f'<div>'
+                    f'<h5>{_("Please use the following transfer details")}</h5>'
+                    f'<p><br></p>'
+                    f'<h6>{_("Bank Account") if len(accounts) == 1 else _("Bank Accounts")}</h6>'
+                    f'<ul>{account_names}</ul>'
+                    f'<p><br></p>'
                     f'</div>'
+                )
 
     # === SETUP METHODS === #
 
@@ -72,7 +81,7 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _get_removal_values(self):
-        """ Override of `payment` to nullify the `custom_mode` field. """
+        """Override of `payment` to nullify the `custom_mode` field."""
         res = super()._get_removal_values()
         res['custom_mode'] = None
         return res

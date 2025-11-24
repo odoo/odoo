@@ -48,6 +48,7 @@ class TossPaymentsController(http.Controller):
 
         Note: The access token is used to verify the request is coming from Toss Payments since we
         don't have paymentKey in the failure return URL to verify the request via API call.
+
         :param dict data: The payment data. Expected keys: access_token, code, message, orderId.
         """
         _logger.info("Handling redirection from Toss Payments with data:\n%s", pprint.pformat(data))
@@ -58,7 +59,9 @@ class TossPaymentsController(http.Controller):
             return request.redirect('/payment/status')
 
         access_token = data.get('access_token')
-        if not access_token or not payment_utils.check_access_token(access_token, tx_sudo.reference):
+        if not access_token or not payment_utils.check_access_token(
+            access_token, tx_sudo.reference
+        ):
             return request.redirect('/payment/status')
 
         tx_sudo._set_error(f"{data['message']} ({data['code']})")

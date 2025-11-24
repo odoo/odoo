@@ -13,7 +13,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -34,7 +33,7 @@ class WorldlineController(http.Controller):
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != 'worldline':
             _logger.warning("Received payment data with invalid provider id.")
-            raise Forbidden()
+            raise Forbidden
 
         try:
             # Fetch the checkout session data from Worldline.
@@ -45,9 +44,7 @@ class WorldlineController(http.Controller):
             _logger.error("Unable to process the payment data")
         else:
             payment_data = checkout_session_data.get('createdPaymentOutput', {})
-            request.env['payment.transaction'].sudo()._process(
-                'worldline', payment_data
-            )
+            request.env['payment.transaction'].sudo()._process('worldline', payment_data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -60,9 +57,7 @@ class WorldlineController(http.Controller):
         :rtype: str
         """
         data = request.get_json_data()
-        _logger.info(
-            "Notification received from Worldline with data:\n%s", pprint.pformat(data)
-        )
+        _logger.info("Notification received from Worldline with data:\n%s", pprint.pformat(data))
 
         # Check the integrity of the notification.
         tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('worldline', data)
@@ -86,7 +81,7 @@ class WorldlineController(http.Controller):
         # Retrieve the received signature from the payload.
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the payload.
         webhook_secret = tx_sudo.provider_id.worldline_webhook_secret
@@ -95,4 +90,4 @@ class WorldlineController(http.Controller):
         )
         if not hmac.compare_digest(received_signature.encode(), expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

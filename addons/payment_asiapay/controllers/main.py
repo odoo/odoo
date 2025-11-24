@@ -10,7 +10,6 @@ from odoo.http import request
 
 from odoo.addons.payment.logging import get_payment_logger
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -19,10 +18,10 @@ class AsiaPayController(http.Controller):
     _webhook_url = '/payment/asiapay/webhook'
 
     @http.route(_return_url, type='http', auth='public', methods=['GET'])
-    def asiapay_return_from_checkout(self, **data):
+    def asiapay_return_from_checkout(self, **_data):
         """Process the payment data sent by AsiaPay after redirection.
 
-        :param dict data: The payment data.
+        :param dict _data: The payment data.
         """
         # Don't process the payment data as they contain no valuable information except for the
         # reference and AsiaPay doesn't expose an endpoint to fetch the data from the API.
@@ -55,7 +54,7 @@ class AsiaPayController(http.Controller):
         received_signature = payment_data.get('secureHash')
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
+            raise Forbidden
 
         # Compare the received signature with the expected signature computed from the data.
         expected_signature = tx_sudo.provider_id._asiapay_calculate_signature(
@@ -63,4 +62,4 @@ class AsiaPayController(http.Controller):
         )
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+            raise Forbidden

@@ -11,7 +11,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -19,7 +18,8 @@ class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     code = fields.Selection(
-        selection_add=[('authorize', 'Authorize.Net')], ondelete={'authorize': 'set default'})
+        selection_add=[('authorize', 'Authorize.Net')], ondelete={'authorize': 'set default'}
+    )
     authorize_login = fields.Char(
         string="API Login ID",
         help="The ID solely used to identify the account with Authorize.Net",
@@ -59,7 +59,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
+        """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'authorize').update({
             'support_manual_capture': 'full_only',
@@ -70,7 +70,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'authorize':
             return super()._get_default_payment_method_codes()
@@ -79,7 +79,7 @@ class PaymentProvider(models.Model):
     # === ACTION METHODS ===#
 
     def action_update_merchant_details(self):
-        """ Fetch the merchant details to update the client key and the account currency. """
+        """Fetch the merchant details to update the client key and the account currency."""
         self.ensure_one()
 
         if self.state == 'disabled':
@@ -106,7 +106,7 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS ===#
 
     def _get_validation_amount(self):
-        """ Override of payment to return the amount for Authorize.Net validation operations.
+        """Override of payment to return the amount for Authorize.Net validation operations.
 
         :return: The validation amount
         :rtype: float
@@ -118,7 +118,7 @@ class PaymentProvider(models.Model):
         return 0.01
 
     def _authorize_get_inline_form_values(self):
-        """ Return a serialized JSON of the required values to render the inline form.
+        """Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
 

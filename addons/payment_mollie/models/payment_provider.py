@@ -26,7 +26,7 @@ class PaymentProvider(models.Model):
     # === COMPUTE METHODS === #
 
     def _get_supported_currencies(self):
-        """ Override of `payment` to return the supported currencies. """
+        """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'mollie':
             supported_currencies = supported_currencies.filtered(
@@ -37,7 +37,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
 
         if self.code != 'mollie':

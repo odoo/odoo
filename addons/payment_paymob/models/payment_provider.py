@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-
 from datetime import datetime
 
 from odoo import _, api, fields, models
@@ -10,7 +9,6 @@ from odoo.fields import Command
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob import const
-
 
 _logger = get_payment_logger(__name__)
 
@@ -24,7 +22,7 @@ class PaymentProvider(models.Model):
     paymob_account_country_id = fields.Many2one(
         string="Paymob Account Country",
         help="The country of the Paymob account. The currency will be updated to match the country"
-             " of the Paymob account.",
+        " of the Paymob account.",
         comodel_name='res.country',
         inverse='_inverse_paymob_account_country_id',
         domain=f'[("code", "in", {list(const.API_MAPPING.keys())})]',
@@ -32,9 +30,7 @@ class PaymentProvider(models.Model):
         copy=False,
     )
     paymob_public_key = fields.Char(
-        string="Paymob Public Key",
-        required_if_provider='paymob',
-        copy=False,
+        string="Paymob Public Key", required_if_provider='paymob', copy=False
     )
     paymob_secret_key = fields.Char(
         string="Paymob Secret Key",
@@ -43,15 +39,9 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
     paymob_hmac_key = fields.Char(
-        string="Paymob HMAC Key",
-        required_if_provider='paymob',
-        copy=False,
+        string="Paymob HMAC Key", required_if_provider='paymob', copy=False
     )
-    paymob_api_key = fields.Char(
-        string="Paymob API Key",
-        required_if_provider='paymob',
-        copy=False,
-    )
+    paymob_api_key = fields.Char(string="Paymob API Key", required_if_provider='paymob', copy=False)
 
     # === CONSTRAINT METHODS === #
 
@@ -72,15 +62,17 @@ class PaymentProvider(models.Model):
         for provider in self.filtered(lambda p: p.code == 'paymob'):
             if self.paymob_account_country_id.code:
                 currency_code = const.CURRENCY_MAPPING.get(self.paymob_account_country_id.code)
-                currency = self.env['res.currency'].with_context(
-                    active_test=False,
-                ).search([('name', '=', currency_code)], limit=1)
+                currency = (
+                    self.env['res.currency']
+                    .with_context(active_test=False)
+                    .search([('name', '=', currency_code)], limit=1)
+                )
                 provider.available_currency_ids = [Command.set(currency.ids)]
 
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.code != 'paymob':
             return super()._get_default_payment_method_codes()
@@ -89,7 +81,7 @@ class PaymentProvider(models.Model):
     # === ACTION METHODS === #
 
     def action_sync_paymob_payment_methods(self):
-        """ Synchronize the payment methods with the ones on the Paymob portal, the integration_name
+        """Synchronize the payment methods with the ones on the Paymob portal, the integration_name
         needs to be set to be able to communicate with the `payment_method.code` when the intention
         is created.
 
@@ -133,7 +125,7 @@ class PaymentProvider(models.Model):
         return displayed_notification
 
     def _match_paymob_payment_methods(self, paymob_gateways_data):
-        """ Filter gateways available in Paymob to match the payment methods enabled in Odoo.
+        """Filter gateways available in Paymob to match the payment methods enabled in Odoo.
 
         This method takes the full list of gateways from Paymob, and while avoiding duplicates,
         returns only those that:
@@ -179,7 +171,7 @@ class PaymentProvider(models.Model):
         return matched_gateways_data
 
     def _update_payment_method_integration_names(self, matched_gateways_data):
-        """ Set the integration name given to the gateways on Paymob to the corresponding payment
+        """Set the integration name given to the gateways on Paymob to the corresponding payment
         method code.
 
         The integration names acts as the identifier to specify which payment method is to be used
@@ -212,7 +204,7 @@ class PaymentProvider(models.Model):
         return f'{self._paymob_get_api_url()}{endpoint}'
 
     def _paymob_get_api_url(self):
-        """ Get the API URL according to the provider country.
+        """Get the API URL according to the provider country.
 
         Note: self.ensure_one()
 
@@ -221,8 +213,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         api_prefix = const.API_MAPPING[self.paymob_account_country_id.code]
-        url = f'https://{api_prefix}.paymob.com'
-        return url
+        return f'https://{api_prefix}.paymob.com'
 
     def _build_request_headers(
         self, *args, is_refresh_token_request=False, is_client_request=False, **kwargs
@@ -238,7 +229,7 @@ class PaymentProvider(models.Model):
         return {'Authorization': f'Bearer {auth}'}
 
     def _paymob_fetch_access_token(self):
-        """ Generate a new access token if it's expired, otherwise return the existing access token.
+        """Generate a new access token if it's expired, otherwise return the existing access token.
 
         Paymob's access tokens expire every hour.
 

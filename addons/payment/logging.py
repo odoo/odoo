@@ -5,7 +5,6 @@ import re
 
 
 class SensitiveDataFilter(logging.Filter):
-
     def __init__(self, sensitive_keys):
         super().__init__()
         if sensitive_keys is None:
@@ -65,6 +64,7 @@ class SensitiveDataFilter(logging.Filter):
         :return: The masked string.
         :rtype: str
         """
+
         def replace(m):
             # 1st group: "<key>" or '<key>'
             # 2nd group: The quote char for the value

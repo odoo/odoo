@@ -16,7 +16,6 @@ _logger = logging.getLogger(__name__)
 
 
 class MercadoPagoOnboardingController(Controller):
-
     @route(const.OAUTH_RETURN_ROUTE, type='http', auth='user', methods=['GET'], website=True)
     def mercado_pago_return_from_authorization(self, **data):
         """Exchange the authorization code for an access token and redirect to the provider form.
@@ -40,7 +39,7 @@ class MercadoPagoOnboardingController(Controller):
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):
             _logger.warning("CSRF token verification failed.")
-            raise Forbidden()
+            raise Forbidden
 
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
@@ -49,15 +48,13 @@ class MercadoPagoOnboardingController(Controller):
             return request.redirect(redirect_url)
 
         # Fetch an access token using the authorization token.
-        proxy_payload = self.env['payment.provider']._prepare_json_rpc_payload(
-            {
-                'authorization_code': authorization_code,
-                'account_country_code': provider_sudo.mercado_pago_account_country_id.code.lower(),
-            }
-        )
+        proxy_payload = self.env['payment.provider']._prepare_json_rpc_payload({
+            'authorization_code': authorization_code,
+            'account_country_code': provider_sudo.mercado_pago_account_country_id.code.lower(),
+        })
         try:
             response_content = provider_sudo._send_api_request(
-                'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True,
+                'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True
             )
         except ValidationError as e:
             return request.render(
