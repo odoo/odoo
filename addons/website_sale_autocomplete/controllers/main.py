@@ -73,11 +73,12 @@ class AutoCompleteController(http.Controller):
                 'session_id': session_id
             }
 
+        types = request.context.get('types', 'address')
         params = {
             'key': api_key,
             'fields': 'formatted_address,name',
             'inputtype': 'textquery',
-            'types': 'address',
+            'types': types,
             'input': partial_address
         }
         if country_code:
