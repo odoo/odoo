@@ -20,12 +20,16 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Size">
-        <BuilderSelect applyTo="'.fa, .social_media_img'">
-            <BuilderSelectItem classAction="'small_social_icon'">Small</BuilderSelectItem>
-            <BuilderSelectItem classAction="''">Medium</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-2x'">Large</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-3x'">Huge</BuilderSelectItem>
-        </BuilderSelect>
+    <BuilderRange
+        withNumberInput="true"
+        action="'resetSocialMediaIconSize'"
+        applyTo="'.fa, .social_media_img'"
+        styleAction="{ mainParam: '--fa-icon-size', extraClass: 'o_sm_custom_size' }"
+        unit="'px'"
+        saveUnit="'rem'"
+        min="40"
+        max="100"
+        step="1"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Color" tooltip.translate="Keep the original icon color">
