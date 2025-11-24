@@ -318,7 +318,7 @@ test(`simple calendar rendering on desktop`, async () => {
             id: 8,
             user_id: serverState.userId,
             partner_id: false,
-            name: "event 7",
+            name: "event 8",
             start: "2016-12-18 09:00:00",
             stop: "2016-12-18 10:00:00",
             attendee_ids: [2],
@@ -327,11 +327,20 @@ test(`simple calendar rendering on desktop`, async () => {
             id: 9,
             user_id: serverState.userId,
             partner_id: false,
-            name: "event 8",
+            name: "event 9",
             start: "2016-12-11 05:15:00",
             stop: "2016-12-11 05:30:00",
             attendee_ids: [1, 2, 3],
             delay: 0.25,
+        },
+        {
+            id: 10,
+            user_id: serverState.userId,
+            partner_id: false,
+            name: "event 10",
+            start: "2016-12-16 11:45:00",
+            stop: false,
+            attendee_ids: [1, 2, 3],
         }
     );
 
@@ -355,8 +364,9 @@ test(`simple calendar rendering on desktop`, async () => {
     });
 
     await toggleSectionFilter("attendee_ids");
-    expect(`.o_event`).toHaveCount(6, {
-        message: "should display 6 events on the week (4 event + 1 is_all_day + 1 >24h is_all_day)",
+    expect(`.o_event`).toHaveCount(7, {
+        message:
+            "should display 7 events on the week (including one without stop + 1 is_all_day + 1 >24h is_all_day)",
     });
     expect(`.o_event_oneliner`).toHaveCount(1, {
         message: "should contain 1 oneliner event (the one we add)",
@@ -370,9 +380,9 @@ test(`simple calendar rendering on desktop`, async () => {
     await toggleSectionFilter("attendee_ids");
     await toggleFilter("attendee_ids", "1");
     await toggleFilter("attendee_ids", "2");
-    expect(`.o_event`).toHaveCount(8, {
+    expect(`.o_event`).toHaveCount(9, {
         message:
-            "should display 7 events on the month (6 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')",
+            "should display 9 events on the month (8 events - 1 'event 6' is filtered + 2 week event)",
     });
 
     // test filters
@@ -391,7 +401,7 @@ test(`simple calendar rendering on desktop`, async () => {
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event`).toHaveCount(6);
+    expect(`.o_event`).toHaveCount(7);
 
     await toggleFilter("attendee_ids", "2");
     expect(`.o_event`).toHaveCount(0);
@@ -1435,8 +1445,11 @@ test(`default week start (US)`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2016-12-18 06:59:59"],
+            "|",
             ["stop", ">=", "2016-12-11 07:00:00"],
+            ["start", ">=", "2016-12-11 07:00:00"],
         ]);
     });
     await mountView({
@@ -1456,8 +1469,11 @@ test(`European week start`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2016-12-18 22:59:59"],
+            "|",
             ["stop", ">=", "2016-12-11 23:00:00"],
+            ["start", ">=", "2016-12-11 23:00:00"],
         ]);
     });
     await mountView({
@@ -1755,8 +1771,11 @@ test(`fetch event when being in timezone`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2016-12-17 12:59:59"],
+            "|",
             ["stop", ">=", "2016-12-10 13:00:00"],
+            ["start", ">=", "2016-12-10 13:00:00"],
         ]);
     });
 
@@ -4037,8 +4056,11 @@ test(`default week start (US) month mode on desktop`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-10-13 06:59:59"],
+            "|",
             ["stop", ">=", "2019-09-01 07:00:00"],
+            ["start", ">=", "2019-09-01 07:00:00"],
         ]);
     });
     await mountView({
@@ -4064,8 +4086,11 @@ test(`default week start (US) month mode on mobile`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-10-13 06:59:59"],
+            "|",
             ["stop", ">=", "2019-09-01 07:00:00"],
+            ["start", ">=", "2019-09-01 07:00:00"],
         ]);
     });
     await mountView({
@@ -4092,8 +4117,11 @@ test(`European week start month mode on chat`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-10-06 22:59:59"],
+            "|",
             ["stop", ">=", "2019-08-25 23:00:00"],
+            ["start", ">=", "2019-08-25 23:00:00"],
         ]);
     });
     await mountView({
@@ -4120,8 +4148,11 @@ test(`European week start month mode on mobile`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-10-06 22:59:59"],
+            "|",
             ["stop", ">=", "2019-08-25 23:00:00"],
+            ["start", ">=", "2019-08-25 23:00:00"],
         ]);
     });
     await mountView({
@@ -4148,8 +4179,11 @@ test(`Monday week start week mode on desktop`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-09-15 22:59:59"],
+            "|",
             ["stop", ">=", "2019-09-08 23:00:00"],
+            ["start", ">=", "2019-09-08 23:00:00"],
         ]);
     });
     await mountView({
@@ -4176,8 +4210,11 @@ test(`Monday week start week mode on mobile`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-09-22 22:59:59"],
+            "|",
             ["stop", ">=", "2019-09-01 23:00:00"],
+            ["start", ">=", "2019-09-01 23:00:00"],
         ]);
     });
     await mountView({
@@ -4204,8 +4241,11 @@ test(`Saturday week start week mode on desktop`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-09-13 22:59:59"],
+            "|",
             ["stop", ">=", "2019-09-06 23:00:00"],
+            ["start", ">=", "2019-09-06 23:00:00"],
         ]);
     });
     await mountView({
@@ -4231,8 +4271,11 @@ test(`Saturday week start week mode on mobile`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-09-13 22:59:59"],
+            "|",
             ["stop", ">=", "2019-09-06 23:00:00"],
+            ["start", ">=", "2019-09-06 23:00:00"],
         ]);
     });
     await mountView({
@@ -4264,8 +4307,11 @@ test(`Monday week start year mode`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-12-31 22:59:59"],
+            "|",
             ["stop", ">=", "2018-12-31 23:00:00"],
+            ["start", ">=", "2018-12-31 23:00:00"],
         ]);
     });
     await mountView({
@@ -4300,8 +4346,11 @@ test(`Sunday week start year mode`, async () => {
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2019-12-31 22:59:59"],
+            "|",
             ["stop", ">=", "2018-12-31 23:00:00"],
+            ["start", ">=", "2018-12-31 23:00:00"],
         ]);
     });
     await mountView({
@@ -4864,6 +4913,7 @@ test(`calendar with option month_overflow not set (default)`, async () => {
     onRpc("search_read", ({ kwargs }) => {
         expect.step("search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2017-01-07 22:59:59"],
             ["start", ">=", "2016-11-26 23:00:00"],
         ]);
@@ -4913,6 +4963,7 @@ test(`calendar with option month_overflow set to false`, async () => {
     onRpc("search_read", ({ kwargs }) => {
         expect.step("search_read");
         expect(kwargs.domain).toEqual([
+            "&",
             ["start", "<=", "2016-12-31 22:59:59"],
             ["start", ">=", "2016-11-30 23:00:00"],
         ]);
