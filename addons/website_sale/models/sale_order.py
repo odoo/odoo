@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import random
 from datetime import datetime
 
@@ -46,12 +47,20 @@ class SaleOrder(models.Model):
     is_abandoned_cart = fields.Boolean(
         string="Abandoned Cart", compute='_compute_abandoned_cart', search='_search_abandoned_cart',
     )
+    pickup_location_data = fields.Json()
     # filter related fields
     is_unfulfilled = fields.Boolean(
         string="Unfulfilled Orders", search='_search_is_unfulfilled', store=False
     )
 
     #=== COMPUTE METHODS ===#
+
+    def _compute_partner_shipping_id(self):
+        """ Override to reset the delivery address when a pickup location was selected. """
+        super()._compute_partner_shipping_id()
+        for order in self:
+            if order.partner_shipping_id.is_pickup_location:
+                order.partner_shipping_id = order.partner_id
 
     @api.depends('order_line')
     def _compute_website_order_line(self):
@@ -1050,3 +1059,98 @@ class SaleOrder(models.Model):
             'sales': float_round(total_sales, precision_rounding=0.01),
             'visitors': visitor_count,
         }
+
+    def _set_pickup_location(self, pickup_location_data):
+        """ Set the pickup location on the current order.
+        Note: self.ensure_one()
+        :param str pickup_location_data: The JSON-formatted pickup location address.
+        :return: None
+        """
+        self.ensure_one()
+        use_locations_fname = f'{self.carrier_id.delivery_type}_use_locations'
+        if hasattr(self.carrier_id, use_locations_fname):
+            use_location = getattr(self.carrier_id, use_locations_fname)
+            if use_location and pickup_location_data:
+                pickup_location = json.loads(pickup_location_data)
+            else:
+                pickup_location = None
+            self.pickup_location_data = pickup_location
+
+    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
+        """ Return the pickup locations of the delivery method close to a given zip code.
+        Use provided `zip_code` and `country` or the order's delivery address to determine the zip
+        code and the country to use.
+        Note: self.ensure_one()
+        :param int zip_code: The zip code to look up to, optional.
+        :param res.country country: The country to look up to, required if `zip_code` is provided.
+        :return: The close pickup locations data.
+        :rtype: dict
+        """
+        self.ensure_one()
+        if country:
+            partner_address = self.env['res.partner'].new({
+                'active': False,
+                'country_id': country.id,
+                'zip': zip_code,
+            })
+        else:
+            partner_address = self.partner_shipping_id
+        try:
+            error = {'error': _("No pick-up points are available for this delivery address.")}
+            function_name = f'_{self.carrier_id.delivery_type}_get_close_locations'
+            if not hasattr(self.carrier_id, function_name):
+                return error
+            pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
+            if not pickup_locations:
+                return error
+            return {'pickup_locations': pickup_locations}
+        except UserError as e:
+            return {'error': str(e)}
+
+    def _action_confirm(self):
+        for order in self:
+            order_location = order.pickup_location_data
+
+            if not order_location:
+                continue
+
+            # Retrieve all the data : name, street, city, state, zip, country.
+            name = order_location.get('name') or order.partner_shipping_id.name
+            street = order_location['street']
+            city = order_location['city']
+            zip_code = order_location['zip_code']
+            country_code = order_location['country_code']
+            country = order.env['res.country'].search([('code', '=', country_code)]).id
+            state = order.env['res.country.state'].search([
+                ('code', '=', order_location['state']),
+                ('country_id', '=', country),
+            ]).id if (order_location.get('state') and country) else None
+            parent_id = order.partner_shipping_id.id
+            email = order.partner_shipping_id.email
+            phone = order.partner_shipping_id.phone
+
+            # Check if the current partner has a partner of type 'delivery' with the same address.
+            existing_partner = order.env['res.partner'].search([
+                ('street', '=', street),
+                ('city', '=', city),
+                ('state_id', '=', state),
+                ('country_id', '=', country),
+                ('parent_id', '=', parent_id),
+                ('type', '=', 'delivery'),
+            ], limit=1)
+
+            shipping_partner = existing_partner or order.env['res.partner'].create({
+                'parent_id': parent_id,
+                'type': 'delivery',
+                'name': name,
+                'street': street,
+                'city': city,
+                'state_id': state,
+                'zip': zip_code,
+                'country_id': country,
+                'email': email,
+                'phone': phone,
+                'is_pickup_location': True,
+            })
+            order.with_context(update_delivery_shipping_partner=True).write({'partner_shipping_id': shipping_partner})
+        return super()._action_confirm()

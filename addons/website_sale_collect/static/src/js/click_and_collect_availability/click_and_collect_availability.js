@@ -5,17 +5,17 @@ import { useBus, useService } from '@web/core/utils/hooks';
 
 import {
     LocationSelectorDialog
-} from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+} from '@website_sale/js/location_selector/location_selector_dialog/location_selector_dialog';
 
 export class ClickAndCollectAvailability extends Component {
     static template = 'website_sale_collect.ClickAndCollectAvailability';
     static props = {
         productId: Number,
-        active: {type: Boolean, optional: true},
+        active: { type: Boolean, optional: true },
         zipCode: { type: String, optional: true },
         selectedLocationData: { type: Object, optional: true },
         inStoreStockData: { type: Object, optional: true },
-        deliveryStockData: { type: Object, optional: true},
+        deliveryStockData: { type: Object, optional: true },
         showSelectStoreButton: { type: Boolean, optional: true },
         countryCode: { type: String, optional: true },
         deliveryMethodId: Number,
@@ -49,7 +49,7 @@ export class ClickAndCollectAvailability extends Component {
      * @param {Object} combinationInfo - The information on the current product variant.
      * @return {void}
      */
-    _updateStateWithCombinationInfo (combinationInfo) {
+    _updateStateWithCombinationInfo(combinationInfo) {
         this.state.productId = combinationInfo.product_id;
         this.state.inStoreStockData = combinationInfo.in_store_stock_data;
         this.state.deliveryStockData = combinationInfo.delivery_stock_data;

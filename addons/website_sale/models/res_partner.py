@@ -13,6 +13,7 @@ class ResPartner(models.Model):
         inverse_name='partner_id',
         domain=[('active', '=', True)],
     )
+    is_pickup_location = fields.Boolean()  # Whether it is a pickup point address.
 
     @api.onchange('property_product_pricelist')
     def _onchange_property_product_pricelist(self):
@@ -60,6 +61,9 @@ class ResPartner(models.Model):
             '|', ('partner_id', 'in', self.ids),
                  ('partner_shipping_id', 'in', self.ids),
         ])
+
+    def _get_delivery_address_domain(self):
+        return super()._get_delivery_address_domain() & Domain('is_pickup_location', '=', False)
 
     def write(self, vals):
         res = super().write(vals)

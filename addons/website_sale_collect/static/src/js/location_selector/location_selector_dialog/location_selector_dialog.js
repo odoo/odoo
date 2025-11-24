@@ -5,7 +5,7 @@ import { _t } from '@web/core/l10n/translation';
 
 import {
     LocationSelectorDialog
-} from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+} from '@website_sale/js/location_selector/location_selector_dialog/location_selector_dialog';
 
 patch(LocationSelectorDialog, {
     components: {
@@ -102,7 +102,7 @@ patch(LocationSelectorDialog.prototype, {
     /**
      * Filter locations by selected country for Click & Collect.
      *
-     * @override method from `@delivery/static/src/js/location_selector_dialog`
+     * @override method from `@website_sale/static/src/js/location_selector_dialog`
      */
     get locations() {
         if (this.isClickAndCollect && this.state.selectedCountryData.code) {
@@ -117,7 +117,7 @@ patch(LocationSelectorDialog.prototype, {
      * Set the countries on the location selector and set the first one as the selected country if
      * no country was selected previously for Click & Collect in checkout page.
      *
-     * @override method from `@delivery/static/src/js/location_selector_dialog`
+     * @override method from `@website_sale/static/src/js/location_selector_dialog`
      */
     _updateLocations(locations) {
         if (!this.isClickAndCollect) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="delivery.locationSelector.dialog">
+    <t t-name="website_sale.locationSelector.dialog">
         <Dialog
             title="title"
             bodyClass="'d-flex flex-column p-0 px-md-3'"
@@ -9,7 +9,7 @@
             <!-- Mobile view -->
             <t t-if="this.state.isSmall">
                 <!-- Search bar -->
-                <t t-call="delivery.locationSelector.searchbar"/>
+                <t t-call="website_sale.locationSelector.searchbar"/>
 
                 <!-- "List view / Map view" navigation -->
                 <div class="nav nav-tabs">
@@ -58,7 +58,7 @@
                 >
 
                     <!-- Search bar -->
-                    <t t-call="delivery.locationSelector.searchbar">
+                    <t t-call="website_sale.locationSelector.searchbar">
                         <t t-set="wrapClass" t-value="'d-flex'"/>
                     </t>
 
@@ -107,7 +107,7 @@
         </Dialog>
     </t>
 
-    <t t-name="delivery.locationSelector.searchbar">
+    <t t-name="website_sale.locationSelector.searchbar">
         <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
             <input
                 id="o_location_selector_search"
