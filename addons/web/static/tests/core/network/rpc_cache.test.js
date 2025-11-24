@@ -1,5 +1,7 @@
 import { Deferred, describe, expect, microTick, test, tick } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { RPCCache } from "@web/core/network/rpc_cache";
+import { IDBQuotaExceededError, IndexedDB } from "@web/core/utils/indexed_db";
 
 const S_PENDING = Symbol("Promise");
 
@@ -1015,4 +1017,30 @@ test("DiskCache: multiple consecutive calls, empty cache, fallback fails", async
         "error call 2: my RPCError",
         "error call 3: my RPCError",
     ]);
+});
+
+test("DiskCache: write throws an IDBQuotaExceededError", async () => {
+    patchWithCleanup(IndexedDB.prototype, {
+        deleteDatabase() {
+            expect.step("delete db");
+        },
+        write() {
+            expect.step("write");
+            return Promise.reject(new IDBQuotaExceededError());
+        },
+    });
+
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    const fallback = () => {
+        expect.step(`fallback`);
+        return Promise.resolve("value");
+    };
+    await rpcCache.read("table", "key", fallback, { type: "disk" });
+
+    await expect.waitForSteps(["fallback", "write", "delete db"]);
 });
