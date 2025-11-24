@@ -43,9 +43,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             this.quickCreate = this.quickCreateRecipient.bind(this);
         }
 
-        this.recipientCheckerBus = useRecipientChecker(() =>
-            this.tags.map((tag) => ({ id: tag.id, email: tag.props.email }))
-        );
+        this.recipientCheckerBus = useRecipientChecker(() => this.tags.map((tag) => ({ id: tag.id, email: tag.props.email })));
 
         const update = this.update;
         this.update = async (object) => {
