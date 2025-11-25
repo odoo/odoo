@@ -6,6 +6,8 @@ import uuid
 from datetime import datetime
 from werkzeug import urls
 from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.tools.translate import LazyTranslate
 
 VALIDATION_KARMA_GAIN = 3
@@ -71,3 +73,109 @@ class ResUsers(models.Model):
         if token == validation_token and self.karma == 0:
             return self.write({'karma': VALIDATION_KARMA_GAIN})
         return False
+
+    @api.model
+    def _get_karma_ranking_domain(self):
+        """Users taking part in the karma ranking of the website."""
+        return Domain('karma', '>', 1) & Domain('website_published', '=', True)
+
+    @api.model
+    def _get_users_karma_ranking(self, search_domain=None, from_date=None, to_date=None,
+                                 limit=30, offset=0, always_include_user_ids=None):
+        """Return one page of the website karma ranking (see ``_get_karma_ranking_domain``).
+
+        Users are ranked on the karma gained between ``from_date`` and
+        ``to_date``, or on their total karma without dates, ties being broken
+        by total karma. Positions are those of the full ranking, even when
+        ``search_domain`` filters the page.
+
+        :param search_domain: optional domain filtering the paginated users
+        :param from_date: rank on karma gained since this date (included)
+        :param to_date: rank on karma gained until this date (included)
+        :param limit: page size
+        :param offset: page offset
+        :param always_include_user_ids: ids of users to return even when
+          outside of the page (if ranked and matching ``search_domain``),
+          e.g. the current user to show their own position below it
+
+        :rtype: dict
+        :return: ``{user_id: row}`` ordered by position, each row being:
+          ::
+
+            {
+                'user_id': int,
+                'karma_gain': int, karma gained in the timeframe, 0 without
+                  change (total karma without dates),
+                'karma_position': int, position in the full ranking,
+                'in_page': bool, False only for ``always_include_user_ids``
+                  outside of the page,
+            }
+        """
+        query = self._search(self._get_karma_ranking_domain(), bypass_access=True)
+        user_t = query.table
+        if from_date or to_date:
+            tracking_domain = Domain.TRUE
+            if from_date:
+                tracking_domain &= Domain('tracking_date', '>=', from_date)
+            if to_date:
+                tracking_domain &= Domain('tracking_date', '<=', to_date)
+            # aggregate the gains per user before joining, to group only the trackings of the timeframe
+            tracking_query = self.env['gamification.karma.tracking']._search(tracking_domain, bypass_access=True)
+            tracking_t = tracking_query.table
+            tracking_query.groupby = tracking_t.user_id
+            tracking_subquery = tracking_query.subselect(
+                SQL("%s AS user_id", tracking_t.user_id),
+                SQL("SUM(%s - %s) AS karma_gain", tracking_t.new_value, tracking_t.old_value),
+            )
+            gain_t = user_t._make_alias('karma_gain')
+            # left join: users without tracking in the timeframe are ranked with a gain of 0
+            query.add_join('LEFT JOIN', gain_t, tracking_subquery, SQL("%s = %s", gain_t.user_id, user_t.id))
+            karma_gain = SQL("COALESCE(%s, 0)", gain_t.karma_gain)
+        else:
+            karma_gain = user_t.karma
+        karma_query = query.subselect(
+            SQL("%s AS user_id", user_t.id),
+            SQL("%s AS karma", user_t.karma),
+            SQL("%s AS karma_gain", karma_gain),
+        )
+
+        if search_domain:
+            row_index = SQL("ROW_NUMBER() OVER (ORDER BY karma_position)")
+            search_condition = SQL("user_id IN %s", self._search(search_domain, bypass_access=True).subselect())
+        else:
+            # without search, the page rows are the ranking ones: skip the second sort
+            row_index = SQL("karma_position")
+            search_condition = SQL("TRUE")
+
+        page_condition = SQL("row_index > %s AND row_index <= %s", offset, offset + limit)
+
+        rows = self.env.execute_query_dict(SQL("""
+            WITH ranked_users AS (
+                SELECT user_id,
+                       karma_gain,
+                       ROW_NUMBER() OVER (ORDER BY karma_gain DESC, karma DESC, user_id DESC) AS karma_position
+                  FROM %(karma_query)s
+            ),
+            searched_users AS (
+                SELECT user_id,
+                       karma_gain,
+                       karma_position,
+                       %(row_index)s AS row_index
+                  FROM ranked_users
+                 WHERE %(search_condition)s
+            )
+            SELECT user_id,
+                   karma_gain,
+                   karma_position,
+                   %(page_condition)s AS in_page
+              FROM searched_users
+             WHERE %(page_condition)s %(or_always_included_users)s
+          ORDER BY karma_position
+        """,
+            karma_query=karma_query,
+            row_index=row_index,
+            search_condition=search_condition,
+            page_condition=page_condition,
+            or_always_included_users=SQL("OR user_id IN %s", tuple(always_include_user_ids)) if always_include_user_ids else SQL(),
+        ))
+        return {row['user_id']: row for row in rows}

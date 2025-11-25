@@ -7,13 +7,14 @@ from freezegun import freeze_time
 from itertools import chain, repeat
 from unittest.mock import patch
 
-from odoo import Command, exceptions, fields, _
+from odoo import Command, exceptions, _
+from odoo.addons.gamification.tests.common import TransactionCaseKarmaTracking
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged, common
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestKarmaTrackingCommon(common.TransactionCase):
+class TestKarmaTrackingCommon(TransactionCaseKarmaTracking):
 
     @classmethod
     def setUpClass(cls):
@@ -34,82 +35,6 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         cls.test_date = datetime(2021, 6, 1)
         cls.first_day_of_test_date_month = '2021-06-01'
         cls.first_day_of_test_date_next_month = '2021-07-01'
-
-    @classmethod
-    def _create_trackings(cls, user, karma, steps, track_date, days_delta=1):
-        old_value = user.karma
-        for _step in range(steps):
-            new_value = old_value + karma
-            cls.env['gamification.karma.tracking'].create([{
-                'user_id': user.id,
-                'old_value': old_value,
-                'new_value': new_value,
-                'consolidated': False,
-                'tracking_date': fields.Datetime.to_string(track_date)
-            }])
-            old_value = new_value
-            track_date = track_date + relativedelta(days=days_delta)
-
-    def test_get_user_ids_ranked_by_karma(self):
-        """Test the optimized raw SQL ranking method with various timeframes and pagination."""
-        self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
-        self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
-        domain = [("id", "in", (self.test_user.id, self.test_user_2.id))]
-
-        # All-time: test_user_2 (200) > test_user (40)
-        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(domain)
-        self.assertEqual(user_ids, [self.test_user_2.id, self.test_user.id])
-
-        # Before specific date: test_user (20) > test_user_2 (10)
-        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(
-            domain, to_date=self.test_date + relativedelta(day=2)
-        )
-        self.assertEqual(user_ids, [self.test_user.id, self.test_user_2.id])
-
-        # After specific date: test_user_2 (50) > test_user (20)
-        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(
-            domain, from_date=self.test_date + relativedelta(months=1, day=1)
-        )
-        self.assertEqual(user_ids, [self.test_user_2.id, self.test_user.id])
-
-        # Limit: Returns only the top overall user (test_user_2 with 200)
-        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(domain, limit=1)
-        self.assertEqual(user_ids, [self.test_user_2.id])
-
-        # Offset: Skips the top user, returns the 2nd overall user (test_user with 40)
-        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(domain, limit=1, offset=1)
-        self.assertEqual(user_ids, [self.test_user.id])
-
-    def test_computation_gain(self):
-        self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
-        self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
-
-        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position([])
-        self.assertEqual(results[0]['user_id'], self.test_user_2.id)
-        self.assertEqual(results[0]['karma_gain_total'], 200)
-        self.assertEqual(results[0]['karma_position'], 1)
-        self.assertEqual(results[1]['user_id'], self.test_user.id)
-        self.assertEqual(results[1]['karma_gain_total'], 40)
-        self.assertEqual(results[1]['karma_position'], 2)
-
-        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position([], to_date=self.test_date + relativedelta(day=2))
-        self.assertEqual(results[0]['user_id'], self.test_user.id)
-        self.assertEqual(results[0]['karma_gain_total'], 20)
-        self.assertEqual(results[0]['karma_position'], 1)
-        self.assertEqual(results[1]['user_id'], self.test_user_2.id)
-        self.assertEqual(results[1]['karma_gain_total'], 10)
-        self.assertEqual(results[1]['karma_position'], 2)
-
-        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position([], from_date=self.test_date + relativedelta(months=1, day=1))
-        self.assertEqual(results[0]['user_id'], self.test_user_2.id)
-        self.assertEqual(results[0]['karma_gain_total'], 50)
-        self.assertEqual(results[0]['karma_position'], 1)
-        self.assertEqual(results[1]['user_id'], self.test_user.id)
-        self.assertEqual(results[1]['karma_gain_total'], 20)
-        self.assertEqual(results[1]['karma_position'], 2)
-
-        results = self.env['res.users']._get_tracking_karma_gain_position([])
-        self.assertEqual(len(results), 0)
 
     @freeze_time('2021-02-02')
     def test_consolidation_cron(self):
