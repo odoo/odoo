@@ -16,20 +16,18 @@ from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import 
 _logger = logging.getLogger(__name__)
 
 if IS_WINDOWS:
-    LIB_PATH = Path('odoo/addons/iot_drivers/iot_handlers/lib')
     DOWNLOAD_URL = 'https://nightly.odoo.com/master/posbox/iotbox/six-timapiv25_10_w.zip'
 else:
-    LIB_PATH = file_path('iot_drivers/iot_handlers/lib')
     DOWNLOAD_URL = 'https://nightly.odoo.com/master/posbox/iotbox/six-timapiv25_10_l.zip'
 
 # Download and unzip timapi library, overwriting the existing one
+LIB_PATH = file_path('iot_drivers/iot_handlers/drivers')
 TIMAPI_ZIP_PATH = Path(LIB_PATH, 'tim.zip')
 helpers.download_from_url(DOWNLOAD_URL, TIMAPI_ZIP_PATH)
 helpers.unzip_file(TIMAPI_ZIP_PATH, Path(LIB_PATH, 'tim'))
 
 # Make TIM SDK dependency libraries visible for the linker
 if IS_WINDOWS:
-    LIB_PATH = file_path('iot_drivers/iot_handlers/drivers')
     os.environ['PATH'] = file_path('iot_drivers/iot_handlers/drivers/tim') + os.pathsep + os.environ['PATH']
 else:
     TIMAPI_DEPENDANCY_LIB = 'libtimapi.so.3'
