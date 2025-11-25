@@ -33,6 +33,7 @@ self.addEventListener("fetch", (event) => {
     if (
         url.includes("extension") ||
         url.includes("web/dataset") ||
+        url.includes("hw_proxy/hello") ||
         event.request.method !== "GET"
     ) {
         return;
