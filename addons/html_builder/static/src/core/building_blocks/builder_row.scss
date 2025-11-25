@@ -14,7 +14,7 @@
     $_z-index: 4;
 
     .popover & {
-        --o-hb-row-bg-color: var(--o-hb-row-bg-color-popover, --popover-bg);
+        --o-hb-row-bg-color: var(--o-hb-row-bg-color-popover, #{$o-we-fg-lighter});
         --o-hb-row-active-bg-color: var(--o-hb-row-active-bg-color-popover, #{mix($o-we-color-accent, $o-we-fg-lighter, 20%)});
         --o-hb-row-color: var(--o-hb-row-color-popover, #{$o-we-bg-lightest});
         --o-hb-row-color-active: var(--o-hb-row-color-active-popover, #{$o-we-bg-darkest});
@@ -55,7 +55,7 @@
         z-index: $_z-index;
         background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
         padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
-        align-self: baseline;
+        align-self: center;
     }
 
     .hb-row-content {
