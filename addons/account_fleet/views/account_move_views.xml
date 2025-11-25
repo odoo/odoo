@@ -13,11 +13,11 @@
             </xpath>
             <xpath expr="//field[@name='line_ids']//field[@name='account_id']" position="after">
                 <field name='need_vehicle' column_invisible="True"/>
-                <field name='vehicle_id' column_invisible="parent.move_type not in ('in_invoice', 'in_refund')" required="need_vehicle and parent.move_type in ('in_invoice', 'in_refund')" optional='hidden'/>
+                <field name='vehicle_id' column_invisible="parent.move_type not in ('in_invoice', 'in_refund', 'in_receipt')" required="need_vehicle and parent.move_type in ('in_invoice', 'in_refund')" optional='hidden'/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']//field[@name='account_id']" position="after">
                 <field name='need_vehicle' column_invisible="True"/>
-                <field name='vehicle_id' column_invisible="parent.move_type not in ('in_invoice', 'in_refund')" required="need_vehicle and parent.move_type in ('in_invoice', 'in_refund')" optional='hidden'/>
+                <field name='vehicle_id' column_invisible="parent.move_type not in ('in_invoice', 'in_refund', 'in_receipt')" required="need_vehicle and parent.move_type in ('in_invoice', 'in_refund')" optional='hidden'/>
             </xpath>
         </field>
     </record>
