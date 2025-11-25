@@ -122,7 +122,7 @@ class AccountMoveSend(models.AbstractModel):
                 attachment['raw'] = signed_data.encode()
                 # Show that those moves couldn't be sent
             if 'error_message' in attachment_data:
-                moves_data[move]['error'] = attachment_data['error_message']
+                moves_data[move]['error'] = {'error_title': attachment_data['error_message']}
 
     def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'
