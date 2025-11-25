@@ -478,14 +478,15 @@ export class SelectionPlugin extends Plugin {
     getSelectionData() {
         const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
+        let collapsed;
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
                 ? Object.freeze({
                       get isCollapsed() {
-                          if (this.collapsed === undefined) {
-                              this.collapsed = selection.isCollapsed;
+                          if (collapsed === undefined) {
+                              collapsed = selection.isCollapsed;
                           }
-                          return this.collapsed;
+                          return collapsed;
                       },
                       anchorNode: selection.anchorNode,
                       anchorOffset: selection.anchorOffset,
