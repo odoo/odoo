@@ -51,11 +51,11 @@ patch(AttendeeCalendarModel.prototype, {
                     }
                     if (res[employeeId].exceptions && dayISO in res[employeeId].exceptions) {
                         // check if exception for that date
-                        const { location_type } = res[employeeId].exceptions[dayISO];
-                        if (location_type in events[dayISO]) {
-                            events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO]));
+                        const { location_name } = res[employeeId].exceptions[dayISO];
+                        if (location_name in events[dayISO]) {
+                            events[dayISO][location_name].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO]));
                         } else {
-                            events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO])];
+                            events[dayISO][location_name] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO])];
                         }
                     }
                     else {
@@ -63,14 +63,14 @@ patch(AttendeeCalendarModel.prototype, {
                         if (!(locationKeyName in res[employeeId])) {
                             continue;
                         }
-                        const {location_type} = res[employeeId][locationKeyName];
-                        if (!location_type) {
+                        const {location_name} = res[employeeId][locationKeyName];
+                        if (!location_name) {
                             continue;
                         }
-                        if (location_type in events[dayISO]) {
-                            events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName]));
+                        if (location_name in events[dayISO]) {
+                            events[dayISO][location_name].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName]));
                         } else {
-                            events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName])];
+                            events[dayISO][location_name] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName])];
                         }
                     }
                 } else {
