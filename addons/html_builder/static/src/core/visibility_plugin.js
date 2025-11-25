@@ -56,9 +56,11 @@ export class VisibilityPlugin extends Plugin {
     }
 
     getVisibleSibling(target, direction) {
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
         const siblingEls = [...target.parentNode.children];
         const visibleSiblingEls = siblingEls.filter(
-            (el) => window.getComputedStyle(el).display !== "none"
+            (el) =>
+                window.getComputedStyle(el).display !== "none" && !el.closest(systemNodeSelectors)
         );
         const targetMobileOrder = target.style.order;
         // On mobile, if the target has a mobile order (which is independent
