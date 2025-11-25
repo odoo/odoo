@@ -489,7 +489,7 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
                 <data>
                     <record id="logo" model="ir.attachment">
                         <field name="name">Company Logo</field>
-                        <field name="datas" type="base64" file="foo/static/src/img/content/logo.png"/>
+                        <field name="raw" type="bytes" file="foo/static/src/img/content/logo.png"/>
                         <field name="res_model">ir.ui.view</field>
                         <field name="public" eval="True"/>
                     </record>
