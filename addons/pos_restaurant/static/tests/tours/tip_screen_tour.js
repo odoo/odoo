@@ -28,6 +28,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.clickPayButton(false),
             ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
             Chrome.clickPlanButton(),
