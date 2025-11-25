@@ -3,7 +3,7 @@
 	<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
 	<cbc:ID>___ignore___</cbc:ID>
 	<cbc:IssueDate>2017-01-01</cbc:IssueDate>
-	<cbc:DueDate>2017-01-31</cbc:DueDate>
+	<cbc:DueDate>2017-01-01</cbc:DueDate>
 	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
 	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
 	<cac:OrderReference>
@@ -98,40 +98,13 @@
 		</cac:PayeeFinancialAccount>
 	</cac:PaymentMeans>
 	<cac:PaymentTerms>
-		<cbc:Note>Payment terms: 30 Days, 2% Early Payment Discount under 7 days</cbc:Note>
+		<cbc:Note>Payment terms: Immediate Payment</cbc:Note>
 	</cac:PaymentTerms>
-	<cac:AllowanceCharge>
-		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-		<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode>
-		<cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
-		<cbc:Amount currencyID="EUR">1.98</cbc:Amount>
-		<cac:TaxCategory>
-			<cbc:ID>S</cbc:ID>
-			<cbc:Percent>21.0</cbc:Percent>
-			<cac:TaxScheme>
-				<cbc:ID>VAT</cbc:ID>
-			</cac:TaxScheme>
-		</cac:TaxCategory>
-	</cac:AllowanceCharge>
-	<cac:AllowanceCharge>
-		<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-		<cbc:AllowanceChargeReasonCode>ZZZ</cbc:AllowanceChargeReasonCode>
-		<cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
-		<cbc:Amount currencyID="EUR">1.98</cbc:Amount>
-		<cac:TaxCategory>
-			<cbc:ID>E</cbc:ID>
-			<cbc:Percent>0.0</cbc:Percent>
-			<cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
-			<cac:TaxScheme>
-				<cbc:ID>VAT</cbc:ID>
-			</cac:TaxScheme>
-		</cac:TaxCategory>
-	</cac:AllowanceCharge>
 	<cac:TaxTotal>
-		<cbc:TaxAmount currencyID="EUR">20.58</cbc:TaxAmount>
+		<cbc:TaxAmount currencyID="EUR">37.84</cbc:TaxAmount>
 		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID="EUR">98.02</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID="EUR">20.58</cbc:TaxAmount>
+			<cbc:TaxableAmount currencyID="EUR">180.20</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">37.84</cbc:TaxAmount>
 			<cac:TaxCategory>
 				<cbc:ID>S</cbc:ID>
 				<cbc:Percent>21.0</cbc:Percent>
@@ -140,37 +113,28 @@
 				</cac:TaxScheme>
 			</cac:TaxCategory>
 		</cac:TaxSubtotal>
-		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID="EUR">1.98</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
-			<cac:TaxCategory>
-				<cbc:ID>E</cbc:ID>
-				<cbc:Percent>0.0</cbc:Percent>
-				<cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
-				<cac:TaxScheme>
-					<cbc:ID>VAT</cbc:ID>
-				</cac:TaxScheme>
-			</cac:TaxCategory>
-		</cac:TaxSubtotal>
 	</cac:TaxTotal>
 	<cac:LegalMonetaryTotal>
-		<cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
-		<cbc:TaxExclusiveAmount currencyID="EUR">100.00</cbc:TaxExclusiveAmount>
-		<cbc:TaxInclusiveAmount currencyID="EUR">120.58</cbc:TaxInclusiveAmount>
-		<cbc:AllowanceTotalAmount currencyID="EUR">1.98</cbc:AllowanceTotalAmount>
-		<cbc:ChargeTotalAmount currencyID="EUR">1.98</cbc:ChargeTotalAmount>
+		<cbc:LineExtensionAmount currencyID="EUR">180.20</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">180.20</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">218.04</cbc:TaxInclusiveAmount>
 		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
-		<cbc:PayableAmount currencyID="EUR">120.58</cbc:PayableAmount>
+		<cbc:PayableAmount currencyID="EUR">218.04</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	<cac:InvoiceLine>
 		<cbc:ID>___ignore___</cbc:ID>
-		<cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
-		<cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
+		<cbc:InvoicedQuantity unitCode="C62">2.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">180.20</cbc:LineExtensionAmount>
+		<cac:AllowanceCharge>
+			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+			<cbc:Amount currencyID="EUR">19.80</cbc:Amount>
+		</cac:AllowanceCharge>
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReasonCode>AEO</cbc:AllowanceChargeReasonCode>
 			<cbc:AllowanceChargeReason>fixed_1.0_(1)</cbc:AllowanceChargeReason>
-			<cbc:Amount currencyID="EUR">1.00</cbc:Amount>
+			<cbc:Amount currencyID="EUR">2.00</cbc:Amount>
 		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Description>product_a</cbc:Description>
