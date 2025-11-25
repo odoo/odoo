@@ -102,7 +102,7 @@
                     <t t-name="card">
                         <div class="d-flex justify-content-between align-items-center">
                             <field name="vehicle_id" class="fw-bold" widget="res_partner_many2one"/>
-                            <field class="badge text-bg-secondary" name="state"/>
+                            <field class="badge rounded-pill text-bg-secondary" name="state"/>
                         </div>
                         <t t-if="luxon.DateTime.fromISO(record.expiration_date.raw_value) &lt; luxon.DateTime.local()" t-set="expiration_class" t-value="'text-danger fw-bold'"/>
                         <span t-att-class="expiration_class"><field name="start_date"/> - <field name="expiration_date"/></span>
@@ -275,7 +275,7 @@
                             <field name="vehicle_id" widget="image" options="{'preview_image': 'image_128'}" class="float-start col-2 pe-2"/>
                             <div class="col-10 pe-2 text-truncate">
                                 <field class="fw-bolder" name="vehicle_id"/>
-                                <span t-attf-class="float-end badge #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'text-bg-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : 'text-bg-success'}">
+                                <span t-attf-class="float-end badge rounded-pill #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'text-bg-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : 'text-bg-success'}">
                                     <field name="state"/>
                                 </span>
                                 <div class="text-truncate">

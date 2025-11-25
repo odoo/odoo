@@ -472,7 +472,7 @@
                         </div>
                         <field t-if="record.serial_no.raw_value" name="serial_no"/>
                         <footer>
-                            <div class="badge text-bg-danger" t-if="record.maintenance_open_count.raw_value">
+                            <div class="badge rounded-pill text-bg-danger" t-if="record.maintenance_open_count.raw_value">
                                 <field name="maintenance_open_count" /> Request
                             </div>
                             <div class="d-flex ms-auto align-items-center">
