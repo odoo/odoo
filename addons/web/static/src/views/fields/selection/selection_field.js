@@ -95,7 +95,7 @@ export class SelectionField extends Component {
                 break;
             case "selection":
                 this.props.record.update(
-                    { [this.props.name]: value },
+                    { [this.props.name]: value ?? false },
                     { save: this.props.autosave }
                 );
                 break;
