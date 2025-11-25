@@ -325,7 +325,7 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
                 command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
+            if specific_paperformat_args and 'data-report-margin-top' in specific_paperformat_args:
                 command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
             else:
                 command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
@@ -344,14 +344,14 @@ class IrActionsReport(models.Model):
                 if _wkhtml().dpi_zoom_ratio:
                     command_args.extend(['--zoom', str(96.0 / dpi)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
+            if specific_paperformat_args and 'data-report-header-spacing' in specific_paperformat_args:
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
             elif paperformat_id.header_spacing:
                 command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
             command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-bottom'):
+            if specific_paperformat_args and 'data-report-margin-bottom' in specific_paperformat_args:
                 command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
             else:
                 command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
