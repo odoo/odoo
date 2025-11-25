@@ -2,8 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, Command
 from odoo.models import BaseModel
+<<<<<<< 3697ee7c0d3815886e4fd78ad355d3949914ddf0
 from odoo.tests import HttpCase, new_test_user, tagged, save_test_file
 from odoo.tools import config, file_path, file_open
+||||||| 84e41b8100cd21787130a2d1a928657ed6b48b90
+from odoo.tests import Form, HttpCase, new_test_user, tagged
+=======
+from odoo.tests import Form, HttpCase, new_test_user, tagged, save_test_file
+from odoo.tools import config, file_path, file_open
+>>>>>>> 8465e2dd64a6010efde31a161eaacd79923db297
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.product.tests.common import ProductCommon
