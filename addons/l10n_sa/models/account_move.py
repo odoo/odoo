@@ -9,7 +9,7 @@ from odoo.tools import float_repr, format_datetime
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
+    l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str', compute_sudo=True)
     l10n_sa_confirmation_datetime = fields.Datetime(string='ZATCA Issue Date',
                                                     readonly=True,
                                                     copy=False,
