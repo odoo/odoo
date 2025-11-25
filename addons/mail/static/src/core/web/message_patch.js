@@ -65,12 +65,12 @@ patch(Message.prototype, {
 
     /** @deprecated */
     async onClickMessageForward() {
-        await this.messageActions.actions.find((a) => a.name === "forward")?.onClick();
+        await this.messageActions.findAction("forward")?.onClick();
     },
 
     /** @deprecated */
     async onClickMessageReplyAll() {
-        await this.messageActions.actions.find((a) => a.name === "reply-all")?.onClick();
+        await this.messageActions.findAction("reply-all")?.onClick();
     },
 
     /** @deprecated */

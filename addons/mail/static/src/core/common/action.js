@@ -49,6 +49,12 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|string[]|(action: Action) => string|string[]} [tags]
  */
 
+export class ActionParams {
+    action;
+    store;
+    owner;
+}
+
 export class Action {
     /** @type {ActionDefinition}  User-defined explicit definition of this action */
     definition;
@@ -72,10 +78,19 @@ export class Action {
                 : isRecord(owner)
                 ? owner.store
                 : useService("mail.store"));
+        this.actionParams = this.makeActionParams();
+    }
+
+    makeActionParams() {
+        return new ActionParams();
     }
 
     get params() {
-        return { action: this, store: this.store, owner: this.owner };
+        this.actionParams.action = this;
+        this.actionParams.store = this.store;
+        this.actionParams.owner = this.owner;
+        return this.actionParams;
+        // return { action: this, store: this.store, owner: this.owner };
     }
 
     /** @param {Action} action @returns {boolean|undefined} */
@@ -464,6 +479,10 @@ export class UseActions extends Reactive {
             toRaw(this).moreActions.set(data.id, moreAction);
         }
         return moreAction;
+    }
+
+    findAction(actionId) {
+        return this.transformedActions.find((action) => action.id === actionId && action.condition);
     }
 
     get actions() {

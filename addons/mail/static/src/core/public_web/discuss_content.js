@@ -41,7 +41,7 @@ export class DiscussContent extends Component {
     }
 
     actionPanelAutoOpenFn() {
-        const memberListAction = this.threadActions.actions.find((a) => a.id === "member-list");
+        const memberListAction = this.threadActions.findAction("member-list");
         if (!memberListAction) {
             return;
         }

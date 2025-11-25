@@ -10,7 +10,7 @@
         <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
             <MessageReactionList message="this.props.message" openReactionMenu="this.props.openReactionMenu" reaction="reaction"/>
         </t>
-        <QuickReactionMenu t-if="props.message.canAddReaction()" action="messageActions.actions.find(action => action.id === 'reaction')" classNames="{ 'p-1 mb-1 opacity-25 opacity-100-hover': true }" message="props.message"/>
+        <QuickReactionMenu t-if="props.message.canAddReaction()" action="messageActions.findAction('reaction')" classNames="{ 'p-1 mb-1 opacity-25 opacity-100-hover': true }" message="props.message"/>
     </div>
 </t>
 </templates>

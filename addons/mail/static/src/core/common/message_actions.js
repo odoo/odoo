@@ -5,7 +5,7 @@ import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
+import { Action, ACTION_TAGS, ActionParams, UseActions } from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -209,6 +209,11 @@ registerMessageAction("copy-link", {
     sequence: 110,
 });
 
+export class MessageActionParams extends ActionParams {
+    message;
+    thread;
+}
+
 export class MessageAction extends Action {
     /** @type {() => Message} */
     messageFn;
@@ -224,8 +229,23 @@ export class MessageAction extends Action {
         this.threadFn = typeof thread === "function" ? thread : () => thread;
     }
 
+    makeActionParams() {
+        return new MessageActionParams();
+    }
+
     get params() {
-        return Object.assign(super.params, { message: this.messageFn(), thread: this.threadFn() });
+        // window.aku2 ??= 0;
+        // window.aku2++;
+        // window.aku3 ??= new Map();
+        const message = this.messageFn();
+        // if (message) {
+        //     window.aku3.set(message.id, (window.aku3.get(message?.id) ?? 0) + 1);
+        // }
+        this.actionParams.message = message;
+        this.actionParams.thread = this.threadFn();
+        return super.params;
+        return this.actionParams;
+        return Object.assign(super.params, { message, thread: this.threadFn() });
     }
 }
 
