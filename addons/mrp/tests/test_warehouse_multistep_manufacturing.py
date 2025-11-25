@@ -25,6 +25,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         product_form.route_ids.clear()
         product_form.route_ids.add(cls.route_mto)
         cls.finished_product = product_form.save()
+        # Assign the MTO route directly to avoid requiring route_ids to be
+        # visible in the form (which would need product_selectable routes to
+        # be present, an assumption that doesn't hold on DBs without demo data)
+        cls.finished_product.route_ids = cls.warehouse_1.mto_pull_id.route_id
 
         # Create raw product for manufactured product
         product_form = Form(cls.env['product.product'])
