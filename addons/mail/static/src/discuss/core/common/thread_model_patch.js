@@ -1,7 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/export";
 import { useSequential } from "@mail/utils/common/hooks";
-import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
+import { nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 
 import { formatList } from "@web/core/l10n/utils";
@@ -77,17 +77,6 @@ const threadPatch = {
             inverse: "threadAsFirstUnread",
         });
         this.invited_member_ids = fields.Many("discuss.channel.member");
-        this.last_interest_dt = fields.Datetime();
-        this.lastInterestDt = fields.Datetime({
-            /** @this {import("models").Thread} */
-            compute() {
-                const selfMemberLastInterestDt = this.self_member_id?.last_interest_dt;
-                const lastInterestDt = this.last_interest_dt;
-                return compareDatetime(selfMemberLastInterestDt, lastInterestDt) > 0
-                    ? selfMemberLastInterestDt
-                    : lastInterestDt;
-            },
-        });
         this.lastMessageSeenByAllId = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
             compute() {
