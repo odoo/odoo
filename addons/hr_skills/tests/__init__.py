@@ -3,3 +3,4 @@
 from . import test_employee_skill
 from . import test_resource
 from . import test_ui
+from . import test_report
