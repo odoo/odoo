@@ -21,7 +21,7 @@ class PosPaymentMethod(models.Model):
     viva_wallet_terminal_id = fields.Char(string="Terminal ID", help='[Terminal ID of the Viva Wallet terminal], for example: 16002169')
     viva_wallet_bearer_token = fields.Char(default='Bearer Token')
     viva_wallet_webhook_verification_key = fields.Char()
-    viva_wallet_latest_response = fields.Json() # used to buffer the latest asynchronous notification from Adyen.
+    viva_wallet_latest_response = fields.Json()  # not used anymore, to remove in master
     viva_wallet_test_mode = fields.Boolean(string="Test mode", help="Run transactions in the test environment.")
     viva_wallet_webhook_endpoint = fields.Char(compute='_compute_viva_wallet_webhook_endpoint', readonly=True)
 
@@ -120,7 +120,6 @@ class PosPaymentMethod(models.Model):
 
         if data.get('success'):
             data.update({'pos_session_id': pos_session_id, 'data_webhook': data_webhook})
-            self.viva_wallet_latest_response = data
             self._send_notification(data)
         else:
             self._send_notification(
@@ -137,6 +136,10 @@ class PosPaymentMethod(models.Model):
             pos_session_sudo.config_id._notify('VIVA_WALLET_LATEST_RESPONSE', {
                 'config_id': pos_session_sudo.config_id.id,
                 'session_id': data.get('sessionId'),
+                'success': data.get('success', False),
+                'transaction_id': data.get('transactionId'),
+                'card_type': data.get('applicationLabel'),
+                'cardholder_name': data.get('FullName', ''),
             })
 
     def _load_pos_data_fields(self, config_id):
@@ -198,12 +201,8 @@ class PosPaymentMethod(models.Model):
         return records
 
     def get_latest_viva_wallet_status(self):
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to get latest transaction status"))
-
-        self.ensure_one()
-        latest_response = self.sudo().viva_wallet_latest_response
-        return latest_response
+        # Not used anymore, to remove in master
+        return {'error': 'Your POS is out of date, please refresh the page.'}
 
     @api.constrains('use_payment_terminal')
     def _check_viva_wallet_credentials(self):
