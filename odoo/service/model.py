@@ -13,6 +13,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
 from . import security
 from .server import thread_local
@@ -52,7 +53,7 @@ def get_public_method(model: BaseModel, name: str):
     for mro_cls in cls.mro():
         if not (cla_method := getattr(mro_cls, name, None)):
             continue
-        if name.startswith('_') or getattr(cla_method, '_api_private', False):
+        if name.startswith('_') or getattr(cla_method, '_api_private', False) or name in _UNSAFE_ATTRIBUTES:
             raise AccessError(f"Private methods (such as '{model._name}.{name}') cannot be called remotely.")  # pylint: disable=missing-gettext
 
     return method
