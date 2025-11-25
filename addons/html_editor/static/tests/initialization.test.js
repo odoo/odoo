@@ -209,6 +209,20 @@ describe("color normalization", () => {
         });
     });
 
+    test("should unwrap nested identical <font> tag when parent already has the same class", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="bg-color-1 text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    parent
+                    <font class="bg-color-1">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1 text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">parentchild</font></p>
+            `),
+        });
+    });
+
     test("should unwrap nested identical <font> tags with color (class and style same)", async () => {
         await testEditor({
             contentBefore: unformat(`
@@ -326,6 +340,13 @@ describe("formatting normalization", () => {
                     </strong>
                 </p>
             `),
+        });
+    });
+
+    test("should merge nested small inside formatting tags", async () => {
+        await testEditor({
+            contentBefore: `<p><small><small>text</small></small></p>`,
+            contentAfter: `<p><small>text</small></p>`,
         });
     });
 
