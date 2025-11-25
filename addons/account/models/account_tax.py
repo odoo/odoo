@@ -3192,6 +3192,8 @@ class AccountTax(models.Model):
             )
             base_line['manual_tax_amounts'] = {}
             for tax_data in taxes_data:
+                if tax_data['is_reverse_charge']:
+                    continue
                 tax = tax_data['tax']
                 tax_id_str = str(tax.id)
                 base_line['manual_tax_amounts'][tax_id_str] = {}
