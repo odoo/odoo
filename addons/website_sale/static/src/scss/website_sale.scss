@@ -248,6 +248,7 @@
             --o-wsale-filmstrip-item-span-width: 100%;
             --o-wsale-filmstrip-item-span-overflow: hidden;
             --o-wsale-filmstrip-item-span-text-overflow: ellipsis;
+            --o-wsale-filmstrip-item-span-white-space: nowrap;
         }
 
         &.o_wsale_filmstrip_grid {
@@ -283,6 +284,7 @@
             --o-wsale-filmstrip-item-span-width: 100%;
             --o-wsale-filmstrip-item-span-overflow: hidden;
             --o-wsale-filmstrip-item-span-text-overflow: ellipsis;
+            --o-wsale-filmstrip-item-span-white-space: nowrap;
 
             @include media-breakpoint-down(xl) {
                 --o-wsale-filmstrip-item-width: 14rem;
@@ -335,6 +337,7 @@
             --o-wsale-filmstrip-item-span-width: 100%;
             --o-wsale-filmstrip-item-span-overflow: hidden;
             --o-wsale-filmstrip-item-span-text-overflow: ellipsis;
+            --o-wsale-filmstrip-item-span-white-space: nowrap;
 
             @include media-breakpoint-down(xl) {
                 --o-wsale-filmstrip-item-width: 12rem;
@@ -461,6 +464,7 @@
                         height: var(--o-wsale-filmstrip-item-span-height);
                         overflow: var(--o-wsale-filmstrip-item-span-overflow);
                         text-overflow: var(--o-wsale-filmstrip-item-span-text-overflow);
+                        white-space: var(--o-wsale-filmstrip-item-span-white-space);
                     }
 
                     &:has(.o_wsale_filmstrip_placeholder) {
