@@ -333,12 +333,6 @@ class TestAccountMove(TestStockValuationCommon):
             closing._post()
             # Second flush to post the tracking values
             self.env.cr.flush()
-            # Update the tracking value create_date since it used the cursor one and not the frozen time
-            am_state_field = self.env['ir.model.fields'].search(
-                [('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
-            state_tracking = closing.message_ids.tracking_value_ids.filtered(
-                lambda t: t.field_id == am_state_field)
-            state_tracking.create_date = fields.Datetime.now()
             self.assertRecordValues(closing.line_ids, [
                 {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 100.0},
                 {'account_id': self.account_stock_valuation.id, 'debit': 100.0, 'credit': 0.0},
