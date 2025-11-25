@@ -1,14 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+import io
 import json
 import logging
 
 from odoo import _
+from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
-
-from odoo.addons.sale_pdf_quote_builder import utils
-
+from odoo.tools import pdf
 
 logger = logging.getLogger(__name__)
 
@@ -42,14 +41,19 @@ class QuotationDocumentController(Controller):
         for ufile in files:
             try:
                 mimetype = ufile.content_type
-                doc = request.env['quotation.document'].create({
+                pdf_bytes = ufile.read()
+                # pypdf will also catch malformed document
+                if pdf.PdfFileReader(io.BytesIO(pdf_bytes), strict=False).isEncrypted:
+                    raise ValidationError(_(  # noqa: TRY301
+                        "It seems that we're not able to process this pdf inside a quotation. It is either"
+                        " encrypted, or encoded in a format we do not support."
+                    ))
+                request.env['quotation.document'].create({
                     'name': ufile.filename,
                     'mimetype': mimetype,
-                    'raw': ufile.read(),
+                    'raw': pdf_bytes,
                     **additional_vals,
                 })
-                # pypdf will also catch malformed document
-                utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
             except Exception as e:
                 logger.exception("Failed to upload document %s", ufile.filename)
                 result = {'error': str(e)}

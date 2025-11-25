@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import base64
+import io
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-
-from odoo.addons.sale_pdf_quote_builder import utils
+from odoo.tools import pdf
 
 
 class QuotationDocument(models.Model):
@@ -57,20 +55,24 @@ class QuotationDocument(models.Model):
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains('datas')
+    @api.constrains('raw')
     def _check_pdf_validity(self):
         for doc in self:
-            if doc.datas and not doc.mimetype.endswith('pdf'):
+            if doc.raw and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be used as header or footer."))
-            utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
+            if doc.raw and pdf.PdfFileReader(io.BytesIO(doc.raw), strict=False).isEncrypted:
+                raise ValidationError(_(
+                    "It seems that we're not able to process this pdf inside a quotation. It is either"
+                    " encrypted, or encoded in a format we do not support."
+                ))
 
     # === COMPUTE METHODS === #
 
-    @api.depends('datas')
+    @api.depends('raw')
     def _compute_form_field_ids(self):
         # Empty the linked form fields as we want all and only those from the current datas
         self.form_field_ids = [Command.clear()]
-        document_to_parse = self.filtered(lambda doc: doc.datas)
+        document_to_parse = self.filtered(lambda doc: doc.raw)
         if document_to_parse:
             doc_type = 'quotation_document'
             self.env['sale.pdf.form.field']._create_or_update_form_fields_on_pdf_records(
