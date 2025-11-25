@@ -1016,3 +1016,58 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             {'price_unit': 1070.71, 'price_subtotal': 1070.71, 'balance': -1070.71},
             {'price_unit': -70.71, 'price_subtotal': -70.71, 'balance': 70.71},
         ])
+
+    def test_down_payment_with_reverse_charge_tax(self):
+        account_1, account_2 = self.env['account.account'].create([
+            {
+                'name': 'Account 1',
+                'code': 'Code1',
+                'account_type': 'liability_current',
+            },
+            {
+                'name': 'Account 2',
+                'code': 'Code2',
+                'account_type': 'liability_current',
+            },
+        ])
+        income_account = self.env.company.income_account_id
+        account_receivable = self.env.company.partner_id.property_account_receivable_id
+
+        repartition_lines = [
+            Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+            Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': account_1.id}),
+            Command.create({'repartition_type': 'tax', 'factor_percent': -100.0, 'account_id': account_2.id}),
+        ]
+
+        rc_tax = self.env['account.tax'].create({
+            'name': "RC Tax 100%",
+            'amount': 100.0,
+            'amount_type': 'percent',
+            'invoice_repartition_line_ids': repartition_lines,
+            'refund_repartition_line_ids': repartition_lines,
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.00,
+                    'tax_ids': [Command.set(rc_tax.ids)],
+                }),
+            ],
+        })
+        so.action_confirm()
+
+        action_values = self.env['sale.advance.payment.inv'].with_context(active_model=so._name, active_ids=so.ids).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 100.00,
+        }).create_invoices()
+        dp_invoice = self.env['account.move'].browse(action_values['res_id'])
+
+        self.assertRecordValues(dp_invoice.line_ids, [
+            {'account_id': income_account.id, 'debit': 100.00, 'credit': 0.0},
+            {'account_id': account_1.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': account_2.id, 'debit': 100.00, 'credit': 0.0},
+            {'account_id': account_receivable.id, 'debit': 0.0, 'credit': 100.0},
+        ])

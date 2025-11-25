@@ -232,7 +232,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
         return so_line._prepare_invoice_line(
             name=name,
-            quantity=1.0,
+            quantity=-1.0,
+            extra_tax_data=self.env['account.tax']._reverse_quantity_base_line_extra_tax_data(so_line.extra_tax_data),
             **({'account_id': account.id} if account else {}),
         )
 
