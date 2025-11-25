@@ -399,13 +399,6 @@ export class Rtc extends Record {
     _crossTabTimeoutId;
     /** @type {number} count of how many times the p2p service attempted a connection recovery */
     _p2pRecoveryCount = 0;
-    upgradeConnectionDebounce = debounce(
-        () => {
-            this._upgradeConnection();
-        },
-        15000,
-        { leading: true, trailing: false }
-    );
 
     /**
      * Whether this tab serves as a remote for a call hosted on another tab.
@@ -456,6 +449,7 @@ export class Rtc extends Record {
 
     setup() {
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
+        this.upgradeConnectionDebounce = debounce(this._upgradeConnection, 15000, true);
         this.blurManager = undefined;
     }
 
