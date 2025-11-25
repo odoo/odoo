@@ -52,6 +52,7 @@ from odoo.tools import (
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 from odoo.tools.translate import _, LazyTranslate
 
 from . import decorators as api
@@ -207,7 +208,7 @@ def get_public_method(model: BaseModel, name: str) -> callable:
     """
     assert isinstance(model, BaseModel)
     e = f"Private methods (such as '{model._name}.{name}') cannot be called remotely."
-    if name.startswith('_'):
+    if name.startswith('_') or name in _UNSAFE_ATTRIBUTES:
         raise AccessError(e)
 
     cls = type(model)
