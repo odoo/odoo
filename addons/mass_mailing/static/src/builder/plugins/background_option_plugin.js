@@ -25,4 +25,4 @@ class BackgroundOptionPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(BackgroundOptionPlugin.id, BackgroundOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(BackgroundOptionPlugin.id, BackgroundOptionPlugin);

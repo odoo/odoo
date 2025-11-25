@@ -49,4 +49,4 @@ class SnippetVisibilityPlugin extends Plugin {
     }
 }
 
-registry.category("mass_mailing-plugins").add(SnippetVisibilityPlugin.id, SnippetVisibilityPlugin);
+registry.category("mass_mailing-builder-plugins").add(SnippetVisibilityPlugin.id, SnippetVisibilityPlugin);

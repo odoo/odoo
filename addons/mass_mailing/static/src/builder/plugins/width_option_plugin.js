@@ -15,4 +15,4 @@ class WidthOptionPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(WidthOptionPlugin.id, WidthOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(WidthOptionPlugin.id, WidthOptionPlugin);

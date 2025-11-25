@@ -15,4 +15,4 @@ export class CompanyTeamOptionPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(CompanyTeamOptionPlugin.id, CompanyTeamOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(CompanyTeamOptionPlugin.id, CompanyTeamOptionPlugin);

@@ -38,4 +38,4 @@ export class VersionControlPlugin extends Plugin {
     }
 }
 
-registry.category("mass_mailing-plugins").add(VersionControlPlugin.id, VersionControlPlugin);
+registry.category("mass_mailing-builder-plugins").add(VersionControlPlugin.id, VersionControlPlugin);

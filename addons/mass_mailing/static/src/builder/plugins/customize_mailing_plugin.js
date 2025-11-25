@@ -252,4 +252,6 @@ export class CustomizeMailingVariable extends BuilderAction {
     }
 }
 
-registry.category("mass_mailing-plugins").add(CustomizeMailingPlugin.id, CustomizeMailingPlugin);
+registry
+    .category("mass_mailing-builder-plugins")
+    .add(CustomizeMailingPlugin.id, CustomizeMailingPlugin);

@@ -28,5 +28,5 @@ export class MassMailingIconSnippetOptionPlugin extends Plugin {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(MassMailingIconSnippetOptionPlugin.id, MassMailingIconSnippetOptionPlugin);

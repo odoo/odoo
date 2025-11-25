@@ -22,4 +22,4 @@ class ReviewsWallOptionPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(ReviewsWallOptionPlugin.id, ReviewsWallOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(ReviewsWallOptionPlugin.id, ReviewsWallOptionPlugin);
