@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import datetime
 
 from freezegun import freeze_time
@@ -25,12 +23,12 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
 
         cls._attachments = [{
             'name': 'first.txt',
-            'datas': base64.b64encode(b'My first attachment'),
+            'raw': b'My first attachment',
             'res_model': 'res.partner',
             'res_id': cls.user_admin.partner_id.id
         }, {
             'name': 'second.txt',
-            'datas': base64.b64encode(b'My second attachment'),
+            'raw': b'My second attachment',
             'res_model': 'res.partner',
             'res_id': cls.user_admin.partner_id.id
         }]

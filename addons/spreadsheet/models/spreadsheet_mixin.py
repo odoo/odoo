@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import zipfile
@@ -21,7 +20,7 @@ class SpreadsheetMixin(models.AbstractModel):
 
     spreadsheet_binary_data = fields.Binary(
         string="Spreadsheet file",
-        default=lambda self: self._empty_spreadsheet_data_base64(),
+        default=lambda self: base64.b64encode(self._empty_spreadsheet_data_bin()).decode(),
     )
     spreadsheet_data = fields.Text(compute='_compute_spreadsheet_data', inverse='_inverse_spreadsheet_data')
     spreadsheet_file_name = fields.Char(compute='_compute_spreadsheet_file_name')
@@ -120,12 +119,9 @@ class SpreadsheetMixin(models.AbstractModel):
             for arg in args
         ]
 
-    def _empty_spreadsheet_data_base64(self):
-        """Create an empty spreadsheet workbook.
-        Encoded as base64
-        """
-        data = json.dumps(self._empty_spreadsheet_data())
-        return base64.b64encode(data.encode())
+    def _empty_spreadsheet_data_bin(self):
+        """Create an empty spreadsheet workbook."""
+        return json.dumps(self._empty_spreadsheet_data()).encode()
 
     def _empty_spreadsheet_data(self):
         """Create an empty spreadsheet workbook.

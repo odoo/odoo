@@ -1,5 +1,3 @@
-import base64
-
 from markupsafe import Markup
 from unittest.mock import patch
 
@@ -790,7 +788,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
     def test_ir_attachment_read_message_notification(self):
         message = self.record_admin.message_ids[0]
         attachment = self.env['ir.attachment'].create({
-            'datas': base64.b64encode(b'My attachment'),
+            'raw': b'My attachment',
             'name': 'doc.txt',
             'res_model': message._name,
             'res_id': message.id})

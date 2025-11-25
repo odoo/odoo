@@ -1049,7 +1049,7 @@ class HrApplicant(models.Model):
         action['res_id'] = employee.id
         employee_attachments = self.env['ir.attachment'].search([('res_model', '=','hr.employee'), ('res_id', '=', employee.id)])
         unique_attachments = self.attachment_ids.filtered(
-            lambda attachment: attachment.datas not in employee_attachments.mapped('datas')
+            lambda attachment: attachment.checksum not in employee_attachments.mapped('checksum')
         )
         unique_attachments.copy({'res_model': 'hr.employee', 'res_id': employee.id})
         employee.write({

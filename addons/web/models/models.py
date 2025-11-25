@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import base64
 import datetime
 import itertools
 import json
@@ -2125,23 +2124,23 @@ class ResCompany(models.Model):
             self._update_asset_style()
         return res
 
-    def _get_asset_style_b64(self):
+    def _get_asset_style_bin(self):
         # One bundle for everyone, so this method
         # necessarily updates the style for every company at once
         company_ids = self.sudo().search([])
         company_styles = self.env['ir.qweb']._render('web.styles_company_report', {
                 'company_ids': company_ids,
             }, raise_if_not_found=False)
-        return base64.b64encode(company_styles.encode())
+        return company_styles.encode()
 
     def _update_asset_style(self):
         asset_attachment = self.env.ref('web.asset_styles_company_report', raise_if_not_found=False)
         if not asset_attachment:
             return
         asset_attachment = asset_attachment.sudo()
-        b64_val = self._get_asset_style_b64()
-        if b64_val != asset_attachment.datas:
-            asset_attachment.write({'datas': b64_val})
+        raw = self._get_asset_style_bin()
+        if raw != asset_attachment.raw:
+            asset_attachment.write({'raw': raw})
 
 
 class RecordSnapshot(dict):

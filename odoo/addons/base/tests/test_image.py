@@ -1,17 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import io
 
 from PIL import Image, ImageDraw, PngImagePlugin
 
 from odoo.tools import image as tools
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, TransactionCase
+from .files import PNG_RAW
 
-
-def img_open(data):
-    return Image.open(io.BytesIO(data))
+img_open = tools.binary_to_image
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -22,7 +20,7 @@ class TestImage(TransactionCase):
         self.bg_color = (135, 90, 123)
         self.fill_color = (0, 160, 157)
 
-        self.img_1x1_png = base64.b64decode(b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC')
+        self.img_1x1_png = PNG_RAW
         self.img_svg = b'<svg></svg>'
         self.img_1920x1080_jpeg = tools.image_apply_opt(Image.new('RGB', (1920, 1080)), 'JPEG')
         # The following image contains a tag `Lens Info` with a value of `3.99mm f/1.8`

@@ -8,7 +8,6 @@ from unittest.mock import Mock, patch
 import textwrap
 import pathlib
 import lxml
-import base64
 import unittest
 
 import odoo.modules
@@ -771,7 +770,7 @@ class TestAssetsBundleInBrowser(HttpCase):
         attach = self.env['ir.attachment'].create({
             'name': 'CustomJscode.js',
             'mimetype': 'text/javascript',
-            'datas': base64.b64encode(code),
+            'raw': code,
         })
         # Use this route (filename is necessary)
         custom_url = '/web/content/%s/%s' % (attach.id, attach.name)
@@ -1919,19 +1918,19 @@ class TestAssetsManifest(AddonManifestPatched):
         )])
 
     def test_37_path_can_be_an_attachment(self):
-        scss_code = base64.b64encode(b"""
+        scss_code = b"""
             .my_div {
                 &.subdiv {
                     color: blue;
                 }
             }
-        """)
+        """
         self.env['ir.attachment'].create({
             'name': 'my custom scss',
             'mimetype': 'text/scss',
             'type': 'binary',
             'url': 'test_assetsbundle/my_style_attach.scss',
-            'datas': scss_code
+            'raw': scss_code,
         })
 
         self.env['ir.asset'].create({

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import socket
 
 from itertools import product
@@ -89,7 +88,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 
         first_attachment = self.env['ir.attachment'].create({
             'company_id': self.user_employee_c2.company_id.id,
-            'datas': base64.b64encode(b'First attachment'),
+            'raw': b'First attachment',
             'mimetype': 'text/plain',
             'name': 'TestAttachmentIDS.txt',
             'res_model': 'mail.compose.message',
@@ -108,7 +107,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 
         new_attach = self.env['ir.attachment'].create({
             'company_id': self.user_employee_c2.company_id.id,
-            'datas': base64.b64encode(b'Second attachment'),
+            'raw': b'Second attachment',
             'mimetype': 'text/plain',
             'name': 'TestAttachmentIDS.txt',
             'res_model': 'mail.compose.message',

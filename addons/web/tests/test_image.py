@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import io
@@ -9,6 +8,7 @@ from freezegun import freeze_time
 from PIL import Image
 from werkzeug.urls import url_unquote_plus
 
+from odoo.addons.base.tests.files import GIF_RAW
 from odoo.tests.common import HttpCase, new_test_user, tagged
 from odoo.tools.misc import limited_field_access_token
 
@@ -53,7 +53,7 @@ class TestImage(HttpCase):
         """This test makes sure that the 304 response is properly returned if the ETag is properly set"""
 
         attachment = self.env['ir.attachment'].create({
-            'datas': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'raw': GIF_RAW,
             'name': 'testEtag.gif',
             'public': True,
             'mimetype': 'image/gif',
@@ -74,7 +74,7 @@ class TestImage(HttpCase):
         """This test makes sure the Content-Disposition header matches the given filename"""
 
         att = self.env['ir.attachment'].create({
-            'datas': b'R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=',
+            'raw': GIF_RAW,
             'name': 'testFilename.gif',
             'public': True,
             'mimetype': 'image/gif'
@@ -99,7 +99,7 @@ class TestImage(HttpCase):
         """This test makes sure the Content-Disposition header matches the given filename"""
 
         att = self.env['ir.attachment'].create({
-            'datas': b'R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=',
+            'raw': GIF_RAW,
             'name': """fô☺o-l'éb \n a"!r".gif""",
             'public': True,
             'mimetype': 'image/gif',
@@ -169,7 +169,7 @@ class TestImage(HttpCase):
 
         attachment = self.env["ir.attachment"].create(
             {
-                "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                "raw": GIF_RAW,
                 "name": "test.gif",
                 "mimetype": "image/gif",
             }
@@ -236,7 +236,7 @@ class TestImage(HttpCase):
             self.assertNotIn(record_res, [base_result])
             # a different field generates a different token
             field_res = get_datetime_from_token(
-                limited_field_access_token(self.env["ir.attachment"].browse(3), "datas", scope="binary")
+                limited_field_access_token(self.env["ir.attachment"].browse(3), "mimetype", scope="binary")
             )
             self.assertNotIn(field_res, [base_result, record_res])
             # a different model generates a different token
@@ -257,26 +257,26 @@ class TestImage(HttpCase):
         attachments = self.env["ir.attachment"].create(
             [
                 {
-                    "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                    "raw": GIF_RAW,
                     "description": "restricted attachment",
                     "name": "test.gif",
                     "res_id": restricted_record.id,
                     "res_model": restricted_record._name,
                 },
                 {
-                    "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                    "raw": GIF_RAW,
                     "description": "restricted attachment",
                     "name": "test.gif",
                     "res_id": accessible_record.id,
                     "res_model": accessible_record._name,
                 },
                 {
-                    "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                    "raw": GIF_RAW,
                     "description": "standalone attachment",
                     "name": "test.gif",
                 },
                 {
-                    "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                    "raw": GIF_RAW,
                     "description": "public attachment",
                     "name": "test.gif",
                     "public": True,

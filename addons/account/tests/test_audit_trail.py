@@ -257,7 +257,7 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
             })
 
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail."):
-            attachment.datas = b'new data'
+            attachment.raw = b'new data'
 
         # Adding an attachment to the log notes should be allowed
         another_attachment = self.env['ir.attachment'].create({

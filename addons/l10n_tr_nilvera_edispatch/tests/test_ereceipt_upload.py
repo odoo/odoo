@@ -1,5 +1,3 @@
-import base64
-
 from odoo import fields
 from odoo.tests import tagged
 from odoo.tools import file_open
@@ -36,7 +34,7 @@ class TestTRNilveraEreceiptUpload(TestStockCommon):
             ereceipt_xml = self.env['ir.attachment'].create({
                 'name': 'test_ereceipt_upload.xml',
                 'type': 'binary',
-                'datas': base64.b64encode(f.read()),
+                'raw': f.read(),
             })
 
         picking, files_with_errors = self.env['stock.picking']._l10n_tr_create_receipts_from_attachment(ereceipt_xml)

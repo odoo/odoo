@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import logging
 import json
 from datetime import datetime, UTC
@@ -1423,7 +1422,7 @@ class PosOrder(models.Model):
             invoice = self.env['ir.attachment'].create({
                 'name': name + '.pdf',
                 'type': 'binary',
-                'datas': base64.b64encode(report[0]),
+                'raw': report[0],
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'application/pdf'

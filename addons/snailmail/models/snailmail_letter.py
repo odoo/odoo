@@ -174,7 +174,7 @@ class SnailmailLetter(models.Model):
                 pdf_bin = self._append_cover_page(pdf_bin)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
-                'datas': base64.b64encode(pdf_bin),
+                'raw': pdf_bin,
                 'res_model': 'snailmail.letter',
                 'res_id': self.id,
                 'type': 'binary',  # override default_type from context, possibly meant for another model!

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
@@ -30,13 +29,13 @@ class testAttachmentAccess(TransactionCase):
         """Test an employee can create a letter linked to an attachment without res_model/res_id"""
         env_user = self.env(user=self.user)
         # As user, create an attachment without res_model/res_id
-        attachment = env_user['ir.attachment'].create({'name': 'foo', 'datas': base64.b64encode(b'foo')})
+        attachment = env_user['ir.attachment'].create({'name': 'foo', 'raw': b'foo'})
         # As user, create a snailmail.letter linked to that attachment
         letter = env_user['snailmail.letter'].create({'attachment_id': attachment.id, **self.letter_defaults})
         # As user, ensure the content of the attachment can be read through the letter
         self.assertEqual(base64.b64decode(letter.attachment_datas), b'foo')
         # As user, create another attachment without res_model/res_id
-        attachment_2 = env_user['ir.attachment'].create({'name': 'foo', 'datas': base64.b64encode(b'bar')})
+        attachment_2 = env_user['ir.attachment'].create({'name': 'foo', 'raw': b'bar'})
         # As user, change the attachment of the letter to this second attachment
         letter.write({'attachment_id': attachment_2.id})
         # As user, ensure the content of this second attachment can be read through the letter
@@ -47,7 +46,7 @@ class testAttachmentAccess(TransactionCase):
         and the attachment does not have a res_model/res_id
         """
         # As admin, create an attachment without res_model/res_id
-        attachment = self.env['ir.attachment'].create({'name': 'foo', 'datas': base64.b64encode(b'foo')})
+        attachment = self.env['ir.attachment'].create({'name': 'foo', 'raw': b'foo'})
         # As admin, create a snailmail.letter linked to that attachment
         letter = self.env['snailmail.letter'].create({'attachment_id': attachment.id, **self.letter_defaults})
 
@@ -59,7 +58,7 @@ class testAttachmentAccess(TransactionCase):
         self.assertEqual(base64.b64decode(letter.with_user(self.user).attachment_datas), b'foo')
 
         # As admin, create a second attachment without res_model/res_id
-        attachment = self.env['ir.attachment'].create({'name': 'bar', 'datas': base64.b64encode(b'bar')})
+        attachment = self.env['ir.attachment'].create({'name': 'bar', 'raw': b'bar'})
         # As admin, link this second attachment to the previously created letter (write instead of create)
         letter.write({'attachment_id': attachment.id})
 
@@ -75,7 +74,7 @@ class testAttachmentAccess(TransactionCase):
         # As admin, create an attachment for which you require the settings group to access
         autovacuum_job = self.env.ref('base.autovacuum_job')
         attachment_forbidden = self.env['ir.attachment'].create({
-            'name': 'foo', 'datas': base64.b64encode(b'foo'),
+            'name': 'foo', 'raw': b'foo',
             'res_model': autovacuum_job._name, 'res_id': autovacuum_job.id,
         })
         # As user, make sure this is indeed not possible to access that attachment data directly
@@ -94,7 +93,7 @@ class testAttachmentAccess(TransactionCase):
         # As user, update the attachment of an existing letter to the unallowed attachment
         # and make sure it raises an access error
         attachment_tmp = self.env['ir.attachment'].with_user(self.user).create({
-            'name': 'bar', 'datas': base64.b64encode(b'bar'),
+            'name': 'bar', 'raw': b'bar',
         })
         letter = self.env['snailmail.letter'].with_user(self.user).create({
             'attachment_id': attachment_tmp.id,

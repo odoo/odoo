@@ -1,5 +1,3 @@
-from base64 import b64encode
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -72,7 +70,7 @@ class StockPicking(models.Model):
         pdf_attachment = self.env['ir.attachment'].create({
             'name': f'Remito - {self.l10n_ar_delivery_guide_number}.pdf',
             'type': 'binary',
-            'datas': b64encode(pdf_content),
+            'raw': pdf_content,
             'res_model': self._name,
             'res_id': self.id,
             'mimetype': 'application/pdf',

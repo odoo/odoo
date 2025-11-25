@@ -7,17 +7,17 @@ from odoo.tools import mute_logger
 from odoo.tools.json import scriptsafe as json_safe
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.base.tests.files import GIF_B64, GIF_RAW
 
 
 @tests.tagged('-at_install', 'post_install')
 class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_modify_image(self):
-        gif_base64 = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
         attachment = self.env['ir.attachment'].create({
             'name': 'test.gif',
             'mimetype': 'image/gif',
-            'datas': gif_base64,
+            'raw': GIF_RAW,
             'public': True,
             'res_model': 'ir.ui.view',
             'res_id': 0,
@@ -25,7 +25,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
         def modify(login, name, expect_fail=False):
             self.authenticate(login, login)
-            svg = b'<svg viewBox="0 0 400 400"><!-- %s --><image url="data:image/gif;base64,%s" /></svg>' % (name.encode('ascii'), gif_base64)
+            svg = b'<svg viewBox="0 0 400 400"><!-- %s --><image url="data:image/gif;base64,%s" /></svg>' % (name.encode('ascii'), GIF_B64)
             params = {
                 'name': name,
                 'mimetype': 'image/svg+xml',

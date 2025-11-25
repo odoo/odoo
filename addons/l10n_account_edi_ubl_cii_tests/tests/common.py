@@ -102,7 +102,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         with misc.file_open(file_path, 'rb', filter_ext=('.xml',)) as file:
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
-                'datas': base64.encodebytes(file.read()),
+                'raw': file.read(),
                 'res_id': invoice.id,
                 'res_model': 'account.move',
             })

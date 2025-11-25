@@ -61,9 +61,8 @@ class TestIrQweb(TransactionCase):
             "name": "webpcopy.jpg",
             "res_model": "ir.attachment",
             "res_id": attachment.id,
-            "datas": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAF0lEQVR4nGJxKFrEwMDAxAAGgAAAAP//D+IBWx9K7TUAAAAASUVORK5CYII="
+            "datas": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAF0lEQVR4nGJxKFrEwMDAxAAGgAAAAP//D+IBWx9K7TUAAAAASUVORK5CYII=",
         })
-        jpeg_datas = jpeg_attach.datas
 
         html = view.with_context(webp_as_jpg=False)._render_template(view.id, {"is_raw_image": True, "record": lang_record})
         tree = etree.fromstring(html)
@@ -73,7 +72,7 @@ class TestIrQweb(TransactionCase):
         html = view.with_context(webp_as_jpg=True)._render_template(view.id, {"is_raw_image": True, "record": lang_record})
         tree = etree.fromstring(html)
         img = tree.find("img")
-        self.assertEqual(img.get("src"), "data:image/png;base64,%s" % jpeg_datas.decode())
+        self.assertEqual(img.get("src"), f"data:image/png;base64,{jpeg_attach.datas.decode()}")
 
     def test_image_svg(self):
         image = """<?xml version='1.0' encoding='UTF-8' ?>

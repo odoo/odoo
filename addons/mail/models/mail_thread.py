@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import base64
 import datetime
 import dateutil
 import email
@@ -2468,7 +2467,7 @@ class MailThread(models.AbstractModel):
                     continue
                 attachement_values = {
                     'name': name,
-                    'datas': base64.b64encode(content),
+                    'raw': content,
                     'type': 'binary',
                     'description': name,
                     'res_model': model,

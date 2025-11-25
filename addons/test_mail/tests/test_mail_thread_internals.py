@@ -1,7 +1,6 @@
 from markupsafe import Markup
 from unittest.mock import patch
 from unittest.mock import DEFAULT
-import base64
 
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
@@ -1328,7 +1327,7 @@ class TestNoThread(MailCommon, TestRecipients):
         })
         cls.test_attachment = cls.env['ir.attachment'].with_user(cls.user_employee).create({
             'name': 'Test Attachment',
-            'datas': base64.b64encode(b'This is test attachment content'),
+            'raw': b'This is test attachment content',
             'res_model': cls.test_record_nothread._name,
             'res_id': cls.test_record_nothread.id,
             'mimetype': 'text/plain',
@@ -1375,7 +1374,7 @@ class TestNoThread(MailCommon, TestRecipients):
         })
         with self.mock_mail_gateway():
             mail_compose_message.action_send_mail()
-        self.assertEqual(self._new_mails.attachment_ids['datas'], base64.b64encode(b'This is test attachment content'),
+        self.assertEqual(self._new_mails.attachment_ids.raw, b'This is test attachment content',
             "The attachment was not included correctly in the sent message")
 
     @users('employee')

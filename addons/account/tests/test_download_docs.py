@@ -16,7 +16,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
             'invoice_line_ids': [Command.create({'price_unit': 100})],
-            'attachment_ids': [Command.create({'name': "Attachment", 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test"})],
+            'attachment_ids': [Command.create({'name': "Attachment", 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test"})],
         })
         invoice_2 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -99,7 +99,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
 
     def test_download_moves_attachments_with_bills(self):
         bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
-        bill.message_main_attachment_id = self.env['ir.attachment'].create({'name': "Attachment", 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test_bill"})
+        bill.message_main_attachment_id = self.env['ir.attachment'].create({'name': "Attachment", 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
         attachment_names = [bill.message_main_attachment_id.name]
         self.authenticate(self.env.user.login, self.env.user.login)
         url = f'/account/download_move_attachments/{bill.id}'
@@ -114,9 +114,9 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         bill_2 = self.init_invoice('in_invoice', products=self.product_a, post=True)
         bill_3 = self.init_invoice('in_invoice', products=self.product_a, post=True)
         att_name = "Attachment"
-        bill_1.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test_bill"})
-        bill_2.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test_bill"})
-        bill_3.message_main_attachment_id = self.env['ir.attachment'].create({'name': f"{att_name} (1)", 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test_bill"})
+        bill_1.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
+        bill_2.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
+        bill_3.message_main_attachment_id = self.env['ir.attachment'].create({'name': f"{att_name} (1)", 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
         attachment_names = [att_name, f"{att_name} (1)", f"{att_name} (1) (1)"]
         self.authenticate(self.env.user.login, self.env.user.login)
 

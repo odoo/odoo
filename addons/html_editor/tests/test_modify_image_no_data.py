@@ -1,6 +1,7 @@
 
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import odoo.tests
 from odoo.tests.common import HttpCase
 from odoo.tools.json import scriptsafe as json_safe
@@ -12,13 +13,12 @@ class TestModifyImageNoData(HttpCase):
     def setUp(self):
         super().setUp()
         self.authenticate('admin', 'admin')
-        self.pixel = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
 
     def test_modify_image_no_data(self):
         # Create an attachment
         attachment = self.env['ir.attachment'].create({
             'name': 'test_image.gif',
-            'datas': self.pixel,
+            'raw': base64.b64decode(b'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='),
             'res_model': 'ir.ui.view',
             'res_id': 0,
         })

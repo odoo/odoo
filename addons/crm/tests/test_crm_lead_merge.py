@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from datetime import timedelta
 
 from odoo.addons.crm.tests.common import TestLeadConvertMassCommon
@@ -444,7 +442,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         # create side documents
         attachments = self.env['ir.attachment'].create([
             {'name': '%02d.txt' % idx,
-             'datas': base64.b64encode(b'Att%02d' % idx),
+             'raw': b'Att%02d' % idx,
              'res_model': 'crm.lead',
              'res_id': self.lead_w_email.id,
             } for idx in range(4)

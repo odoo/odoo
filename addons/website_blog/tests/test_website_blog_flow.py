@@ -82,7 +82,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         attachment = self.env['ir.attachment'].sudo().create({
             'name': 'some_attachment.pdf',
             'res_model': 'mail.compose.message',
-            'datas': 'test',
+            'raw': b'test',
             'type': 'binary',
         })
 
@@ -103,7 +103,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         second_attachment = self.env['ir.attachment'].sudo().create({
             'name': 'some_attachment.pdf',
             'res_model': 'mail.compose.message',
-            'datas': 'test',
+            'raw': b'test',
             'type': 'binary',
         })
 

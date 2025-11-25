@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from base64 import b64encode
 from functools import partial
 from unittest.mock import patch
 
@@ -34,20 +33,20 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         cls.env['quotation.document'].search([]).action_archive()
 
         with file_open(forms_pdf, 'rb') as file:
-            forms_pdf_data = b64encode(file.read())
+            forms_pdf_data = file.read()
 
         with file_open(plain_pdf, 'rb') as file:
-            plain_pdf_data = b64encode(file.read())
+            plain_pdf_data = file.read()
 
         att_header, att_footer, att_prod_doc = cls.env['ir.attachment'].create([{
             'name': "Header",
-            'datas': plain_pdf_data,
+            'raw': plain_pdf_data,
         }, {
             'name': "Footer",
-            'datas': forms_pdf_data,
+            'raw': forms_pdf_data,
         }, {
             'name': "Product Document",
-            'datas': forms_pdf_data,
+            'raw': forms_pdf_data,
         }])
         cls.header, cls.footer = cls.env['quotation.document'].create([{
             'name': "Header",
@@ -197,7 +196,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
     def test_non_pdf_attachment_inside_quote_form_save(self):
         non_pdf_att = self.env['ir.attachment'].create({
             'name': 'Not a PDF',
-            'datas': b64encode(b"hello"),
+            'raw': b"hello",
             'mimetype': 'text/plain',
         })
 

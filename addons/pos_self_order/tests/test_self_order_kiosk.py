@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import random
 
 import odoo.tests
@@ -222,7 +220,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             return self.env["ir.attachment"].create(
                 {
                     "name": f"test_{random.randint(1000, 9999)}",
-                    "datas": base64.b64encode(b"test"),
+                    "raw": b"test",
                 },
             )
 
@@ -248,7 +246,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
                         Command.create(
                             {
                                 "name": f"test_{field}",
-                                "datas": base64.b64encode(b"test"),
+                                "raw": b"test",
                             },
                         ),
                     ],

@@ -448,12 +448,14 @@ class HTML_Editor(http.Controller):
         """
         self._clean_context()
         attachment = request.env['ir.attachment'].browse(attachment.id)
-        if not data and attachment.datas:
-            data = attachment.datas
+        if data:
+            raw = b64decode(data)
+        else:
+            raw = attachment.raw
 
         fields = {
             'original_id': attachment.id,
-            'datas': data,
+            'raw': raw,
             'type': 'binary',
             'res_model': res_model or 'ir.ui.view',
             'mimetype': mimetype or attachment.mimetype,

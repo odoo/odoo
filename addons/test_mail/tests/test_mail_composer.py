@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 
 from ast import literal_eval
@@ -607,7 +605,7 @@ class TestComposerInternals(TestMailComposer):
         attachs = self.env['ir.attachment'].sudo().search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 3)
         extra_attach = self.env['ir.attachment'].create({
-            'datas': base64.b64encode(b'ExtraData'),
+            'raw': b'ExtraData',
             'mimetype': 'text/plain',
             'name': 'ExtraAttFileName.txt',
             'res_model': False,
@@ -2675,7 +2673,7 @@ class TestComposerResultsMass(TestMailComposer):
         self.test_records[1].write({'count': 2, 'name': 'B'})
 
         template_attachment, composer_attachment = self.env['ir.attachment'].create([{
-            'datas': base64.b64encode(b'ExtraData'),
+            'raw': b'ExtraData',
             'mimetype': 'text/plain',
             'name': f'{record._name}_Common_Attachment.txt',
             'res_id': record.id if record else False,

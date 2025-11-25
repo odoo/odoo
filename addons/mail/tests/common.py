@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import contextlib
 import email
 import email.policy
@@ -1251,7 +1249,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         attach_values = attach_values or {}
         prefix = prefix or ''
         return [{
-            'datas': base64.b64encode(b'AttContent_%02d' % x),
+            'raw': b'AttContent_%02d' % x,
             'name': f'{prefix}AttFileName_{x:02d}.txt',
             'mimetype': 'text/plain',
             'res_model': res_model,

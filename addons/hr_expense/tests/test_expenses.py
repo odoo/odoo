@@ -5,6 +5,7 @@ from datetime import date
 from freezegun import freeze_time
 
 from odoo import Command, fields
+from odoo.addons.base.tests.files import GIF_RAW
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form
@@ -465,13 +466,13 @@ class TestExpenses(TestExpenseCommon):
         expense = self.create_expenses({'name': 'Employee expense'})
         expense_2 = self.create_expenses({'name': 'Employee expense 2'})
         attachment = self.env['ir.attachment'].create({
-            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'raw': GIF_RAW,
             'name': 'file1.png',
             'res_model': 'hr.expense',
             'res_id': expense.id,
         })
         attachment_2 = self.env['ir.attachment'].create({
-            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'raw': GIF_RAW,
             'name': 'file2.png',
             'res_model': 'hr.expense',
             'res_id': expense_2.id,
@@ -487,13 +488,13 @@ class TestExpenses(TestExpenseCommon):
 
         self.assertRecordValues(expenses.account_move_id.attachment_ids.sorted('name'), [
             {
-                'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                'raw': GIF_RAW,
                 'name': 'file1.png',
                 'res_model': 'account.move',
                 'res_id': expense.account_move_id.id,
             },
             {
-                'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+                'raw': GIF_RAW,
                 'name': 'file2.png',
                 'res_model': 'account.move',
                 'res_id': expense_2.account_move_id.id,
@@ -511,13 +512,13 @@ class TestExpenses(TestExpenseCommon):
             'payment_mode': 'company_account',
         })
         attachment = self.env['ir.attachment'].create({
-            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'raw': GIF_RAW,
             'name': 'file1.png',
             'res_model': 'hr.expense',
             'res_id': expense.id,
         })
         attachment_2 = self.env['ir.attachment'].create({
-            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'raw': GIF_RAW,
             'name': 'file2.png',
             'res_model': 'hr.expense',
             'res_id': expense_2.id,
@@ -534,14 +535,14 @@ class TestExpenses(TestExpenseCommon):
         expense_move = expense.account_move_id
         expense_2_move = expense_2.account_move_id
         self.assertRecordValues(expense_move.attachment_ids, [{
-            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'raw': GIF_RAW,
             'name': 'file1.png',
             'res_model': 'account.move',
             'res_id': expense_move.id
         }])
 
         self.assertRecordValues(expense_2_move.attachment_ids, [{
-            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'raw': GIF_RAW,
             'name': 'file2.png',
             'res_model': 'account.move',
             'res_id': expense_2_move.id

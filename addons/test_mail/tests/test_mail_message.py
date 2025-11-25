@@ -38,7 +38,7 @@ class TestMessageValues(MailCommon):
         note_subtype = self.env.ref('mail.mt_note')
         _attach_1 = self.env['ir.attachment'].with_user(self.user_employee).create({
             'name': 'Attach1',
-            'datas': 'bWlncmF0aW9uIHRlc3Q=',
+            'raw': b'migration test',
             'res_id': 0,
             'res_model': 'mail.compose.message',
         })
