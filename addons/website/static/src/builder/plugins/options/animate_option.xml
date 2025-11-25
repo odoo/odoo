@@ -11,7 +11,7 @@
 <t t-name="website.AnimateOption">
     <t t-if="this.state.isOptionActive">
         <BuilderRow label.translate="Animation">
-            <BuilderSelect t-if="!this.isActiveItem('transform_image')" preview="false">
+            <BuilderSelect t-if="!this.isActiveItem('transform_image')" preview="false" dropdownClass="props.dropdownClass">
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="''"
                             classAction="''"
                             id="'no_animation_opt'"
@@ -37,7 +37,7 @@
             <t t-call="website.animateOnScrollInOut"/>
         </BuilderRow>
         <BuilderRow label.translate="Effect" level="1">
-            <BuilderSelect id="'animation_effect_opt'"
+            <BuilderSelect id="'animation_effect_opt'" dropdownClass="props.dropdownClass"
                 t-if="state.hasAnimateClass and !this.isActiveItem('animation_on_hover_opt')"
                 action="'setAnimationEffect'" actionParam="''">
 
@@ -49,7 +49,7 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow label.translate="Direction" level="1" t-if="state.hasAnimateClass and !state.isLimitedEffect">
-            <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'">
+            <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'" dropdownClass="props.dropdownClass">
                 <t t-foreach="state.directionItems" t-as="item" t-key="item.className">
                     <BuilderSelectItem classAction="item.className" t-out="item.label" />
                 </t>
@@ -57,7 +57,7 @@
         </BuilderRow>
         <!-- Trigger -->
         <BuilderRow label.translate="Trigger" level="1">
-            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !state.isInDropdown">
+            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !state.isInDropdown" dropdownClass="props.dropdownClass">
                 <BuilderSelectItem classAction="''">First Time Only</BuilderSelectItem>
                 <BuilderSelectItem classAction="'o_animate_both_scroll'">Every Time</BuilderSelectItem>
             </BuilderSelect>
@@ -90,7 +90,7 @@
         </BuilderContext>
         <t t-if="this.isActiveItem('animation_on_hover_opt')">
             <BuilderRow label.translate="Effect" level="1">
-                <BuilderSelect action="'setHoverEffect'" actionParam="{}">
+                <BuilderSelect action="'setHoverEffect'" actionParam="{}" dropdownClass="props.dropdownClass">
                     <BuilderSelectItem actionValue="'overlay'" id="'hover_effect_overlay_opt'">Overlay</BuilderSelectItem>
                     <BuilderSelectItem actionValue="'image_zoom_in'" id="'hover_effect_zoom_in_opt'">Zoom In</BuilderSelectItem>
                     <BuilderSelectItem actionValue="'image_zoom_out'" id="'hover_effect_zoom_out_opt'">Zoom Out</BuilderSelectItem>
