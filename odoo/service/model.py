@@ -19,6 +19,7 @@ from odoo.exceptions import (
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
 from .server import thread_local
 
@@ -50,7 +51,7 @@ def get_public_method(model: BaseModel, name: str):
     """
     assert isinstance(model, BaseModel)
     e = f"Private methods (such as '{model._name}.{name}') cannot be called remotely."
-    if name.startswith('_'):
+    if name.startswith('_') or name in _UNSAFE_ATTRIBUTES:
         raise AccessError(e)
 
     cls = type(model)
