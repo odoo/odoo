@@ -86,6 +86,32 @@ test("SelectionField in a list view", async () => {
     expect(td.children).toHaveCount(1, { message: "select tag should be only child of td" });
 });
 
+test.tags("desktop");
+test("SelectionField in a list view with multi_edit", async () => {
+    Partner._records.forEach((r) => (r.color = "red"));
+    onRpc("has_group", () => true);
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: '<list string="Colors" multi_edit="1"><field name="color"/></list>',
+    });
+    // select two records and edit them
+    await click(".o_data_row:eq(0) .o_list_record_selector input:first");
+    await animationFrame();
+    await click(".o_data_row:eq(1) .o_list_record_selector input:first");
+    await animationFrame();
+
+    await contains(".o_field_cell[name='color']").click();
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "" });
+    await contains(".o_dialog footer button").click();
+    expect(queryAllTexts(".o_field_cell")).toEqual(["", "", "Red"]);
+
+    await contains(".o_field_cell[name='color']").click();
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
+    await contains(".o_dialog footer button").click();
+    expect(queryAllTexts(".o_field_cell")).toEqual(["Black", "Black", "Red"]);
+});
+
 test("SelectionField, edition and on many2one field", async () => {
     Partner._onChanges.product_id = () => {};
     Partner._records[0].product_id = 37;
