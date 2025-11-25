@@ -119,12 +119,19 @@ export function _makeUser(session) {
         if (!userId) {
             return Promise.resolve(false);
         }
-        return rpc("/web/dataset/call_kw/res.users/has_group", {
+        const params = {
             model: "res.users",
             method: "has_group",
             args: [userId, group],
             kwargs: { context },
-        });
+        };
+        const cache = {
+            type: "disk",
+            callback: (updatedValue) => {
+                groupCache.cache[group] = Promise.resolve(updatedValue);
+            },
+        };
+        return rpc("/web/dataset/call_kw/res.users/has_group", params, { cache });
     };
     const getGroupCacheKey = (group) => group;
     const groupCache = new Cache(getGroupCacheValue, getGroupCacheKey);
