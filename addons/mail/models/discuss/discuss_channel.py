@@ -922,7 +922,10 @@ class DiscussChannel(models.Model):
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        payload = {"data": Store(bus_channel=self).add(message).get_result(), "id": self.id}
+        store = Store(bus_channel=self).add(message)
+        if message.channel_id.parent_channel_id:
+            store.add(message.channel_id, ["message_count"])
+        payload = {"data": store.get_result(), "id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
         if kwargs.get("silent"):
@@ -1251,6 +1254,7 @@ class DiscussChannel(models.Model):
                 sort="id",
                 predicate=lambda c: c.channel_type in self._member_based_naming_channel_types(),
             ),
+            Store.Attr("message_count", predicate=lambda c: c.parent_channel_id),
             Store.One("parent_channel_id", predicate=is_channel_or_group),
             # sudo: discuss.channel: reading sessions of accessible channel is acceptable
             Store.Many(

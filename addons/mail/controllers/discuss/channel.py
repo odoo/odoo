@@ -213,8 +213,26 @@ class ChannelController(http.Controller):
         if search_term:
             domain.append(("name", "ilike", search_term))
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
+        store = Store().add(sub_channels).add(sub_channels._get_last_messages())
+        if sub_channels:
+            self.env.cr.execute(
+                """
+                    SELECT id
+                      FROM (
+                          SELECT id,
+                                  ROW_NUMBER() OVER (PARTITION BY channel_id ORDER BY id) AS rn
+                            FROM discuss_channel_member
+                           WHERE channel_id IN %s
+                      )
+                     WHERE rn <= 4;
+                """,
+                (tuple(sub_channels.ids),),
+            )
+            store.add(
+                self.env["discuss.channel.member"].browse([r[0] for r in self.env.cr.fetchall()])
+            )
         return {
-            "store_data": Store().add(sub_channels).add(sub_channels._get_last_messages()).get_result(),
+            "store_data": store.get_result(),
             "sub_channel_ids": sub_channels.ids,
         }
 

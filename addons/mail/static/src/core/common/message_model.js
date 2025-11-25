@@ -396,6 +396,13 @@ export class Message extends Record {
     inlineBody = fields.Html("", {
         /** @this {import("models").Message} */
         compute() {
+            if (this.poll) {
+                let text = this.poll.poll_question;
+                if (this.ended_poll_ids.length) {
+                    text = this.poll.pollClosedText;
+                }
+                return markup`<i class="fa fa-fw o-me-0_5 oi oi-view-cohort"></i>${text}`;
+            }
             if (this.notificationType === "call") {
                 return _t("%(caller)s started a call", { caller: this.authorName });
             }
@@ -460,33 +467,39 @@ export class Message extends Record {
         return this.isBodyEmpty && this.hasAttachments;
     }
 
-    previewText = fields.Html("", {
+    bodyPreview = fields.Html("", {
         /** @this {import("models").Message} */
         compute() {
             let messageBody = "";
             if (!this.hasOnlyAttachments) {
-                messageBody = this.inlineBody || this.subtype_id?.description;
-            } else {
-                const attachments = this.attachment_ids;
-                switch (attachments.length) {
-                    case 1:
-                        messageBody = attachments[0].previewName;
-                        break;
-                    case 2:
-                        messageBody = _t("%(file1)s and %(file2)s", {
-                            file1: attachments[0].previewName,
-                            file2: attachments[1].previewName,
-                            count: attachments.length - 1,
-                        });
-                        break;
-                    default:
-                        messageBody = _t("%(file1)s and %(count)s other attachments", {
-                            file1: attachments[0].previewName,
-                            count: attachments.length - 1,
-                        });
-                }
-                messageBody = markup`<i class="fa me-1 ${this.previewIcon}"></i>${messageBody}`;
+                return this.inlineBody || this.subtype_id?.description;
             }
+            const attachments = this.attachment_ids;
+            switch (attachments.length) {
+                case 1:
+                    messageBody = attachments[0].previewName;
+                    break;
+                case 2:
+                    messageBody = _t("%(file1)s and %(file2)s", {
+                        file1: attachments[0].previewName,
+                        file2: attachments[1].previewName,
+                        count: attachments.length - 1,
+                    });
+                    break;
+                default:
+                    messageBody = _t("%(file1)s and %(count)s other attachments", {
+                        file1: attachments[0].previewName,
+                        count: attachments.length - 1,
+                    });
+            }
+            return markup`<i class="fa me-1 ${this.previewIcon}"></i>${messageBody}`;
+        },
+    });
+
+    previewText = fields.Html("", {
+        /** @this {import("models").Message} */
+        compute() {
+            const messageBody = this.bodyPreview;
             if (this.isSelfAuthored) {
                 return markup`<i class="fa fa-mail-reply me-1 opacity-75"></i>${_t(
                     "You: %(message_content)s",

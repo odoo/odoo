@@ -66,6 +66,7 @@ class DiscussChannelMember(models.Model):
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
     rtc_inviting_session_id = fields.Many2one('discuss.channel.rtc.session', string='Ringing session')
 
+    _channel_id_id_idx = models.Index("(channel_id, id)")
     _seen_message_id_idx = models.Index("(channel_id, partner_id, seen_message_id)")
 
     @api.autovacuum
