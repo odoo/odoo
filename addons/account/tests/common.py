@@ -1115,46 +1115,38 @@ class AccountTestInvoicingCommon(ProductCommon):
                 cls._merge_two_xml(xml_schema, xml_main_schema)
 
     @classmethod
-    def _sort_xml_attributes(cls, xml_element: etree._Element):
-        """
-        Collects all attribute of an _Element and reorder them.
-        This is done to preserve the order of the attributes and make it deterministic.
-        The attributes will be reordered in to 3 groups (in order): namespaces, normal attributes, and ignored attributes.
-        Within each group, they will be sorted alphabetically.
-        """
-        normal_keys = []
-        ignored_keys = []
-        temp_attrib = dict(xml_element.attrib)
-        temp_children = list(xml_element)
+    def _rebuild_xml_with_sorted_namespaces(cls, root: etree._Element) -> etree._Element:
+        # Collect all namespaces and prefixes
+        all_nsmap = {
+            prefix: uri
+            for elem in root.iter()
+            for prefix, uri in elem.nsmap.items()
+        }
 
-        for attrib_key, attrib_val in xml_element.items():
-            if re.match(r'{.+}.+', attrib_key):
-                pass  # skip namespaces
-            elif attrib_val == '___ignore___':
-                ignored_keys.append(attrib_key)
-            else:
-                normal_keys.append(attrib_key)
+        # Sort all namespaces
+        nsmap_str_keys = [key for key in all_nsmap if isinstance(key, str)]
+        sorted_nsmap_keys = [
+            *((None,) if None in all_nsmap else ()),
+            *sorted(nsmap_str_keys),
+        ]
+        sorted_nsmap = {
+            nsmap_key: all_nsmap[nsmap_key]
+            for nsmap_key in sorted_nsmap_keys
+        }
 
-        cls._clear_xml_content(xml_element, clean_namespaces=False)  # Remove all attributes & children, but not namespaces
-        normal_keys.sort()
-        ignored_keys.sort()
+        # Build a new root element with the sorted namespaces and all original root attrib & children
+        new_root = etree.Element(root.tag, nsmap=sorted_nsmap)
+        new_root.text = root.text
+        for attrib_key, attrib_val in root.attrib.items():
+            new_root.attrib[attrib_key] = attrib_val
+        for child in root.getchildren():
+            new_root.append(child)
 
-        for normal_key in normal_keys:
-            xml_element.attrib[normal_key] = temp_attrib[normal_key]
-        for ignored_key in ignored_keys:
-            xml_element.attrib[ignored_key] = temp_attrib[ignored_key]
-        for child in temp_children:
-            xml_element.append(child)
-
-        for xml_child in xml_element.getchildren():
-            cls._sort_xml_attributes(xml_child)
+        return new_root
 
     def _get_test_file_path(self, file_name: str, subfolder=''):
         optional_subfolder = f"{subfolder}/" if subfolder else ''
-        return file_path(
-            f"{self.test_module}/tests/test_files/{optional_subfolder}{file_name}",
-            check_exists=False,
-        )
+        return file_path(f"{self.test_module}/tests/test_files/{optional_subfolder}{file_name}")
 
     def assert_json(self, content_to_assert: dict, test_name: str, subfolder=''):
         """
@@ -1187,7 +1179,6 @@ class AccountTestInvoicingCommon(ProductCommon):
             xml_element: str | bytes | etree._Element,
             test_name: str,
             subfolder='',
-            sort_attributes=True,
     ):
         """
         Helper to save/assert an XML element/string/bytes to an XML file.
@@ -1198,13 +1189,12 @@ class AccountTestInvoicingCommon(ProductCommon):
         - Reindent the XML element by `\t`
         - Save the XML element to a temporary folder for potential external testing
         - Patch the XML element with `___ignore___` values, following the corresponding schema on the closest `ignore_schema.xml`
-        - Sort the attributes of the XML content (when `sort_attributes` optional parameter is True)
+        - Canonicalize the XML element to ensure consistency in their namespaces & attributes order
         - Save the XML element content to the test file
 
         :param xml_element: the _Element/str/bytes content to be saved or asserted
         :param test_name: the test file name
         :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
-        :param sort_attributes: specify whether the attributes should be sorted or not (by default, True)
         :return:
         """
         file_name = f"{test_name}.xml"
@@ -1220,7 +1210,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             with patch.object(re, 'fullmatch', lambda _arg1, _arg2: True):
                 save_test_file(
                     test_name=test_name,
-                    content=etree.tostring(xml_element, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
+                    content=etree.tostring(xml_element, pretty_print=True, encoding='UTF-8'),
                     prefix=f"{self.test_module}",
                     extension='xml',
                     document_type='Invoice XML',
@@ -1238,19 +1228,21 @@ class AccountTestInvoicingCommon(ProductCommon):
                 )
                 etree.indent(xml_element, space='\t')
 
-            # Sort the XML attributes alphabetically to preserve their order
-            if sort_attributes:
-                self._sort_xml_attributes(xml_element)
+            # Canonicalize & re-sort the namespaces
+            canonicalized_xml_str = etree.canonicalize(xml_element)
+            xml_element = etree.fromstring(canonicalized_xml_str)
+            xml_element = self._rebuild_xml_with_sorted_namespaces(xml_element)
 
-            # Save XML to test_files/
-            with file_open(test_file_path, 'wb+') as f:
-                f.write(etree.tostring(xml_element, pretty_print=True, xml_declaration=True, encoding='UTF-8'))
+            # Save the xml_element content
+            with file_open(test_file_path, 'wb') as f:
+                f.write(etree.tostring(xml_element, pretty_print=True, encoding='UTF-8'))
                 _logger.info("Saved the generated xml content to %s", file_name)
         else:
             with file_open(test_file_path, 'rb') as f:
                 expected_xml_str = f.read()
-                expected_xml_tree = etree.fromstring(expected_xml_str)
-                self.assertXmlTreeEqual(xml_element, expected_xml_tree)
+
+            expected_xml_tree = etree.fromstring(expected_xml_str)
+            self.assertXmlTreeEqual(xml_element, expected_xml_tree)
 
     @classmethod
     def _turn_node_as_dict_hierarchy(cls, node, path=''):
