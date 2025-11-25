@@ -1,3 +1,8 @@
+$o-we-toolbar-bg: #FFF !default;
+$o-we-toolbar-color-text: #2b2b33 !default; // Same as $o-we-bg-light
+$o-we-item-spacing: 8px !default;
+$o-we-color-success: #00ff9e !default;
+
 .o_font_color_selector {
     @include o-input-number-no-arrows();
     --bg: #{$o-we-toolbar-bg};
@@ -86,12 +91,4 @@
         font-family: FontAwesome;
         color: $o-we-color-success;
     }
-}
-
-// Extend bootstrap to create background and text utilities for some colors
-@for $index from 1 through 5 {
-    $-color-name: 'o-color-#{$index}';
-    $-color: map-get($colors, $-color-name);
-    @include bg-variant(".bg-#{$-color-name}", $-color);
-    @include text-emphasis-variant(".text-#{$-color-name}", $-color);
 }

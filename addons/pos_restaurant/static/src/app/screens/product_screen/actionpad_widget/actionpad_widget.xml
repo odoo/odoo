@@ -8,7 +8,8 @@
             </button>
         </xpath>
         <xpath expr="//div[hasclass('validation')]" position="attributes">
-            <attribute name="t-if">this.swapButton or props.showActionButton</attribute>
+            <!-- Check availability for all children, needed due to condition based pay button. Skip rendering if none are available. -->
+            <attribute name="t-if">!this.swapButton or showFastPaymentMethods or (pos.showBackButton() and !pos.config.module_pos_restaurant)</attribute>
         </xpath>
         <xpath expr="//div[hasclass('validation')]//button[hasclass('pay-order-button')]" position="attributes">
             <attribute name="t-if">!this.swapButton</attribute>

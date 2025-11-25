@@ -6,9 +6,11 @@ from odoo.tests import HttpCase, tagged, new_test_user
 class TestEmployeeUi(HttpCase):
     def test_employee_profile_tour(self):
         user = new_test_user(self.env, login='davidelora', groups='base.group_user')
+        johnny_user = new_test_user(self.env, login="johnny", name="Johnny H.")
 
         self.env['hr.employee'].create([{
             'name': 'Johnny H.',
+            "user_id": johnny_user.id,
         }, {
             'name': 'David Elora',
             'user_id': user.id,

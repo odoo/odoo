@@ -6,6 +6,7 @@ import { VisibilityOption } from "./options/visibility_option";
 export class WebsiteVisibilityPlugin extends Plugin {
     static id = "websiteVisibilityPlugin";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         system_classes: ["o_conditional_hidden"],
         target_show: this.onTargetShow.bind(this),

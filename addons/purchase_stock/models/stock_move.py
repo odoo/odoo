@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import deque
+from datetime import datetime
 
 from odoo import api, Command, fields, models, _
+from odoo.fields import Date
 from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
@@ -150,6 +152,10 @@ class StockMove(models.Model):
         if not self.purchase_line_id:
             return valuation_data
 
+        if isinstance(at_date, datetime):
+            # Since aml.date are Date, we don't need the extra precision here.
+            at_date = Date.to_date(at_date)
+
         aml_quantity = 0
         value = 0
         aml_ids = set()
@@ -175,9 +181,9 @@ class StockMove(models.Model):
             valuation_data['quantity'] = quantity
             valuation_data['value'] = quantity * value / aml_quantity
         account_moves = self.env['account.move.line'].browse(aml_ids).move_id
-        valuation_data['description'] = _('%(value)s for %(quantity)s %(unit)s from %(bills)s',
-            value=value, quantity=quantity, unit=self.product_id.uom_id.name,
-            bills=', '.join(account_move.name for account_move in account_moves))
+        valuation_data['description'] = self.env._('%(value)s for %(quantity)s %(unit)s from %(bills)s',
+            value=self.company_currency_id.format(value), quantity=aml_quantity, unit=self.product_id.uom_id.name,
+            bills=account_moves.mapped('display_name'))
         return valuation_data
 
     def _get_value_from_quotation(self, quantity, at_date=None):
@@ -185,11 +191,15 @@ class StockMove(models.Model):
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
         price_unit = self.purchase_line_id._get_stock_move_price_unit()
-        quantity = min(quantity, self.quantity)
+        uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
+        quantity = min(quantity, uom_quantity)
+        value = price_unit * quantity
         return {
-            'value': price_unit * quantity,
+            'value': value,
             'quantity': quantity,
-            'description': _('From %(quotation)s', quotation=self.purchase_line_id.order_id.name),
+            'description': self.env._('%(value)s for %(quantity)s %(unit)s from %(quotation)s (not billed)',
+                value=self.company_currency_id.format(value), quantity=quantity, unit=self.product_id.uom_id.name,
+                quotation=self.purchase_line_id.order_id.display_name),
         }
 
     def _get_related_invoices(self):

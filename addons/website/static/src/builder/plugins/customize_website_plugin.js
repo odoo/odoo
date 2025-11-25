@@ -14,6 +14,25 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { renderToElement } from "@web/core/utils/render";
 import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 
+/**
+ * @typedef { Object } CustomizeWebsiteShared
+ * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
+ * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
+ * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
+ * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
+ * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
+ * @property { CustomizeWebsitePlugin['withCustomHistory'] } withCustomHistory
+ * @property { CustomizeWebsitePlugin['populateCache'] } populateCache
+ * @property { CustomizeWebsitePlugin['loadConfigKey'] } loadConfigKey
+ * @property { CustomizeWebsitePlugin['getConfigKey'] } getConfigKey
+ * @property { CustomizeWebsitePlugin['getWebsiteVariableValue'] } getWebsiteVariableValue
+ * @property { CustomizeWebsitePlugin['getPendingThemeRequests'] } getPendingThemeRequests
+ * @property { CustomizeWebsitePlugin['setPendingThemeRequests'] } setPendingThemeRequests
+ * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
+ * @property { CustomizeWebsitePlugin['reloadBundles'] } reloadBundles
+ * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
+ */
+
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
@@ -37,6 +56,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "setViewsOnSave",
     ];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             CustomizeWebsiteVariableAction,

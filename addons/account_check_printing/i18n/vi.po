@@ -7,13 +7,14 @@
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 04:38+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-07 03:41+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/vi/>\n"
 "Language: vi\n"
@@ -253,6 +254,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Thủ công: Thanh toán hoặc Nhận thanh toán bằng bất kỳ phương thức nào bên "
+"ngoài Odoo.\n"
+"Nhà cung cấp dịch vụ thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có "
+"Phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh "
+"toán do đối tác lưu khi mua hoặc đăng ký online.\n"
+"Séc: Thanh toán hóa đơn bằng séc và in từ Odoo.\n"
+"Nộp theo lô: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và nộp "
+"theo lô tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
+"Chuyển tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển "
+"tín dụng SEPA cho ngân hàng của bạn. Cần có phân hệ account_iso20022.\n"
+"Ghi nợ trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy "
+"nhiệm mà đối tác sẽ cấp cho bạn. Cần có phân hệ account_iso20022.\n"
+"Chuẩn ISO20022 tại Hoa Kỳ: Thực hiện thanh toán trong nước bằng cách gửi tệp "
+"ISO20022 tới ngân hàng của bạn. Cần có phân hệ account_iso20022.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -385,6 +400,14 @@ msgid ""
 msgstr ""
 "Đã xảy ra sự cố với Bố cục séc, vui lòng chọn bố cục khác trong Cài đặt hóa "
 "đơn/kế toán và thử lại."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
 
 #. module: account_check_printing
 #. odoo-python

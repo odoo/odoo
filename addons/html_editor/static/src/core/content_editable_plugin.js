@@ -3,6 +3,18 @@ import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
+/** @typedef {import("@html_editor/editor").EditorContext} EditorContext */
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+
+/**
+ * @typedef {((el: HTMLElement) => boolean)[]} valid_contenteditable_predicates
+ *
+ * @typedef {((root: EditorContext["editable"]) => HTMLElement[])[]} content_editable_providers
+ * @typedef {((root: EditorContext["editable"]) => HTMLElement[])[]} content_not_editable_providers
+ *
+ * @typedef {CSSSelector[]} contenteditable_to_remove_selector
+ */
+
 /**
  * This plugin is responsible for setting the contenteditable attribute on some
  * elements.
@@ -13,6 +25,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class ContentEditablePlugin extends Plugin {
     static id = "contentEditablePlugin";
+    /** @type {import("plugins").EditorResources} */
     resources = {
         normalize_handlers: withSequence(5, this.normalize.bind(this)),
         clean_for_save_handlers: withSequence(Infinity, this.cleanForSave.bind(this)),

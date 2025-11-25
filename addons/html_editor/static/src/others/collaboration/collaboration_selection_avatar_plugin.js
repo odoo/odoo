@@ -21,6 +21,7 @@ export const AVATAR_SIZE = 25;
 export class CollaborationSelectionAvatarPlugin extends Plugin {
     static id = "collaborationSelectionAvatar";
     static dependencies = ["history", "position", "localOverlay", "collaborationOdoo"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),

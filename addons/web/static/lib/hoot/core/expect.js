@@ -545,6 +545,7 @@ export function makeExpect(params) {
             /** @type {import("../hoot_utils").Reporting} */
             const report = {
                 assertions: assertionCount,
+                duration: test.lastResults?.duration || 0,
                 tests: 1,
             };
             if (!currentResult.pass) {

@@ -8,6 +8,13 @@ import { CONDITIONAL_VISIBILITY, DEVICE_VISIBILITY } from "@website/builder/opti
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef {{
+ *      saveAttribute: string;
+ *      attributeName: string;
+ *      callWith: "code" | "name" | "value" | "id";
+ * }[]} visibility_selector_parameters
+ */
 export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";
 
 export class DeviceVisibilityOption extends BaseOptionComponent {
@@ -20,6 +27,7 @@ export class DeviceVisibilityOption extends BaseOptionComponent {
 class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
     static dependencies = ["visibility", "websiteSession"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(CONDITIONAL_VISIBILITY, VisibilityOption),

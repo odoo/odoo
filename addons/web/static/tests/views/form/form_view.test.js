@@ -353,6 +353,16 @@ test(`button box rendering on big screen`, async () => {
     }
 });
 
+test(`button box rendering invisible`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><div name="button_box" invisible="1"><button id="btn1">MyButton</button></div></form>`,
+        resId: 2,
+    });
+    expect(`.o_control_panel .o_control_panel_actions`).toHaveInnerHTML("");
+});
+
 test(`form view gets size class on small and big screens`, async () => {
     let uiSize = SIZES.MD;
     const bus = new EventBus();
@@ -6245,7 +6255,7 @@ test(`onchange returns an error`, async () => {
 
     await contains(`.o_field_widget[name=int_field] input`).edit("64");
     expect.verifyErrors(["Some business message"]);
-    expect(`.modal`).toHaveCount(1);
+    await waitFor(`.modal`);
     expect(`.modal-body`).toHaveText(/Some business message/);
     expect(`.o_field_widget[name="int_field"] input`).toHaveValue("9");
 

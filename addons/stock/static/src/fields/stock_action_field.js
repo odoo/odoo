@@ -57,8 +57,13 @@ const stockActionField = {
     ...monetaryField,
     component: StockActionField,
     supportedOptions: [
-        ...floatField.supportedOptions,
-        ...monetaryField.supportedOptions,
+        Object.values(
+            Object.fromEntries(
+                [...floatField.supportedOptions, ...monetaryField.supportedOptions].map(
+                    (option) => [option.name, option]
+                )
+            )
+        ),
         {
             label: _t("Action Name"),
             name: "action_name",

@@ -17,7 +17,7 @@ test("the image should show its size", async () => {
     const selector = `[data-container-title="Image"] [title="Size"]`;
     await waitFor(selector);
     const size = parseFloat(document.querySelector(selector).innerHTML);
-    expectAround(size, 20.1);
+    expectAround(size, 22.8);
 });
 
 test("the background image should show its size", async () => {
@@ -31,7 +31,7 @@ test("the background image should show its size", async () => {
     const selector = `[data-label="Image"] [title="Size"]`;
     await waitFor(selector);
     const size = parseFloat(document.querySelector(selector).innerHTML);
-    expectAround(size, 20.1);
+    expectAround(size, 22.8);
 });
 
 function expectAround(value, expected, delta = 0.2) {

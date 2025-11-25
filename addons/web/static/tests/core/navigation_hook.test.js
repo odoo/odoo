@@ -377,3 +377,26 @@ test("active item is unset when focusing out", async () => {
     expect(".two").not.toHaveClass(ACTIVE_ELEMENT_CLASS);
     expect(component.navigation.activeItem).toBe(null);
 });
+
+test("set focused element as active item", async () => {
+    class Parent extends Component {
+        static props = [];
+        static template = xml`
+            <div class="container" t-ref="containerRef">
+                <input class="o-navigable one" id="input" t-ref="autofocus"/>
+                <button class="o-navigable two">target two</button>
+                <button class="o-navigable three">target three</button>
+            </div>
+        `;
+
+        setup() {
+            this.inputRef = useAutofocus();
+            this.navigation = useNavigation("containerRef");
+        }
+    }
+
+    const component = await mountWithCleanup(Parent);
+    expect(component.inputRef.el).toBeFocused();
+    expect(component.navigation.activeItem).not.toBeEmpty();
+    expect(component.navigation.activeItem.el).toBe(component.inputRef.el);
+});

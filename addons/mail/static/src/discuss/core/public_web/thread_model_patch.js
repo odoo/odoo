@@ -25,7 +25,6 @@ const threadPatch = {
                 return this._computeDiscussAppCategory();
             },
         });
-        this.isBusSubscribed = false;
         this.from_message_id = fields.One("mail.message");
         this.parent_channel_id = fields.One("Thread", {
             onDelete() {
@@ -38,11 +37,7 @@ const threadPatch = {
         });
         this.displayInSidebar = fields.Attr(false, {
             compute() {
-                return (
-                    this.displayToSelf ||
-                    this.isLocallyPinned ||
-                    this.sub_channel_ids.some((t) => t.displayInSidebar)
-                );
+                return this._computeDisplayInSidebar();
             },
         });
         this.loadSubChannelsDone = false;
@@ -51,6 +46,13 @@ const threadPatch = {
     },
     get canLeave() {
         return !this.parent_channel_id && super.canLeave;
+    },
+    _computeDisplayInSidebar() {
+        return (
+            this.displayToSelf ||
+            this.isLocallyPinned ||
+            this.sub_channel_ids.some((t) => t.displayInSidebar)
+        );
     },
     _computeDiscussAppCategory() {
         if (this.parent_channel_id) {
@@ -65,12 +67,6 @@ const threadPatch = {
     },
     get allowCalls() {
         return super.allowCalls && !this.parent_channel_id;
-    },
-    delete() {
-        if (this.model === "discuss.channel") {
-            this.store.env.services.bus_service.deleteChannel(this.busChannel);
-        }
-        super.delete(...arguments);
     },
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel_type);
@@ -132,17 +128,6 @@ const threadPatch = {
         super.onPinStateUpdated();
         if (this.self_member_id?.is_pinned) {
             this.isLocallyPinned = false;
-        }
-        if (this.isLocallyPinned) {
-            if (!this.isBusSubscribed) {
-                this.store.env.services["bus_service"].addChannel(this.busChannel);
-                this.isBusSubscribed = true;
-            }
-        } else {
-            if (this.isBusSubscribed) {
-                this.store.env.services["bus_service"].deleteChannel(this.busChannel);
-                this.isBusSubscribed = false;
-            }
         }
         if (!this.self_member_id?.is_pinned && !this.isLocallyPinned) {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));

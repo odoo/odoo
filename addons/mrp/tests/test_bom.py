@@ -2797,6 +2797,23 @@ class TestBoM(TestMrpCommon):
         mo = mo_form.save()
         self.assertEqual(mo.workorder_ids.operation_id, kit_bom.operation_ids.filtered(lambda op: op.bom_product_template_attribute_value_ids == blue))
 
+    def test_correct_bom_final_product_unit(self):
+        """
+        Checks if the Final product (tracked by lot) is manufactured with the correct unit.
+        """
+        final_product = self.env['product.product'].create(dict({'is_storable': True}, name="Product to manufacture"))
+        final_product.tracking = 'lot'
+        # Create MO.with a different UOM
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = final_product
+        mo_form.product_qty = 1
+        mo_form.product_uom_id = self.uom_dozen
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.finished_move_line_ids.product_uom_id, self.uom_dozen)
+
+
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
     @classmethod

@@ -3,13 +3,15 @@
 # * stock_delivery
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-17 17:30+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-12 15:06+0000\n"
+"Last-Translator: DeepL <noreply-mt-deepl@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "stock_delivery/tr/>\n"
 "Language: tr\n"
@@ -22,8 +24,9 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/sale_order.py:0
+#, fuzzy
 msgid "%(name)s (Estimated Cost: %(cost)s)"
-msgstr ""
+msgstr "%(name)s (Tahmini Maliyet: %(cost)s)"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
@@ -49,17 +52,19 @@ msgstr "<span>Nakliye Ağırlığı: </span>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr ""
+msgstr "<strong>Nakliyeci:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+#, fuzzy
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Taşıyıcı</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+#, fuzzy
 msgid "<strong>Shipping Method:</strong>"
-msgstr ""
+msgstr "<strong>Nakliye Yöntemi:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -77,13 +82,15 @@ msgstr ""
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+#, fuzzy
 msgid "<strong>Total Weight</strong>"
-msgstr ""
+msgstr "<strong>Toplam Ağırlık</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+#, fuzzy
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Takip Numarası</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -96,21 +103,25 @@ msgid ""
 "<strong>Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Ağırlık:</strong>\n"
+"                <br/>"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Teslimat emirlerini doğrularken alınacak aksiyon"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
+#, fuzzy
 msgid "Allowed Carrier"
-msgstr ""
+msgstr "İzin Verilen Taşıyıcı"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
+#, fuzzy
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Nakliye Yöntemlerinde Uygulanabilir"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -142,7 +153,7 @@ msgstr "Nakliyeci Kodu"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
 msgid "Carrier Type"
-msgstr ""
+msgstr "Taşıyıcı Türü"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
@@ -152,8 +163,9 @@ msgstr "Nakliyeci Adı"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
+#, fuzzy
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Maliyet: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
@@ -206,12 +218,18 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the "
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Tahmini Maliyet: müşteri, nakliye için tahmini maliyet üzerinden "
+"faturalandırılacaktır.\n"
+"Gerçek Maliyet: müşteri, nakliye için gerçek maliyet üzerinden "
+"faturalandırılacaktır, teslimattan sonra satış siparişi üzerinde nakliye "
+"maliyeti güncellenecektir."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
+#, fuzzy
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr ""
+msgstr "Transferde taşıyıcı ile ilgili istisna oluştu"
 
 #. module: stock_delivery
 #. odoo-python
@@ -252,7 +270,7 @@ msgstr "ID"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Entegrasyon Seviyesi"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
@@ -272,8 +290,9 @@ msgstr "Ters Transfer"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
+#, fuzzy
 msgid "Manual actions might be needed."
-msgstr ""
+msgstr "Manuel işlemler gerekebilir."
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -325,8 +344,9 @@ msgstr "Sağlayıcı"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_put_in_pack
+#, fuzzy
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "Paket Sihirbazına Koyun"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
@@ -385,10 +405,13 @@ msgstr "Nakliyeciye Gönder"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
+#, fuzzy
 msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
 "(ref)s"
 msgstr ""
+"Gönderi, takip numarasıyla birlikte nakliye için %(carrier_name)s adresine "
+"gönderildi %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -419,8 +442,9 @@ msgstr "Kargo Ağırlığı:"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
+#, fuzzy
 msgid "Standardized code for international shipping and goods declaration."
-msgstr ""
+msgstr "Uluslararası nakliye ve mal beyanı için standartlaştırılmış kod."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -471,10 +495,13 @@ msgstr "Teslimat tamamlandıktan sonra nakliye fiyatı belirlenecektir."
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
+#, fuzzy
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "its package type. Please choose another package."
 msgstr ""
+"Paketinizin ağırlığı, paket türü için izin verilen maksimum ağırlıktan daha "
+"yüksek. Lütfen başka bir paket seçin."
 
 #. module: stock_delivery
 #. odoo-python
@@ -525,8 +552,9 @@ msgstr "Takip URL"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
+#, fuzzy
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Sevkiyat için takip bağlantıları:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -566,11 +594,15 @@ msgstr "Ağırlık:"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "You cannot pack products into the same package when they have different "
 "carriers (i.e. check that all of their transfers have a carrier assigned and "
 "are using the same carrier)."
 msgstr ""
+"Farklı taşıyıcıları olan ürünleri aynı pakette paketleyemezsiniz (yani, tüm "
+"transferlerine bir taşıyıcı atandığını ve aynı taşıyıcıyı kullandıklarını "
+"kontrol edin)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -609,13 +641,15 @@ msgstr "^FO310,200"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
+#, fuzzy
 msgid "^FO35, 180 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 180 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
+#, fuzzy
 msgid "^FO35, 220 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 220 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label

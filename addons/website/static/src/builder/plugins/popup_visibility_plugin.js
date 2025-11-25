@@ -2,11 +2,18 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
+/**
+ * @typedef { Object } PopupVisibilityShared
+ * @property { PopupVisibilityPlugin['onTargetHide'] } onTargetHide
+ * @property { PopupVisibilityPlugin['onTargetShow'] } onTargetShow
+ */
+
 export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
     static dependencies = ["visibility", "history"];
     static shared = ["onTargetShow", "onTargetHide"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),

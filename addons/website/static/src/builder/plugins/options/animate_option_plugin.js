@@ -12,10 +12,23 @@ import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/positio
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 
+/**
+ * @typedef { Object } AnimateOptionShared
+ * @property { AnimateOptionPlugin['forceAnimation'] } forceAnimation
+ * @property { AnimateOptionPlugin['getDirectionsItems'] } getDirectionsItems
+ * @property { AnimateOptionPlugin['getEffectsItems'] } getEffectsItems
+ */
+
+/**
+ * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} remove_hover_effect_handlers
+ * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} set_hover_effect_handlers
+ */
+
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["history", "selection", "split"];
     static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(ANIMATE, AnimateOption)],
         toolbar_items: [

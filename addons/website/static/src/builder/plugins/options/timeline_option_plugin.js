@@ -32,6 +32,7 @@ export class DotColorOption extends BaseOptionComponent {
 
 class TimelineOptionPlugin extends Plugin {
     static id = "timelineOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(TIMELINE, TimelineOption),

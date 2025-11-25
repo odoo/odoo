@@ -12,6 +12,7 @@ export class MapOption extends BaseOptionComponent {
 
 class MapOptionPlugin extends Plugin {
     static id = "mapOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [MapOption],
         so_content_addition_selector: [".s_map"],

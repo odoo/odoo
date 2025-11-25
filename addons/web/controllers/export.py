@@ -312,7 +312,8 @@ class Export(http.Controller):
             definition_record = field['definition_record']
             definition_record_field = field['definition_record_field']
 
-            target_model = Model.env[Model._fields[definition_record].comodel_name]
+            # sudo(): user may lack access to property definition model
+            target_model = Model.env[Model._fields[definition_record].comodel_name].sudo()
             domain_definition = [(definition_record_field, '!=', False)]
             # Depends of the records selected to avoid showing useless Properties
             if domain:
@@ -566,7 +567,7 @@ class ExportFormat(object):
         groupby = params.get('groupby')
         if not import_compat and groupby:
             export_data = records.export_data(['.id'] + field_names).get('datas', [])
-            groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
+            groupby_type = [Model._fields[x.split(':', 1)[0].split('.', 1)[0]].type for x in groupby]
             tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             if ids:
                 domain = [('id', 'in', ids)]

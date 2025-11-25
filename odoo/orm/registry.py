@@ -135,6 +135,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
+        models_to_check: set[str] | None = None,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
@@ -189,6 +190,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     install_modules=install_modules,
                     reinit_modules=reinit_modules,
                     new_db_demo=new_db_demo,
+                    models_to_check=models_to_check,
                 )
             except Exception:
                 reset_modules_state(db_name)

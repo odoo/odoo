@@ -49,7 +49,7 @@ function getRecordsUntilSection(list, record, asc, subSection) {
     }
 
     const sectionRecords = [];
-    let index = list.records.indexOf(record);
+    let index = list.records.findIndex(listRecord => listRecord.id === record.id);
     if (asc) {
         sectionRecords.push(list.records[index]);
         index++;
@@ -113,24 +113,16 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return this.record.data.collapse_prices;
     }
 
-    get hideCompositions() {
+    get hideComposition() {
         return this.record.data.collapse_composition;
     }
 
-    get showPricesButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.collapse_prices && !parentRecord?.data?.collapse_composition;
-        }
-        return true;
+    get disablePricesButton() {
+        return this.shouldCollapse(this.record, 'collapse_prices') || this.disableCompositionButton;
     }
 
-    get showCompositionButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.collapse_composition;
-        }
-        return true;
+    get disableCompositionButton() {
+        return this.shouldCollapse(this.record, 'collapse_composition');
     }
 
     async toggleCollapse(record, fieldName) {
@@ -185,11 +177,18 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             this.props.list.records.indexOf(record) +
             getSectionRecords(this.props.list, record, !addSubSection).length -
             1;
-        const context = {};
+        const context = this.getInsertLineContext(record, addSubSection);
         if (addSubSection) {
             context["default_display_type"] = DISPLAY_TYPES.SUBSECTION;
         }
         await this.props.list.addNewRecordAtIndex(index, { context });
+    }
+
+    /**
+     * Hook for other modules to conditionally specify defaults for new lines
+     */
+    getInsertLineContext(_record, _addSubSection) {
+        return {};
     }
 
     canUseFormatter(column, record) {
@@ -325,21 +324,40 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      * - If the parent is a subsection: use parent subsection OR its section.
      * @param {object} record
      * @param {string} fieldName
+     * @param {boolean} checkSection - if true, also evaluates the collapse state for section or
+     *  subsection records
      * @returns {boolean}
      */
-    shouldCollapse(record, fieldName) {
+    shouldCollapse(record, fieldName, checkSection = false) {
+        const parentSection = getParentSectionRecord(this.props.list, record);
+
+        // --- For sections ---
+        if (this.isSection(record) && checkSection) {
+            if (this.isTopSection(record)) {
+                return record.data[fieldName];
+            }
+            if (this.isSubSection(record)) {
+                return record.data[fieldName] || parentSection?.data[fieldName];
+            }
+            return false;
+        }
+
+        // `line_section` never collapses unless explicitly checked above
         if (this.isTopSection(record)) {
             return false;
-        } else {
-            const parentSection = getParentSectionRecord(this.props.list, record);
-            if (parentSection?.data.display_type === DISPLAY_TYPES.SUBSECTION) {
-                return (
-                    parentSection.data[fieldName]
-                    || getParentSectionRecord(this.props.list, parentSection)?.data[fieldName]
-                );
-            }
-            return parentSection?.data[fieldName];
         }
+
+        if (!parentSection) {
+            return false;
+        }
+
+        // --- For regular lines ---
+        if (this.isSubSection(parentSection)) {
+            const grandParent = getParentSectionRecord(this.props.list, parentSection);
+            return parentSection.data[fieldName] || grandParent?.data[fieldName];
+        }
+
+        return !!parentSection.data[fieldName];
     }
 
     getRowClass(record) {
@@ -453,6 +471,41 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             }));
         }
         await this.props.list.applyCommands(commands, { sort: true });
+    }
+
+    /**
+     * @override
+     * Reset the values of `collapse_` fields of the subsection if it is dragged
+     */
+    async sortDrop(dataRowId, dataGroupId, options) {
+        await super.sortDrop(dataRowId, dataGroupId, options);
+
+        const record = this.props.list.records.find(r => r.id === dataRowId);
+        const parentSection = getParentSectionRecord(this.props.list, record);
+        const commands = [];
+
+        if (this.resetOnResequence(record, parentSection)) {
+            commands.push(x2ManyCommands.update(record.resId || record._virtualId, {
+                ...this.fieldsToReset(),
+            }));
+        }
+
+        await this.props.list.applyCommands(commands);
+    }
+
+    resetOnResequence(record, parentSection) {
+        return (
+            this.isSubSection(record)
+            && parentSection?.data.collapse_composition
+            && (record.data.collapse_composition || record.data.collapse_prices)
+        );
+    }
+
+    fieldsToReset() {
+        return {
+            ...(this.props.hideComposition && { collapse_composition: false }),
+            ...(this.props.hidePrices && { collapse_prices: false }),
+        };
     }
 }
 

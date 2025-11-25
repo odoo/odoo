@@ -23,6 +23,14 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  * @property { SplitPlugin['splitSelection'] } splitSelection
  */
 
+/**
+ * @typedef {(() => void)[]} before_split_block_handlers
+ *
+ * @typedef {((params: { targetNode: Node, targetOffset: number, blockToSplit: HTMLElement | null }) => void | true)[]} split_element_block_overrides
+ *
+ * @typedef {((node: Node) => boolean)[]} unsplittable_node_predicates
+ */
+
 export class SplitPlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input", "delete", "lineBreak"];
     static id = "split";
@@ -35,6 +43,7 @@ export class SplitPlugin extends Plugin {
         "splitSelection",
         "isUnsplittable",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
 
@@ -70,6 +79,11 @@ export class SplitPlugin extends Plugin {
             },
             (node) => node.nodeName === "SECTION",
         ],
+        selection_blocker_predicates: (blocker) => {
+            if (this.isUnsplittable(blocker)) {
+                return true;
+            }
+        },
     };
 
     // --------------------------------------------------------------------------

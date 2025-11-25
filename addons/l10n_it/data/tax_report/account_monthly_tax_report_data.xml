@@ -148,14 +148,14 @@
                             <record id="tax_monthly_report_line_vp6_vp6a_debit" model="account.report.expression">
                                 <field name="label">debit</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">VP4.debit - VP5.credit</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="formula">VP4.debit + VP5.credit</field>
+                                <field name="subformula">if_below(EUR(0))</field>
                                 <field name="blank_if_zero" eval="True"/>
                             </record>
                             <record id="tax_monthly_report_line_vp6_vp6b_credit" model="account.report.expression">
                                 <field name="label">credit</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">-(VP4.debit - VP5.credit)</field>
+                                <field name="formula">VP4.debit + VP5.credit</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                                 <field name="blank_if_zero" eval="True"/>
                             </record>

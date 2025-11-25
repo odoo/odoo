@@ -274,6 +274,12 @@
                     <th name="th_position" class="text-start">Position</th>
                 </t>
             </xpath>
+            <!-- Insert Empty Column for Position Numbers to Handle Section Misalignment -->
+            <xpath expr="//td[@name='line_name_td']" position="after">
+                <t t-if="o.company_id.has_position_column">
+                    <td/>
+                </t>
+            </xpath>
 
             <xpath expr="//table[@name='invoice_line_table']/tbody//t[1]" position="before">
                 <t t-if="o.company_id.has_position_column">

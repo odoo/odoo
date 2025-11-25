@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 08:42+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-14 09:09+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/nl/>\n"
@@ -194,7 +194,7 @@ msgstr "Ga naar het configuratiepaneel"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
 msgid "Has Check Layout"
-msgstr "Heeft cheque-layout"
+msgstr "Heeft cheque-lay-out"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -255,6 +255,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Handmatig: Betalen of betaald worden via een methode buiten Odoo.\n"
+"Betalingsproviders: Elke betaalprovider heeft zijn eigen betaalmethode. "
+"Vraag een transactie aan op/naar een kaart dankzij een betalingstoken dat "
+"door de partner is opgeslagen bij online aankopen of abonnementen.\n"
+"Cheque: Betaal leveranciersfacturen per cheque en druk deze af vanuit Odoo.\n"
+"Batchbetaling: Verzamel meerdere cheques van klanten tegelijk en genereer en "
+"verstuur een batchdeposito naar je bank. Module account_batch_payment is "
+"vereist.\n"
+"SEPA-overschrijving: Betaal in de SEPA-zone door een SEPA-overschrijving "
+"bestand in te dienen bij je bank. Module account_iso20022 is vereist.\n"
+"SEPA-incassomandaat: Word betaald in de SEPA-zone dankzij een mandaat dat je "
+"partner je heeft gegeven. Module account_iso20022 is vereist.\n"
+"VS ISO20022: Betaal in de VS door een ISO20022-bestand in te dienen bij je "
+"bank. Module account_iso20022 is vereist.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -390,6 +404,14 @@ msgid ""
 msgstr ""
 "Er is iets misgegaan met de lay-out controleren, selecteer een andere lay-"
 "out in de instellingen voor facturering/boekhouding en probeer het opnieuw."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
 
 #. module: account_check_printing
 #. odoo-python

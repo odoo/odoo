@@ -32,6 +32,7 @@ export class ComboConfiguratorDialog extends Component {
             optional: true,
             shape: {
                 showQuantity : { type: Boolean, optional: true },
+                showPrice : { type: Boolean, optional: true },
             },
         },
         save: Function,

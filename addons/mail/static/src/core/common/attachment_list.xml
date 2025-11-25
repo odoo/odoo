@@ -14,8 +14,10 @@
                      class="o-mail-AttachmentContainer d-flex border position-relative rounded-3"
                      t-att-title="attachment.name ? attachment.name : undefined"
                      t-att-class="{
-                        'o-viewable': attachment.isViewable,
+                        'o-inMessage': env.inMessage,
+                        'o-isImage': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
+                        'o-viewable': attachment.isViewable,
                     }"
                      tabindex="0"
                      t-att-data-mimetype="attachment.mimetype"
@@ -28,11 +30,12 @@
                         src="getImageUrl(attachment)"
                         paused="attachment.gifPaused"
                         alt="attachment.name"
-                        class="'o-mail-AttachmentImage img img-fluid object-fit-cover w-100 rounded-3'"
+                        class="'o-mail-AttachmentImage img img-fluid w-100 rounded-3 ' + (env.inMessage ? 'object-fit-contain o-inMessage' : 'object-fit-cover')"
                     />
                     <img
                         t-elif="attachment.isImage"
-                        class="o-mail-AttachmentImage img img-fluid object-fit-cover w-100 rounded-3"
+                        class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
+                        t-att-class="{ 'object-fit-contain o-inMessage': env.inMessage, 'object-fit-cover': !env.inMessage }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
                         t-on-load="onImageLoaded"

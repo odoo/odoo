@@ -8,6 +8,7 @@ import { GridImageOption } from "./grid_image_option";
 class GridImageOptionPlugin extends Plugin {
     static id = "gridImageOption";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(GRID_IMAGE, GridImageOption)],
         builder_actions: {

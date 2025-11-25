@@ -7,6 +7,13 @@ import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef { Object } NavTabsStyleOptionShared
+ * @property { NavTabsStyleOptionPlugin['isNavItem'] } isNavItem
+ * @property { NavTabsStyleOptionPlugin['getActiveOverlayButtons'] } getActiveOverlayButtons
+ * @property { NavTabsStyleOptionPlugin['moveNavItem'] } moveNavItem
+ */
+
 export class NavTabsStyleOption extends BaseOptionComponent {
     static template = "website.NavTabsStyleOption";
     static selector = ".s_tabs";
@@ -22,6 +29,7 @@ export class NavTabsImagesStyleOption extends BaseOptionComponent {
 class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
     static shared = ["isNavItem", "getActiveOverlayButtons", "moveNavItem"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC_END, NavTabsStyleOption),

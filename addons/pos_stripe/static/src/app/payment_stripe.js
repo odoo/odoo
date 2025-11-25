@@ -20,7 +20,7 @@ export class PaymentStripe extends PaymentInterface {
     async stripeFetchConnectionToken() {
         // Do not cache or hardcode the ConnectionToken.
         try {
-            const data = await this.pos.data.silentCall(
+            const data = await this.pos.data.call(
                 "pos.payment.method",
                 "stripe_connection_token",
                 []
@@ -237,7 +237,7 @@ export class PaymentStripe extends PaymentInterface {
 
     async capturePaymentStripe(paymentIntentId, amount = null, context = {}) {
         try {
-            const data = await this.pos.data.silentCall(
+            const data = await this.pos.data.call(
                 "pos.payment.method",
                 "stripe_capture_payment",
                 [paymentIntentId],
@@ -259,11 +259,10 @@ export class PaymentStripe extends PaymentInterface {
 
     async fetchPaymentIntentClientSecret(payment_method, amount) {
         try {
-            const data = await this.pos.data.silentCall(
-                "pos.payment.method",
-                "stripe_payment_intent",
-                [[payment_method.id], amount]
-            );
+            const data = await this.pos.data.call("pos.payment.method", "stripe_payment_intent", [
+                [payment_method.id],
+                amount,
+            ]);
             if (data.error) {
                 throw data.error;
             }

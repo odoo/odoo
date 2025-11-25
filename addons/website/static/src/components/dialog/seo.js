@@ -952,6 +952,9 @@ export class OptimizeSEODialog extends Component {
         this.contentClass = "oe_seo_configuration";
 
         onWillStart(async () => {
+            // Wait for the preview iframe because this dialog reads directly
+            // from the iframe DOM.
+            await this.waitForIframe();
             const {
                 metadata: { mainObject, seoObject, path },
             } = this.website.currentWebsite;
@@ -995,6 +998,18 @@ export class OptimizeSEODialog extends Component {
 
             this.canEditKeywords = "website_meta_keywords" in this.data;
             seoContext.keywords = this.getMeta({ name: "keywords" });
+        });
+    }
+
+    async waitForIframe() {
+        await new Promise((resolve) => {
+            const iframeEl = document.querySelector(
+                ".o_iframe_container > iframe:not(.o_ignore_in_tour)"
+            );
+            if (!iframeEl || iframeEl.contentDocument?.readyState === "complete") {
+                return resolve();
+            }
+            iframeEl.addEventListener("load", resolve, { once: true });
         });
     }
 

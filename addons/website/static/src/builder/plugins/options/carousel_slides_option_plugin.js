@@ -13,6 +13,7 @@ export class CarouselSlidesOption extends BaseOptionComponent {
 
 export class CarouselSlidesOptionPlugin extends Plugin {
     static id = "carouselSlidesOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(SNIPPET_SPECIFIC_END, CarouselSlidesOption)],
         builder_actions: {

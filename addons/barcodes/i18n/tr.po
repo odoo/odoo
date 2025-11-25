@@ -14,13 +14,16 @@
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 02:35+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-11-21 14:44+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/barcodes/"
 "tr/>\n"
 "Language: tr\n"
@@ -34,7 +37,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' geçerli bir Regex Barkod Kalıbı değildir. '.*' mi demek istediniz?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -98,7 +101,7 @@ msgstr "Hiç"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/manual_barcode.xml:0
 msgid "Apply"
-msgstr ""
+msgstr "Uygula"
 
 #. module: barcodes
 #. odoo-javascript
@@ -145,7 +148,7 @@ msgstr "Barcode Tarandı"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
-msgstr ""
+msgstr "Barkod: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -197,7 +200,7 @@ msgstr "Kodlama"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/manual_barcode.js:0
 msgid "Enter a barcode..."
-msgstr ""
+msgstr "Bir barkod girin..."
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -220,6 +223,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"barcodes.barcode_events_mixin kullanmak için on_barcode_scanned yöntemi "
+"uygulanmalıdır"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -258,6 +263,15 @@ msgid ""
 "<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Kalıplar ayrıca ağırlık veya fiyat gibi sayısal değerlerin nasıl\n"
+"                                barkod içine kodlanacağını da tanımlar. "
+"Bunlar <code>{NNN}</code> ile gösterilir; burada N'ler\n"
+"                                sayının rakamlarının nerede kodlanacağını "
+"tanımlar. Ondalık değerler de desteklenir ve ondalık basamaklar D harfiyle "
+"ifade edilir; örneğin <code>{NNNDD}</code>  gibi. Bu durumlarda,\n"
+"                                ilişkili kayıtlardaki barkod alanı bu "
+"rakamları sıfır \n"
+" olarak <i> göstermelidir </i>"
 
 #. module: barcodes
 #. odoo-javascript
@@ -301,7 +315,7 @@ msgstr "Barkod eşleşme kalıbı"
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
-msgstr ""
+msgstr "%(pattern)s barkod deseni geçerli bir düzenli ifadeye yol açmaz."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -411,6 +425,8 @@ msgstr "Son taranan barkodun değeri"
 msgid ""
 "You cannot delete '%(name)s' because it's the default barcode nomenclature."
 msgstr ""
+"Varsayılan barkod isimlendirmesi olduğu için '%(name)s' adresini "
+"silemezsiniz."
 
 #~ msgid "Barcode: "
 #~ msgstr "Barkod:"

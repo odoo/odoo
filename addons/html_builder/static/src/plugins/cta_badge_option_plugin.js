@@ -12,6 +12,7 @@ export class CTABadgeOption extends BaseOptionComponent {
 
 class CTABadgeOptionPlugin extends Plugin {
     static id = "ctaBadgeOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [CTABadgeOption],
         so_content_addition_selector: [".s_cta_badge"],

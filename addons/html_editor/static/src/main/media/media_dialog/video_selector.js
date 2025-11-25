@@ -71,7 +71,6 @@ export class VideoSelector extends Component {
             youtube: "youtube",
             dailymotion: "dailymotion",
             vimeo: "vimeo",
-            youku: "youku",
         };
 
         this.platformParams = {
@@ -86,7 +85,6 @@ export class VideoSelector extends Component {
                 description: _t("Videos are muted when autoplay is enabled"),
                 platforms: [
                     this.PLATFORMS.youtube,
-                    this.PLATFORMS.dailymotion,
                     this.PLATFORMS.vimeo,
                 ],
                 urlParameter: () => "autoplay=1",
@@ -100,7 +98,6 @@ export class VideoSelector extends Component {
                 label: _t("Hide player controls"),
                 platforms: [
                     this.PLATFORMS.youtube,
-                    this.PLATFORMS.dailymotion,
                     this.PLATFORMS.vimeo,
                 ],
                 urlParameter: () => "controls=0",
@@ -111,16 +108,6 @@ export class VideoSelector extends Component {
                 urlParameter: () => "fs=0",
                 isHidden: () =>
                     this.state.options.filter((option) => option.id === "hide_controls")[0].value,
-            },
-            hide_dm_logo: {
-                label: _t("Hide Dailymotion logo"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: () => "ui-logo=0",
-            },
-            hide_dm_share: {
-                label: _t("Hide sharing button"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: () => "sharing-enable=0",
             },
             start_from: {
                 label: _t("Start at"),
@@ -423,7 +410,7 @@ export class VideoSelector extends Component {
      * @returns {string} - The start time in seconds.
      */
     parseTimeToSeconds(value) {
-        const match = value.match(/^(?:(\d+)m(\d+)s|(\d+)m|(\d+)s|(\d+))$/);
+        const match = value?.match(/^(?:(\d+)m(\d+)s|(\d+)m|(\d+)s|(\d+))$/);
         if (!match) {
             return value;
         }

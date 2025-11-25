@@ -413,6 +413,17 @@ describe("row", () => {
                         </tbody>
                     </table>
                 `),
+                contentBeforeEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
                 stepFunction: removeRow(),
                 contentAfter: "<p>[]<br></p>",
             });
@@ -702,6 +713,16 @@ describe("column", () => {
                         </tbody>
                     </table>
                 `),
+                contentBeforeEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr> <td>[]ab</td> </tr>
+                            <tr> <td>cd</td> </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
                 stepFunction: removeColumn(),
                 contentAfter: "<p>[]<br></p>",
             });
@@ -723,7 +744,8 @@ describe("tab", () => {
 
         await press("Tab");
 
-        const expectedContent = unformat(`
+        const expectedContent = unformat(
+            `<p data-selection-placeholder=""><br></p>
             <table><tbody>
                 <tr style="height: 20px;">
                     <td style="width: 20px;">ab</td>
@@ -735,13 +757,19 @@ describe("tab", () => {
                     <td><p><br></p></td>
                     <td><p><br></p></td>
                 </tr>
-            </tbody></table>`);
+            </tbody></table>
+            <p data-selection-placeholder=""><br></p>`
+        );
 
         expect(getContent(el)).toBe(expectedContent);
 
         // Check that it was registed as a history step.
         undo(editor);
-        expect(getContent(el)).toBe(contentBefore);
+        expect(getContent(el)).toBe(
+            '<p data-selection-placeholder=""><br></p>' +
+                contentBefore +
+                '<p data-selection-placeholder=""><br></p>'
+        );
     });
 
     test("should not select whole text of the next cell", async () => {

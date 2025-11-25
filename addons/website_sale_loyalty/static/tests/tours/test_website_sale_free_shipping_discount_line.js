@@ -15,7 +15,7 @@ function assertRewardAmounts(rewards) {
     for (const [reward, amount] of Object.entries(rewards)) {
         steps.push({
             content: `check if ${reward} reward is correct`,
-            trigger: `[data-reward-type=${reward}] ${currencyValue}:contains(/^${amount}$/)`,
+            trigger: `[data-reward-type=${reward}] ${currencyValue}:text(${amount})`,
         });
     }
     return steps;
@@ -121,11 +121,11 @@ webTours.add("update_shipping_after_discount", {
         }),
         {
             content: "check discount code discount doesn't apply to shipping",
-            trigger: '[data-reward-type=discount] .oe_currency_value:contains(/^- 50.00$/)',
+            trigger: '[data-reward-type=discount] .oe_currency_value:text(- 50.00)',
         },
         {
             content: "check eWallet discount applies to shipping ($50 for Plumbus + $5 for delivery)",
-            trigger: '[data-reward-type=discount] .oe_currency_value:contains(/^- 55.00$/)',
+            trigger: '[data-reward-type=discount] .oe_currency_value:text(- 55.00)',
         },
     ],
 });

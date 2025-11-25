@@ -12,12 +12,33 @@ import {
 import { Plugin } from "../../plugin";
 import { getAffineApproximation, getProjective } from "@html_editor/utils/perspective_utils";
 
-export const DEFAULT_IMAGE_QUALITY = "75";
+export const DEFAULT_IMAGE_QUALITY = "92";
 
 /**
  * @typedef { Object } ImagePostProcessShared
  * @property { ImagePostProcessPlugin['processImage'] } processImage
  * @property { ImagePostProcessPlugin['getProcessedImageSize'] } getProcessedImageSize
+ */
+
+/**
+ * @typedef {(
+ *   (img: HTMLImageElement, newDataset: object) => Promise<{
+ *     getHeight: (canvas: HTMLCanvasElement) => number,
+ *     perspective: string | null,
+ *     newDataset: object,
+ *     postProcessCroppedCanvas: (canvas: HTMLCanvasElement) => Promise<HTMLCanvasElement>,
+ *     svg: SVGElement,
+ *     svgAspectRatio: number,
+ *     svgWidth: number,
+ *   }>
+ * )[]} process_image_warmup_handlers
+ * @typedef {(
+ *   (
+ *     url: string,
+ *     newDataset: object,
+ *     processContext: { svg: SVGElement, svgAspectRatio: number, svgWidth: number }
+ *   ) => Promise<[newUrl: string, handlerDataset: object]>
+ * )[]} process_image_post_handlers
  */
 
 export class ImagePostProcessPlugin extends Plugin {
@@ -269,6 +290,7 @@ export class ImagePostProcessPlugin extends Plugin {
                 delete el.dataset[key];
             }
         }
+        this.dispatchTo("on_image_updated_handlers", { imageEl: el });
     }
 }
 

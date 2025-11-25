@@ -67,6 +67,10 @@ export class TurnStile {
      * @param {HTMLElement} el
      */
     static clean(el) {
+        const submitButtons = el.querySelectorAll(".cf_form_disabled");
+        submitButtons.forEach(button => {
+            button.classList.remove("disabled", "cf_form_disabled");
+        });
         const turnstileEls = el.querySelectorAll(".s_turnstile");
         turnstileEls.forEach(element => element.remove());
     }

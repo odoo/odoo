@@ -531,6 +531,9 @@ class IrQwebFieldImage(models.AbstractModel):
             return None
 
     def load_remote_url(self, url):
+        if url.startswith('data:'):
+            logger.debug("Cannot load binary data url %r", url)
+            return None
         try:
             # should probably remove remote URLs entirely:
             # * in fields, downloading them without blowing up the server is a

@@ -752,9 +752,15 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abcd</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "abcd" }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "abcd" }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]cd"
-                    contentAfterEdit: highlightedPre({ value: "abd", textareaRange: 2 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "abd", textareaRange: 2 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">abd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -764,9 +770,15 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     abcd</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "     abcd" }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "     abcd" }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(7), // "     ab[]cd"
-                    contentAfterEdit: highlightedPre({ value: "     abd", textareaRange: 7 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "     abd", textareaRange: 7 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">     abd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -776,9 +788,15 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abcd     </pre>",
-                    contentBeforeEdit: highlightedPre({ value: "abcd     " }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "abcd     " }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]cd     "
-                    contentAfterEdit: highlightedPre({ value: "abd     ", textareaRange: 2 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "abd     ", textareaRange: 2 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">abd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -788,9 +806,15 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     abcd     </pre>",
-                    contentBeforeEdit: highlightedPre({ value: "     abcd     " }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "     abcd     " }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(7), // "     ab[]cd     "
-                    contentAfterEdit: highlightedPre({ value: "     abd     ", textareaRange: 7 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "     abd     ", textareaRange: 7 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">     abd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -800,9 +824,15 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     ab</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "     ab" }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "     ab" }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "  []   ab"
-                    contentAfterEdit: highlightedPre({ value: "    ab", textareaRange: 2 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "    ab", textareaRange: 2 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">    ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -812,9 +842,15 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>ab\ncd</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "ab\ncd" }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "ab\ncd" }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]\ncd"
-                    contentAfterEdit: highlightedPre({ value: "abcd", textareaRange: 2 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "abcd", textareaRange: 2 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -824,7 +860,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     ab</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "     ab" }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "     ab" }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: async (editor) => {
                         await testDeleteInCodeBlock(0)(editor); // "[]     ab"
                         await testDeleteInCodeBlock(0)(editor); // "[]    ab"
@@ -832,7 +871,10 @@ describe("Selection collapsed", () => {
                         await testDeleteInCodeBlock(0)(editor); // "[]  ab"
                         await testDeleteInCodeBlock(0)(editor); // "[] ab"
                     },
-                    contentAfterEdit: highlightedPre({ value: "ab", textareaRange: 0 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "ab", textareaRange: 0 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -842,7 +884,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>ab     </pre>",
-                    contentBeforeEdit: highlightedPre({ value: "ab     " }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "ab     " }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: async (editor) => {
                         await testDeleteInCodeBlock(2)(editor); // "ab[]     "
                         await testDeleteInCodeBlock(2)(editor); // "ab[]    "
@@ -850,7 +895,10 @@ describe("Selection collapsed", () => {
                         await testDeleteInCodeBlock(2)(editor); // "ab[]  "
                         await testDeleteInCodeBlock(2)(editor); // "ab[] "
                     },
-                    contentAfterEdit: highlightedPre({ value: "ab", textareaRange: 2 }),
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "ab", textareaRange: 2 }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -1131,6 +1179,7 @@ describe("Selection collapsed", () => {
                                 <p>content</p>
                             </div>
                         </div>
+                        <p data-selection-placeholder=""><br></p>
                     `),
                 stepFunction: deleteForward,
                 contentAfter: unformat(`

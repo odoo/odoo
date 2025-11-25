@@ -70,7 +70,7 @@ class SaleOrderLine(models.Model):
     is_configurable_product = fields.Boolean(
         string="Is the product configurable?",
         related='product_template_id.has_configurable_attributes',
-        depends=['product_id'])
+        depends=['product_template_id'])
     is_downpayment = fields.Boolean(
         string="Is a down payment",
         help="Down payments are made when creating invoices from a sales order."
@@ -147,6 +147,7 @@ class SaleOrderLine(models.Model):
     linked_line_ids = fields.One2many(
         string="Linked Order Lines", comodel_name='sale.order.line', inverse_name='linked_line_id',
     )
+    categ_id = fields.Many2one(related='product_id.categ_id')
     # Uniquely identifies this sale order line before the record is saved in the DB, i.e. before the
     # record has an `id`.
     virtual_id = fields.Char()
@@ -287,6 +288,18 @@ class SaleOrderLine(models.Model):
         compute='_compute_amount_to_invoice',
         compute_sudo=True,  # ensure same access as `untaxed_amount_to_invoice`
     )
+    amount_to_invoice_at_date = fields.Float(string='Amount', compute='_compute_amount_to_invoice_at_date')
+
+    # Same than `qty_delivered` and `qty_invoiced` but non-stored and depending of the context.
+    qty_delivered_at_date = fields.Float(
+        string="Delivered",
+        compute='_compute_qty_delivered_at_date',
+        digits='Product Unit')
+    qty_invoiced_at_date = fields.Float(
+        string="Invoiced",
+        compute='_compute_qty_invoiced_at_date',
+        digits='Product Unit')
+
     # Technical field holding custom data for the taxes computation engine.
     extra_tax_data = fields.Json()
 
@@ -302,7 +315,7 @@ class SaleOrderLine(models.Model):
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
     company_price_include = fields.Selection(related="company_id.account_price_include")
-    sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
+    sale_line_warn_msg = fields.Text(compute='_compute_sale_line_warn_msg')
 
     # Section-related fields
     parent_id = fields.Many2one(
@@ -513,6 +526,12 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_uom_id or (line.product_id.uom_id.id != line.product_uom_id.id):
                 line.product_uom_id = line.product_id.uom_id
+
+    @api.depends('product_id.sale_line_warn_msg')
+    def _compute_sale_line_warn_msg(self):
+        has_warning_group = self.env.user.has_group('sale.group_warning_sale')
+        for line in self:
+            line.sale_line_warn_msg = line.product_id.sale_line_warn_msg if has_warning_group else ""
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
     def _compute_allowed_uom_ids(self):
@@ -876,11 +895,31 @@ class SaleOrderLine(models.Model):
             take their concerned so lines, compute and set the `qty_delivered` field, and call super with the remaining
             records.
         """
+        delivered_qties = self._prepare_qty_delivered()
+        for so_line in self:
+            if not so_line.qty_delivered or so_line in delivered_qties:
+                so_line.qty_delivered = delivered_qties[so_line]
+
+    @api.depends('qty_delivered')
+    @api.depends_context('accrual_entry_date')
+    def _compute_qty_delivered_at_date(self):
+        if not self._date_in_the_past():
+            # Avoid useless compute if we don't look in the past.
+            for line in self:
+                line.qty_delivered_at_date = line.qty_delivered
+            return
+        delivered_qties = self._prepare_qty_delivered()
+        for line in self:
+            line.qty_delivered_at_date = delivered_qties[line]
+
+    def _prepare_qty_delivered(self):
         # compute for analytic lines
+        delivered_qties = defaultdict(float)
         lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
-            so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
+            delivered_qties[so_line] = mapping.get(so_line.id or so_line._origin.id, 0.0)
+        return delivered_qties
 
     def _get_downpayment_state(self):
         self.ensure_one()
@@ -897,8 +936,8 @@ class SaleOrderLine(models.Model):
         return ''
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
-        """ Compute and write the delivered quantity of current SO lines, based on their related
-            analytic lines.
+        """ Compute and return the delivered quantity of current SO lines,
+            based on their related analytic lines.
             :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
         """
         result = defaultdict(float)
@@ -937,15 +976,33 @@ class SaleOrderLine(models.Model):
         a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
         it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
         """
+        invoiced_quantities = self._prepare_qty_invoiced()
         for line in self:
-            qty_invoiced = 0.0
+            line.qty_invoiced = invoiced_quantities[line]
+
+    @api.depends('qty_invoiced')
+    @api.depends_context('accrual_entry_date')
+    def _compute_qty_invoiced_at_date(self):
+        if not self._date_in_the_past():
+            # Avoid useless compute if we don't look in the past.
+            for line in self:
+                line.qty_invoiced_at_date = line.qty_invoiced
+            return
+        invoiced_quantities = self._prepare_qty_invoiced()
+        for line in self:
+            line.qty_invoiced_at_date = invoiced_quantities[line]
+
+    def _prepare_qty_invoiced(self):
+        invoiced_qties = defaultdict(float)
+        for line in self:
             for invoice_line in line._get_invoice_lines():
                 if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
+                    invoice_qty = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom_id)
                     if invoice_line.move_id.move_type == 'out_invoice':
-                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom_id)
+                        invoiced_qties[line] += invoice_qty
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom_id)
-            line.qty_invoiced = qty_invoiced
+                        invoiced_qties[line] -= invoice_qty
+        return invoiced_qties
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
     def _compute_qty_invoiced_posted(self):
@@ -967,8 +1024,9 @@ class SaleOrderLine(models.Model):
     def _get_invoice_lines(self):
         self.ensure_one()
         if self.env.context.get('accrual_entry_date'):
+            accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
             return self.invoice_lines.filtered(
-                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self.env.context['accrual_entry_date']
+                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= accrual_date
             )
         else:
             return self.invoice_lines
@@ -1139,6 +1197,12 @@ class SaleOrderLine(models.Model):
                 line.amount_to_invoice = unit_price_total * qty_to_invoice
             else:
                 line.amount_to_invoice = 0.0
+
+    @api.depends('price_unit', 'qty_invoiced_at_date', 'qty_delivered_at_date')
+    @api.depends_context('accrual_entry_date')
+    def _compute_amount_to_invoice_at_date(self):
+        for line in self:
+            line.amount_to_invoice_at_date = (line.qty_delivered_at_date - line.qty_invoiced_at_date) * line.price_unit
 
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):
@@ -1587,7 +1651,7 @@ class SaleOrderLine(models.Model):
         if len(self) == 1:
             return {
                 'quantity': self.product_uom_qty,
-                'price': self.price_unit,
+                'price': self._get_discounted_price(),
                 'readOnly': (
                     self.order_id._is_readonly()
                     or bool(self.combo_item_id)
@@ -1648,8 +1712,19 @@ class SaleOrderLine(models.Model):
             )
         return amount
 
+    @api.model
+    def _date_in_the_past(self):
+        if not 'accrual_entry_date' in self.env.context:
+            return False
+        accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
+        return accrual_date < fields.Date.today()
+
+    def _get_discounted_price(self):
+        self.ensure_one()
+        return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+
     def has_valued_move_ids(self):
-        return self.move_ids
+        return None  # TODO: remove in master
 
     def _get_linked_line(self):
         """ Return the linked line of this line, if any.

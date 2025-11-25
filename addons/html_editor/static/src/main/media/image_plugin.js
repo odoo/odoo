@@ -41,11 +41,17 @@ const IMAGE_SIZE = [
  * @property { ImagePlugin['resetImageTransformation'] } resetImageTransformation
  */
 
+/**
+ * @typedef {((img: HTMLImageElement) => void | true)[]} delete_image_overrides
+ * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_predicates
+ */
+
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "dom", "selection", "overlay"];
     static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
     static defaultConfig = { allowImageTransform: true };
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

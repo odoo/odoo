@@ -9,6 +9,7 @@ const tabsSectionSelector = "section.s_tabs, section.s_tabs_images";
 class NavTabsOptionPlugin extends Plugin {
     static id = "navTabsOption";
     static dependencies = ["clone"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_header_middle_buttons: {
             Component: NavTabsHeaderMiddleButtons,

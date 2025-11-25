@@ -5,11 +5,17 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 
+/**
+ * @typedef { Object } MediaWebsiteShared
+ * @property { MediaWebsitePlugin['replaceMedia'] } replaceMedia
+ */
+
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
-    static dependencies = ["media", "selection", "builderOptions"];
+    static dependencies = ["media", "selection", "builderOptions", "operation"];
     static shared = ["replaceMedia"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         on_replaced_media_handlers: ({ newMediaEl }) =>
             // Activate the new media options.
@@ -72,13 +78,15 @@ export class MediaWebsitePlugin extends Plugin {
     }
 
     /**
-     * Replaces the double-cliked media element.
+     * Replaces the double-clicked media element.
      *
      * @param {HTMLElement} mediaEl the media element to replace
      */
     async onDblClickEditableMedia(mediaEl) {
-        this.removeCurrentTooltip();
-        await this.replaceMedia(mediaEl);
+        this.dependencies.operation.next(async () => {
+            this.removeCurrentTooltip();
+            await this.replaceMedia(mediaEl);
+        });
     }
 
     /**

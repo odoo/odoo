@@ -220,7 +220,7 @@ test("Can add reaction to a message on an ipad", async () => {
     await advanceTime(LONG_PRESS_DELAY);
     await click("button:contains('Add a Reaction')");
     await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
-    await contains(".o-mail-MessageReaction:contains('😀\n1')");
+    await contains(".o-mail-MessageReaction:contains('😀 1')");
 });
 
 test("Editing message keeps the mentioned channels", async () => {
@@ -244,6 +244,16 @@ test("Editing message keeps the mentioned channels", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
     await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-content", { text: "other bye (edited)" });
+    await click(".o_channel_redirect", { text: "other" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "other" });
+    // Test editing via arrow up shortcut
+    await click(".o-mail-DiscussSidebarChannel", { text: "general" });
+    await contains(".o-mail-Message");
+    await press("ArrowUp");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other bye" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "#other hello", { replace: true });
+    await click(".o-mail-Message button", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "other hello (edited)" });
     await click(".o_channel_redirect", { text: "other" });
     await contains(".o-mail-DiscussContent-threadName", { value: "other" });
 });
@@ -858,7 +868,7 @@ test("Reaction summary", async () => {
         await withUser(userId, async () => {
             await click(".o-mail-Message-actions [title='Add a Reaction']");
             await click(".o-mail-QuickReactionMenu button", { text: "😅" });
-            await waitFor(`.o-mail-MessageReaction:contains(/^😅 ${idx + 1}$/)`, {
+            await waitFor(`.o-mail-MessageReaction:text(😅 ${idx + 1})`, {
                 exact: true,
                 timeout: 3000,
             });

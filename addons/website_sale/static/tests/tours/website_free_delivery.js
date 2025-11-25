@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("check_free_delivery", {
         tourUtils.goToCart({ quantity: 1 }),
         tourUtils.goToCheckout(),
         {
-            trigger: "#o_delivery_methods label:contains(/^Delivery Now Free Over 10$/)",
+            trigger: "#o_delivery_methods label:text(Delivery Now Free Over 10)",
         },
         {
             content: "Check Free Delivery value to be zero",

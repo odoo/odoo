@@ -12,12 +12,13 @@
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 12:46+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-18 08:55+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/de/>\n"
@@ -345,8 +346,8 @@ msgid ""
 "invisible=\"request_unit != 'hour'\">hours</span>"
 msgstr ""
 "<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">Tage</span>\n"
-"                                        <span class=\"mx-2\" invisible="
-"\"request_unit != 'hour'\">Stunden</span>"
+"                                        <span class=\"mx-2\" "
+"invisible=\"request_unit != 'hour'\">Stunden</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -438,8 +439,8 @@ msgid ""
 "                                ("
 msgstr ""
 "<span>Der Mitarbeiter befindet sich in einer anderen Zeitzone als Sie. Hier "
-"werden die Daten und Uhrzeiten in der Zeitzone des Mitarbeiters "
-"angezeigt</span>\n"
+"werden die Daten und Uhrzeiten in der Zeitzone des Mitarbeiters angezeigt</"
+"span>\n"
 "                                ("
 
 #. module: hr_holidays
@@ -2839,6 +2840,11 @@ msgid "Meeting"
 msgstr "Meeting"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__member_of_department
+msgid "Member of department"
+msgstr "Mitglied der Abteilung"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
@@ -3022,6 +3028,8 @@ msgid "New Group Allocation"
 msgstr "Neuer Gruppenurlaubsanspruch"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "New Group Time Off"
@@ -3837,6 +3845,21 @@ msgstr "Krankheit"
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_small_unemployment
 msgid "Small Unemployment"
 msgstr "Sonderurlaub"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid ""
+"Some employees already have time off requests in hours that overlap with the "
+"selected period, Odoo cannot automatically adjust or split hourly leaves "
+"during batch generation. Conflicting time off:\n"
+"%s"
+msgstr ""
+"Einige Mitarbeiter haben bereits Urlaubsanträge in Stunden, die sich mit dem "
+"ausgewählten Zeitraum überschneiden. Odoo kann stundenweise Abwesenheiten "
+"während der Stapelgenerierung nicht automatisch anpassen oder aufteilen. "
+"Problematische Abwesenheiten :\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4953,6 +4976,15 @@ msgid "When the time is accrued?"
 msgstr "Wann wird Zeit angesammelt?"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_report_calendar__member_of_department
+msgid ""
+"Whether the employee is a member of the active user's department or one of "
+"it's child department."
+msgstr ""
+"Ob der Mitarbeiter Mitglied der Abteilung des aktiven Benutzers oder einer "
+"seiner untergeordneten Abteilungen ist."
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
 msgstr "Warum möchten Sie diese genehmigte Abwesenheit stornieren?"
@@ -5255,19 +5287,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"You cannot refuse this allocation request since the employee has already "
-"taken leaves for it. Please refuse or delete those leaves first."
-msgstr ""
-"Sie können diesen Antrag auf Urlaubsanspruch nicht ablehnen, da der "
-"Mitarbeiter bereits Urlaub davon genommen hat. Bitte lehnen Sie diese "
-"Urlaubstage zuerst ab oder löschen Sie sie."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-#, fuzzy
 msgid ""
 "You do not have any allocation for this time off type.\n"
 "Please request an allocation before submitting your time off request."
@@ -5635,6 +5655,14 @@ msgstr "gültig bis"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validieren"
+
+#~ msgid ""
+#~ "You cannot refuse this allocation request since the employee has already "
+#~ "taken leaves for it. Please refuse or delete those leaves first."
+#~ msgstr ""
+#~ "Sie können diesen Antrag auf Urlaubsanspruch nicht ablehnen, da der "
+#~ "Mitarbeiter bereits Urlaub davon genommen hat. Bitte lehnen Sie diese "
+#~ "Urlaubstage zuerst ab oder löschen Sie sie."
 
 #~ msgid ""
 #~ "\n"

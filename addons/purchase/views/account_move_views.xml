@@ -36,7 +36,7 @@
                 <field name="purchase_line_id" groups="purchase.group_purchase_user" column_invisible="True"/>
                 <field name="purchase_order_id" groups="purchase.group_purchase_user" column_invisible="parent.move_type != 'in_invoice'" optional="hide"/>
             </xpath>
-            <xpath expr="//field[@name='journal_line_ids']/list/field[@name='company_id']" position="after">
+            <xpath expr="//field[@name='line_ids']/list/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" groups="purchase.group_purchase_user" column_invisible="True"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">

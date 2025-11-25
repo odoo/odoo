@@ -469,12 +469,16 @@ describe(parseUrl(import.meta.url), () => {
             expectSelector(".title:eq('1')").toEqualNodes(".title", { index: 1 });
             expectSelector('.title:eq("1")').toEqualNodes(".title", { index: 1 });
 
-            // :contains (text)
+            // :contains
             expectSelector("main > .text:contains(ipsum)").toEqualNodes("p");
             expectSelector(".text:contains(/\\bL\\w+\\b\\sipsum/)").toEqualNodes("p");
             expectSelector(".text:contains(item)").toEqualNodes("li");
 
-            // :contains (value)
+            // :text
+            expectSelector(".text:text(item)").toEqualNodes("");
+            expectSelector(".text:text(first item)").toEqualNodes("li:first-of-type");
+
+            // :value
             expectSelector("input:value(john)").toEqualNodes("[name=name],[name=email]");
             expectSelector("input:value(john doe)").toEqualNodes("[name=name]");
             expectSelector("input:value('John Doe (JOD)')").toEqualNodes("[name=name]");
@@ -610,9 +614,9 @@ describe(parseUrl(import.meta.url), () => {
                     <div>PA4: PAV41</div>
                 </span>
             `);
-            expectSelector(
-                `span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")`
-            ).toEqualNodes("span");
+            expectSelector(`span:contains("Matrix (PAV11, PAV22, PAV31) PA4: PAV41")`).toEqualNodes(
+                "span"
+            );
         });
 
         test(":has(...):first", async () => {
@@ -744,7 +748,7 @@ describe(parseUrl(import.meta.url), () => {
             `);
 
             expectSelector(
-                `.o_content:has(.o_field_widget[name=messages]):has(td:contains(/^bbb$/)):has(td:contains(/^\\[test_trigger\\] Mitchell Admin$/))`
+                `.o_content:has(.o_field_widget[name=messages]):has(td:text(bbb)):has(td:contains(/^\\[test_trigger\\] Mitchell Admin/))`
             ).toEqualNodes(".o_content");
         });
 

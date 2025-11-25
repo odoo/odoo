@@ -6,6 +6,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class BlockAlignmentOptionPlugin extends Plugin {
     static id = "blockAlignmentOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(BLOCK_ALIGN, BlockAlignmentOption)],
     };

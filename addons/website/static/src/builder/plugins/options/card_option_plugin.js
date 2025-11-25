@@ -23,6 +23,7 @@ export class WebsiteBackgroundCardOption extends BaseWebsiteBackgroundOption {
 class CardOptionPlugin extends Plugin {
     static id = "cardOption";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             CardOption,

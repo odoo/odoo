@@ -101,6 +101,8 @@ class DocController(http.Controller):
         # TODO: gzip
         filename = f'odoo-doc-index-{db_registry_sequence}-{unique}.json'
         index_attach = self.env['ir.attachment'].sudo().search([('name', '=', filename)], limit=1)
+        if not use_cache:
+            modules, models = self._doc_index()
         if not index_attach:
             # No cache, generate the index and save it.
             modules, models = self._doc_index()
@@ -136,6 +138,7 @@ class DocController(http.Controller):
                     field.name: {'string': field.field_description}
                     for field in ir_model.field_id
                     # sorted(ir_model.field_id, key=partial(sort_key_field, modules, Model))
+                    if field.name in Model._fields  # band-aid, see task 5172546
                     if Model._has_field_access(Model._fields[field.name], 'read')
                 },
                 'methods': [

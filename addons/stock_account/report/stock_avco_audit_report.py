@@ -10,6 +10,7 @@ class StockAverageCostReport(models.AbstractModel):
     date = fields.Date(string='Date', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True)
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Currency')
 
     product_id = fields.Many2one('product.product', string='Product', required=True)
 

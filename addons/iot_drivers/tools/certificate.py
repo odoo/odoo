@@ -9,6 +9,7 @@ from odoo.addons.iot_drivers.tools.helpers import (
     get_conf,
     get_identifier,
     get_path_nginx,
+    get_version,
     odoo_restart,
     require_db,
     start_nginx_server,
@@ -50,10 +51,16 @@ def get_certificate_end_date():
         (name_attribute.value for name_attribute in cert.subject.get_attributes_for_oid(NameOID.COMMON_NAME)), ''
     )
 
-    cert_end_date = cert.not_valid_after
+    # Ensure cryptography compatibility with python < 3.13
+    if IS_RPI and float(get_version()[1:8]) < 2025.10:
+        cert_end_date = cert.not_valid_after
+        now = datetime.datetime.now()
+    else:
+        cert_end_date = cert.not_valid_after_utc
+        now = datetime.datetime.now(datetime.timezone.utc)
     if (
         common_name == 'OdooTempIoTBoxCertificate'
-        or datetime.datetime.now() > cert_end_date - datetime.timedelta(days=10)
+        or now > cert_end_date - datetime.timedelta(days=10)
     ):
         _logger.debug("SSL certificate '%s' must be updated.", common_name)
         return None
@@ -112,7 +119,11 @@ def download_odoo_certificate(retry=0):
         Path('/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
         Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
         start_nginx_server()
-        return str(x509.load_pem_x509_certificate(certificate.encode()).not_valid_after)
+        cert = x509.load_pem_x509_certificate(certificate.encode())
+        if float(get_version()[1:8]) < 2025.10:
+            return str(cert.not_valid_after)
+        else:
+            return str(cert.not_valid_after_utc)
     else:
         Path(get_path_nginx(), 'conf', 'nginx-cert.crt').write_text(certificate, encoding='utf-8')
         Path(get_path_nginx(), 'conf', 'nginx-cert.key').write_text(private_key, encoding='utf-8')

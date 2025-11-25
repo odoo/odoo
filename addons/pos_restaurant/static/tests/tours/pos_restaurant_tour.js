@@ -638,6 +638,31 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("5"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("RestaurantPresetEatInTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.cashierNameExists("test_user"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout", {
     steps: () =>
         [
@@ -1043,7 +1068,7 @@ registry.category("web_tour.tours").add("test_sync_set_pricelist", {
             assertCurrentOrderDirty(false),
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola"),
-            ProductScreen.clickPriceList("Restaurant Pricelist"),
+            ProductScreen.clickPriceList("Second Pricelist"),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -1109,5 +1134,23 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_guest_count_bank_payment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.confirmOrderWarningDialog(),
+            NumberPopup.enterValue("5"),
+            NumberPopup.isShown("5"),
+            Dialog.confirm(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.isShown(),
         ].flat(),
 });

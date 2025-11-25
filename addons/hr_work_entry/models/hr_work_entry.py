@@ -22,11 +22,15 @@ class HrWorkEntry(models.Model):
     name = fields.Char()
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
-    version_id = fields.Many2one('hr.version', string="Employee Record", required=True)
+    version_id = fields.Many2one('hr.version', string="Employee Record", required=True, index=True)
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        index=True,
+        default=lambda self: self.env['hr.work.entry.type'].search([], limit=1),
+        domain=lambda self: self._get_work_entry_type_domain())
     display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
@@ -193,6 +197,8 @@ class HrWorkEntry(models.Model):
 
         outside_entries = self.env['hr.work.entry']
         for calendar, entries in entries_by_calendar.items():
+            if not calendar or calendar.flexible_hours:
+                continue
             datetime_start = datetime.combine(min(entries.mapped('date')), time.min)
             datetime_stop = datetime.combine(max(entries.mapped('date')), time.max)
 
@@ -304,3 +310,8 @@ class HrWorkEntry(models.Model):
                 # New work entries are handled in the create method,
                 # no need to reload work entries.
                 work_entries.exists()._check_if_error()
+
+    def _get_work_entry_type_domain(self):
+        if len(self.env.companies.country_id.ids) > 1:
+            return [('country_id', '=', False)]
+        return ['|', ('country_id', '=', False), ('country_id', 'in', self.env.companies.country_id.ids)]

@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_tax_python
+# * account_tax_python
 #
 # Translators:
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Egon Raamat <egon@avalah.ee>, 2022\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"PO-Revision-Date: 2025-11-16 15:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
@@ -36,6 +38,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Maksude grupp: Maks koosneb alammaksudest.\n"
+"    - Fikseeritud: Maks jääb samaks, olenemata hinnast.\n"
+"    - Protsent: Maks on teatud % hinnast:\n"
+"        nt 100 * (1 + 10%) = 110 (hind ei sisalda maksu)\n"
+"        nt 110 / (1 + 10%) = 100 (hind sisaldab maksu)\n"
+"    - Sisaldab protsendilist maksu: Maksusumma sõltub hinnast:\n"
+"        nt 180 / (1 - 10%) = 200 (hind ei sisalda maksu)\n"
+"       nt 200 * (1 - 10%) = 180 (hind sisaldab maksu)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
@@ -47,16 +59,22 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Arvutage maksusumma.\n"
+"\n"
+":param baas: ujuv, tegelik summa, millelt maks rakendatakse\n"
+":param hinna_ühik: ujuv\n"
+":param kogus: ujuv\n"
+":param toode: toodet esindav objekt\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Kohandatud valem"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Kuvatav nimi"
 
 #. module: account_tax_python
 #. odoo-python
@@ -67,17 +85,17 @@ msgstr ""
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
 msgid "Formula"
-msgstr ""
+msgstr "Valem"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "Valemi dekodeeritud teave"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_tax_python
 #. odoo-python
@@ -89,7 +107,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid formula"
-msgstr ""
+msgstr "Vigane võrrand"
 
 #. module: account_tax_python
 #. odoo-python

@@ -1276,15 +1276,6 @@ class HrExpense(models.Model):
             expense_state[state]['amount'] += total_amount_sum
         return expense_state
 
-    def action_get_attachment_view(self):
-        self.ensure_one()
-        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
-        res.update({
-            'domain': [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)],
-            'context': {'default_res_model': 'hr.expense', 'default_res_id': self.id},
-        })
-        return res
-
     def action_approve_duplicates(self):
         root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
         for expense in self.duplicate_expense_ids:
@@ -1772,13 +1763,10 @@ class HrExpense(models.Model):
         account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_line_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
         chart_template = self.with_context(allowed_company_ids=self.company_id.root_id.ids).env['account.chart.template']
         outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
-        if not self.company_id.chart_template:
-            action = self.env.ref('account.action_account_config')
-            raise RedirectWarning(_('You should install a Fiscal Localization first.'), action.id, _('Accounting Settings'))
         if not outstanding_account:
             bank_prefix = self.company_id.bank_account_code_prefix
-            template_data = chart_template._get_chart_template_data(self.company_id.chart_template).get('template_data')
-            code_digits = int(template_data.get('code_digits', 6))
+            first_account = self.env['account.account'].search([('company_ids', 'in', self.company_id.id)], limit=1)
+            code_digits = len(first_account.code or '') or 6
             chart_template._create_outstanding_accounts(self.company_id, bank_prefix, code_digits)
             outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
         if not outstanding_account.active:

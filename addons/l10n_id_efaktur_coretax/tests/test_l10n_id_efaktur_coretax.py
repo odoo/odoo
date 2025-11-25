@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
+
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestEfakturCoretax(AccountTestInvoicingCommon):
 
@@ -28,6 +29,13 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         cls.partner_a.write({"l10n_id_pkp": True, "l10n_id_kode_transaksi": "04", "vat": "1234567890123457", "country_id": cls.env.ref('base.id').id})
         cls.tax_sale_a.amount = 11.0
         cls.tax_incl = cls.env['account.tax'].create({"name": "tax include 11", "type_tax_use": "sale", "amount": 11.0, "price_include_override": "tax_included"})
+
+        company_id = cls.company_data['company'].id
+        ChartTemplate = cls.env['account.chart.template'].with_company(company_id)
+        cls.luxury_tax = ChartTemplate.ref(f'account.{company_id}_tax_ST3')
+        cls.non_luxury_tax = ChartTemplate.ref(f'account.{company_id}_tax_ST4')
+        cls.stlg_tax = ChartTemplate.ref(f'account.{company_id}_tax_luxury_sales')
+        cls.zero_tax = ChartTemplate.ref(f'account.{company_id}_tax_ST0')
 
         path = "l10n_id_efaktur_coretax/tests/results/sample.xml"
         with tools.file_open(path, mode='rb') as test_file:
@@ -137,6 +145,74 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(ValidationError, "does not contain any taxes"):
             out_invoice_no_tax.download_efaktur()
+
+        # Report invoice contains luxury and non-luxury
+        out_invoice_luxury_non_luxury = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.non_luxury_tax.id]})
+            ],
+        })
+        out_invoice_luxury_non_luxury.action_post()
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            r"can only have one tax group \(excluding STLG\)[\s\S]*Luxury-Goods and Non-Luxury-Goods taxes"
+        ):
+            out_invoice_luxury_non_luxury.download_efaktur()
+
+        # Report invoice contains stlg and non-luxury
+        out_invoice_stlg_non_luxury = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id, self.stlg_tax.id]})
+            ],
+        })
+        out_invoice_stlg_non_luxury.action_post()
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            r"contains both Non-Luxury-Goods and STLG taxes.[\s\S]*has STLG tax but missing the required Luxury-Goods tax."
+        ):
+            out_invoice_stlg_non_luxury.download_efaktur()
+
+        # Report invoice with code other than 07/08 with zero rate tax
+        out_invoice_zero_tax = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.zero_tax.id]})
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice_zero_tax.action_post()
+
+        with self.assertRaisesRegex(ValidationError, r".*does not allow 0% \(Zero-rated or Exempt\) taxes\."):
+            out_invoice_zero_tax.download_efaktur()
+
+        # Report invoice with code 07/08 with not zero rate tax
+        out_invoice_zero_tax_2 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]})
+            ],
+            'l10n_id_kode_transaksi': '07',
+        })
+        out_invoice_zero_tax_2.action_post()
+
+        with self.assertRaisesRegex(ValidationError, r".*must always have tax amount 0"):
+            out_invoice_zero_tax_2.download_efaktur()
 
     def test_download_efaktur_invalid_customer(self):
         """ Test to ensure conditions related to customers are enforced when downloading E-Faktur """
@@ -275,10 +351,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
     def test_efaktur_xml_trx_01(self):
-        """ Test result of regular valid invoice with 04 transaction code.
-
-        Expected is OtherTaxBase=TaxBase and VATRate follows the actual amount of the tax
-        """
+        """ Test that with transaction code 01, OtherTaxBase should equal to TaxBase."""
 
         out_invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
@@ -286,10 +359,11 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]})
             ],
             'l10n_id_kode_transaksi': '01',
         })
+
         out_invoice.action_post()
         out_invoice.download_efaktur()
 
@@ -303,10 +377,15 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             <xpath expr="//OtherTaxBase" position="replace">
                 <OtherTaxBase>100000.00</OtherTaxBase>
             </xpath>
-            <xpath expr="//VATRate" position="replace">
-                <VATRate>11.0</VATRate>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>100000.00</TaxBase>
             </xpath>
-
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>12000.00</VAT>
+            </xpath>
             '''
         )
 
@@ -318,13 +397,14 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         Result of test should also work for code 08
         """
+
         out_invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.zero_tax.id]})
             ],
             'l10n_id_kode_transaksi': '07',
             'l10n_id_coretax_add_info_07': 'TD.00505',
@@ -349,10 +429,10 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <FacilityStamp>TD.01105</FacilityStamp>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>100000.00</OtherTaxBase>
+                <OtherTaxBase>91666.67</OtherTaxBase>
             </xpath>
             <xpath expr="//VATRate" position="replace">
-                <VATRate>11.0</VATRate>
+                <VATRate>12</VATRate>
             </xpath>
             <xpath expr="//VAT" position="replace">
                 <VAT>11000.00</VAT>
@@ -393,7 +473,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
             ],
-            'l10n_id_kode_transaksi': '01',
+            'l10n_id_kode_transaksi': '04',
         })
 
         out_invoice_1.action_post()
@@ -409,7 +489,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <TaxInvoice>
                     <TaxInvoiceDate>2019-05-01</TaxInvoiceDate>
                     <TaxInvoiceOpt>Normal</TaxInvoiceOpt>
-                    <TrxCode>01</TrxCode>
+                    <TrxCode>04</TrxCode>
                     <AddInfo/>
                     <CustomDoc/>
                     <CustomDocMonthYear/>
@@ -434,8 +514,8 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                         <Qty>1.0</Qty>
                         <TotalDiscount>0.00</TotalDiscount>
                         <TaxBase>100000.00</TaxBase>
-                        <OtherTaxBase>100000.00</OtherTaxBase>
-                        <VATRate>11.0</VATRate>
+                        <OtherTaxBase>91666.67</OtherTaxBase>
+                        <VATRate>12</VATRate>
                         <VAT>11000.00</VAT>
                         <STLGRate>0.0</STLGRate>
                         <STLG>0.00</STLG>
@@ -499,18 +579,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
     def test_efaktur_xml_luxury_goods(self):
-        """ Test that when selling product that involves the luxury good tax, STLGRate and STLG
-        should be filled in """
-
-        company_id = self.company_data['company'].id
-        luxury_tax = self.env['account.tax'].create(
-            {
-                "name": "luxury tax",
-                "type_tax_use": "sale",
-                "amount": 20.0,
-                "tax_group_id": self.env.ref(f'account.{company_id}_l10n_id_tax_group_luxury_goods').id
-            }
-        )
+        """ Test that when selling product that involves the luxury good tax"""
 
         out_invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
@@ -518,9 +587,9 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [luxury_tax.id, self.tax_sale_a.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
             ],
-            'l10n_id_kode_transaksi': '01',
+            'l10n_id_kode_transaksi': '04',
         })
         out_invoice.action_post()
         out_invoice.download_efaktur()
@@ -530,13 +599,53 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             etree.fromstring(self.sample_xml),
             '''
             <xpath expr="//TrxCode" position="replace">
-                <TrxCode>01</TrxCode>
+                <TrxCode>04</TrxCode>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
                 <OtherTaxBase>100000.00</OtherTaxBase>
             </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>12000.00</VAT>
+            </xpath>
             <xpath expr="//VATRate" position="replace">
-                <VATRate>11.0</VATRate>
+                <VATRate>12</VATRate>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_luxury_goods_stlg(self):
+        """ Test that when selling product that involves the luxury good tax, STLGRate and STLG
+        should be filled in """
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.stlg_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>100000.00</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>12000.00</VAT>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
             </xpath>
             <xpath expr="//STLGRate" position="replace">
                 <STLGRate>20.0</STLGRate>

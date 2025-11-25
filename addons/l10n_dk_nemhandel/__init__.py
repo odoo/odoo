@@ -31,3 +31,7 @@ def _pre_init_nemhandel(env):
          WHERE _dk.id = p.id
     """
     env.cr.execute(query)
+
+
+def uninstall_hook(env):
+    env["res.partner"]._clear_removed_edi_formats("oioubl_21")

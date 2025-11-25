@@ -25,7 +25,12 @@ export class CategorySelector extends Component {
     }
 
     getCategoriesAndSub() {
-        const rootCategories = this.pos.models["pos.category"]
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        let rootCategories = this.pos.models["pos.category"].getAll();
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            rootCategories = iface_available_categ_ids;
+        }
+        rootCategories = rootCategories
             .filter((category) => !category.parent_id)
             .sort((a, b) => a.sequence - b.sequence);
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];

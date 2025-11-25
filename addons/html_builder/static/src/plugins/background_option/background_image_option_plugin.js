@@ -9,6 +9,13 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {((editingElement: HTMLElement) => void)[]} on_bg_image_hide_handlers
+ *
+ * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_filter_target_providers
+ * @typedef {((el: HTMLElement) => HTMLElement)[]} get_target_element_providers
+ */
+
 export class BackgroundImageOptionPlugin extends Plugin {
     static id = "backgroundImageOption";
     static dependencies = ["builderActions", "media", "style"];
@@ -18,6 +25,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         "loadReplaceBackgroundImage",
         "applyReplaceBackgroundImage",
     ];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SelectFilterColorAction,
@@ -26,6 +34,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
             DynamicColorAction,
         },
         content_not_editable_selectors: ".o_we_bg_filter",
+        system_node_selectors: ".o_we_bg_filter",
         get_target_element_providers: withSequence(5, (el) => el),
     };
     /**

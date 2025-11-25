@@ -61,15 +61,15 @@
                 <field name="lot_id"   groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="context.get('picking_code') != 'incoming' or context.get('show_lots_text')"/>
                 <field name="lot_name" string="Lot/Serial Number" groups="stock.group_production_lot"
                        readonly="tracking not in ['lot', 'serial']" column_invisible="context.get('picking_code') != 'incoming' or not context.get('show_lots_text')"/>
+                <field name="package_id" groups="stock.group_tracking_lot" column_invisible="True" context="{'show_src_package': 1}"/>
                 <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', picking_location_id)]"
-                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False}"
+                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False, 'show_src_package': 1}"
                         readonly="state in ('done', 'cancel') and is_locked"
                         widget="pick_from"
                         options="{'no_open': True}"/>
                 <field name="location_id" column_invisible="True"/>
                 <field name="location_dest_id"/>
-                <field name="package_id" groups="stock.group_tracking_lot" column_invisible="True"/>
                 <field name="result_package_id" groups="stock.group_tracking_lot" widget="package_m2o" context="{'show_dest_package': 1}"/>
                 <field name="quantity"/>
                 <field name="product_uom_id" options="{'no_create': True}" widget="many2one_uom"
@@ -109,6 +109,13 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_see_packages" string="Packages" type="object"
+                            class="oe_stat_button" icon="fa-cubes"
+                            groups="stock.group_tracking_lot">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Packages</span>
+                            </div>
+                        </button>
                         <button name="action_batch_detailed_operations"
                                 class="oe_stat_button"
                                 icon="fa-bars"
@@ -122,13 +129,6 @@
                             class="oe_stat_button" icon="fa-list"
                             invisible="not show_allocation"
                             groups="stock.group_reception_report"/>
-                        <button name="action_see_packages" string="Packages" type="object"
-                            class="oe_stat_button" icon="fa-cubes"
-                            invisible="state == 'done'" groups="stock.group_tracking_lot">
-                            <div class="o_form_field o_stat_info">
-                                <span class="o_stat_text">Packages</span>
-                            </div>
-                        </button>
                     </div>
                     <div class="oe_title">
                         <h1><field name="name" class="oe_inline"/></h1>

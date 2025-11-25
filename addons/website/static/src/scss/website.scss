@@ -435,6 +435,8 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
         }
 
         .accordion-button {
+            font-size: inherit;
+
             &:not(.collapsed) {
                 @if $-navbar-mobile-bg-color != null {
                     background-color: shade-color($-navbar-mobile-bg-color, 5%);
@@ -1689,6 +1691,10 @@ header {
             display: none;
         }
     }
+
+    .hidden_mega_menu_li {
+        display: none;
+    }
 }
 
 @if o-website-value('header-template') == 'sidebar' {
@@ -1850,6 +1856,7 @@ header {
         z-index: $o-mega-menu-zindex;
         max-width: $offcanvas-horizontal-width;
         opacity: 0;
+        pointer-events: none;
 
         section {
             @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
@@ -1864,6 +1871,7 @@ header {
         @include transition(opacity $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
         visibility: visible !important;
         opacity: 1;
+        pointer-events: auto;
 
         section {
             @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);

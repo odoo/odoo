@@ -10,6 +10,8 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 import { CALL_PROMOTE_FULLSCREEN } from "./thread_model_patch";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
+export const CALL_ICON_DEAFEN = "fa fa-deaf";
+export const CALL_ICON_MUTED = "fa fa-microphone-slash";
 
 /** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 
@@ -42,8 +44,8 @@ export const muteAction = {
     icon: ({ action, store }) =>
         action.isActive
             ? store.rtc.selfSession?.is_deaf
-                ? "fa fa-deaf"
-                : "fa fa-microphone-slash"
+                ? CALL_ICON_DEAFEN
+                : CALL_ICON_MUTED
             : "fa fa-microphone",
     hotkey: "shift+m",
     onSelected: ({ store }) => store.rtc.toggleMicrophone(),
@@ -78,7 +80,7 @@ registerCallAction("deafen", {
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
-    icon: ({ action }) => (action.isActive ? "fa fa-deaf" : "fa fa-headphones"),
+    icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "fa fa-headphones"),
     hotkey: "shift+d",
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,

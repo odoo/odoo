@@ -598,6 +598,7 @@ class IrAttachment(models.Model):
         if (
             not self.env.context.get('skip_res_field_check')
             and not any(d.field_expr in ('id', 'res_field') for d in domain.iter_conditions())
+            and not bypass_access
         ):
             disable_binary_fields_attachments = True
             domain &= Domain('res_field', '=', False)
@@ -946,3 +947,9 @@ class IrAttachment(models.Model):
             self.check_access('read')
             return True
         return super()._can_return_content(field_name, access_token)
+
+    def _migrate_remote_to_local(self):
+        if self.type == 'binary':
+            return
+        if self.type == 'url':
+            raise ValidationError(_("URL attachment (%s) shouldn't be migrated to local.", self.id))

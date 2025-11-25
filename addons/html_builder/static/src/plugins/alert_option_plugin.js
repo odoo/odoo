@@ -8,6 +8,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class AlertOptionPlugin extends Plugin {
     static id = "alertOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             AlertIconAction,

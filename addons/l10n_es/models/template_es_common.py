@@ -35,5 +35,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'account_common_485',
                 'expense_account_id': 'account_common_600',
                 'income_account_id': 'account_common_7000',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'account_common_310',
+            },
+        }
+
+    @template('es_common', 'account.account')
+    def _get_es_common_account_account(self):
+        return {
+            'account_common_310': {
+                'account_stock_expense_id': 'account_common_601',
+                'account_stock_variation_id': 'account_common_611',
             },
         }

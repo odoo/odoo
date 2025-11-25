@@ -47,8 +47,6 @@ class ProductTemplate(models.Model):
         combination_info = super()._get_additionnal_combination_info(
             product_or_template, quantity, uom, date, website
         )
-        pricelist_prices = request.pricelist._compute_price_rule(self, 1.0)
-
         if (
             website
             and website.company_id.country_code == 'AR'
@@ -60,11 +58,8 @@ class ProductTemplate(models.Model):
             mapped_taxes = request.fiscal_position.map_tax(product_taxes)
 
             # Compute price per unit of product or template
-            unit_price = (
-                pricelist_prices[self.id][0]
-                if product_or_template._name == 'product.template'
-                else product_or_template.lst_price
-            )
+            pricelist_prices = request.pricelist._compute_price_rule(product_or_template, quantity)
+            unit_price = pricelist_prices[product_or_template.id][0]
 
             # Compute the tax-excluded value
             total_excluded_value = mapped_taxes.compute_all(

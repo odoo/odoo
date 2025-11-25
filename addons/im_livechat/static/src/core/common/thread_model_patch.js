@@ -3,6 +3,7 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { url } from "@web/core/utils/urls";
 
 patch(Thread.prototype, {
     setup() {
@@ -42,7 +43,9 @@ patch(Thread.prototype, {
     },
     get autoOpenChatWindowOnNewMessage() {
         return (
-            (this.channel_type === "livechat" && !this.store.chatHub.compact) ||
+            (this.channel_type === "livechat" &&
+                !this.store.chatHub.compact &&
+                this.self_member_id) ||
             super.autoOpenChatWindowOnNewMessage
         );
     },
@@ -75,6 +78,11 @@ patch(Thread.prototype, {
             ? _t("This livechat conversation has ended")
             : "";
     },
+
+    get transcriptUrl() {
+        return url(`/im_livechat/download_transcript/${this.id}`);
+    },
+
     /**
      * @override
      * @param {import("models").Persona} persona

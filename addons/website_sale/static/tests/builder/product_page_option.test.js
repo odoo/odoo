@@ -4,6 +4,7 @@ import {
     contains,
     dataURItoBlob,
     defineModels,
+    fields,
     models,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -12,12 +13,25 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 
+class ProductProduct extends models.Model {
+    _name = "product.product";
+
+    id = fields.Integer();
+    name = fields.Char();
+    image_1920 = fields.Image();
+
+    _records = [
+        { id: 13, name: "Variant 1", image_1920: "/9j/4AAQSkL6D8wwP//Z" },
+        { id: 14, name: "Variant 2", image_1920: null },
+    ];
+}
+
 class ProductRibbon extends models.Model {
     _name = "product.ribbon";
 }
 
 defineWebsiteModels();
-defineModels([ProductRibbon]);
+defineModels([ProductProduct, ProductRibbon]);
 
 test("Product page options", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
@@ -67,6 +81,10 @@ test("Product page options", async () => {
         expect.step("save");
         return [];
     });
+    onRpc("product.product", "write", () => {
+        expect.step("product_write");
+        return true;
+    });
 
     const base64Image =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5" +
@@ -90,15 +108,11 @@ test("Product page options", async () => {
         // converted image won't be used if original is not larger
         return dataURItoBlob(base64Image + "A".repeat(1000));
     });
-    onRpc("/html_editor/modify_image/1", () => {
-        expect.step("modify_image");
-        return base64Image; // Simulate image compression/convertion
-    });
 
     await contains(":iframe .o_wsale_product_page").click();
     await contains("[data-action-id=productReplaceMainImage]").click();
     await contains(".o_select_media_dialog .o_existing_attachment_cell button").click();
-    await expect.waitForSteps(["theme_customize_data_get", "get_image_info"]);
+    await expect.waitForSteps(["theme_customize_data_get", "get_image_info", "product_write"]);
     await waitForNone(".o_select_media_dialog");
 
     expect(":iframe #product_detail_main img[src^='data:image/webp;base64,']").toHaveCount(1);
@@ -115,9 +129,6 @@ test("Product page options", async () => {
     await expect.waitForSteps([
         // Activate the carousel view and change the shop config
         "config",
-        // Shop config changes don't trigger the `savePlugin`; image edits are saved because of the
-        // theme customization.
-        "modify_image",
         // Save the pending image width class changes
         "save",
         // Save the image changes

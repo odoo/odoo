@@ -657,6 +657,8 @@ class StockPicking(models.Model):
     is_locked = fields.Boolean(default=True, copy=False, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
+    is_date_editable = fields.Boolean(
+        'Is Scheduled Date Editable', compute='_compute_is_date_editable')
 
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
@@ -742,6 +744,13 @@ class StockPicking(models.Model):
     def _compute_is_signed(self):
         for picking in self:
             picking.is_signed = picking.signature
+
+    def _compute_is_date_editable(self):
+        for picking in self:
+            if picking.state in ['done', 'cancel']:
+                picking.is_date_editable = not picking.is_locked
+            else:
+                picking.is_date_editable = True
 
     @api.depends('state', 'picking_type_code', 'scheduled_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_products_availability(self):
@@ -880,7 +889,7 @@ class StockPicking(models.Model):
             packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
 
             shipping_weight = picking.weight_bulk
-            relevant_packages = picking.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+            relevant_packages = picking.move_line_ids.result_package_id.outermost_package_id
             children_packages_by_pack = relevant_packages._get_all_children_package_dest_ids()[0]
             for package in relevant_packages:
                 if package.shipping_weight:
@@ -994,6 +1003,9 @@ class StockPicking(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.parent_id.name')
     def _compute_picking_warning_text(self):
+        if not self.env.user.has_group('stock.group_warning_stock'):
+            self.picking_warning_text = ''
+            return
         for picking in self:
             text = ''
             if partner_msg := picking.partner_id.picking_warn_msg:
@@ -1904,7 +1916,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('picking_ids', 'in', self.ids)],
             'context': {
-                'picking_id': self.id,
+                'picking_ids': self.ids,
                 'location_id': self.location_id.id,
                 'can_add_entire_packs': self.picking_type_code != 'incoming',
                 'search_default_main_packages': True,

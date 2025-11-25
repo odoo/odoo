@@ -20,6 +20,20 @@ import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetype } from "@html_editor/utils/image";
 
+/**
+ * @typedef {((dataset: DOMStringMap) => string)[]} default_shape_handlers
+ * @typedef {((
+ *     svg: SVGElement,
+ *     params: {
+ *         shapeId: string,
+ *         shapeFlip: "x" | "y",
+ *         shapeRotate: 0 | "90" | "180" | "270",
+ *         shapeAnimationSpeed: number,
+ *         shapeColors: string,
+ *     }
+ * ) => Promise<void>)[]} post_compute_shape_listeners
+ */
+
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
 // background images that are part of a CSS rule "background-image: ...". The
@@ -46,6 +60,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         "getShapeLabel",
         "loadShape",
     ];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SetImageShapeAction,
@@ -426,6 +441,15 @@ export class SetImageShapeAction extends BuilderAction {
         updateImageAttributes();
         const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
         img.dataset.fileName = `${imgFilename}.svg`;
+    }
+    isApplied({ editingElement: img, value }) {
+        const datasetShape = img.dataset.shape;
+        if (!datasetShape) {
+            return false;
+        }
+        // Compatibility with old shapes.
+        const currentShape = datasetShape.replace("web_editor", "html_builder");
+        return currentShape === value;
     }
 }
 export class SetImgShapeColorAction extends BuilderAction {

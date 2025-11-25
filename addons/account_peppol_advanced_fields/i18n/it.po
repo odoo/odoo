@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-14 12:22+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-10 07:10+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol_advanced_fields/it/>\n"
@@ -61,48 +61,11 @@ msgstr ""
 "Una descrizione testuale o un codice per identificare il costo contabile."
 
 #. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_accounting_cost
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_accounting_cost
-msgid "Accounting Cost"
-msgstr "Costo contabile"
-
-#. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_additional_document_reference
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_additional_document_reference
-msgid "Additional Document Reference"
-msgstr "Riferimento documento aggiuntivo"
-
-#. module: account_peppol_advanced_fields
-#: model_terms:ir.ui.view,arch_db:account_peppol_advanced_fields.view_move_form_inherit_peppol
-msgid "Advanced Peppol"
-msgstr "Peppol avanzato"
-
-#. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_contract_document_reference
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_contract_document_reference
-msgid "Contract Document Reference"
-msgstr "Riferimento documento contratto"
-
-#. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_delivery_location_id
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_delivery_location_id
-msgid "Delivery Location GLN"
-msgstr "GLN luogo di consegna"
-
-#. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_despatch_document_reference
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_despatch_document_reference
-msgid "Despatch Document Reference"
-msgstr "Riferimento documento di spedizione"
-
-#. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__id
 msgid "ID"
 msgstr "ID"
@@ -113,29 +76,79 @@ msgid "Journal Entry"
 msgstr "Registrazione contabile"
 
 #. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_originator_document_reference
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_originator_document_reference
-msgid "Originator Document Reference"
-msgstr "Riferimento documento di origine"
-
-#. module: account_peppol_advanced_fields
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_project_reference
-#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_project_reference
-msgid "Project Reference"
-msgstr "Riferimento progetto"
-
-#. module: account_peppol_advanced_fields
 #: model:ir.model.fields,help:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_delivery_location_id
 #: model:ir.model.fields,help:account_peppol_advanced_fields.field_account_move__peppol_delivery_location_id
 msgid "The Global Location Number (GLN) of the delivery location."
 msgstr "Il numero univoco globale (GLN) del luogo di consegna."
 
 #. module: account_peppol_advanced_fields
-#: model:ir.model,name:account_peppol_advanced_fields.model_account_edi_xml_ubl_bis3
-msgid "UBL BIS Billing 3.0.12"
-msgstr "UBL BIS Billing 3.0.12"
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_accounting_cost
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_accounting_cost
+msgid "[DEPRECATED] Accounting Cost"
+msgstr "[NON ATTIVO] Costi contabili"
 
 #. module: account_peppol_advanced_fields
-#: model_terms:ir.ui.view,arch_db:account_peppol_advanced_fields.view_move_form_inherit_peppol
-msgid "XML Invoice"
-msgstr "Fattura XML"
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_additional_document_reference
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_additional_document_reference
+msgid "[DEPRECATED] Additional Document Reference"
+msgstr "[NON ATTIVO] Riferimento documento aggiuntivo"
+
+#. module: account_peppol_advanced_fields
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_contract_document_reference
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_contract_document_reference
+msgid "[DEPRECATED] Contract Document Reference"
+msgstr "[NON ATTIVO] Riferimento documento contratto"
+
+#. module: account_peppol_advanced_fields
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_delivery_location_id
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_delivery_location_id
+msgid "[DEPRECATED] Delivery Location GLN"
+msgstr "[NON ATTIVO] Luogo di consegna GLN"
+
+#. module: account_peppol_advanced_fields
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_despatch_document_reference
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_despatch_document_reference
+msgid "[DEPRECATED] Despatch Document Reference"
+msgstr "[NON ATTIVO] Riferimento documento di spedizione"
+
+#. module: account_peppol_advanced_fields
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_originator_document_reference
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_originator_document_reference
+msgid "[DEPRECATED] Originator Document Reference"
+msgstr "[NON ATTIVO] Riferimento documento originario"
+
+#. module: account_peppol_advanced_fields
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_bank_statement_line__peppol_project_reference
+#: model:ir.model.fields,field_description:account_peppol_advanced_fields.field_account_move__peppol_project_reference
+msgid "[DEPRECATED] Project Reference"
+msgstr "[NON ATTIVO] Riferimento progetto"
+
+#~ msgid "Accounting Cost"
+#~ msgstr "Costo contabile"
+
+#~ msgid "Additional Document Reference"
+#~ msgstr "Riferimento documento aggiuntivo"
+
+#~ msgid "Advanced Peppol"
+#~ msgstr "Peppol avanzato"
+
+#~ msgid "Contract Document Reference"
+#~ msgstr "Riferimento documento contratto"
+
+#~ msgid "Delivery Location GLN"
+#~ msgstr "GLN luogo di consegna"
+
+#~ msgid "Despatch Document Reference"
+#~ msgstr "Riferimento documento di spedizione"
+
+#~ msgid "Originator Document Reference"
+#~ msgstr "Riferimento documento di origine"
+
+#~ msgid "Project Reference"
+#~ msgstr "Riferimento progetto"
+
+#~ msgid "UBL BIS Billing 3.0.12"
+#~ msgstr "UBL BIS Billing 3.0.12"
+
+#~ msgid "XML Invoice"
+#~ msgstr "Fattura XML"

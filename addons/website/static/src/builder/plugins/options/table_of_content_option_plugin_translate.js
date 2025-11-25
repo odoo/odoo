@@ -4,6 +4,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 export class TranslateTableOfContentOptionPlugin extends Plugin {
     static id = "tableOfContentOption";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         normalize_handlers: this.normalize.bind(this),
         content_not_editable_selectors: [".s_table_of_content_navbar"],

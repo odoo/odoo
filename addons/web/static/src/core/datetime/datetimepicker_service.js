@@ -74,6 +74,7 @@ const parsers = {
 export const datetimePickerService = {
     dependencies: ["popover"],
     start(env, { popover: popoverService }) {
+        const dateTimePickerList = new Set();
         return {
             /**
              * @param {DateTimePickerServiceParams} [params]
@@ -265,6 +266,9 @@ export const datetimePickerService = {
                                 popoverTarget.style.marginBottom = marginBottom;
                             };
                         }
+                        for (const picker of dateTimePickerList) {
+                            picker.close();
+                        }
                         popover.open(popoverTarget, { pickerProps });
                     }
 
@@ -396,7 +400,7 @@ export const datetimePickerService = {
                         getInputs(),
                         ensureArray(pickerProps.value),
                         (el, currentValue) => {
-                            if (!el) {
+                            if (!el || el.tagName?.toLowerCase() !== "input") {
                                 return currentValue;
                             }
                             const [parsedValue, error] = safeConvert("parse", el.value);
@@ -529,8 +533,16 @@ export const datetimePickerService = {
                         `datetime picker service error: cannot use target as ref name when not using Owl hooks`
                     );
                 }
-
-                return { enable, isOpen, open, state: pickerProps };
+                const picker = {
+                    enable,
+                    disable: () => dateTimePickerList.delete(picker),
+                    isOpen,
+                    open,
+                    close: () => popover.close(),
+                    state: pickerProps,
+                };
+                dateTimePickerList.add(picker);
+                return picker;
             },
         };
     },

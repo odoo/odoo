@@ -157,7 +157,7 @@ const SET_OPERATORS_BEHAVIORS = {
         return new Domain([[fieldPath, domainOperator, false]]);
     },
     toCellValue(getters, filter, filterValue) {
-        return { value: filterValue.operator === "set" };
+        return [[{ value: filterValue.operator === "set" }]];
     },
 };
 
@@ -175,7 +175,7 @@ const FILTERS_BEHAVIORS = {
                 );
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         {
@@ -188,7 +188,7 @@ const FILTERS_BEHAVIORS = {
                 return new Domain([[fieldPath, filterValue.operator, filterValue.strings]]);
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         {
@@ -203,7 +203,7 @@ const FILTERS_BEHAVIORS = {
                 );
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         SET_OPERATORS_BEHAVIORS,
@@ -242,7 +242,7 @@ const FILTERS_BEHAVIORS = {
                 );
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         SET_OPERATORS_BEHAVIORS,
@@ -270,7 +270,7 @@ const FILTERS_BEHAVIORS = {
                 return new Domain([[fieldPath, filterValue.operator, filterValue.selectionValues]]);
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.selectionValues.join(", ") };
+                return [[{ value: filterValue.selectionValues.join(", ") }]];
             },
         },
     ],
@@ -292,9 +292,8 @@ const FILTERS_BEHAVIORS = {
                 return new Domain([[fieldPath, filterValue.operator, filterValue.targetValue]]);
             },
             toCellValue(getters, filter, filterValue) {
-                return {
-                    value: filterValue.targetValue !== undefined ? filterValue.targetValue : "",
-                };
+                const value = filterValue.targetValue !== undefined ? filterValue.targetValue : "";
+                return [[{ value }]];
             },
         },
         {

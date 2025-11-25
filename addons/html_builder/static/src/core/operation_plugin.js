@@ -4,6 +4,11 @@ import { useComponent } from "@odoo/owl";
 
 /** @typedef {import("./operation").OperationParams} OperationParams */
 
+/**
+ * @typedef { Object } OperationShared
+ * @property { OperationPlugin['next'] } next
+ */
+
 export class OperationPlugin extends Plugin {
     static id = "operation";
     static dependencies = ["history"];

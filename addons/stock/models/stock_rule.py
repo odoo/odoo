@@ -364,7 +364,7 @@ class StockRule(models.Model):
             'origin': origin,
             'picking_type_id': self.picking_type_id.id,
             'procurement_values': self._serialize_procurement_values(values),
-            'route_ids': [Command.clear()] + [Command.link(route.id) for route in values.get('route_ids', [])] + [Command.link(self.route_id.id)],
+            'route_ids': [Command.clear()] + [Command.link(route.id) for route in values.get('route_ids', [])],
             'never_product_template_attribute_value_ids': values.get('never_product_template_attribute_value_ids'),
             'warehouse_id': self.warehouse_id.id,
             'date': date_scheduled,

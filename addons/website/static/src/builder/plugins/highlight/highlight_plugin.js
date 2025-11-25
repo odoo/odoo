@@ -19,6 +19,7 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
     static dependencies = ["history", "selection", "split", "format", "edit_interaction"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
         toolbar_items: [
@@ -246,6 +247,11 @@ formatsSpecs.highlight = {
     isFormatted: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     hasStyle: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     addStyle: (node, { highlightId, thicknessToRestore, colorToRestore }) => {
+        const styledNode = closestElement(node, ".o_text_highlight");
+        if (styledNode) {
+            formatsSpecs.highlight.removeStyle(styledNode);
+            node = styledNode;
+        }
         node.classList.add("o_text_highlight", `o_text_highlight_${highlightId}`);
         if (colorToRestore && colorToRestore !== "currentColor") {
             node.style.setProperty("--text-highlight-color", colorToRestore);

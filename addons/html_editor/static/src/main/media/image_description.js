@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useEffect, useRef } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -32,6 +32,11 @@ export class ImageDescriptionPopover extends Component {
             description: this.props.description,
             tooltip: this.props.tooltip,
         };
+        this.inputRef = useRef("description");
+        useEffect(
+            (el) => el?.focus(),
+            () => [this.inputRef.el]
+        );
         useHotkey("escape", () => this.props.close());
     }
 

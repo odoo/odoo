@@ -1,9 +1,9 @@
 import { expect, test } from "@odoo/hoot";
-import { click, dblclick, press, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, dblclick, pointerUp, press, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { base64Img, setupEditor } from "./_helpers/editor";
-import { getContent, setContent } from "./_helpers/selection";
+import { getContent, moveSelectionOutsideEditor, setContent } from "./_helpers/selection";
 import { insertText, undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 
@@ -102,6 +102,20 @@ test("can undo a shape", async () => {
     undo(editor);
     await expectElementCount(".o-we-toolbar button[name='shape_rounded'].active", 0);
     expect("img").not.toHaveClass("rounded");
+});
+
+test("focus description input by default when image description popover opens", async () => {
+    await setupEditor(`
+        <img src="${base64Img}">
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+
+    await click(".o-we-toolbar .btn-group[name='image_description'] button");
+    await animationFrame();
+
+    expect(".o-we-image-description-popover").toHaveCount(1);
+    expect("input[name='description']").toBeFocused();
 });
 
 test("can add an image description & tooltip", async () => {
@@ -588,6 +602,20 @@ test("can undo link removing of an image", async () => {
     undo(editor);
     await animationFrame();
     expect(img.parentElement.tagName).toBe("A");
+});
+
+test("image toolbar should open on click even if selection is not in editable", async () => {
+    const { el, editor } = await setupEditor(`
+        <img src="${base64Img}">
+    `);
+
+    el.focus();
+    moveSelectionOutsideEditor();
+    const selectionData = editor.shared.selection.getSelectionData();
+    expect(document.activeElement).toBe(el);
+    expect(selectionData.documentSelectionIsInEditable).toBe(false);
+    await pointerUp("img");
+    await expectElementCount(".o-we-toolbar", 1);
 });
 
 test.tags("desktop");

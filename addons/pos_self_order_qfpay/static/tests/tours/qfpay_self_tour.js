@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("kiosk_qfpay_order", {
         Utils.checkIsNoBtn("Pay"),
         {
             content: "Waiting for Qfpay payment to be processed",
-            trigger: "body:not(:has(.btn:contains(/^Retry$/)))",
+            trigger: "body:not(:has(.btn:text(Retry)))",
             run: async function () {
                 const amount = posmodel.currentOrder.amount_total;
                 const paymentMethodId = posmodel.models["pos.payment.method"].getAll()[0].id;

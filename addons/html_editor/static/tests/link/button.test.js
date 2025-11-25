@@ -381,3 +381,12 @@ describe("button edit", () => {
         );
     });
 });
+
+test("button should never contain selection placeholder", async () => {
+    await testEditor({
+        contentBefore:
+            '<button style="display: block" contenteditable="true"><div style="display: block" contenteditable="false">a</div></button>',
+        contentBeforeEdit:
+            '<button style="display: block" contenteditable="true"><div style="display: block" contenteditable="false">a</div></button>',
+    });
+});

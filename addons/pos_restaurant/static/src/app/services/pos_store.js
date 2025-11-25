@@ -105,7 +105,7 @@ patch(PosStore.prototype, {
     async sendOrderInPreparation(order, opts = {}) {
         let categoryCount = [];
         if (!opts.cancelled) {
-            categoryCount = this.categoryCount;
+            categoryCount = this.getCategoryCount(order);
         }
         const result = await super.sendOrderInPreparation(order, opts);
 
@@ -120,22 +120,17 @@ patch(PosStore.prototype, {
         }
         return result;
     },
-
-    async sendOrderInPreparationUpdateLastChange(order, opts = {}) {
+    async ensureGuestCustomerCount(order) {
         const currentPreset = order.preset_id;
-        if (
-            this.config.use_presets &&
-            currentPreset?.use_guest &&
-            !order.uiState.guestSetted &&
-            !opts.cancelled
-        ) {
-            const response = await this.setCustomerCount(order);
-            if (!response) {
-                return;
+        if (this.config.use_presets && currentPreset?.use_guest && !order.uiState.guestSetted) {
+            await this.setCustomerCount(order);
+            if (order.getCustomerCount() === 0 && order.table_id) {
+                order.setCustomerCount(order.table_id.seats);
             }
             order.uiState.guestSetted = true;
         }
-
+    },
+    async sendOrderInPreparationUpdateLastChange(order, opts = {}) {
         if (!opts.cancelled) {
             order.cleanCourses();
             const firstCourse = order.getFirstCourse();
@@ -210,6 +205,7 @@ patch(PosStore.prototype, {
                 destOrder.uiState.unmerge[uuid] = {
                     table_id: sourceOrder.table_id.id,
                     quantity: orphanLine.qty,
+                    formerUuid: orphanLine.uuid,
                 };
             }
 
@@ -295,6 +291,7 @@ patch(PosStore.prototype, {
                     acc.push({
                         quantity: details.quantity,
                         uuid: uuid,
+                        formerUuid: details.formerUuid,
                     });
                 }
                 return acc;
@@ -366,6 +363,9 @@ patch(PosStore.prototype, {
                 );
 
                 delete order.uiState.unmerge[line.uuid];
+                if (this.config.module_pos_restaurant) {
+                    newOrder.uiState.mappingOrderlinesUuid[detail.formerUuid] = newLine.uuid;
+                }
             }
 
             await this.syncAllOrders({ orders: [order, newOrder] });
@@ -411,7 +411,10 @@ patch(PosStore.prototype, {
         }
     },
     get categoryCount() {
-        const orderChanges = this.getOrderChanges();
+        return this.getCategoryCount();
+    },
+    getCategoryCount(order = this.getOrder()) {
+        const orderChanges = this.getOrderChanges(order);
         const linesChanges = orderChanges.orderlines;
 
         const categories = Object.values(linesChanges).reduce((acc, curr) => {
@@ -442,12 +445,11 @@ patch(PosStore.prototype, {
             categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
         }
         // Only send modeUpdate if there's already an older mode in progress.
-        const currentOrder = this.getOrder();
         if (
             orderChanges.modeUpdate &&
-            Object.keys(currentOrder.last_order_preparation_change.lines).length
+            Object.keys(order.last_order_preparation_change.lines).length
         ) {
-            const displayName = _t(currentOrder.preset_id?.name);
+            const displayName = _t(order.preset_id?.name);
             categories["modeUpdate"] = { count: 1, name: displayName };
         }
 
@@ -546,6 +548,7 @@ patch(PosStore.prototype, {
     },
     async submitOrder() {
         const order = this.getOrder();
+        await this.ensureGuestCustomerCount(order);
         await this.sendOrderInPreparationUpdateLastChange(order);
         this.addPendingOrder([order.id]);
         this.showDefault();
@@ -565,6 +568,7 @@ patch(PosStore.prototype, {
                 return;
             }
             try {
+                await this.ensureGuestCustomerCount(order);
                 this.env.services.ui.block();
                 await this.sendOrderInPreparationUpdateLastChange(order);
             } finally {
@@ -853,7 +857,7 @@ patch(PosStore.prototype, {
 
         if (destinationTable) {
             if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-                await this.syncAllOrders({ orders: [sourceOrder] });
+                await this.handleFailToPrepareOrderTransfer([sourceOrder]);
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
@@ -867,13 +871,16 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-            await this.syncAllOrders({ orders: [sourceOrder] });
+            await this.handleFailToPrepareOrderTransfer([sourceOrder]);
             return;
         }
 
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
+    },
+    async handleFailToPrepareOrderTransfer(orders) {
+        await this.syncAllOrders({ orders });
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);

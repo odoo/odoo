@@ -1938,6 +1938,18 @@ test(`basic grouped list rendering with a date field between two fields with a a
     expect(queryAllTexts(`.o_group_header:eq(0) td`)).toEqual(["-4", "", "-4"]);
 });
 
+test(`basic grouped list rendering 1 col without selector and with optional field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="bar" optional="hidden"/></list>`,
+        groupBy: ["bar"],
+        allowSelectors: false,
+    });
+    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
+});
+
 test(`basic grouped list rendering 1 col without selector`, async () => {
     await mountView({
         resModel: "foo",
@@ -1991,6 +2003,25 @@ test(`basic grouped list rendering 3 cols without selector`, async () => {
         resModel: "foo",
         type: "list",
         arch: `<list><field name="foo"/><field name="bar"/><field name="text"/></list>`,
+        groupBy: ["bar"],
+        allowSelectors: false,
+    });
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
+});
+
+test(`basic grouped list rendering 3 cols without selector and with optional fields`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="text"/>
+                <field name="date" optional="hidden"/>
+            </list>
+        `,
         groupBy: ["bar"],
         allowSelectors: false,
     });
@@ -4971,6 +5002,54 @@ test(`aggregates monetary (currency field in view)`, async () => {
     expect(`tfoot`).toHaveText("$ 2,000.00");
 });
 
+test(`aggregates monetary (currency field not set)`, async () => {
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_test" });
+    Foo._fields.currency_test = fields.Many2one({ relation: "res.currency" });
+    Foo._records[0].currency_test = 1;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_test"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
+        "$ 1,200.00",
+        "500.00",
+        "300.00",
+        "0.00",
+    ]);
+    expect(`tfoot`).toHaveText("$ 0.00?");
+});
+
+test(`aggregates monetary (currency field not set on first record)`, async () => {
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_test" });
+    Foo._fields.currency_test = fields.Many2one({ relation: "res.currency" });
+    Foo._records[1].currency_test = 1;
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_test"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
+        "1,200.00",
+        "$ 500.00",
+        "300.00",
+        "0.00",
+    ]);
+    expect(`tfoot`).toHaveText("$ 0.00?");
+});
+
 test(`aggregates monetary with custom digits (same currency)`, async () => {
     Foo._records = Foo._records.map((record) => ({
         ...record,
@@ -7442,6 +7521,38 @@ test(`click on header in empty list with sample data`, async () => {
     });
 });
 
+test(`list grouped by m2o with sample data with more than 5 real groups`, async () => {
+    Foo._records = [];
+    onRpc("web_read_group", () => ({
+        // simulate 6, empty, real groups
+        groups: [1, 2, 3, 4, 5, 6].map((id) => ({
+            __count: 0,
+            __records: [],
+            m2o: [id, `Value ${id}`],
+            __extra_domain: [["m2o", "=", id]],
+        })),
+        length: 6,
+    }));
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list sample="1"><field name="foo"/></list>`,
+        groupBy: ["m2o"],
+    });
+    expect(`.o_list_view .o_content`).toHaveClass("o_view_sample_data");
+    expect(`.o_list_table`).toHaveCount(1);
+    expect(`.o_group_header`).toHaveCount(6);
+    expect(queryAllTexts(`.o_group_header`)).toEqual([
+        "Value 1 (3)",
+        "Value 2 (3)",
+        "Value 3 (3)",
+        "Value 4 (3)",
+        "Value 5 (2)",
+        "Value 6 (2)",
+    ]);
+});
+
 test.tags("desktop");
 test(`non empty editable list with sample data: delete all records`, async () => {
     await mountView({
@@ -7888,7 +7999,7 @@ test(`edit button does not trigger fold group`, async () => {
                 </groupby>
             </list>
         `,
-        groupBy: ['currency_id']
+        groupBy: ["currency_id"],
     });
     expect(`.o_group_open`).toHaveCount(0);
     await contains(`.o_group_header:eq(0)`).click();
@@ -19268,6 +19379,42 @@ test(`multi edition: many2many_tags add few tags in one time`, async () => {
     expect(`.modal .o_field_many2many_tags .badge:eq(0)`).toHaveText("Value 3", {
         message: "should have display_name in badge",
     });
+});
+
+test.tags("desktop");
+test("multi_edit: must work for copy/paster or operation", async () => {
+    Foo._records[1].datetime = "1989-05-03 12:51:35";
+    Foo._records[2].datetime = "1987-11-13 12:12:34";
+    Foo._records[3].datetime = "2019-04-09 03:21:35";
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="datetime"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_list_record_selector`).click();
+    await contains(`.o_data_cell[name=datetime]`).click();
+    await animationFrame();
+    await waitFor(`.o_datetime_picker`);
+    await contains(`input[data-field=datetime]`).edit("+125d", { confirm: "tab" });
+    expect(`tbody tr:eq(0) td[name=datetime]`).toHaveText("Jul 14, 11:30 AM");
+    await contains(`.modal button:contains(update)`).click();
+    expect(".modal").toHaveCount(0);
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "Jul 14, 11:30 AM",
+        "blip",
+        "Jul 14, 11:30 AM",
+        "gnap",
+        "Jul 14, 11:30 AM",
+        "blip",
+        "Jul 14, 11:30 AM",
+    ]);
 });
 
 test.tags("mobile");

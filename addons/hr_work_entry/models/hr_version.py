@@ -18,10 +18,10 @@ class HrVersion(models.Model):
     _inherit = 'hr.version'
 
     date_generated_from = fields.Datetime(string='Generated From', readonly=True, required=True,
-        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False,
+        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
         groups="hr.group_hr_user", tracking=True)
     date_generated_to = fields.Datetime(string='Generated To', readonly=True, required=True,
-        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False,
+        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
         groups="hr.group_hr_user", tracking=True)
     last_generation_date = fields.Date(string='Last Generation Date', readonly=True, groups="hr.group_hr_user", tracking=True)
     work_entry_source = fields.Selection([('calendar', 'Working Schedule')], required=True, default='calendar', tracking=True, help='''
@@ -175,7 +175,7 @@ class HrVersion(models.Model):
         version_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
 
-        attendances_by_resource = self._get_attendance_intervals(start_dt, end_dt)
+        attendances_by_resource = self.sudo()._get_attendance_intervals(start_dt, end_dt)
 
         resource_calendar_leaves = self._get_resource_calendar_leaves(start_dt, end_dt)
         # {resource: resource_calendar_leaves}

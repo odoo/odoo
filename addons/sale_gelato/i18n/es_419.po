@@ -5,13 +5,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 11:54+0000\n"
-"PO-Revision-Date: 2025-10-30 17:20+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 19:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/sale_gelato/es_419/>\n"
 "Language: es_419\n"
@@ -77,19 +78,19 @@ msgstr ""
 "                        Nos alegra informarte que tu orden va hacia tu "
 "dirección.\n"
 "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
-"                            <t t-set=\"tracking_url\" t-value="
-"\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            Tu número de rastreo es <a t-att-href="
-"\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <t t-set=\"tracking_url\" t-"
+"value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Tu número de rastreo es <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
 "                            <br/><br/>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            Tus números de rastreo son:\n"
 "                            <ul>\n"
-"                                <li t-foreach=\"ctx['tracking_data']\" t-as="
-"\"tracking_url\">\n"
-"                                    <a t-att-href=\"tracking_url\" t-out="
-"\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                    <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
 "                                </li>\n"
 "                            </ul>\n"
 "                        </t>\n"
@@ -103,9 +104,9 @@ msgstr ""
 "                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
 "container=\"1\">\n"
 "                        <br/>\n"
-"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote="
-"\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\""
-">Mitchell Admin</t></div>\n"
+"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "                    </t>\n"
 "                </p>\n"
 "            </div>\n"
@@ -403,7 +404,7 @@ msgstr "El método de entrega no está disponible para esta orden."
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/models/delivery_carrier.py:0
+#: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The following required address fields are missing: %s"
 msgstr "Faltan los siguientes campos de dirección: %s"
 
@@ -422,6 +423,18 @@ msgid ""
 msgstr ""
 "La orden con número de referencia %(order_reference)s no se envió a Gelato.\n"
 "Motivo: %(error_message)s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to confirm the order %s on Gelato."
+msgstr "No pudimos confirmar la orden %s en Gelato."
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to delete the order %s on Gelato."
+msgstr "No pudimos eliminar la orden %s en Gelato."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form

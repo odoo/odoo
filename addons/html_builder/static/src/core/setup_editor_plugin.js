@@ -2,9 +2,22 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
+/**
+ * @typedef { Object } SetupEditorShared
+ * @property { SetupEditorPlugin['getEditableAreas'] } getEditableAreas
+ */
+
+/**
+ * @typedef {(() => void | true)[]} after_setup_editor_handlers
+ * @typedef {(() => void)[]} before_setup_editor_handlers
+ *
+ * @typedef {CSSSelector[]} o_editable_selectors
+ */
+
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
     static shared = ["getEditableAreas"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         closest_savable_providers: withSequence(10, (el) => el.closest(".o_editable")),

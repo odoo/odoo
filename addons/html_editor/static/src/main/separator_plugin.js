@@ -15,6 +15,7 @@ import { fillEmpty } from "../utils/dom";
 export class SeparatorPlugin extends Plugin {
     static id = "separator";
     static dependencies = ["selection", "history", "split", "delete", "lineBreak", "baseContainer"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

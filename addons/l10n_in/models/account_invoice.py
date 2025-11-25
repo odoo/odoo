@@ -428,7 +428,7 @@ class AccountMove(models.Model):
     def _get_sections_aggregate_sum_by_pan(self, section_alert, commercial_partner_id):
         self.ensure_one()
         month_start_date, month_end_date = get_month(self.date)
-        company_fiscalyear_dates = self.company_id.compute_fiscalyear_dates(self.date)
+        company_fiscalyear_dates = self.company_id.sudo().compute_fiscalyear_dates(self.date)
         fiscalyear_start_date, fiscalyear_end_date = company_fiscalyear_dates['date_from'], company_fiscalyear_dates['date_to']
         default_domain = [
             ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
@@ -482,7 +482,7 @@ class AccountMove(models.Model):
         def _group_by_section_alert(invoice_lines):
             group_by_lines = {}
             for line in invoice_lines:
-                group_key = line.account_id.l10n_in_tds_tcs_section_id
+                group_key = line.account_id.sudo().l10n_in_tds_tcs_section_id
                 if group_key and not line.company_currency_id.is_zero(line.price_total):
                     group_by_lines.setdefault(group_key, [])
                     group_by_lines[group_key].append(line)
@@ -679,9 +679,13 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_in_extract_digits(self, string):
         if not string:
-            return string
+            return ""
         matches = re.findall(r"\d+", string)
         return "".join(matches)
+
+    @api.model
+    def _l10n_in_is_service_hsn(self, hsn_code):
+        return self._l10n_in_extract_digits(hsn_code).startswith('99')
 
     @api.model
     def _l10n_in_round_value(self, amount, precision_digits=2):
@@ -725,6 +729,6 @@ class AccountMove(models.Model):
     @contextmanager
     def _sync_l10n_in_gstr_section(self, moves):
         yield
-        for move in moves:
-            # we set the section on the invoice lines
-            move.line_ids._set_l10n_in_gstr_section()
+        tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
+        # we set the section on the invoice lines
+        moves.line_ids._set_l10n_in_gstr_section(tax_tags_dict)

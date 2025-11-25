@@ -154,10 +154,20 @@ class TestUBLRO(TestUBLCommon):
             'street': "Strada Kunst, 3",
         })
 
+        cls.bank = cls.env['res.bank'].create({
+            'name': 'Banca Trimitere EDI Global',
+            'country': cls.env.ref('base.ro').id,
+            'state': cls.env.ref('base.RO_CJ').id,
+            'city': 'Cluj-Napoca',
+            'zip': '400000',
+            'street': 'Strada Global EDI Test',
+        })
+
         cls.env['res.partner.bank'].create({
             'acc_type': 'iban',
             'partner_id': cls.company_data['company'].partner_id.id,
             'acc_number': 'RO98RNCB1234567890123456',
+            'bank_id': cls.bank.id,
         })
 
         cls.partner_a = cls.env['res.partner'].create({

@@ -14,6 +14,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";
     static dependencies = ["clone", "selection"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(LAYOUT, LayoutOption),

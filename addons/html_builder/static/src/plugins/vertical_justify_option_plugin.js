@@ -6,6 +6,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class VerticalJustifyOptionPlugin extends Plugin {
     static id = "verticalJustifyOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(END, VerticalJustifyOption)],
     };

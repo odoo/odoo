@@ -1,3 +1,4 @@
+
 import logging
 import re
 import uuid
@@ -1688,7 +1689,7 @@ class AccountMove(models.Model):
                 discount_type = get_text(discount, './/Tipo')
                 discount_sign = -1 if discount_type == 'MG' else 1
                 if (discount_percentage := get_float(discount, './/Percentuale')) and not float_is_zero(discount_percentage, precision_rounding=move_line.currency_id.rounding):
-                    current_unit_price *= discount_sign * (100 - discount_percentage) / 100
+                    current_unit_price *= (100 - discount_sign * discount_percentage) / 100
                 elif discount_amount := get_float(discount, './/Importo'):
                     current_unit_price -= discount_sign * discount_amount
             expected_total = get_float(element, './/PrezzoTotale')
@@ -1821,7 +1822,7 @@ class AccountMove(models.Model):
         errors = {}
         for kind_code, kind_desc, min_len in (
             ('vat', _('VAT'), 1),
-            ('withholding', _('Withholding'), 0),
+            ('withholding_no_enasarco', _('Withholding'), 0),
             ('pension_fund', _('Pension Fund'), 0),
         ):
             errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len))
