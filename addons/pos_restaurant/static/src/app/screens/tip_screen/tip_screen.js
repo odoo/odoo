@@ -109,10 +109,10 @@ export class TipScreen extends Component {
     }
     async printTipReceipt() {
         const order = this.currentOrder;
-        const receipts = [
-            order.getSelectedPaymentline().ticket,
-            order.getSelectedPaymentline().cashier_receipt,
-        ];
+        const selectedPaymentLine = order.getSelectedPaymentline() || order.payment_ids[0];
+        const receipts = [selectedPaymentLine?.ticket, selectedPaymentLine?.cashier_receipt].filter(
+            Boolean
+        );
         for (let i = 0; i < receipts.length; i++) {
             await this.printer.print(
                 TipReceipt,
