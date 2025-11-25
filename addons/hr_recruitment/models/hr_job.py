@@ -24,7 +24,7 @@ class HrJob(models.Model):
 
     def _address_id_domain(self):
         return ['|', '&', '&', ('type', '!=', 'contact'), ('type', '!=', 'private'),
-                ('id', 'in', self.sudo().env.companies.partner_id.child_ids.ids),
+                ('parent_id', 'in', self.sudo().env.companies.partner_id.ids),
                 ('id', 'in', self.sudo().env.companies.partner_id.ids)]
 
     def _get_default_favorite_user_ids(self):
@@ -97,6 +97,7 @@ class HrJob(models.Model):
         ('monthly', 'Month'),
         ('yearly', 'Year'),
     ], string='Scheduled Pay', default='monthly', required=True, groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user")
+    company_partner_id = fields.Many2one('res.partner', compute='_compute_company_partner_id')
 
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
@@ -306,6 +307,11 @@ class HrJob(models.Model):
     def _onchange_salary(self):
         if self.salary_min > self.salary_max:
             self.salary_min, self.salary_max = self.salary_max, self.salary_min
+
+    @api.depends('company_id')
+    def _compute_company_partner_id(self):
+        for job in self:
+            job.company_partner_id = job.company_id.partner_id or self.env.company.partner_id
 
     @api.model_create_multi
     def create(self, vals_list):
