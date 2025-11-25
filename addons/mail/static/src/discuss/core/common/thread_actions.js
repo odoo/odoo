@@ -118,7 +118,7 @@ threadActionsRegistry
         open(component, action) {
             if (action.sidebar) {
                 action.dialogService?.add(ChannelActionDialog, {
-                    title: component.thread.name,
+                    title: component.thread.displayName,
                     contentComponent: ChannelInvitation,
                     contentProps: {
                         autofocus: true,

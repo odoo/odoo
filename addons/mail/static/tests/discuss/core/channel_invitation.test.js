@@ -174,3 +174,20 @@ test("unnamed group chat should display correct name just after being invited", 
         text: "You have been invited to #Jane and Mitchell Admin",
     });
 });
+
+test("Invite sidebar action has the correct title for group chats", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item", { text: "Invite People" });
+    await contains("h4.modal-title", { text: "Mitchell Admin and Demo" });
+});
