@@ -59,7 +59,7 @@ export class BuilderList extends Component {
             id: this.props.id,
             defaultValue: this.parseDisplayValue([]),
             parseDisplayValue: this.parseDisplayValue,
-            formatRawValue: this.formatRawValue,
+            formatRawValue: this.formatRawValue.bind(this),
         });
         this.state = state;
         this.commit = commit;
@@ -96,11 +96,9 @@ export class BuilderList extends Component {
         }
     }
 
-    get availableRecords() {
-        const items = this.formatRawValue(this.state.value);
-        return this.allRecords.filter(
-            (record) => !items.some((item) => item.id === Number(record.id))
-        );
+    getAvailableRecords() {
+        const itemIds = new Set(this.formatRawValue(this.state.value).map((i) => i.id));
+        return this.allRecords.filter((record) => !itemIds.has(record.id));
     }
 
     parseDisplayValue(displayValue) {
@@ -109,9 +107,11 @@ export class BuilderList extends Component {
 
     formatRawValue(rawValue) {
         const items = rawValue ? JSON.parse(rawValue) : [];
+        let nextAvailableId = items ? this.getNextAvailableItemId(items) : 0;
         for (const item of items) {
             if (!("_id" in item)) {
-                item._id = this.getNextAvailableItemId(items);
+                item._id = nextAvailableId.toString();
+                nextAvailableId += 1;
             }
         }
         return items;
@@ -156,7 +156,7 @@ export class BuilderList extends Component {
         return {
             ...this.props.defaultNewValue,
             ...this.props.default,
-            _id: this.getNextAvailableItemId(),
+            _id: this.getNextAvailableItemId().toString(),
         };
     }
 
@@ -166,7 +166,7 @@ export class BuilderList extends Component {
             .map((item) => parseInt(item._id))
             .reduce((acc, id) => (id > acc ? id : acc), -1);
         const nextAvailableId = biggestId + 1;
-        return nextAvailableId.toString();
+        return nextAvailableId;
     }
 
     onInput(e) {
