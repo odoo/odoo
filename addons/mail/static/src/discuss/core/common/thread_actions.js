@@ -91,7 +91,7 @@ registerThreadAction("invite-people", {
     open({ owner, store, thread }) {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
-                title: thread.name,
+                title: thread.displayName,
                 contentComponent: ChannelInvitation,
                 contentProps: {
                     autofocus: true,
