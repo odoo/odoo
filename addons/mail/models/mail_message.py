@@ -1207,7 +1207,7 @@ class MailMessage(models.Model):
                     not self.env.user._is_public()
                     and self.env.user.partner_id in notifications_partners
                 )
-                data["trackingValues"] = displayed_tracking_ids._tracking_value_format()
+                data["trackingValues"] = []  # TDE: to remove
             store.add(message, data)
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is

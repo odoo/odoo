@@ -657,14 +657,6 @@ class TestTrackingInternals(MailCommon):
                 'tracking_values_fmt': tracking_value_list,
             }
         )
-        # check formatting for all field types
-        formatted_values_all = new_message.sudo().tracking_value_ids._tracking_value_format()
-        for (field_name, field_type, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
-            currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
-            precision = None if field_name != 'float_field_with_digits' else (10, 8)
-            with self.subTest(field_name=field_name):
-                self.assertEqual(formatted_vals['fieldInfo']['currencyId'], currency)
-                self.assertEqual(formatted_vals['fieldInfo']['floatPrecision'], precision)
 
         # check if the tracking value have the correct currency and values after
         # changing the value and the company at the same time
@@ -777,21 +769,6 @@ class TestTrackingInternals(MailCommon):
             }
         )
 
-        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
-        self.assertEqual(len(formatted_values), 5)
-        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
-        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
-        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
-        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
-        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property Date')
-        self.assertEqual(formatted_values[1]['oldValue'], '2024-01-03')
-        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Datetime')
-        self.assertEqual(formatted_values[2]['oldValue'], '2024-01-02 12:59:01Z')
-        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Tags')
-        self.assertEqual(formatted_values[3]['oldValue'], 'AA, BB')
-        self.assertEqual(formatted_values[4]['fieldInfo']['changedField'], 'Properties: Property M2M')
-        self.assertEqual(formatted_values[4]['oldValue'], 'Record 0, Record 1, Record 2')
-
         properties_record_1 = self.properties_record_1.with_env(self.env)
         with self.mock_mail_gateway(), self.mock_mail_app():
             properties_record_1.properties_parent_id = self.properties_parent_2
@@ -807,19 +784,6 @@ class TestTrackingInternals(MailCommon):
                 ],
             }
         )
-
-        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
-        self.assertEqual(len(formatted_values), 4)
-        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
-        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
-        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
-        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
-        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property M2O')
-        self.assertEqual(formatted_values[1]['oldValue'], 'Record 0')
-        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Int')
-        self.assertEqual(formatted_values[2]['oldValue'], 1337)
-        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Char')
-        self.assertEqual(formatted_values[3]['oldValue'], 'char value')
 
         # changing the parent and then changing again
         # to the original one to not create tracking values
@@ -973,51 +937,6 @@ class TestTrackingInternals(MailCommon):
                 groups = field.groups
             self.assertEqual(groups, exp_groups)
 
-        # check formatting, as it fetches info on model
-        formatted = trackings._tracking_value_format()
-        self.assertEqual(
-            formatted,
-            [
-                {
-                    'id': trackings[0].id,
-                    'fieldInfo': {
-                        'changedField': 'Secret',
-                        'currencyId': False,
-                        'fieldType': 'char',
-                        'floatPrecision': None,
-                        'isPropertyField': False,
-                    },
-                    'newValue': 'secret',
-                    'oldValue': False,
-                },
-                {
-                    'id': trackings[2].id,
-                    'fieldInfo': {
-                        'changedField': 'Old integer',
-                        'currencyId': False,
-                        'fieldType': 'integer',
-                        'floatPrecision': None,
-                        'isPropertyField': False,
-                    },
-                    'newValue': 35,
-                    'oldValue': 30,
-                },
-                {
-                    'id': trackings[1].id,
-                    'fieldInfo': {
-                        'changedField': 'Unknown',
-                        'currencyId': False,
-                        'fieldType': 'char',
-                        'floatPrecision': None,
-                        'isPropertyField': False,
-                    },
-                    'newValue': False,
-                    'oldValue': False,
-                },
-            ],
-        )
-
-
     @users('employee')
     def test_track_sequence(self):
         """ Update some tracked fields and check that the mail.tracking.value
@@ -1072,12 +991,6 @@ class TestTrackingInternals(MailCommon):
             tracking_values.field_id.mapped('name'),
             list(reversed(custom_order_fnames)),
             'Tracking model: order, based on ID DESC, following reverted insertion'
-        )
-        tracking_formatted = tracking_values._tracking_value_format()
-        self.assertEqual(
-            [tracking_values.browse(t['id']).field_id.name for t in tracking_formatted],
-            ordered_fnames,
-            'Track: formatted order is correctly based on field sequence definition'
         )
 
     @users('employee')
@@ -1136,46 +1049,6 @@ class TestTrackingInternals(MailCommon):
 
         # check display / format
         trackings_all = (record + record_other).message_ids.sudo().tracking_value_ids
-        trackings_all_sorted = [
-            trackings_all.filtered(lambda t: t.field_id.name == 'user_id'),  # tracking=1
-            trackings_all.filtered(lambda t: t.field_id.name == 'customer_id'),  # tracking=2
-            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[0],  # tracking=True -> 100
-            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[1],  # tracking=True -> 100
-            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[2],  # tracking=True -> 100
-        ]
-        fields_info = [
-            ('user_id', 'many2one', 'Responsible'),
-            ('customer_id', 'many2one', 'Customer'),
-            ('email_from', 'char', 'Email From'),
-            ('email_from', 'char', 'Email From'),
-            ('email_from', 'char', 'Email From'),
-        ]
-        values_info = [
-            ('', self.env.user.name),
-            ('', self.test_partner.name),
-            (False, 'new_value'),
-            ('email.from.1@example.com', 'email.from.2@example.com'),
-            (False, 'email.from.1@example.com'),
-        ]
-        formatted = trackings_all._tracking_value_format()
-        self.assertEqual(
-            formatted,
-            [
-                {
-                    'id': tracking.id,
-                    'fieldInfo': {
-                        'changedField': field_info[2],
-                        'fieldType': field_info[1],
-                        'floatPrecision': None,
-                        'currencyId': False,
-                        'isPropertyField': False,
-                    },
-                    'newValue': values[1],
-                    'oldValue': values[0],
-                }
-                for tracking, field_info, values in zip(trackings_all_sorted, fields_info, values_info)
-            ]
-        )
 
         # remove fields
         fields_toremove = self.env['ir.model.fields'].sudo().search([
@@ -1184,24 +1057,3 @@ class TestTrackingInternals(MailCommon):
         ])
         fields_toremove.with_context(_force_unlink=True).unlink()
         self.assertEqual(len(trackings_all.exists()), 5)
-
-        # check display / format, even if field is removed
-        formatted = trackings_all._tracking_value_format()
-        self.assertEqual(
-            formatted,
-            [
-                {
-                    'id': tracking.id,
-                    'fieldInfo': {
-                        'changedField': field_info[2],
-                        'fieldType': field_info[1],
-                        'isPropertyField': False,
-                        'currencyId': False,
-                        'floatPrecision': None,
-                    },
-                    'newValue': values[1],
-                    'oldValue': values[0],
-                }
-                for tracking, field_info, values in zip(trackings_all_sorted, fields_info, values_info)
-            ]
-        )
