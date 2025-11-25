@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import io
 import re
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-
-from odoo.addons.sale_pdf_quote_builder import utils
+from odoo.tools import pdf, unique
 
 
 class SalePdfFormField(models.Model):
@@ -202,9 +202,9 @@ class SalePdfFormField(models.Model):
             records = records.with_context(bin_size=False)
 
         for document in records:
-            if document.datas:
-                form_fields = utils._get_form_fields_from_pdf(document.datas)
-                for field in form_fields:
+            if document.raw:
+                reader = pdf.PdfFileReader(io.BytesIO(document.raw), strict=False)
+                for field in unique(reader.getFormTextFields()):
                     if field not in existing_form_fields_name:
                         document.form_field_ids = [
                             Command.create({

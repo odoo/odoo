@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import base64
+import io
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-
-from odoo.addons.sale_pdf_quote_builder import utils
+from odoo.tools import pdf
 
 
 class ProductDocument(models.Model):
@@ -35,26 +33,29 @@ class ProductDocument(models.Model):
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains('attached_on_sale', 'datas', 'type')
+    @api.constrains('attached_on_sale', 'raw', 'type')
     def _check_attached_on_and_datas_compatibility(self):
         for doc in self.filtered(lambda doc: doc.attached_on_sale == 'inside'):
             if doc.type != 'binary':
                 raise ValidationError(_(
                     "When attached inside a quote, the document must be a file, not a URL."
                 ))
-            if doc.datas and not doc.mimetype.endswith('pdf'):
+            if doc.raw and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be attached inside a quote."))
-            if doc.datas:
-                utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
+            if doc.raw and pdf.PdfFileReader(io.BytesIO(doc.raw), strict=False).isEncrypted:
+                raise ValidationError(_(
+                    "It seems that we're not able to process this pdf inside a quotation. It is either"
+                    " encrypted, or encoded in a format we do not support."
+                ))
 
     # === COMPUTE METHODS === #
 
-    @api.depends('datas', 'attached_on_sale')
+    @api.depends('raw', 'attached_on_sale')
     def _compute_form_field_ids(self):
         # Empty the linked form fields as we want all and only those from the current datas
         self.form_field_ids = [Command.clear()]
         document_to_parse = self.filtered(
-            lambda doc: doc.attached_on_sale == 'inside' and doc.datas and doc.mimetype and doc.mimetype.endswith('pdf')
+            lambda doc: doc.attached_on_sale == 'inside' and doc.raw and doc.mimetype and doc.mimetype.endswith('pdf')
         )
         if document_to_parse:
             doc_type = 'product_document'
