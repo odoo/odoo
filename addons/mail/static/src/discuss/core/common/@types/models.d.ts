@@ -36,7 +36,6 @@ declare module "models" {
         updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {
-        _computeOfflineMembers: () => ChannelMember[];
         allow_invite_by_email: Readonly<boolean>;
         allowCalls: Readonly<boolean>;
         allowDescription: Readonly<boolean>;
@@ -58,9 +57,7 @@ declare module "models" {
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
-        hasMemberList: Readonly<boolean>;
         hasSeenFeature: boolean;
-        hasSelfAsMember: Readonly<boolean>;
         invitationLink: Readonly<unknown|string>;
         invited_member_ids: ChannelMember[];
         last_interest_dt: import("luxon").DateTime;
