@@ -69,6 +69,14 @@ class AccountPayment(models.Model):
         help="When an internal transfer is posted, a paired payment is created. "
         "They are cross referenced through this field", copy=False)
 
+    transaction_uuid = fields.Char(
+        string='Transaction ID',
+        compute='_compute_transaction_uuid',
+        store=True,
+        index=True,
+        help='Unique transaction identifier assigned by the initiating party',
+    )
+
     # == Payment methods fields ==
     payment_method_line_id = fields.Many2one('account.payment.method.line', string='Payment Method',
         readonly=False, store=True, copy=False,
@@ -440,6 +448,10 @@ class AccountPayment(models.Model):
 
                 reconcile_lines = (counterpart_lines + writeoff_lines).filtered(lambda line: line.account_id.reconcile)
                 pay.is_reconciled = pay.currency_id.is_zero(sum(reconcile_lines.mapped(residual_field)))
+
+    def _compute_transaction_uuid(self):
+        # TO BE OVERRIDDEN
+        pass
 
     @api.model
     def _get_method_codes_using_bank_account(self):

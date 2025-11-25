@@ -143,8 +143,6 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        reference = f'{self.reference} - {self.provider_reference or ""}'
-
         payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
             .filtered(lambda l: l.payment_provider_id == self.provider_id)
         payment_values = {
@@ -158,7 +156,7 @@ class PaymentTransaction(models.Model):
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
-            'memo': reference,
+            'memo': self.reference,
             'write_off_line_vals': [],
             'invoice_ids': self.invoice_ids,
             **extra_create_values,

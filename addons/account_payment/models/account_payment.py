@@ -103,6 +103,13 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.refunds_count = data.get(payment.id, 0)
 
+    @api.depends('payment_transaction_id')
+    def _compute_transaction_uuid(self):
+        super()._compute_transaction_uuid()
+        for payment in self:
+            if payment.payment_transaction_id:
+                payment.transaction_uuid = payment.payment_transaction_id.provider_reference
+
     #=== ONCHANGE METHODS ===#
 
     @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
