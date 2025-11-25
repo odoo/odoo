@@ -65,9 +65,15 @@ class BlackBoxDriver(SerialDriver):
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
         self.device_type = 'fiscal_data_module'
-        self.sequence_number = 0
+        self.sequence_number = int(system.get_conf("fdm_sequence_number") or 0)
         self._set_actions()
         self._certified_ref()
+
+    def disconnect(self):
+        """Override the disconnect method of the driver to save
+        the sequence number in odoo.conf."""
+        system.update_conf({"fdm_sequence_number": self.sequence_number})
+        super().disconnect()
 
     def _set_actions(self):
         """Initializes `self._actions`, a map of action keys sent by the frontend to backend action methods."""
@@ -195,6 +201,7 @@ class BlackBoxDriver(SerialDriver):
                 # If the last response was an error, we do not send the next messages in the batch. They will be sent later in a new batch.
                 break
 
+        system.update_conf({"fdm_sequence_number": self.sequence_number})
         return responses
 
     def _register_receipt_web(self, data):
