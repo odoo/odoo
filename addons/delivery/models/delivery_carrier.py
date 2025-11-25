@@ -206,7 +206,7 @@ class DeliveryCarrier(models.Model):
         if source._name == 'sale.order':
             products = source.order_line.product_id
         elif source._name == 'stock.picking':
-            products = source.move_ids.product_id
+            products = source.move_ids.with_prefetch().mapped('product_id')
         else:
             raise UserError(_("Invalid source document type"))
         return not self.must_have_tag_ids or any(
@@ -219,7 +219,7 @@ class DeliveryCarrier(models.Model):
         if source._name == 'sale.order':
             products = source.order_line.product_id
         elif source._name == 'stock.picking':
-            products = source.move_ids.product_id
+            products = source.move_ids.with_prefetch().mapped('product_id')
         else:
             raise UserError(_("Invalid source document type"))
         return not any(tag in products.all_product_tag_ids for tag in self.excluded_tag_ids)
