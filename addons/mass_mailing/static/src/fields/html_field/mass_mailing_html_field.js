@@ -115,7 +115,7 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     get withBuilder() {
-        return !this.props.readonly && this.state.activeTheme !== "basic";
+        return this.state.activeTheme !== "basic";
     }
 
     resetIframe() {

@@ -108,8 +108,6 @@
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
 
-            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-
             'html_editor/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/scss/background.scss',
 
@@ -121,16 +119,33 @@
             'web/static/src/scss/fontawesome_overridden.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
+
+            # TODO EGGMAIL: extract what is needed here from the bundle, but remove
+            # this bundle inclusion as it should only concern the sent email,
+            # not its appearance in the browser (except if this is a way to
+            # copy microsoft-specific style rules inline, to check if this does
+            # not cause some style parser to crash and interrupt reading).
+            ('include', 'mass_mailing.assets_email_html_conversion'),
         ],
+        'mass_mailing.assets_email_html_conversion': [
+            # style sheet added in _prepare_mail_values in the
+            # email sent, they are added here to create as many inline style
+            # rules as possible during html conversion.
+            # Files added here should also be handled in _prepare_mail_values
+            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
+        ],
+        'mass_mailing.assets_inside_basic_editor_iframe': [
+            ('include', 'mass_mailing.assets_iframe_style'),
+            ('include', 'html_editor.assets_editor'),
+        ],
+        # TODO EGGMAIL: fix bundle definitions
         # style assets used to view the mail content in Odoo, but not used
         # during html conversion, specific to the builder
         'mass_mailing.assets_inside_builder_iframe': [
+            ('include', 'mass_mailing.assets_iframe_style'),
+            ('include', 'html_editor.assets_editor'),
             ('include', 'html_builder.assets_inside_builder_iframe'),
-            # TODO ABD: fix bundles usages so that html_editor files don't
-            # have to be cherry picked individually.
-            'html_editor/static/src/main/selection_placeholder_plugin.scss',
             'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
         'mass_mailing.iframe_add_dialog': [
