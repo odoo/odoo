@@ -902,18 +902,15 @@ class StockMoveLine(models.Model):
             if line_key not in aggregated_move_lines:
                 qty_ordered = None
                 if backorders and not kwargs.get('strict'):
-                    qty_ordered = move_line.move_id.product_uom_qty
                     # Filters on the aggregation key (product, description and uom) to add the
                     # quantities delayed to backorders to retrieve the original ordered qty.
-                    following_move_lines = backorders.move_line_ids.filtered(
-                        lambda ml: self._get_aggregated_properties(move=ml.move_id)['line_key'] == line_key
+                    following_moves = backorders.move_ids.filtered(
+                        lambda m: self._get_aggregated_properties(move=m)['line_key'] == line_key
                     )
-                    qty_ordered += sum(following_move_lines.move_id.mapped('product_uom_qty'))
-                    # Remove the done quantities of the other move lines of the stock move
-                    previous_move_lines = move_line.move_id.move_line_ids.filtered(
-                        lambda ml: self._get_aggregated_properties(move=ml.move_id)['line_key'] == line_key and ml.id != move_line.id
-                    )
-                    qty_ordered -= sum([m.product_uom_id._compute_quantity(m.quantity, uom) for m in previous_move_lines])
+                    if following_moves:
+                        qty_ordered = move_line.move_id.quantity + sum(following_moves.mapped('product_uom_qty'))
+                    else:
+                        qty_ordered = move_line.move_id.product_uom_qty
                 aggregated_move_lines[line_key] = {
                     **aggregated_properties,
                     'quantity': quantity,
@@ -950,7 +947,9 @@ class StockMoveLine(models.Model):
                     'product': empty_move.product_id,
                 }
             elif line_key in aggregated_move_lines:
-                aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
+                # If the move is a backorder, it was already taken into account in the first loop
+                if not (backorders and empty_move.picking_id in backorders):
+                    aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
 
         return self._compute_packaging_qtys(aggregated_move_lines)
 
