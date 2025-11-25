@@ -362,7 +362,7 @@
                                 <field t-if="!record.date_start.raw_value" name="production_date"/>
                             </div>
                             <div class="h2 ms-2">
-                                <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'blocked'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
+                                <span t-attf-class="badge rounded-pill #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'blocked'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
                                     <field name="state"/>
                                 </span>
                             </div>
