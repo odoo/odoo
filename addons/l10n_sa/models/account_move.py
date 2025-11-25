@@ -17,9 +17,15 @@ ADJUSTMENT_REASONS = [
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+<<<<<<< f0479ed63ffa5f792aee5cda9b59a79ed5b88454
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str', compute_sudo=True)
     l10n_sa_show_reason = fields.Boolean(compute="_compute_show_l10n_sa_reason")
     l10n_sa_reason = fields.Selection(string="ZATCA Reason", selection=ADJUSTMENT_REASONS, copy=False)
+||||||| 046eff94b1c70b64cd8954ace9eb1dcd0f0ac470
+    l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
+=======
+    l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str', compute_sudo=True)
+>>>>>>> bcb8353880a1ef232a9a48984846d349377915fd
     l10n_sa_confirmation_datetime = fields.Datetime(string='ZATCA Issue Date',
                                                     readonly=True,
                                                     copy=False,
