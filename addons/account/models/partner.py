@@ -796,12 +796,16 @@ class ResPartner(models.Model):
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
 
+    def _check_vat_parent_child_consistency(self,partner2moves,parent_vat):
+        if partner2moves and any((partner.vat or '') != (parent_vat or '') for partner in self):
+            raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
+
+
     def write(self, vals):
-        if 'parent_id' in vals:
+        if 'parent_id' in vals :
             partner2moves = self.sudo().env['account.move'].search([('partner_id', 'in', self.ids)]).grouped('partner_id')
             parent_vat = self.env['res.partner'].browse(vals['parent_id']).vat
-            if partner2moves and vals['parent_id'] and any((partner.vat or '') != (parent_vat or '') for partner in self):
-                raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
+            self._check_vat_parent_child_consistency(partner2moves,parent_vat)
 
         res = super().write(vals)
 
