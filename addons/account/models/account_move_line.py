@@ -2985,6 +2985,10 @@ class AccountMoveLine(models.Model):
                         account.reconcile = True
                     lines.with_context(no_exchange_difference=True, no_cash_basis=True).reconcile()
 
+    def _get_matched_move_ids(self):
+        """ Return a record set with both self.matched_debit_ids & self.matched_credit_ids """
+        return self.matched_debit_ids | self.matched_credit_ids
+
     # -------------------------------------------------------------------------
     # ANALYTIC
     # -------------------------------------------------------------------------
