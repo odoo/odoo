@@ -952,6 +952,7 @@ class MailMessage(models.Model):
                 accessible_tracking_value_ids = tracking_values._filter_has_field_access(self.env)
                 message_domain |= Domain("id", "in", accessible_tracking_value_ids.mail_message_id.ids)
             domain &= message_domain
+        if search_term or is_notification is not None:
             res["count"] = self.search_count(domain)
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
