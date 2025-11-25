@@ -513,7 +513,7 @@ test("expand call participants when joining a call", async () => {
     await contains("img[title='Bob']");
     await contains("img[title='Cathy']");
     await contains("img[title='David']");
-    await contains(".o-mail-DiscussSidebarCallParticipants span", { text: "+2" });
+    await contains(".o-mail-AvatarStack-remainingCount", { text: "+2" });
     await click("[title='Join Call']");
     await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 10 });
     await contains("img[title='Alice']");
