@@ -621,6 +621,17 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         finally:
             self.env.user.company_id = old_company
 
+    def test_fifo_avg_cost_fallback_zero_valued_qty(self):
+        self.product.standard_price = 42.0
+        move = self._make_in_move(self.product, 1)
+        self._make_out_move(self.product, 1)
+        move.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
+        self.assertEqual(move._get_valued_qty(), 0.0)
+        self.product.invalidate_recordset(['total_value', 'avg_cost'])
+        self.product._compute_value()
+        self.assertEqual(self.product.total_value, 0.0)
+        self.assertEqual(self.product.avg_cost, 42.0)
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
