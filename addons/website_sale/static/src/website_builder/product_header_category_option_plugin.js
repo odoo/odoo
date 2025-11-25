@@ -1,18 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { BuilderAction } from "@html_builder/core/builder_action";
-
 
 export class ProductHeaderCategoryOptionPlugin extends Plugin {
     static id = "ProductHeaderCategoryOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_actions: {
-            ToggleCategoryShowTitleAction,
-            ToggleCategoryShowDescriptionAction,
-            ToggleCategoryAlignContentAction,
-        },
         dirt_marks: {
             id: "product-header",
             setDirtyOnMutation: (mutation, targetNode) =>
@@ -28,32 +21,6 @@ export class ProductHeaderCategoryOptionPlugin extends Plugin {
                 }),
         },
     };
-}
-
-export class BaseCategoryToggleAction extends BuilderAction {
-    isApplied({ editingElement: el, params }) {
-        return el.classList.contains(params.previewClass);
-    }
-
-    apply({ editingElement: el, params }) {
-        el.classList.add(params.previewClass);
-    }
-
-    clean({ editingElement: el, params }) {
-        el.classList.remove(params.previewClass);
-    }
-}
-
-export class ToggleCategoryShowTitleAction extends BaseCategoryToggleAction {
-    static id = "toggleCategoryShowTitle";
-}
-
-export class ToggleCategoryShowDescriptionAction extends BaseCategoryToggleAction {
-    static id = "toggleCategoryShowDescription";
-}
-
-export class ToggleCategoryAlignContentAction extends BaseCategoryToggleAction {
-    static id = "toggleCategoryAlignContent";
 }
 
 registry
