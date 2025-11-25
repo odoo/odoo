@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 09:18+0000\n"
+"POT-Creation-Date: 2025-11-25 19:35+0000\n"
 "PO-Revision-Date: 2025-11-16 11:09+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/"
-"odoo-s18-4-l10n/l10n_id_efaktur_coretax/id/>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s18-4-"
+"l10n/l10n_id_efaktur_coretax/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -477,11 +477,6 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: l10n_id_efaktur_coretax
-#: model:ir.model,website_form_label:l10n_id_efaktur_coretax.model_res_partner
-msgid "Create a Customer"
-msgstr "Buat Pelanggan"
-
-#. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_document__create_uid
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_product_code__create_uid
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_uom_code__create_uid
@@ -681,6 +676,45 @@ msgstr "Faktur"
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: line '%(line)s' contains both Luxury-Goods and Non-Luxury-"
+"Goods taxes."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: line '%(line)s' contains both Non-Luxury-Goods and STLG "
+"taxes."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: line '%(line)s' has STLG tax but missing the required "
+"Luxury-Goods tax."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: transaction code %(kode)s does not allow 0%% (Zero-rated or "
+"Exempt) taxes."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: transaction code %(kode)s must always have tax amount 0%%."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
 msgid "Invoice %s does not contain any taxes"
 msgstr ""
 
@@ -710,6 +744,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
 msgid "Invoice %s is not under Indonesian company"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s: can only have one STLG group."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid "Invoice %s: can only have one tax group (excluding STLG)."
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
@@ -888,6 +934,12 @@ msgid "Passport"
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move_line.py:0
+msgid "Price for line '%s' cannot be a negative amount. Please check again."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
 #: model:ir.model,name:l10n_id_efaktur_coretax.model_product_template
 msgid "Product"
 msgstr "Produk"
@@ -1021,7 +1073,7 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
-msgid "Unable to download E-faktur fot he following reasons(s):"
+msgid "Unable to download E-faktur for the following reason(s):"
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
@@ -1069,3 +1121,6 @@ msgstr ""
 #: code:addons/l10n_id_efaktur_coretax/controllers/download_efaktur.py:0
 msgid "efaktur"
 msgstr ""
+
+#~ msgid "Create a Customer"
+#~ msgstr "Buat Pelanggan"
