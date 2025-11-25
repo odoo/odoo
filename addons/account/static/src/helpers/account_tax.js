@@ -1702,6 +1702,9 @@ export const accountTaxHelpers = {
                 tax_details.total_excluded + tax_details.delta_total_excluded;
             base_line.manual_tax_amounts = {};
             for (const tax_data of taxes_data) {
+                if (tax_data.is_reverse_charge) {
+                    continue;
+                }
                 const tax = tax_data.tax;
                 const tax_id_str = tax.id.toString();
                 base_line.manual_tax_amounts[tax_id_str] = {};
