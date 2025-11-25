@@ -684,7 +684,7 @@ export class Thread extends Component {
                 channelName: this.props.thread.name,
             });
         }
-        if (this.props.thread.channel?.channel_type === "channel") {
+        if (this.props.thread.channel?.channel_type === "group") {
             return _t("This is the start of %(conversationName)s group", {
                 conversationName: this.props.thread.displayName,
             });
