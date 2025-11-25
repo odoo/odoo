@@ -52,10 +52,17 @@ class AccountMove(models.Model):
         help="The exception reason of the invoice.",
     )
     l10n_tr_exemption_code_domain_list = fields.Binary(compute="_compute_l10n_tr_exemption_code_domain_list")
+    l10n_tr_zero_vat_warning = fields.Binary(compute="_compute_l10n_tr_l10n_tr_zero_vat_warning")
     l10n_tr_nilvera_customer_status = fields.Selection(
         string="Partner Nilvera Status",
         related="partner_id.l10n_tr_nilvera_customer_status",
     )
+
+    @api.depends('invoice_line_ids.tax_ids')
+    def _compute_l10n_tr_l10n_tr_zero_vat_warning(self):
+        exempt_zero_tax = self.env['account.chart.template'].ref('tr_s_0_ex', raise_if_not_found=False)
+        for invoice in self:
+            invoice.l10n_tr_zero_vat_warning = exempt_zero_tax and invoice.l10n_tr_gib_invoice_type == 'SATIS' and exempt_zero_tax in invoice.line_ids.tax_ids
 
     @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_gib_invoice_type", "l10n_tr_is_export_invoice")
     def _compute_l10n_tr_exemption_code_domain_list(self):

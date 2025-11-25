@@ -1,5 +1,6 @@
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.l10n_tr_nilvera_einvoice.tests.test_xml_ubl_tr_common import TestUBLTRCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
@@ -15,6 +16,7 @@ class TestUBLTR(TestUBLTRCommon):
         cls.company_data['company'].partner_id.write({'l10n_tr_tax_office_id': cls.env.ref("l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_tax_office_1009").id})
         cls.einvoice_partner.write({'l10n_tr_tax_office_id': cls.env.ref("l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_tax_office_1009").id})
 
+        cls.tax_0 = cls.env['account.chart.template'].ref('tr_s_0_ex')
         cls.tax_20 = cls.env['account.chart.template'].ref('tr_s_20')
         cls.tax_20_withholding = cls.env['account.chart.template'].ref('tr_s_vat_wh_20_OGH')
         # Registered for Export Reason
@@ -25,6 +27,9 @@ class TestUBLTR(TestUBLTRCommon):
 
         # Export Reason
         cls.reason_301 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_301')
+
+        # Line Level Zero Tax Exemption Reason
+        cls.reason_351 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_351')
         cls.incoterm = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice_extended.incoterm_DAF')
 
     def test_xml_invoice_basic_export_registered_einvoice(self):
@@ -50,6 +55,31 @@ class TestUBLTR(TestUBLTRCommon):
             generated_xml = self._generate_invoice_xml(self.einvoice_partner)
 
         with file_open('l10n_tr_nilvera_einvoice_extended/tests/expected_xmls/invoice_basic_sale_einvoice.xml', 'rb') as expected_xml_file:
+            expected_xml = expected_xml_file.read()
+
+        self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
+
+    def test_xml_invoice_basic_sale_zero_export_vat_line_einvoice(self):
+        with freeze_time('2025-03-05'):
+            invoice_line_ids = [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 50.00,
+                    'quantity': 3,
+                    'discount': 12,
+                    'tax_ids': [Command.set(self.tax_0.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 100.00,
+                    'quantity': 3,
+                    'discount': 10,
+                    'tax_ids': [Command.set(self.tax_20.ids)],
+                }),
+            ]
+            generated_xml = self._generate_invoice_xml(self.einvoice_partner, l10n_tr_gib_invoice_type="SATIS", invoice_line_ids=invoice_line_ids)
+
+        with file_open('l10n_tr_nilvera_einvoice_extended/tests/expected_xmls/invoice_basic_sale_zero_export_vat_line_einvoice.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))

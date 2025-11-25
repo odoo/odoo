@@ -6,6 +6,12 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert" invisible="not l10n_tr_zero_vat_warning">
+                    For 0% EX VAT on sales invoices, an exemption reason is required. Odoo has set the default as "351 - Other Non-Exempt VAT"
+                </div>
+            </xpath>
+
             <xpath expr="//group[@name='accounting_info_group']/field[@name='invoice_incoterm_id']" position="attributes">
                 <attribute name="required" add="l10n_tr_is_export_invoice" separator=" or "/>
             </xpath>

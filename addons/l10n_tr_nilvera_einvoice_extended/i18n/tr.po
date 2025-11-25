@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.4+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-10 06:42+0000\n"
-"PO-Revision-Date: 2025-10-10 06:42+0000\n"
+"POT-Creation-Date: 2025-11-27 13:03+0000\n"
+"PO-Revision-Date: 2025-11-27 13:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,8 +57,8 @@ msgid ""
 "<span class=\"fw-bold\">Warning:</span> Changing the Export Alias will cause"
 " issues for export invoice scenario."
 msgstr ""
-"<span class=\"fw-bold\">Uyarı:</span> İhracat Takma Adını değiştirmek, ihracat"
-"faturası senaryosu için sorunlara neden olabilir"
+"<span class=\"fw-bold\">Uyarı:</span> İhracat Takma Adını değiştirmek, "
+"ihracatfaturası senaryosu için sorunlara neden olabilir"
 
 #. module: l10n_tr_nilvera_einvoice_extended
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice_extended.account_move_form_view_l10n_tr_nilvera_extended
@@ -147,7 +147,7 @@ msgstr "Ticari Reklam Hizmetleri"
 
 #. module: l10n_tr_nilvera_einvoice_extended
 #: model:ir.model,name:l10n_tr_nilvera_einvoice_extended.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr "Şirketler"
 
 #. module: l10n_tr_nilvera_einvoice_extended
@@ -336,6 +336,15 @@ msgid "Food Service"
 msgstr "Yemek Servis Hizmeti"
 
 #. module: l10n_tr_nilvera_einvoice_extended
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice_extended.account_move_form_view_l10n_tr_nilvera_extended
+msgid ""
+"For 0% EX VAT on sales invoices, an exemption reason is required. Odoo has "
+"set the default as \"351 - Other Non-Exempt VAT\""
+msgstr ""
+"%0 KDV’li satış faturaları için istisna nedeni zorunludur. Odoo varsayılan olarak"
+"\“351 - KDV İstisna Olmayan Diğer\” değerini atadı."
+
+#. module: l10n_tr_nilvera_einvoice_extended
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_view_form
 msgid "For a full list of codes and descriptions, check"
 msgstr "Kodların ve açıklamaların tam listesi için göz atın:"
@@ -423,6 +432,12 @@ msgid "L10N Tr Exemption Code Domain List"
 msgstr "L10N Tr İstisna Kodu Alan Listesi"
 
 #. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_zero_vat_warning
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_zero_vat_warning
+msgid "L10N Tr Zero Vat Warning"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
 #: model:l10n_tr_nilvera_einvoice_extended.account.tax.code,name:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_606
 msgid "Labor Supply Services"
 msgstr "İşgücü Temin Hizmetleri"
@@ -457,6 +472,11 @@ msgstr "Organizasyon Hizmeti"
 #: model:l10n_tr_nilvera_einvoice_extended.account.tax.code,name:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_350
 msgid "Other"
 msgstr "İstisna Diğer"
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:l10n_tr_nilvera_einvoice_extended.account.tax.code,name:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_351
+msgid "351 - Other Not Exempt from VAT"
+msgstr "351 - KDV İstisna Olmayan Diğer"
 
 #. module: l10n_tr_nilvera_einvoice_extended
 #: model:l10n_tr_nilvera_einvoice_extended.account.tax.code,name:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_616
@@ -694,7 +714,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice_extended/models/account_move_send.py:0
 msgid "View Company(s)"
-msgstr "Şirket(ler)i Görüntüle"
+msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
 #. odoo-python

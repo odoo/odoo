@@ -486,7 +486,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 },
             }
         tax_totals_vals = super()._get_tax_category_node(vals)
-        tax_invoice_exemption = vals['invoice'].l10n_tr_exemption_code_id
+        tax_invoice_exemption = self._l10n_tr_get_exemption_code(vals)
         if self.env.context.get('skip_tr_reason_code') or not tax_invoice_exemption:
             return tax_totals_vals
 
@@ -495,6 +495,41 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'cbc:TaxExemptionReason': {'_text': tax_invoice_exemption.with_context(lang='tr_TR').name},
         })
         return tax_totals_vals
+
+    def _l10n_tr_get_exemption_code(self, vals):
+        """
+        Return the tax exemption code to apply at invoice level.
+
+        For SATIŞ invoices, the exemption must come from the grouped line data
+        each line can define its own exemption reason. For all other invoice
+        types, the exemption set on the invoice is used.
+
+        :param vals: Dict containing the invoice and grouping information.
+        :return: The exemption code record to apply.
+        """
+        invoice = vals["invoice"]
+        if invoice.l10n_tr_gib_invoice_type == 'SATIS' and (exemption_reason := vals.get('grouping_key')['tax_exemption_reason']):
+            return exemption_reason
+        return invoice.l10n_tr_exemption_code_id
+
+    def _get_tax_exemption_reason(self, customer, supplier, tax):
+        """Determine the exemption reason for the given tax.
+
+        The special export tax 0% VAT must use its dedicated exemption code.
+        When this tax is detected, the method returns that predefined exemption
+        reason.
+
+        :param customer: Customer partner.
+        :param supplier: Supplier partner.
+        :param tax: Tax record being exported.
+        :return: Dict with the exemption code and record, or the default result.
+        """
+        if tax == self.env['account.chart.template'].ref('tr_s_0_ex', raise_if_not_found=False) and (exemption_351 := self.env.ref("l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_351", raise_if_not_found=False)):
+            return {
+                'tax_exemption_reason_code': exemption_351.code,
+                'tax_exemption_reason': exemption_351,
+            }
+        return super()._get_tax_exemption_reason(customer, supplier, tax)
 
     def _export_invoice(self, invoice):
         # EXTENDS account.edi.xml.ubl_21
