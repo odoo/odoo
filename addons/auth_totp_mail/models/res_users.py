@@ -113,15 +113,19 @@ class ResUsers(models.Model):
         }
 
     def _mfa_type(self):
+        self.ensure_one()
         r = super()._mfa_type()
         if r is not None:
             return r
         ICP = self.env['ir.config_parameter'].sudo()
         otp_required = False
+        otp_grace_days = ICP.get_int('auth_totp.mfa_grace_days', -1)  # (days)
+        account_age = (datetime.now() - self.sudo().create_date).days
+        in_grace_period = account_age < min(otp_grace_days, 0)
         if ICP.get_str('auth_totp.policy') == 'all_required' or \
                 (ICP.get_str('auth_totp.policy') == 'employee_required' and self._is_internal()):
             otp_required = True
-        if otp_required:
+        if otp_required and not in_grace_period:
             return 'totp_mail'
 
     def _mfa_url(self):
