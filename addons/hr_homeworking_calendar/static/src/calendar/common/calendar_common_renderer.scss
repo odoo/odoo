@@ -1,10 +1,6 @@
 .o_worklocation_btn {
     min-height: o-to-rem(20px);
-    margin-top: 1em;
     color: var(--body-color);
-    .o_worklocation_text, .o_worklocation_line {
-        box-shadow: 0 1px 0 rgba(0,0,0, 0.3)
-    }
 }
 
 .o_worklocation_line {
@@ -13,14 +9,20 @@
 
 .o_homework_multi {
     text-transform: none;
-    &.o_homeworking_content .fa {
+    .o_homeworking_content .fa {
         height: var(--o-homework-icon-size, 20px);
         aspect-ratio: 1;
-        font-size: var(--o-homework-icon-size, 1.2rem);
+        font-size: var(--o-homework-icon-size, 1rem);
 
         &.fa-building:before {
             transform: scale(.8);
         }
+    }
+}
+
+.fc-col-header-cell:hover {
+    .o_worklocation_action {
+        opacity: 1 !important;
     }
 }
 
@@ -59,15 +61,19 @@
     $-color-subtle: tint-color($-color, 65%);
 
     .o_homework_multi {
-        .wl_color_#{$-i - 1} {
+        .o_worklocation_color_#{$-i - 1} {
             color: shade-color($-color, 10%);
             background-color: $-color-subtle;
             border-color:  $-color-subtle !important;
         }
     }
     .o_homework_single {
-        .wl_color_#{$-i - 1} {
+        .o_worklocation_color_#{$-i - 1} {
             background-color: $-color-subtle;
         }
+    }
+    .o_worklocation_outline_#{$-i - 1}:hover {
+        outline: 2px solid lighten($-color-subtle, 10%);
+        outline-offset: -2px;
     }
 }

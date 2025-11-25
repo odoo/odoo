@@ -1,9 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller"
 import { serializeDate} from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
 
 patch(AttendeeCalendarController.prototype, {
     setup() {
@@ -57,11 +58,22 @@ patch(AttendeeCalendarController.prototype, {
             super.deleteRecord(...arguments)
         }
     },
-    openWorkLocationWizard(startDate) {
+    async openWorkLocationWizard(startDate, locationId = undefined, ghostRecord= undefined) {
+        const [employeeRecord] = await this.orm.read("res.users", [user.userId], ["employee_id"]);
+        if (!employeeRecord.employee_id) {
+            this.displayDialog(AlertDialog, {
+                title: _t("Missing Employee"),
+                body: _t("An administrator first needs to link your user to an employee in order to set work locations."),
+            });
+            return;
+        }
+
         this.action.doAction('hr_homeworking_calendar.set_location_wizard_action',{
             additionalContext: {
                 'default_date': serializeDate(startDate),
+                'default_work_location_id': locationId,
                 'dialog_size': 'medium',
+                'default_weekly': !!ghostRecord,
             },
             onClose: async () => {
                 this.model.load()

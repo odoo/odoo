@@ -15,6 +15,17 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             // Force to rerender the FC.
             // As it doesn't redraw the header when the event's data changes
             this.fc.api.render();
+            /*The fc.api.render() only re-renders content handled by its internal virtual DOM
+            and content added using methods like dayCellContent or eventContent
+            (https://fullcalendar.io/docs/content-injection)
+
+            Since the dayCell content is injected into the DOM using standard js,
+            the lib doesn't know about it and won't rerender it
+
+            From the docs (https://fullcalendar.io/docs/Calendar-render):
+            'This method will not completely wipe the DOM clean and rebuild. It will use its
+            internal virtual DOM representation to only commit needed changes.'*/
+            this.renderMonthDayCellsWorklocations();
         });
     },
     get options(){
@@ -37,7 +48,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
     handleWorkLocationClick(target, date) {
         let worklocations = this.props.model.worklocations[date.toISODate()];
         const worklocationSet = worklocations && Object.keys(worklocations).length > 0;
-        const actionElement = target.closest('.wl_action');
+        const actionElement = target.closest('.o_worklocation_action');
         if (!actionElement) {
             return;
         }
@@ -46,9 +57,11 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             if (!worklocations.id) {
                 worklocations = worklocations[location] && worklocations[location].find(wl => wl.id == id);
             }
-            if (worklocations) {
+            // If the worklocation doesn't belong to the current user, open a popover instead of the wizard
+            if (worklocations && worklocations.userId !== user.userId) {
                 return this.openPopover(target, worklocations);
             }
+            return this.props.openWorkLocationWizard(date, worklocations.work_location_id, worklocations.ghostRecord);
         }
         return this.props.openWorkLocationWizard(date);
     },
@@ -61,6 +74,32 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             box.insertAdjacentHTML("beforeend", content);
         }
     },
+    // Manually rerender injected worklocation html content (see onPatched in setup)
+    renderMonthDayCellsWorklocations() {
+        if (this.props.model.scale === 'month') {
+            const dayCells = document.querySelectorAll('.fc-daygrid-day');
+            dayCells.forEach(dayCell => {
+                const wlButtonEl = dayCell.querySelector('.o_worklocation_btn');
+                if (wlButtonEl) {
+                    wlButtonEl.remove();
+
+                    const dayTopEl = dayCell.querySelector('.fc-daygrid-day-top');
+                    if (!dayTopEl) {
+                        return;
+                    }
+
+                    const dateStr = dayCell.getAttribute('data-date');
+                    if (!dateStr) {
+                        return;
+                    }
+
+                    const date = new Date(dateStr);
+                    const wlContent = renderToString(this.constructor.ButtonWorklocationTemplate, this.headerTemplateProps(date));
+                    dayTopEl.insertAdjacentHTML("beforeend", wlContent);
+                }
+            });
+        }
+    },
     onDateClick(info){
         if (info.jsEvent && info.jsEvent.target.closest(".o_worklocation_btn")) {
             const date = DateTime.fromJSDate(info.date);
@@ -70,13 +109,13 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         }
     },
     headerTemplateProps(date) {
-        if (this.props.model.scale === "month") {
-            return super.headerTemplateProps(date);
-        }
         const parsedDate = DateTime.fromJSDate(date).toISODate();
-        const multiCalendar = this.props.model.multiCalendar;
-        const showLine = ["week", "month"].includes(this.props.model.scale);
+        let showLine = ["week", "month"].includes(this.props.model.scale);
         let worklocation = this.props.model.worklocations[parsedDate];
+        if (!worklocation) {
+            return {...super.headerTemplateProps(date), showLine, userFilterActive: this.props.model.data.userFilterActive};
+        }
+        const multiCalendar = this.props.model.multiCalendar;
         const workLocationSetForCurrentUser =
             multiCalendar && worklocation ?
             Object.keys(worklocation).some(key => worklocation[key].some(wlItem => wlItem.userId === user.userId)
@@ -84,11 +123,16 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
 
         let displayedWorkLocation = worklocation ? (JSON.parse(JSON.stringify(worklocation))) : {};
         // do not display the work locations of the current user if the user filter is not active
-        if (multiCalendar && !this.props.model.data.userFilterActive) {
-            for (let wl in worklocation){
-                displayedWorkLocation[wl] = worklocation[wl].filter(wlItem => wlItem.userId !== user.userId);
+        if (!this.props.model.data.userFilterActive) {
+            if (multiCalendar) {
+                for (let wl in worklocation){
+                    displayedWorkLocation[wl] = worklocation[wl].filter(wlItem => wlItem.userId !== user.userId);
+                }
+                displayedWorkLocation = Object.fromEntries(Object.entries(displayedWorkLocation).filter(([_, wlItems]) => wlItems.length !== 0));
+            } else {
+                displayedWorkLocation = {};
+                showLine = false;
             }
-            displayedWorkLocation = Object.fromEntries(Object.entries(displayedWorkLocation).filter(([_, wlItems]) => wlItems.length !== 0));
         }
 
         return {
@@ -97,6 +141,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             workLocationSetForCurrentUser,
             multiCalendar,
             showLine,
+            userFilterActive: this.props.model.data.userFilterActive,
             iconMap: {
                 "office": "fa-building",
                 "home": "fa-home",
