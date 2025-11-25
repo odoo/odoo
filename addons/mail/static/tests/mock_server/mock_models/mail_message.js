@@ -524,6 +524,8 @@ export class MailMessage extends models.ServerModel {
                 ]);
             }
             domain = Domain.and([domain, message_domain]).toList();
+        }
+        if (search_term || is_notification !== undefined) {
             res.count = this.search_count(domain);
         }
         if (around !== undefined) {

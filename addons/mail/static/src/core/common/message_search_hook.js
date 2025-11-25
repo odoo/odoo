@@ -69,7 +69,7 @@ export function useMessageSearch(thread) {
     const state = useState({
         thread,
         async search(before = false) {
-            if (this.searchTerm) {
+            if (this.searchTerm || this.is_notification !== undefined) {
                 this.searching = true;
                 const data = await sequential(() =>
                     store.searchMessagesInThread(
@@ -98,6 +98,7 @@ export function useMessageSearch(thread) {
         },
         count: 0,
         clear() {
+            this.is_notification = undefined;
             this.messages = [];
             this.searched = false;
             this.searching = false;

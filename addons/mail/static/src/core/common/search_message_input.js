@@ -68,9 +68,7 @@ export class SearchMessageInput extends Component {
     onChangeSearchFilter(searchFilter) {
         if (searchFilter.is_notification !== this.props.messageSearch.is_notification) {
             this.props.messageSearch.is_notification = searchFilter.is_notification;
-            if (this.state.searchTerm) {
-                this.search();
-            }
+            this.search();
         }
     }
 
