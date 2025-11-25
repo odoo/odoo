@@ -712,3 +712,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_website_edit_megamenu_visibility(self):
         self.start_tour("/", 'edit_megamenu_visibility', login='admin')
+
+    def test_compile_owl_templates(self):
+        # This test should prevent accidental sabotage of website Owl templates.
+        self.start_tour('/', 'website_compile_owl_templates', login='admin')
