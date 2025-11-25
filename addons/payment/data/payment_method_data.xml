@@ -25,6 +25,24 @@
         />
     </record>
 
+    <record id="payment_method_aba_khqr" model="payment.method">
+        <field name="name">ABA KHQR</field>
+        <field name="code">aba_khqr</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/aba_khqr.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                        ref('base.USD'),
+                        ref('base.KHR')
+                    ])]"
+        />
+    </record>
+
     <record id="payment_method_ach_direct_debit" model="payment.method">
         <field name="name">ACH Direct Debit</field>
         <field name="code">ach_direct_debit</field>
@@ -3925,6 +3943,7 @@
                          ref('base.USD'),
                          ref('base.SGD'),
                          ref('base.THB'),
+                         ref('base.KHR'),
                      ])]"
         />
     </record>
