@@ -75,6 +75,7 @@ export class SignatureField extends Component {
 export const signatureField = {
     component: SignatureField,
     fieldDependencies: [{ name: "write_date", type: "datetime" }],
+    supportedTypes: ["binary"],
     supportedOptions: [
         {
             label: _t("Prefill with"),
