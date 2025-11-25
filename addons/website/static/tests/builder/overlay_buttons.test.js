@@ -65,6 +65,56 @@ test("Use the 'move arrows' overlay buttons", async () => {
     expect(".overlay .fa-angle-left").toHaveCount(0);
 });
 
+test("Use the 'move arrows' overlay buttons within an editable div", async () => {
+    await setupWebsiteBuilder(`
+        <div contenteditable="true">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <p>TEST</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p>TEST</p>
+                    </div>
+                    <div class="col-lg-3">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <p>TEST</p>
+        </section>
+        </div>
+    `);
+
+    await contains(":iframe section").click();
+    expect(".overlay .o_overlay_options").toHaveCount(1);
+    expect(".overlay .fa-angle-down").toHaveCount(1);
+    expect(".overlay .fa-angle-up").toHaveCount(0);
+    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+
+    await contains(":iframe .col-lg-5").click();
+    expect(".overlay .o_overlay_options").toHaveCount(1);
+    expect(".overlay .fa-angle-right").toHaveCount(1);
+    expect(".overlay .fa-angle-left").toHaveCount(0);
+    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(0);
+
+    await contains(":iframe .col-lg-3").click();
+    expect(".overlay .fa-angle-right").toHaveCount(0);
+    expect(".overlay .fa-angle-left").toHaveCount(1);
+
+    await contains(":iframe .col-lg-4").click();
+    expect(".overlay .fa-angle-right").toHaveCount(1);
+    expect(".overlay .fa-angle-left").toHaveCount(1);
+
+    await contains(".overlay .fa-angle-left").click();
+    expect(":iframe .col-lg-4:nth-child(1)").toHaveCount(1);
+    expect(".overlay .fa-angle-right").toHaveCount(1);
+    expect(".overlay .fa-angle-left").toHaveCount(0);
+});
+
 test("Use the 'grid' overlay buttons", async () => {
     await setupWebsiteBuilder(`
         <section>
