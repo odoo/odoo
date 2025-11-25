@@ -961,16 +961,6 @@ class MailMessage(models.Model):
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])
-            if thread and is_notification is not False:
-                tracking_value_domain = (
-                    Domain("mail_message_id.res_id", "=", thread.id)
-                    & Domain("mail_message_id.model", "=", thread._name)
-                    & self._get_tracking_values_domain(search_term)
-                )
-                # sudo: mail.tracking.value - searching allowed tracking values for acessible records
-                tracking_values = self.env["mail.tracking.value"].sudo().search(tracking_value_domain)
-                accessible_tracking_value_ids = tracking_values._filter_has_field_access(self.env)
-                message_domain |= Domain("id", "in", accessible_tracking_value_ids.mail_message_id.ids)
             domain &= message_domain
             res["count"] = self.search_count(domain)
         if around is not None:
@@ -985,39 +975,6 @@ class MailMessage(models.Model):
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
-
-    def _get_tracking_values_domain(self, search_term):
-        """Get the domain to search for tracking values."""
-        numeric_term = None
-        # try to convert the search term to a number
-        with contextlib.suppress(ValueError, TypeError):
-            numeric_term = float(search_term)
-        domain = Domain.OR(
-            Domain(field_name, "ilike", search_term)
-            for field_name in (
-                "old_value_char",
-                "new_value_char",
-                "old_value_text",
-                "new_value_text",
-                "old_value_datetime",
-                "new_value_datetime",
-                "field_id.name",
-                "field_id.field_description",
-            )
-        )
-        if numeric_term:
-            epsilon = 1e-9  # small epsilon to allow for floating point precision
-            domain |= Domain.OR(
-                Domain(field_name, ">=", numeric_term - epsilon)
-                & Domain(field_name, "<=", numeric_term + epsilon)
-                for field_name in ("old_value_float", "new_value_float")
-            )
-            if numeric_term.is_integer():
-                domain |= Domain.OR(
-                    Domain(field_name, "=", int(numeric_term))
-                    for field_name in ("old_value_integer", "new_value_integer")
-                )
-        return domain
 
     def _message_reaction(self, content, action, partner, guest, store: Store = None):
         self.ensure_one()
