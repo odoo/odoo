@@ -90,7 +90,7 @@ class StockLot(models.Model):
     def _compute_partner_ids(self):
         delivery_ids_by_lot = self._find_delivery_ids_by_lot()
         for lot in self:
-            if delivery_ids_by_lot[lot.id]:
+            if delivery_ids_by_lot.get(lot.id, []):
                 picking_ids = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True)
                 lot.partner_ids = list(p.sale_id.partner_shipping_id.id if p.is_dropship else p.partner_id.id for p in picking_ids)
             else:
