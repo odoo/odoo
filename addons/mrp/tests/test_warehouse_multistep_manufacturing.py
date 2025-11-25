@@ -26,6 +26,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         cls.warehouse = warehouse_form.save()
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.warehouse.manufacture_pull_id.route_id.product_selectable = True
+        cls.warehouse.mto_pull_id.route_id.product_selectable = True
 
         # Create manufactured product
         product_form = Form(cls.env['product.product'])
