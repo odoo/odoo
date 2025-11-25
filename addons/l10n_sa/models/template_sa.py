@@ -66,6 +66,14 @@ class AccountChartTemplate(models.AbstractModel):
     @template('sa', 'account.account')
     def _get_sa_account_account(self):
         return {
+            'sa_account_100105': {'asset_depreciation_account_id': 'sa_account_100105', 'asset_expense_account_id': 'sa_account_401002'},
+            'sa_account_100106': {'asset_depreciation_account_id': 'sa_account_100106', 'asset_expense_account_id': 'sa_account_401003'},
+            'sa_account_100107': {'asset_depreciation_account_id': 'sa_account_100107', 'asset_expense_account_id': 'sa_account_401004'},
+            'sa_account_100108': {'asset_depreciation_account_id': 'sa_account_100108', 'asset_expense_account_id': 'sa_account_401006'},
+            'sa_account_100109': {'asset_depreciation_account_id': 'sa_account_100109', 'asset_expense_account_id': 'sa_account_401001'},
+            'sa_account_100110': {'asset_depreciation_account_id': 'sa_account_100110', 'asset_expense_account_id': 'sa_account_401007'},
+            'sa_account_100111': {'asset_depreciation_account_id': 'sa_account_100111', 'asset_expense_account_id': 'sa_account_401008'},
+            'sa_account_100112': {'asset_depreciation_account_id': 'sa_account_100112', 'asset_expense_account_id': 'sa_account_401005'},
             'sa_account_131100': {
                 'account_stock_variation_id': 'sa_account_400001',
             },

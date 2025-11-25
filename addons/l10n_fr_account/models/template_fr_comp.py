@@ -43,3 +43,108 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_valuation_id': 'pcg_31_account',
             },
         }
+
+    @template('fr_comp', 'account.account')
+    def _get_fr_comp_account_account(self):
+        return {
+            'pcg_2011': {
+                'asset_depreciation_account_id': 'pcg_2801',
+                'asset_expense_account_id': 'pcg_68111',
+            },
+            'pcg_203': {
+                'asset_depreciation_account_id': 'pcg_2801',
+                'asset_expense_account_id': 'pcg_68111',
+            },
+            'pcg_205': {
+                'asset_depreciation_account_id': 'pcg_2805',
+                'asset_expense_account_id': 'pcg_68111',
+            },
+            'pcg_206': {
+                'asset_depreciation_account_id': 'pcg_2806',
+                'asset_expense_account_id': 'pcg_68111',
+            },
+            'pcg_207': {
+                'asset_depreciation_account_id': 'pcg_2807',
+                'asset_expense_account_id': 'pcg_68111',
+            },
+            'pcg_208': {
+                'asset_depreciation_account_id': 'pcg_2808',
+                'asset_expense_account_id': 'pcg_68111',
+            },
+            'pcg_2113': {
+                'asset_depreciation_account_id': 'pcg_2813',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_212': {
+                'asset_depreciation_account_id': 'pcg_2812',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2131': {
+                'asset_depreciation_account_id': 'pcg_2813',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2135': {
+                'asset_depreciation_account_id': 'pcg_2813',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2138_account': {
+                'asset_depreciation_account_id': 'pcg_2813',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_214': {
+                'asset_depreciation_account_id': 'pcg_2814',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_21511': {
+                'asset_depreciation_account_id': 'pcg_2815',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_21514': {
+                'asset_depreciation_account_id': 'pcg_2815',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_21531': {
+                'asset_depreciation_account_id': 'pcg_2815',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_21534': {
+                'asset_depreciation_account_id': 'pcg_2815',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2154': {
+                'asset_depreciation_account_id': 'pcg_2815',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2155': {
+                'asset_depreciation_account_id': 'pcg_2815',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2157': {
+                'asset_depreciation_account_id': 'pcg_2815',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2181': {
+                'asset_depreciation_account_id': 'pcg_2818',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2182': {
+                'asset_depreciation_account_id': 'pcg_2818',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2183': {
+                'asset_depreciation_account_id': 'pcg_2818',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2184': {
+                'asset_depreciation_account_id': 'pcg_2818',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2185': {
+                'asset_depreciation_account_id': 'pcg_2818',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+            'pcg_2186': {
+                'asset_depreciation_account_id': 'pcg_2818',
+                'asset_expense_account_id': 'pcg_68112',
+            },
+        }

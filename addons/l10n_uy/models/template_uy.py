@@ -69,4 +69,12 @@ class AccountChartTemplate(models.AbstractModel):
             'uy_code_11704': {
                 'account_stock_variation_id': 'uy_code_5401',
             },
+            'uy_code_12401': {'asset_depreciation_account_id': 'uy_code_12420', 'asset_expense_account_id': 'uy_code_5500'},
+            'uy_code_12402': {'asset_depreciation_account_id': 'uy_code_12421', 'asset_expense_account_id': 'uy_code_5500'},
+            'uy_code_12403': {'asset_depreciation_account_id': 'uy_code_12422', 'asset_expense_account_id': 'uy_code_5500'},
+            'uy_code_12404': {'asset_depreciation_account_id': 'uy_code_12423', 'asset_expense_account_id': 'uy_code_5500'},
+            'uy_code_12405': {'asset_depreciation_account_id': 'uy_code_12422', 'asset_expense_account_id': 'uy_code_5500'},
+            'uy_code_12407': {'asset_depreciation_account_id': 'uy_code_12421', 'asset_expense_account_id': 'uy_code_5500'},
+            'uy_code_12408': {'asset_depreciation_account_id': 'uy_code_12520', 'asset_expense_account_id': 'uy_code_5500'},
+            'uy_code_12409': {'asset_depreciation_account_id': 'uy_code_12423', 'asset_expense_account_id': 'uy_code_5500'},
         }

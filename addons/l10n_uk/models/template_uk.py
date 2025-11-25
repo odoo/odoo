@@ -60,4 +60,13 @@ class AccountChartTemplate(models.AbstractModel):
             '100100': {
                 'account_stock_variation_id': '630000',
             },
+            '001000': {'asset_depreciation_account_id': '001100', 'asset_expense_account_id': '751000'},
+            '002000': {'asset_depreciation_account_id': '002100', 'asset_expense_account_id': '800000'},
+            '003000': {'asset_depreciation_account_id': '003100', 'asset_expense_account_id': '800100'},
+            '004001': {'asset_depreciation_account_id': '004101', 'asset_expense_account_id': '800100'},
+            '005000': {'asset_depreciation_account_id': '005100', 'asset_expense_account_id': '800100'},
+            '006000': {'asset_depreciation_account_id': '006100', 'asset_expense_account_id': '750600'},
+            '007000': {'asset_depreciation_account_id': '007100', 'asset_expense_account_id': '800100'},
+            '008000': {'asset_depreciation_account_id': '008100', 'asset_expense_account_id': '800100'},
+            '009000': {'asset_depreciation_account_id': '009100', 'asset_expense_account_id': '800100'},
         }

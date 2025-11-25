@@ -64,7 +64,7 @@
                                         <field name="tax_ids" widget="many2many_tax_tags" invisible="account_type == 'off_balance'" options="{'no_quick_create': True}"/>
                                         <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '=', 'accounts')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
                                     </group>
-                                    <group>
+                                    <group name="technical_settings">
                                         <field name="internal_group" invisible="1" readonly="1"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" string="Currency" placeholder="Any currency"/>
                                         <field name="active" widget="boolean_toggle"/>

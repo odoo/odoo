@@ -36,6 +36,14 @@ class AccountChartTemplate(models.AbstractModel):
     @template('gt', 'account.account')
     def _get_gt_account_account(self):
         return {
+            'cta120102': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
+            'cta120104': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
+            'cta120105': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
+            'cta120106': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
+            'cta120107': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
+            'cta120108': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
+            'cta120109': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
+            'cta120110': {'asset_depreciation_account_id': 'cta120201', 'asset_expense_account_id': 'cta680101'},
             'cta140101': {
                 'account_stock_expense_id': 'cta510101',
                 'account_stock_variation_id': 'cta640101',

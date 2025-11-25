@@ -1234,6 +1234,7 @@
                                                     'list_view_ref': 'account.view_account_list_from_entry',
                                                     'from_bill': move_type == 'in_invoice',
                                                }"
+                                               widget="m2o_cell_with_extra_m2o_fields"
                                                groups="account.group_account_readonly"
                                                options="{'no_quick_create': True}"
                                                domain="[('company_ids', 'parent_of', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]"

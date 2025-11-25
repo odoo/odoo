@@ -48,6 +48,22 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_expense_id': 'l10n_id_66110100',
                 'account_stock_variation_id': 'l10n_id_66110130',
             },
+            'l10n_id_12210200': {'asset_depreciation_account_id': 'l10n_id_12281200', 'asset_expense_account_id': 'l10n_id_67100010'},
+            'l10n_id_12210210': {'asset_depreciation_account_id': 'l10n_id_12281210', 'asset_expense_account_id': 'l10n_id_67100020'},
+            'l10n_id_12210300': {'asset_depreciation_account_id': 'l10n_id_12281300', 'asset_expense_account_id': 'l10n_id_67100030'},
+            'l10n_id_12210310': {'asset_depreciation_account_id': 'l10n_id_12281310', 'asset_expense_account_id': 'l10n_id_67100040'},
+            'l10n_id_12210320': {'asset_depreciation_account_id': 'l10n_id_12281320', 'asset_expense_account_id': 'l10n_id_67100050'},
+            'l10n_id_12210400': {'asset_depreciation_account_id': 'l10n_id_12281400', 'asset_expense_account_id': 'l10n_id_67100060'},
+            'l10n_id_12210410': {'asset_depreciation_account_id': 'l10n_id_12281410', 'asset_expense_account_id': 'l10n_id_67100070'},
+            'l10n_id_12210420': {'asset_depreciation_account_id': 'l10n_id_12281420', 'asset_expense_account_id': 'l10n_id_67100080'},
+            'l10n_id_12210430': {'asset_depreciation_account_id': 'l10n_id_12281430', 'asset_expense_account_id': 'l10n_id_67100090'},
+            'l10n_id_12210500': {'asset_depreciation_account_id': 'l10n_id_12281500', 'asset_expense_account_id': 'l10n_id_67100100'},
+            'l10n_id_12210510': {'asset_depreciation_account_id': 'l10n_id_12281510', 'asset_expense_account_id': 'l10n_id_67100110'},
+            'l10n_id_12210600': {'asset_depreciation_account_id': 'l10n_id_12281600', 'asset_expense_account_id': 'l10n_id_67100120'},
+            'l10n_id_12210610': {'asset_depreciation_account_id': 'l10n_id_12281610', 'asset_expense_account_id': 'l10n_id_67100130'},
+            'l10n_id_12210620': {'asset_depreciation_account_id': 'l10n_id_12281620', 'asset_expense_account_id': 'l10n_id_67100140'},
+            'l10n_id_12210630': {'asset_depreciation_account_id': 'l10n_id_12281630', 'asset_expense_account_id': 'l10n_id_67100150'},
+            'l10n_id_12210700': {'asset_depreciation_account_id': 'l10n_id_12281700', 'asset_expense_account_id': 'l10n_id_67100160'},
         }
 
     @template('id', 'account.journal')

@@ -46,4 +46,13 @@ class AccountChartTemplate(models.AbstractModel):
             'au_11310': {
                 'account_stock_variation_id': 'au_51110',
             },
+            'au_13120': {'asset_depreciation_account_id': 'au_13130', 'asset_expense_account_id': 'au_61500'},
+            'au_13140': {'asset_depreciation_account_id': 'au_13150', 'asset_expense_account_id': 'au_61500'},
+            'au_13160': {'asset_depreciation_account_id': 'au_13170', 'asset_expense_account_id': 'au_61500'},
+            'au_13210': {'asset_depreciation_account_id': 'au_13220', 'asset_expense_account_id': 'au_61500'},
+            'au_13310': {'asset_depreciation_account_id': 'au_13320', 'asset_expense_account_id': 'au_61500'},
+            'au_13410': {'asset_depreciation_account_id': 'au_13420', 'asset_expense_account_id': 'au_61500'},
+            'au_13430': {'asset_depreciation_account_id': 'au_13440', 'asset_expense_account_id': 'au_61500'},
+            'au_13450': {'asset_depreciation_account_id': 'au_13460', 'asset_expense_account_id': 'au_61500'},
+            'au_13470': {'asset_depreciation_account_id': 'au_13480', 'asset_expense_account_id': 'au_61500'},
         }

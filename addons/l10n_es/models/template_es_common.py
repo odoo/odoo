@@ -42,6 +42,74 @@ class AccountChartTemplate(models.AbstractModel):
     @template('es_common', 'account.account')
     def _get_es_common_account_account(self):
         return {
+            'account_common_200': {
+                'asset_depreciation_account_id': 'account_common_2800',
+                'asset_expense_account_id': 'account_common_680',
+            },
+            'account_common_201': {
+                'asset_depreciation_account_id': 'account_common_2800',
+                'asset_expense_account_id': 'account_common_680',
+            },
+            'account_common_202': {
+                'asset_depreciation_account_id': 'account_common_2800',
+                'asset_expense_account_id': 'account_common_682',
+            },
+            'account_common_203': {
+                'asset_depreciation_account_id': 'account_common_2800',
+                'asset_expense_account_id': 'account_common_682',
+            },
+            'account_common_205': {
+                'asset_depreciation_account_id': 'account_common_2800',
+                'asset_expense_account_id': 'account_common_682',
+            },
+            'account_common_206': {
+                'asset_depreciation_account_id': 'account_common_2800',
+                'asset_expense_account_id': 'account_common_682',
+            },
+            'account_common_209': {
+                'asset_depreciation_account_id': 'account_common_2800',
+                'asset_expense_account_id': 'account_common_682',
+            },
+            'account_common_211': {
+                'asset_depreciation_account_id': 'account_common_2811',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_212': {
+                'asset_depreciation_account_id': 'account_common_2812',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_213': {
+                'asset_depreciation_account_id': 'account_common_2813',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_214': {
+                'asset_depreciation_account_id': 'account_common_2814',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_215': {
+                'asset_depreciation_account_id': 'account_common_2815',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_216': {
+                'asset_depreciation_account_id': 'account_common_2816',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_217': {
+                'asset_depreciation_account_id': 'account_common_2817',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_218': {
+                'asset_depreciation_account_id': 'account_common_2818',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_219': {
+                'asset_depreciation_account_id': 'account_common_2819',
+                'asset_expense_account_id': 'account_common_681',
+            },
+            'account_common_221': {
+                'asset_depreciation_account_id': 'account_common_282',
+                'asset_expense_account_id': 'account_common_682',
+            },
             'account_common_310': {
                 'account_stock_expense_id': 'account_common_601',
                 'account_stock_variation_id': 'account_common_611',

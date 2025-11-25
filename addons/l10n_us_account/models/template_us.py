@@ -107,4 +107,32 @@ class AccountChartTemplate(models.AbstractModel):
             'account_account_us_inventory_valuation': {
                 'account_stock_variation_id': 'account_account_us_raw_materials',
             },
+            'account_account_us_technology': {
+                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
+                'asset_expense_account_id': 'account_account_us_computers',
+            },
+            'account_account_us_buildings': {
+                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
+                'asset_expense_account_id': 'account_account_us_expense',
+            },
+            'account_account_us_improvements': {
+                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
+                'asset_expense_account_id': 'account_account_us_office_maintenance',
+            },
+            'account_account_us_machines': {
+                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
+                'asset_expense_account_id': 'account_account_us_equipment',
+            },
+            'account_account_us_other_property': {
+                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
+                'asset_expense_account_id': 'account_account_us_expense',
+            },
+            'account_account_us_furniture': {
+                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
+                'asset_expense_account_id': 'account_account_us_equipment',
+            },
+            'account_account_us_vehicles': {
+                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
+                'asset_expense_account_id': 'account_account_us_vehicles_expense',
+            },
         }
