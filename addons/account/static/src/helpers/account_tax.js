@@ -768,7 +768,6 @@ export const accountTaxHelpers = {
      */
     normalize_target_factors(target_factors) {
         const factors = target_factors.map((x, i) => [i, Math.abs(x.factor)]);
-        factors.sort((a, b) => b[1] - a[1]);
         const sum_of_factors = factors.reduce((sum, x) => sum + x[1], 0.0);
         return factors.map((x) => [x[0], sum_of_factors ? x[1] / sum_of_factors : 0.0]);
     },
@@ -790,6 +789,7 @@ export const accountTaxHelpers = {
 
         // Distribute using the factor first.
         const factors = this.normalize_target_factors(target_factors);
+        factors.sort((a, b) => b[1] - a[1]);
         for (const [i, factor] of factors) {
             if (!remaining_errors) {
                 break;

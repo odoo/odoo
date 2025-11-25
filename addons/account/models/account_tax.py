@@ -1805,7 +1805,6 @@ class AccountTax(models.Model):
         :return:                    A list of tuple <index, normalized_factor> for each 'target_factors' passed as parameter.
         """
         factors = [(i, abs(target_factor['factor'])) for i, target_factor in enumerate(target_factors)]
-        factors.sort(key=lambda x: x[1], reverse=True)
         sum_of_factors = sum(x[1] for x in factors)
         return [(i, factor / sum_of_factors if sum_of_factors else 0.0) for i, factor in factors]
 
@@ -1843,6 +1842,8 @@ class AccountTax(models.Model):
 
         # Distribute using the factor first.
         factors = self._normalize_target_factors(target_factors)
+        factors.sort(key=lambda x: x[1], reverse=True)
+
         for i, factor in factors:
             if not remaining_errors:
                 break

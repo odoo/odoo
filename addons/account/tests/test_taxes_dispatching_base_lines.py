@@ -122,6 +122,11 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         self._assert_tax_totals_summary(tax_totals, expected_values)
 
     def test_dispatch_global_discount_lines(self):
+        def assert_global_discount_lines(base_lines, expected_values):
+            for base_line, expected_discounts in zip(base_lines, expected_values):
+                for discount_line, expected_discount in zip(base_line['discount_base_lines'], expected_discounts):
+                    self.assertAlmostEqual(discount_line['price_unit'], expected_discount, base_line['currency_id'].decimal_places, f"expected a discount of {expected_discount} but the discount is {discount_line['price_unit']}")
+
         self.env.company.tax_calculation_rounding_method = 'round_globally'
         AccountTax = self.env['account.tax']
         tax1 = self.fixed_tax(1, include_base_amount=True)
@@ -130,8 +135,8 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
 
         document_params = self.init_document(
             lines=[
-                {'product_id': self.product_a, 'price_unit': 33.58, 'quantity': 10, 'tax_ids': taxes},
                 {'product_id': self.product_a, 'price_unit': 16.79, 'quantity': 10, 'tax_ids': taxes},
+                {'product_id': self.product_a, 'price_unit': 33.58, 'quantity': 10, 'tax_ids': taxes},
             ],
             currency=self.foreign_currency,
             rate=0.5,
@@ -215,6 +220,8 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         self.assertEqual(len(base_lines), 3)
         base_lines[-1]['special_type'] = 'global_discount'
         base_lines = AccountTax._dispatch_global_discount_lines(base_lines, self.env.company)
+        # verify the global discount is dispatched proportionnaly in each line
+        assert_global_discount_lines(base_lines, [[-34.22], [-66.52]])
         AccountTax._squash_global_discount_lines(base_lines, self.env.company)
         self.assertEqual(len(base_lines), 2)
         tax_totals = AccountTax._get_tax_totals_summary(base_lines, document['currency'], self.env.company)
