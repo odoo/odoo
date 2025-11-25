@@ -13,6 +13,7 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.clickPayButton(),
