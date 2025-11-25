@@ -104,8 +104,6 @@
                 <field name="state"/>
                 <field name="employee_id"/>
                 <field name="leave_type_request_unit"/>
-                <field name="request_unit_hours"/>
-                <field name="request_unit_half"/>
                 <field name="request_date_from"/>
                 <field name="request_hour_from"/>
                 <field name="request_hour_to"/>
@@ -366,8 +364,8 @@
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
                                 readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                            <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
-                            <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
+                            <label for="request_date_from" invisible="leave_type_request_unit not in('hour', 'half_day')" string="Date" />
+                            <label for="request_date_from" invisible="leave_type_request_unit in ('half_day', 'hour')" string="Dates" />
                             <div id="full_date" class="o_row">
                                 <field
                                     name="request_date_from"
@@ -381,23 +379,23 @@
                                 </div>
                             </div>
                             <!-- half day or custom hours-->
-                            <label for="request_date_from_period" invisible="not request_unit_half" string="Day Period"/>
-                            <div class="o_row" invisible="not request_unit_half">
-                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'" class="o_hr_narrow_field me-2"/>
-                                <field name="request_date_to_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'" class="o_hr_narrow_field"/>
+                            <label for="request_date_from_period" invisible="leave_type_request_unit != 'half_day'" string="Day Period"/>
+                            <div class="o_row" invisible="leave_type_request_unit != 'half_day'">
+                                <field name="request_date_from_period" invisible="leave_type_request_unit != 'half_day'" required="leave_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field me-2"/>
+                                <field name="request_date_to_period" invisible="leave_type_request_unit != 'half_day'" required="leave_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field"/>
                             </div>
-                            <label for="request_hour_from" invisible="not request_unit_hours" string="Hours"/>
-                            <div class="o_row" invisible="not request_unit_hours">
-                                <field name="request_hour_from" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
-                                <field name="request_hour_to" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection" class="o_hr_narrow_field"/>
+                            <label for="request_hour_from" invisible="leave_type_request_unit != 'hour'" string="Hours"/>
+                            <div class="o_row" invisible="leave_type_request_unit != 'hour'">
+                                <field name="request_hour_from" readonly="state == 'validate'" required="leave_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
+                                <field name="request_hour_to" readonly="state == 'validate'" required="leave_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
                             </div>
-                            <div colspan="2" class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch or dashboard_warning_message">
+                            <div colspan="2" class="alert alert-info" role="alert" invisible="leave_type_request_unit != 'hour' or not tz_mismatch or dashboard_warning_message">
                                 <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's work timezone</span>
                                 (<field name="tz" class="oe_inline fw-bold"/>).
                                 <div>For your reference, the equivalent times in your timezone are displayed below.</div>
                             </div>
-                            <label for="date_from" string="Your Timezone" invisible="not request_unit_hours or not tz_mismatch"/>
-                            <div class="o_row o_row_readonly" invisible="not request_unit_hours or not tz_mismatch">
+                            <label for="date_from" string="Your Timezone" invisible="leave_type_request_unit != 'hour' or not tz_mismatch"/>
+                            <div class="o_row o_row_readonly" invisible="leave_type_request_unit != 'hour' or not tz_mismatch">
                                 <label for="date_from" string="From" />
                                 <field name="date_from" readonly="1" widget="datetime"/>
                                 <label for="date_to" string="To" />
