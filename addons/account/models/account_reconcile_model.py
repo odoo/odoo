@@ -666,7 +666,7 @@ class AccountReconcileModel(models.Model):
 
         # Filter out excluded account.move.line.
         if excluded_ids:
-            query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
+            query += ' AND aml.id NOT IN %(excluded_aml_ids)s'
             params['excluded_aml_ids'] = tuple(excluded_ids)
 
         if self.matching_order == 'new_first':
