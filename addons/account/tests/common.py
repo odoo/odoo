@@ -1802,35 +1802,40 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     # base_lines_tax_details
     # -------------------------------------------------------------------------
 
+    def _extract_base_lines_details(self, document):
+        return [
+            {
+                'total_excluded_currency': base_line['tax_details']['total_excluded_currency'],
+                'total_excluded': base_line['tax_details']['total_excluded'],
+                'total_included_currency': base_line['tax_details']['total_included_currency'],
+                'total_included': base_line['tax_details']['total_included'],
+                'delta_total_excluded_currency': base_line['tax_details']['delta_total_excluded_currency'],
+                'delta_total_excluded': base_line['tax_details']['delta_total_excluded'],
+                'manual_total_excluded': base_line['manual_total_excluded'],
+                'manual_total_excluded_currency': base_line['manual_total_excluded_currency'],
+                'manual_tax_amounts': base_line['manual_tax_amounts'],
+                'taxes_data': [
+                    {
+                        'tax_id': tax_data['tax'].id,
+                        'tax_amount_currency': tax_data['tax_amount_currency'],
+                        'tax_amount': tax_data['tax_amount'],
+                        'base_amount_currency': tax_data['base_amount_currency'],
+                        'base_amount': tax_data['base_amount'],
+                    }
+                    for tax_data in base_line['tax_details']['taxes_data']
+                ],
+            }
+            for base_line in document['lines']
+        ]
+
     def _assert_sub_test_base_lines_tax_details(self, results, expected_values):
         self.assertEqual(len(results['base_lines_tax_details']), len(expected_values['base_lines_tax_details']))
         for result, expected in zip(results['base_lines_tax_details'], expected_values['base_lines_tax_details']):
             self.assertDictEqual(result, expected)
 
     def _create_py_sub_test_base_lines_tax_details(self, document):
-        base_lines = document['lines']
         return {
-            'base_lines_tax_details': [
-                {
-                    'total_excluded_currency': base_line['tax_details']['total_excluded_currency'],
-                    'total_excluded': base_line['tax_details']['total_excluded'],
-                    'total_included_currency': base_line['tax_details']['total_included_currency'],
-                    'total_included': base_line['tax_details']['total_included'],
-                    'delta_total_excluded_currency': base_line['tax_details']['delta_total_excluded_currency'],
-                    'delta_total_excluded': base_line['tax_details']['delta_total_excluded'],
-                    'taxes_data': [
-                        {
-                            'tax_id': tax_data['tax'].id,
-                            'tax_amount_currency': tax_data['tax_amount_currency'],
-                            'tax_amount': tax_data['tax_amount'],
-                            'base_amount_currency': tax_data['base_amount_currency'],
-                            'base_amount': tax_data['base_amount'],
-                        }
-                        for tax_data in base_line['tax_details']['taxes_data']
-                    ],
-                }
-                for base_line in base_lines
-            ]
+            'base_lines_tax_details': self._extract_base_lines_details(document),
         }
 
     def _create_js_sub_test_base_lines_tax_details(self, document):
@@ -1948,9 +1953,11 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     def _assert_sub_test_down_payment(self, results, expected_results):
         self._assert_tax_totals_summary(
             results['tax_totals'],
-            expected_results,
+            expected_results['tax_totals'],
             soft_checking=results['soft_checking'],
         )
+        if 'base_lines_tax_details' in expected_results:
+            self._assert_sub_test_base_lines_tax_details(results, expected_results)
 
     def _create_py_sub_test_down_payment(self, document, amount_type, amount, soft_checking):
         AccountTax = self.env['account.tax']
@@ -1971,7 +1978,11 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             company=self.env.company,
             cash_rounding=new_document['cash_rounding'],
         )
-        return {'tax_totals': tax_totals, 'soft_checking': soft_checking}
+        return {
+            'tax_totals': tax_totals,
+            'soft_checking': soft_checking,
+            'base_lines_tax_details': self._extract_base_lines_details(new_document),
+        }
 
     def _create_js_sub_test_down_payment(self, document, amount_type, amount, soft_checking):
         return {
