@@ -124,138 +124,66 @@ class ResUsers(models.Model):
         return True
 
     @api.model
-    def _get_user_ids_ranked_by_karma(self, user_domain, from_date=None, to_date=None, limit=30, offset=0):
-        """ Return the list of user_ids satisfying the domain, sorted by their
-        karma gain during the specified period.
-
-        This method is designed for the website leaderboard pagination. It
-        computes the ranking based on the sum of gamification.karma.tracking
-        values within the given dates."""
-
-        where_query = self.env['res.users']._search(user_domain, bypass_access=True)
-
-        sql = SQL("""
-            SELECT "res_users".id as user_id
-            FROM %s
-            LEFT JOIN "gamification_karma_tracking" as "tracking"
-                ON "res_users".id = "tracking".user_id
-            WHERE %s %s %s
-            GROUP BY "res_users".id
-            ORDER BY COALESCE(SUM("tracking".new_value - "tracking".old_value), 0) DESC, "res_users".id DESC
-            LIMIT %s OFFSET %s
-        """,
-            where_query.from_clause,
-            where_query.where_clause or SQL("TRUE"),
-            SQL("AND tracking.tracking_date >= %s::DATE", from_date) if from_date else SQL(),
-            SQL("AND tracking.tracking_date < %s::DATE + interval '1' day", to_date) if to_date else SQL(),
-            limit,
-            offset,
-        )
-
-        self.env.cr.execute(sql)
-        res = self.env.cr.fetchall()
-        return [r[0] for r in res]
-
-    def _get_tracking_karma_gain_position(self, user_domain, from_date=None, to_date=None):
-        """ Get absolute position in term of gained karma for users. First a ranking
-        of all users is done given a user_domain; then the position of each user
-        belonging to the current record set is extracted.
-
-        Example: in website profile, search users with name containing Norbert. Their
-        positions should not be 1 to 4 (assuming 4 results), but their actual position
-        in the karma gain ranking (with example user_domain being karma > 1,
-        website published True).
-
-        :param user_domain: general domain (i.e. active, karma > 1, website, ...)
-          to compute the absolute position of the current record set
-        :param from_date: compute karma gained after this date (included) or from
-          beginning of time;
-        :param to_date: compute karma gained before this date (included) or until
-          end of time;
-
-        :rtype: list[dict]
-        :return:
-          ::
-
-            [{
-                'user_id': user_id (belonging to current record set),
-                'karma_gain_total': integer, karma gained in the given timeframe,
-                'karma_position': integer, ranking position
-            }, {..}]
-
-          ordered by descending karma position
+    def _get_users_karma_ranking(self, user_domain, from_date=None, to_date=None, limit=30, offset=0, always_include_user_id=None):
+        """ Ranks users based on karma.
+        If dates are provided, ranking is based on tracking lines gain in `gamification_karma_tracking`.
+        Otherwise, it falls back to total lifetime karma in `res_users`.
         """
-        if not self:
-            return []
+        query_obj = self.env['res.users']._search(user_domain, bypass_access=True)
 
-        where_query = self.env['res.users']._search(user_domain, bypass_access=True)
+        if from_date or to_date:
+            base_query = SQL("""
+                SELECT "res_users".id as user_id,
+                       COALESCE(SUM("tracking".new_value - "tracking".old_value), 0) as karma_gain
+                  FROM %(from_clause)s
+             LEFT JOIN "gamification_karma_tracking" as "tracking"
+                    ON "res_users".id = "tracking".user_id AND "res_users"."active" = TRUE
+                 WHERE %(where_clause)s %(date_from)s %(date_to)s
+              GROUP BY "res_users".id
+                HAVING SUM("tracking".new_value - "tracking".old_value) > 0
+            """,
+                from_clause=query_obj.from_clause,
+                where_clause=query_obj.where_clause or SQL("TRUE"),
+                date_from=SQL(" AND tracking.tracking_date >= %s::DATE", from_date) if from_date else SQL(),
+                date_to=SQL(" AND tracking.tracking_date < %s::DATE + interval '1 day'", to_date) if to_date else SQL(),
+            )
+        else:
+            base_query = SQL("""
+                SELECT "res_users".id as user_id,
+                       COALESCE("res_users".karma, 0) as karma_gain
+                  FROM %(from_clause)s
+                 WHERE %(where_clause)s
+            """,
+                from_clause=query_obj.from_clause,
+                where_clause=query_obj.where_clause or SQL("TRUE")
+            )
 
-        sql = SQL("""
-SELECT final.user_id, final.karma_gain_total, final.karma_position
-FROM (
-    SELECT intermediate.user_id, intermediate.karma_gain_total, row_number() OVER (ORDER BY intermediate.karma_gain_total DESC) AS karma_position
-    FROM (
-        SELECT "res_users".id as user_id, COALESCE(SUM("tracking".new_value - "tracking".old_value), 0) as karma_gain_total
-        FROM %s
-        LEFT JOIN "gamification_karma_tracking" as "tracking"
-        ON "res_users".id = "tracking".user_id AND "res_users"."active" IS TRUE
-        WHERE %s %s %s
-        GROUP BY "res_users".id
-        ORDER BY karma_gain_total DESC
-    ) intermediate
-) final
-WHERE final.user_id IN %s""",
-            where_query.from_clause,
-            where_query.where_clause or SQL("TRUE"),
-            SQL("AND tracking.tracking_date::DATE >= %s::DATE", from_date) if from_date else SQL(),
-            SQL("AND tracking.tracking_date::DATE <= %s::DATE", to_date) if to_date else SQL(),
-            tuple(self.ids),
-        )
+        where_clause = SQL("karma_position > %s AND karma_position <= %s", offset, offset + limit)
+        if always_include_user_id:
+            where_clause = SQL("%s OR user_id = %s", where_clause, always_include_user_id)
 
-        self.env.cr.execute(sql)
-        return self.env.cr.dictfetchall()
-
-    def _get_karma_position(self, user_domain):
-        """ Get absolute position in term of total karma for users. First a ranking
-        of all users is done given a user_domain; then the position of each user
-        belonging to the current record set is extracted.
-
-        Example: in website profile, search users with name containing Norbert. Their
-        positions should not be 1 to 4 (assuming 4 results), but their actual position
-        in the total karma ranking (with example user_domain being karma > 1,
-        website published True).
-
-        :param user_domain: general domain (i.e. active, karma > 1, website, ...)
-          to compute the absolute position of the current record set
-
-        :rtype: list[dict]
-        :return:
-
-            ::
-
-                [{
-                    'user_id': user_id (belonging to current record set),
-                    'karma_position': integer, ranking position
-                }, {..}] ordered by karma_position desc
-        """
-        if not self:
-            return {}
-
-        where_query = self.env['res.users']._search(user_domain, bypass_access=True)
-
-        # we search on every user in the DB to get the real positioning (not the one inside the subset)
-        # then, we filter to get only the subset.
-        sql = SQL("""
-SELECT sub.user_id, sub.karma_position
-FROM %s AS sub
-WHERE sub.user_id IN %s""",
-            where_query.subselect(
-                SQL("%s as user_id", where_query.table.id),
-                SQL("row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position"),
+        query = SQL("""
+            WITH users_with_karma_gain AS (
+                %(base_query)s
             ),
-            tuple(self.ids),
+            users_with_karma_position as (
+                SELECT user_id,
+                       karma_gain,
+                       ROW_NUMBER() OVER (ORDER BY karma_gain DESC, user_id DESC) AS karma_position
+                  FROM "users_with_karma_gain"
+            )
+            SELECT user_id,
+                   karma_gain,
+                   karma_position
+              FROM "users_with_karma_position"
+             WHERE %(final_condition)s
+        """,
+            base_query=base_query,
+            final_condition=where_clause
         )
-        return self.env.execute_query_dict(sql)
+
+        self.env.cr.execute(query)
+        return {row['user_id']: row for row in self.env.cr.dictfetchall()}
 
     def _rank_changed(self):
         """
