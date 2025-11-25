@@ -106,7 +106,6 @@ class AccountMove(models.Model):
         compute='_compute_l10n_in_total_withholding_amount',
         help="Total withholding amount for the move",
     )
-    l10n_in_display_higher_tcs_button = fields.Boolean(string="Display higher TCS button", compute="_compute_l10n_in_display_higher_tcs_button")
     l10n_in_tds_feature_enabled = fields.Boolean(related='company_id.l10n_in_tds_feature')
     l10n_in_tcs_feature_enabled = fields.Boolean(related='company_id.l10n_in_tcs_feature')
 
@@ -374,17 +373,6 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_total_withholding_amount = 0.0
 
-    @api.depends('l10n_in_warning')
-    def _compute_l10n_in_display_higher_tcs_button(self):
-        for move in self:
-            if move.company_id.l10n_in_tcs_feature:
-                move.l10n_in_display_higher_tcs_button = (
-                    move.l10n_in_warning
-                    and move.l10n_in_warning.get('lower_tcs_tax')
-                )
-            else:
-                move.l10n_in_display_higher_tcs_button = False
-
     def action_l10n_in_withholding_entries(self):
         self.ensure_one()
         return {
@@ -394,23 +382,6 @@ class AccountMove(models.Model):
             'view_mode': 'list,form',
             'domain': [('id', 'in', self.l10n_in_withhold_move_ids.ids)],
         }
-
-    def action_l10n_in_apply_higher_tax(self):
-        self.ensure_one()
-        invalid_lines = self._get_l10n_in_invalid_tax_lines()
-        for line in invalid_lines:
-            updated_tax_ids = []
-            for tax in line.tax_ids:
-                if tax.l10n_in_tax_type == 'tcs':
-                    max_tax = max(
-                        tax.l10n_in_section_id.l10n_in_section_tax_ids,
-                        key=lambda t: t.amount
-                    )
-                    updated_tax_ids.append(max_tax.id)
-                else:
-                    updated_tax_ids.append(tax.id)
-            if set(line.tax_ids.ids) != set(updated_tax_ids):
-                line.write({'tax_ids': [Command.clear()] + [Command.set(updated_tax_ids)]})
 
     def _get_l10n_in_invalid_tax_lines(self):
         self.ensure_one()

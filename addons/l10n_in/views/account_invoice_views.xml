@@ -71,8 +71,6 @@
             <xpath expr="//header" position="inside">
                 <button name="%(l10n_in_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"
                         invisible="country_code != 'IN' or l10n_in_tds_deduction == 'no' or not l10n_in_tds_feature_enabled or move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund') or state != 'posted'"/>
-                <button name="action_l10n_in_apply_higher_tax" string="Apply Higher TCS" type="object" class="btn btn-secondary float-end"
-                        invisible="not l10n_in_display_higher_tcs_button or not l10n_in_tcs_feature_enabled"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_l10n_in_withholding_entries"
