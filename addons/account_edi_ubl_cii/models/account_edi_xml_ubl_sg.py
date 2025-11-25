@@ -26,9 +26,11 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._get_partner_party_vals(partner, role)
 
-        for party_tax_scheme in vals['party_tax_scheme_vals']:
+        for party_tax_scheme in vals.get('party_tax_scheme_vals', []):
             party_tax_scheme['tax_scheme_vals'] = {'id': 'GST'}
 
         return vals
@@ -36,6 +38,8 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
     def _get_invoice_payment_means_vals_list(self, invoice):
         """ https://www.peppolguide.sg/billing/bis/#_payment_means_information
         """
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_invoice_payment_means_vals_list(invoice)
         for vals in vals_list:
             vals.update({
@@ -48,6 +52,8 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
     def _get_tax_sg_codes(self, tax):
         """ https://www.peppolguide.sg/billing/bis/#_gst_category_codes
         """
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         tax_category_code = 'SR'
         if tax.amount == 0:
             tax_category_code = 'ZR'
@@ -55,6 +61,8 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
 
     def _get_tax_category_list(self, customer, supplier, taxes):
         # OVERRIDE
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         res = []
         for tax in taxes:
             res.append({
@@ -66,6 +74,8 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
+        # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
+        # If you change this method, please change the corresponding new helper (at the end of this file).
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({
@@ -73,3 +83,40 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
         })
 
         return vals
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_header_nodes(document_node, vals)
+        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['ubl_sg']}
+
+    def _add_invoice_payment_means_nodes(self, document_node, vals):
+        """ https://www.peppolguide.sg/billing/bis/#_payment_means_information """
+        super()._add_invoice_payment_means_nodes(document_node, vals)
+        document_node['cac:PaymentMeans']['cbc:PaymentMeansCode'] = {
+            '_text': 54,
+            'name': 'Credit Card',
+        }
+
+    def _get_party_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        party_node = super()._get_party_node(vals)
+        party_node['cac:PartyTaxScheme'][0]['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
+        return party_node
+
+    def _get_tax_category_code(self, customer, supplier, tax):
+        """ https://www.peppolguide.sg/billing/bis/#_gst_category_codes """
+        if not tax or tax.amount == 0:
+            return 'ZR'
+        return 'SR'
+
+    def _get_tax_category_node(self, vals):
+        # OVERRIDE
+        tax_category_node = super()._get_tax_category_node(vals)
+        tax_category_node['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
+        tax_category_node['cbc:TaxExemptionReason'] = None
+        tax_category_node['cbc:TaxExemptionReasonCode'] = None
+        return tax_category_node

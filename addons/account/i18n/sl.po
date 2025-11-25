@@ -17,13 +17,15 @@
 # Wil Odoo, 2025
 # Aleš Pipan, 2025
 # Jan Zorko <jan.zorko@implex.si>, 2025.
+# Tadej Vengust <tadej.vengust@implex.si>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 19:44+0000\n"
-"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 06:42+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "account/sl/>\n"
 "Language: sl\n"
@@ -211,18 +213,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) bi moral biti račun tipa \"%"
-"(receivable)s\" or \"%(payable)s\" z obema možnostma \"%"
-"(allow_reconciliation)s\" in \"%(non_trade)s\" omogočeno."
 
 #. module: account
 #. odoo-python
@@ -2699,7 +2689,7 @@ msgstr "Dovoljeni dnevniki"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Allowed accounts"
-msgstr "Dovoljeni računi"
+msgstr "Dovoljeni konti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13600,7 +13590,7 @@ msgstr "Prodajalec"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Same Account as product"
-msgstr "Isti račun kot izdelek"
+msgstr "Isti konto kot izdelek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -14432,7 +14422,7 @@ msgstr "Začetno stanje"
 #: model:ir.model.fields,field_description:account.field_account_payment__state
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "State"
-msgstr "Zvezna država ali regija"
+msgstr "Stanje"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -15209,7 +15199,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The Bill/Refund date is required to validate this document."
-msgstr ""
+msgstr "Za validiranje tega dokumenta je potreben datum računa/vračila."
 
 #. module: account
 #. odoo-python
@@ -15514,7 +15504,7 @@ msgstr "Država, iz katere se bodo uporabljala davčna poročila za to podjetje"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "Devizni tečaj mora biti strogo pozitiven."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -19493,6 +19483,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Potrdilo o plačilu (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) bi moral biti račun tipa \"%"
+#~ "(receivable)s\" or \"%(payable)s\" z obema možnostma \"%"
+#~ "(allow_reconciliation)s\" in \"%(non_trade)s\" omogočeno."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

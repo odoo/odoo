@@ -772,3 +772,6 @@ class TestUi(odoo.tests.HttpCase):
     @mute_logger("odoo.http")
     def test_website_replace_remove_image(self):
         self.start_tour("/", "website_replace_remove_image", login="admin")
+
+    def test_website_custom_colors_picking(self):
+        self.start_tour('/', 'website_custom_colors_picking', login='admin')

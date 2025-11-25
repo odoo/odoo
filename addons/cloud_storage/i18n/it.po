@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* cloud_storage
-# 
+# * cloud_storage
+#
 # Translators:
 # Marianna Ciofani, 2024
 # Wil Odoo, 2024
-# 
+#
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"POT-Creation-Date: 2025-11-14 18:38+0000\n"
+"PO-Revision-Date: 2025-11-17 10:30+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/"
+"cloud_storage/it/>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -65,6 +69,14 @@ msgstr "Errore archiviazione cloud"
 #: model:ir.model,name:cloud_storage.model_res_config_settings
 msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid ""
+"Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
+msgstr ""
+"Impossibile scaricare l'allegato (%(id)s) dal cloud: %(code)s - %(reason)s"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
@@ -118,7 +130,8 @@ msgstr ""
 #: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid ""
 "webclient can upload files larger than the minimum file size\n"
-"        (in bytes) as url attachments to the server and then upload the file to\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
 "        the cloud storage."
 msgstr ""
 "Il client web può caricare file più grandi della dimensione minima\n"

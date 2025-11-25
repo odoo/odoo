@@ -1,24 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* delivery
-# 
+# * delivery
+#
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024, 2025.
 # Wil Odoo, 2024
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:03+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"PO-Revision-Date: 2025-11-21 15:43+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
+"delivery/uk/>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: delivery
 #. odoo-python
@@ -33,6 +38,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"Безкоштовна доставка"
 
 #. module: delivery
 #. odoo-python
@@ -88,7 +95,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>Опис доставки</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -188,6 +195,8 @@ msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
 "Tags."
 msgstr ""
+"Перевізник %s не може мати той самий тег одночасно в обов'язкових та "
+"виключених тегах."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -198,14 +207,14 @@ msgstr "Опис перевізника"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "Оберіть точку видачі"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
-msgstr ""
+msgstr "Оберіть цю локацію"
 
 #. module: delivery
 #. odoo-javascript
@@ -453,6 +462,8 @@ msgid ""
 "Filling this form allows you to make the shipping method available according"
 " to the content of the order or its destination."
 msgstr ""
+"Заповнення цієї форми дозволяє вам зробити спосіб доставки доступним "
+"відповідно до вмісту замовлення або його пункту призначення."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -513,6 +524,7 @@ msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
 msgstr ""
+"Якщо загальний обсяг замовлення перевищує цей обсяг, метод буде недоступний."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
@@ -520,6 +532,7 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
+"Якщо загальна вага замовлення перевищує цю вагу, метод буде недоступний."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -598,7 +611,7 @@ msgstr "Керуйте префіксами індексу доставки"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
-msgstr ""
+msgstr "Перегляд карти"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -618,7 +631,7 @@ msgstr "Маржа на ставці"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Максимальний обʼєм"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
@@ -633,7 +646,7 @@ msgstr "Максимальне значення"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Обовʼязкові теги"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -650,7 +663,7 @@ msgstr "Нові провайдери"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr ""
+msgstr "Для цієї адреси доставки немає пунктів видачі."
 
 #. module: delivery
 #. odoo-javascript
@@ -669,7 +682,7 @@ msgstr "Недоступно для поточного замовлення"
 #: code:addons/delivery/static/src/js/location_selector/location/location.js:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
-msgstr ""
+msgstr "Відкриті години"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -684,7 +697,7 @@ msgstr "Замовлення"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Дані локації видачі"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -871,6 +884,8 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Метод НЕ доступний, якщо хоча б один товар із замовлення має один із цих "
+"тегів."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -878,6 +893,8 @@ msgid ""
 "The method is available only if at least one product of the order has one of"
 " these tags."
 msgstr ""
+"Метод доступний лише за умови, що хоча б один товар замовлення має один із "
+"цих тегів."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -906,7 +923,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
-msgstr ""
+msgstr "Сталася помилка під час завантаження карти"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -930,6 +947,9 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"Ця опція додає посилання для клієнта на порталі, щоб він міг легко "
+"відстежувати свою посилку. Використовуйте <shipmenttrackingnumber> як "
+"заповнювач у вашій URL-адресі."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -944,7 +964,7 @@ msgstr "Загальна вага замовлення"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "Посилання відстеження"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1029,7 +1049,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Your postal code"
-msgstr ""
+msgstr "Ваш індекс"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1049,4 +1069,4 @@ msgstr "наприклад, UPS Express"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
-msgstr ""
+msgstr "напр. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"

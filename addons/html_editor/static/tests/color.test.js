@@ -643,7 +643,7 @@ test("should be able to remove color applied by 'text-*' classes (1)", async () 
     });
 });
 
-test.todo("should be able to remove color applied by 'text-*' classes (2)", async () => {
+test("should be able to remove color applied by 'text-*' classes (2)", async () => {
     await testEditor({
         contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
         stepFunction: setColor("", "color"),

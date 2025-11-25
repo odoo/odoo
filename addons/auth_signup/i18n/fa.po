@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_signup
+# * auth_signup
 #
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-11 02:16+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tiffany Chang, 2025\n"
-"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"PO-Revision-Date: 2025-11-17 10:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-18/"
+"auth_signup/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -166,6 +169,60 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width:"
+" 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value="
+"\"ctx.get('invited_users', [])\"/>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Pending Invitations\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear <t t-out=\"object.name or ''\">Mitchell "
+"Admin</t>,<br/> <br/>\n"
+"                        شما کاربر(های) زیر را به پایگاه داده خود اضافه کرده‌"
+"اید اما هنوز ثبت‌نام نکرده‌اند:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as="
+"\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\""
+">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        از آن‌ها پیگیری کنید تا بتوانند به پایگاه داده شما "
+"دسترسی پیدا کرده و کار با شما را آغاز کنند. \n"
+"                        <br/><br/>\n"
+"                        روز خوبی داشته باشید!<br/>\n"
+"                        --<br/>The <t t-out=\"object.company_id.name or ''\""
+">شرکت شما</t> Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -429,13 +486,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "A reset password link was sent by email"
-msgstr ""
+msgstr "لینک بازنشانی گذرواژه از طریق ایمیل ارسال شد"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "A signup link was sent by email"
-msgstr ""
+msgstr "لینک بازنشانی گذرواژه از طریق ایمیل ارسال شد"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -771,7 +828,7 @@ msgstr "ثبت نام برای کاربران دعوت نشده مجاز نیس�
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
 msgid "Signup token '%s' is not valid or expired"
-msgstr ""
+msgstr "توکن ثبت‌نام '%s' معتبر نیست یا منقضی شده است."
 
 #. module: auth_signup
 #. odoo-python
@@ -882,7 +939,7 @@ msgstr "برای مثال محمد احمدی"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "hours:<br/>"
-msgstr ""
+msgstr "ساعت‌ها:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email

@@ -133,6 +133,7 @@ export class ImagePlugin extends Plugin {
                 title: _t("Resize Default"),
                 text: _t("Default"),
                 isActive: () => this.hasImageSize(""),
+                isAvailable: () => this.config.allowImageResize ?? true,
             },
             {
                 id: "resize_100",
@@ -142,6 +143,7 @@ export class ImagePlugin extends Plugin {
                 title: _t("Resize Full"),
                 text: "100%",
                 isActive: () => this.hasImageSize("100%"),
+                isAvailable: () => this.config.allowImageResize ?? true,
             },
             {
                 id: "resize_50",
@@ -151,6 +153,7 @@ export class ImagePlugin extends Plugin {
                 title: _t("Resize Half"),
                 text: "50%",
                 isActive: () => this.hasImageSize("50%"),
+                isAvailable: () => this.config.allowImageResize ?? true,
             },
             {
                 id: "resize_25",
@@ -160,6 +163,7 @@ export class ImagePlugin extends Plugin {
                 title: _t("Resize Quarter"),
                 text: "25%",
                 isActive: () => this.hasImageSize("25%"),
+                isAvailable: () => this.config.allowImageResize ?? true,
             },
             {
                 id: "image_transform",

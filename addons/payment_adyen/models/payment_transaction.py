@@ -3,7 +3,7 @@
 import logging
 import pprint
 
-from odoo import _, models
+from odoo import _, models, release
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_amount
 
@@ -72,6 +72,13 @@ class PaymentTransaction(models.Model):
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
+            },
+            'applicationInfo': {
+                'externalPlatform': {
+                    'name': 'Odoo',
+                    'version': release.version,
+                    'integrator': 'Odoo SA',
+                }
             },
             'countryCode': partner_country_code,
             'reference': self.reference,

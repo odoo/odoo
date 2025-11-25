@@ -1,6 +1,4 @@
-from odoo import api, models, _
-
-CHORUS_PRO_PEPPOL_ID = "0009:11000201100044"
+from odoo import _, models
 
 
 class AccountEdiXmlUBLBIS3(models.AbstractModel):
@@ -10,10 +8,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     See Pagero documentation: https://www.pagero.com/onboarding/aife/aife-en#requirements
     Chorus Pro documentation: https://communaute.chorus-pro.gouv.fr/wp-content/uploads/2017/07/Specifications_Externes_Annexe_EDI_V4.22.pdf
     """
-
-    @api.model
-    def _is_customer_behind_chorus_pro(self, customer):
-        return customer.peppol_eas and customer.peppol_endpoint and f"{customer.peppol_eas}:{customer.peppol_endpoint}" == CHORUS_PRO_PEPPOL_ID
 
     def _export_invoice_vals(self, invoice):
         """

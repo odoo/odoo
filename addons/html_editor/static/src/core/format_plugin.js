@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { hasAnyNodesColor, TEXT_CLASSES_REGEX, BG_CLASSES_REGEX } from "@html_editor/utils/color";
-import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
+import { cleanTextNode, removeEmptyTextNodes, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
@@ -305,6 +305,12 @@ export class FormatPlugin extends Plugin {
                 if (isUselessZws) {
                     unwrapContents(parentNode);
                 } else {
+                    const cursors = this.dependencies.selection.preserveSelection();
+                    this.dispatchTo("clean_handlers", parentNode);
+                    // Remove empty text nodes (replaced FEFFs) before splitting,
+                    // to prevent creating empty elements in the DOM.
+                    removeEmptyTextNodes(parentNode, cursors);
+                    cursors.restore();
                     const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
                         currentNode,
                         parentNode

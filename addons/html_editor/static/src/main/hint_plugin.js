@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
+import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
-import { childNodes, selectElements } from "@html_editor/utils/dom_traversal";
+import { childNodes, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
@@ -71,14 +71,24 @@ export class HintPlugin extends Plugin {
             for (const hint of this.getResource("hints")) {
                 if (hint.selector) {
                     const el = closestBlock(editableSelection.anchorNode);
-                    if (el && el.matches(hint.selector) && !isProtected(el) && isEmptyBlock(el)) {
+                    if (
+                        el &&
+                        el.matches(hint.selector) &&
+                        !isProtected(el) &&
+                        isEmptyBlock(el) &&
+                        !descendants(el).some(isEditorTab)
+                    ) {
                         this.makeHint(el, hint.text);
                         this.hint = el;
                     }
                 } else {
                     const target = hint.target(selectionData, this.editable);
                     // Do not replace an existing empty block hint by a temp hint.
-                    if (target && !target.classList.contains("o-we-hint")) {
+                    if (
+                        target &&
+                        !target.classList.contains("o-we-hint") &&
+                        !descendants(target).some(isEditorTab)
+                    ) {
                         this.makeHint(target, hint.text);
                         this.hint = target;
                         return;

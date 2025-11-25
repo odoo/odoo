@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Aleš Pipan, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: base_import
 #. odoo-javascript
@@ -86,14 +87,14 @@ msgstr "Dovoli ujemanje s podpolji"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"Med uvozom je prišlo do neznane težave (morda prekinjena povezava, presežena"
-" omejitev podatkov ali omejitve pomnilnika). Če je težava prehodna, "
-"poskusite znova. Če se težava še vedno pojavlja, poskusite datoteko "
-"razdeliti, namesto da jo uvozite naenkrat."
+"Med uvozom je prišlo do neznane težave (morda prekinjena povezava, presežena "
+"omejitev podatkov ali omejitve pomnilnika). Če je težava prehodna, poskusite "
+"znova. Če se težava še vedno pojavlja, poskusite datoteko razdeliti, namesto "
+"da jo uvozite naenkrat."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -158,11 +159,11 @@ msgstr "Stolpec %(column)s vsebuje napačne vrednosti (vrednost:%(value)s)"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
-"Stolpec %(column)s vsebuje napačne vrednosti. Napaka v vrstici %(line)d: "
-"%(error)s"
+"Stolpec %(column)s vsebuje napačne vrednosti. Napaka v vrstici %(line)d: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -185,11 +186,10 @@ msgstr "Komentarji"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"URL-ja ni bilo mogoče pridobiti: %(url)s [%(field_name)s: L%(line_number)d]:"
-" %(error)s"
+"URL-ja ni bilo mogoče pridobiti: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -306,12 +306,12 @@ msgstr "Napaka pri uvozu zapisov: Ločilo besedila mora biti en sam znak."
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"Napaka pri uvozu zapisov: vse vrstice bi morale biti enake velikosti, vendar"
-" ima naslovna vrstica %(title_row_entries)d vnose, medtem ko ima prva "
-"vrstica %(first_row_entries)d. Morda boste morali spremeniti ločilni znak."
+"Napaka pri uvozu zapisov: vse vrstice bi morale biti enake velikosti, vendar "
+"ima naslovna vrstica %(title_row_entries)d vnose, medtem ko ima prva vrstica "
+"%(first_row_entries)d. Morda boste morali spremeniti ločilni znak."
 
 #. module: base_import
 #. odoo-javascript
@@ -403,8 +403,8 @@ msgstr "Oblikovanje"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "Najdeni so bili neveljavni podatki slike, slike je treba uvoziti kot URL-je "
 "ali podatke, kodirane v base64."
@@ -445,7 +445,8 @@ msgstr ""
 "Če datoteka vsebuje\n"
 "                    imena stolpcev, lahko Odoo poskusi samodejno zaznati\n"
 "                    polje, ki ustreza stolpcu. To omogoča uvoz\n"
-"                    preprostejše, še posebej, če ima datoteka veliko stolpcev."
+"                    preprostejše, še posebej, če ima datoteka veliko "
+"stolpcev."
 
 #. module: base_import
 #. odoo-javascript
@@ -454,8 +455,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Če model uporablja openchatter, bo sledenje zgodovini nastavilo naročnine in"
-" pošiljalo obvestila med uvozom, vendar bo uvoz počasnejši."
+"Če model uporablja openchatter, bo sledenje zgodovini nastavilo naročnine in "
+"pošiljalo obvestila med uvozom, vendar bo uvoz počasnejši."
 
 #. module: base_import
 #. odoo-python
@@ -515,8 +516,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"Neveljavna oblika celice v vrstici %(row)s, stolpec %(col)s: %(cell_value)s,"
-" z obliko: %(cell_format)s, kot (%(format_type)s) formati niso podprti."
+"Neveljavna oblika celice v vrstici %(row)s, stolpec %(col)s: %(cell_value)s, "
+"z obliko: %(cell_format)s, kot (%(format_type)s) formati niso podprti."
 
 #. module: base_import
 #. odoo-python
@@ -794,6 +795,22 @@ msgid "The file will be imported by batches"
 msgstr "Datoteka bo uvožena v paketih"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -826,7 +843,8 @@ msgstr "Sledenje zgodovine med uvozom"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 "Ni mogoče naložiti \"{extension}\" datoteke: zahteva se Python modul "
 "\"{modname}\""
@@ -836,7 +854,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Ne podprt format datoteke \"{}\", uvoz podpira le CSV, ODS, XLS in XLSX"
+msgstr ""
+"Ne podprt format datoteke \"{}\", uvoz podpira le CSV, ODS, XLS in XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -861,21 +880,21 @@ msgstr "Naložite svoje datoteke"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
-"V 24-urnem sistemu za ure uporabite HH, za 12-urni sistem pa II v povezavi s"
-" 'p'. Poleg predlaganih oblik lahko uporabite tudi obliko po meri. Pustite "
+"V 24-urnem sistemu za ure uporabite HH, za 12-urni sistem pa II v povezavi s "
+"'p'. Poleg predlaganih oblik lahko uporabite tudi obliko po meri. Pustite "
 "prazno, da Odoo ugane obliko (priporočeno)."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "Za leto uporabite LLLL, za mesec MM in za dan DD. Vključite ločila, kot so "
 "pika, poševnica naprej ali pomišljaj. Poleg predlaganih oblik lahko "

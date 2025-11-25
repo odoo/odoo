@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 22:21+0000\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-19 09:14+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "account/uk/>\n"
@@ -206,18 +206,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) має бути рахунок з типом \"%"
-"(receivable)s\"або \"%(payable)s\" з двома опціями \"%"
-"(allow_reconciliation)s\" та включеним \"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -999,6 +987,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Ви можете обрати, як і в якому електронному форматі "
+"нам надсилати рахунки-фактури.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2405,6 +2397,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Запис нарахування створено %(date)s: %(accrual_entry)s.                І "
+"його зворотний запис: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3899,6 +3893,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"Групове надсилання рахунків-фактур недоступне. Будь ласка, активуйте cron, "
+"щоб увімкнути групове надсилання рахунків-фактур."
 
 #. module: account
 #. odoo-python
@@ -3907,6 +3903,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"Групове надсилання рахунків недоступне. Будь ласка, зверніться до свого "
+"системного адміністратора, щоб активувати cron для групового надсилання "
+"рахунків."
 
 #. module: account
 #. odoo-javascript
@@ -6202,7 +6201,7 @@ msgstr "Податки за замовчуванням, які використ�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "Типове значення для 'company_id' для %(record)s не є цілим числом"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -8032,7 +8031,7 @@ msgstr "Глобальна дата блокування"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Перейдіть до налаштувань крону"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -12437,7 +12436,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Платежі, які було узгоджено з цим рахунком-фактурою."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13112,7 +13111,7 @@ msgstr "Тип узгоджених рахунків"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Узгоджені платежі"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -19679,6 +19678,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Квитанція про оплату (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) має бути рахунок з типом \"%"
+#~ "(receivable)s\"або \"%(payable)s\" з двома опціями \"%"
+#~ "(allow_reconciliation)s\" та включеним \"%(non_trade)s\"."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

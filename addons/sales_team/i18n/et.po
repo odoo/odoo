@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-# 
+#
 # Translators:
 # Katrin Kampura, 2024
 # Martin Trigaux, 2024
@@ -18,26 +18,30 @@
 # Leaanika Randmets, 2024
 # Siim Raasuke, 2025
 # Tairi Tiimann, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-11-21 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tairi Tiimann, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -78,8 +82,7 @@ msgstr "Lisa meeskonna liige"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid ""
-"Add members to automatically assign their documents to this sales team."
+msgid "Add members to automatically assign their documents to this sales team."
 msgstr ""
 "Lisage liikmeid, et määrata nende dokumendid automaatselt müügimeeskonnale."
 
@@ -247,11 +250,10 @@ msgstr "Lemmikliikmed"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid ""
-"Favorite teams to display them in the dashboard and access them easily."
+msgid "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
-"Lisa müügitiim lemmikutesse, et näha seda töölaual ja et pääseksid lihtsasti"
-" sellele ligi."
+"Lisa müügitiim lemmikutesse, et näha seda töölaual ja et pääseksid lihtsasti "
+"sellele ligi."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -295,8 +297,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
-"Kui see on tõene, võivad kasutajad kuuluda mitmesse müügimeeskonda. Vastasel"
-" juhul on liikmesus piiratud ühe müügimeeskonnaga."
+"Kui see on tõene, võivad kasutajad kuuluda mitmesse müügimeeskonda. Vastasel "
+"juhul on liikmesus piiratud ühe müügimeeskonnaga."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -612,6 +614,14 @@ msgid "The default company for this user."
 msgstr "Selle kasutaja vaikimisi ettevõte."
 
 #. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
@@ -647,8 +657,7 @@ msgstr "Müügimeeskonna määratlemata graafiku mudel: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid ""
-"Use Sales Teams to organize your sales departments and draw up reports."
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
 "Kasutage müügimeeskondi oma müügiosakondade organiseerimiseks ja aruannete "
 "koostamiseks."
@@ -676,6 +685,14 @@ msgstr ""
 #: model:ir.model,name:sales_team.model_res_users
 msgid "User"
 msgstr "Kasutaja"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -717,15 +734,14 @@ msgstr "Veebileht"
 #: code:addons/sales_team/models/crm_team.py:0
 msgid ""
 "Working in multiple teams? Activate the option under Configuration>Settings."
-msgstr ""
-"Töötate mitmes meeskonnas? Aktiveerige see võimalus Seaded>Seaded alt."
+msgstr "Töötate mitmes meeskonnas? Aktiveerige see võimalus Seaded>Seaded alt."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"You are trying to create duplicate membership(s). We found that "
-"%(duplicates)s already exist(s)."
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
 msgstr ""
 "Proovite luua topelt liikmesusi. Leidsime, et %(duplicates)s on juba olemas."
 
@@ -754,8 +770,8 @@ msgstr "the user will have access to his own data in the sales application."
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
 msgstr ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."

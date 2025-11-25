@@ -1,27 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_crm
-# 
+# * event_crm
+#
 # Translators:
 # Vasco Rodrigues, 2025
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # NumerSpiral HBG, 2025
 # Wil Odoo, 2025
 # Rita Bastos, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rita Bastos, 2025\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"PO-Revision-Date: 2025-11-21 02:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
+"event_crm/pt/>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
@@ -96,6 +99,8 @@ msgstr "Atribuir automaticamente as leads criadas a este Vendedor."
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"Ah! Nenhum lead foi criado, verifique suas regras de geração de leads e "
+"tente novamente."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -144,6 +149,10 @@ msgid ""
 "Registered: at attendee registration, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Criação: na criação do participante;\n"
+"Confirmação: no cadastro do participante, manual ou automaticamente;\n"
+"Participou: quando o comparecimento é confirmado e a inscrição definida como "
+"concluída;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
@@ -166,12 +175,12 @@ msgstr "Evento"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
-msgstr ""
+msgstr "CRM de eventos: Gerar leads com base em regras"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "Solicitação de leads de eventos"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -235,13 +244,14 @@ msgstr "Para qualquer destes Eventos"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "Generate Leads"
-msgstr ""
+msgstr "Gerar leads"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
 msgstr ""
+"Entendi! Registramos sua solicitação. Seus leads serão criados em breve!"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
@@ -351,6 +361,8 @@ msgstr ""
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
 msgstr ""
+"Somente os gerentes de eventos têm permissão para gerar novamente todos os "
+"leads."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -374,6 +386,9 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Por participante: um lead é criado para cada participante (B2C).\n"
+"Por pedido: um único lead é criado por lote de ingressos/pedidos de venda "
+"(B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -383,7 +398,7 @@ msgstr "Por Encomenda"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "Inscrição processada"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -470,6 +485,7 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"O ID da última event.registration processada, usado para saber onde retomar."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -496,12 +512,12 @@ msgstr "Quando"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "Oba! %(leads_count)s leads foram criados!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
-msgstr ""
+msgstr "Você só pode ter uma solicitação de geração por evento de cada vez."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

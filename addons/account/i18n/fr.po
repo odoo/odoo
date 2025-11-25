@@ -14,13 +14,14 @@
 # Manon Rondou, 2025
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 # Rémi CAZENAVE <remi@le-filament.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 20:54+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 06:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/account/"
 "fr/>\n"
 "Language: fr\n"
@@ -211,18 +212,6 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) doit être un compte de type \"%"
-"(receivable)s\" ou \"%(payable)s\" avec les deux options \"%"
-"(allow_reconciliation)s\" et \"%(non_trade)s\" activées."
 
 #. module: account
 #. odoo-python
@@ -1005,6 +994,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Choisissez le mode d'envoi de vos factures et le format "
+"électronique souhaité.\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2444,6 +2437,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Écriture d’accumulation créée le %(date)s: %(accrual_entry)s.                "
+"Et son écriture d’inversion : %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3952,6 +3947,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"L’envoi groupé de factures est indisponible. Veuillez activer la tâche "
+"planifiée (cron) pour permettre l’envoi groupé des factures."
 
 #. module: account
 #. odoo-python
@@ -3960,6 +3957,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"L’envoi groupé de factures est indisponible. Veuillez contacter votre "
+"administrateur système pour activer la tâche planifiée (cron) permettant "
+"l’envoi groupé des factures."
 
 #. module: account
 #. odoo-javascript
@@ -6277,6 +6277,7 @@ msgstr "Taxes utilisées par défaut lors de la vente du produit"
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
 msgstr ""
+"La valeur par défaut pour \"company_id\" de %(record)s n’est pas un entier"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -8115,7 +8116,7 @@ msgstr "Date de verrouillage globale"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Aller à la configuration du cron"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -9958,7 +9959,7 @@ msgstr "Juin"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "Fournisseur KPI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -12556,7 +12557,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Paiements lettrés avec cette facture."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13236,7 +13237,7 @@ msgstr "Type de factures lettrées"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Paiements réconciliés"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -19914,6 +19915,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Reçu de paiement (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) doit être un compte de type \"%"
+#~ "(receivable)s\" ou \"%(payable)s\" avec les deux options \"%"
+#~ "(allow_reconciliation)s\" et \"%(non_trade)s\" activées."
 
 #~ msgid ""
 #~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "

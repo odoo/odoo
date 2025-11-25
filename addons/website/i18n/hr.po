@@ -36,13 +36,14 @@
 # Luka Carević <luka@uvid.hr>, 2025
 # Karlo Mikešić <karlo@uvid.hr>, 2025.
 # Alen Komljen <alen@uvid.hr>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-24 18:36+0000\n"
-"PO-Revision-Date: 2025-08-26 14:55+0000\n"
-"Last-Translator: Alen Komljen <alen@uvid.hr>\n"
+"PO-Revision-Date: 2025-11-21 06:42+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/website/"
 "hr/>\n"
 "Language: hr\n"
@@ -119,12 +120,15 @@ msgid ""
 "\"Homepage URL\" field in the website settings or the page properties on any "
 "custom page."
 msgstr ""
+"\"URL za\" ne može se postaviti na \"/\". Za promjenu sadržaja početne "
+"stranice upotrijebite polje \"URL početne stranice\" u postavkama web-mjesta "
+"ili svojstvima stranice na bilo kojoj prilagođenoj stranici."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 msgid "\"URL to\" cannot be set to an existing page."
-msgstr ""
+msgstr "\"URL za\" ne može se postaviti na postojeću stranicu."
 
 #. module: website
 #. odoo-python
@@ -890,6 +894,9 @@ msgid ""
 "the steps, including setup, inventory management, and payment processing.<br/"
 ">"
 msgstr ""
+"<br/>Prodajte online jednostavno uz platformu prilagođenu korisniku koja "
+"pojednostavljuje sve korake, uključujući postavljanje, upravljanje zalihama "
+"i obradu plaćanja.<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
@@ -1136,6 +1143,9 @@ msgid ""
 "                            <span class=\"mt-1\">A password is required to "
 "access this page.</span>"
 msgstr ""
+"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"                            <span class=\"mt-1\">Za pristup ovoj stranici "
+"potrebna je lozinka.</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -2231,6 +2241,8 @@ msgid ""
 "A visitor is considered as connected if his last page view was within the "
 "last 5 minutes."
 msgstr ""
+"Posjetitelj se smatra povezanim ako je zadnji put pregledao stranicu unutar "
+"posljednjih 5 minuta."
 
 #. module: website
 #. odoo-javascript
@@ -2552,7 +2564,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 msgid "Add page template"
-msgstr ""
+msgstr "Dodaj predložak stranice"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__is_new_page_template
@@ -2561,11 +2573,13 @@ msgid ""
 "Add this page to the \"+New\" page templates. It will be added to the "
 "\"Custom\" category."
 msgstr ""
+"Dodajte ovu stranicu u predloške stranica \"+Novo\". Bit će dodana u "
+"kategoriju \"Prilagođeno\"."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Add to Cart Button"
-msgstr ""
+msgstr "Dodaj u košaricu gumb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -2778,7 +2792,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "All pages"
-msgstr ""
+msgstr "Sve stranice"
 
 #. module: website
 #. odoo-javascript
@@ -2814,6 +2828,8 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_page__track
 msgid "Allow to specify for one page of the website to be trackable or not"
 msgstr ""
+"Omogućuje određivanje hoće li se jedna stranica web-mjesta moći pratiti ili "
+"ne"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_access
@@ -2881,7 +2897,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_showcase
 msgid "Amazing pages"
-msgstr ""
+msgstr "Fantastične stranice"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map
@@ -3135,6 +3151,8 @@ msgid ""
 "Automatically opens the pop-up if the user stays on a page longer than the "
 "specified time."
 msgstr ""
+"Automatski otvara skočni prozor ako korisnik ostane na stranici dulje od "
+"navedenog vremena."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -3563,7 +3581,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Buttons"
-msgstr ""
+msgstr "Gumbi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_1_s_banner
@@ -5144,7 +5162,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_cafe_options
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_options
 msgid "Descriptions"
-msgstr ""
+msgstr "Opisi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5573,7 +5591,7 @@ msgstr "Donacija"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Donation Button"
-msgstr ""
+msgstr "Gumb za donaciju"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5984,7 +6002,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 msgid "Engages Visitors"
-msgstr ""
+msgstr "Privlači posjetitelje"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -6971,7 +6989,7 @@ msgstr "GitHub račun"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_forum
 msgid "Give visitors the information they need"
-msgstr ""
+msgstr "Pružite posjetiteljima potrebne informacije"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -6982,7 +7000,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 msgid "Go Back"
-msgstr ""
+msgstr "Natrag"
 
 #. module: website
 #. odoo-javascript
@@ -8433,6 +8451,8 @@ msgid ""
 "It captures your visitors' attention and helps them quickly understand the "
 "value of your product."
 msgstr ""
+"Privlači pažnju vaših posjetitelja i pomaže im da brzo shvate vrijednost "
+"vašeg proizvoda."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_2nd
@@ -8744,12 +8764,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "Last modified pages"
-msgstr ""
+msgstr "Zadnje izmijenjene stranice"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__last_connection_datetime
 msgid "Last page view date"
-msgstr ""
+msgstr "Datum zadnjeg pregleda stranice"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -9645,6 +9665,11 @@ msgid ""
 "push notification. If they have completed one of your forms, you can send "
 "them an SMS, or call them right away while they are browsing your website."
 msgstr ""
+"Pratite svoje posjetitelje dok pregledavaju vašu web stranicu pomoću Odoo "
+"Social aplikacije. Povežite se s njima samo jednim klikom koristeći zahtjev "
+"za chat uživo ili push obavijest. Ako su ispunili jedan od vaših obrazaca, "
+"možete im poslati SMS ili ih odmah nazvati dok pregledavaju vašu web "
+"stranicu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9950,7 +9975,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
 msgid "No Visitors yet!"
-msgstr ""
+msgstr "Još nema posjetitelja!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10131,7 +10156,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "OR"
-msgstr ""
+msgstr "ILI"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10338,7 +10363,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Opening Hours"
-msgstr ""
+msgstr "Radno vrijeme"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
@@ -10393,6 +10418,8 @@ msgid ""
 "Organizing and presenting key information effectively increases the "
 "likelihood of turning your visitors into customers."
 msgstr ""
+"Učinkovito organiziranje i prezentiranje ključnih informacija povećava "
+"vjerojatnost pretvaranja posjetitelja u kupce."
 
 #. module: website
 #. odoo-python
@@ -10841,7 +10868,7 @@ msgstr "Stranice"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Pagination"
-msgstr ""
+msgstr "Raspored stranica"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -11517,7 +11544,7 @@ msgstr "Omjer"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Re-order"
-msgstr ""
+msgstr "Ponovna narudžba"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_default_template
@@ -11577,7 +11604,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Recipient Email"
-msgstr ""
+msgstr "E-pošta primatelja"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_rule
@@ -12285,7 +12312,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_cover
 msgid "Sell Online. <br/>Easily."
-msgstr ""
+msgstr "Prodajite online.<br/>Lako."
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_shop
@@ -13339,7 +13366,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid "Thank You!"
-msgstr ""
+msgstr "Hvala Vam!"
 
 #. module: website
 #. odoo-javascript
@@ -13812,7 +13839,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website.menu_current_page
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "This page"
-msgstr ""
+msgstr "Ova stranica"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -13905,7 +13932,7 @@ msgstr "TikTok račun"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__time_since_last_action
 msgid "Time since last page view. E.g.: 2 minutes ago"
-msgstr ""
+msgstr "Vrijeme od zadnjeg pregleda stranice. Npr.: prije 2 minute"
 
 #. module: website
 #. odoo-javascript
@@ -13946,6 +13973,8 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_0
 msgid "Tip: Engage with visitors to convert them into leads"
 msgstr ""
+"Savjet: Angažirajte posjetitelje kako biste ih pretvorili u potencijalne "
+"klijente"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_2
@@ -14026,6 +14055,11 @@ msgid ""
 "will recommend you the best keywords to target. Then adapt your title and "
 "description accordingly to boost your traffic."
 msgstr ""
+"Za dobivanje više posjetitelja, trebali biste ciljati ključne riječi koje se "
+"često pretražuju na Googleu. Pomoću ugrađenog SEO alata, nakon što "
+"definirate nekoliko ključnih riječi, Odoo će vam preporučiti najbolje "
+"ključne riječi za ciljanje. Zatim prilagodite naslov i opis u skladu s tim "
+"kako biste povećali promet."
 
 #. module: website
 #. odoo-javascript
@@ -14040,6 +14074,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Za slanje pozivnica u B2B načinu rada, otvorite kontakt ili odaberite "
+"nekoliko njih u prikazu popisa i kliknite na opciju 'Upravljanje pristupom "
+"portalu' u padajućem izborniku *Akcija*."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -14878,6 +14915,8 @@ msgstr "Posjeti"
 #: model_terms:ir.actions.act_window,help:website.website_visitor_view_action
 msgid "Wait for visitors to come to your website to see the pages they viewed."
 msgstr ""
+"Pričekajte da posjetitelji dođu na vašu web stranicu kako bi vidjeli "
+"stranice koje su pregledali."
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
@@ -14885,6 +14924,8 @@ msgid ""
 "Wait for visitors to come to your website to see their history and engage "
 "with them."
 msgstr ""
+"Pričekajte da posjetitelji dođu na vašu web stranicu kako biste vidjeli "
+"njihovu povijest i stupili u interakciju s njima."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -15376,7 +15417,7 @@ msgstr ""
 #. module: website
 #: model:ir.actions.server,name:website.website_visitor_cron_ir_actions_server
 msgid "Website Visitor : clean inactive visitors"
-msgstr ""
+msgstr "Posjetitelj web stranice: čisti neaktivni posjetitelji"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_tree
