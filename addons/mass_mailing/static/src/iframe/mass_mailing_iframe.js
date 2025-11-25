@@ -2,7 +2,6 @@ import {
     Component,
     onMounted,
     onWillDestroy,
-    onWillUpdateProps,
     status,
     useComponent,
     useEffect,
@@ -87,11 +86,6 @@ export class MassMailingIframe extends Component {
             showFullscreen: false,
             isMobile: false,
             ready: false,
-        });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.showCodeView) {
-                this.state.showFullscreen = false;
-            }
         });
         this.iframeLoaded = new Deferred();
         onMounted(() => {
