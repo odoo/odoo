@@ -244,6 +244,7 @@ export class PosOrderline extends Base {
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
     setQuantity(quantity, keep_price) {
+        const oldQty = this.qty;
         if (this.order_id.preset_id?.is_return) {
             quantity = -Math.abs(quantity);
         }
@@ -313,6 +314,10 @@ export class PosOrderline extends Base {
                     )
                 );
             }
+        }
+        for (const comboLine of this.combo_line_ids) {
+            // If each combo contains 2 qty of a product, we wanna keep this ratio after setting the new quantity on the parent product.
+            comboLine.setQuantity((comboLine.qty / oldQty || 1) * quantity, true);
         }
         return true;
     }

@@ -245,9 +245,6 @@ export class OrderSummary extends Component {
                         val,
                         Boolean(selectedLine.combo_line_ids?.length)
                     );
-                    for (const line of selectedLine.combo_line_ids) {
-                        line.setQuantity(val, true);
-                    }
                     if (result !== true) {
                         this.dialog.add(AlertDialog, result);
                         this.numberBuffer.reset();
@@ -278,10 +275,13 @@ export class OrderSummary extends Component {
     }
     async updateQuantityNumber(newQuantity) {
         if (newQuantity !== null) {
-            const selectedLine = this.currentOrder.getSelectedOrderline();
+            let selectedLine = this.currentOrder.getSelectedOrderline();
+            if (selectedLine.combo_parent_id) {
+                selectedLine = selectedLine.combo_parent_id;
+            }
             const currentQuantity = selectedLine.getQuantity();
             if (newQuantity >= currentQuantity) {
-                selectedLine.setQuantity(newQuantity);
+                selectedLine.setQuantity(newQuantity, Boolean(selectedLine.combo_line_ids?.length));
             } else if (newQuantity >= selectedLine.uiState.savedQuantity) {
                 await this.handleDecreaseUnsavedLine(newQuantity);
             } else {
@@ -292,13 +292,19 @@ export class OrderSummary extends Component {
         return false;
     }
     async handleDecreaseUnsavedLine(newQuantity) {
-        const selectedLine = this.currentOrder.getSelectedOrderline();
+        let selectedLine = this.currentOrder.getSelectedOrderline();
+        if (selectedLine.combo_parent_id) {
+            selectedLine = selectedLine.combo_parent_id;
+        }
         const decreaseQuantity = selectedLine.getQuantity() - newQuantity;
-        selectedLine.setQuantity(newQuantity);
+        selectedLine.setQuantity(newQuantity, Boolean(selectedLine.combo_line_ids?.length));
         return decreaseQuantity;
     }
     async handleDecreaseLine(newQuantity) {
-        const selectedLine = this.currentOrder.getSelectedOrderline();
+        let selectedLine = this.currentOrder.getSelectedOrderline();
+        if (selectedLine.combo_parent_id) {
+            selectedLine = selectedLine.combo_parent_id;
+        }
         let current_saved_quantity = 0;
         for (const line of this.currentOrder.lines) {
             if (line === selectedLine) {
@@ -316,12 +322,18 @@ export class OrderSummary extends Component {
             newLine.setQuantity(-decreasedQuantity + newLine.getQuantity(), true);
         }
         if (newLine !== selectedLine && selectedLine.uiState.savedQuantity != 0) {
-            selectedLine.setQuantity(selectedLine.uiState.savedQuantity);
+            selectedLine.setQuantity(
+                selectedLine.uiState.savedQuantity,
+                Boolean(selectedLine.combo_line_ids?.length)
+            );
         }
         return decreasedQuantity;
     }
     getNewLine() {
-        const selectedLine = this.currentOrder.getSelectedOrderline();
+        let selectedLine = this.currentOrder.getSelectedOrderline();
+        if (selectedLine.combo_parent_id) {
+            selectedLine = selectedLine.combo_parent_id;
+        }
         const sign = selectedLine.getQuantity() > 0 ? 1 : -1;
         let newLine = selectedLine;
         if (selectedLine.uiState.savedQuantity != 0) {
