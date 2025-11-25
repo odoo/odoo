@@ -11,6 +11,8 @@
                 <field name="adyen_terminal_identifier" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
                 <field name="adyen_event_url" invisible="use_payment_terminal != 'adyen'" widget="CopyClipboardChar"/>
                 <field name="adyen_test_mode" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
+                <field name="adyen_region" invisible="use_payment_terminal != 'adyen'" />
+                <field name="adyen_api_url_prefix" invisible="use_payment_terminal != 'adyen'"/>
             </xpath>
         </field>
     </record>

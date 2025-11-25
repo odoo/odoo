@@ -47,6 +47,16 @@ msgid "Adyen Test Mode"
 msgstr ""
 
 #. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_region
+msgid "Adyen Region"
+msgstr ""
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_url_prefix
+msgid "API URL Prefix"
+msgstr ""
+
+#. module: pos_adyen
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/utils/payment/payment_adyen.js:0
 msgid "An unexpected error occurred. Message from Adyen: %s"
@@ -116,6 +126,18 @@ msgid "Invalid Adyen request"
 msgstr ""
 
 #. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+msgid "Missing paymentPspReference for Adyen %s request"
+msgstr ""
+
+#. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+msgid "Configure the API URL prefix on the payment method to perform this operation."
+msgstr ""
+
+#. module: pos_adyen
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/utils/payment/payment_adyen.js:0
 msgid "Message from Adyen: %s"
@@ -164,6 +186,12 @@ msgid ""
 msgstr ""
 
 #. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+msgid "Unsupported Adyen operation."
+msgstr ""
+
+#. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_event_url
 msgid "This URL needs to be pasted on Adyen's portal terminal settings."
 msgstr ""
@@ -176,6 +204,16 @@ msgid ""
 msgstr ""
 
 #. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_url_prefix
+msgid "The base URL for the API endpoints"
+msgstr ""
+
+#. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
+msgstr ""
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_region
+msgid "Select the region for Adyen Terminal API endpoints."
 msgstr ""

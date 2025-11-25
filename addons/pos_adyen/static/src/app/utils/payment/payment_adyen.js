@@ -317,6 +317,11 @@ export class PaymentAdyen extends PaymentInterface {
         const config = this.pos.config;
         const payment_result = payment_response.PaymentResult;
 
+        const poiTransactionId = payment_response?.POIData?.POITransactionID?.TransactionID || "";
+        const [, poiPspReference] = poiTransactionId.split("."); // format: <tenderRef>.<pspReference>
+        const paymentPspReference =
+            additional_response.get("pspReference") || poiPspReference || poiTransactionId;
+
         const cashier_receipt = payment_response.PaymentReceipt.find(
             (receipt) => receipt.DocumentQualifier == "CashierReceipt"
         );
@@ -343,7 +348,7 @@ export class PaymentAdyen extends PaymentInterface {
             line.setAmount(payment_result.AmountsResp.AuthorizedAmount);
         }
 
-        line.transaction_id = additional_response.get("pspReference");
+        line.transaction_id = paymentPspReference;
         line.card_type = additional_response.get("cardType");
         line.cardholder_name = additional_response.get("cardHolderName") || "";
     }
