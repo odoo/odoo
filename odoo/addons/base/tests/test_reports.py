@@ -555,6 +555,46 @@ class TestReportsRendering(TestReportsRenderingCommon):
         pages_contents = [[elem[1] for elem in page] for page in pages]
         self.assertEqual(pages_contents, expected_pages_contents)
 
+    def test_report_specific_paperformat_args(self):
+        """
+            Verify that the values defined in `specific_paperformat_args` take
+            precedence over those in the paperformat when building the wkhtmltopdf
+            command arguments.
+        """
+        command_args = self.env['ir.actions.report']._build_wkhtmltopdf_args(
+            self.env['report.paperformat'].new({
+                'format': 'A4',
+                'margin_top': 25,
+                'margin_left': 50,
+                'margin_bottom': 75,
+                'margin_right': 100,
+                'dpi': 90,
+                'header_spacing': 125,
+                'orientation': 'portrait'
+            }),
+            landscape=None,
+            specific_paperformat_args={
+                'data-report-landscape': True,
+                'data-report-margin-top': 0,
+                'data-report-margin-bottom': 0,
+                'data-report-header-spacing': 0,
+                'data-report-dpi': 96
+            })
+        self.assertEqual(command_args, [
+            '--disable-local-file-access',
+            '--quiet',
+            '--page-size', 'A4',
+            '--margin-top', '0',
+            '--dpi', '96',
+            '--zoom', '1.0',
+            '--header-spacing', '0',
+            '--margin-left', '50.0',
+            '--margin-bottom', '0',
+            '--margin-right', '100.0',
+            '--javascript-delay', '1000',
+            '--orientation', 'landscape',
+        ])
+
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'pdf_rendering')
 class TestReportsRenderingLimitations(TestReportsRenderingCommon):
