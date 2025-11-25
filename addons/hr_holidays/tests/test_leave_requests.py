@@ -1675,19 +1675,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
 
         hr_leave_default_value = self.env['hr.leave'].with_context({
-            'default_request_unit_hours': True,
+            'default_leave_type_request_unit': 'hour',
         }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
         self.assertEqual(hr_leave_default_value.get('holiday_status_id'), hour_leave_type.id)
 
         self.env['hr.leave.type'].search([('id', '=', hour_leave_type.id)]).unlink()
         hr_leave_default_value = self.env['hr.leave'].with_context({
-            'default_request_unit_hours': True,
+            'default_leave_type_request_unit': 'hour',
         }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
         self.assertEqual(hr_leave_default_value.get('holiday_status_id'), half_day_leave_type.id)
 
         self.env['hr.leave.type'].search([('id', '=', half_day_leave_type.id)]).unlink()
         hr_leave_default_value = self.env['hr.leave'].with_context({
-            'default_request_unit_hours': True,
+            'default_leave_type_request_unit': 'hour',
         }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
         self.assertEqual(hr_leave_default_value.get('holiday_status_id'), False)
 

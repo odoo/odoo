@@ -197,7 +197,7 @@ class ResourceResource(models.Model):
         holiday_id = leave_record.holiday_id
         tz = ZoneInfo(self.tz or self.env.user.tz)
 
-        if holiday_id.request_unit_half:
+        if holiday_id.leave_type_request_unit == 'half_day':
             # Half day leaves are limited to half a day within a single day
             leave_day = leave_start.date()
             half_start_datetime = datetime.combine(leave_day, datetime.min.time() if holiday_id.request_date_from_period == "am" else time(12), tzinfo=tz)
@@ -210,7 +210,7 @@ class ResourceResource(models.Model):
                     resource_hours_per_day[self.id][leave_day] -= holiday_id.number_of_hours
                 week = weeknumber(babel_locale_parse(locale), leave_day)
                 resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
-        elif holiday_id.request_unit_hours:
+        elif holiday_id.leave_type_request_unit == 'hour':
             # Custom leaves are limited to a specific number of hours within a single day
             leave_day = leave_start.date()
             range_start_datetime = leave_record.date_from.replace(tzinfo=UTC).astimezone(tz)

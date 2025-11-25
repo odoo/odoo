@@ -84,13 +84,12 @@ class HrLeave(models.Model):
             selected_leave_type = next(
                 (
                     leave_type for leave_type in leave_types
-                    if (defaults.get('request_unit_hours') and leave_type['request_unit'] == 'hour') or (not defaults.get('request_unit_hours'))
+                    if (defaults.get('leave_type_request_unit') == 'hour' and leave_type['request_unit'] == 'hour') or (defaults.get('leave_type_request_unit') != 'hour')
                 ),
                 leave_types[0] if leave_types else None,
             )
             if selected_leave_type:
                 defaults['holiday_status_id'] = selected_leave_type.id
-                defaults['request_unit_hours'] = (selected_leave_type.request_unit == 'hour')
 
         if 'request_date_from' in fields and 'request_date_from' not in defaults:
             defaults['request_date_from'] = Date.today()
@@ -222,9 +221,6 @@ class HrLeave(models.Model):
     request_date_to_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period End", default='pm')
-    # request type
-    request_unit_half = fields.Boolean('Half-Day', compute='_compute_request_unit_half', store=True)
-    request_unit_hours = fields.Boolean('Specific Time', compute='_compute_request_unit_hours', store=True)
     # view
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
@@ -253,12 +249,12 @@ class HrLeave(models.Model):
         self.request_hour_from = min(max(self.request_hour_from, 0.0), 23.99)
         self.request_hour_to = min(max(self.request_hour_to, 0.0), 24)
 
-    @api.depends('employee_id', 'request_date_from', 'request_date_to', 'request_unit_hours')
+    @api.depends('employee_id', 'request_date_from', 'request_date_to', 'leave_type_request_unit')
     def _compute_request_hour_from_to(self):
         env_company_calendar = self.env.company.resource_calendar_id
         for leave in self:
             calendar = leave.resource_calendar_id or env_company_calendar
-            if (not leave.request_unit_hours
+            if (leave.leave_type_request_unit != 'hour'
                     and leave.employee_id
                     and leave.request_date_from
                     and leave.request_date_to
@@ -428,18 +424,23 @@ class HrLeave(models.Model):
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
-                 'request_date_from', 'request_date_to', 'request_unit_half', 'request_unit_hours', 'employee_id')
+                 'request_date_from', 'request_date_to', 'leave_type_request_unit', 'employee_id')
     def _compute_date_from_to(self):
         for holiday in self:
+            if not holiday.request_date_from or not holiday.request_date_to:
+                holiday.date_from = False
+                holiday.date_to = False
+                continue
+
             if not holiday.request_date_from:
                 holiday.date_from = False
                 continue
 
-            if not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
+            if holiday.leave_type_request_unit != 'hour' and holiday.leave_type_request_unit != 'half_day' and not holiday.request_date_to:
                 holiday.date_to = False
                 continue
 
-            if holiday.request_unit_hours:
+            if holiday.leave_type_request_unit == 'hour':
                 hour_from = holiday.request_hour_from
                 hour_to = holiday.request_hour_to
                 if not hour_from or not hour_to:
@@ -447,7 +448,7 @@ class HrLeave(models.Model):
                     hour_from = hour_from or computed_from
                     hour_to = hour_to or computed_to
 
-            elif holiday.request_unit_half:
+            elif holiday.leave_type_request_unit == 'half_day':
                 period_map = {'am': 'morning', 'pm': 'afternoon'}
                 from_period = period_map.get(holiday.request_date_from_period)
                 to_period = period_map.get(holiday.request_date_to_period)
@@ -464,16 +465,6 @@ class HrLeave(models.Model):
 
             holiday.date_from = self._to_utc(holiday.request_date_from, hour_from, holiday.employee_id or holiday)
             holiday.date_to = self._to_utc(holiday.request_date_to, hour_to, holiday.employee_id or holiday)
-
-    @api.depends('leave_type_request_unit')
-    def _compute_request_unit_half(self):
-        for holiday in self:
-            holiday.request_unit_half = holiday.leave_type_request_unit == 'half_day'
-
-    @api.depends('leave_type_request_unit')
-    def _compute_request_unit_hours(self):
-        for holiday in self:
-            holiday.request_unit_hours = holiday.leave_type_request_unit == 'hour'
 
     def _get_employee_domain(self):
         domain = [
@@ -608,8 +599,8 @@ class HrLeave(models.Model):
                             hours += (stop - start).total_seconds() / 3600
                     else:
                         hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    if not leave.request_unit_hours and not public_holidays:
-                        days = 1 if not leave.request_unit_half else 0.5
+                    if leave.leave_type_request_unit != 'hour' and not public_holidays:
+                        days = 1 if leave.leave_type_request_unit != 'half_day' else 0.5
                     else:
                         days = hours / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
@@ -1085,7 +1076,7 @@ class HrLeave(models.Model):
                 "%(employee)s on Time Off : %(duration)s",
                 employee=holiday.employee_id.name or holiday.category_id.name,
                 duration=holiday.duration_display)
-            allday_value = not holiday.request_unit_half
+            allday_value = (holiday.leave_type_request_unit != 'half_day')
             if holiday.leave_type_request_unit == 'hour':
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
             meeting_values = {
