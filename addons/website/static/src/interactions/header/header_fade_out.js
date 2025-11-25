@@ -9,10 +9,14 @@ export class HeaderFadeOut extends BaseHeaderSpecial {
         this.isAnimated = true;
         this.el.style.transitionDuration = "400ms";
         this.el.style.transitionProperty = "opacity";
+        this.fadeTimeout = null;
     }
 
     transformShow() {
         this.el.style.opacity = 1;
+        if (this.fadeTimeout) {
+            clearTimeout(this.fadeTimeout);
+        }
         super.transformShow();
     }
 
@@ -20,7 +24,10 @@ export class HeaderFadeOut extends BaseHeaderSpecial {
         this.el.style.opacity = 0;
         this.isVisible = false;
         // We want to translate the header after the transition is complete
-        this.waitForTimeout(() => (this.el.style.transform = "translate(0, -100%)"), 400);
+        this.fadeTimeout = this.waitForTimeout(
+            () => (this.el.style.transform = "translate(0, -100%)"),
+            400
+        );
         this.adaptToHeaderChangeLoop(1);
     }
 }
