@@ -5,22 +5,47 @@
         <field name="model">homework.location.wizard</field>
         <field name="arch" type="xml">
             <form string="Location">
+                <group col="12" class="mb-2 d-flex">
+                    <i class="fa fa-clock-o ms-1" title="Date"/>
+                    <field name="date" nolabel="1" class="oe_inline o_input_5ch" default_focus="0"/>
+                    <field name="weekly" class="oe_inline" nolabel="1" default_focus="1"/>
+                    <span class="w-100">
+                        Repeat every <field name="day_week_string" class="oe_inline"/>
+                    </span>
+                </group>
                 <group>
-                    <label for="date"/>
-                    <div class="o_row w-100">
-                        <field name="date"/>
+                    <div class="o_row">
+                        <i class="fa fa-map-marker mx-2 pt-2" title="Location"/>
+                        <field name="work_location_id"
+                               class="mb-n3"
+                               nolabel="1"
+                               widget="selection_badge_icons"
+                               options="{
+                                    'icon_mapping': {'office': 'fa-building-o', 'home': 'fa-home'},
+                                    'related_icon_field': 'location_type',
+                                    'default_icon': 'fa-map-marker'
+                               }"/>
                     </div>
-                    <label for="weekly"/>
-                    <div class="o_row w-100">
-                        <field name="weekly" class="oe_inline"/>
-                        <span class="w-100">
-                            Repeat every <field name="day_week_string" class="oe_inline"/>
-                        </span>
-                    </div>
-                    <field name="work_location_id"/>
                 </group>
                 <footer>
-                    <button name="set_employee_location" type="object" class="btn-primary" string="Set Location" />
+                    <div class="d-flex justify-content-between w-100">
+                        <div>
+                            <button name="set_employee_location" type="object" class="btn-primary me-2" string="Set Location"/>
+                            <button name="discard" string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        </div>
+                        <button title="Delete homeworking location"
+                            name="delete_employee_location"
+                            type="object"
+                            class="btn btn-secondary fa fa-trash"
+                            confirm="Are you sure you want to delete this location?"
+                            invisible="not context.get('default_work_location_id') or context.get('default_weekly')"/>
+                        <button title="Delete homeworking location"
+                            name="delete_employee_location"
+                            type="object"
+                            class="btn btn-secondary fa fa-trash"
+                            confirm="Are you sure you want to delete this recurring location?"
+                            invisible="not context.get('default_weekly')"/>
+                    </div>
                 </footer>
             </form>
         </field>

@@ -7,6 +7,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'views/calendar_views.xml',
         'wizard/homework_location_wizard.xml',
     ],
     'auto_install': True,
