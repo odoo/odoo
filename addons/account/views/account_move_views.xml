@@ -1192,12 +1192,12 @@
                                                options="{'no_create': True}"
                                                optional="show"/>
                                         <field name="deductible_amount"
-                                               column_invisible="parent.move_type not in ('in_invoice', 'in_refund')"
+                                               column_invisible="parent.move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
                                                string="Professional %"
                                                optional="hide"
                                                groups="!account.group_partial_purchase_deductibility"/>
                                         <field name="deductible_amount"
-                                               column_invisible="parent.move_type not in ('in_invoice', 'in_refund')"
+                                               column_invisible="parent.move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
                                                string="Professional %"
                                                optional="show"
                                                groups="account.group_partial_purchase_deductibility"/>
