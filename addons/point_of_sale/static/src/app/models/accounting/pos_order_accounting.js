@@ -143,7 +143,7 @@ export class PosOrderAccounting extends Base {
             this.payment_ids.reduce(function (sum, paymentLine) {
                 // Return lines are created after the sync, should not be taken into account in
                 // the paid amount otherwise, the change would be wrong.
-                if (paymentLine.isDone() && paymentLine.name !== "return") {
+                if (paymentLine.isDone() && !paymentLine.is_change) {
                     sum += paymentLine.getAmount();
                 }
                 return sum;
