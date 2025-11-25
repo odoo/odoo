@@ -339,7 +339,7 @@
                 <label for="address_id"/>
                 <div class="o_row">
                     <span invisible="address_id" class="oe_read_only">Remote</span>
-                    <field name="address_id" context="{'show_address': 1}" placeholder="Remote"/>
+                    <field name="address_id" context="{'show_address': 1, 'default_parent_id': company_partner_id, 'default_type': 'other'}" placeholder="Remote"/>
                 </div>
             </group>
 
