@@ -137,6 +137,9 @@ def _eval_xml(self, node, env):
             return _process("".join(etree.tostring(n, method='html', encoding='unicode') for n in node))
 
         if node.get('file'):
+            if t == 'bytes':
+                with file_open(node.get('file'), 'rb', env=env) as f:
+                    return f.read()
             if t == 'base64':
                 with file_open(node.get('file'), 'rb', env=env) as f:
                     return base64.b64encode(f.read())
@@ -169,6 +172,8 @@ def _eval_xml(self, node, env):
                 return [_eval_xml(self, n, env) for n in node.iterchildren('value')]
             case 'tuple':
                 return tuple(_eval_xml(self, n, env) for n in node.iterchildren('value'))
+            case 'bytes':
+                raise ValueError("bytes type is only compatible with file data")
             case 'base64':
                 raise ValueError("base64 type is only compatible with file data")
             case t:
