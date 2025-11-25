@@ -11,6 +11,7 @@ export function createFileViewer() {
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files} files
      */
     function open(file, files = [file]) {
+        close();
         if (!file.isViewable) {
             return;
         }
