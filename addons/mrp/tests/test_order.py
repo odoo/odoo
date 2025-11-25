@@ -3395,6 +3395,7 @@ class TestMrpOrder(TestMrpCommon):
         """
 
         self.bom_3.write({'product_uom_id': self.uom_unit.id})
+        self.env.company.resource_calendar_id.tz = 'UTC'
 
         # Create an MO.
         mo_form = Form(self.env['mrp.production'])
