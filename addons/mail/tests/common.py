@@ -2077,11 +2077,6 @@ class MailCommon(MailCase):
         </t>
     </div>
     <t t-out="message.body"/>
-    <ul t-if="tracking_values">
-        <li t-foreach="tracking_values" t-as="tracking">
-            <t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> -&gt; <t t-out="tracking[2]"/>
-        </li>
-    </ul>
     <div t-if="signature" t-out="signature"/>
     <div t-if="show_footer">
         <p>Sent by <t t-out="company.name"/></p>

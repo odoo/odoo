@@ -3691,23 +3691,6 @@ class MailThread(models.AbstractModel):
             model_description = record_wlang._get_model_description(msg_vals['model'] if 'model' in msg_vals else message.model)
         record_name = force_record_name or message.with_context(lang=lang).record_name
 
-        # tracking: in case of missing value, perform search (skip only if sure we don't have any)
-        check_tracking = msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self)
-        tracking = []
-        if check_tracking:
-            tracking_values = self.env['mail.tracking.value'].sudo().search(
-                [('mail_message_id', 'in', message.ids)]
-            )._filter_has_field_access(self.env)
-            if tracking_values and hasattr(record_wlang, '_track_filter_for_display'):
-                tracking_values = record_wlang._track_filter_for_display(tracking_values)
-            tracking = [
-                (
-                    fmt_vals['fieldInfo']['changedField'],
-                    fmt_vals['oldValue'],
-                    fmt_vals['newValue'],
-                ) for fmt_vals in tracking_values._tracking_value_format()
-            ]
-
         subtype_id = msg_vals['subtype_id'] if 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
@@ -3716,7 +3699,6 @@ class MailThread(models.AbstractModel):
             'is_discussion': is_discussion,
             'message': message,
             'subtype': message.subtype_id,
-            'tracking_values': tracking,
             # record
             'model_description': model_description,
             'record': record_wlang,
