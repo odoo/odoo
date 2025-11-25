@@ -296,11 +296,11 @@ class HrVersion(models.Model):
     def write(self, vals):
         # Employee Versions Validation
         if 'employee_id' in vals:
-            if self.filtered(lambda v: len(v.employee_id.version_ids) == 1 and vals['employee_id'] != v.employee_id.id):
-                raise ValidationError(self.env._("Cannot unassign the only active record of an employee."))
+            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
+                raise ValidationError(self.env._("Cannot unassign all the active versions of an employee."))
         if 'active' in vals and not vals['active']:
-            if self.filtered(lambda v: len(v.employee_id.version_ids) == 1):
-                raise ValidationError(self.env._("Cannot archive the only active record of an employee."))
+            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self):
+                raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
 
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
             return super().write(vals)
