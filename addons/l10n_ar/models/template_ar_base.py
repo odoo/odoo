@@ -55,6 +55,26 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_expense_id': 'base_compra_mercaderia',
                 'account_stock_variation_id': 'base_variacion_mercaderia_reventa',
             },
+            'base_instalaciones': {
+                'asset_depreciation_account_id': 'base_amortizacion_acumulada_instalaciones',
+                'asset_expense_account_id': 'base_amortizacion_instalaciones',
+            },
+            'base_maq_y_equipos': {
+                'asset_depreciation_account_id': 'base_amortizacion_acumulada_maq_y_equipos',
+                'asset_expense_account_id': 'base_amortizacion_maq_y_equipos',
+            },
+            'base_muebles_y_utiles': {
+                'asset_depreciation_account_id': 'base_amortizacion_acumulada_muebles_utiles',
+                'asset_expense_account_id': 'base_amortizacion_muebles_utiles',
+            },
+            'base_rodados': {
+                'asset_depreciation_account_id': 'base_amortizacion_acumulada_rodados',
+                'asset_expense_account_id': 'base_amortizacion_rodados',
+            },
+            'base_derechos_de_marca': {
+                'asset_depreciation_account_id': 'base_amortizacion_acumulada_derechos_de_marca',
+                'asset_expense_account_id': 'base_amortizacion_derechos_de_marca',
+            },
         }
 
     def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):

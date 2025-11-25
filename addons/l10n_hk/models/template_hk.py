@@ -37,6 +37,14 @@ class AccountChartTemplate(models.AbstractModel):
     @template('hk', 'account.account')
     def _get_hk_account_account(self):
         return {
+            'l10n_hk_110001': {'asset_depreciation_account_id': 'l10n_hk_151001', 'asset_expense_account_id': 'l10n_hk_522401'},
+            'l10n_hk_110003': {'asset_depreciation_account_id': 'l10n_hk_151002', 'asset_expense_account_id': 'l10n_hk_522402'},
+            'l10n_hk_110004': {'asset_depreciation_account_id': 'l10n_hk_151003', 'asset_expense_account_id': 'l10n_hk_522402'},
+            'l10n_hk_110005': {'asset_depreciation_account_id': 'l10n_hk_151004', 'asset_expense_account_id': 'l10n_hk_522402'},
+            'l10n_hk_110006': {'asset_depreciation_account_id': 'l10n_hk_151005', 'asset_expense_account_id': 'l10n_hk_522402'},
+            'l10n_hk_110007': {'asset_depreciation_account_id': 'l10n_hk_151006', 'asset_expense_account_id': 'l10n_hk_522402'},
+            'l10n_hk_110008': {'asset_depreciation_account_id': 'l10n_hk_151007', 'asset_expense_account_id': 'l10n_hk_522402'},
+            'l10n_hk_110009': {'asset_depreciation_account_id': 'l10n_hk_151008', 'asset_expense_account_id': 'l10n_hk_522402'},
             'l10n_hk_1270': {
                 'account_stock_variation_id': 'l10n_hk_51',
             },

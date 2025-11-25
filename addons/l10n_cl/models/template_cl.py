@@ -43,4 +43,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_expense_id': 'account_410230',
                 'account_stock_variation_id': 'account_603100',
             },
+            'account_110625': {'asset_depreciation_account_id': 'account_121310', 'asset_expense_account_id': 'account_410141'},
+            'account_110730': {'asset_depreciation_account_id': 'account_121310', 'asset_expense_account_id': 'account_420120'},
+            'account_121110': {'asset_depreciation_account_id': 'account_121310', 'asset_expense_account_id': 'account_410141'},
+            'account_121120': {'asset_depreciation_account_id': 'account_121320', 'asset_expense_account_id': 'account_410141'},
+            'account_121130': {'asset_depreciation_account_id': 'account_121330', 'asset_expense_account_id': 'account_410141'},
+            'account_150405': {'asset_depreciation_account_id': 'account_121330', 'asset_expense_account_id': 'account_420120'},
         }

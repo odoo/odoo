@@ -44,4 +44,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_expense_id': 'co_puc_621000',
                 'account_stock_variation_id': 'co_puc_146501',
             },
+            'co_puc_150405': {'asset_depreciation_account_id': 'co_puc_150405', 'asset_expense_account_id': 'co_puc_514510'},
+            'co_puc_150410': {'asset_depreciation_account_id': 'co_puc_150410', 'asset_expense_account_id': 'co_puc_514510'},
+            'co_puc_150800': {'asset_depreciation_account_id': 'co_puc_150800', 'asset_expense_account_id': 'co_puc_514510'},
+            'co_puc_151200': {'asset_depreciation_account_id': 'co_puc_151200', 'asset_expense_account_id': 'co_puc_513510'},
+            'co_puc_152000': {'asset_depreciation_account_id': 'co_puc_152000', 'asset_expense_account_id': 'co_puc_519530'},
+            'co_puc_152400': {'asset_depreciation_account_id': 'co_puc_152400', 'asset_expense_account_id': 'co_puc_519530'},
+            'co_puc_152800': {'asset_depreciation_account_id': 'co_puc_152800', 'asset_expense_account_id': 'co_puc_519530'},
+            'co_puc_154000': {'asset_depreciation_account_id': 'co_puc_154000', 'asset_expense_account_id': 'co_puc_524540'},
         }

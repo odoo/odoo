@@ -57,8 +57,10 @@ class AccountMoveLine(models.Model):
     vehicle_log_service_ids = fields.One2many(export_string_translation=False,
         comodel_name='fleet.vehicle.log.services', inverse_name='account_move_line_id')  # One2one
 
+    @api.depends("account_id")
     def _compute_need_vehicle(self):
-        self.need_vehicle = False
+        for line in self:
+            line.need_vehicle = line.account_id.is_vehicle_account
 
     def _prepare_fleet_log_service(self):
         vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)

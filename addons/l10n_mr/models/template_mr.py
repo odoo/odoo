@@ -29,3 +29,23 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'mr_7000',
             },
         }
+
+    @template('mr', 'account.account')
+    def _get_mr_account_account(self):
+        return {
+            'mr_210681': {'asset_depreciation_account_id': 'mr_2811', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2120': {'asset_depreciation_account_id': 'mr_2812', 'asset_expense_account_id': 'mr_68012'},
+            'mr_21205': {'asset_depreciation_account_id': 'mr_2812', 'asset_expense_account_id': 'mr_68012'},
+            'mr_21208': {'asset_depreciation_account_id': 'mr_2813', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2122': {'asset_depreciation_account_id': 'mr_28122', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2125': {'asset_depreciation_account_id': 'mr_28125', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2140': {'asset_depreciation_account_id': 'mr_2814', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2150': {'asset_depreciation_account_id': 'mr_2815', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2160': {'asset_depreciation_account_id': 'mr_2816', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2170': {'asset_depreciation_account_id': 'mr_2817', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2180': {'asset_depreciation_account_id': 'mr_2818', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2181': {'asset_depreciation_account_id': 'mr_28181', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2182': {'asset_depreciation_account_id': 'mr_28182', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2183': {'asset_depreciation_account_id': 'mr_28183', 'asset_expense_account_id': 'mr_68012'},
+            'mr_2200': {'asset_depreciation_account_id': 'mr_2820', 'asset_expense_account_id': 'mr_68012'},
+        }
