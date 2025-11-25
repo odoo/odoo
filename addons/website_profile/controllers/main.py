@@ -219,69 +219,88 @@ class WebsiteProfile(http.Controller):
 
         user_count = User.sudo().search_count(dom)
         my_user = request.env.user
-        current_user_values = False
+        current_user_value = False
+        user_values = []
+        pager = {'page_count': 0}
         if user_count:
             page_count = math.ceil(user_count / self._users_per_page)
             pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args=kwargs)
+            position_map = self._get_position_map(
+                dom,
+                group_by=group_by,
+                page=page,
+                limit=self._users_per_page
+            )
 
-            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-            user_values = self._prepare_all_users_values(users)
+            user_ids_with_ranking = list(position_map.keys())
 
-            # Get karma position for users (only website_published)
-            position_domain = [('karma', '>', 1), ('website_published', '=', True)]
-            position_map = self._get_position_map(position_domain, users, group_by)
+            if user_ids_with_ranking:
 
-            max_position = max([user_data['karma_position'] for user_data in position_map.values()], default=1)
-            for user in user_values:
-                user_data = position_map.get(user['id'], dict())
-                user['position'] = user_data.get('karma_position', max_position + 1)
-                user['karma_gain'] = user_data.get('karma_gain_total', 0)
-            user_values.sort(key=itemgetter('position'))
+                user_values = self._prepare_all_users_values(User.sudo().browse(user_ids_with_ranking))
+                for user_dict in user_values:
+                    user_id = user_dict['id']
+                    rank_data = position_map.get(user_id, {})
 
-            if my_user.website_published and my_user.karma and my_user.id not in users.ids:
-                # Need to keep the dom to search only for users that appear in the ranking page
-                current_user = User.sudo().search(Domain.AND([[('id', '=', my_user.id)], dom]))
-                if current_user:
-                    current_user_values = self._prepare_all_users_values(current_user)[0]
+                    user_dict['position'] = rank_data.get('karma_position', 0)
+                    user_dict['karma_gain'] = rank_data.get('karma_gain_total', 0)
 
-                    user_data = self._get_position_map(position_domain, current_user, group_by).get(current_user.id, {})
-                    current_user_values['position'] = user_data.get('karma_position', 0)
-                    current_user_values['karma_gain'] = user_data.get('karma_gain_total', 0)
+                user_values.sort(key=lambda x: x['position'])
 
-        else:
-            user_values = []
-            pager = {'page_count': 0}
+            if my_user.website_published and my_user.karma and my_user.id not in user_ids_with_ranking:
+                my_user_map = self._get_position_map(
+                    dom,
+                    group_by=group_by,
+                    target_user_id=my_user.id,
+                )
+
+                if my_user.id in my_user_map:
+                    current_user_value = self._prepare_all_users_values(my_user.sudo())[0]
+
+                    current_user_value['position'] = my_user_map[my_user.id].get('karma_position', 0)
+                    current_user_value['karma_gain'] = my_user_map[my_user.id].get('karma_gain_total', 0)
+
         render_values.update({
             'top3_users': user_values[:3] if not search_term and page == 1 else [],
             'users': user_values,
-            'my_user': current_user_values,
+            'my_user': current_user_value,
             'pager': pager,
             **self._prepare_url_from_info(),
         })
         return request.render("website_profile.users_page_main", render_values)
 
-    def _get_position_map(self, position_domain, users, group_by):
-        if group_by:
-            position_map = self._get_user_tracking_karma_gain_position(position_domain, users.ids, group_by)
-        else:
-            position_results = users._get_karma_position(position_domain)
-            position_map = dict((user_data['user_id'], dict(user_data)) for user_data in position_results)
-        return position_map
+    def _get_position_map(self, domain, group_by, page=1, limit=20, target_user_id=None):
+        """ Switcher: Decides between fast ORM ranking (All time) vs Slow SQL ranking (Time range) """
+        User = request.env['res.users']
+        offset = (page - 1) * limit
 
-    def _get_user_tracking_karma_gain_position(self, domain, user_ids, group_by):
-        """ Helper method computing boundaries to give to _get_tracking_karma_gain_position.
-        See that method for more details. """
-        to_date = fields.Date.today()
-        if group_by == 'week':
-            from_date = to_date - relativedelta(weeks=1)
-        elif group_by == 'month':
-            from_date = to_date - relativedelta(months=1)
+        if group_by in ('week', 'month'):
+            to_date = fields.Date.today()
+            if group_by == 'week':
+                from_date = to_date - relativedelta(weeks=1)
+            elif group_by == 'month':
+                from_date = to_date - relativedelta(months=1)
+
+            position_results = User._get_tracking_karma_gain_position(
+                user_domain=domain,
+                from_date=from_date,
+                to_date=to_date,
+                limit=limit,
+                offset=offset,
+                target_user_id=target_user_id,
+                )
+            return {res['user_id']: res for res in position_results}
+
         else:
-            from_date = None
-        results = request.env['res.users'].browse(user_ids)._get_tracking_karma_gain_position(domain, from_date=from_date, to_date=to_date)
-        return dict((item['user_id'], dict(item)) for item in results)
+            position_results = User._get_karma_position(
+                user_domain=domain,
+                limit=limit,
+                offset=offset,
+                target_user_id=target_user_id,
+            )
+
+            return {res['user_id']: res for res in position_results}
 
     # User and validation
     # --------------------------------------------------
