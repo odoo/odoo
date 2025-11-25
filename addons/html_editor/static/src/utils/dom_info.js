@@ -784,14 +784,36 @@ export function isContentEditableAncestor(node) {
 }
 
 /**
+ * Checks if all classes in node are present in node2 (subset check)
+ */
+function hasClassesSubset(node, node2) {
+    const getNodeClasses = (n) => (n || "").trim().split(/\s+/).filter(Boolean);
+    const [nodeClasses, node2Classes] = [node, node2].map(getNodeClasses);
+    return nodeClasses.every((cls) => node2Classes.includes(cls));
+}
+
+/**
+ * Checks if all styles in node are present in node2 (subset check)
+ */
+function hasStylesSubset(node, node2) {
+    const getNodeStyles = (n) =>
+        (n || "")
+            .split(";")
+            .map((s) => s.trim())
+            .filter(Boolean);
+    const [nodeStyles, node2Styles] = [node, node2].map(getNodeStyles);
+    return nodeStyles.every((style) => node2Styles.includes(style));
+}
+
+/**
  * Checks if a node is redundant based on its closest element with same tag.
  *
  * A node is considered redundant if:
  * - It is an Element node with a parent.
  * - There is a closest element with the same tag name.
  * - All of the node's attributes are present in that closest element:
- *   - All classes exist in the closest element's class list.
- *   - All inline styles are present in the closest element's style attribute.
+ *   - All classes exist in the closest element's class list (subset check).
+ *   - All inline styles are present in the closest element's style attribute (subset check).
  *   - All other attributes must have identical values.
  *
  * @param {Node} node - The DOM node to evaluate.
@@ -819,12 +841,12 @@ export function isRedundantElement(node) {
 
         if (attrName === "class") {
             // All classes on the node must exist in closest element.
-            if (!hasSameClasses(node, closestEl)) {
+            if (!hasClassesSubset(nodeAttrVal, closestElAttrVal)) {
                 return false;
             }
         } else if (attrName === "style") {
             // All inline styles on the node must exist in closest element.
-            if (!hasSameStyleAttributes(node, closestEl)) {
+            if (!hasStylesSubset(nodeAttrVal, closestElAttrVal)) {
                 return false;
             }
         } else {
