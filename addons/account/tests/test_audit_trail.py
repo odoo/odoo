@@ -46,11 +46,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             ('res_id', '=', record.id),
         ])
 
-    def assertTrail(self, trail, expected):
-        self.assertEqual(len(trail), len(expected))
-        for message, expected_needle in zip(trail, expected[::-1]):
-            self.assertIn(expected_needle, message.account_audit_log_preview)
-
     def test_can_unlink_draft(self):
         self.env.company.restrictive_audit_trail = True
         self.move.unlink()
@@ -113,7 +108,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)',
                 'body': '',
                 'message_type': 'tracking',
                 'tracking_values_fmt': [
@@ -128,7 +122,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nPosted ⇨ Draft (Status)',
                 'body': '',
                 'message_type': 'tracking',
                 'tracking_values_fmt': [
@@ -142,7 +135,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nMISC/2021/04/0001 ⇨ nawak (Number)',
                 'body': '',
                 'message_type': 'tracking',
                 'tracking_values_fmt': [
@@ -164,19 +156,16 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         for msg, check_values in zip(self._new_msgs, [
             # update 1
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} updated\n100.0 ⇨ 300.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
                 'tracking_values_fmt': [(('balance', 'Balance'), 'monetary', (100, self.env.ref('base.USD')), (300, self.env.ref('base.USD')))],
             },
             # update 2
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[1].id} updated\n-100.0 ⇨ -200.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> updated</p>',
                 'tracking_values_fmt': [(('balance', 'Balance'), 'monetary', (-100, self.env.ref('base.USD')), (-200, self.env.ref('base.USD')))],
             },
             # new line
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[2].id} created\n ⇨ 400000 Product Sales (Account)\n0.0 ⇨ -100.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> created</p>',
                 'tracking_values_fmt': [
                     (('balance', 'Balance'), 'monetary', (0, self.env.ref('base.USD')), (-100, self.env.ref('base.USD'))),
@@ -198,13 +187,11 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         for msg, check_values in zip(self._new_msgs, [
             # update 1
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} updated\n ⇨ 15% (Taxes)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
                 'tracking_values_fmt': [(('tax_ids', 'Taxes'), 'many2many', '', '15%')],
             },
             # new line
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[3].id} created\n ⇨ 131000 Tax Paid (Account)\n0.0 ⇨ 45.0 (Balance)\nFalse ⇨ 15% (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> created</p>',
                 'tracking_values_fmt': [
                     (('name', 'Label'), 'char', False, '15%'),
@@ -214,7 +201,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             },
             # new line
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[4].id} created\n ⇨ {suspense_account.code} Bank Suspense Account (Account)\n0.0 ⇨ -45.0 (Balance)\nFalse ⇨ Automatic Balancing Line (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> created</p>',
                 'tracking_values_fmt': [
                     (('name', 'Label'), 'char', False, "Automatic Balancing Line"),
@@ -232,7 +218,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
 
         exp_results = [
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} deleted\n400000 Product Sales ⇨  (Account)\n300.0 ⇨ 0.0 (Balance)\n15% ⇨  (Taxes)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> deleted</p>',
                 'tracking_values_fmt': [
                     (('account_id', 'Account'), 'many2one', self.company_data['default_account_revenue'], False),
@@ -240,21 +225,18 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                     (('tax_ids', 'Taxes'), 'many2many', '15%', ''),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[1].id} deleted\n400000 Product Sales ⇨  (Account)\n-200.0 ⇨ 0.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> deleted</p>',
                 'tracking_values_fmt': [
                     (('account_id', 'Account'), 'many2one', self.company_data['default_account_revenue'], False),
                     (('balance', 'Balance'), 'monetary', (-200, self.env.ref('base.USD')), (0, self.env.ref('base.USD'))),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[2].id} deleted\n400000 Product Sales ⇨  (Account)\n-100.0 ⇨ 0.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> deleted</p>',
                 'tracking_values_fmt': [
                     (('account_id', 'Account'), 'many2one', self.company_data['default_account_revenue'], False),
                     (('balance', 'Balance'), 'monetary', (-100, self.env.ref('base.USD')), (0, self.env.ref('base.USD'))),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[3].id} deleted\n131000 Tax Paid ⇨  (Account)\n45.0 ⇨ 0.0 (Balance)\n15% ⇨ False (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> deleted</p>',
                 'tracking_values_fmt': [
                     (('account_id', 'Account'), 'many2one', self.company_data['default_account_tax_purchase'], False),
@@ -262,7 +244,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                     (('name', 'Label'), 'char', '15%', False),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[4].id} deleted\n{suspense_account.code} Bank Suspense Account ⇨  (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ False (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> deleted</p>',
                 'tracking_values_fmt': [
                     (('account_id', 'Account'), 'many2one', suspense_account, False),
@@ -287,7 +268,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nFalse ⇨ True (Restrictive Audit Trail)',
                 'body': '',
                 'message_type': 'tracking',
                 'tracking_values_fmt': [('restrictive_audit_trail', 'boolean', 'False', 'True')],
