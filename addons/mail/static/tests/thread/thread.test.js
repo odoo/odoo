@@ -434,15 +434,6 @@ test("should not scroll on receiving new message if the list is initially scroll
     await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
 });
 
-test("show empty placeholder when thread contains no message", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "Welcome to #general!" });
-    await contains(".o-mail-Message", { count: 0 });
-});
-
 test("Mention a partner with special character (e.g. apostrophe ')", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
@@ -923,4 +914,43 @@ test("Can scroll to notification", async () => {
     await click("[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await isInViewportOf(".o-mail-NotificationMessage:contains(notification 0)", ".o-mail-Thread");
+});
+
+test("Show start message of conversation", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create([
+        { name: "ThreadOne", parent_channel_id: channelId, channel_type: "channel" },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "group",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-Thread h1", { text: "Welcome to #General!" });
+    await contains(".o-mail-Thread p", { text: "This is the start of the #General channel" });
+    await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "ThreadOne" });
+    await contains(".o-mail-Thread h1", { text: "ThreadOne" });
+    await contains(".o-mail-Thread p", { text: "Started by Mitchell Admin" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains(".o-mail-Thread h1", { text: "Demo" });
+    await contains(".o-mail-Thread p", { text: "This is the start of your direct chat with Demo" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin and Demo" });
+    await contains(".o-mail-Thread h1", { text: "Mitchell Admin and Demo" });
+    await contains(".o-mail-Thread p", {
+        text: "This is the start of Mitchell Admin and Demo group",
+    });
 });
