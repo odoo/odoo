@@ -721,7 +721,7 @@ class L10nInEwaybill(models.Model):
         attachment = self.env['ir.attachment'].create({
             'name': f'{doc_label} - {self.document_number}.pdf',
             'type': 'binary',
-            'datas': base64.b64encode(pdf_content),
+            'raw': pdf_content,
             'res_model': 'l10n.in.ewaybill',
             'res_id': self.id,
             'mimetype': 'application/pdf',

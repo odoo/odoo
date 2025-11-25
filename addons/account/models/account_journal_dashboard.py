@@ -2,7 +2,6 @@ import ast
 from babel.dates import format_datetime, format_date
 from collections import defaultdict
 from datetime import datetime, timedelta
-import base64
 import json
 import random
 
@@ -991,7 +990,7 @@ class AccountJournal(models.Model):
                 'type': 'binary',
                 'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),
                 'res_model': 'mail.compose.message',
-                'datas': base64.encodebytes(content),
+                'raw': content,
             })
             bill.message_post(attachment_ids=attachment.ids)
         return {

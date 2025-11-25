@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 
 from werkzeug.urls import url_encode
 
-import odoo
 import odoo.tests
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -40,7 +38,6 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
             'name': custom_url,
             'type': 'binary',
             'mimetype': 'text/scss',
-            'datas': '',
             'url': custom_url,
             'website_id': website_default.id
         })
@@ -53,7 +50,6 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
             'name': 'SO036.pdf',
             'type': 'binary',
             'mimetype': 'application/pdf',
-            'datas': '',
             'website_id': website_test.id
         })
 
@@ -338,7 +334,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         attach = self.env['ir.attachment'].create({
             'name': 'EditorExtension.js',
             'mimetype': 'text/javascript',
-            'datas': base64.b64encode(code),
+            'raw': code,
         })
         custom_url = '/_custom/web/content/%s/%s' % (attach.id, attach.name)
         attach.url = custom_url

@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo import Command
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
@@ -22,7 +20,6 @@ class TestRecruitment(MailCase, TransactionCase):
         cls.env.user.company_id = cls.company
         cls.env.user.company_ids = [Command.set(cls.company.ids)]
 
-        cls.TEXT = base64.b64encode(bytes("hr_recruitment", 'utf-8'))
         cls.Attachment = cls.env['ir.attachment']
 
     def test_infer_applicant_lang_from_context(self):
@@ -350,7 +347,7 @@ class TestRecruitment(MailCase, TransactionCase):
             'email_from': 'test_applicant@example.com'
         })
         applicant_attachment = self.Attachment.create({
-            'datas': self.TEXT,
+            'raw': b'hr_recuritment',
             'name': 'textFile.txt',
             'mimetype': 'text/plain',
             'res_model': applicant_1._name,
@@ -363,7 +360,7 @@ class TestRecruitment(MailCase, TransactionCase):
             ('res_model', '=', employee_applicant['res_model']),
             ('res_id', '=', employee_applicant['res_id']),
         ])
-        self.assertEqual(applicant_attachment['datas'], attachment_employee_applicant['datas'])
+        self.assertEqual(applicant_attachment['raw'], attachment_employee_applicant['raw'])
 
     def test_other_applications_count(self):
         """

@@ -312,7 +312,7 @@ class TestItEdiImport(TestItEdi):
         })
         self.env['ir.attachment'].with_company(other_company).create({
             'name': filename,
-            'datas': self.fake_test_content,
+            'raw': self.fake_test_content.encode(),
             'res_model': 'account.move',
             'res_id': invoice.id,
             'res_field': 'l10n_it_edi_attachment_file',

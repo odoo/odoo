@@ -76,7 +76,7 @@ class TestOdoobot(MailCommon, TestRecipients):
         )
         kwargs['body'] = ''
         attachment = self.env['ir.attachment'].with_user(self.user_employee).create({
-            'datas': 'bWlncmF0aW9uIHRlc3Q=',
+            'raw': b'migration test',
             'name': 'picture_of_your_dog.doc',
             'res_model': 'mail.compose.message',
         })

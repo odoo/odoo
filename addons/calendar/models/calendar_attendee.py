@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
-import base64
 import logging
 
-from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
@@ -173,7 +171,7 @@ class CalendarAttendee(models.Model):
                         'no_document': True,  # An ICS file must not create a document
                     }
                     attachment_ids += self.env['ir.attachment'].with_context(context).create({
-                        'datas': base64.b64encode(ics_file),
+                        'raw': ics_file,
                         'description': 'invitation.ics',
                         'mimetype': 'text/calendar',
                         'res_id': 0,

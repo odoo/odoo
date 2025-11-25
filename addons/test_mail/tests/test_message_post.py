@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import base64
 
 from datetime import datetime, timedelta
 from freezegun import freeze_time
@@ -1419,7 +1416,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(len(msg.attachment_ids), 5)
         self.assertEqual(set(msg.attachment_ids.mapped('res_model')), {test_record._name})
         self.assertEqual(set(msg.attachment_ids.mapped('res_id')), {test_record.id})
-        self.assertEqual(set(base64.b64decode(x) for x in msg.attachment_ids.mapped('datas')),
+        self.assertEqual(set(msg.attachment_ids.mapped('raw')),
                          set([b'AttContent_00', b'AttContent_01', b'AttContent_02', _attachments[0][1], _attachments[1][1]]))
         self.assertTrue(set(_attachment_records.ids).issubset(msg.attachment_ids.ids),
                         'message_post: mail.message attachments duplicated')

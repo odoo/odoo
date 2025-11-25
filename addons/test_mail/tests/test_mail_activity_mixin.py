@@ -268,13 +268,13 @@ class TestActivityMixin(TestActivityCommon):
             'res_name': 'test',
             'res_model': 'mail.activity',
             'res_id': activity.id,
-            'datas': 'test',
+            'raw': b'test',
         }, {
             'name': 'test2',
             'res_name': 'test',
             'res_model': 'mail.activity',
             'res_id': activity.id,
-            'datas': 'testtest',
+            'raw': b'testtest',
         }])
 
         # Checking if the attachment has been forwarded to the message

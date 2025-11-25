@@ -1,13 +1,12 @@
-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import binascii
 import json
 
 import odoo.tests
 from odoo.tests.common import HttpCase, new_test_user
 from odoo.tools.json import scriptsafe as json_safe
 from unittest.mock import patch
+from odoo.addons.base.tests.files import GIF_B64
 from odoo.addons.mail.tools import link_preview
 
 
@@ -62,7 +61,7 @@ class TestController(HttpCase):
             attachment = self.env['ir.attachment'].create({
                 'name': 'test.svg',
                 'mimetype': 'image/svg+xml',
-                'datas': binascii.b2a_base64(svg, newline=False),
+                'raw': svg,
                 'public': True,
                 'res_model': 'ir.ui.view',
                 'res_id': 0,
@@ -98,7 +97,6 @@ class TestController(HttpCase):
             self.assertTrue('3AADAA' not in str(response.content), 'Old c1 should not be there anymore')
 
     def test_03_get_image_info(self):
-        gif_base64 = "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
         self.authenticate('admin', 'admin')
         # Upload document.
         response = self.url_open(
@@ -106,7 +104,7 @@ class TestController(HttpCase):
             headers={'Content-Type': 'application/json'},
             data=json_safe.dumps({'params': {
                 'name': 'test.gif',
-                'data': gif_base64,
+                'data': GIF_B64.decode(),
                 'is_image': True,
             }})
         )

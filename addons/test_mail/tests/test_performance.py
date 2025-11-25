@@ -1337,7 +1337,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             {
                 'attachment_ids': [
                     (0, 0, {
-                        'datas': 'data',
+                        'raw': b'data',
                         'name': f'Test file {att_idx}',
                         'res_id': record.id,
                         'res_model': record._name,

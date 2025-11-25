@@ -819,15 +819,15 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertRecordValues(message.attachment_ids.sorted('name'), [
             {
                 'name': invoice.invoice_pdf_report_id.name,
-                'datas': invoice.invoice_pdf_report_id.datas,
+                'raw': invoice.invoice_pdf_report_id.raw,
             },
             {
                 'name': extra_attachment2.name,
-                'datas': extra_attachment2.datas,
+                'raw': extra_attachment2.raw,
             },
             {
                 'name': manual_attachment.name,
-                'datas': manual_attachment.datas,
+                'raw': manual_attachment.raw,
             },
         ])
 
@@ -852,26 +852,26 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertRecordValues(message.attachment_ids.sorted('name'), [
             {
                 'name': invoice.invoice_pdf_report_id.name,
-                'datas': invoice.invoice_pdf_report_id.datas,
+                'raw': invoice.invoice_pdf_report_id.raw,
             },
             {
                 'name': extra_attachment2.name,
-                'datas': extra_attachment2.datas,
+                'raw': extra_attachment2.raw,
             },
         ])
 
         # Manually remove the attachment and check the mail's attachments are not removed.
         invoice_pdf_report_name = invoice.invoice_pdf_report_id.name
-        invoice_pdf_report_datas = invoice.invoice_pdf_report_id.datas
+        invoice_pdf_report_raw = invoice.invoice_pdf_report_id.raw
         invoice.invoice_pdf_report_id.unlink()
         self.assertRecordValues(message.attachment_ids.sorted('name'), [
             {
                 'name': invoice_pdf_report_name,
-                'datas': invoice_pdf_report_datas,
+                'raw': invoice_pdf_report_raw,
             },
             {
                 'name': extra_attachment2.name,
-                'datas': extra_attachment2.datas,
+                'raw': extra_attachment2.raw,
             },
         ])
 

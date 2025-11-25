@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
-from odoo.addons.base.tests.files import PNG_B64
+from odoo.addons.base.tests.files import PNG_B64, PNG_RAW
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
@@ -359,8 +358,8 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
                 response = self.url_open(url)
                 if can_read:
                     self.assertEqual(
-                        base64.b64encode(response.content),
-                        PNG_B64,
+                        response.content,
+                        PNG_RAW,
                         f'{user.login} must be able to see the slide image',
                     )
                 else:
@@ -430,7 +429,7 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
 class TestRemoveMembership(common.SlidesCase):
 
     def setUp(self):
-        super(TestRemoveMembership, self).setUp()
+        super().setUp()
         self.channel_partner = self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
             'partner_id': self.customer.id,

@@ -40,7 +40,7 @@ class TestCloudStorageGoogle(TestCloudStorageGoogleCommon):
         attachment = self.env['ir.attachment'].create([{
             'name': file_name,
             'mimetype': 'text/plain',
-            'datas': b'',
+            'raw': b'',
         }])
         attachment._post_add_create(cloud_storage=True)
         attachment._generate_cloud_storage_upload_info()
@@ -53,7 +53,7 @@ class TestCloudStorageGoogle(TestCloudStorageGoogleCommon):
             attachment = self.env['ir.attachment'].create([{
                 'name': 'test.txt',
                 'mimetype': 'text/plain',
-                'datas': b'',
+                'raw': b'',
             }])
             attachment._post_add_create(cloud_storage=True)
             attachment.flush_recordset()

@@ -1,6 +1,5 @@
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
-import base64
 import contextlib
 import logging
 import re
@@ -65,11 +64,11 @@ def _validate_xml(env, url, path, xmls):
     # Get the XSD data
     xsd_attachment = env['ir.attachment']
     if path:
-        with file_open(path, filter_ext=('.xsd',)) as file:
+        with file_open(path, 'rb', filter_ext=('.xsd',)) as file:
             content = file.read()
         attachment_vals = {
             'name': path.split('/')[-1],
-            'datas': base64.b64encode(content.encode()),
+            'raw': content,
         }
         xsd_attachment = env['ir.attachment'].create(attachment_vals)
     elif url:

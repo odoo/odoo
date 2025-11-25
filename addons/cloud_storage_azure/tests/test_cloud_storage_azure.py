@@ -6,7 +6,6 @@ import requests
 from datetime import datetime, timezone, timedelta
 from requests import Response
 from unittest.mock import patch
-import base64
 
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tests.common import TransactionCase
@@ -159,7 +158,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             attachment = self.env['ir.attachment'].create([{
                 'name': 'test.txt',
                 'mimetype': 'text/plain',
-                'datas': b'',
+                'raw': b'',
             }])
             attachment._post_add_create(cloud_storage=True)
             attachment._generate_cloud_storage_upload_info()
@@ -174,7 +173,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         attachment = self.env['ir.attachment'].create([{
             'name': file_name,
             'mimetype': 'text/plain',
-            'datas': b'',
+            'raw': b'',
             'type': 'cloud_storage',
             'url': mk_url(self.DUMMY_AZURE_ACCOUNT_NAME, self.container_name),
         }])
@@ -255,7 +254,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         # A cloud attachment and small txt attachment sent -> 1st should become a link, 2nd should be sent with the message
         small_attachment = self.env["ir.attachment"].create({
             "name": "Small attachment that should be attached normally.txt",
-            "datas": base64.b64encode(b"tiny file").decode(),
+            "raw": b"tiny file",
             "mimetype": "text/plain",
             "res_model": "res.partner",
             "res_id": thread_model.id,
@@ -302,7 +301,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         too_much_bytes = b"x" * (int(max_email_size_bytes) + 1)
         large_attachment = self.env["ir.attachment"].create({
             "name": "persistent large attachment should be attached as a link",
-            "datas": base64.b64encode(too_much_bytes).decode(),
+            "raw": too_much_bytes,
             "mimetype": "text/plain",
             "res_model": "res.partner",
             "res_id": thread_model.id,
@@ -335,7 +334,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             attachment = self.env['ir.attachment'].create([{
                 'name': 'test.txt',
                 'mimetype': 'text/plain',
-                'datas': b'',
+                'raw': b'',
             }])
             attachment._post_add_create(cloud_storage=True)
             attachment.flush_recordset()

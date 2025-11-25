@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-import base64
 import io
 import re
 
@@ -36,7 +34,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         })
 
         in_invoice_1.message_main_attachment_id = self.env['ir.attachment'].create({
-            'datas': base64.b64encode(self.file),
+            'raw': self.file,
             'name': attach_name,
             'mimetype': 'application/pdf',
             'res_model': 'account.move',

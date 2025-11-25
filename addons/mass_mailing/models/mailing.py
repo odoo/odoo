@@ -1396,7 +1396,8 @@ class MailingMailing(models.Model):
         checksums_set, checksum_original_id, new_attachment_by_checksum = set(), {}, {}
         next_img_id = len(existing_attachments)
         for (b64image, original_id) in b64images:
-            checksum = IrAttachment._compute_checksum(base64.b64decode(b64image))
+            image_raw = base64.b64decode(b64image)
+            checksum = IrAttachment._compute_checksum(image_raw)
             checksums.append(checksum)
             existing_attach = existing_attachments.get(checksum)
             # Existing_attach can be None, in which case it acts as placeholder
@@ -1407,7 +1408,7 @@ class MailingMailing(models.Model):
             if not existing_attach and not checksum in checksums_set:
                 # We create only one attachment per checksum
                 vals_for_attachs.append({
-                    'datas': b64image,
+                    'raw': image_raw,
                     'name': f"image_mailing_{self.id}_{next_img_id}",
                     'type': 'binary',
                     'res_id': self.id,

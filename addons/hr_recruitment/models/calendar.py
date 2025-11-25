@@ -46,7 +46,7 @@ class CalendarEvent(models.Model):
             self.env['ir.attachment'].create([{
                 'name': att.name,
                 'type': 'binary',
-                'datas': att.datas,
+                'raw': att.raw,
                 'res_model': event._name,
                 'res_id': event.id
             } for event in events for att in attachments])

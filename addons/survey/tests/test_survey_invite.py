@@ -320,7 +320,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCase):
             'attachment_ids': [Command.create({
                 'name': 'some_attachment.pdf',
                 'res_model': 'mail.template',
-                'datas': 'test',
+                'raw': b'test',
                 'type': 'binary',
             })],
         })

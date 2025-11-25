@@ -1,4 +1,3 @@
-import base64
 from datetime import datetime
 from xml.etree import ElementTree as et
 
@@ -21,7 +20,7 @@ class TestAutoPostBills(AccountTestInvoicingCommon):
                 tree.find('./{*}ExchangedDocument/{*}ID').text = ref
             attachment = self.env['ir.attachment'].create({
                 'name': 'test_file.xml',
-                'datas': base64.encodebytes(et.tostring(tree.getroot())),
+                'raw': et.tostring(tree.getroot()),
             })
             return self.company_data['default_journal_purchase'].with_context(disable_abnormal_invoice_detection=False)._create_document_from_attachment(attachment.id)
 

@@ -460,13 +460,13 @@ class TestMassMailValues(MassMailCommon):
             'body_html': '<p>Hello</p>',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
-        blob_b64 = base64.b64encode(b'blob1')
+        blob = b'blob1'
 
         # Created when uploading an image
         original_svg_attachment = self.env['ir.attachment'].create({
             "name": "test SVG",
             "mimetype": "image/svg+xml",
-            "datas": blob_b64,
+            "raw": blob,
             "public": True,
             "res_model": "mailing.mailing",
             "res_id": mailing.id,
@@ -476,7 +476,7 @@ class TestMassMailValues(MassMailCommon):
         png_duplicate_of_svg_attachment = self.env['ir.attachment'].create({
             "name": "test SVG duplicate",
             "mimetype": "image/png",
-            "datas": blob_b64,
+            "raw": blob,
             "public": True,
             "res_model": "mailing.mailing",
             "res_id": mailing.id,
@@ -487,7 +487,7 @@ class TestMassMailValues(MassMailCommon):
         original_png_attachment = self.env['ir.attachment'].create({
             "name": "test PNG",
             "mimetype": "image/png",
-            "datas": blob_b64,
+            "raw": blob,
             "public": True,
             "res_model": "mailing.mailing",
             "res_id": mailing.id,
@@ -497,7 +497,7 @@ class TestMassMailValues(MassMailCommon):
         self.env['ir.attachment'].create({
             "name": "test PNG duplicate",
             "mimetype": "image/png",
-            "datas": blob_b64,
+            "raw": blob,
             "public": True,
             "res_model": "mailing.mailing",
             "res_id": mailing.id,

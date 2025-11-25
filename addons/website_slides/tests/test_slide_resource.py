@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
 from werkzeug.urls import url_unquote_plus
 
+from odoo.addons.base.tests.files import PNG_B64
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, HttpCase
@@ -66,8 +66,7 @@ class TestResources(common.SlidesCase, HttpCase):
             'file_name': 'test.png',
             'resource_type': 'file',
             # A file for which _odoo_guess_mimetype and python_magic can detect the mime type: a png file
-            'data': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAC4jAA'
-                    'AuIwF4pT92AAAAD0lEQVQIHQEEAPv/AIdaewLIAV0IjhGPAAAAAElFTkSuQmCC',
+            'data': PNG_B64,
             'slide_id': self.slide.id,
         })
         self.authenticate(self.env.user.login, self.env.user.login)

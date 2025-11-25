@@ -56,14 +56,14 @@ class WebsiteAssets(models.AbstractModel):
                 either 'scss' or 'js' according to the file being customized
         """
         custom_url = self._make_custom_asset_url(url, bundle)
-        datas = base64.b64encode((content or "\n").encode("utf-8"))
+        raw = (content or "\n").encode("utf-8")
 
         # Check if the file to save had already been modified
         custom_attachment = self._get_custom_attachment(custom_url)
         if custom_attachment:
             # If it was already modified, simply override the corresponding
             # attachment content
-            custom_attachment.write({"datas": datas})
+            custom_attachment.write({"raw": raw})
             self.env.registry.clear_cache('assets')
         else:
             # If not, create a new attachment to copy the original scss/js file
@@ -72,7 +72,7 @@ class WebsiteAssets(models.AbstractModel):
                 'name': url.split("/")[-1],
                 'type': "binary",
                 'mimetype': (file_type == 'js' and 'text/javascript' or 'text/scss'),
-                'datas': datas,
+                'raw': raw,
                 'url': custom_url,
                 **self._add_website_id({}),
             }
@@ -263,7 +263,7 @@ class WebsiteAssets(models.AbstractModel):
                         attachment = IrAttachment.create({
                             'name': f'google-font-{name}',
                             'type': 'binary',
-                            'datas': base64.b64encode(req.content),
+                            'raw': req.content,
                             'public': True,
                         })
                         nonlocal font_family_attachments
@@ -279,7 +279,7 @@ class WebsiteAssets(models.AbstractModel):
                     attach_font = IrAttachment.create({
                         'name': f'{font_name} (google-font)',
                         'type': 'binary',
-                        'datas': base64.encodebytes(font_content.encode()),
+                        'raw': font_content.encode(),
                         'mimetype': 'text/css',
                         'public': True,
                     })

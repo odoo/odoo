@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -6,7 +5,6 @@ from markupsafe import Markup
 
 from odoo import _, models
 from odoo.tools import float_compare
-import base64
 
 
 class PosOrder(models.Model):
@@ -299,7 +297,7 @@ class PosOrder(models.Model):
                         gift_card_pdf = self.env['ir.attachment'].create({
                             'name': filename,
                             'type': 'binary',
-                            'datas': base64.b64encode(report[0]),
+                            'raw': report[0],
                             'store_fname': filename,
                             'res_model': 'pos.order',
                             'res_id': self.ids[0],

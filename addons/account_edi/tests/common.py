@@ -69,7 +69,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
     def _create_fake_edi_attachment(self):
         return self.env['ir.attachment'].create({
             'name': '_create_fake_edi_attachment.xml',
-            'datas': base64.encodebytes(b"<?xml version='1.0' encoding='UTF-8'?><Invoice/>"),
+            'raw': b"<?xml version='1.0' encoding='UTF-8'?><Invoice/>",
             'mimetype': 'application/xml'
         })
 

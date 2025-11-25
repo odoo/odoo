@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import ValidationError, UserError
 from odoo import fields, Command
 
-import base64
 
 @tagged('post_install', '-at_install')
 class TestAccountBankStatementLine(AccountTestInvoicingCommon):
@@ -1408,7 +1406,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         ''' Ensure that attachments are properly linked to bank statements '''
 
         attachment_vals = {
-            'datas': base64.b64encode(b'My attachment'),
+            'raw': b'My attachment',
             'name': 'doc.txt',
         }
 

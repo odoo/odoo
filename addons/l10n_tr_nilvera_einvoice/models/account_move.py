@@ -1,3 +1,4 @@
+import base64
 import uuid
 from markupsafe import Markup
 from urllib.parse import quote, urlencode, urlparse
@@ -377,7 +378,7 @@ class AccountMove(models.Model):
             'name': filename,
             'res_id': invoice.id,
             'res_model': 'account.move',
-            'datas': response,
+            'raw': base64.b64decode(response),
             'type': 'binary',
             'mimetype': 'application/pdf',
         })

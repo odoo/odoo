@@ -98,11 +98,11 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         """
 
         Attachment = self.Attachment.with_user(self.user_demo.id)
-        a2 = Attachment.create({'name': 'a2', 'datas': self.blob1_b64, 'mimetype': 'image/png'})
+        a2 = Attachment.create({'name': 'a2', 'raw': self.blob1, 'mimetype': 'image/png'})
         self.assertEqual(a2.mimetype, 'image/png', "the new mimetype should be the one given on write")
-        a3 = Attachment.create({'name': 'a3', 'datas': self.blob1_b64, 'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
+        a3 = Attachment.create({'name': 'a3', 'raw': self.blob1, 'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
         self.assertEqual(a3.mimetype, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', "should preserve office mime type")
-        a4 = Attachment.create({'name': 'a4', 'datas': self.blob1_b64, 'mimetype': 'Application/VND.OpenXMLformats-officedocument.wordprocessingml.document'})
+        a4 = Attachment.create({'name': 'a4', 'raw': self.blob1, 'mimetype': 'Application/VND.OpenXMLformats-officedocument.wordprocessingml.document'})
         self.assertEqual(a4.mimetype, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', "should preserve office mime type (lowercase)")
 
     def test_08_neuter_xml_mimetype(self):
@@ -110,22 +110,22 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         Tests that potentially harmful mimetypes (XML mimetypes that can lead to XSS attacks) are converted to text
         """
         Attachment = self.Attachment.with_user(self.user_demo.id)
-        document = Attachment.create({'name': 'document', 'datas': self.blob1_b64})
-        document.write({'datas': self.blob1_b64, 'mimetype': 'text/xml'})
+        document = Attachment.create({'name': 'document', 'raw': self.blob1})
+        document.write({'raw': self.blob1, 'mimetype': 'text/xml'})
         self.assertEqual(document.mimetype, 'text/plain', "XML mimetype should be forced to text")
-        document.write({'datas': self.blob1_b64, 'mimetype': 'image/svg+xml'})
+        document.write({'raw': self.blob1, 'mimetype': 'image/svg+xml'})
         self.assertEqual(document.mimetype, 'text/plain', "SVG mimetype should be forced to text")
-        document.write({'datas': self.blob1_b64, 'mimetype': 'text/html'})
+        document.write({'raw': self.blob1, 'mimetype': 'text/html'})
         self.assertEqual(document.mimetype, 'text/plain', "HTML mimetype should be forced to text")
-        document.write({'datas': self.blob1_b64, 'mimetype': 'application/xhtml+xml'})
+        document.write({'raw': self.blob1, 'mimetype': 'application/xhtml+xml'})
         self.assertEqual(document.mimetype, 'text/plain', "XHTML mimetype should be forced to text")
 
     def test_09_dont_neuter_xml_mimetype_for_admin(self):
         """
         Admin user does not have a mime type filter
         """
-        document = self.Attachment.create({'name': 'document', 'datas': self.blob1_b64})
-        document.write({'datas': self.blob1_b64, 'mimetype': 'text/xml'})
+        document = self.Attachment.create({'name': 'document', 'raw': self.blob1})
+        document.write({'raw': self.blob1, 'mimetype': 'text/xml'})
         self.assertEqual(document.mimetype, 'text/xml', "XML mimetype should not be forced to text, for admin user")
 
     def test_10_image_autoresize(self):
@@ -224,7 +224,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         """
         Copying an attachment preserves the data
         """
-        document = self.Attachment.create({'name': 'document', 'datas': self.blob2_b64})
+        document = self.Attachment.create({'name': 'document', 'raw': self.blob2})
         document2 = document.copy({'name': "document (copy)"})
         self.assertEqual(document2.name, "document (copy)")
         self.assertEqual(document2.datas, document.datas)
@@ -232,7 +232,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertEqual(document2.store_fname, document.store_fname)
         self.assertEqual(document2.checksum, document.checksum)
 
-        document3 = document.copy({'datas': self.blob1_b64})
+        document3 = document.copy({'raw': self.blob1})
         self.assertEqual(document3.datas, self.blob1_b64)
         self.assertEqual(document3.raw, self.blob1)
         self.assertTrue(self.filestore)  # no data in db but has a store_fname

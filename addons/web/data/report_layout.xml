@@ -46,7 +46,7 @@
         </record>
 
         <record id="asset_styles_company_report" model="ir.attachment">
-            <field name="datas" model="res.company" eval="obj()._get_asset_style_b64()"/>
+            <field name="raw" model="res.company" eval="obj()._get_asset_style_bin()"/>
             <field name="mimetype">text/scss</field>
             <field name="name">res.company.scss</field>
             <field name="type">binary</field>

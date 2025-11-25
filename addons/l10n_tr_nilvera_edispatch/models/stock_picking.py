@@ -1,4 +1,3 @@
-import base64
 import uuid
 
 from lxml import etree
@@ -261,7 +260,7 @@ class StockPicking(models.Model):
         )
         attachment = self.env['ir.attachment'].create({
             'name': f"{self.name}_e_Dispatch.xml",
-            'datas': base64.b64encode(xml_string),
+            'raw': xml_string,
             'res_model': self._name,
             'res_id': self.id,
             'type': 'binary',

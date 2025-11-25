@@ -67,10 +67,10 @@ class TestMailMail(MailCommon):
             'email_to': 'test@example.com',
             'partner_ids': [(4, self.user_employee.partner_id.id)],
             'attachment_ids': [
-                (0, 0, {'name': 'file 1', 'datas': 'c2VjcmV0'}),
-                (0, 0, {'name': 'file 2', 'datas': 'c2VjcmV0'}),
-                (0, 0, {'name': 'file 3', 'datas': 'c2VjcmV0'}),
-                (0, 0, {'name': 'file 4', 'datas': 'c2VjcmV0'}),
+                (0, 0, {'name': 'file 1', 'raw': b'secret'}),
+                (0, 0, {'name': 'file 2', 'raw': b'secret'}),
+                (0, 0, {'name': 'file 3', 'raw': b'secret'}),
+                (0, 0, {'name': 'file 4', 'raw': b'secret'}),
             ],
         })
 
@@ -86,7 +86,7 @@ class TestMailMail(MailCommon):
 
         new_attachment = self.env['ir.attachment'].create({
             'name': 'new file',
-            'datas': 'c2VjcmV0',
+            'raw': b'secret',
         })
 
         with patch.object(self.env.registry['ir.attachment'], '_check_access', _patched_check_access):
@@ -1081,7 +1081,7 @@ class TestMailMailServer(MailCommon):
                 'res_name': 'test',
                 'res_model': self.test_record._name if business_attachment else 'mail.message',
                 'res_id': self.test_record.id if business_attachment else 0,
-                'datas': 'IA==',  # a non-empty base64 content. We mock attachment file_size to simulate bigger size.
+                'raw': b' ',  # a non-empty content. We mock attachment file_size to simulate bigger size.
             } for idx_attachment in range(n_attachment)])
             with self.mock_smtplib_connection():
                 mails = self.env['mail.mail'].create([{
