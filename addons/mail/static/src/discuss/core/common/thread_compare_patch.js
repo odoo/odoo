@@ -27,8 +27,8 @@ threadCompareRegistry.add(
      * @param {import("models").Thread thread2}
      */
     (thread1, thread2) => {
-        const aLastInterestDt = thread1.lastInterestDt;
-        const bLastInterestDt = thread2.lastInterestDt;
+        const aLastInterestDt = thread1.channel?.lastInterestDt;
+        const bLastInterestDt = thread2.channel?.lastInterestDt;
         if (aLastInterestDt && bLastInterestDt) {
             const res = compareDatetime(bLastInterestDt, aLastInterestDt);
             if (res !== 0) {
