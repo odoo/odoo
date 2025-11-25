@@ -1,7 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
-import { effectWithCleanup } from "@mail/utils/common/misc";
+import { compareDatetime, effectWithCleanup } from "@mail/utils/common/misc";
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
@@ -94,6 +94,15 @@ export class DiscussChannel extends Record {
     get hasMemberList() {
         return this.memberListTypes.includes(this.channel_type);
     }
+    last_interest_dt = fields.Datetime();
+    lastInterestDt = fields.Datetime({
+        /** @this {import("models").Thread} */
+        compute() {
+            return compareDatetime(this.self_member_id?.last_interest_dt, this.last_interest_dt) > 0
+                ? this.self_member_id?.last_interest_dt
+                : this.last_interest_dt;
+        },
+    });
     onlineMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").DiscussChannel} */
         compute() {

@@ -16,7 +16,9 @@ export class DiscussAppCategory extends Record {
                 t2.id - t1.id
             );
         }
-        return compareDatetime(t2.lastInterestDt, t1.lastInterestDt) || t2.id - t1.id;
+        return (
+            compareDatetime(t2.channel.lastInterestDt, t1.channel.lastInterestDt) || t2.id - t1.id
+        );
     }
 
     get isVisible() {

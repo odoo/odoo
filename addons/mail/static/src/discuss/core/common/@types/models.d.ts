@@ -60,8 +60,6 @@ declare module "models" {
         hasSeenFeature: boolean;
         invitationLink: Readonly<unknown|string>;
         invited_member_ids: ChannelMember[];
-        last_interest_dt: import("luxon").DateTime;
-        lastInterestDt: import("luxon").DateTime;
         lastMessageSeenByAllId: undefined|number;
         lastSelfMessageSeenByEveryone: Message;
         leaveChannel: () => Promise<void>;
