@@ -1406,17 +1406,39 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 
     // Style - Indicators outside
     &.s_carousel_controllers_indicators_outside {
-        .carousel-control-prev, .carousel-control-next {
-            margin-bottom: $-o-carousel-controllers-size;
+        &:not(:has(.s_carousel_indicators_hidden)) {
+            .carousel-control-prev, .carousel-control-next {
+                margin-bottom: $-o-carousel-controllers-size;
+            }
         }
 
         .carousel-indicators {
             position: relative;
             margin-bottom: 0;
 
-            button {
+            &:not(.s_carousel_indicators_numbers) button {
                 background-color: currentColor;
+            }
+
+            button {
                 color: inherit;
+            }
+            
+            &.s_carousel_indicators_numbers {
+                // For large screen, use the same size as the margin-bottom of
+                // the prev/next buttons (like other indicators; instead of
+                // "auto"), so that the bottom of the buttons is aligned with
+                // the bottom of the slides. For smaller screen, the buttons do
+                // not have the same appearance and their bottoms do not need
+                // to align, and also the numbers may need to go on a second
+                // line if there is many slides, so we keep "auto"
+                @include media-breakpoint-up(md) {
+                    height: $-o-carousel-controllers-size;
+                }
+
+                button:after {
+                    border-top-color: currentColor;
+                }
             }
         }
     }
