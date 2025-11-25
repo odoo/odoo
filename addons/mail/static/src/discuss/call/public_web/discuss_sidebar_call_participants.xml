@@ -55,7 +55,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.list">
-        <div class="d-flex flex-column gap-1 flex-grow-1" style="padding: 1.5px;">
+        <div class="d-flex flex-column gap-1 flex-grow-1 overflow-hidden" style="padding: 1.5px;">
             <t t-foreach="sessions" t-as="session" t-key="session.localId">
                 <t t-call="mail.DiscussSidebarCallParticipants.participant">
                     <t t-set="session" t-value="session"/>
