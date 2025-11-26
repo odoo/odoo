@@ -52,8 +52,6 @@ declare module "models" {
         correspondents: Readonly<ChannelMember[]>;
         default_display_mode: "video_full_screen"|undefined;
         executeCommand: (command: unknown, body: string) => unknown;
-        fetchChannelInfoDeferred: Deferred<Thread|undefined>;
-        fetchChannelInfoState: "not_fetched"|"fetching"|"fetched";
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];

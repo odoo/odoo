@@ -40,10 +40,6 @@ const threadPatch = {
         });
         /** @type {"video_full_screen"|undefined} */
         this.default_display_mode = undefined;
-        /** @type {Deferred<Thread|undefined>} */
-        this.fetchChannelInfoDeferred = undefined;
-        /** @type {"not_fetched"|"fetching"|"fetched"} */
-        this.fetchChannelInfoState = "not_fetched";
         this.group_ids = fields.Many("res.groups");
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
