@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo.addons.crm.tests.common import TestCrmCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestWebsiteCrm(odoo.tests.HttpCase):
+class TestWebsiteCrm(odoo.tests.HttpCase, TestCrmCommon):
 
     def test_tour(self):
         all_utm_campaign = self.env['utm.campaign'].search([])
@@ -54,3 +55,12 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
         # check partner has not been changed
         self.assertEqual(user_partner.email, partner_email)
         self.assertEqual(user_partner.phone, partner_phone)
+
+    def test_form_properties(self):
+        self.lead_1.lead_properties = [{
+            'definition_changed': True,
+            'name': 'test',
+            'string': 'test property',
+            'type': 'char',
+        }]
+        self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'website_crm_form_properties', login='admin')
