@@ -113,9 +113,8 @@ class MailTrackingDurationMixin(models.AbstractModel):
         # add "fake" tracking for time spent in the current value
         trackings.append({
             'create_date': self.env.cr.now(),
-            'old_value_integer': self[self._track_duration_field].id,
+            'old_value_integer': self[self._track_duration_field].id or 0,
         })
-
         for tracking in trackings:
             json[tracking['old_value_integer']] += int((tracking['create_date'] - previous_date).total_seconds())
             previous_date = tracking['create_date']

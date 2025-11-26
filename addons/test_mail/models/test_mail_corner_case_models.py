@@ -201,14 +201,32 @@ class MailTestTrackCompute(models.Model):
 class MailTestTrackDurationMixin(models.Model):
     _description = 'Fake model to test the mixin mail.tracking.duration.mixin'
     _name = "mail.test.track.duration.mixin"
-    _track_duration_field = 'customer_id'
+    _track_duration_field = 'stage_id'
     _inherit = ['mail.tracking.duration.mixin']
 
     name = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
+    stage_id = fields.Many2one(
+        'mail.test.track.duration.mixin.stage', compute='_compute_stage_id',
+        readonly=False, store=True, tracking=True,
+    )
+
+    @api.depends('name')
+    def _compute_stage_id(self):
+        default = self.env['mail.test.track.duration.mixin.stage'].search([], limit=1)
+        for duration_track in self.filtered(lambda t: not t.stage_id):
+            duration_track.stage_id = default.id
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
+
+
+class MailTestTrackDurationMixinStage(models.Model):
+    _description = 'Fake stage model for duration mixin'
+    _name = "mail.test.track.duration.mixin.stage"
+
+    name = fields.Char()
+    fold = fields.Boolean(default=False)
 
 
 class MailTestTrackGroups(models.Model):
