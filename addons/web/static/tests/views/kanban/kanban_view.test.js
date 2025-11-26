@@ -9652,3 +9652,25 @@ test(`groupby use odoomark`, async () => {
     expect(`.o_kanban_group b`).toHaveCount(2);
     expect(`.o_kanban_group span.o_badge`).toHaveCount(2);
 });
+
+test.tags("desktop");
+test("kanban: fields with data-tooltip attribute", async () => {
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban sample="1">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo" data-tooltip="pipu" />
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o-tooltip").toHaveCount(0);
+    await hover("article:contains(gnap) span");
+    await advanceTime(500);
+    expect(".o-tooltip").toHaveCount(1);
+});
