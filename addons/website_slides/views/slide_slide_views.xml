@@ -296,7 +296,7 @@
                     <field name="channel_id"/>
                     <field name="user_id"/>
                     <field name="tag_ids"/>
-                    <filter name="filter_user_id_uid" string="My Content" domain="[('user_id', '=', uid)]"/>
+                    <filter name="filter_user_id_uid" string="My Content" domain="[('user_id', 'expr', 'user')]"/>
                     <separator/>
                     <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
                     <filter name="not_published" string="Waiting for validation" domain="[('is_published', '=', False)]"/>

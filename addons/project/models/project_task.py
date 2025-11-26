@@ -210,7 +210,7 @@ class ProjectTask(models.Model):
     # See project_task_stage_personal.py for the model defininition
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
         ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
-        domain="[('user_id', '=', uid)]", string='Personal Stages', export_string_translation=False)
+        domain="[('user_id', 'expr', 'user')]", string='Personal Stages', export_string_translation=False)
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
         compute='_compute_personal_stage_id',
@@ -220,7 +220,7 @@ class ProjectTask(models.Model):
     personal_stage_type_id = fields.Many2one('project.task.type', string='Personal Stage',
         related='personal_stage_id.stage_id',
         readonly=False, store=False,
-        help="The current user's personal task stage.", domain="[('user_id', '=', uid)]",
+        help="The current user's personal task stage.", domain="[('user_id', 'expr', 'user')]",
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',

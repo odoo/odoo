@@ -1811,6 +1811,66 @@ def _optimize_m2o_bypass_comodel_id_lookup(condition, model):
     return condition
 
 
+@operator_optimization(['expr'], OptimizationLevel.DYNAMIC_VALUES)
+def _operator_expr_eval(condition, model):
+    """Evaluate a dynamic value given by the expression.
+
+    The value can be a `str` of `list[str]`. We try to find the expression that
+    will have a non-falsy value. Usually the resulting operator is `in`.
+
+    - "{rec}" or "{rec}.{value}" where rec is user, company, companies,
+      partner_id, groups are recordsets on which we can map a value;
+      for example "user.name" is `in user.mapped('name')`
+    - "context.{value}" read a value from env.context
+    """
+    env = model.env
+    expr_value = condition.value
+    if isinstance(expr_value, str):
+        expr_value = [expr_value]
+    elif not expr_value:
+        condition._raise(f"Invalid expression: {expr_value!r}")
+    operator, value = 'in', tuple()
+    for expr in expr_value:
+        if not isinstance(expr, str):
+            condition._raise(f"Invalid expression: {expr!r}")
+        env_name, is_mapped, path = expr.partition('.')
+        if env_name == 'user':
+            value = env.user
+        elif env_name == 'company':
+            value = env.company
+        elif env_name == 'companies':
+            value = env.companies
+        elif env_name == 'partner_id':
+            value = env.user.partner_id
+        elif env_name == 'groups':
+            value = env.user.all_group_ids
+        elif env_name == 'context':
+            value = env.context.get(path, ())
+            operator = 'in' if isinstance(value, COLLECTION_TYPES) else '='
+            if value:
+                break
+            else:
+                continue
+        else:
+            condition._raise(f"Invalid expression: {expr!r}")
+
+        operator = 'in'
+        if is_mapped:
+            # map the values using the environment to avoid reading in sudo
+            value = value.with_env(env).mapped(path)
+        if any(value):
+            break
+
+    from .models import BaseModel  # noqa: PLC0415
+    if isinstance(value, BaseModel):
+        assert operator == 'in', "Invalid operator for recordset comparison"
+        field = condition._field(model)
+        if field.comodel_name != value._name:
+            condition._raise(f"Cannot compare {field} and {value}")
+        value = value.ids
+    return DomainCondition(condition.field_expr, operator, value)
+
+
 # --------------------------------------------------
 # Optimizations: nary
 # --------------------------------------------------

@@ -56,19 +56,20 @@
         <record id="res_partner_bank_rule" model="ir.rule">
             <field name="name">Partner bank company rule</field>
             <field name="model_id" ref="model_res_partner_bank"/>
-            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'expr', 'companies')]</field>
         </record>
 
         <record id="res_currency_rate_rule" model="ir.rule">
             <field name="name">multi-company currency rate rule</field>
             <field name="model_id" ref="model_res_currency_rate"/>
+            <!-- XXX expr to get all parents-->
             <field name="domain_force">['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
         </record>
 
         <record id="change_password_rule" model="ir.rule">
             <field name="name">change user password rule</field>
             <field name="model_id" ref="model_change_password_user"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="domain_force">[('create_uid', 'expr', 'user')]</field>
         </record>
 
         <!-- Restrict modifications on ir.filters to owner only -->
@@ -149,7 +150,7 @@
             <field name="name">portal user access</field>
             <field name="model_id" ref="model_res_users"/>
             <field name="groups" eval="[Command.set([ref('base.group_portal')])]"/>
-            <field name="domain_force">[('commercial_partner_id', '=', user.commercial_partner_id.id)]</field>
+            <field name="domain_force">[('commercial_partner_id', 'expr', 'user.commercial_partner_id')]</field>
         </record>
 
         <record id="change_password_own_rule" model="ir.rule">
