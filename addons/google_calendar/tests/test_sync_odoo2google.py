@@ -1046,6 +1046,42 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             self.assertTrue(past_recurrence._is_event_over(), "Past recurrence should be considered over")
             self.assertGoogleEventSendUpdates('none')
 
+    @patch_api
+    def test_odoobot_event_creation_for_synchronized_user(self):
+        """ Test that odoobot can create events for a synchronized user without blocking Google insertion. """
+        with self.mock_datetime_and_now("2020-01-14"):
+            # Setup: Create a synchronized user with Google token and get the odoobot user.
+            partner = self.env['res.partner'].create({'name': 'Synchronized User', 'email': 'o@opoo.com'})
+            synced_user = self.env['res.users'].create({'name': 'Synced User', 'login': 'o@opoo.com', 'partner_id': partner.id})
+            synced_user.google_calendar_token = 'valid-token'
+            odoobot_user = self.env.ref('base.user_root')
+
+            # Create event as odoobot user for the synchronized user.
+            event = self.env['calendar.event'].with_user(odoobot_user).create({
+                'name': "Odoobot Event",
+                'start': datetime(2020, 1, 15, 8, 0),
+                'stop': datetime(2020, 1, 15, 18, 0),
+                'user_id': synced_user.id,
+                'need_sync': False,
+            })
+            event.with_user(synced_user)._sync_odoo2google(self.google_service)
+
+            # Assert that the event was inserted in Google Calendar.
+            self.assertGoogleEventInserted({
+                'id': False,
+                'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
+                'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
+                'summary': 'Odoobot Event',
+                'description': '',
+                'location': '',
+                'guestsCanModify': True,
+                'reminders': {'useDefault': False, 'overrides': []},
+                'organizer': {'email': 'o@opoo.com', 'self': True},
+                'attendees': [{'email': 'o@opoo.com', 'responseStatus': 'accepted'}],
+                'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+                'transparency': 'opaque',
+            })
+
     def test_recurrence_not_over_send_updates(self):
         """Test that recurrences that are not over send updates to attendees."""
         with self.mock_datetime_and_now("2023-01-10"):

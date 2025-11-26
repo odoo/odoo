@@ -244,4 +244,7 @@ class RecurrenceRule(models.Model):
         self.ensure_one()
         has_base_event = self.base_event_id
         has_different_owner = self.base_event_id.user_id and self.base_event_id.user_id != sender_user
-        return has_base_event and has_different_owner
+        is_odoobot_user = sender_user == self.env.ref('base.user_root')
+        # Since Odoobot has no token, we must bypass this check for creating events.
+        # The function `_get_event_user` will always get the organizer as it can have a valid sync token.
+        return has_base_event and has_different_owner and not is_odoobot_user
