@@ -2,28 +2,53 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallDeviceSelect">
-        <select
-            t-if="!isPermissionGranted(props.kind)"
-            name="inputDevice"
-            class="form-select d-flex shadow-sm"
-            t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
-            t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+        <Dropdown
+            onStateChanged.bind="openSelect"
+            disabled="!isPermissionGranted(props.kind)"
+            openOnMouseEnter="false"
         >
-            <option value="">Permission Needed</option>
-        </select>
-        <select
-            t-else=""
-            name="inputDevice"
-            class="form-select d-flex shadow-sm"
-            t-on-change="onChangeSelectAudioInput"
-        >
-            <option t-if="!isBrowserChrome" value="">Browser Default</option>
-            <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
-                <option t-if="device.kind === props.kind" t-att-selected="isSelected(device.deviceId)" t-att-value="device.deviceId">
-                    <t t-esc="device.label || 'device ' + device_index"/>
-                </option>
+            <button
+                t-if="isPermissionGranted(props.kind)"
+                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret"
+                t-att-data-kind="props.kind"
+                t-attf-class="{{ props.roundedType === 'pill' ? 'rounded-pill' : 'rounded' }}"
+             >
+                <i t-if="props.icon" t-att-class="props.icon"/>
+                <span
+                    class="pe-2 d-inline-block text-truncate flex-grow-1 min-w-0"
+                    t-attf-class="{{ props.icon ? 'ps-2' : '' }}"
+                    t-esc="selectLabel || BROWSER_DEFAULT"/>
+                <span t-attf-class="oi smaller {{state.isSelectOpen ? 'oi-chevron-up': 'oi-chevron-down'}}"/>
+            </button>
+            <button
+                t-else=""
+                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret"
+                t-att-data-kind="props.kind"
+                t-attf-class="{{ props.roundedType === 'pill' ? 'rounded-pill' : 'rounded' }}"
+                t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
+                t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+            >
+                <i t-if="props.icon" t-att-class="props.icon"/>
+                <span
+                    class="d-inline-block text-truncate flex-grow-1 min-w-0"
+                    t-attf-class="{{ props.icon ? 'ps-2' : '' }}"
+                >
+                    <t t-esc="PERMISSION_NEEDED"/>
+                </span>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem t-if="!isBrowserChrome or props.kind === 'videoinput'" onSelected="onSelectAudioDevice.bind(this)">
+                    <i class="fa fa-check me-2" t-if="isSelected()"/>
+                    <span t-esc="BROWSER_DEFAULT"/>
+                </DropdownItem>
+                <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
+                    <DropdownItem t-if="device.kind === props.kind" onSelected="onSelectAudioDevice.bind(this, device)">
+                        <i t-if="isSelected(device.deviceId)" class="fa fa-check me-2"/>
+                        <span t-esc="device.label || 'device ' + device_index"/>
+                    </DropdownItem>
+                </t>
             </t>
-        </select>
+        </Dropdown>
     </t>
 
 </templates>

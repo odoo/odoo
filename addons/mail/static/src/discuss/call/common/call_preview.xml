@@ -10,5 +10,21 @@
             </div>
             <audio autoplay="" t-ref="audio"/>
         </div>
+        <div t-if="props.hasSettingsAtBottom" class="d-flex flex-row justify-content-between mt-2 w-100 mw-100 flex-nowrap px-3">
+            <div class="px-2" style="width: 30%">
+                <DeviceSelect icon="'fa fa-fw fa-microphone'" kind="'audioinput'" roundedType="'pill'"/>
+            </div>
+            <div class="px-2" style="width: 30%">
+                <DeviceSelect icon="'fa fa-fw fa-volume-up'" kind="'audiooutput'" roundedType="'pill'"/>
+            </div>
+            <div class="px-2" style="width: 30%">
+                <DeviceSelect icon="'fa fa-fw fa-video-camera'" kind="'videoinput'" roundedType="'pill'"/>
+            </div>
+            <div class="d-flex align-items-center flex-grow-0 flex-shrink-0 px-2 text-muted">
+                <a role="button" t-on-click="onClickSettings" title="Advanced Settings">
+                    <i class="fa fa-fw fa-gear"/>
+                </a>
+            </div>
+        </div>
     </t>
 </templates>

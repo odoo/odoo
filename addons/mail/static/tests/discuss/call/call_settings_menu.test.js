@@ -16,14 +16,15 @@ import { describe, test, expect } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
+import { isBrowserChrome } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("Renders the call settings", async () => {
     patchWithCleanup(browser.navigator.mediaDevices, {
-        enumerateDevices: () =>
-            Promise.resolve([
+        enumerateDevices: () => {
+            const deviceList = [
                 {
                     deviceId: "mockAudioDeviceId",
                     kind: "audioinput",
@@ -34,7 +35,16 @@ test("Renders the call settings", async () => {
                     kind: "videoinput",
                     label: "mockVideoDeviceLabel",
                 },
-            ]),
+            ];
+            if (isBrowserChrome()) {
+                deviceList.push({
+                    deviceId: "default",
+                    kind: "audioinput",
+                    label: "Default",
+                });
+            }
+            return Promise.resolve(deviceList);
+        },
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
@@ -50,11 +60,16 @@ test("Renders the call settings", async () => {
     await contains("label[aria-label='Camera']");
     await contains("label[aria-label='Microphone']");
     await contains("label[aria-label='Speakers']");
-    await contains("option", { textContent: "Permission Needed", count: 3 });
+    await contains(".o-mail-DeviceSelect-button:has(:text('Permission Needed'))", { count: 3 });
     rtc.microphonePermission = "granted";
-    await contains("option[value=mockAudioDeviceId]");
+    const browserDefaultLabel = isBrowserChrome() ? "Default" : "Browser Default";
+    await click(".o-mail-DeviceSelect-button[data-kind='audioinput']:has(:text('Default'))");
+    await contains(".o-dropdown-item:has(:text('mockAudioDeviceLabel'))");
+    await contains(`.o-dropdown-item:has(:text(${browserDefaultLabel}))`);
     rtc.cameraPermission = "granted";
-    await contains("option[value=mockVideoDeviceId]");
+    await click(".o-mail-DeviceSelect-button[data-kind='videoinput']:has(:text('Default'))");
+    await contains(".o-dropdown-item:has(:text('mockVideoDeviceLabel'))");
+    await contains(`.o-dropdown-item:has(:text(${browserDefaultLabel}))`);
     await contains("button", { text: "Voice Detection" });
     await contains("button", { text: "Push to Talk" });
     await contains("span", { text: "Voice detection sensitivity" });

@@ -7,6 +7,8 @@ import {
     quickVideoSettings,
 } from "@mail/discuss/call/common/call_actions";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
+import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
+import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
 import { Component, onWillDestroy, status, useEffect, useRef, useState } from "@odoo/owl";
@@ -23,8 +25,13 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class CallPreview extends Component {
     static template = "mail.CallPreview";
-    static props = ["activateCamera?", "activateMicrophone?", "onSettingsChanged?"];
-    static components = { ActionList };
+    static props = [
+        "activateCamera?",
+        "activateMicrophone?",
+        "onSettingsChanged?",
+        "hasSettingsAtBottom?",
+    ];
+    static components = { ActionList, DeviceSelect };
 
     setup() {
         this.dialog = useService("dialog");
@@ -140,36 +147,62 @@ export class CallPreview extends Component {
             name: ({ action }) => (action.isActive ? _t("Unmute") : _t("Mute")),
             onSelected: () => this.toggleMic(),
         };
-        return [
-            [
+        const videoBlurAction = {
+            condition: () => this.state.videoStream !== null,
+            icon: () => "fa fa-fw fa-photo",
+            isActive: ({ store }) => store.settings.useBlur,
+            name: ({ action }) =>
+                action.isActive ? _t("Disable background blur") : _t("Enable background blur"),
+            onSelected: ({ store }) => {
+                store.settings.useBlur = !store.settings.useBlur;
+            },
+            tags: ({ action }) => (action.isActive ? [ACTION_TAGS.SUCCESS] : []),
+        };
+        const callAudioActions = [
+            new Action({
+                id: "toggle-microphone",
+                owner: this,
+                definition: muteActionUpdated,
+                store: this.store,
+            }),
+        ];
+        const callVideoActions = [
+            new Action({
+                id: "toggle-camera",
+                owner: this,
+                definition: cameraOnActionUpdated,
+                store: this.store,
+            }),
+        ];
+        if (this.props.hasSettingsAtBottom) {
+            callVideoActions.push(
                 new Action({
-                    id: "toggle-microphone",
+                    id: "video-blur",
                     owner: this,
-                    definition: muteActionUpdated,
+                    definition: videoBlurAction,
                     store: this.store,
-                }),
+                })
+            );
+        } else {
+            callAudioActions.push(
                 new Action({
                     id: "audio-settings",
                     owner: this,
                     definition: quickActionSettings,
                     store: this.store,
-                }),
-            ],
-            [
-                new Action({
-                    id: "toggle-camera",
-                    owner: this,
-                    definition: cameraOnActionUpdated,
-                    store: this.store,
-                }),
+                })
+            );
+            callVideoActions.push(
                 new Action({
                     id: "video-settings",
                     owner: this,
                     definition: quickVideoSettings,
                     store: this.store,
-                }),
-            ],
-        ];
+                })
+            );
+        }
+
+        return [callAudioActions, callVideoActions];
     }
 
     async enableMicrophone() {
@@ -299,5 +332,9 @@ export class CallPreview extends Component {
             return;
         }
         this.enableBlur();
+    }
+
+    onClickSettings() {
+        this.dialog.add(CallSettingsDialog, {});
     }
 }

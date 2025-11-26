@@ -10,7 +10,7 @@
         <h2 class="m-3 m-md-5" t-esc="store.companyName"/>
         <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
             <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
-                <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
+                <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)" hasSettingsAtBottom="true"/>
             </div>
             <div class="d-flex flex-column text-center justify-content-center">
                 <div class="d-flex flex-column" t-if="store.self_guest and !store.self_user">
