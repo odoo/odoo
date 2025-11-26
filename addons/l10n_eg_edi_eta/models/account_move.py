@@ -121,7 +121,8 @@ class AccountMove(models.Model):
         from_currency = self.currency_id
         to_currency = self.company_id.currency_id
         if from_currency != to_currency and self.invoice_line_ids:
-            amount_currency = self.invoice_line_ids[0].amount_currency
+            first_product_line = self.invoice_line_ids.filtered(lambda line: line.display_type == "product")[:1]
+            amount_currency = first_product_line.amount_currency
             if not float_is_zero(amount_currency, precision_rounding=from_currency.rounding):
-                return abs(self.invoice_line_ids[0].balance / amount_currency)
+                return abs(first_product_line.balance / amount_currency)
         return 1.0
