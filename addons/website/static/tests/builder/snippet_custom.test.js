@@ -129,7 +129,6 @@ test("thumbnails are displayed on custom inner snippets even if they have the sa
     );
     await contains(":iframe .s_test").click();
     await contains("div[data-container-title='test'] button.oe_snippet_save").click();
-    await contains(".modal-dialog button.btn-primary").click();
     await contains("button[data-name='blocks']").click();
     expect("div.o_snippet[name='Custom test'] div.o_snippet_thumbnail_img").toHaveStyle({
         "background-image": /url\(.*s_countdown/,

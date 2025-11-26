@@ -79,6 +79,9 @@ export class SaveSnippetPlugin extends Plugin {
             this.wrapWithBeforeAfterSaveHandlers.bind(this)
         );
         if (savedName) {
+            if (this.delegateTo("custom_snippets_notification_handlers", savedName)) {
+                return;
+            }
             const message = _t(
                 "Saved as %s. Find it in your snippets.",
                 markup`<strong>${savedName}</strong>`

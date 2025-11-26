@@ -157,12 +157,10 @@ test("Use the sidebar 'save snippet' buttons", async () => {
 
     // Save the snippets.
     await contains(saveButtonSelector).click();
-    await contains(".o_dialog .btn:contains('Save')").click();
     expect(".o_notification_manager .o_notification_content").toHaveCount(1);
     await contains(".o_notification_manager .o_notification_close").click();
 
     await contains(saveSectionSelector).click();
-    await contains(".o_dialog .btn:contains('Save')").click();
     expect(".o_notification_manager .o_notification_content").toHaveCount(1);
 
     // Check that the custom sections appeared.

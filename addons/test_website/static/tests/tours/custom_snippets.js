@@ -42,11 +42,6 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Confirm reload",
-            trigger: ".modal-dialog button:contains('Save')",
-            run: "click",
-        },
-        {
             content: "Click on the block tab",
             trigger: ".o-snippets-tabs button[data-name='blocks']",
             run: "click",
