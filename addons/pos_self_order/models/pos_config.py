@@ -419,6 +419,7 @@ class PosConfig(models.Model):
             'iface_splitbill': True,
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
         })
 
     def __generate_single_qr_code(self, url):
