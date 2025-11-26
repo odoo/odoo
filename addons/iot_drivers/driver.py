@@ -51,22 +51,29 @@ class Driver(Thread):
         :return: the result of the action method
         """
         if self._check_if_action_is_duplicate(data.get('action_unique_id')):
-            return
+            return {'status': 'duplicate'}
 
         action = data.get('action', '')
         session_id = data.get('session_id')
         if session_id:
             self.data["owner"] = session_id
         try:
-            response = {'status': 'success', 'result': self._actions[action](data), 'action_args': {**data}}
+            response = {'status': 'success', 'result': self._actions[action](data)}
+            # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
+            # we don't return `True` for them not to trigger `onSuccess` on the db: to let it wait for events
+            if self.device_type in ["printer", "payment"]:
+                response['result'] = "pending"
         except Exception as e:
             _logger.exception("Error while executing action %s with params %s", action, data)
-            response = {'status': 'error', 'result': str(e), 'action_args': {**data}}
+            response = {'status': 'error', 'result': str(e)}
 
         # Make response available to /event route or websocket
         # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
+        # TODO: remove when v19.0 is deprecated - backward compat for db that don't handle longpolling direct response
         if self.device_type not in ["printer", "payment"]:
             event_manager.device_changed(self, response)
+
+        return response
 
     def _check_if_action_is_duplicate(self, action_unique_id):
         if not action_unique_id:

@@ -62,7 +62,7 @@ class EventManager:
         }
         send_to_controller({
             **event,
-            'session_id': data.get('action_args', {}).get('session_id', ''),
+            'session_id': data.get('owner', ''),
             'iot_box_identifier': IOT_IDENTIFIER,
             **data,
         })
