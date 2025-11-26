@@ -1,6 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { insertChartInSpreadsheet } from "@spreadsheet/../tests/helpers/chart";
-import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
+import {
+    insertChartInSpreadsheet,
+    createSpreadsheetWithChart,
+} from "@spreadsheet/../tests/helpers/chart";
+import {
+    createBasicChart,
+    createCarousel,
+    addChartFigureToCarousel,
+} from "@spreadsheet/../tests/helpers/commands";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
@@ -149,7 +156,6 @@ test("Datasource link is removed when a pivot is deleted", async function () {
     });
     model.dispatch("REMOVE_PIVOT", { pivotId });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
@@ -168,7 +174,6 @@ test("Datasource link is removed when a list is deleted", async function () {
     });
     model.dispatch("REMOVE_ODOO_LIST", { listId });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
@@ -190,7 +195,6 @@ test("Datasource link is removed when an odoo chart is deleted", async function 
         sheetId: model.getters.getActiveSheetId(),
     });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
@@ -207,4 +211,30 @@ test("cannot link against a non-existing datasource", async function () {
         odooLink: { dataSourceCoreId: "coucou", type: "dataSource", dataSourceType: "pivot" },
     });
     expect(result2.reasons).toEqual([CommandResult.InvalidDataSourceId]);
+});
+
+test("Link to menu id is preserved when duplicating a carousel chart", async () => {
+    const { model } = await createSpreadsheetWithChart();
+    const sheetId = model.getters.getActiveSheetId();
+    const chartFigureId = model.getters.getFigures(sheetId)[0].id;
+    createCarousel(model, { items: [] }, "carouselId");
+    addChartFigureToCarousel(model, "carouselId", chartFigureId);
+
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const odooLink = { type: "odooMenu", odooMenuId: 1 };
+    model.dispatch("UPDATE_ODOO_LINK_TO_CHART", { chartId, odooLink });
+    expect(model.getters.getChartOdooLink(chartId)).toEqual(odooLink);
+
+    model.dispatch("DUPLICATE_CAROUSEL_CHART", {
+        chartId,
+        duplicatedChartId: "duplicatedChartId",
+        carouselId: "carouselId",
+        sheetId,
+    });
+
+    const carouselItems = model.getters.getCarousel("carouselId").items;
+    expect(carouselItems).toHaveLength(2);
+    expect(carouselItems[1]).toMatchObject({ type: "chart", chartId: "duplicatedChartId" });
+    expect(model.getters.getChartOdooLink(chartId)).toEqual(odooLink);
+    expect(model.getters.getChartOdooLink("duplicatedChartId")).toEqual(odooLink);
 });
