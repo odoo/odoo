@@ -47,6 +47,21 @@ class TestModel(models.Model):
             'order': 'name asc, id desc',
         }
 
+    def _get_search_highlight_handlers(self):
+        handlers = super()._get_search_highlight_handlers()
+        handlers['notes'] = self._search_highlight_notes
+        return handlers
+
+    def _search_highlight_notes(self, field_meta, value, term):
+        if value and 'secret' in value:
+            return True, value, 'notes'
+
+        if value and term:
+            highlighted = value.replace(term, f'/{term}/')
+            return False, highlighted, 'text'
+
+        return False, value, 'text'
+
     def open_website_url(self):
         self.ensure_one()
         return self.env['website'].get_client_action(f'/test_model/{self.id}')

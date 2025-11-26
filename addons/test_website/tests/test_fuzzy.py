@@ -149,3 +149,25 @@ class TestAutoComplete(TransactionCase):
         # Sub-sub-fields are currently not supported.
         # Adapt expected result if this becomes a feature.
         self._autocomplete('tagg', 0, "Not found")
+
+    def test_custom_highlight_handler(self):
+        field_meta = {'name': 'notes', 'type': 'notes', 'match': True}
+        value = "The quick brown fox jumps over the lazy dog"
+        term = "fox"
+
+        skip, result, field_type = self.env['test.model']._search_highlight_field(field_meta, value, term)
+
+        self.assertFalse(skip, "Expected field to not be skipped")
+        self.assertEqual(field_type, 'text', "Expected field_type to switch to 'text' after highlighting")
+        self.assertEqual(result, "The quick brown /fox/ jumps over the lazy dog")
+
+    def test_highlight_handler_skips_fields(self):
+        field_meta = {'name': 'notes', 'type': 'notes', 'match': True}
+        value = "The quick brown fox guards a secret note"
+        term = "fox"
+
+        skip, result, field_type = self.env['test.model']._search_highlight_field(field_meta, value, term)
+
+        self.assertTrue(skip, "Expected field to be skipped because the value contains 'secret'")
+        self.assertEqual(field_type, 'notes', "Expected field_type to remain 'notes' when highlighting is skipped")
+        self.assertEqual(result, value, "Expected result to remain unchanged when highlighting is skipped")
