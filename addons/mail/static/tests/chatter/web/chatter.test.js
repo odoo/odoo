@@ -673,7 +673,7 @@ test("Mentions in composer should still work when using pager", async () => {
     await patchUiSize({ size: SIZES.LG });
     await start();
     await openFormView("res.partner", partnerId_1, { resIds: [partnerId_1, partnerId_2] });
-    await click("button:text('Log note')");
+    await click("button:text('Send message')");
     await click(".o_pager_next");
     await insertText(".o-mail-Composer-input", "@");
     // all records in DB: Mitchell Admin | Hermit | Public user except OdooBot
@@ -773,4 +773,28 @@ test("can mark message as unread from chatter", async () => {
     await contains(".o_notification:text(Marked as unread)");
     await click(".o-mail-MessagingMenu-counter:text(1)");
     await contains(".o-mail-NotificationItem-text:text(John Doe: lorem ipsum)");
+});
+
+test("only internal users can be Suggested/mentioned in Log note", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({
+        name: "External Partner",
+        email: "external@test.com",
+        partner_share: true,
+    });
+    await start();
+    await openFormView("res.partner");
+    await click("button:text('Log note')");
+    await contains(".o-mail-Composer");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 3 });
+    await click("button:text('Send message')");
+    await insertText(".o-mail-Composer-input", "ext");
+    await click(".o-mail-Composer-suggestionPartner-name:text('External Partner')");
+    await click("button:text('Log note')");
+    await click(".o-mail-Composer button:enabled:text('Log')");
+    await contains(".o-mail-Message-contentContainer:text('@External Partner')");
+    await contains(".o-mail-Message-richBody a.o_mail_redirect:text('@External Partner')", {
+        count: 0,
+    });
 });

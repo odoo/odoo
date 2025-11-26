@@ -33,11 +33,14 @@ export class SuggestionService {
         return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }
 
-    async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
+    async fetchSuggestions({ delimiter, term }, { thread, abortSignal, composerType } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@":
-                await this.fetchPartnersRoles(cleanedSearchTerm, thread, { abortSignal });
+                await this.fetchPartnersRoles(cleanedSearchTerm, thread, {
+                    abortSignal,
+                    composerType,
+                });
                 break;
             case "#":
                 await this.fetchThreads(cleanedSearchTerm, { abortSignal });
@@ -84,10 +87,12 @@ export class SuggestionService {
      * @param {string} term
      * @param {import("models").Thread} [thread]
      */
-    async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
+    async fetchPartnersRoles(term, thread, { abortSignal, composerType } = {}) {
         const kwargs = { search: term };
         if (thread?.channel) {
             kwargs.channel_id = thread.id;
+        } else {
+            kwargs.internal_users_only = composerType === "note";
         }
         const data = await this.makeOrmCall(
             "res.partner",
@@ -168,12 +173,16 @@ export class SuggestionService {
      *  result in the context of given thread
      * @returns {{ type: String, suggestions: Array }}
      */
-    searchSuggestions({ delimiter, term }, { thread } = {}) {
+    searchSuggestions({ delimiter, term }, { thread, composerType } = {}) {
         thread = toRaw(thread);
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
-                const partners = this.searchPartnerSuggestions(cleanedSearchTerm, thread);
+                const partners = this.searchPartnerSuggestions(
+                    cleanedSearchTerm,
+                    thread,
+                    composerType
+                );
                 const roles = this.searchRoleSuggestions(cleanedSearchTerm);
                 return {
                     type: "Partner",
@@ -225,21 +234,24 @@ export class SuggestionService {
         };
     }
 
-    isSuggestionValid(partner, thread) {
+    isSuggestionValid(partner, thread, composerType) {
+        if (composerType === "note") {
+            return partner.partner_share === false && partner.notEq(this.store.odoobot);
+        }
         return (
             (this.store.self_user?.share === false || partner.mention_token) &&
             partner.notEq(this.store.odoobot)
         );
     }
 
-    getPartnerSuggestions(thread) {
+    getPartnerSuggestions(thread, composerType) {
         return Object.values(this.store["res.partner"].records).filter((partner) =>
-            this.isSuggestionValid(partner, thread)
+            this.isSuggestionValid(partner, thread, composerType)
         );
     }
 
-    searchPartnerSuggestions(cleanedSearchTerm, thread) {
-        const partners = this.getPartnerSuggestions(thread);
+    searchPartnerSuggestions(cleanedSearchTerm, thread, composerType) {
+        const partners = this.getPartnerSuggestions(thread, composerType);
         const suggestions = [];
         for (const partner of partners) {
             if (!partner.name) {

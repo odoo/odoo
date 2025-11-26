@@ -750,6 +750,21 @@ export class Composer extends Component {
             if (allRecipients.some((recipient) => !recipient.email || !isEmail(recipient.email))) {
                 return;
             }
+        } else {
+            const externalPartners = composer.mentionedPartners.filter(
+                (partner) => partner.partner_share
+            );
+            composer.mentionedPartners = composer.mentionedPartners.filter(
+                (partner) => !partner.partner_share
+            );
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(composer.composerHtml, "text/html");
+            for (const partner of externalPartners) {
+                doc.querySelectorAll(`a.o_mail_redirect[data-oe-id="${partner.id}"]`).forEach(
+                    (link) => link.replaceWith(link.textContent)
+                );
+            }
+            composer.composerHtml = markup(doc.body.innerHTML);
         }
         const { specialMentions, roles } = this.store.getMentionsFromText(composer.composerHtml, {
             mentionedRoles: composer.mentionedRoles,

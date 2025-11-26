@@ -274,7 +274,7 @@ class ResPartner(models.Model):
             res.extend(["email", "phone", "tz"])
 
     def _store_partner_fields(self, res: Store.FieldList):
-        res.extend(["active", "is_company", "name"])
+        res.extend(["active", "is_company", "name", "partner_share"])
         self._store_avatar_fields(res)
         self._store_im_status_fields(res)
         # sudo: to access portal user of another company in chatter
@@ -284,12 +284,15 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
-    def get_mention_suggestions(self, search, limit=8):
+    def get_mention_suggestions(self, search, limit=8, internal_users_only=False):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also (internal) users, and then extend the research to all partners.
         """
+        domain = self._get_mention_suggestions_domain(search)
+        if internal_users_only:
+            domain &= Domain("partner_share", "=", False)
         store = Store().add(
-            self._search_mention_suggestions(self._get_mention_suggestions_domain(search), limit),
+            self._search_mention_suggestions(domain, limit),
             lambda res: (
                 res.from_method("_store_partner_fields"),
                 res.from_method("_store_mention_fields"),
