@@ -53,11 +53,8 @@ declare module "models" {
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
-        hasSeenFeature: boolean;
         invitationLink: Readonly<unknown|string>;
         invited_member_ids: ChannelMember[];
-        lastMessageSeenByAllId: undefined|number;
-        lastSelfMessageSeenByEveryone: Message;
         leaveChannel: () => Promise<void>;
         leaveChannelRpc: () => void;
         markAsFetched: () => Promise<void>;
