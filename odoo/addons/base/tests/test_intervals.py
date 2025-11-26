@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from odoo.tests.common import tagged, TransactionCase
-from odoo.tools.intervals import Intervals, intervals_overlap, invert_intervals
+from odoo.tools.intervals import Intervals, intervals_duration, intervals_overlap, invert_intervals
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -160,6 +160,36 @@ class TestUtils(TransactionCase):
             start, end = limits
             with self.subTest(start=start, end=end):
                 self.assertListEqual(invert_intervals(test_intervals, start, end), expected_result)
+
+    def test_intervals_durations(self):
+        test_intervals = [
+            [
+                (datetime(2023, 2, 5, 8, 0), datetime(2023, 2, 5, 12, 0), set()),  # 4 hours
+                (datetime(2023, 2, 6, 10, 0), datetime(2023, 2, 6, 16, 0), set()),  # 6 hours
+                (datetime(2023, 2, 7, 8, 0), datetime(2023, 2, 7, 8, 0), set()),  # 0 hours
+            ],
+            [
+                (datetime(2023, 2, 5, 8, 0), datetime(2023, 2, 6, 8, 0), set()),  # 24 hours
+                (datetime(2023, 2, 6, 9, 0), datetime(2023, 2, 6, 10, 0), set()),  # 1 hour
+                (datetime(2023, 2, 6, 9, 30), datetime(2023, 2, 6, 11, 0), set()),  # 1.5 hour
+            ],
+            [
+                (datetime(2023, 2, 7), datetime(2023, 2, 7), set()),  # 0 hours
+                (datetime(2023, 2, 8), datetime(2023, 2, 9), set()),  # 24 hours
+            ],
+        ]
+        test_units = ['hours', 'seconds', 'minutes', 'days']
+        expected_results = [
+            # Format: [hours, seconds, minutes, days]
+            [10.0, 36000.0, 600.0, 0.4167],      # 10 hours = ~0.4167 day
+            [26.5, 95400.0, 1590.0, 1.1042],     # 26.5 hours = ~1.1042 days
+            [24.0, 86400.0, 1440.0, 1.0],        # 24 hours = 1 days
+        ]
+
+        for interval, expected_set in zip(test_intervals, expected_results):
+            for unit, expected in zip(test_units, expected_set):
+                result = intervals_duration(interval, unit)
+                self.assertAlmostEqual(result, expected, places=4)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
