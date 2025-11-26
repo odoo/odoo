@@ -8,7 +8,7 @@ export class CardImageOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
-            hasCoverImage: !!editingElement.querySelector(".o_card_img_wrapper"),
+            hasCoverImage: !!editingElement.querySelector(":scope > .o_card_img_wrapper"),
         }));
     }
 }
