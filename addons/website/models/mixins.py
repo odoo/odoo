@@ -615,6 +615,23 @@ class WebsiteSearchableMixin(models.AbstractModel):
     _name = 'website.searchable.mixin'
     _description = 'Website Searchable Mixin'
 
+    def _split_for_highlight(self, text, term):
+        """
+        Splits a string into parts around search term matches.
+
+        :param text: The text to split
+        :param term: The search term (case-insensitive, supports multi-word)
+
+        :return: tuple (parts, has_highlight)
+        """
+        if not text or not term:
+            return [text], False
+
+        pattern = '|'.join(map(re.escape, term.split()))
+        parts = re.split(f'({pattern})', text, flags=re.IGNORECASE)
+        has_highlight = len(parts) > 1
+        return parts, has_highlight
+
     @api.model
     def _search_build_domain(self, domain_list, search, fields, extra=None):
         """
@@ -692,3 +709,77 @@ class WebsiteSearchableMixin(models.AbstractModel):
                         text = text_from_html(data[html_field], True)
                         data[html_field] = text
         return results_data
+
+    def _search_highlight_field(self, field_meta, value, term):
+        """
+        Dispatches search highlighting to the appropriate handler based on field
+        type.
+
+        This method acts as the central router: it reads the field type from
+        `field_meta`, retrieves the corresponding highlight handler from
+        `_get_search_highlight_handlers()`, and delegates processing to it.
+
+        :param field_meta: dict containing field configuration
+                           (e.g., name, type, match, truncate, ...)
+        :param value: the original field value to process
+        :param term: the search term to highlight in the value
+
+        :return: tuple (skip_field, processed_value, resulting_type)
+            - skip_field (bool): Whether this field should be omitted from the
+                                 final result set
+            - processed_value: The updated/highlighted value
+            - resulting_type (str): The effective field type after processing
+                                    Handlers may override the type (e.g., 'text'
+                                    becoming 'html' if highlight markup is
+                                    applied)
+        """
+        field_type = field_meta.get('type')
+
+        handlers = self._get_search_highlight_handlers()
+        handler = handlers.get(field_type)
+        if handler:
+            return handler(field_meta, value, term)
+
+        # No handler found, return value unchanged
+        return False, value, field_type
+
+    def _get_search_highlight_handlers(self):
+        """
+        Returns the mapping of field types to their highlight handler methods.
+
+        This explicit type-to-handler mapping allows easy extension of highlight
+        behaviour by adding new field types and corresponding handler methods.
+
+        :return: dict where:
+            - key (str): field type
+            - value (callable): handler function accepting
+                                (field_meta, value, term) and returning
+                                (skip_field, processed_value, resulting_type)
+        """
+        return {
+            'text': self._search_highlight_text,
+        }
+
+    def _search_highlight_text(self, field_meta, value, term):
+        """
+        Highlight handler for plain text fields.
+
+        Splits the text around search term matches and wraps matched segments in
+        highlight markup.
+
+        :return: tuple (skip_field, processed_value, resulting_type)
+            - skip_field (bool): Always False for text fields
+            - processed_value: Highlighted HTML or the original text
+            - resulting_type (str): 'html' if highlights were added, else
+                                    'text'
+        """
+        parts, has_highlight = self._split_for_highlight(value, term)
+
+        if has_highlight:
+            value = self.env['ir.ui.view'].sudo()._render_template(
+                "website.search_text_with_highlight",
+                {'parts': parts}
+            )
+            return False, value, 'html'
+
+        return False, value, 'text'

@@ -601,7 +601,9 @@ class Website(Home):
         mappings = []
         results_data = []
         for search_result in search_results:
-            results_data += search_result['results_data']
+            for result in search_result['results_data']:
+                result['model'] = search_result['model']
+                results_data.append(result)
             mappings.append(search_result['mapping'])
         if search_type == 'all':
             # Only supported order for 'all' is on name
@@ -610,6 +612,7 @@ class Website(Home):
         result = []
         for record in results_data:
             mapping = record['_mapping']
+            model = request.env[record['model']]
             mapped = {
                 '_fa': record.get('_fa'),
             }
@@ -619,19 +622,13 @@ class Website(Home):
                     mapped[mapped_name] = ''
                     continue
                 field_type = field_meta.get('type')
-                if field_type == 'text':
-                    if value and field_meta.get('truncate', True):
-                        value = self._shorten_around_match(value, term, max_nb_chars)
-                    if field_meta.get('match') and value and term:
-                        pattern = '|'.join(map(re.escape, term.split()))
-                        if pattern:
-                            parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
-                            if len(parts) > 1:
-                                value = request.env['ir.ui.view'].sudo()._render_template(
-                                    "website.search_text_with_highlight",
-                                    {'parts': parts}
-                                )
-                                field_type = 'html'
+                if field_type == 'text' and field_meta.get('truncate', True):
+                    value = self._shorten_around_match(value, term, max_nb_chars)
+
+                if field_meta.get('match'):
+                    skip_field, value, field_type = model._search_highlight_field(field_meta, value, term)
+                    if skip_field:
+                        continue
 
                 if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
                     opt = {}
