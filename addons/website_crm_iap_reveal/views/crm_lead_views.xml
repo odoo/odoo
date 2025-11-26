@@ -6,13 +6,6 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='lead']/group" position="inside">
-                <group string="Lead Generation Information" invisible="not reveal_ip" groups="base.group_no_one">
-                    <field name="reveal_ip"/>
-                    <field name="reveal_iap_credits"/>
-                    <field name="reveal_rule_id"/>
-                </group>
-            </xpath>
             <xpath expr="//page[@name='extra']/group" position="inside">
                 <group string="Lead Generation Information" invisible="not reveal_ip" groups="base.group_no_one">
                     <field name="reveal_ip"/>
