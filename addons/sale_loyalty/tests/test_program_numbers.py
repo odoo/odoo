@@ -1958,3 +1958,55 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             order.amount_total,
             "Order total should be 0, as a specific discount should have been applied.",
         )
+
+    def test_100_percent_discount_rounding(self):
+        self.env['loyalty.program'].create({
+            'name': '100% Discount',
+            'program_type': 'coupons',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'code': '100pc',
+                'mode': 'with_code',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 100,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        tax_9_99pc = self.env['account.tax'].create({
+            'name': "19.99% Tax",
+            'amount_type': 'percent',
+            'amount': 19.99,
+        })
+
+        prices = [19.99, 19.99, 19.99]
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': [(6, 0, [tax_9_99pc.id])],
+        })
+
+        order_lines = []
+        for price in prices:
+            order_lines.append((0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'price_unit': price,
+                'tax_id': [(6, 0, [tax_9_99pc.id])],
+            }))
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': order_lines
+        })
+
+        self._apply_promo_code(order, '100pc')
+
+        self.assertEqual(order.amount_untaxed, 0.0, "Amount untaxed should be 0")
+        self.assertEqual(order.amount_tax, 0.0, "Amount tax should be 0")
+        self.assertEqual(order.amount_total, 0.0, "Amount total should be 0")

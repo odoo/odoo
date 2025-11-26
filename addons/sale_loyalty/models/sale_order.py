@@ -571,6 +571,20 @@ class SaleOrder(models.Model):
             return [reward_line_values]
 
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
+
+        # For 100% percent order discounts, match each line to ensure exact cancellation.
+        if reward.discount_mode == 'percent' and reward.discount == 100 and reward_applies_on == 'order':
+            lines = self.order_line.filtered(lambda l: not l.display_type and not l.reward_id)
+            lines -= self._get_no_effect_on_threshold_lines()
+            return [{
+                **base_reward_line_values,
+                'name': reward.description,
+                'price_unit': -line.price_unit,
+                'product_uom_qty': line.product_uom_qty,
+                'points_cost': point_cost if line == lines[0] else 0,
+                'tax_id': [Command.set(self.fiscal_position_id.map_tax(line.tax_id).ids)],
+            } for line in lines]
+
         reward_dict = {}
         for tax, price in discountable_per_tax.items():
             if not price:
