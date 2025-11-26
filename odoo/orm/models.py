@@ -1766,7 +1766,7 @@ class BaseModel(metaclass=MetaModel):
         select_args = [grouping_select_sql, *groupby_terms.values(), *aggregates_terms]
 
         # _read_group_orderby may change groupby_terms then it is necessary to be call before
-        query.order = self._read_group_orderby(order, groupby_terms, query)
+        query.order = self._read_group_orderby(query.table, order, groupby_terms)
         # GROUPING SET ((a, b), (a), ())
         grouping_sets_sql = [
             SQL("(%s)", SQL(", ").join(groupby_terms[groupby_spec] for groupby_spec in grouping_set))
@@ -1921,7 +1921,7 @@ class BaseModel(metaclass=MetaModel):
         ]
         select_args = [*[groupby_terms[spec] for spec in groupby], *aggregates_terms]
         if groupby_terms:
-            query.order = self._read_group_orderby(order, groupby_terms, query)
+            query.order = self._read_group_orderby(query.table, order, groupby_terms)
             query.groupby = SQL(", ").join(groupby_terms.values())
             query.having = self._read_group_having(query.table, list(having))
 
@@ -2123,16 +2123,15 @@ class BaseModel(metaclass=MetaModel):
 
         return stack[0]
 
-    def _read_group_orderby(self, order: str, groupby_terms: dict[str, SQL],
-                            query: Query) -> SQL:
+    def _read_group_orderby(self, table: TableSQL, order: str, groupby_terms: dict[str, SQL]) -> SQL:
         """ Return (<SQL expression>, <SQL expression>)
         corresponding to the given order and groupby terms.
 
         Note: this method may change groupby_terms
 
+        :param table: The table of the query we are building
         :param order: the order specification
         :param groupby_terms: the group by terms mapping ({spec: sql_expression})
-        :param query: The query we are building
         """
         if order:
             traverse_many2one = True
@@ -2158,7 +2157,7 @@ class BaseModel(metaclass=MetaModel):
 
             if term not in groupby_terms:
                 try:
-                    sql_expr = self._read_group_select(query.table, term)
+                    sql_expr = self._read_group_select(table, term)
                 except ValueError as e:
                     raise ValueError(f"Order term {order_part!r} is not a valid aggregate nor valid groupby") from e
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
@@ -2170,8 +2169,9 @@ class BaseModel(metaclass=MetaModel):
                 traverse_many2one and field and field.type == 'many2one'
                 and self.env[field.comodel_name]._order != 'id'
             ):
-                if sql_order := self._order_to_sql(query.table, f'{term} {direction} {nulls}'):
+                if sql_order := self._order_to_sql(table, f'{term} {direction} {nulls}'):
                     orderby_terms.append(sql_order)
+                    query = table._query
                     if query._order_groupby:
                         query._order_groupby.insert(0, groupby_terms[term])
                         groupby_terms[term] = SQL(", ").join(query._order_groupby)
