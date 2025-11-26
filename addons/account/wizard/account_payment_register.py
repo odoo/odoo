@@ -1374,6 +1374,8 @@ class AccountPaymentRegister(models.TransientModel):
         payments = wizard.with_context(clean_context(self.env.context))._init_payments(to_process, edit_mode=edit_mode)
         wizard._post_payments(to_process, edit_mode=edit_mode)
         wizard._reconcile_payments(to_process, edit_mode=edit_mode)
+        if not self.env.context.get('keep_payment_register'):
+            wizard.sudo().unlink()
         return payments.sudo(flag=False)
 
     def _get_next_payment_date_in_context(self):

@@ -138,7 +138,7 @@ class TestArWithholdingArRi(TestArCommon):
 
     def payment_register(self, moves):
         """ The register payment wizard model, opened on the given documents. """
-        return self.env['account.payment.register'].with_context(active_model='account.move', active_ids=moves.ids)
+        return self.env['account.payment.register'].with_context(active_model='account.move', active_ids=moves.ids, keep_payment_register=True)
 
     def create_payment_register(self, moves, withholdings=None, **wizard_args):
         """ The register payment wizard, opened on the given documents.

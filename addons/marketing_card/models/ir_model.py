@@ -1,12 +1,9 @@
-from odoo import models, api
+from odoo import models
 
 
 class IrModel(models.Model):
     _inherit = 'ir.model'
 
-    @api.ondelete(at_uninstall=False)
-    def _delete_linked_campaigns(self):
-        """Remove campaigns on removed models."""
-        self.env['card.campaign'].search([
-            ('res_model', 'in', self.mapped('model'))
-        ]).unlink()
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.env['card.campaign'].search([('res_model', 'in', self.mapped('model'))])

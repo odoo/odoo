@@ -5396,7 +5396,6 @@ class TestPrecompute(TransactionCase):
 
         fnames = [fname for fname, field in currency._fields.items() if field.prefetch]
         QUERIES = [
-            'SELECT "res_currency"."id" FROM "res_currency" WHERE "res_currency"."id" IN %s',  # env.ref for currency
             select(currency, *fnames),
             insert(model, 'amount', 'currency_id'),
             select(model, 'currency_id'),
