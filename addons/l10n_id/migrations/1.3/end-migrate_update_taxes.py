@@ -6,7 +6,7 @@ def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {"lang": "en_US"})
 
     ChartTemplate = env["account.chart.template"]
-    companies = env["res.company"].search([("chart_template", "=", "id")], order="parent_path")
+    companies = env["res.company"].search([("chart_template", "=", "id"), ("parent_id", "=", False)])
 
     new_tax_groups = ["l10n_id_tax_group_stlg", "l10n_id_tax_group_non_luxury_goods", "l10n_id_tax_group_luxury_goods", "l10n_id_tax_group_0"]
     new_taxes = [
