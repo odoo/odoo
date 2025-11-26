@@ -4,7 +4,6 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.models import Query
 from odoo.tools import SQL, unique
 from odoo.tools.float_utils import float_compare, float_round
 
@@ -129,10 +128,10 @@ class AnalyticMixin(models.AbstractModel):
 
         return super()._read_group_groupby(table, groupby_spec)
 
-    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
-        if query.table._alias == 'distribution' and aggregate_spec != '__count':
+    def _read_group_select(self, table, aggregate_spec: str) -> SQL:
+        if table._alias == 'distribution' and aggregate_spec != '__count':
             raise ValueError(f"analytic_distribution grouping does not accept {aggregate_spec} as aggregate.")
-        return super()._read_group_select(aggregate_spec, query)
+        return super()._read_group_select(table, aggregate_spec)
 
     def _get_count_id(self, query):
         match query.table._alias:

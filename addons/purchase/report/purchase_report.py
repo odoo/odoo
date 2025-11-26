@@ -5,7 +5,6 @@
 #
 
 from odoo import fields, models
-from odoo.models import Query
 from odoo.tools.sql import SQL
 
 
@@ -150,12 +149,12 @@ class PurchaseReport(models.Model):
             """,
         )
 
-    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
+    def _read_group_select(self, table, aggregate_spec: str) -> SQL:
         """ This override allows us to correctly calculate the average price of products. """
         if aggregate_spec != 'price_average:avg':
-            return super()._read_group_select(aggregate_spec, query)
+            return super()._read_group_select(table, aggregate_spec)
         return SQL(
             'SUM(%(f_price)s * %(f_qty)s) / NULLIF(SUM(%(f_qty)s), 0.0)',
-            f_qty=self._field_to_sql(self._table, 'qty_ordered', query),
-            f_price=self._field_to_sql(self._table, 'price_average', query),
+            f_price=table.price_average,
+            f_qty=table.qty_ordered,
         )
