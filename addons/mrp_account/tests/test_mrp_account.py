@@ -307,7 +307,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         mo_form.qty_producing = mo.product_qty
         mo = mo_form.save()
         now = fields.Datetime.now()
-        workorder = mo.workorder_ids[0]
+        workorder = mo.workorder_ids.filtered('move_raw_ids')[0]
         self.env['mrp.workcenter.productivity'].create({
             'workcenter_id': self.workcenter.id,
             'workorder_id': workorder.id,

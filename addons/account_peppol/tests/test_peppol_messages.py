@@ -221,6 +221,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         # we can't send the ubl document again unless we regenerate the pdf
         move.invoice_pdf_report_id.unlink()
+        move.invoice_pdf_report_file = False  # unlink doesn't invalidate invoice_pdf_report_id
         with mock_lookup_success('0208:0428759497'):
             wizard = self.create_send_and_print(move, default=True)
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')

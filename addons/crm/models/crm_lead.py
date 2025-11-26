@@ -1646,6 +1646,8 @@ class CrmLead(models.Model):
         opportunities.activity_ids.write({
             'res_id': self.id,
         })
+        # need to invalidate manually because res_id is an integer
+        (self + opportunities).invalidate_recordset(['activity_ids'])
 
         return True
 

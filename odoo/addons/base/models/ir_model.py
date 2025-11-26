@@ -14,7 +14,7 @@ from operator import itemgetter
 from psycopg2.extras import Json
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import BinaryBytes, frozendict, reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import expr_eval, safe_eval, datetime, dateutil, time
@@ -327,14 +327,20 @@ class IrModel(models.Model):
         result = self.env.cr.fetchone()
         return result and result[0]
 
+    @api.ondelete(at_uninstall=True)
     def _drop_table(self):
+        to_drop = []
         for model in self:
             current_model = self.env.get(model.model)
             if current_model is not None:
                 if current_model._abstract:
                     continue
+                to_drop.append((current_model._table, model.model))
+            else:
+                _logger.runbot('The model %s cannot be dropped because it did not exist in the registry.', model.model)
 
-                table = current_model._table
+        def drop_tables():
+            for table, model_name in to_drop:
                 kind = sql.table_kind(self.env.cr, table)
                 if kind == sql.TableKind.View:
                     self.env.cr.execute(SQL('DROP VIEW %s', SQL.identifier(table)))
@@ -343,11 +349,9 @@ class IrModel(models.Model):
                 elif kind is not None:
                     _logger.warning(
                         "Unable to drop table %r of model %r: unmanaged or unknown tabe type %r",
-                        table, model.model, kind
+                        table, model_name, kind
                     )
-            else:
-                _logger.runbot('The model %s could not be dropped because it did not exist in the registry.', model.model)
-        return True
+        return drop_tables if to_drop else None
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_manual(self):
@@ -386,6 +390,9 @@ class IrModel(models.Model):
             self.env['ir.attachment']._file_delete(fname)
 
     def unlink(self):
+        # flush other changes before trying to change schema
+        self.env.flush_all()
+
         # prevent screwing up fields that depend on these models' fields
         manual_models = self.filtered(lambda model: model.state == 'manual')
         manual_models.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
@@ -404,7 +411,6 @@ class IrModel(models.Model):
         if model_data:
             model_data.unlink()
 
-        self._drop_table()
         res = super().unlink()
 
         # Reload registry for normal unlink only. For module uninstall, the
@@ -2258,14 +2264,24 @@ class IrModelData(models.Model):
             self.env.transaction.invalidate_ormcache('groups')
         return res
 
-    def unlink(self):
-        """ Regular unlink method, but make sure to clear the caches. """
-        clear_groups = self and any(data.model == 'res.groups' for data in self.exists())
-        res = super().unlink()
-        self.env.transaction.invalidate_ormcache()  # _xmlid_lookup
-        if clear_groups:
-            self.env.transaction.invalidate_ormcache('groups')
-        return res
+    @api.ondelete(at_uninstall=True)
+    def _delete_clear_groups_hook(self):
+        # First delete in the database, *then* in the filesystem if the
+        # database allowed it. Helps avoid errors when concurrent transactions
+        # are deleting the same file, and some of the transactions are
+        # rolled back by PostgreSQL (due to concurrent updates detection).
+        try:
+            clear_groups = any(data.model == 'res.groups' for data in self)
+        except MissingError:
+            # during upgrade, data records may be deleted
+            clear_groups = True
+
+        def _post_hook():
+            self.env.transaction.invalidate_ormcache()
+            if clear_groups:
+                self.env.transaction.invalidate_ormcache('groups')
+
+        return _post_hook
 
     def _lookup_xmlids(self, xml_ids, model):
         """ Look up the given XML ids of the given model. """
@@ -2556,7 +2572,7 @@ class IrModelData(models.Model):
                 # record), also applies to ir.model.fields, constraints, etc.
                 pass
         # remove remaining module data records
-        module_data.unlink()
+        module_data.exists().unlink()
 
     @api.model
     def _process_end_unlink_record(self, record):

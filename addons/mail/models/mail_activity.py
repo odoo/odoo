@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
@@ -162,11 +162,14 @@ class MailActivity(models.Model):
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
-        free = self.filtered(lambda a: not a.res_model or not a.res_id)
-        free.res_name = False
-        for activity in (self - free):
-            activity.res_name = activity.res_model and \
-                self.env[activity.res_model].browse(activity.res_id).display_name
+        for activity in self:
+            name = False
+            if activity.res_model and activity.res_id:
+                try:  # noqa: SIM105
+                    name = self.env[activity.res_model].browse(activity.res_id).display_name
+                except MissingError:
+                    pass
+            activity.res_name = name
 
     @api.depends('active', 'date_deadline')
     def _compute_state(self):
