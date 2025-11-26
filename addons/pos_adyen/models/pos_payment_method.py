@@ -41,6 +41,10 @@ class PosPaymentMethod(models.Model):
         params += ['adyen_terminal_identifier']
         return params
 
+    @api.model
+    def _allowed_actions_in_self_order(self):
+        return super()._allowed_actions_in_self_order() + ['proxy_adyen_request', 'get_latest_adyen_status']
+
     @api.constrains('adyen_terminal_identifier')
     def _check_adyen_terminal_identifier(self):
         for payment_method in self:

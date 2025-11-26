@@ -11,6 +11,13 @@ export class PaymentAdyen extends PaymentInterface {
     setup() {
         super.setup(...arguments);
         this.paymentLineResolvers = {};
+        this.connectWebSocket("ADYEN_LATEST_RESPONSE", () => {
+            const pendingLine = this.pos.getPendingPaymentLine("adyen");
+
+            if (pendingLine) {
+                pendingLine.payment_method_id.payment_terminal.handleAdyenStatusResponse();
+            }
+        });
     }
 
     sendPaymentRequest(uuid) {
@@ -46,13 +53,11 @@ export class PaymentAdyen extends PaymentInterface {
     }
 
     _callAdyen(data, operation = false) {
-        return this.pos.data
-            .silentCall("pos.payment.method", "proxy_adyen_request", [
-                [this.payment_method_id.id],
-                data,
-                operation,
-            ])
-            .catch(this._handleOdooConnectionFailure.bind(this));
+        return this.callPaymentMethod("proxy_adyen_request", [
+            [this.payment_method_id.id],
+            data,
+            operation,
+        ]).catch(this._handleOdooConnectionFailure.bind(this));
     }
 
     _adyenGetSaleId() {
@@ -328,11 +333,9 @@ export class PaymentAdyen extends PaymentInterface {
      * confirmation from Adyen is received via the webhook.
      */
     async handleAdyenStatusResponse() {
-        const notification = await this.pos.data.silentCall(
-            "pos.payment.method",
-            "get_latest_adyen_status",
-            [[this.payment_method_id.id]]
-        );
+        const notification = await this.callPaymentMethod("get_latest_adyen_status", [
+            [this.payment_method_id.id],
+        ]);
 
         if (!notification) {
             this._handleOdooConnectionFailure();
