@@ -1086,3 +1086,33 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event.write({'videocall_location': False})
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventPatched(google_id, {'conferenceData': None}, timeout=3)
+
+    @patch_api
+    def test_event_creation_for_different_user(self):
+        """
+        Test event is synchronized for organizer with active google synchronization if it is
+        created by a user with google synchronization stopped.
+        """
+        self.attendee_user.google_synchronization_stopped = True
+        self.organizer_user.google_calendar_token = 'dummy-token'
+        event = self.env['calendar.event'].with_user(self.attendee_user).create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'user_id': self.organizer_user.id,
+            'partner_ids': [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)],
+        })
+
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
+            'summary': 'Event',
+            'location': '',
+            'guestsCanModify': True,
+            'organizer': {'email': 'o.o@example.com', 'self': False},
+            'attendees': [{'email': 'a.a@example.com', 'responseStatus': 'accepted'}, {'email': 'o.o@example.com', 'responseStatus': 'needsAction'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+            'transparency': 'opaque',
+        }, timeout=3)
