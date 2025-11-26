@@ -612,7 +612,6 @@ const granularities = [
 pivotRegistry.add("ODOO", {
     ui: OdooPivot,
     definition: OdooPivotRuntimeDefinition,
-    externalData: true,
     onIterationEndEvaluation: () => {},
     dateGranularities: [...granularities],
     datetimeGranularities: [...granularities, "hour_number", "minute_number", "second_number"],
