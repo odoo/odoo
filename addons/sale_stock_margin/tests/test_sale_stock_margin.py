@@ -464,6 +464,24 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(first_delivery.state, 'done')
         self.assertEqual(sale_order_line.purchase_price, 10)
 
+    def test_avco_different_uom(self):
+        pack_of_6 = self.ref('uom.product_uom_pack_6')
+        self.product_avco.write({
+                'standard_price': 1,
+                'list_price': 3,
+                'uom_ids': [pack_of_6],
+            })
+        sale_order = self._create_sale_order()
+        sale_order_line = self.env['sale.order.line'].create({
+            'name': 'Sale order',
+            'order_id': sale_order.id,
+            'product_id': self.product_avco.id,
+            'product_uom_qty': 1,
+            'product_uom_id': pack_of_6,
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order_line.margin, 12.0)
+
     def test_avco_calc(self):
         """ test purchase_price and margin correct calculation for avco product"""
         # need to freezetime due to test being too fast resulting in inconsistent AVCO calculation for in/out moves having the same exact validation date
