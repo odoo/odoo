@@ -390,7 +390,6 @@
                             </block>
 
                             <block title="Connected Devices" id="pos_connected_devices_section">
-                                <!-- Use ePoS printer for receipts -->
                                 <setting id="pos_other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box" documentation="/applications/sales/point_of_sale/configuration/epos_ssc.html">
                                     <field name="pos_other_devices"/>
                                     <div class="row" invisible="not pos_other_devices">
@@ -409,24 +408,6 @@
                                     </div>
                                     <div role="alert" class="alert alert-warning" invisible="not pos_iface_print_via_proxy or not pos_other_devices or pos_epson_printer_ip in [False, '']">
                                         The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box.
-                                    </div>
-                                </setting>
-                                <!-- Use Epson server direct printer for receipts (the printer will poll a controller to retreive the receipt) -->
-                                <setting id="use_epson_server_direct_print" string="Epson Server Direct Printer" help="Use the url and id from the buttons below to setup your printer">
-                                    <field name="use_epson_server_direct_print"/>
-                                    <div class="content-group" invisible="not use_epson_server_direct_print">
-                                        <div>
-                                            <label string="Cashdrawer" for="pos_iface_cashdrawer" class="col-lg-3 o_light_label"/>
-                                            <field name="pos_iface_cashdrawer"/>
-                                        </div>
-                                        <div>
-                                            <label string="URL for printer setup" for="epson_server_direct_print_url" class="col-lg-3 o_light_label"/>
-                                            <field name="epson_server_direct_print_url" string="Copy URL" options="{'btn_class': 'secondary'}" widget="CopyClipboardButton"/>
-                                        </div>
-                                        <div>
-                                            <label string="ID for printer setup" help="Set this ID in printer settings to secure your printing" for="epson_server_direct_print_id" class="col-lg-3 o_light_label"/>
-                                            <field name="epson_server_direct_print_id" string="Copy ID" options="{'btn_class': 'secondary'}" widget="CopyClipboardButton"/>
-                                        </div>
                                     </div>
                                 </setting>
                                 <setting id="customer_display" string="Customer Display" help="Set the background image of your customer display" documentation="/applications/sales/point_of_sale/shop/customer_display.html" >

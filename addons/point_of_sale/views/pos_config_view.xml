@@ -74,30 +74,6 @@
                                 The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box.
                             </div>
                         </setting>
-                        <!-- Use Epson server direct printer for receipts (the printer will poll a controller to retreive the receipt) -->
-                            <setting id="use_epson_server_direct_print" string="Epson Server Direct Printer" help="Use the url and id from the buttons below to setup your printer">
-                            <field name="use_epson_server_direct_print"/>
-                            <div class="row" invisible="not use_epson_server_direct_print">
-                                <div class="col-lg-5 o_light_label">
-                                    <label string="Cashdrawer" for="iface_cashdrawer"/>
-                                </div>
-                                <div class="col-lg-7">
-                                    <field name="iface_cashdrawer"/>
-                                </div>
-                                <div class="col-lg-5 o_light_label">
-                                    <label string="URL for printer setup" help="Set this URL in printer settings to enable printing" for="epson_server_direct_print_url"/>
-                                </div>
-                                <div class="col-lg-7">
-                                    <field name="epson_server_direct_print_url" string="Copy URL" options="{'btn_class': 'secondary'}" widget="CopyClipboardButton"/>
-                                </div>
-                                <div class="col-lg-5 o_light_label">
-                                    <label string="ID for printer setup" for="epson_server_direct_print_id"/>
-                                </div>
-                                <div class="col-lg-7">
-                                    <field name="epson_server_direct_print_id" string="Copy ID" options="{'btn_class': 'secondary'}" widget="CopyClipboardButton" />
-                                </div>
-                            </div>
-                        </setting>
                         <setting string="IoT Box" help="Connect devices using an IoT Box">
                                 <field name="use_posbox" />
                                 <div class="content-group pos_iot_config ms-3" invisible="not use_posbox">

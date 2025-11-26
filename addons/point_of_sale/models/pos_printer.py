@@ -37,7 +37,6 @@ class PosPrinter(models.Model):
         default='epson_epos',
         selection=[
             ('epson_epos', 'Use an Epson printer'),
-            ('epson_server_direct_print', 'Use Epson Server Direct Print'),
         ]
     )
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
