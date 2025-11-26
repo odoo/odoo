@@ -1923,7 +1923,7 @@ class BaseModel(metaclass=MetaModel):
         if groupby_terms:
             query.order = self._read_group_orderby(order, groupby_terms, query)
             query.groupby = SQL(", ").join(groupby_terms.values())
-            query.having = self._read_group_having(list(having), query)
+            query.having = self._read_group_having(query.table, list(having))
 
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
         row_values = self.env.execute_query(query.select(*select_args))
@@ -2094,7 +2094,7 @@ class BaseModel(metaclass=MetaModel):
 
         return sql_expr
 
-    def _read_group_having(self, having_domain: list, query: Query) -> SQL:
+    def _read_group_having(self, table: TableSQL, having_domain: list) -> SQL:
         """ Return <SQL expression> corresponding to the having domain.
         """
         if not having_domain:
@@ -2113,7 +2113,7 @@ class BaseModel(metaclass=MetaModel):
                 left, operator, right = item
                 if operator not in SUPPORTED:
                     raise ValueError(f"Invalid having clause {item!r}: supported comparators are {SUPPORTED}")
-                sql_left = self._read_group_select(query.table, left)
+                sql_left = self._read_group_select(table, left)
                 stack.append(SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], right))
             else:
                 raise ValueError(f"Invalid having clause {item!r}: it should be a domain-like clause")
