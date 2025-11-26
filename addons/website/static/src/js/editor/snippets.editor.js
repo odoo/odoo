@@ -235,6 +235,14 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             }
         });
 
+        // TODO remove in master: fixes the selector for the "Ratio" setting in
+        // cards, preventing the setting of a parent to leak onto children when
+        // cards are nested.
+        const cardRatioOptionEl = html.querySelector('[data-js="CardImageOptions"] we-select[string="Ratio"]');
+        if (cardRatioOptionEl) {
+            cardRatioOptionEl.dataset.applyTo = ">.o_card_img_wrapper";
+        }
+
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
