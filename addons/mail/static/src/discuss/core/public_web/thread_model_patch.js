@@ -1,5 +1,6 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/misc";
+import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { patch } from "@web/core/utils/patch";
@@ -45,7 +46,9 @@ const threadPatch = {
         });
         this.sub_channel_ids = fields.Many("mail.thread", {
             inverse: "parent_channel_id",
-            sort: (a, b) => b.id - a.id,
+            sort: (a, b) =>
+                compareDatetime(b.channel?.lastInterestDt, a.channel?.lastInterestDt) ||
+                b.id - a.id,
         });
         this.displayInSidebar = fields.Attr(false, {
             compute() {
