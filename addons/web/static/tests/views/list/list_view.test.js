@@ -12819,6 +12819,47 @@ test(`grouped list view move to previous page of group when all records from las
 });
 
 test.tags("desktop");
+test(`grouped list view move to previous page of group when all records from last page deleted with more pages`, async () => {
+    Foo._records.push({ id: 6, foo: "foo", m2o: 1 });
+    Foo._records.push({ id: 7, foo: "foo", m2o: 1 });
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step(`web_search_read ${kwargs.limit} - ${kwargs.offset}`);
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2"><field name="display_name"/></list>`,
+        actionMenus: {},
+        groupBy: ["m2o"],
+    });
+    expect(`th:contains(Value 1 (5))`).toHaveCount(1, {
+        message: "Value 1 should contain 3 records",
+    });
+    expect(`th:contains(Value 2 (1))`).toHaveCount(1, {
+        message: "Value 2 should contain 1 record",
+    });
+    await contains(`.o_group_header:eq(0)`).click();
+    expect(getPagerValue(queryFirst(`.o_group_header`))).toEqual([1, 2]);
+    expect(getPagerLimit(queryFirst(`.o_group_header`))).toBe(5);
+    expect.verifySteps(["web_search_read 2 - 0"]);
+
+    // move to next page
+    await pagerNext(queryFirst(`.o_group_header`));
+    await pagerNext(queryFirst(`.o_group_header`));
+    expect(getPagerValue(queryFirst(`.o_group_header`))).toEqual([5, 5]);
+    expect(getPagerLimit(queryFirst(`.o_group_header`))).toBe(5);
+    expect.verifySteps(["web_search_read 2 - 2", "web_search_read 2 - 4"]);
+
+    // delete a record
+    await contains(`.o_data_row .o_list_record_selector input`).click();
+    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await contains(`.dropdown-item:contains(Delete)`).click();
+    await contains(`.modal .btn-primary`).click();
+    expect(`th.o_group_name:eq(0) .o_pager_counter`).toHaveCount(1);
+    expect(`.o_data_row`).toHaveCount(2);
+});
+
+test.tags("desktop");
 test(`grouped list view move to next page when all records from the current page deleted`, async () => {
     Foo._records = [1, 2, 3, 4, 5, 6]
         .map((i) => ({
