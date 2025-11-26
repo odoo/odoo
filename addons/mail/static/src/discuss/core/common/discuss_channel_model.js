@@ -168,6 +168,17 @@ export class DiscussChannel extends Record {
         inverse: "channel",
         onDelete: (r) => r?.delete(),
     });
+    memberBusSubscription = fields.Attr(false, {
+        /** @this {import("models").Thread} */
+        compute() {
+            return (
+                this.self_member_id?.memberSince >= this.store.env.services.bus_service.startedAt
+            );
+        },
+        onUpdate() {
+            this.store.updateBusSubscription();
+        },
+    });
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });
     get unknownMembersCount() {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
