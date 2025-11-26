@@ -9,7 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
-class ImageFormatOptionPlugin extends Plugin {
+export class ImageFormatOptionPlugin extends Plugin {
     static id = "imageFormatOption";
     static shared = ["computeAvailableFormats"];
     /** @type {import("plugins").BuilderResources} */

@@ -1,12 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
 export class Many2OneOption extends BaseOptionComponent {
+    static id = "many2one_option";
     static template = "html_builder.Many2OneOption";
-    static selector = "[data-oe-many2one-model]:not([data-oe-readonly])";
-    static editableOnly = false;
-
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -25,3 +24,5 @@ export class Many2OneOption extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("builder-options").add(Many2OneOption.id, Many2OneOption);

@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class ImageSnippetOptionPlugin extends Plugin {
+export class ImageSnippetOptionPlugin extends Plugin {
     static id = "imageSnippetOption";
     static dependencies = ["media"];
     static shared = ["onSnippetDropped"];

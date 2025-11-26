@@ -5,16 +5,16 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 export class CTABadgeOption extends BaseOptionComponent {
+    static id = "cta_badge_option";
     static template = "html_builder.CTABadgeOption";
-    static selector = ".s_cta_badge";
     static components = { BorderConfigurator, ShadowOption };
 }
+registry.category("builder-options").add(CTABadgeOption.id, CTABadgeOption);
 
-class CTABadgeOptionPlugin extends Plugin {
+export class CTABadgeOptionPlugin extends Plugin {
     static id = "ctaBadgeOption";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        builder_options: [CTABadgeOption],
         so_content_addition_selector: [".s_cta_badge"],
     };
 }

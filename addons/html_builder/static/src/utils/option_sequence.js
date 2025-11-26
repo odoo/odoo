@@ -1,3 +1,5 @@
+// TODO DUAU: remove the file
+
 // Gives names to options sequence.
 // Module-specific sequences are defined in other option_sequence.js files.
 

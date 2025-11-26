@@ -1,7 +1,7 @@
 declare module "plugins" {
     import { AnchorShared } from "@html_builder/core/anchor/anchor_plugin";
     import { builder_components, BuilderComponentShared } from "@html_builder/core/builder_component_plugin";
-    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, change_current_options_containers_listeners, clone_disabled_reason_providers, container_title, elements_to_options_title_components, get_options_container_top_buttons, has_overlay_options, keep_overlay_options, no_parent_containers, on_restore_containers_handlers, remove_disabled_reason_providers } from "@html_builder/core/builder_options_plugin";
+    import { builder_header_middle_buttons, BuilderOptionsShared, change_current_options_containers_listeners, clone_disabled_reason_providers, container_title, elements_to_options_title_components, get_options_container_top_buttons, has_overlay_options, keep_overlay_options, no_parent_containers, on_restore_containers_handlers, remove_disabled_reason_providers } from "@html_builder/core/builder_options_plugin";
     import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
     import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
@@ -131,7 +131,6 @@ declare module "plugins" {
         builder_actions: builder_actions;
         builder_components: builder_components;
         builder_header_middle_buttons: builder_header_middle_buttons;
-        builder_options: builder_options;
         container_title: container_title;
         content_editable_selectors: content_editable_selectors;
         content_not_editable_selectors: content_not_editable_selectors;
@@ -146,13 +145,6 @@ declare module "plugins" {
         mark_color_level_selector_params: mark_color_level_selector_params;
         no_parent_containers: no_parent_containers;
         savable_selectors: savable_selectors;
-        /** @deprecated */
-        patch_builder_options: {
-            target_name: string,
-            target_element: "selector" | "exclude" | "applyTo",
-            method: "replace" | "add" | "remove",
-            value: CSSSelector,
-        }[];
         so_content_addition_selector: so_content_addition_selector;
         so_snippet_addition_selector: so_snippet_addition_selector;
         snippet_preview_dialog_bundles: snippet_preview_dialog_bundles;

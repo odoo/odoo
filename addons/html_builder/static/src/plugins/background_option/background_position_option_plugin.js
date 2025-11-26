@@ -15,7 +15,7 @@ const getBgSizeValue = function ({ editingElement, params: { mainParam: styleNam
     return value === "auto" ? "" : value;
 };
 
-class BackgroundPositionOptionPlugin extends Plugin {
+export class BackgroundPositionOptionPlugin extends Plugin {
     static id = "backgroundPositionOption";
     static dependencies = ["overlay", "overlayButtons"];
     static shared = ["getDelta"];

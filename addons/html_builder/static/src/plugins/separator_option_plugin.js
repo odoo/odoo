@@ -3,11 +3,10 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BorderConfigurator } from "./border_configurator_option";
 
-class SeparatorOptionPlugin extends Plugin {
+export class SeparatorOptionPlugin extends Plugin {
     static id = "separatorOption";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        builder_options: [SeparatorOption],
         dropzone_selector: {
             selector: ".s_hr",
             dropNear: "p, h1, h2, h3, blockquote, .s_hr",
@@ -16,11 +15,11 @@ class SeparatorOptionPlugin extends Plugin {
         is_movable_selector: { selector: ".s_hr", direction: "vertical" },
     };
 }
+registry.category("builder-plugins").add(SeparatorOptionPlugin.id, SeparatorOptionPlugin);
 
 export class SeparatorOption extends BaseOptionComponent {
+    static id = "separator_option";
     static template = "html_builder.SeparatorOption";
-    static selector = ".s_hr";
-    static applyTo = "hr";
     static components = { BorderConfigurator };
 }
-registry.category("builder-plugins").add(SeparatorOptionPlugin.id, SeparatorOptionPlugin);
+registry.category("builder-options").add(SeparatorOption.id, SeparatorOption);

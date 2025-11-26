@@ -8,6 +8,9 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
+import { renderToElement } from "@web/core/utils/render";
 
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -74,7 +77,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  *     props: object;
  *     editableOnly?: boolean;
  * }[]} builder_header_middle_buttons
- * @typedef {BaseOptionComponent[]} builder_options
  * @typedef {{
  *     selector: CSSSelector;
  *     getTitleExtraInfo: (editingElement: HTMLElement) => string;
@@ -159,7 +161,8 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
-        this.builderOptions = this.getResource("builder_options");
+        this.builderOptions = this.getBuilderOptionsFromTemplate();
+        console.log("builderOptions", this.builderOptions);
         this.builderOptionsContext = new Map();
         this.builderOptionsDependencies = new Map();
         const options = this.builderOptions.concat([OptionsContainer]);
@@ -171,10 +174,6 @@ export class BuilderOptionsPlugin extends Plugin {
         this.elementsToOptionsTitleComponents = withIds(
             this.getResource("elements_to_options_title_components")
         );
-        // todo: remove that resource as we should be able to patch the class the normal way
-        this.getResource("patch_builder_options").forEach((option) => {
-            this.patchBuilderOptions(option);
-        });
         this.builderHeaderMiddleButtons = withIds(
             this.getResource("builder_header_middle_buttons")
         );
@@ -536,38 +535,6 @@ export class BuilderOptionsPlugin extends Plugin {
         return reasons.length ? reasons.join(" ") : undefined;
     }
 
-    patchBuilderOptions({ target_name, target_element, method, value }) {
-        if (!target_name || !target_element || !method || (!value && method !== "remove")) {
-            throw new Error(
-                `Missing patch_builder_options required parameters: target_name, target_element, method, value`
-            );
-        }
-
-        const builderOption = this.builderOptions.find((option) => option.name === target_name);
-        if (!builderOption) {
-            throw new Error(`Builder option ${target_name} not found`);
-        }
-
-        switch (method) {
-            case "replace":
-                builderOption[target_element] = value;
-                break;
-            case "remove":
-                delete builderOption[target_element];
-                break;
-            case "add":
-                if (!builderOption[target_element]) {
-                    throw new Error(
-                        `Builder option ${target_name} does not have ${target_element}`
-                    );
-                }
-                builderOption[target_element] += `, ${value}`;
-                break;
-            default:
-                throw new Error(`Unknown method ${method}`);
-        }
-    }
-
     /**
      * Finds the given option in the given element closest options container, as
      * well as in the parent containers if specified, and returns it and its
@@ -607,6 +574,107 @@ export class BuilderOptionsPlugin extends Plugin {
 
         return { option: requestedOption, targetEl };
     }
+
+    getBuilderOptionsFromTemplate() {
+        const template = renderToElement(
+            this.config.builderOptionsTemplate,
+            this.getBuilderOptionsConstants()
+        );
+        const options = [];
+        for (const node of template.childNodes) {
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+                continue;
+            }
+            const OptionClass = this.createOptionClassFromNode(node);
+            options.push(OptionClass);
+        }
+        return options;
+    }
+
+    createOptionClassFromNode(node) {
+        const optionId = node.tagName.toLowerCase();
+        const { template, selector, exclude, applyTo, editableOnly, groups, props } =
+            this.getOptionAttributes(node);
+        if (!selector) {
+            throw new Error(`Missing selector name in builder option ${optionId}`);
+        }
+        const builderOptionsRegistry = registry.category("builder-options");
+        if (!builderOptionsRegistry.contains(optionId)) {
+            if (!template) {
+                throw new Error(`Missing template name in builder option ${optionId}`);
+            }
+            return this.createOptionClass(optionId, {
+                template,
+                selector,
+                exclude,
+                applyTo,
+                editableOnly,
+                groups,
+                props,
+            });
+        }
+        if (template) {
+            throw new Error(
+                `If a BaseOptionComponent class exists, template should be in the class: ${optionId}`
+            );
+        }
+        const ComplexOptionClass = builderOptionsRegistry.get(optionId);
+        if (!ComplexOptionClass.template) {
+            throw new Error(`Missing template name in builder option ${optionId}`);
+        }
+        // TODO DUAU: REMOVE THE ERROR, JUST TO CHECK THAT NOTHING WAS FORGOTTEN
+        if (
+            ComplexOptionClass.selector ||
+            ComplexOptionClass.exclude ||
+            ComplexOptionClass.applyTo ||
+            ComplexOptionClass.editableOnly !== undefined ||
+            ComplexOptionClass.groups
+        ) {
+            throw new Error(
+                `Can't have selector, exclude, applyTo, editableOnly, groups in BaseOptionComponent: ${optionId}`
+            );
+        }
+        if (Object.keys(ComplexOptionClass.props).length !== 0) {
+            console.error(`props ${optionId}:`, Object.keys(ComplexOptionClass.props).length);
+        }
+        const OptionClass = { [optionId]: class extends ComplexOptionClass {} }[optionId];
+        return Object.assign(OptionClass, {
+            selector,
+            exclude,
+            applyTo,
+            editableOnly,
+            groups,
+            props,
+        });
+    }
+
+    createOptionClass(name, { template, selector, exclude, applyTo, editableOnly, groups, props }) {
+        const OptionClass = { [name]: class extends BaseOptionComponent {} }[name];
+        return Object.assign(OptionClass, {
+            template,
+            selector,
+            exclude,
+            applyTo,
+            editableOnly,
+            groups,
+            props,
+        });
+    }
+
+    getOptionAttributes(node) {
+        const jsonProps = node.getAttribute("props");
+        const jsonGroups = node.getAttribute("groups");
+        return {
+            template: node.getAttribute("template"),
+            selector: node.getAttribute("selector"),
+            exclude: node.getAttribute("exclude"),
+            applyTo: node.getAttribute("applyTo") || undefined,
+            editableOnly: node.getAttribute("editableOnly") !== "false",
+            groups: jsonGroups ? JSON.parse(jsonGroups) : [],
+            props: jsonProps ? JSON.parse(jsonProps) : {},
+        };
+    }
+
     /**
      * Get all dependencies of an OptionComponent and all its descendants.
      */
@@ -635,6 +703,17 @@ export class BuilderOptionsPlugin extends Plugin {
             return context;
         }
         return context;
+    }
+
+    getBuilderOptionsConstants() {
+        if (!this.builderOptionsConstants) {
+            const resourceResult = this.getResource("builder_options_context");
+            console.warn("resourceResult", resourceResult);
+            const constants = Object.assign({}, ...resourceResult);
+            console.warn("constants", constants);
+            this.builderOptionsConstants = Object.freeze(constants);
+        }
+        return this.builderOptionsConstants;
     }
 }
 
