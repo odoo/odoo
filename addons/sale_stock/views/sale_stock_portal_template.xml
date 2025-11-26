@@ -67,7 +67,7 @@
                     </t>
                 </div>
             </div>
-            <t t-set="returns" t-value="delivery_orders.return_ids.sorted('date', reverse=True)"/>
+            <t t-set="returns" t-value="delivery_orders.return_ids.sorted('create_date', reverse=True)"/>
             <div t-if="returns" class="col-12 col-lg-6 mb-4">
                 <h4 class="mb-1">Returns</h4>
                 <hr class="mt-1 mb-2"/>
