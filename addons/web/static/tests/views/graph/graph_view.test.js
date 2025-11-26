@@ -18,7 +18,6 @@ import {
     saveFavorite,
     serverState,
     switchView,
-    toggleMenu,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
@@ -29,6 +28,7 @@ import {
     checkDatasets,
     checkLabels,
     checkLegend,
+    checkMeasure,
     checkModeIs,
     checkTooltip,
     checkYTicks,
@@ -224,7 +224,8 @@ test("simple bar chart rendering", async () => {
         label: "Count",
         stack: "",
     });
-    checkLegend(view, "Count");
+    checkLegend(view, []);
+    checkMeasure("Count");
     checkTooltip(view, { lines: [{ label: "Total", value: "8" }] }, 0);
 });
 
@@ -258,7 +259,9 @@ test("simple bar chart rendering (one groupBy)", async () => {
         data: [5, 3],
         label: "Count",
     });
-    checkLegend(view, "Count");
+    // No legend when there's only one groupBy: already shown in the measures button
+    checkLegend(view, []);
+    checkMeasure("Count");
     checkTooltip(view, { lines: [{ label: "false", value: "5" }] }, 0);
     checkTooltip(view, { lines: [{ label: "true", value: "3" }] }, 1);
 });
@@ -328,7 +331,8 @@ test("bar chart many2many groupBy", async () => {
         data: [10, 13, 8],
         label: "Revenue",
     });
-    checkLegend(view, "Revenue");
+    checkLegend(view, []);
+    checkMeasure("Revenue");
     checkTooltip(view, { lines: [{ label: "black", value: "10" }], title: "Revenue" }, 0);
     checkTooltip(view, { lines: [{ label: "red", value: "13" }], title: "Revenue" }, 1);
     checkTooltip(view, { lines: [{ label: "None", value: "8" }], title: "Revenue" }, 2);
@@ -380,7 +384,8 @@ test("line chart rendering (no groupBy)", async () => {
         label: "Count",
         stack: undefined,
     });
-    checkLegend(view, "Count");
+    checkLegend(view, []);
+    checkMeasure("Count");
     checkTooltip(view, { lines: [{ label: "Total", value: "8" }] }, 1);
 });
 
@@ -403,7 +408,8 @@ test("line chart rendering (one groupBy)", async () => {
         data: [5, 3],
         label: "Count",
     });
-    checkLegend(view, "Count");
+    checkLegend(view, []);
+    checkMeasure("Count");
     checkTooltip(view, { lines: [{ label: "false", value: "5" }] }, 0);
     checkTooltip(view, { lines: [{ label: "true", value: "3" }] }, 1);
 });
@@ -483,7 +489,8 @@ test("line chart many2many groupBy", async () => {
         data: [10, 13],
         label: "Revenue",
     });
-    checkLegend(view, "Revenue");
+    checkLegend(view, []);
+    checkMeasure("Revenue");
     checkTooltip(view, { lines: [{ label: "black", value: "10" }], title: "Revenue" }, 0);
     checkTooltip(view, { lines: [{ label: "red", value: "13" }], title: "Revenue" }, 1);
 });
@@ -566,7 +573,8 @@ test("format total in hh:mm when measure is unit_amount", async () => {
     expect(".o_graph_view").toHaveClass("o_view_controller");
     expect("div.o_graph_canvas_container canvas").toHaveCount(1);
     expect(measure).toBe("unit_amount", { message: `the measure should be "unit_amount"` });
-    checkLegend(view, "Unit Amount");
+    checkLegend(view, []);
+    checkMeasure("Unit Amount");
     checkLabels(view, ["Total"]);
     expect(fieldAttrs[measure].widget).toBe("float_time", {
         message: "should be a float_time widget",
@@ -1007,7 +1015,8 @@ test("field id not in groupBy", async () => {
         label: "Count",
         stack: "",
     });
-    checkLegend(view, "Count");
+    checkLegend(view, []);
+    checkMeasure("Count");
 });
 
 test("props modifications", async () => {
@@ -1033,7 +1042,7 @@ test("props modifications", async () => {
 
     checkModeIs(view, "line");
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
     await toggleMenuItem("Revenue");
 
     expect(getYAxisLabel(view)).toBe("Revenue");
@@ -1064,23 +1073,15 @@ test("switching mode", async () => {
 });
 
 test("switching measure", async () => {
-    const checkMeasure = (measure) => {
-        const yAxe = getChart(view).config.options.scales.y;
-        expect(yAxe.title.text).toBe(measure);
-        expect(`.o_menu_item:contains(${measure})`).toHaveClass("selected");
-    };
+    await mountView({ type: "graph", resModel: "foo" });
 
-    const view = await mountView({ type: "graph", resModel: "foo" });
-
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
 
     checkMeasure("Count");
-    checkLegend(view, "Count");
 
     await toggleMenuItem("Foo");
 
     checkMeasure("Foo");
-    checkLegend(view, "Foo");
 });
 
 test("process default view description", async () => {
@@ -1373,7 +1374,7 @@ test("save params succeeds", async () => {
     await editFavoriteName("First Favorite");
     await saveFavorite();
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
     await toggleMenuItem("Foo");
 
     await toggleSaveFavorite();
@@ -1412,7 +1413,8 @@ test("correctly uses graph_ keys from the context", async () => {
     });
 
     checkLabels(view, ["black", "red"]);
-    checkLegend(view, "Foo");
+    checkLegend(view, []);
+    checkMeasure("Foo");
     checkModeIs(view, "line");
     expect(getYAxisLabel(view)).toBe("Foo");
     expect(getGraphModelMetaData(view).mode).toBe("line");
@@ -1434,14 +1436,16 @@ test("correctly uses graph_ keys from the context (at reload)", async () => {
         `,
     });
 
-    checkLegend(view, "Count");
+    checkLegend(view, []);
+    checkMeasure("Count");
     expect(getYAxisLabel(view)).toBe("Count");
     checkModeIs(view, "bar");
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Context");
 
-    checkLegend(view, "Foo");
+    checkLegend(view, []);
+    checkMeasure("Foo");
     expect(getYAxisLabel(view)).toBe("Foo");
     checkModeIs(view, "line");
 });
@@ -1472,7 +1476,8 @@ test("correctly use group_by key from the context", async () => {
     });
 
     checkLabels(view, ["black", "red"]);
-    checkLegend(view, "Foo");
+    checkLegend(view, []);
+    checkMeasure("Foo");
     checkModeIs(view, "line");
     expect(getYAxisLabel(view)).toBe("Foo");
     expect(getGraphModelMetaData(view).mode).toBe("line");
@@ -1529,7 +1534,7 @@ test("the active measure description is the arch string attribute in priority", 
 
     checkTooltip(view, { title: "FooFighters", lines: [{ label: "Total", value: "239" }] }, 0);
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
     await toggleMenuItem("Nirvana");
 
     checkTooltip(view, { title: "Nirvana", lines: [{ label: "Total", value: "23" }] }, 0);
@@ -1562,7 +1567,7 @@ test("reload graph with correct fields", async () => {
 });
 
 test("initial groupby is kept when reloading", async () => {
-    expect.assertions(7);
+    expect.assertions(8);
 
     onRpc("formatted_read_group", ({ kwargs }) => {
         expect(kwargs.groupby).toEqual(["product_id"]);
@@ -1584,7 +1589,8 @@ test("initial groupby is kept when reloading", async () => {
     });
 
     checkLabels(view, ["xphone", "xpad"]);
-    checkLegend(view, "Foo");
+    checkLegend(view, []);
+    checkMeasure("Foo");
     checkDatasets(view, "data", { data: [82, 157] });
     expect(getYAxisLabel(view)).toBe("Foo");
 
@@ -1605,7 +1611,8 @@ test("use a many2one as a measure should work (without groupBy)", async () => {
     });
 
     checkLabels(view, ["Total"]);
-    checkLegend(view, "Product");
+    checkLegend(view, []);
+    checkMeasure("Product");
     checkDatasets(view, "data", { data: [2] });
     expect(getYAxisLabel(view)).toBe("Product");
 });
@@ -1623,7 +1630,8 @@ test("use a many2one as a measure should work (with groupBy)", async () => {
     });
 
     checkLabels(view, ["false", "true"]);
-    checkLegend(view, "Product");
+    checkLegend(view, []);
+    checkMeasure("Product");
     checkDatasets(view, "data", { data: [2, 1] });
 });
 
@@ -1640,7 +1648,8 @@ test("use a many2one as a measure and as a groupby should work", async () => {
     });
 
     checkLabels(view, ["xphone", "xpad"]);
-    checkLegend(view, "Product");
+    checkLegend(view, []);
+    checkMeasure("Product");
     checkDatasets(view, "data", { data: [1, 1] });
     expect(getYAxisLabel(view)).toBe("Product");
 });
@@ -1669,7 +1678,7 @@ test("not use a many2one as a measure by default", async () => {
         viewId: false,
     });
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
 
     expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual(["Foo", "Revenue", "Count"]);
 });
@@ -1697,7 +1706,7 @@ test("graph measures should be alphabetically sorted (exception: 'Count' is last
         `,
     });
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
 
     expect(queryAllTexts(".o-dropdown--menu .o_menu_item")).toEqual([
         "Bouh",
@@ -1718,7 +1727,8 @@ test("a many2one field can be added as measure in arch", async () => {
         `,
     });
 
-    checkLegend(view, "Product");
+    checkLegend(view, []);
+    checkMeasure("Product");
     expect(getYAxisLabel(view)).toBe("Product");
 });
 
@@ -1736,7 +1746,7 @@ test("non store fields defined on the arch are present in the measures", async (
         `,
     });
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
     expect(queryAllTexts(`.o_menu_item`)).toEqual(["Foo", "Revenue", "Count"]);
 });
 
@@ -1751,7 +1761,8 @@ test("graph view `graph_measure` field in context", async () => {
     });
 
     expect(getYAxisLabel(view)).toBe("Product");
-    checkLegend(view, "Product");
+    checkLegend(view, []);
+    checkMeasure("Product");
     checkTooltip(view, { title: "Product", lines: [{ label: "Total", value: "2" }] }, 0);
 });
 
@@ -1770,7 +1781,8 @@ test("`graph_measure` in context is prefered to measure in arch", async () => {
     });
 
     expect(getYAxisLabel(view)).toBe("Product");
-    checkLegend(view, "Product");
+    checkLegend(view, []);
+    checkMeasure("Product");
     checkTooltip(view, { title: "Product", lines: [{ label: "Total", value: "2" }] }, 0);
 });
 
@@ -1816,7 +1828,7 @@ test("an invisible field can not be found in the 'Measures' menu", async () => {
 
     checkTooltip(view, { lines: [{ label: "Total", value: "8" }] }, 0);
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
 
     expect(".o_menu_item:contains(Revenue)").toHaveCount(0, {
         message: `"Revenue" can not be found in the "Measures" menu`,
@@ -2102,7 +2114,7 @@ test("graph view without invisible attribute on field", async () => {
         type: "graph",
         resModel: "foo",
     });
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
 
     expect(".o_menu_item").toHaveCount(3, {
         message:
@@ -2123,7 +2135,7 @@ test("graph view with invisible attribute on field", async () => {
             </graph>
         `,
     });
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
 
     expect(".o_menu_item").toHaveCount(2, {
         message: "there should be only two menu items in the measures dropdown (count and foo)",
@@ -2149,7 +2161,8 @@ test("graph view sort by measure", async () => {
     expect(".fa-sort-amount-asc").toHaveCount(1);
     expect(".fa-sort-amount-desc").toHaveCount(1);
 
-    checkLegend(view, "Count", "measure should be by count");
+    checkLegend(view, []);
+    checkMeasure("Count");
     expect(".fa-sort-amount-desc").toHaveClass("active");
     checkDatasets(view, "data", { data: [4, 3, 1] });
 
@@ -2174,7 +2187,8 @@ test("graph view sort by measure", async () => {
     expect(".fa-sort-amount-asc").toHaveCount(1);
     expect(".fa-sort-amount-desc").toHaveCount(1);
 
-    checkLegend(view, "Count", "measure should be by count");
+    checkLegend(view, []);
+    checkMeasure("Count");
     expect(".fa-sort-amount-desc").not.toHaveClass("active");
     checkDatasets(view, "data", { data: [4, 1, 3] });
 
@@ -2452,7 +2466,7 @@ test("change mode, stacked, or order via the graph buttons does not reload datap
 
     expect(`[data-tooltip="Ascending"]`).toHaveClass("active");
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
     await toggleMenuItem("Foo");
 
     expect.verifySteps([
@@ -2495,7 +2509,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
     });
 
     // Toggle a measure
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
     await toggleMenuItem("Foo");
 
     checkDatasets(view, ["data", "label"], {
@@ -2679,14 +2693,16 @@ test("graph_groupbys should be also used after first load", async () => {
 
     checkModeIs(view, "bar");
     checkLabels(view, ["Q1 2016", "Q2 2016", "None"]);
-    checkLegend(view, "Count");
+    checkLegend(view, []);
+    checkMeasure("Count");
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Favorite");
 
     checkModeIs(view, "bar");
     checkLabels(view, ["red", "None"]);
-    checkLegend(view, "Revenue");
+    checkLegend(view, []);
+    checkMeasure("Revenue");
 });
 
 test("order='desc' on arch", async () => {
@@ -2759,7 +2775,7 @@ test("no class 'o_view_sample_data' when real data are presented", async () => {
     expect(".o_graph_view .o_view_sample_data").toHaveCount(1);
     expect(getChart(view).data.datasets.length).toBeGreaterThan(0);
 
-    await toggleMenu("Measures");
+    await contains(`.o_report_measures`).click();
     await toggleMenuItem("Revenue");
 
     expect(".o_graph_view .o_view_sample_data").toHaveCount(0);
@@ -2987,7 +3003,8 @@ test("monetary chart rendering with multiple currencies", async () => {
         data: [1200, 1000],
         label: "Amount",
     });
-    checkLegend(view, "Amount");
+    checkLegend(view, []);
+    checkMeasure("Amount");
     // should display the sum in the company currency, i.e. EUR
     checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00 €" }] }, 0);
     checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] }, 1);
