@@ -2908,3 +2908,20 @@ class TestStockValuation(TestStockValuationCommon):
                 {'account_id': self.account_expense.id, 'credit': 0.0, 'debit': 600.0},
             ]
         )
+
+    def test_inventory_user_can_validate_avco_picking(self):
+        """Ensure that an inventory user can validate a receipt picking
+        containing an AVCO-costed product without triggering an access error.
+        """
+        move = self.env['stock.move'].create({
+            'product_id': self.product_avco_auto.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_avco_auto.uom_id.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        move._action_confirm()
+        move.quantity = 1.0
+        move.picked = True
+        move.with_user(self.inventory_user)._action_done()
+        self.assertEqual(move.state, 'done')
