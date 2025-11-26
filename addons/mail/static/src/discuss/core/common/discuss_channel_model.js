@@ -128,6 +128,12 @@ export class DiscussChannel extends Record {
             return this.otherTypingMembers.length > 0;
         },
     });
+    hasSeenFeature = fields.Attr(false, {
+        /** @this {import("models").DiscussChannel} */
+        compute() {
+            return this.store.channel_types_with_seen_infos.includes(this.channel_type);
+        },
+    });
     /** @type {number} */
     id = fields.Attr(undefined, {
         onUpdate() {
@@ -135,6 +141,45 @@ export class DiscussChannel extends Record {
             if (!busService.isActive && !this.isTransient) {
                 busService.start();
             }
+        },
+    });
+    lastMessageSeenByAllId = fields.Attr(undefined, {
+        /** @this {import("models").DiscussChannel} */
+        compute() {
+            if (!this.hasSeenFeature) {
+                return;
+            }
+            return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
+                if (member.notEq(this.self_member_id) && member.seen_message_id) {
+                    return lastMessageSeenByAllId
+                        ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
+                        : member.seen_message_id.id;
+                } else {
+                    return lastMessageSeenByAllId;
+                }
+            }, undefined);
+        },
+    });
+    lastSelfMessageSeenByEveryone = fields.One("mail.message", {
+        /** @this {import("models").DiscussChannel} */
+        compute() {
+            if (!this.lastMessageSeenByAllId) {
+                return false;
+            }
+            let res;
+            // starts from most recent persistent messages to find early
+            for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
+                const message = this.persistentMessages[i];
+                if (!message.isSelfAuthored) {
+                    continue;
+                }
+                if (message.id > this.lastMessageSeenByAllId) {
+                    continue;
+                }
+                res = message;
+                break;
+            }
+            return res;
         },
     });
     /**

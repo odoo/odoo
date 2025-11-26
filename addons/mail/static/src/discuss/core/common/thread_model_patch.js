@@ -39,14 +39,6 @@ const threadPatch = {
             },
         });
         this.group_ids = fields.Many("res.groups");
-        this.hasSeenFeature = fields.Attr(false, {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.store.channel_types_with_seen_infos.includes(
-                    this.channel?.channel_type
-                );
-            },
-        });
         this.firstUnreadMessage = fields.One("mail.message", {
             /** @this {import("models").Thread} */
             compute() {
@@ -71,44 +63,6 @@ const threadPatch = {
             inverse: "threadAsFirstUnread",
         });
         this.invited_member_ids = fields.Many("discuss.channel.member");
-        this.lastMessageSeenByAllId = fields.Attr(undefined, {
-            /** @this {import("models").Thread} */
-            compute() {
-                if (!this.hasSeenFeature) {
-                    return;
-                }
-                return this.channel?.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
-                    if (member.notEq(this.self_member_id) && member.seen_message_id) {
-                        return lastMessageSeenByAllId
-                            ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
-                            : member.seen_message_id.id;
-                    } else {
-                        return lastMessageSeenByAllId;
-                    }
-                }, undefined);
-            },
-        });
-        this.lastSelfMessageSeenByEveryone = fields.One("mail.message", {
-            compute() {
-                if (!this.lastMessageSeenByAllId) {
-                    return false;
-                }
-                let res;
-                // starts from most recent persistent messages to find early
-                for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
-                    const message = this.persistentMessages[i];
-                    if (!message.isSelfAuthored) {
-                        continue;
-                    }
-                    if (message.id > this.lastMessageSeenByAllId) {
-                        continue;
-                    }
-                    res = message;
-                    break;
-                }
-                return res;
-            },
-        });
         this.markReadSequential = useSequential();
         this.markedAsUnread = false;
         this.markingAsRead = false;
