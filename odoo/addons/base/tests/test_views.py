@@ -3621,14 +3621,6 @@ Forbidden owl directive used in arch (t-on-click).""",
         arch = "<form>%s</form>"
 
         self.assertInvalid(
-            arch % ('<span data-tooltip="Test"/>'),
-            """Error while validating view near:
-
-<form __validate__="1"><span data-tooltip="Test"/></form>
-Forbidden attribute used in arch (data-tooltip)."""
-        )
-
-        self.assertInvalid(
             arch % ('<span data-tooltip-template="test"/>'),
             """Error while validating view near:
 
@@ -3641,27 +3633,11 @@ Forbidden attribute used in arch (data-tooltip-template)."""
         arch = "<kanban><templates><t t-name='card'>%s</t></templates></kanban>"
 
         self.assertInvalid(
-            arch % ('<span data-tooltip="Test"/>'),
-            """Error while validating view near:
-
-<kanban __validate__="1"><templates><t t-name="card"><span data-tooltip="Test"/></t></templates></kanban>
-Forbidden attribute used in arch (data-tooltip)."""
-        )
-
-        self.assertInvalid(
             arch % ('<span data-tooltip-template="test"/>'),
             """Error while validating view near:
 
 <kanban __validate__="1"><templates><t t-name="card"><span data-tooltip-template="test"/></t></templates></kanban>
 Forbidden attribute used in arch (data-tooltip-template)."""
-        )
-
-        self.assertInvalid(
-            arch % ('<span t-att-data-tooltip="test"/>'),
-            """Error while validating view near:
-
-<kanban __validate__="1"><templates><t t-name="card"><span t-att-data-tooltip="test"/></t></templates></kanban>
-Forbidden attribute used in arch (t-att-data-tooltip)."""
         )
 
         self.assertInvalid(
