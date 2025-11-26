@@ -70,6 +70,13 @@ export class DiscussChannel extends Record {
         return def;
     }
 
+    /** Equivalent to DiscussChannel._allow_invite_by_email */
+    get allow_invite_by_email() {
+        return (
+            this.channel_type === "group" ||
+            (this.channel_type === "channel" && !this.group_public_id)
+        );
+    }
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     }
