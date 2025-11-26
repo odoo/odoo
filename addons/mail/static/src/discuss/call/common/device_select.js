@@ -1,6 +1,8 @@
 import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
@@ -13,8 +15,19 @@ export class DeviceSelect extends Component {
             type: String,
             validate: (string) => deviceKind.has(string),
         },
+        icon: {
+            type: String,
+            optional: true,
+        },
+        roundedType: {
+            type: String,
+            optional: true,
+        },
     };
+    static components = { Dropdown, DropdownItem };
     static template = "discuss.CallDeviceSelect";
+    PERMISSION_NEEDED = _t("Permission Needed");
+    BROWSER_DEFAULT = isBrowserChrome() ? _t("Default") : _t("Browser Default");
 
     setup() {
         super.setup();
@@ -22,6 +35,8 @@ export class DeviceSelect extends Component {
         this.notification = useService("notification");
         this.state = useState({
             userDevices: [],
+            selectedDevice: undefined,
+            isSelectOpen: false,
         });
         this.abortController = new AbortController();
         this.isBrowserChrome = isBrowserChrome();
@@ -36,11 +51,26 @@ export class DeviceSelect extends Component {
                 return;
             }
             await this.updateDevicesList();
+            this.state.selectedDevice = this.state.userDevices.find((device) =>
+                this.isSelected(device.deviceId)
+            );
             this.setupEventListeners();
         });
         onWillDestroy(() => {
             this.abortController.abort();
         });
+    }
+
+    get selectLabel() {
+        return this.state.selectedDevice?.label;
+    }
+
+    openSelect(state) {
+        if (state === true) {
+            this.state.isSelectOpen = true;
+        } else if (state === false) {
+            this.state.isSelectOpen = false;
+        }
     }
 
     async updateDevicesList() {
@@ -82,26 +112,41 @@ export class DeviceSelect extends Component {
     }
 
     isSelected(id) {
+        if (id === undefined) {
+            id = "";
+        }
         switch (this.props.kind) {
             case "audioinput":
-                return this.store.settings.audioInputDeviceId === id;
+                return (
+                    this.store.settings.audioInputDeviceId === id ||
+                    (this.isBrowserChrome &&
+                        this.store.settings.audioInputDeviceId === "" &&
+                        id === "default")
+                );
             case "videoinput":
                 return this.store.settings.cameraInputDeviceId === id;
             case "audiooutput":
-                return this.store.settings.audioOutputDeviceId === id;
+                return (
+                    this.store.settings.audioOutputDeviceId === id ||
+                    (this.isBrowserChrome &&
+                        this.store.settings.audioOutputDeviceId === "" &&
+                        id === "default")
+                );
         }
     }
 
-    onChangeSelectAudioInput(ev) {
+    onSelectAudioDevice(device) {
+        this.state.selectedDevice = device;
+        const deviceId = device?.deviceId ?? "";
         switch (this.props.kind) {
             case "audioinput":
-                this.store.settings.audioInputDeviceId = ev.target.value;
+                this.store.settings.audioInputDeviceId = deviceId;
                 return;
             case "videoinput":
-                this.store.settings.cameraInputDeviceId = ev.target.value;
+                this.store.settings.cameraInputDeviceId = deviceId;
                 return;
             case "audiooutput":
-                this.store.settings.audioOutputDeviceId = ev.target.value;
+                this.store.settings.audioOutputDeviceId = deviceId;
                 return;
         }
     }

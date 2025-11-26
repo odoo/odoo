@@ -264,9 +264,15 @@ test("device input/output id", async () => {
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Call Settings')");
     await contains(".o-discuss-CallSettings");
-    await contains("label[title='Microphone'] option[value=audio_input_2_id]");
-    await contains("label[title='Speakers'] option[value=audio_output_2_id]");
-    await contains("label[title='Camera'] option[value=video_input_2_id]");
+    await contains(
+        "label[title='Microphone'] .o-mail-DeviceSelect-button[data-kind='audioinput']:text('audio_input_2_label')"
+    );
+    await contains(
+        "label[title='Speakers'] .o-mail-DeviceSelect-button[data-kind='audiooutput']:text('audio_output_2_label')"
+    );
+    await contains(
+        "label[title='Camera'] .o-mail-DeviceSelect-button[data-kind='videoinput']:text('video_input_2_label')"
+    );
     // correct local storage values
     const audioInputDeviceIdKey = makeRecordFieldLocalId(Settings.localId(), "audioInputDeviceId");
     expect(localStorage.getItem(audioInputDeviceIdKey)).toBe(toRawValue("audio_input_2_id"));

@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: "select[name='inputDevice']",
+            trigger: ".o-mail-DeviceSelect-button[data-kind='audioinput']",
         },
         {
             trigger: "button:contains('Voice Detection')",
