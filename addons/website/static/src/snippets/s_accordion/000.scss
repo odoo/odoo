@@ -21,13 +21,13 @@
     }
 
     .s_accordion_highlight {
-        .accordion-item {
+        >.accordion-item {
             border: 0;
             border-radius: var(--#{$prefix}accordion-border-radius);
             overflow: hidden;
 
             // This removes the bg color when the item isn't displayed.
-            &:has(.collapsed) {
+            &:has(>.collapsed) {
                 background: transparent !important;
                 color: inherit;
             }
@@ -37,7 +37,7 @@
             // replaced by a color preset or a custom color.
             // This avoids color conflicts and preserves the colors
             // selected by the user when changing the accordion template.
-            &:not(:has(.collapsed))::before {
+            &:not(:has(>.collapsed))::before {
                 position: absolute;
                 inset: 0;
                 display: block;
