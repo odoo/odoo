@@ -46,9 +46,9 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 
     _call_viva_com(data, action, paymentLine) {
-        return this.env.services.orm.silent
-            .call("pos.payment.method", action, [[this.payment_method_id.id], data])
-            .catch(this._handleOdooConnectionFailure.bind(this, paymentLine));
+        return this.callPaymentMethod(action, [[this.payment_method_id.id], data]).catch(
+            this._handleOdooConnectionFailure.bind(this, paymentLine)
+        );
     }
 
     _handleOdooConnectionFailure(paymentLine, data = {}) {
