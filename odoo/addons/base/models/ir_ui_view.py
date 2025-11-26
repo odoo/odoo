@@ -2204,7 +2204,7 @@ actual arch.
                 msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
                 self._log_view_warning(msg, node)
 
-            elif (re.match(r'^(t\-att\-|t\-attf\-)?data-tooltip(-template|-info)?$', attr)):
+            elif (re.match(r'^(t\-att\-|t\-attf\-)?data-tooltip(-template|-info)$', attr)):
                 self._raise_view_error(_("Forbidden attribute used in arch (%s).", attr), node)
 
             elif (attr.startswith("t-")):
