@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from odoo import fields, models
+from odoo import _, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ProductLabelLayout(models.TransientModel):
@@ -37,6 +38,11 @@ class ProductLabelLayout(models.TransientModel):
             docids = []
             for lot_id, qty in quantity_by_lot.items():
                 docids.extend([lot_id] * qty)
-        report_action = self.env.ref(xml_id).report_action(docids, config=False)
+        record = self.env.ref(xml_id, raise_if_not_found=False)
+        if not record:
+            raise ValidationError(_(
+                'Unable to find report template for %(template)s format', template=self.print_format
+            ))
+        report_action = record.report_action(docids, config=False)
         report_action.update({'close_on_report_download': True})
         return report_action
