@@ -26,14 +26,29 @@ class AwRule(models.Model):
         required=True,
     )
     template = fields.Char()
-    project_id = fields.Many2one("project.project", string="Project")
-    task_id = fields.Many2one("project.task", string="Task")
+    project_id = fields.Many2one(
+        "project.project", string="Project",
+        compute="_compute_project_id", inverse="_inverse_project_id",
+        store=True, readonly=False,
+    )
+    task_id = fields.Many2one("project.task", domain="[('project_id', '=?', project_id)]", string="Task")
     always_active = fields.Boolean(default=False)
     primary = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     match_count = fields.Integer(
         string="Capture Groups", compute="_compute_match_count", default=0,
     )
+
+    @api.depends("task_id")
+    def _compute_project_id(self):
+        for rule in self:
+            if rule.task_id:
+                rule.project_id = rule.task_id.project_id
+
+    def _inverse_project_id(self):
+        for rule in self:
+            if rule.task_id and rule.task_id.project_id != rule.project_id:
+                rule.task_id = False
 
     @api.depends("regex")
     def _compute_match_count(self):
@@ -53,4 +68,4 @@ class AwRule(models.Model):
             try:
                 re.compile(record.regex)
             except re.error:
-                raise ValidationError(_("Invalid regex: %(regex)s", regex=record.regex))
+                raise ValidationError(self.env._("Invalid regex: %(regex)s", regex=record.regex))

@@ -127,6 +127,17 @@
                         </div>
                     </div>
                 </t>
+
+                <t t-if="env.debug">
+                    <div class="text-center mt-3">
+                        <button type="button"
+                                class="btn btn-sm btn-secondary"
+                                t-on-click="() => window.open('http://localhost:5700/#/timeline', '_blank')"
+                        >
+                            View ActivityWatch Data
+                        </button>
+                    </div>
+                </t>
             </div>
 
             <!-- RIGHT SIDE: form + billable + non-billable -->

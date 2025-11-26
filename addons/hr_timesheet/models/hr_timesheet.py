@@ -25,10 +25,10 @@ class AccountAnalyticLine(models.Model):
 
         def get_planning_slots():
             res = []
-            if not self.env['ir.module.module']._get('planning').state == 'installed':
+            if self.env['ir.module.module']._get('planning').state != 'installed':
                 return res
 
-            fields = ['role_id', 'start_datetime', 'end_datetime']
+            fields = ['role_id', 'name', 'start_datetime', 'end_datetime']
             if self.env['ir.module.module']._get('project_forecast').state == 'installed':
                 fields.append('project_id')
 
@@ -39,15 +39,24 @@ class AccountAnalyticLine(models.Model):
                     ('end_datetime', '>=', start),
                 ],
                 fields=fields,
-                order='start_datetime', # assuming no overlap
+                order='start_datetime',  # assuming no overlap
             ):
                 for formated_field_name, field_name in {"start": "start_datetime", "stop": "end_datetime"}.items():
                     slot[formated_field_name] = slot[field_name]
                     del slot[field_name]
 
                 slot['type'] = 'planning_slot'
-                slot['name'] = self.env._("Planning Slot - %(role)s", role=slot['role_id'][1])
-                if project:=slot.get("project_id"):
+
+                name = slot.get('name') or ''
+                role_name = slot.get('role_id')[1] if slot.get('role_id') else None
+                slot['name'] = (
+                    name if len(name) <= 64
+                    else role_name
+                    or _("%(truncated_name)s...", truncated_name=name[:64])
+                    or _("Shift")
+                )
+
+                if project := slot.get("project_id"):
                     slot["project_id"] = project[0]
                 res.append(slot)
 
@@ -65,7 +74,7 @@ class AccountAnalyticLine(models.Model):
                     ('stop', '>=', start),
                 ],
                 fields=['name', 'start', 'stop', 'partner_ids'],
-                order='start', # assuming no overlap
+                order='start',  # assuming no overlap
             ):
                 partner_ids = self.env["res.partner"].browse(list(filter(lambda id: id != self.env.user.partner_id.id, event["partner_ids"])))
                 del event["partner_ids"]
@@ -97,9 +106,9 @@ class AccountAnalyticLine(models.Model):
             if intervals_to_include[0]['start'] < ranges[0]['start']:
                 gaps.append((intervals_to_include[0]['start'], ranges[0]['start']))
 
-            for i in range(size-1):
-                if ranges[i]['stop'] < ranges[i+1]['start']:
-                    gaps.append((ranges[i]['stop'], ranges[i+1]['start']))
+            for i in range(size - 1):
+                if ranges[i]['stop'] < ranges[i + 1]['start']:
+                    gaps.append((ranges[i]['stop'], ranges[i + 1]['start']))
 
             if intervals_to_include[-1]['stop'] > ranges[-1]['stop']:
                 gaps.append((ranges[-1]['stop'], intervals_to_include[-1]['stop']))
@@ -123,8 +132,8 @@ class AccountAnalyticLine(models.Model):
 
         # priority order can be discussed later, for now, calendar then planning
         ranges = []
-        for userRanges in [get_calendar_events(), get_planning_slots()]: # order is important and can be configurable by user
-            ranges = merge(ranges, userRanges)
+        for user_ranges in [get_calendar_events(), get_planning_slots()]:  # order is important and can be configurable by user
+            ranges = merge(ranges, user_ranges)
 
         return ranges
 
