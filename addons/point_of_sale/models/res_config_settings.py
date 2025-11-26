@@ -119,9 +119,6 @@ class ResConfigSettings(models.TransientModel):
     pos_fallback_nomenclature_id = fields.Many2one(related='pos_config_id.fallback_nomenclature_id', domain="[('id', '!=', barcode_nomenclature_id)]", readonly=False)
     group_pos_preset = fields.Boolean(string="Presets", implied_group="point_of_sale.group_pos_preset", help="Hide or show the Presets menu in the Point of Sale configuration.")
     pos_epson_printer_ip = fields.Char(related='pos_config_id.epson_printer_ip', readonly=False)
-    use_epson_server_direct_print = fields.Boolean(related='pos_config_id.use_epson_server_direct_print', readonly=False)
-    epson_server_direct_print_url = fields.Char(related='pos_config_id.epson_server_direct_print_url', readonly=True)
-    epson_server_direct_print_id = fields.Char(related='pos_config_id.epson_server_direct_print_id', string="Print ID", help="Set this ID in printer settings to secure your printing", readonly=True)
     pos_use_fast_payment = fields.Boolean(related='pos_config_id.use_fast_payment', readonly=False)
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
 
