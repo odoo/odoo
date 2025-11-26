@@ -394,7 +394,7 @@ class ProductProduct(models.Model):
         if lot:
             fifo_stack_size = lot.product_qty
         else:
-            fifo_stack_size = int(self._with_valuation_context().with_context(to_date=at_date).qty_available)
+            fifo_stack_size = self._with_valuation_context().with_context(to_date=at_date).qty_available
         if fifo_stack_size <= 0:
             return fifo_stack, 0
 
@@ -414,7 +414,7 @@ class ProductProduct(models.Model):
             moves_domain &= Domain([('is_in', '=', True)])
 
         # Base limit to 100 to avoid issue with other UoM than Unit
-        initial_limit = fifo_stack_size * 10
+        initial_limit = int(fifo_stack_size * 10)
         unit_uom = self.env.ref('uom.product_uom_unit', raise_if_not_found=False)
         if unit_uom and self.uom_id != unit_uom:
             initial_limit = max(initial_limit, 100)
