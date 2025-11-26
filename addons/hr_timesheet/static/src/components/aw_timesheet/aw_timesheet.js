@@ -10,6 +10,7 @@ import { formatFloatTime } from "@web/views/fields/formatters";
 import { TimesheetTimer } from "@timesheet_grid/components/static_timesheet_form/static_timesheet_timer";
 import { user } from "@web/core/user";
 import { incrementFrequency, loadFrequency } from "./aw_local_config";
+import { roundTimeSpent } from "@hr_timesheet/utils/timer";
 
 const { DateTime, Duration } = luxon;
 
@@ -29,9 +30,11 @@ export class ActivityWatchTimesheet extends Component {
         this.consumedEvents = JSON.parse(localStorage.getItem(this.localKey) || "{}");
         this.localConfig = loadFrequency();
         this.selectedTimesheet = null;
+        this.roundingValues = { minimum: 15, rounding: 15 };
 
         onWillStart(async () => {
             await this.loadData();
+            await this.loadRoundingValues();
         });
 
         this._onMouseUp = this.onMouseUp.bind(this);
@@ -65,6 +68,10 @@ export class ActivityWatchTimesheet extends Component {
         };
     }
 
+    async loadRoundingValues() {
+        this.roundingValues = await this.orm.call("account.analytic.line", "get_rounding_values");
+    }
+
     onClickOutside(ev) {
         const cards = document.querySelector(".o_suggestion");
         if (cards && !cards.contains(ev.target)) {
@@ -85,6 +92,12 @@ export class ActivityWatchTimesheet extends Component {
     navigateToToday() {
         this.state.currentDate = luxon.DateTime.now();
         this.loadData();
+    }
+
+    get dayHeader() {
+        return `${this.state.currentDate.toFormat("d")} ${this.state.currentDate.toFormat(
+            "MMMM"
+        )} ${this.state.currentDate.year}`;
     }
 
     keyFor(groupKey, title) {
@@ -753,7 +766,7 @@ export class ActivityWatchTimesheet extends Component {
 
         let project_id = false;
         let task_id = false;
-        let total_amount = 0.0;
+        let totalAmount = 0.0;
 
         for (const row of this.state.selectedRows) {
             const { groupKey, title } = JSON.parse(row);
@@ -764,16 +777,20 @@ export class ActivityWatchTimesheet extends Component {
                 task_id = params.task_id || false;
             }
 
-            total_amount += params.unit_amount;
+            totalAmount += params.unit_amount;
         }
 
         const name = this.getGroupedNames(Array.from(this.state.selectedRows));
+        const roundedAmount = roundTimeSpent({
+            minutesSpent: totalAmount,
+            ...this.roundingValues,
+        });
 
         return {
             project_id,
             task_id,
             name,
-            unit_amount: total_amount,
+            unit_amount: roundedAmount,
             date: this.state.currentDate.toISO().split("T")[0],
             user_id: user.userId,
         };

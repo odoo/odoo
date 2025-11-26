@@ -1,6 +1,7 @@
 import re
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AwRule(models.Model):
@@ -28,7 +29,7 @@ class AwRule(models.Model):
     project_id = fields.Many2one("project.project", string="Project")
     task_id = fields.Many2one("project.task", string="Task")
     always_active = fields.Boolean(default=False)
-    primary = fields.Boolean(default=False)
+    primary = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     match_count = fields.Integer(
         string="Capture Groups", compute="_compute_match_count", default=0,
@@ -52,4 +53,4 @@ class AwRule(models.Model):
             try:
                 re.compile(record.regex)
             except re.error:
-                raise models.ValidationError(f"Invalid regex: {record.regex}")
+                raise ValidationError(_("Invalid regex: %(regex)s", regex=record.regex))
