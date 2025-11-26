@@ -45,6 +45,8 @@ class WebsiteMenu(models.Model):
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')
+    original_id = fields.Many2one('website.menu', index=True)  # technical field
+    replica_ids = fields.One2many('website.menu', inverse_name="original_id")  # technical field
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
@@ -83,7 +85,7 @@ class WebsiteMenu(models.Model):
 
         Rules enforced:
         - Menus must not exceed two levels of nesting.
-        - A mega menu must not have a parent or child.
+        - A mega menu must not have a grandparent or child.
         - Menus with children cannot be added as a submenu under another menu.
         """
         for record in self:
@@ -121,32 +123,39 @@ class WebsiteMenu(models.Model):
         menus = self.env['website.menu']
         for vals in vals_list:
             if vals.get('url') == '/default-main-menu':
-                menus |= super().create(vals)
+                menus |= super().create([vals])
                 continue
             if 'website_id' in vals:
-                menus |= super().create(vals)
+                menus |= super().create([vals])
                 continue
             elif self.env.context.get('website_id'):
                 vals['website_id'] = self.env.context.get('website_id')
-                menus |= super().create(vals)
+                menus |= super().create([vals])
                 continue
             else:
                 # if creating a default menu, we should also save it as such
-                default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+                parent_id = vals.get("parent_id")
+                parent_menu = self.env["website.menu"].browse(parent_id)
                 # create for every site
                 w_vals = []
-                for website in self.env["website"].search([]):
-                    parent_id = vals.get("parent_id")
-                    if not parent_id or (default_menu and parent_id == default_menu.id):
-                        parent_id = website.menu_id.id
+                websites = self.env["website"].search([])
+                for website in websites:
+                    if not parent_id:
+                        w_parent = website.menu_id
+                    elif parent_menu.replica_ids.filtered(lambda r: r.website_id == website):
+                        w_parent = parent_menu.replica_ids.filtered(lambda r: r.website_id == website)[:1]
+                    else:
+                        w_parent = parent_menu
                     w_vals.append({
                         **vals,
                         'website_id': website.id,
-                        'parent_id': parent_id,
+                        'parent_id': w_parent.id,
                     })
-                new_menu = super().create(w_vals)[-1:]  # take the last record
-                if default_menu and vals.get('parent_id') == default_menu.id:
-                    new_menu = super().create(vals)
+                new_menus = super().create(w_vals)
+                new_menu = new_menus[-1:]  # take the last record
+                if not websites or parent_menu.replica_ids:
+                    new_menu = super().create([vals])
+                    new_menus.write({"original_id": new_menu.id})
                 menus |= new_menu
         # Only one record per vals is returned but multiple could have been created
         return menus
@@ -163,12 +172,12 @@ class WebsiteMenu(models.Model):
 
     def unlink(self):
         self.env.registry.clear_cache('templates')
-        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
-        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
-            menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
-                                                                ('website_id', '!=', False),
-                                                                ('id', '!=', menu.id)])
+        for menu in self:
+            if menu.child_id:
+                menu.child_id.unlink()
+            if menu.replica_ids:
+                menus_to_remove |= menu.replica_ids
         return super(WebsiteMenu, menus_to_remove).unlink()
 
     @api.ondelete(at_uninstall=False)

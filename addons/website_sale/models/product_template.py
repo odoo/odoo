@@ -862,7 +862,7 @@ class ProductTemplate(models.Model):
         if extra_domain := options.get('extra_domain'):
             domains.append(extra_domain)
         if category:
-            domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
+            domains.append([('public_categ_ids', 'child_of', [self.env['ir.http']._unslug(category)[1]])])
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')

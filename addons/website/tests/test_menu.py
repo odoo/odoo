@@ -63,7 +63,7 @@ class TestMenu(common.TransactionCase):
 
         # Simulating website.menu created on module install (blog, shop, forum..) that will be created on default menu tree
         default_menu = self.env.ref('website.main_menu')
-        Menu.create({
+        sub_default_menu = Menu.create({
             'name': 'Sub Default Menu',
             'parent_id': default_menu.id,
         })
@@ -72,7 +72,15 @@ class TestMenu(common.TransactionCase):
         # Ensure new website got a top menu
         total_menus = Menu.search_count([])
         Website.create({'name': 'new website'})
-        self.assertEqual(total_menus + 3, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Sub Default Menu)")
+        self.assertEqual(total_menus + 3, Menu.search_count([]), "New website's bootstrapping should have duplicate default menu tree (Top/Home/Sub Default Menu)")
+
+        # Simulating website.menu created on module install (blog, shop, forum..) that will be created on a sub default menu
+        total_menu_items = Menu.search_count([])
+        Menu.create({
+            'name': 'Grandchild Default Menu',
+            'parent_id': sub_default_menu.id,
+        })
+        self.assertEqual(total_menu_items + 1 + (self.nb_website + 1), Menu.search_count([]), "Creating a default grandchild menu should create it as such and copy it on every website")
 
     def test_04_specific_menu_translation(self):
         IrModuleModule = self.env['ir.module.module']
@@ -123,8 +131,16 @@ class TestMenu(common.TransactionCase):
         total_menu_items = Menu.search_count([])
 
         default_menu = self.env.ref('website.main_menu')
+        Menu.create({
+            'name': 'Grandchild Default Menu',
+            'parent_id': default_menu.child_id[0].id,
+        })
+        self.assertEqual(total_menu_items + 1 + self.nb_website, Menu.search_count([]), "Creating a default grandchild menu should create it as such and copy it on every website")
+        default_menu.child_id[0].child_id[0].unlink()
+        self.assertEqual(total_menu_items, Menu.search_count([]), "Deleting a default menu item's child menu should delete its 'copies' (same URL) from website's menu trees. In this case, the default item menu's child menu and its copies on the websites")
+
         default_menu.child_id[0].unlink()
-        self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
+        self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default item menu and its copies on the websites")
 
     def test_06_menu_active(self):
         Menu = self.env['website.menu']
