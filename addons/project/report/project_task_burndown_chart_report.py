@@ -237,10 +237,10 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         non_task_specific_domain = filter_domain_leaf(domain, lambda field: field not in self.task_specific_fields)
         return non_task_specific_domain, task_specific_domain
 
-    def _read_group_select(self, aggregate_spec, query):
+    def _read_group_select(self, table, aggregate_spec):
         if aggregate_spec == '__count':
             return SQL("SUM(%s)", SQL.identifier(self._table, '__count'))
-        return super()._read_group_select(aggregate_spec, query)
+        return super()._read_group_select(table, aggregate_spec)
 
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         self._validate_group_by(groupby)
