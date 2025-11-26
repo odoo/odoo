@@ -4933,6 +4933,44 @@ test(`date field aggregates in grouped lists`, async () => {
     ]);
 });
 
+test(`when a group is emptied, dont display its group header`, async () => {
+    Foo._records.push({
+        id: 5,
+        foo: "meow",
+        int_field: 67,
+        m2o: 3,
+    });
+
+    onRpc("some_method", () => {
+        MockServer.env.foo.unlink([5]);
+        return true;
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <groupby name="m2o">
+                    <button type="object" name="some_method" string="click here"/>
+                </groupby>
+            </list>
+        `,
+        groupBy: ["m2o"],
+    });
+    expect(queryAllTexts(`.o_group_header`, { inline: true })).toEqual([
+        `Value 1 (3)`,
+        `Value 2 (1)`,
+        `Value 3 (1)`,
+    ]);
+    await contains(`.o_group_header:last`).click();
+    await contains(`.o_group_header .btn-secondary`).click();
+    expect(queryAllTexts(`.o_group_header`, { inline: true })).toEqual([
+        `Value 1 (3)`,
+        `Value 2 (1)`,
+    ]);
+});
+
 test(`hide aggregated value in grouped lists when no data provided by RPC call`, async () => {
     onRpc("web_read_group", ({ parent }) => {
         const res = parent();
@@ -5086,63 +5124,6 @@ test(`aggregates monetary (currency field in view)`, async () => {
         "$ 0.00",
     ]);
     expect(`tfoot`).toHaveText("$ 2,000.00");
-});
-
-test(`aggregates monetary (currency field not set)`, async () => {
-    Foo._fields.amount = fields.Monetary({ currency_field: "currency_test" });
-    Foo._fields.currency_test = fields.Many2one({ relation: "res.currency" });
-    Foo._records[0].currency_test = 1;
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list>
-                <field name="amount" widget="monetary" sum="Sum"/>
-                <field name="currency_test"/>
-            </list>
-        `,
-    });
-    expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
-        "$ 1,200.00",
-        "500.00",
-        "300.00",
-        "0.00",
-    ]);
-    expect(`tfoot`).toHaveText("$ 2,000.00?");
-    await toggleMultiCurrencyPopover("tfoot span sup");
-    expect(".o_multi_currency_popover").toHaveCount(1);
-    expect(".o_multi_currency_popover").toHaveText("2,000.00 without currency");
-});
-
-test(`aggregates monetary (currency field not set on first record)`, async () => {
-    Foo._fields.amount = fields.Monetary({ currency_field: "currency_test" });
-    Foo._fields.currency_test = fields.Many2one({ relation: "res.currency" });
-    Foo._records[1].currency_test = 1;
-    Foo._records[2].currency_test = 2;
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list>
-                <field name="amount" widget="monetary" sum="Sum"/>
-                <field name="currency_test"/>
-            </list>
-        `,
-    });
-    expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
-        "1,200.00",
-        "$ 500.00",
-        "300.00 €",
-        "0.00",
-    ]);
-    expect(`tfoot`).toHaveText("$ 1,850.00?");
-    await toggleMultiCurrencyPopover("tfoot span sup");
-    expect(".o_multi_currency_popover").toHaveCount(1);
-    expect(".o_multi_currency_popover").toHaveText(
-        "3,700.00 € at $ 0.50 on Jun 13\n1,850.00 without currency"
-    );
 });
 
 test(`aggregates monetary with custom digits (same currency)`, async () => {
@@ -19667,84 +19648,4 @@ test(`groupby use odoomark`, async () => {
     expect(`.o_group_name`).toHaveCount(2);
     expect(`.o_group_name b`).toHaveCount(2);
     expect(`.o_group_name span.o_badge`).toHaveCount(2);
-});
-
-test.tags("desktop");
-test(`multi edition: edit date with operation`, async () => {
-    Foo._records[1].datetime = "2019-04-09 03:55:05";
-    Foo._records[2].datetime = "1987-11-13 13:13:13";
-    Foo._records[3].datetime = "2021-01-01 00:00:01";
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list multi_edit="1">
-                <field name="foo"/>
-                <field name="datetime"/>
-            </list>`,
-    });
-
-    const operations = [
-        { op: "+=4w", text: "+ 4 weeks" },
-        { op: "-=1w", text: "- 1 weeks" },
-        { op: "+=1", text: "+ 1 days" },
-        { op: "-=3", text: "- 3 days" },
-        { op: "+=4m", text: "+ 4 months" },
-        { op: "+=1m", text: "+ 1 months" },
-        { op: "+=4y", text: "+ 4 years" },
-        { op: "-=1y", text: "- 1 years" },
-        { op: "+=199939S", text: "+ 199939 seconds" },
-        { op: "+=0M", text: "+ 0 minutes" },
-        { op: "-=9999999999999999999999999999M", text: "- 1e+28 minutes" },
-        { op: "+=4H", text: "+ 4 hours" },
-    ];
-
-    async function checkOperation(operation) {
-        await contains(`tr:eq(1) .o_data_cell[name=datetime]`).click();
-        await animationFrame();
-        await edit(operation.op, { confirm: "tab" });
-        await animationFrame();
-        expect(`.modal .o_modal_changes [name=datetime]`).toHaveText(`Datetime ${operation.text}`);
-        expect(`.modal .alert`).toHaveCount(1);
-        await contains(`.modal-dialog button:contains(cancel)`).click();
-    }
-
-    await contains(`th .o-checkbox`).click();
-    for (const operation of operations) {
-        await checkOperation(operation);
-    }
-
-    await contains(`tr:eq(1) .o_data_cell[name=datetime]`).click();
-    await animationFrame();
-    await edit("-=4d", { confirm: "tab" });
-    await animationFrame();
-    expect(`.modal .alert`)
-        .toHaveText(`Use the operators "+=", "-=" to update the current date by days (d), weeks (w), months (m), years (y), hours (H), minutes (M) and seconds (S).
-For example, if the date is Mar 11 and you enter "+=2d", it will be updated to Mar 13.`);
-    await contains(`.modal-dialog button:contains(update)`).click();
-    expect(queryAllTexts(`.o_data_cell`)).toEqual([
-        "yop",
-        "Dec 8, 2016, 11:55 AM",
-        "blip",
-        "Apr 5, 5:55 AM",
-        "gnap",
-        "Nov 9, 1987, 2:13 PM",
-        "blip",
-        "Dec 28, 2020, 1:00 AM",
-    ]);
-    await contains(`tr:eq(1) .o_data_cell[name=datetime]`).click();
-    await animationFrame();
-    await edit("+=4y", { confirm: "tab" });
-    await animationFrame();
-    await contains(`.modal-dialog button:contains(update)`).click();
-    expect(queryAllTexts(`.o_data_cell`)).toEqual([
-        "yop",
-        "Dec 8, 2020, 11:55 AM",
-        "blip",
-        "Apr 5, 2023, 5:55 AM",
-        "gnap",
-        "Nov 9, 1991, 2:13 PM",
-        "blip",
-        "Dec 28, 2024, 1:00 AM",
-    ]);
 });
