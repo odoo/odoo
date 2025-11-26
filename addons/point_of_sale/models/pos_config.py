@@ -940,10 +940,6 @@ class PosConfig(models.Model):
         self.ensure_one()
         self._notify(f"UPDATE_CUSTOMER_DISPLAY-{device_uuid}", order)
 
-    def _get_display_device_ip(self):
-        self.ensure_one()
-        return self.proxy_ip
-
     def _get_customer_display_data(self):
         self.ensure_one()
         return {
@@ -951,7 +947,6 @@ class PosConfig(models.Model):
             'access_token': self.access_token,
             'has_bg_img': bool(self.customer_display_bg_img),
             'company_id': self.company_id.id,
-            'proxy_ip': self._get_display_device_ip(),
         }
 
     @api.model
