@@ -1,13 +1,8 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-import { ShadowOption } from "@html_builder/plugins/shadow_option";
-import { basicHeaderOptionSettings } from "./basicHeaderOptionSettings";
-
+import { registry } from "@web/core/registry";
 export class HeaderBoxOption extends BaseOptionComponent {
+    static id = "header_box_option";
     static template = "website.HeaderBoxOption";
-    static applyTo = ".navbar:not(.d-none)";
-
-    static components = { BorderConfigurator, ShadowOption };
 
     setup() {
         super.setup();
@@ -17,4 +12,4 @@ export class HeaderBoxOption extends BaseOptionComponent {
     }
 }
 
-Object.assign(HeaderBoxOption, basicHeaderOptionSettings);
+registry.category("builder-options").add(HeaderBoxOption.id, HeaderBoxOption);

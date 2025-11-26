@@ -1,7 +1,5 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BorderConfigurator } from "./border_configurator_option";
 
 export class SeparatorOptionPlugin extends Plugin {
     static id = "separatorOption";
@@ -16,10 +14,3 @@ export class SeparatorOptionPlugin extends Plugin {
     };
 }
 registry.category("builder-plugins").add(SeparatorOptionPlugin.id, SeparatorOptionPlugin);
-
-export class SeparatorOption extends BaseOptionComponent {
-    static id = "separator_option";
-    static template = "html_builder.SeparatorOption";
-    static components = { BorderConfigurator };
-}
-registry.category("builder-options").add(SeparatorOption.id, SeparatorOption);

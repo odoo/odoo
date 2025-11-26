@@ -1,20 +1,13 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { generateGMapLink } from "@website/js/utils";
 import { renderToElement } from "@web/core/utils/render";
 
-export class MapOption extends BaseOptionComponent {
-    static template = "website.mapOption";
-    static selector = ".s_map";
-}
-
-class MapOptionPlugin extends Plugin {
+export class MapOptionPlugin extends Plugin {
     static id = "mapOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [MapOption],
         so_content_addition_selector: [".s_map"],
         builder_actions: {
             MapUpdateSrcAction,

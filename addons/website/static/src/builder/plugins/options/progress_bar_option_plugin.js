@@ -5,8 +5,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export class ProgressBarOption extends BaseOptionComponent {
+    static id = "progress_bar_option";
     static template = "website.ProgressBarOption";
-    static selector = ".s_progress_bar";
 
     static cleanForSave(editingEl) {
         const progressBar = editingEl.querySelector(".progress-bar");
@@ -22,11 +22,10 @@ export class ProgressBarOption extends BaseOptionComponent {
     }
 }
 
-class ProgressBarOptionPlugin extends Plugin {
+export class ProgressBarOptionPlugin extends Plugin {
     static id = "progressBarOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: ProgressBarOption,
         builder_actions: {
             DisplayAction,
             ProgressBarValueAction,
@@ -104,3 +103,4 @@ export class ProgressBarValueAction extends BuilderAction {
 }
 
 registry.category("website-plugins").add(ProgressBarOptionPlugin.id, ProgressBarOptionPlugin);
+registry.category("builder-options").add(ProgressBarOption.id, ProgressBarOption);

@@ -1,4 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -16,8 +17,8 @@ export function getColor(color, win, doc) {
 }
 
 export class ChartOption extends BaseOptionComponent {
+    static id = "chart_option";
     static template = "website.ChartOption";
-    static selector = ".s_chart";
     static dependencies = ["chartOptionPlugin"];
 
     setup() {
@@ -293,3 +294,5 @@ export class ChartOption extends BaseOptionComponent {
         }
     }
 }
+
+registry.category("builder-options").add(ChartOption.id, ChartOption);

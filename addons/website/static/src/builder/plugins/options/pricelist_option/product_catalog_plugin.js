@@ -1,40 +1,26 @@
-import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
-import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { BaseAddProductOption } from "@html_builder/plugins/add_product_option";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-
-export class ProductCatalogDescriptionOption extends BaseOptionComponent {
-    static template = "website.ProductCatalogDescriptionOption";
-    static selector = ".s_product_catalog";
-    static components = { BorderConfigurator };
-}
 
 export class AddProductCatalogOption extends BaseAddProductOption {
-    static selector = ".s_product_catalog";
+    static id = "add_product_catalog_option";
+    // can probably be given as props
     buttonApplyTo =
         ":scope > :has(.s_product_catalog_dish):not(:has(.row > div .s_product_catalog_dish))";
     productSelector = ".s_product_catalog_dish";
 }
 
 export class AddProductCatalogSectionOption extends BaseAddProductOption {
-    static selector = ".s_product_catalog .row > div";
+    static id = "add_product_catalog_section_option";
     buttonApplyTo = ":scope > :has(.s_product_catalog_dish)";
     productSelector = ".s_product_catalog_dish";
 }
 
-class ProductCatalogOptionPlugin extends Plugin {
+export class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(BEGIN, AddProductCatalogOption),
-            withSequence(BEGIN, AddProductCatalogSectionOption),
-            withSequence(SNIPPET_SPECIFIC_END, ProductCatalogDescriptionOption),
-        ],
         dropzone_selector: {
             selector: ".s_product_catalog_dish",
             dropNear: ".s_product_catalog_dish",
@@ -51,3 +37,7 @@ class ProductCatalogOptionPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(ProductCatalogOptionPlugin.id, ProductCatalogOptionPlugin);
+registry.category("builder-options").add(AddProductCatalogOption.id, AddProductCatalogOption);
+registry
+    .category("builder-options")
+    .add(AddProductCatalogSectionOption.id, AddProductCatalogSectionOption);

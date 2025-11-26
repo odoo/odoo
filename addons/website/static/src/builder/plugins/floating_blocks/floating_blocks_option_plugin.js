@@ -1,22 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
-import { after } from "@html_builder/utils/option_sequence";
-import { DEVICE_VISIBILITY } from "@website/builder/option_sequence";
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-
-export class FloatingBlocksOption extends BaseOptionComponent {
-    static template = "website.FloatingBlocksOption";
-    static selector = ".s_floating_blocks";
-}
 
 export class FloatingBlocksOptionPlugin extends Plugin {
     static id = "floatingBlocksOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(after(DEVICE_VISIBILITY), FloatingBlocksOption)],
         builder_actions: {
             FloatingBlocksRoundnessAction,
             AddFloatingBlockCardAction,

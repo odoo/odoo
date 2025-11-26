@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
-import { GoogleMapsOption } from "./google_maps_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
@@ -52,7 +51,6 @@ export class GoogleMapsOptionPlugin extends Plugin {
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [GoogleMapsOption],
         so_content_addition_selector: [".s_google_map"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         builder_actions: {

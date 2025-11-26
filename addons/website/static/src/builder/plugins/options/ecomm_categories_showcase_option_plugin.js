@@ -1,28 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
-import {
-    SNIPPET_SPECIFIC_BEFORE,
-    END,
-    VERTICAL_ALIGNMENT,
-} from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class EcommCategoriesShowcaseOption extends BaseOptionComponent {
-    static template = "website.EcommCategoriesShowcaseOption";
-    static selector = ".s_ecomm_categories_showcase";
-}
-export class EcommCategoriesShowcaseBlockDesign extends BaseOptionComponent {
-    static template = "website.EcommCategoriesShowcaseBlockDesign";
-    static selector = ".s_ecomm_categories_showcase_block";
-}
-export class EcommCategoriesShowcaseBlocksDesign extends BaseOptionComponent {
-    static template = "website.EcommCategoriesShowcaseBlocksDesign";
-    static selector = ".s_ecomm_categories_showcase";
-}
-
-class EcommCategoriesShowcaseOptionPlugin extends Plugin {
+export class EcommCategoriesShowcaseOptionPlugin extends Plugin {
     static id = "ecommCategoriesShowcaseOption";
 
     static DEFAULT_BLOCK_COUNT = 3;
@@ -42,11 +22,6 @@ class EcommCategoriesShowcaseOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC_BEFORE, EcommCategoriesShowcaseOption),
-            withSequence(VERTICAL_ALIGNMENT, EcommCategoriesShowcaseBlockDesign),
-            withSequence(END, EcommCategoriesShowcaseBlocksDesign),
-        ],
         builder_actions: {
             BlockCountAction,
             SpacingToggleAction,

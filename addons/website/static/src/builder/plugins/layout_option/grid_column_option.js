@@ -1,8 +1,9 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 
 export class GridColumnsOption extends BaseOptionComponent {
+    static id = "grid_columns_option";
     static template = "website.GridColumnsOption";
-    static selector = ".row:not(.s_col_no_resize) > div";
 
     setup() {
         super.setup();
@@ -11,3 +12,5 @@ export class GridColumnsOption extends BaseOptionComponent {
         }));
     }
 }
+
+registry.category("builder-options").add(GridColumnsOption.id, GridColumnsOption);

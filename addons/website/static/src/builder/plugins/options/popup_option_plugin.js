@@ -1,36 +1,13 @@
-import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export const POPUP = SNIPPET_SPECIFIC;
-export const COOKIES_BAR = SNIPPET_SPECIFIC_END;
-
-export class PopupOption extends BaseOptionComponent {
-    static template = "website.PopupOption";
-    static selector = ".s_popup";
-    static exclude = "#website_cookies_bar";
-    static applyTo = ".modal";
-}
-
-export class PopupCookiesOption extends BaseOptionComponent {
-    static template = "website.PopupCookiesOption";
-    static selector = ".s_popup#website_cookies_bar";
-    static applyTo = ".modal";
-}
-
-class PopupOptionPlugin extends Plugin {
+export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
     static dependencies = ["anchor", "visibility", "history", "popupVisibilityPlugin"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(POPUP, PopupOption),
-            withSequence(COOKIES_BAR, PopupCookiesOption),
-        ],
         dropzone_selector: {
             selector: ".s_popup",
             exclude: "#website_cookies_bar",

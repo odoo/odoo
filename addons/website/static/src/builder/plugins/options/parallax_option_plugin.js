@@ -11,7 +11,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { WebsiteParallaxPlugin['applyParallaxType'] } applyParallaxType
  */
 
-class WebsiteParallaxPlugin extends Plugin {
+export class WebsiteParallaxPlugin extends Plugin {
     static id = "websiteParallaxPlugin";
     static dependencies = ["builderActions", "backgroundImageOption"];
     static shared = ["applyParallaxType"];
@@ -26,6 +26,7 @@ class WebsiteParallaxPlugin extends Plugin {
         get_target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {
+        // TODO DUAU: wtf how to manage that
         this.backgroundOptionClasses = filterExtends(
             this.getResource("builder_options"),
             BaseWebsiteBackgroundOption

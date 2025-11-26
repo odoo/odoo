@@ -6,7 +6,7 @@ import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 
-class AnimateTextPopover extends BaseOptionComponent {
+export class AnimateTextPopover extends BaseOptionComponent {
     static template = "website_builder.AnimateTextPopover";
     static props = {
         animateOptionProps: AnimateOption.props,

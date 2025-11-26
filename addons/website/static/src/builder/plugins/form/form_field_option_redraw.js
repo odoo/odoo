@@ -1,11 +1,12 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 import { FormFieldOption } from "./form_field_option";
 
+// TODO DUAU: check props here
 export class FormFieldOptionRedraw extends BaseOptionComponent {
+    static id = "form_field_option_redraw";
     static template = "website.s_website_form_field_option_redraw";
     static props = FormFieldOption.props;
-    static selector = ".s_website_form_field";
-    static exclude = ".s_website_form_dnone";
     static components = { FormFieldOption };
 
     setup() {
@@ -19,3 +20,5 @@ export class FormFieldOptionRedraw extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("builder-options").add(FormFieldOptionRedraw.id, FormFieldOptionRedraw);

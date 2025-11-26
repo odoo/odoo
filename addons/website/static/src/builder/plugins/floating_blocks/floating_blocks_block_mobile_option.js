@@ -1,9 +1,9 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 
 export class FloatingBlocksBlockMobileOption extends BaseOptionComponent {
+    static id = "floating_blocks_block_mobile_option";
     static template = "website.FloatingBlocksBlockMobileOption";
-    static selector = ".s_floating_blocks .s_floating_blocks_block";
-    static applyTo = ".container-fluid";
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
@@ -11,3 +11,7 @@ export class FloatingBlocksBlockMobileOption extends BaseOptionComponent {
         }));
     }
 }
+
+registry
+    .category("builder-options")
+    .add(FloatingBlocksBlockMobileOption.id, FloatingBlocksBlockMobileOption);

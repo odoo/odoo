@@ -1,4 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 
 export const connectorOptionParams = [
     { key: "", param: "None" },
@@ -8,8 +9,8 @@ export const connectorOptionParams = [
 ];
 
 export class ProcessStepsOption extends BaseOptionComponent {
+    static id = "process_steps_option";
     static template = "website.ProcessStepsOption";
-    static selector = ".s_process_steps";
 
     setup() {
         super.setup();
@@ -20,3 +21,5 @@ export class ProcessStepsOption extends BaseOptionComponent {
         return !connectorOptionParamKey ? "no_connector_opt" : "";
     }
 }
+
+registry.category("builder-options").add(ProcessStepsOption.id, ProcessStepsOption);

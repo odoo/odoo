@@ -1,8 +1,5 @@
-import { MegaMenuOption } from "@website/builder/plugins/options/mega_menu_option";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
-import { SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
 
 /**
  * @typedef { Object } MegaMenuOptionShared
@@ -16,7 +13,6 @@ export class MegaMenuOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(SNIPPET_SPECIFIC_NEXT, MegaMenuOption)],
         dropzone_selector: {
             selector: ".o_mega_menu .nav > .nav-link",
             dropIn: ".o_mega_menu nav",

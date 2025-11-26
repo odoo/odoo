@@ -1,28 +1,13 @@
-import { PortalOption, PortalCardVisibilityOption } from "./portal_option";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-/**
- * PortalOptionPlugin
- *
- * Registers portal-related builder options and actions for the Website Builder.
- * - Adds PortalOption and PortalCardVisibilityOption to the options panel.
- * - Registers SetStylePortalCardAction and CardVisibilityOptionAction actions.
- *
- * @extends Plugin
- */
-class PortalOptionPlugin extends Plugin {
+export class PortalOptionPlugin extends Plugin {
     static id = "portalOption";
     static dependencies = ["customizeWebsite"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(1, PortalOption),
-            withSequence(2, PortalCardVisibilityOption),
-        ],
         builder_actions: {
             SetStylePortalCardAction,
             CardVisibilityOptionAction,
@@ -31,13 +16,7 @@ class PortalOptionPlugin extends Plugin {
     };
 }
 
-/**
- * SetStylePortalCardAction
- *
- * This action is executed when the user changes the style of the portal card
- * (border style, border radius, border width, border color) from the builder panel.
- */
-class SetStylePortalCardAction extends StyleAction {
+export class SetStylePortalCardAction extends StyleAction {
     static id = "setStylePortalCard";
     static dependencies = ["customizeWebsite", "color"];
 
@@ -74,13 +53,7 @@ class SetStylePortalCardAction extends StyleAction {
     }
 }
 
-/**
- * CardVisibilityOptionAction
- *
- * This action is triggered when the user enables/disables the visibility
- * of a portal entry card from the portal builder sidebar.
- */
-class CardVisibilityOptionAction extends BuilderAction {
+export class CardVisibilityOptionAction extends BuilderAction {
     static id = "cardVisibilityOption";
 
     setup() {

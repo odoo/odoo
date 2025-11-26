@@ -1,9 +1,8 @@
-import { BorderConfigurator } from "../plugins/border_configurator_option";
-import { ShadowOption } from "../plugins/shadow_option";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
+import { hashCode } from "@web/core/utils/strings";
 import { useOperation } from "../core/operation_plugin";
 import {
     BaseOptionComponent,
@@ -15,10 +14,6 @@ import {
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
     static dependencies = ["builderOptions", "overlayButtons", "builderOverlay", "remove", "clone"];
-    static components = {
-        BorderConfigurator,
-        ShadowOption,
-    };
     static props = {
         snippetModel: { type: Object },
         options: { type: Array },
@@ -76,6 +71,12 @@ export class OptionsContainer extends BaseOptionComponent {
             return true;
         }
         return groups.every((group) => this.hasGroup[group]);
+    }
+
+    getOptionKey(OptionClass) {
+        return `${OptionClass.name}-${OptionClass.template}-${hashCode(
+            OptionClass.selector || ""
+        )}`;
     }
 
     get title() {

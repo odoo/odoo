@@ -6,20 +6,13 @@ import {
 } from "@html_builder/utils/grid_layout_utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { LayoutGridOption, LayoutOption } from "./layout_option";
-import { withSequence } from "@html_editor/utils/resource";
-import { LAYOUT, LAYOUT_GRID } from "@website/builder/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-class LayoutOptionPlugin extends Plugin {
+export class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";
     static dependencies = ["clone", "selection"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(LAYOUT, LayoutOption),
-            withSequence(LAYOUT_GRID, LayoutGridOption),
-        ],
         on_cloned_handlers: this.onCloned.bind(this),
         builder_actions: {
             SetGridLayoutAction,

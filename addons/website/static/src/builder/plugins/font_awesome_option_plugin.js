@@ -1,21 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { FONT_AWESOME } from "@html_builder/utils/option_sequence";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 
-class FontAwesomeOptionPlugin extends Plugin {
+export class FontAwesomeOptionPlugin extends Plugin {
     static id = "fontAwesomeOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(FONT_AWESOME, FontAwesomeOptionComponent)],
         builder_actions: {
             FaResizeAction,
         },
     };
 }
+registry.category("website-plugins").add(FontAwesomeOptionPlugin.id, FontAwesomeOptionPlugin);
 
 export class FaResizeAction extends ClassAction {
     static id = "faResize";
@@ -25,11 +22,9 @@ export class FaResizeAction extends ClassAction {
         super.apply(context);
     }
 }
-export class FontAwesomeOptionComponent extends BaseOptionComponent {
+export class FontAwesomeOption extends BaseOptionComponent {
+    static id = "font_awesome_option";
     static template = "website.FontAwesomeOption";
-    static selector = "span.fa, i.fa, .social_media_img";
-    static exclude = "[data-oe-xpath]";
-    static components = { BorderConfigurator };
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => {
@@ -44,4 +39,4 @@ export class FontAwesomeOptionComponent extends BaseOptionComponent {
     }
 }
 
-registry.category("website-plugins").add(FontAwesomeOptionPlugin.id, FontAwesomeOptionPlugin);
+registry.category("builder-options").add(FontAwesomeOption.id, FontAwesomeOption);

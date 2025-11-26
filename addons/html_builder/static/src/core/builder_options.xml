@@ -4,11 +4,6 @@
         <t t-set="socialMediaElementsSelector" t-value="`.s_social_media i.fa, .s_share i.fa, .social_media_img`"/>
         <t t-set="replaceMediaOptionSelector" t-value="`img, .media_iframe_video, span.fa, i.fa`"/>
         <t t-set="replaceMediaOptionExclude" t-value="`[data-oe-xpath], ` + socialMediaElementsSelector"/>
-        <!-- BLOCKQUOTE_PARENT_HANDLERS -->
-        <t t-set="blockquotesParentHandlers" t-value="`.s_reviews_wall .row > div`"/>
-        <!-- CARD_PARENT_HANDLERS -->
-        <t t-set="cardParentHandlers"
-            t-value="`.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item`"/>
         <div>
             <!-- Obviously comments will be removed, it's only to check the current sequence -->
             <!-- 17 -->
@@ -42,9 +37,9 @@
             <!-- 37  -->
             <rating_option template="html_builder.RatingOption" selector=".s_rating"/>
             <!-- 38 -->
-            <separator_option selector=".s_hr" applyTo="hr"/>
+            <separator_option template="html_builder.SeparatorOption" selector=".s_hr" applyTo="hr"/>
             <!-- 39 -->
-            <cta_badge_option selector=".s_cta_badge"/>
+            <cta_badge_option template="html_builder.CTABadgeOption" selector=".s_cta_badge"/>
             <!-- 106 -->
             <layout_column_option
                 selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"

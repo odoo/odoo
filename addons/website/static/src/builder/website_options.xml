@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.BuilderOptions" t-inherit="html_builder.BuilderOptions">
+        <!-- To add t-set if needed -->
+        <xpath expr="//t[@t-set][last()]" position="after">
+        </xpath>
+
+        <!-- before 17 -->
+        <xpath expr="//replace_media_option" position="before">
+            <!-- 3 -->
+            <portal_option
+                template="website.PortalOption"
+                selector=".o_portal_index_card > a"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <portal_card_visibility_option
+                selector=".o_portal_wrap"
+                editableOnly="false"
+                reloadTarget="true"
+                groups='["website.group_website_designer"]'/>
+            <floating_blocks_block_mobile_option selector=".s_floating_blocks .s_floating_blocks_block" applyTo=".container-fluid"/>
+            <!-- 4 -->
+            <embed_code_option template="website.EmbedCodeOption" selector=".s_embed_code"/>
+            <!-- 5 -->
+            <faq_horizontal_option template="website.FaqHorizontalOption" selector=".s_faq_horizontal"/>
+            <!-- 6 -->
+            <media_list_option template="website.MediaListOption" selector=".s_media_list"/>
+            <!-- 7 -->
+            <add_product_pricelist_boxed_option
+                template="html_builder.AddProductOption"
+                selector=".s_pricelist_boxed"
+                props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_boxed_item):not(:has(.row > div .s_pricelist_boxed_item))", "productSelector": ".s_pricelist_boxed_item" }'/>
+            <!-- 8 -->
+            <add_product_pricelist_boxed_section_option
+                template="html_builder.AddProductOption"
+                selector=".s_pricelist_boxed_section"
+                props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_boxed_item)", "productSelector": ".s_pricelist_boxed_item" }'/>
+            <!-- 9 -->
+            <add_product_pricelist_cafe_option
+                template="html_builder.AddProductOption"
+                selector=".s_pricelist_cafe"
+                props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_cafe_item):not(:has(.row > div .s_pricelist_cafe_item))", "productSelector": ".s_pricelist_cafe_item" }'/>
+            <!-- 10 -->
+            <pricelist_cafe_vertical_alignment_option
+                template="html_builder.VerticalAlignmentOption"
+                selector=".s_pricelist_cafe"
+                applyTo=".row:has(.s_pricelist_cafe_col)"
+                props='{ "level": 0, "justify": true }'/>
+            <!-- 11 -->
+            <add_product_pricelist_cafe_row_option
+                template="html_builder.AddProductOption"
+                selector=".s_pricelist_cafe .row > div"
+                props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_cafe_item)", "productSelector": ".s_pricelist_cafe_item" }'/>
+            <!-- 12 -->
+            <add_product_catalog_option selector=".s_product_catalog"/>
+            <!-- 13 -->
+            <add_product_catalog_section_option selector=".s_product_catalog .row > div"/>
+            <!-- 14 -->
+            <timeline_list_option template="website.TimelineListOption" selector=".s_timeline_list"/>
+            <!-- 15 -->
+            <dot_color_option template="website.DotColorOption" selector=".s_timeline_list .s_timeline_list_row"/>
+            <!-- 16 -->
+            <timeline_images_option template="website.TimelineImagesOption" selector=".s_timeline_images"/>
+        </xpath>
+
+        <!-- after 17 -->
+        <xpath expr="//replace_media_option" position="after">
+            <!-- 19 -->
+            <font_awesome_option selector="span.fa, i.fa, .social_media_img" exclude="[data-oe-xpath]"/>
+        </xpath>
+
+        <!-- after 20 -->
+        <xpath expr="//image_tool_option" position="after">
+            <!-- 21 -->
+            <image_pop_up_option template="website.ImagePopUpOption" selector="img" exclude="a img, header img, footer img, .s_image_gallery img"/>
+        </xpath>
+
+        <!-- after 22 -->
+        <xpath expr="//image_and_fa_option" position="after">
+            <!-- 23 -->
+            <dynamic_svg_option t-att-selector="dynamicSVGSelector"/>
+        </xpath>
+
+        <!-- after 24 -->
+        <xpath expr="//text_alignment_option" position="after">
+            <!-- 25 -->
+            <social_media_option
+                template="website.SocialMediaOption"
+                selector=".s_share, .s_social_media"/>
+        </xpath>
+
+        <!-- after 28 -->
+        <xpath expr="//block_alignment_option" position="after">
+            <!-- 29 -->
+            <size_option template="website.SizeOption" selector=".s_alert"/>
+            <!-- 30 -->
+            <ecomm_categories_showcase_option
+                template="website.EcommCategoriesShowcaseOption"
+                selector=".s_ecomm_categories_showcase"/>
+            <!-- 31 -->
+            <base_website_background_option
+                t-att-selector="blockquoteParentHandlers"
+                t-att-applyTo="blockquoteDisableWidthApplyTo"
+                props='{ "withColors": true,"withImages": true, "withShapes": true, "withColorCombinations": true }'/>
+            <!-- 32 -->
+            <base_website_background_option
+                selector="section"
+                applyTo=":scope > .carousel:not(.s_carousel_cards)"
+                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
+        </xpath>
+
+        <!-- after 39 -->
+        <xpath expr="//cta_badge_option" position="after">
+            <!-- 40 --> 
+            <carousel_option
+                template="website.CarouselOption"
+                selector="section"
+                exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)"
+                applyTo=":scope > .carousel"/>
+            <!-- 41 -->
+            <carousel_bottom_controllers_option
+                template="website.CarouselBottomControllersOption"
+                selector="section"
+                applyTo=".s_carousel_intro, .s_quotes_carousel_compact"/>
+             <!-- 42 -->
+            <form_option
+                selector=".s_website_form"
+                applyTo="form"/>
+            <!-- 43 -->
+            <form_field_option_redraw
+                selector=".s_website_form_field"
+                exclude=".s_website_form_dnone"/>
+            <!-- 44 -->
+            <website_form_submit_option
+                template="website.s_website_form_submit_option"
+                selector=".s_website_form_submit"
+                exclude=".s_website_form_no_submit_options"/>
+            <!-- 45-->
+            <accordion_option template="website.AccordionOption" selector=".s_accordion"/>
+            <!-- 46 -->
+            <accordion_item_option template="website.AccordionItemOption" selector=".s_accordion .accordion-item"/>
+            <!-- 47 -->
+            <chart_option selector=".s_chart"/>
+            <!-- 48 -->
+            <controllers_page_listing_layout_option
+                template="website.ControllerPageListingLayoutOption"
+                selector=".listing_layout_switcher"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 49 -->
+            <cookies_bar_option template="website.CookiesBarOption" selector="#website_cookies_bar" applyTo=".modal"/>
+            <!-- 50 -->
+            <facebook_option template="website.FacebookOption" selector=".o_facebook_page"/>
+            <!-- 51 -->
+            <footer_copyright_option
+                selector="#wrapwrap > footer .o_footer_copyright"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 52 -->
+            <gallery_element_option
+                selector=".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item"/>
+            <!-- 53 -->
+            <google_maps_option selector=".s_google_map"/>
+            <!-- 54 -->
+            <image_gallery_images_option template="website.ImageGalleryImagesOption" selector=".s_image_gallery"/>
+            <!-- 55 -->
+            <map_option template="website.mapOption" selector=".s_map"/>
+            <!-- 56 -->
+            <base_blockquote_option selector=".s_blockquote" t-att-exclude="specialBlockquoteSelector"/>
+            <!-- 57 -->
+            <base_blockquote_option
+                t-att-selector="blockquoteParentHandlers"
+                t-att-applyTo="blockquoteDisableWidthApplyTo"
+                props='{ "disableWidth": true }'/>
+            <!-- 58 -->
+            <base_website_background_option
+                selector=".s_process_step .s_process_step_number"
+                props='{ "withColors": true, "withImages": false, "withColorCombinations": false }'/>
+            <!-- 59 -->
+            <progress_bar_option selector=".s_progress_bar"/>
+            <!-- 60 -->
+            <searchbar_option
+                selector=".s_searchbar_input"
+                applyTo=".search-query"/>
+            <breadcrumb_option
+                selector=".o_page_breadcrumb"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+            <!-- 62 -->
+            <table_of_content_option template="website.TableOfContentOption" selector=".s_table_of_content"/>
+            <!-- 63 -->
+            <table_of_content_navbar_option template="website.TableOfContentNavbarOption" selector=".s_table_of_content_navbar_wrap"/>
+            <!-- 64 -->
+            <base_card_option selector=".s_card" t-attf-exclude="div:is({{cardParentHandlers}}) > .s_card"/>
+            <!-- 65 -->
+            <base_card_option
+                t-att-selector="cardParentHandlers"
+                t-att-applyTo="cardDisableWidthApplyTo"
+                props='{ "disableWidth": true }'/>
+            <!-- 66 -->
+            <base_website_background_option
+                t-att-selector="cardParentHandlers"
+                t-att-applyTo="websiteBgApplyTo"
+                props='{ "withColors": true, "withImages": true, "withShapes": true, "withColorCombinations": true }'/>
+            <!-- 67 -->
+            <carousel_cards_item_option selector=".s_carousel_cards_item" applyTo=":scope > .s_carousel_cards_card"/>
+            <!-- 68 -->
+            <info_page_option
+                template="website.InfoPageOption"
+                selector="main:has(.o_website_info)"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 69 -->
+            <avatars_option
+                template="website.AvatarsOption"
+                selector=".s_avatars"/>
+            <popup_option template="website.PopupOption" selector=".s_popup"/>
+            <!-- 70 -->
+            <switchable_views
+                selector=".o_portal_wrap"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+            <!-- 71 -->
+            <dot_color_option template="website.DotColorOption" selector=".s_timeline_images .s_timeline_images_row"/>
+            <!-- 105 -->
+            <layout_option
+                selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
+                exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs, .s_tabs_images, .s_floating_blocks .s_floating_blocks_block, .s_banner_categories, .s_splash_intro"
+                applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        </xpath>
+
+        <!-- after 106 -->
+        <xpath expr="//layout_column_option" position="after">
+            <!-- 107 -->
+            <floating_blocks_block_option selector=".s_floating_blocks .s_floating_blocks_block"/>
+            <!-- 108 -->
+            <layout_grid_option
+                selector="section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro, section.s_banner_categories"
+                applyTo=":scope > *:has(> .row)"/>
+        </xpath>
+
+        <!-- after 110 -->
+        <xpath expr="//vertical_alignment_option" position="after">
+            <!-- 111 -->
+            <ecomm_categories_showcase_block_design
+                template="website.EcommCategoriesShowcaseBlockDesign"
+                selector=".s_ecomm_categories_showcase_block"/>
+            <!-- 112 -->
+            <timeline_option template="website.TimelineOption" selector=".s_timeline"/>
+            <!-- 113 -->
+            <base_website_background_option
+                t-att-selector="websiteBackgroundBgColorImageOptionSelector"
+                t-att-exclude="websiteBackgroundBgColorImageOptionExclude"
+                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
+            <!-- 114 -->
+            <base_website_background_option
+                t-att-selector="websiteBackgroundBgColorOptionSelector"
+                t-att-exclude="websiteBackgroundBgColorOptionExclude"
+                props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
+            <!-- 115 -->
+            <base_website_background_option
+            t-att-selector="baseOnlyBgImageSelector"
+            props='{ "withColors": false, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": false }'/>
+            <!-- 116 -->
+            <bento_border_option template="html_builder.BentoBorderOption" selector=".s_bento_banner section[data-name='Card'], .s_bento_block_card"/>
+            <!-- 117 -->
+            <announcement_scroll_option
+                template="website.AnnouncementScrollOption"
+                selector="section.s_announcement_scroll"/>
+            <!-- 118 -->
+            <carousel_cards_option
+                template="website.CarouselCardsOption"
+                selector="section"
+                applyTo=".s_carousel_cards"/>
+            <!-- 119 -->
+            <grid_columns_option selector=".row:not(.s_col_no_resize) > div"/>
+            <!-- 120 -->
+            <border_option
+                template="website.BorderOption"
+                selector="section .row > div, section:has(.s_carousel_cards)"
+                t-attf-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize, .s_text_cover .row > .o_not_editable, {{cardParentHandlers}}, {{blockquoteParentHandlers}}"/>
+            <!-- 121 -->
+            <website_vertical_alignment_option
+                template="html_builder.VerticalAlignmentOption"
+                selector=".s_attributes_vertical_col"
+                applyTo=":scope > .row"/>
+            <!-- 122 -->
+            <mega_menu_option selector = ".o_mega_menu"/>
+            <!-- 123 -->
+            <navbar_logo_option
+                template="website.NavbarLogoOption"
+                selector="#wrapwrap > header nav.navbar .navbar-brand"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+            <!-- 125 -->
+            <footer_template_option
+                selector="#wrapwrap > footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 126 -->
+            <header_template_option
+                selector="#wrapwrap > header"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 127 -->
+            <top_menu_visibility_option
+                selector="[data-main-object]:has(input.o_page_option_data[name='header_visible']) #wrapwrap > header"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 130 -->
+            <footer_colors_option
+                template="website.FooterColorsOption"
+                selector="#wrapwrap > footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 131 -->
+            <header_font_option
+                template="website.HeaderFontOption"
+                selector="#wrapwrap > header"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 132 -->
+            <footer_width_option
+                template="website.FooterWidthOption"
+                selector="#wrapwrap > footer"
+                applyTo=":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 133 -->
+            <header_box_option
+                selector="#wrapwrap > header"
+                applyTo=".navbar:not(.d-none)"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 134 -->
+            <language_selector_option
+                selector="#wrapwrap > header nav.navbar .o_header_language_selector"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+            <!-- 135 -->
+            <content_width_option
+                template="website.ContentWidthOption"
+                selector="section, .s_carousel .carousel-item, .s_carousel_intro_item"
+                exclude="[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *, .s_bento_banner section[data-name='Card'],.s_floating_blocks .s_floating_blocks_block, .s_bento_block_card"
+                applyTo=":scope > .container, :scope > .container-fluid, :scope > .o_container_small"/>
+            <!-- 136 -->
+            <footer_slideout_option
+                template="website.FooterSlideoutOption"
+                selector="#wrapwrap > footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 137 -->
+            <header_navigation_option
+                selector="#wrapwrap > header"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 138 -->
+            <process_steps_option selector=".s_process_steps"/>
+            <!-- 139 -->
+            <footer_scroll_to_top_option
+                template="website.FooterScrollToTopOption"
+                selector="#wrapwrap > footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 140 -->
+            <header_elements_option
+                selector="#wrapwrap > header"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 142 -->
+            <toggle_footer_copyright_option
+                template="website.ToggleFooterCopyrightOption"
+                selector="#wrapwrap > footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>            
+            <toggle_footer_cookies_policy_link_option
+                template="website.ToggleFooterCookiePolicyLinkOption"
+                selector="#wrapwrap:has(#website_cookies_bar) > footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 143 -->
+            <header_icon_background_option
+                template="website.HeaderIconBackgroundOption"
+                selector="#wrapwrap > header"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 144 -->
+            <scroll_button_option
+                selector="section"
+                exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_facebook_page, .o_mega_menu > section, .s_appointments .s_dynamic_snippet_content, .s_bento_banner section[data-name='Card'], .s_floating_blocks, .s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .s_dynamic_category, .s_dynamic_category .s_dynamic_snippet_title, .s_announcement_scroll"/>
+            <!-- 145 -->
+            <hide_footer_option
+                template="website.HideFooterOption"
+                selector="[data-main-object]:has(input.o_page_option_data[name='footer_visible']) #wrapwrap > footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 146 -->
+            <footer_border_option
+                template="website.FooterBorder"
+                selector="#wrapwrap > footer"
+                applyTo="#footer"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <!-- 147 -->
+            <countdown_option selector=".s_countdown"/>
+            <!-- 148 -->
+            <carousel_slides_option
+                template="website.CarouselSlidesOption"
+                selector=".carousel .carousel-item"
+                exclude=".s_image_gallery .carousel-item"/>
+            <!-- 149 -->
+            <dynamic_snippet_option selector=".s_dynamic_snippet"/>
+            <!-- 150 -->
+            <dynamic_snippet_carousel_option selector=".s_dynamic_snippet_carousel"/>
+            <!-- 151 -->
+            <image_gallery_option selector=".s_image_gallery"/>
+            <!-- 152 -->
+            <instagram_option template="website.InstagramOption" selector = ".s_instagram_page"/>
+            <!-- 153 -->
+            <nav_tabs_style_option
+                template="website.NavTabsStyleOption"
+                selector=".s_tabs"
+                applyTo=".s_tabs_main"/>
+            <!-- 154 -->
+            <nav_tabs_images_style_option
+                template="website.NavTabsImagesStyleOption"
+                selector=".s_tabs_images"
+                applyTo=".s_tabs_main"/>
+            <!-- 155 -->
+            <price_list_boxed_description_option template="website.PriceListBoxedDescriptionOption" selector=".s_pricelist_boxed"/>
+            <!-- 156 -->
+            <price_list_cafe_description_option template="website.PriceListCafeDescriptionOption" selector=".s_pricelist_cafe"/>
+            <!-- 157 -->
+            <product_catalog_description_option template="website.ProductCatalogDescriptionOption" selector=".s_product_catalog"/>
+            <!-- 158 -->
+            <dot_lines_color_option
+                template="website.DotLinesColorOption"
+                selector=".s_timeline_list"/>
+            <!-- 159 -->
+            <dot_lines_color_option
+                template="website.DotLinesColorOption"
+                selector=".s_timeline_images"/>
+            <!-- 160 -->
+            <popup_cookies_option
+                template="website.PopupCookiesOption"
+                selector=".s_popup#website_cookies_bar"
+                applyTo=".modal"/>
+            <!-- 161 -->
+            <dot_lines_color_option
+                template="website.DotLinesColorOption"
+                selector=".s_timeline"/>
+            <!-- 166 -->
+            <dot_color_option template="website.DotColorOption" selector=".s_timeline .s_timeline_row"/>
+            <!-- 167 -->
+            <grid_image_option selector="img"/>
+        </xpath>
+
+        <!-- after 170 -->
+        <xpath expr="//badge_option" position="after">
+            <!-- 171 -->
+            <animate_option
+                selector=".o_animable, section .row > div, img, .fa, .btn"
+                t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, {{socialMediaElementsSelector}}, {{specialBlockquoteSelector}}"/>
+            <!-- 172 -->
+            <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
+            <!-- 173 -->
+            <visibility_option selector="section, .s_hr"/>
+            <!-- 174 -->
+            <device_visibility_option
+                template="website.DeviceVisibilityOption"
+                t-att-selector="deviceVisibilityOptionSelector"
+                exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize"/>
+            <!-- 176 -->
+            <floating_blocks_option
+                template="website.FloatingBlocksOption"
+                selector=".s_floating_blocks"/>
+        </xpath>
+
+        <!-- after 177 -->
+        <xpath expr="//vertical_justify_option" position="after">
+            <!-- 178 -->
+            <ecomm_categories_showcase_blocks_design
+                template="website.EcommCategoriesShowcaseBlocksDesign"
+                selector=".s_ecomm_categories_showcase"/>
+            <!-- 179 -->
+            <media_list_item_option selector=".s_media_list_item" shouldHaveColor="true"/>
+        </xpath>
+    </t>
+</templates>

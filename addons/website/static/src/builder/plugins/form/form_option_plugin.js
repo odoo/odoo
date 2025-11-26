@@ -4,7 +4,6 @@ import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
-import { FormFieldOptionRedraw } from "./form_field_option_redraw";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
     deleteConditionalVisibility,
@@ -39,11 +38,9 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { FormOption } from "./form_option";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 import { getParsedDataFor } from "@website/js/utils";
 
 /**
@@ -65,13 +62,6 @@ import { getParsedDataFor } from "@website/js/utils";
  */
 
 const { DateTime } = luxon;
-
-export class WebsiteFormSubmitOption extends BaseOptionComponent {
-    static template = "website.s_website_form_submit_option";
-    static selector = ".s_website_form_submit";
-    static exclude = ".s_website_form_no_submit_options";
-}
-
 const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
@@ -146,7 +136,6 @@ export class FormOptionPlugin extends Plugin {
                 reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
-        builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
         builder_actions: {
             // Form actions
             // Components that use this action MUST await fetchModels before they start.

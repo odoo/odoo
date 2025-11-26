@@ -1,27 +1,24 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 
 export class CountdownOption extends BaseOptionComponent {
+    static id = "countdown_option";
     static template = "website.CountdownOption";
-    static selector = ".s_countdown";
-    static components = { BorderConfigurator };
     static cleanForSave = (editingEl) => {
         editingEl.classList.remove("s_countdown_enable_preview");
     };
 }
 
-class CountdownOptionPlugin extends Plugin {
+registry.category("builder-options").add(CountdownOption.id, CountdownOption);
+
+export class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(before(SNIPPET_SPECIFIC_END), CountdownOption)],
         so_content_addition_selector: [".s_countdown"],
         builder_actions: {
             SetEndActionAction,

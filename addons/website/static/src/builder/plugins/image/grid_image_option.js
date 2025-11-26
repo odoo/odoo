@@ -1,8 +1,9 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 
 export class GridImageOption extends BaseOptionComponent {
+    static id = "grid_image_option";
     static template = "website.GridImageOption";
-    static selector = "img";
 
     setup() {
         super.setup();
@@ -25,3 +26,5 @@ export class GridImageOption extends BaseOptionComponent {
         );
     }
 }
+
+registry.category("builder-options").add(GridImageOption.id, GridImageOption);

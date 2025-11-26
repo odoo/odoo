@@ -9,6 +9,8 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { ShadowOption } from "@html_builder/plugins/shadow_option";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -166,7 +168,10 @@ export class BuilderOptionsPlugin extends Plugin {
         this.builderOptionsContext = new Map();
         this.builderOptionsDependencies = new Map();
         const options = this.builderOptions.concat([OptionsContainer]);
+        // TODO DUAU: better way to do this?
+        const defaultComponents = { BorderConfigurator, ShadowOption };
         for (const Option of options) {
+            Option.components = { ...defaultComponents, ...(Option.components || {}) };
             this.getBuilderDependencies(Option);
             this.getBuilderOptionContext(Option);
         }
@@ -627,7 +632,7 @@ export class BuilderOptionsPlugin extends Plugin {
             ComplexOptionClass.selector ||
             ComplexOptionClass.exclude ||
             ComplexOptionClass.applyTo ||
-            ComplexOptionClass.editableOnly !== undefined ||
+            !ComplexOptionClass.editableOnly ||
             ComplexOptionClass.groups
         ) {
             throw new Error(
@@ -644,7 +649,7 @@ export class BuilderOptionsPlugin extends Plugin {
             applyTo,
             editableOnly,
             groups,
-            props,
+            props: { ...(OptionClass.props || {}), ...props },
         });
     }
 

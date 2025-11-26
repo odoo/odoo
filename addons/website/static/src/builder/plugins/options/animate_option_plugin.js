@@ -2,12 +2,10 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
-import { AnimateOption } from "./animate_option";
 import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_traversal";
-import { ANIMATE } from "@html_builder/utils/option_sequence";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { EmphasizeAnimatedText } from "./emphasize_animated_text";
@@ -30,7 +28,6 @@ export class AnimateOptionPlugin extends Plugin {
     static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(ANIMATE, AnimateOption)],
         toolbar_items: [
             {
                 id: "animateText",

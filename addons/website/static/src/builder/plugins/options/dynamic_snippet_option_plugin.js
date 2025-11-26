@@ -1,10 +1,7 @@
-import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
-import { DynamicSnippetOption } from "./dynamic_snippet_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
@@ -48,10 +45,9 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * }) => void)[]} dynamic_snippet_template_updated
  */
 
-export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
 export const CONTAINER_CLASSES = ["container", "container-fluid", "o_container_small"];
 
-class DynamicSnippetOptionPlugin extends Plugin {
+export class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
     static shared = [
         "fetchDynamicFilters",
@@ -74,7 +70,6 @@ class DynamicSnippetOptionPlugin extends Plugin {
     fetchedDynamicFilterTemplates = [];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [withSequence(DYNAMIC_SNIPPET, DynamicSnippetOption)],
         builder_actions: {
             DynamicFilterAction,
             DynamicSnippetTemplateAction,
@@ -102,7 +97,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
         return this.modelNameFilter;
     }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(DynamicSnippetOption.selector)) {
+        if (snippetEl.matches(".s_dynamic_snippet")) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
     }

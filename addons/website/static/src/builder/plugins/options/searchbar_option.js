@@ -1,9 +1,9 @@
 import { BaseOptionComponent, useGetItemValue } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 
 export class SearchbarOption extends BaseOptionComponent {
+    static id = "searchbar_option";
     static template = "website.SearchbarOption";
-    static selector = ".s_searchbar_input";
-    static applyTo = ".search-query";
 
     setup() {
         super.setup();
@@ -13,3 +13,5 @@ export class SearchbarOption extends BaseOptionComponent {
         this.displayItems = this.getResource("searchbar_option_display_items");
     }
 }
+
+registry.category("builder-options").add(SearchbarOption.id, SearchbarOption);

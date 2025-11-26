@@ -1,12 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 import { onWillStart } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 
 export class FooterCopyrightOption extends BaseOptionComponent {
+    static id = "footer_copyright_option";
     static template = "website.FooterCopyrightOption";
-    static selector = ".o_footer_copyright";
-    static editableOnly = false;
-    static groups = ["website.group_website_designer"];
 
     setup() {
         super.setup();
@@ -17,3 +16,5 @@ export class FooterCopyrightOption extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("builder-options").add(FooterCopyrightOption.id, FooterCopyrightOption);

@@ -10,7 +10,7 @@ import { showAddFontDialog } from "./add_font_dialog";
  */
 
 // TODO Website-specific
-class WebsiteFontPlugin extends Plugin {
+export class WebsiteFontPlugin extends Plugin {
     static id = "websiteFont";
     static shared = ["addFont", "deleteFont"];
     static dependencies = ["savePlugin", "builderFont", "customizeWebsite"];

@@ -22,8 +22,6 @@ import { useDebounced } from "@web/core/utils/timing";
 // Selectors for special cases where snippet options are bound to parent
 // containers instead of the snippet itself.
 export const BLOCKQUOTE_PARENT_HANDLERS = ".s_reviews_wall .row > div";
-export const BLOCKQUOTE_DISABLE_WIDTH_APPLY_TO = ":scope > .s_blockquote";
-export const SPECIAL_BLOCKQUOTE_SELECTOR = `${BLOCKQUOTE_PARENT_HANDLERS} > .s_blockquote`;
 export const CARD_PARENT_HANDLERS =
     ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item";
 

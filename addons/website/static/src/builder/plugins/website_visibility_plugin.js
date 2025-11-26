@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { DEVICE_VISIBILITY_OPTION_SELECTOR } from "./options/visibility_option_plugin";
-import { VisibilityOption } from "./options/visibility_option";
 
 export class WebsiteVisibilityPlugin extends Plugin {
     static id = "websiteVisibilityPlugin";
@@ -16,7 +15,7 @@ export class WebsiteVisibilityPlugin extends Plugin {
     onTargetHide(editingEl) {
         if (
             editingEl.matches(DEVICE_VISIBILITY_OPTION_SELECTOR) ||
-            editingEl.matches(VisibilityOption.selector)
+            editingEl.matches("section, .s_hr")
         ) {
             editingEl.classList.remove("o_snippet_override_invisible");
 
@@ -30,7 +29,7 @@ export class WebsiteVisibilityPlugin extends Plugin {
     onTargetShow(editingEl) {
         if (
             editingEl.matches(DEVICE_VISIBILITY_OPTION_SELECTOR) ||
-            editingEl.matches(VisibilityOption.selector)
+            editingEl.matches("section, .s_hr")
         ) {
             const isMobilePreview = this.config.isMobileView(editingEl);
             const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");

@@ -1,8 +1,8 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { onWillStart } from "@odoo/owl";
-import { basicHeaderOptionSettings } from "./basicHeaderOptionSettings";
-
+import { registry } from "@web/core/registry";
 export class HeaderNavigationOption extends BaseOptionComponent {
+    static id = "header_navigation_option";
     static template = "website.HeaderNavigationOption";
     static dependencies = ["customizeWebsite"];
     static reloadTarget = true;
@@ -50,4 +50,4 @@ export class HeaderNavigationOption extends BaseOptionComponent {
     }
 }
 
-Object.assign(HeaderNavigationOption, basicHeaderOptionSettings);
+registry.category("builder-options").add(HeaderNavigationOption.id, HeaderNavigationOption);

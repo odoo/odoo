@@ -1,10 +1,10 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { _t } from "@web/core/l10n/translation";
-import { dynamicSVGSelector } from "@html_builder/plugins/utils";
+import { registry } from "@web/core/registry";
 
 export class DynamicSvgOption extends BaseOptionComponent {
+    static id = "dynamic_svg_option";
     static template = "website.DynamicSvgOption";
-    static selector = dynamicSVGSelector;
 
     setup() {
         super.setup();
@@ -30,3 +30,5 @@ export class DynamicSvgOption extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("builder-options").add(DynamicSvgOption.id, DynamicSvgOption);

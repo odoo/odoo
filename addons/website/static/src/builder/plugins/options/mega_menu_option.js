@@ -1,10 +1,11 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { registry } from "@web/core/registry";
 
 export class MegaMenuOption extends BaseOptionComponent {
+    static id = "mega_menu_option";
     static template = "website.MegaMenuOption";
     static dependencies = ["megaMenuOptionPlugin"];
-    static selector = ".o_mega_menu";
 
     setup() {
         super.setup();
@@ -22,3 +23,4 @@ export class MegaMenuOption extends BaseOptionComponent {
         return headerTemplates.includes(currentHeaderTemplate.slice(1, -1));
     }
 }
+registry.category("builder-options").add(MegaMenuOption.id, MegaMenuOption);

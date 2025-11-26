@@ -32,6 +32,7 @@ declare module "plugins" {
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style } from "@html_builder/core/core_builder_action_plugin";
     import { on_bg_color_updated_handlers } from "@html_builder/core/color_style_plugin";
+    import { builder_options_context } from "@html_builder/core/builder_options_context";
 
     interface SharedMethods {
         // Main
@@ -148,5 +149,6 @@ declare module "plugins" {
         so_content_addition_selector: so_content_addition_selector;
         so_snippet_addition_selector: so_snippet_addition_selector;
         snippet_preview_dialog_bundles: snippet_preview_dialog_bundles;
+        builder_options_context: builder_options_context;
     }
 }

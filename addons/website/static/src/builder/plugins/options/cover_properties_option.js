@@ -1,10 +1,10 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
 export class CoverPropertiesOption extends BaseOptionComponent {
+    static id = "cover_properties_option";
     static template = "website.CoverPropertiesOption";
-    static selector = ".o_record_cover_container";
-    static editableOnly = false;
 
     setup() {
         super.setup();
@@ -25,3 +25,5 @@ export const coverSizeClassLabels = {
     o_half_screen_height: _t("Half Screen"),
     cover_auto: _t("Fit text"),
 };
+
+registry.category("builder-options").add(CoverPropertiesOption.id, CoverPropertiesOption);

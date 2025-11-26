@@ -61,7 +61,8 @@
             </div>
         </div>
         <div t-if="!this.props.folded" class="we-bg-options-container pb-3" t-ref="content">
-            <t t-foreach="props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
+            <!-- TODO DUAU: temp fix, there was a clash with base_website_background_option, applyTo should be applied at render not after -->
+            <t t-foreach="props.options" t-as="OptionClass" t-key="getOptionKey(OptionClass)">
                 <BuilderContext applyTo="OptionClass.applyTo" t-if="hasAccess(OptionClass.groups)">
                     <t t-component="OptionClass" t-props="OptionClass.props || {}"></t>
                 </BuilderContext>
