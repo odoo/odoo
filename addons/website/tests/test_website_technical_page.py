@@ -1,3 +1,6 @@
+from unittest.mock import patch
+
+from odoo.addons.website.models.website_technical_page import WebsiteTechnicalPage
 from odoo.tests import TransactionCase, tagged
 
 
@@ -19,3 +22,12 @@ class TestWebsiteTechnicalPage(TransactionCase):
             "/web/reset_password",
             "/website/info",
         ])
+
+    def test_load_website_escaping_title(self):
+        patched_route = [
+            ("H'\\e\"l/l\\'\\\"o", "/w'\\o\"r/l\\'\\\"d"),
+        ]
+        with patch.object(WebsiteTechnicalPage, '_get_static_routes', return_value=patched_route):
+            page = self.env["website.technical.page"].search([])
+            self.assertEqual(page.name, patched_route[0][0])
+            self.assertEqual(page.website_url, patched_route[0][1])
