@@ -123,6 +123,39 @@ test("toggling category button does not hide active sub thread", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "Sub Channel" });
 });
 
+test("sub threads are sorted with last_interest_dt", async () => {
+    const pyEnv = await startServer();
+    const mainChannelId = pyEnv["discuss.channel"].create({ name: "Main Channel" });
+    const [subChannelId1] = pyEnv["discuss.channel"].create([
+        {
+            name: "Sub Channel_1",
+            parent_channel_id: mainChannelId,
+            last_interest_dt: "2021-01-02 12:00:00",
+        },
+        {
+            name: "Sub Channel_2",
+            parent_channel_id: mainChannelId,
+            last_interest_dt: "2021-01-01 12:00:00",
+        },
+        {
+            name: "Sub Channel_3",
+            parent_channel_id: mainChannelId,
+            last_interest_dt: "2021-01-03 12:00:00",
+        },
+    ]);
+    await start();
+    await openDiscuss(subChannelId1);
+    await contains(".o-mail-DiscussSidebarChannel-subChannel", { count: 3 });
+    await contains(".o-mail-DiscussSidebarChannel-subChannel", {
+        text: "Sub Channel_3",
+        before: [".o-mail-DiscussSidebarChannel-subChannel", { text: "Sub Channel_1" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel-subChannel", {
+        text: "Sub Channel_1",
+        before: [".o-mail-DiscussSidebarChannel-subChannel", { text: "Sub Channel_2" }],
+    });
+});
+
 test("channel - command: should have view command when category is unfolded", async () => {
     await start();
     await openDiscuss();
