@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 
 const SELECTORS_TO_DISABLE = [
     "button:not([data-available-offline]):not([disabled])",
-    "input[type='checkbox']:not([disabled])",
+    "input[type='checkbox']:not([data-available-offline]):not([disabled])",
 ];
 
 function offlineUI() {
