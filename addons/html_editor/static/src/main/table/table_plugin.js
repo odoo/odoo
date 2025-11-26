@@ -148,6 +148,8 @@ export class TablePlugin extends Plugin {
         selection_placeholder_container_predicates: (container) => {
             if (container.nodeName === "TABLE") {
                 return false;
+            } else if (["TD", "TH"].includes(container.nodeName)) {
+                return true;
             }
         },
         normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
