@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from odoo import exceptions, tools
+
+from odoo import exceptions, fields, tools
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
@@ -16,6 +17,35 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass('mail.test.track.duration.mixin')
+
+    @users('employee')
+    def test_mail_tracking_duration_structure(self):
+        """ Quickly test structure of stored JSON duration tracking """
+        test_record = self.rec_1.with_env(self.env)
+        self.assertEqual(test_record.duration, {
+            's': self.stage_1.id, 'd': fields.Datetime.to_string(self.mock_start_time),
+        })
+
+        # no stage
+        with self.mock_datetime_and_now(self.mock_start_time + timedelta(minutes=10)):
+            test_record.stage_id = False
+            test_record.flush_recordset()
+        self.assertEqual(test_record.duration, {
+            's': 0,
+            'd': fields.Datetime.to_string(self.mock_start_time + timedelta(minutes=10)),
+            str(self.stage_1.id): 10,
+        })
+
+        # new stage
+        with self.mock_datetime_and_now(self.mock_start_time + timedelta(minutes=30)):
+            test_record.stage_id = self.stage_2.id
+            test_record.flush_recordset()
+        self.assertEqual(test_record.duration, {
+            's': self.stage_2.id,
+            'd': fields.Datetime.to_string(self.mock_start_time + timedelta(minutes=30)),
+            str(self.stage_1.id): 10,
+            '0': 20,
+        })
 
     def test_mail_tracking_duration(self):
         self._test_record_duration_tracking()

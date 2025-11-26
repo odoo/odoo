@@ -11,7 +11,12 @@ class MailTrackingDurationMixin(models.AbstractModel):
     _name = 'mail.tracking.duration.mixin'
     _description = "Mixin to compute the time a record has spent in each value a many2one field can take"
     _inherit = ['mail.thread']
+    _track_duration_field = False
 
+    duration = fields.Json(
+        compute="_compute_duration", string="Timing",
+        store=True,
+    )
     duration_tracking = fields.Json(
         string="Status time", compute="_compute_duration_tracking",
         help="JSON that maps ids from a many2one field to seconds spent")
@@ -22,6 +27,30 @@ class MailTrackingDurationMixin(models.AbstractModel):
     rotting_days = fields.Integer('Days Rotting', help='Day count since this resource was last updated',
         compute='_compute_rotting')
     is_rotting = fields.Boolean('Rotting', compute='_compute_rotting', search='_search_is_rotting')
+
+    @api.depends(lambda self: [self._track_duration_field])
+    def _compute_duration(self):
+        """ Compute duration tracking, a JSON dict, whose keys are stage IDs
+        (stringified IDs) as well as special string-based monocharacter keys
+        holding valuable information, like
+            '0': time spent in no stage
+            '1': time spent in stage ID 1
+            '3': time spent in stage ID 3
+            ...
+            's': last (current) stage, may be False;
+            'd': last stage update;
+        """
+        now = self.env.cr.now()
+        for record in self:
+            duration_dict = record.duration or {}
+            last_stage_id = duration_dict.get('s')
+            if last_stage_id is not None and duration_dict.get('d'):
+                old_update = fields.Datetime.to_datetime(duration_dict['d'])
+                duration_dict[str(last_stage_id)] = duration_dict.get(str(last_stage_id), 0) + int((now - old_update) / timedelta(minutes=1))
+            # update last stage / datetime
+            duration_dict['s'] = record[record._track_duration_field].id or 0
+            duration_dict['d'] = self.env.cr.now()
+            record.duration = duration_dict
 
     def _compute_duration_tracking(self):
         """
