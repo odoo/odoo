@@ -727,17 +727,19 @@ class IrAttachment(models.Model):
                 vals['raw'] = attachment.raw
         return vals_list
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _delete_file_hook(self):
         # First delete in the database, *then* in the filesystem if the
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
         to_delete = OrderedSet(attach.store_fname for attach in self if attach.store_fname)
-        res = super().unlink()
-        for file_path in to_delete:
-            self._file_delete(file_path)
 
-        return res
+        def _post_hook():
+            for file_path in to_delete:
+                self._file_delete(file_path)
+
+        return _post_hook
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -1,6 +1,5 @@
-
+from odoo.exceptions import MissingError
 from odoo.fields import Command
-from odoo.orm.fields import MissingError
 from odoo.tests import TransactionCase
 from odoo.tools import mute_logger
 
@@ -68,6 +67,7 @@ class TestUnlink(TransactionCase):
 
         self.assertFalse(self.ModelData._xmlid_to_res_id(ref_name, raise_if_not_found=False))
 
+    @mute_logger("odoo.models.unlink")
     def test_unlink_inverse_inside(self):
         # See https://github.com/odoo/odoo/pull/229604
         containers = self.Container.create([
@@ -82,3 +82,114 @@ class TestUnlink(TransactionCase):
 
         self.assertEqual(len(containers[0].cascade_line_ids), 0)
         self.assertEqual(len(containers[1].cascade_line_ids), 0, "The unlink inside the inverse shouldn't invalidate the inverse value of the second record")
+
+    @mute_logger("odoo.models.unlink")
+    def test_unlink_simple_graph_1(self):
+        # container <==== cascade_line <---- child_cascade_line
+        container = self.Container.create({
+            'cascade_line_ids': [
+                Command.create({
+                    'childs_ids': [Command.create({})],
+                }),
+            ],
+        })
+
+        child_cascade_line = container.cascade_line_ids.childs_ids
+
+        self.assertEqual(child_cascade_line.has_parent, True)
+        cascade_line_ids = container.cascade_line_ids
+
+        container.unlink()
+
+        self.assertFalse(container.exists(), False)
+        self.assertFalse(cascade_line_ids.exists(), False)
+
+        self.assertFalse(child_cascade_line.parent_id)
+        self.assertEqual(child_cascade_line.has_parent, False)
+        self.assertEqual(child_cascade_line.parent_path, f'{child_cascade_line.id}/')
+
+    @mute_logger("odoo.models.unlink")
+    def test_unlink_simple_graph_2(self):
+        # container <== cascade_line <---- child_cascade_line
+        #        ^                              ║
+        #        ╚==============================╝
+        container = self.Container.create({
+            'cascade_line_ids': [
+                Command.create({}),
+                Command.create({}),
+            ],
+        })
+        child_cascade_line = container.cascade_line_ids[1]
+        child_cascade_line.parent_id = container.cascade_line_ids[0]
+
+        self.assertEqual(child_cascade_line.has_parent, True)
+        cascade_line_ids = container.cascade_line_ids
+
+        container.unlink()
+        self.assertFalse(container.exists(), False)
+        self.assertFalse(cascade_line_ids.exists(), False)
+        self.assertFalse(child_cascade_line.exists(), False)
+
+        with self.assertRaises(MissingError):
+            child_cascade_line.parent_id
+
+    @mute_logger("odoo.models.unlink")
+    def test_unlink_simple_graph_3(self):
+        #        ╔========== cascade_line_1
+        #        v
+        # container <======= cascade_line_2
+        #     ^  ^              ^
+        #     |  |              ┃    <override _delete_collect_extra>
+        #     |  └---------- null_line_1
+        #     |
+        #     └------------- null_line_2
+
+        container = self.Container.create({
+            'cascade_line_ids': [
+                Command.create({}),
+                Command.create({}),
+            ],
+            'null_line_ids': [
+                Command.create({}),
+                Command.create({}),
+            ],
+        })
+        # null_line_ids should be deleted too
+        container.cascade_line_ids[0].hard_sibling_id = container.null_line_ids[0]
+        cascade_line_ids = container.cascade_line_ids
+        null_line_ids = container.null_line_ids
+
+        container.unlink()
+        self.assertFalse(container.exists(), False)
+        self.assertFalse(cascade_line_ids.exists(), False)
+        self.assertFalse(null_line_ids[0].exists(), False)
+        with self.assertRaises(MissingError):
+            null_line_ids[0].container_id
+
+        self.assertTrue(null_line_ids[1].exists())
+        self.assertFalse(null_line_ids[1].container_id)
+
+    @mute_logger("odoo.models.unlink")
+    def test_unlink_performance(self):
+        container = self.Container.create(
+            [
+                {
+                    'cascade_line_ids': [
+                        Command.create({}),
+                        Command.create({}),
+                    ],
+                    'null_line_ids': [
+                        Command.create({}),
+                        Command.create({}),
+                    ],
+                }
+                for __ in range(50)
+            ],
+        )
+        self.env.flush_all()
+
+        # 3 +3 queries : search ir data / ir attachment / ir default for cascade_line_ids + unlink
+        # 1 Query for delete
+        # 1 query to update has_container of null_line_ids
+        with self.assertQueryCount(8):
+            container.unlink()

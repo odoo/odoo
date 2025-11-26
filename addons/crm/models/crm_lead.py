@@ -1639,6 +1639,9 @@ class CrmLead(models.Model):
         opportunities.activity_ids.write({
             'res_id': self.id,
         })
+        # FIXME: It shoud be done during the write above
+        # Why activity_ids doesn't depends on res_id ?
+        (self + opportunities).invalidate_recordset(['activity_ids'])
 
         return True
 

@@ -60,7 +60,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         self.move.button_draft()
-        with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
+        with self.assertRaisesRegex(UserError, "To keep the restrictive audit trail, you can not delete journal entries"):
             self.move.unlink()
 
     def test_cant_unlink_message(self):

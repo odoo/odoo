@@ -177,3 +177,4 @@ class BusCase:
     def _reset_bus(self):
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.env["bus.bus"].sudo().search([]).unlink()
+        self.env.invalidate_all()  # Mimic the old behavior, necessary for test_60_rtc_sync_sessions_should_gc_and_return_outdated_and_active_sessions

@@ -17,6 +17,7 @@ class ProductDocument(models.Model):
         'ir.attachment',
         string="Related attachment",
         required=True,
+        index=True,
         ondelete='cascade')
 
     active = fields.Boolean(default=True)
@@ -55,6 +56,5 @@ class ProductDocument(models.Model):
         return vals_list
 
     def unlink(self):
-        attachments = self.ir_attachment_id
-        res = super().unlink()
-        return res and attachments.unlink()
+        # Will force this record to be deleted because of the delete cascade
+        return self.ir_attachment_id.unlink()

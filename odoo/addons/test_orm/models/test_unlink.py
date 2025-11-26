@@ -26,13 +26,21 @@ class Test_OrmUnlinkCascadeLine(models.Model):
     container_id = fields.Many2one('test_orm.unlink', ondelete="cascade")
 
     parent_id = fields.Many2one('test_orm.unlink.cascade.line', ondelete="set null")
+    childs_ids = fields.One2many('test_orm.unlink.cascade.line', 'parent_id')
     parent_path = fields.Char(index='btree')
     has_parent = fields.Boolean(compute='_compute_has_parent', store=True)
+
+    hard_sibling_id = fields.Many2one('test_orm.unlink.null.line', ondelete='cascade')
 
     @api.depends('parent_id')
     def _compute_has_parent(self):
         for rec in self:
             rec.has_parent = bool(rec.parent_id)
+
+    def _delete_collect_extra(self):
+        # Add hard_sibling_id record to be deleted
+        yield from super()._delete_collect_extra()
+        yield self.hard_sibling_id
 
 
 class Test_OrmUnlinkNullLine(models.Model):

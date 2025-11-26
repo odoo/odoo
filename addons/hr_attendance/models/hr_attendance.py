@@ -102,7 +102,7 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('check_in', 'check_out', 'employee_id', 'linked_overtime_ids')
     def _compute_overtime_status(self):
         for attendance in self:
             if not attendance.linked_overtime_ids:
@@ -114,12 +114,13 @@ class HrAttendance(models.Model):
             else:
                 attendance.overtime_status = 'to_approve'
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('check_in', 'check_out', 'employee_id', 'linked_overtime_ids')
     def _compute_overtime_hours(self):
         for attendance in self:
             attendance.overtime_hours = sum(attendance.linked_overtime_ids.mapped('manual_duration'))
 
     @api.depends('check_in', 'check_out', 'employee_id')
+    # no dependency on linked_overtime_ids to avoid recomputation
     def _compute_validated_overtime_hours(self):
         for attendance in self:
             attendance.validated_overtime_hours = sum(attendance.linked_overtime_ids.filtered_domain([('status', '=', 'approved')]).mapped('manual_duration'))

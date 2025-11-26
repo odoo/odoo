@@ -106,14 +106,10 @@ class IrActionsActions(models.Model):
         for record in self:
             record.xml_id = res.get(record.id)
 
-    def unlink(self):
-        """unlink ir.action.todo/ir.filters which are related to actions which will be deleted.
-           NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
-        todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
-        todos.unlink()
-        filters = self.env['ir.filters'].search([('action_id', 'in', self.ids)])
-        filters.unlink()
-        return super().unlink()
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
+        yield self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
+        yield self.env['ir.filters'].search([('action_id', 'in', self.ids)])
 
     @api.ondelete(at_uninstall=True)
     def _unlink_check_home_action(self):

@@ -161,7 +161,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
         if res_model and res_id:
             record = self[res_model].browse(res_id)
-            if record.exists():
+            if record.exists():  # TODO: can be removed
                 return record
             if raise_if_not_found:
                 raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))

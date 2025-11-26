@@ -523,6 +523,36 @@ class Registry(Mapping[str, type["BaseModel"]]):
         return result
 
     @functools.cached_property
+    def many2one_targeting(self) -> dict[str, tuple[Field, ...]]:
+        result = defaultdict(list)
+        for Model in self.models.values():
+            if Model._abstract or not Model._auto:
+                continue
+
+            for field in Model._fields.values():
+                if field.type == 'many2one' and field.store:
+                    result[field.comodel_name].append(field)
+
+        return {
+            model_name: tuple(fields) for model_name, fields in result.items()
+        }
+
+    @functools.cached_property
+    def many2many_targeting(self) -> dict[str, tuple[Field, ...]]:
+        result = defaultdict(list)
+        for Model in self.models.values():
+            if Model._abstract or not Model._auto:
+                continue
+
+            for field in Model._fields.values():
+                if field.type == 'many2many' and field.store:
+                    result[field.comodel_name].append(field)
+
+        return {
+            model_name: tuple(fields) for model_name, fields in result.items()
+        }
+
+    @functools.cached_property
     def field_computed(self) -> dict[Field, list[Field]]:
         """ Return a dict mapping each field to the fields computed by the same method. """
         computed: dict[Field, list[Field]] = {}

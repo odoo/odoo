@@ -316,7 +316,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 }])
 
         # we can't send the ubl document again unless we regenerate the pdf
-        move.invoice_pdf_report_id.unlink()
+        move.invoice_pdf_report_file = False  # unlink doesn't invalidate invoice_pdf_report_id
         wizard = self.create_send_and_print(move, default=True)
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
         self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)

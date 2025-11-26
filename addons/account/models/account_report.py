@@ -565,16 +565,6 @@ class AccountReportLine(models.Model):
         if vals_list:
             self.env['account.report.expression'].create(vals_list)
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_child_expressions(self):
-        """
-        We explicitly unlink child expressions.
-        This is necessary even if there is an ondelete='cascade' on it, because
-        the @api.ondelete method _unlink_archive_used_tags is not automatically
-        called if the parent model is deleted.
-        """
-        self.expression_ids.unlink()
-
 
 class AccountReportExpression(models.Model):
     _name = 'account.report.expression'
