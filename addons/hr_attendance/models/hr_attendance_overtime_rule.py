@@ -354,8 +354,8 @@ class HrAttendanceOvertimeRule(models.Model):
         ):
             period = rule.quantity_period
             for date in attendances_by[period]:
-                if attendances.employee_id.resource_calendar_id.flexible_hours:
-                    expected_hours = attendances.employee_id.resource_calendar_id.hours_per_day
+                if attendances.employee_id.resource_calendar_id.flexible_hours or not attendances.employee_id.resource_calendar_id:
+                    continue
                 elif rule.expected_hours_from_contract:
                     expected_hours = self._get_expected_hours_from_contract(date, version_map[employee][date], period)
                 else:
@@ -364,7 +364,7 @@ class HrAttendanceOvertimeRule(models.Model):
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
                 # # Handle undertime: convert missing hours into intervals to be deducted later
-                if overtime_quantity < 0:
+                if period == 'day' and overtime_quantity < 0:
                     missing_hours = abs(overtime_quantity)
 
                     new_intervals = _last_hours_as_intervals(
@@ -377,7 +377,8 @@ class HrAttendanceOvertimeRule(models.Model):
                         undertime_flag[date, start, end] = True
 
                     continue
-                # Handle overtime: convert overtime hours into intervals to be added later
+                if period == 'week' and overtime_quantity < 0:
+                    continue
                 if overtime_quantity <= rule.employer_tolerance:
                     continue
                 if overtime_quantity < overtime_hours_by[period][date]:

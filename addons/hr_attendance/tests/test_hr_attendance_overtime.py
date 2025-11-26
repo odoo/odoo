@@ -757,14 +757,14 @@ class TestHrAttendanceOvertime(HttpCase):
         # TODO naja: logic should rework after negative logic
         # self.assertAlmostEqual(attendance.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
         # for no negative overtime -> 0
-        self.assertAlmostEqual(attendance.overtime_hours, 0, 2, 'There should be -2 hours of overtime for the flexible resource.')
+        self.assertAlmostEqual(attendance.overtime_hours, 0, 2, 'There should be 0 hours of overtime for the flexible resource.')
 
         # 3) 10:00 - 22:00 should contain 4 hours of overtime
         attendance.write({
             'check_in': datetime(2023, 1, 4, 10, 0),
             'check_out': datetime(2023, 1, 4, 22, 0)
         })
-        self.assertAlmostEqual(attendance.overtime_hours, 4, 2, 'There should be 4 hours of overtime for the flexible resource.')
+        self.assertAlmostEqual(attendance.overtime_hours, 0, 2, 'There should be 0 hours of overtime for the flexible resource.')
 
     def test_overtime_hours_multiple_flexible_resources(self):
         """ Test the computation of overtime hours for multiple flexible resources on a single workday with 8 hours_per_day.
@@ -996,7 +996,7 @@ class TestHrAttendanceOvertime(HttpCase):
             ('employee_id', '=', self.employee.id),
         ])
 
-        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 5.0, 2)
+        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 2.0, 2)
         self._check_overtimes(overtimes, [
             {  # monday 18:00->19:00 (weekly + monday daily)
                 'date': date(2025, 8, 18),
