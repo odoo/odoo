@@ -11,6 +11,10 @@ export class ReportViewMeasures extends Component {
     static props = {
         measures: true,
         activeMeasures: { type: Array, optional: true },
+        multiSelect: { type: Boolean, optional: true },
         onMeasureSelected: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        multiSelect: true,
     };
 }

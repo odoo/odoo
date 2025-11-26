@@ -146,6 +146,12 @@ export function checkLegend(view, expectedLabels) {
     });
 }
 
+export function checkMeasure(expectedMeasure) {
+    expect(`.o_report_measures`).toHaveText(expectedMeasure, {
+        message: `Measure should be ${expectedMeasure}`,
+    });
+}
+
 /**
  * @param {GraphView} view
  */
