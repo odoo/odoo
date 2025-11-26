@@ -1101,6 +1101,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         ml_to_unlink.unlink()
         # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
         # so it must be called for each move where no move line has been deleted.
+        if ml_to_unlink:
+            self.env.invalidate_all()  # test_propagate_quantity_on_backorders: workorder states are not recomputed
         (moves_to_unreserve - moves_not_to_recompute)._recompute_state()
         return True
 

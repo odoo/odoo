@@ -1,13 +1,12 @@
-from odoo import api, models
+from odoo import models
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    @api.ondelete(at_uninstall=False)
-    def unlink_snailmail_letters(self):
-        snailmail_letters = self.env['snailmail.letter'].search([
+    def _delete_collect_extra(self):
+        yield self.env['snailmail.letter'].search([
             ('model', '=', 'account.move'),
             ('res_id', 'in', self.ids),
         ])
-        snailmail_letters.unlink()
+        yield from super()._delete_collect_extra()
