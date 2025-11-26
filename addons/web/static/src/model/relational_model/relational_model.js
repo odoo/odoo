@@ -584,7 +584,7 @@ export class RelationalModel extends Model {
                     }
                 }
                 if (Object.hasOwn(groupData, "__offset")) {
-                    groupConfig.list.offset = group.__offset;
+                    groupConfig.list.offset = groupData.__offset;
                 }
                 if (groupRecordConfig) {
                     groupConfig.record = {
