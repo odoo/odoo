@@ -171,3 +171,8 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
                 invoice.delivery_date, custom_delivery_date,
                 "Custom invoice delivery shouldn't change posting invoice",
             )
+            invoice.button_draft()
+            self.assertEqual(
+                invoice.delivery_date, custom_delivery_date,
+                "Custom invoice delivery shouldn't change resetting to draft invoice",
+            )
