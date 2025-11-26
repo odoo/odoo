@@ -112,7 +112,6 @@
     <template id="nav_online_invoice_xml_3_0_simple_address" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
         <base:simpleAddress>
             <base:countryCode t-out="partner.country_code"/>
-            <base:region t-if="partner.state_id" t-out="partner.state_id.name"/>
             <base:postalCode t-out="partner.zip"/>
             <base:city t-out="partner.city"/>
             <base:additionalAddressDetail t-out="partner.street"/>
