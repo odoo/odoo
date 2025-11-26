@@ -151,13 +151,6 @@ const threadPatch = {
             },
         });
     },
-    /** Equivalent to DiscussChannel._allow_invite_by_email */
-    get allow_invite_by_email() {
-        return (
-            this.channel.channel_type === "group" ||
-            (this.channel.channel_type === "channel" && !this.group_public_id)
-        );
-    },
     get avatarUrl() {
         if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
