@@ -1,4 +1,4 @@
-from odoo import models, fields, _
+from odoo import _, fields, models, modules, tools
 from odoo.exceptions import UserError
 
 
@@ -36,6 +36,11 @@ class PosMakeInvoice(models.TransientModel):
         if not self.consolidated_billing or len(selected_orders) == 1:
             for order in selected_orders:
                 invoices |= order._generate_pos_order_invoice()
+                # Commit after each invoice because a failure on one POS Order would rollback all previously created invoices,
+                # which is not desirable since some of the invoice send & print web services may already be triggered, and those are already committing.
+                if not tools.config['test_enable'] and not modules.module.current_test:
+                    self.env.cr.commit()
+
         else:
             configs = selected_orders.config_id
             partners = selected_orders.partner_id
@@ -65,6 +70,10 @@ class PosMakeInvoice(models.TransientModel):
 
             for _key, orders in grouped_orders:
                 invoices |= orders._generate_pos_order_invoice()
+                # Commit after each invoice because a failure on one group of POS Orders would rollback all previously created invoices,
+                # which is not desirable since some of the invoice send & print web services may already be triggered, and those are already committing.
+                if not tools.config['test_enable'] and not modules.module.current_test:
+                    self.env.cr.commit()
 
         if invoices:
             return selected_orders.action_view_invoice()
