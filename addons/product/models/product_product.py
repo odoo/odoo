@@ -33,6 +33,8 @@ class ProductProduct(models.Model):
         'Sales Price', compute='_compute_product_lst_price',
         digits='Product Price', inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
+    # variant specific price
+    price_variant_extra = fields.Float('Variant Extra Price')
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -303,13 +305,17 @@ class ProductProduct(models.Model):
                 value = self.env['uom.uom'].browse(self.env.context['uom'])._compute_price(product.lst_price, product.uom_id)
             else:
                 value = product.lst_price
-            value -= product.price_extra
+            if len(product.product_tmpl_id.product_variant_ids) <= 1:
+                value -= product.price_extra
+            else:
+                product.price_variant_extra = value - product.list_price - sum(product.product_template_attribute_value_ids.mapped('price_extra'))
+                value -= product.price_extra
             product.write({'list_price': value})
 
     @api.depends("product_template_attribute_value_ids.price_extra")
     def _compute_product_price_extra(self):
         for product in self:
-            product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
+            product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra')) + product.price_variant_extra
 
     @api.depends('list_price', 'price_extra')
     @api.depends_context('uom')
