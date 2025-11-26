@@ -29,6 +29,7 @@
                 <p t-if="description" class="mb-0" t-out="description"/>
                 <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
+                <div t-if="result['tags']" t-out="result['tags']" class="my-2"/>
             </div>
             <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0 ms-auto">
                 <t t-if="result['detail_strike']">

@@ -171,3 +171,34 @@ class TestAutoComplete(TransactionCase):
         self.assertTrue(skip, "Expected field to be skipped because the value contains 'secret'")
         self.assertEqual(field_type, 'notes', "Expected field_type to remain 'notes' when highlighting is skipped")
         self.assertEqual(result, value, "Expected result to remain unchanged when highlighting is skipped")
+
+    def test_tags_highlight_handler_match(self):
+        field_meta = {'name': 'tag_ids', 'type': 'tags', 'match': True}
+        value = [{'name': 'Marketing'}, {'name': 'Finance'}]
+        search_term = "market"
+
+        skip, result, field_type = self.env['test.model']._search_highlight_field(field_meta, value, search_term)
+
+        self.assertFalse(skip, "Expected field to not be skipped")
+        self.assertEqual(field_type, 'html', "Expected field_type to switch to 'html' after highlighting")
+        self.assertIn(
+            '<span class="fw-bold text-primary-emphasis">Market</span><span>ing</span>',
+            str(result),
+            "Expected matching term to be highlighted in the output"
+        )
+        self.assertIn(
+            '<span>Finance</span>',
+            str(result),
+            "Expected non-matching tags to be present without highlighting"
+        )
+
+    def test_tags_highlight_handler_no_match(self):
+        field_meta = {'name': 'tag_ids', 'type': 'tags', 'match': True}
+        value = [{'name': 'Marketing'}, {'name': 'Finance'}]
+        search_term = "random"
+
+        skip, result, field_type = self.env['test.model']._search_highlight_field(field_meta, value, search_term)
+
+        self.assertTrue(skip, "Expected field to be skipped when no tags match the search term")
+        self.assertEqual(field_type, 'tags', "Expected field_type to remain 'tags' when highlighting is skipped")
+        self.assertEqual(result, value, "Expected result to remain unchanged when highlighting is skipped")

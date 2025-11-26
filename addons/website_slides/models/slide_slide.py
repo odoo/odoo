@@ -1281,13 +1281,14 @@ class SlideSlide(models.Model):
     @api.model
     def _search_get_detail(self, website, order, options):
         with_description = options['displayDescription']
-        search_fields = ['name']
-        fetch_fields = ['id', 'name']
+        search_fields = ['name', 'tag_ids.name']
+        fetch_fields = ['id', 'name', 'tag_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
             'extra_link': {'name': 'course', 'type': 'text'},
             'extra_link_url': {'name': 'course_url', 'type': 'text', 'truncate': False},
+            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
         if with_description:
             search_fields.append('description')
@@ -1319,6 +1320,7 @@ class SlideSlide(models.Model):
             data['url'] = slide.website_absolute_url
             data['course'] = _('Course: %s', slide.channel_id.name)
             data['course_url'] = slide.channel_id.website_absolute_url
+            data['tag_ids'] = slide.tag_ids.read(['name'])
         return results_data
 
     def get_base_url(self):

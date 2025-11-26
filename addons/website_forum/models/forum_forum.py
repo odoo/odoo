@@ -321,11 +321,12 @@ class ForumForum(models.Model):
     @api.model
     def _search_get_detail(self, website, order, options):
         with_description = options['displayDescription']
-        search_fields = ['name']
-        fetch_fields = ['id', 'name']
+        search_fields = ['name', 'tag_ids.name']
+        fetch_fields = ['id', 'name', 'tag_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
         if with_description:
             search_fields.append('description')
@@ -345,4 +346,5 @@ class ForumForum(models.Model):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for forum, data in zip(self, results_data):
             data['website_url'] = forum.website_url
+            data['tag_ids'] = forum.tag_ids.read(['name'])
         return results_data

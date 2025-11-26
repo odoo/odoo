@@ -333,14 +333,12 @@ class BlogPost(models.Model):
                 domain.append([("publish_on", "!=", False)])
         else:
             domain.append([("website_published", "=", True)])
-        search_fields = ['name', 'author_name']
-        def search_in_tags(env, search_term):
-            tags_like_search = env['blog.tag'].search([('name', 'ilike', search_term)])
-            return [('tag_ids', 'in', tags_like_search.ids)]
-        fetch_fields = ['name', 'website_url']
+        search_fields = ['name', 'author_name', 'tag_ids.name']
+        fetch_fields = ['name', 'website_url', 'tag_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
         if with_description:
             search_fields.append('content')
@@ -353,8 +351,13 @@ class BlogPost(models.Model):
             'model': 'blog.post',
             'base_domain': domain,
             'search_fields': search_fields,
-            'search_extra': search_in_tags,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-rss',
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for post, data in zip(self, results_data):
+            data['tag_ids'] = post.tag_ids.read(['name'])
+        return results_data

@@ -605,12 +605,13 @@ class EventEvent(models.Model):
                 if date_details[0] != 'scheduled':
                     current_date = date_details[1]
 
-        search_fields = ['name']
-        fetch_fields = ['name', 'website_url', 'address_name']
+        search_fields = ['name', 'tag_ids.name']
+        fetch_fields = ['name', 'website_url', 'address_name', 'tag_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
             'address_name': {'name': 'address_name', 'type': 'text', 'match': True},
+            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True}
         }
         if with_description:
             search_fields.append('subtitle')
@@ -645,12 +646,13 @@ class EventEvent(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         with_date = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
-        if with_date:
-            for event, data in zip(self, results_data):
+        for event, data in zip(self, results_data):
+            if with_date:
                 begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
                 end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
                 data['range'] = (
                     Markup('{} <i class="fa fa-long-arrow-right"></i> {}').format(begin, end)
                     if begin != end else begin
                 )
+            data['tag_ids'] = event.tag_ids.read(['name'])
         return results_data
