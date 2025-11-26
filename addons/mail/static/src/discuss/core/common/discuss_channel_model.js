@@ -80,6 +80,8 @@ export class DiscussChannel extends Record {
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     }
+    /** @type {"video_full_screen"|undefined} */
+    default_display_mode;
     channel_member_ids = fields.Many("discuss.channel.member", {
         inverse: "channel_id",
         onDelete: (r) => r?.delete(),

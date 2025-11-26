@@ -38,8 +38,6 @@ const threadPatch = {
                 return this.correspondent?.persona?.country_id ?? this.country_id;
             },
         });
-        /** @type {"video_full_screen"|undefined} */
-        this.default_display_mode = undefined;
         this.group_ids = fields.Many("res.groups");
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
