@@ -13,6 +13,10 @@
         'point_of_sale._assets_pos': [
             'pos_adyen/static/src/**/*',
         ],
+        'point_of_sale.payment_terminals': [
+            'pos_adyen/static/src/app/utils/payment/payment_adyen.js',
+            'pos_adyen/static/src/app/models/pos_payment.js',
+        ],
         'web.assets_tests': [
             'pos_adyen/static/tests/tours/**/*',
         ],
