@@ -853,11 +853,12 @@ class ForumPost(models.Model):
     def _search_get_detail(self, website, order, options):
         with_description = options['displayDescription']
         with_date = options['displayDetail']
-        search_fields = ['name']
-        fetch_fields = ['id', 'name', 'website_url']
+        search_fields = ['name', 'tag_ids.name']
+        fetch_fields = ['id', 'name', 'website_url', 'tag_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
 
         domain = website.website_domain()
@@ -921,6 +922,7 @@ class ForumPost(models.Model):
         for post, data in zip(self, results_data):
             if with_date:
                 data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
+            data['tag_ids'] = post.tag_ids.read(['name'])
         return results_data
 
     def _get_related_posts(self, limit=5):

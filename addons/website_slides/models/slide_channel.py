@@ -1050,11 +1050,12 @@ class SlideChannel(models.Model):
                 domain.append([('tag_ids', 'in', tags_.ids)])
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
-        search_fields = ['name']
-        fetch_fields = ['name', 'website_url']
+        search_fields = ['name', 'tag_ids.name']
+        fetch_fields = ['name', 'website_url', 'tag_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
         if with_description:
             search_fields.append('description_short')
@@ -1071,6 +1072,12 @@ class SlideChannel(models.Model):
             'mapping': mapping,
             'icon': 'fa-graduation-cap',
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for channel, data in zip(self, results_data):
+            data['tag_ids'] = channel.tag_ids.read(['name'])
+        return results_data
 
     def _get_placeholder_filename(self, field):
         image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]

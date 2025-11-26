@@ -758,6 +758,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
         """
         return {
             'text': self._search_highlight_text,
+            'tags': self._search_highlight_tags,
         }
 
     def _search_highlight_text(self, field_meta, value, term):
@@ -783,3 +784,35 @@ class WebsiteSearchableMixin(models.AbstractModel):
             return False, value, 'html'
 
         return False, value, 'text'
+
+    def _search_highlight_tags(self, field_meta, value, term):
+        """
+        Highlight handler for tags fields.
+
+        Splits each tag name around search term matches and wraps matched
+        segments in highlight markup.
+
+        :return: tuple (skip_field, processed_value, resulting_type)
+            - skip_field (bool): Always False for tags fields
+            - processed_value: Highlighted HTML or the original tags data
+            - resulting_type (str): 'html' if highlights were added, else 'tags'
+        """
+        highlighted_tags = []
+        has_highlight = False
+
+        for tag in value:
+            name = tag.get('name', '')
+            parts, tag_highlight = self._split_for_highlight(name, term)
+            tag['parts'] = parts
+            if tag_highlight:
+                has_highlight = True
+            highlighted_tags.append(tag)
+
+        if has_highlight:
+            value = self.env['ir.ui.view'].sudo()._render_template(
+                "website.search_tags_highlight",
+                {'tags': highlighted_tags}
+            )
+            return False, value, 'html'
+
+        return True, value, 'tags'

@@ -3100,6 +3100,19 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
     <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary-emphasis' if part[0] % 2 else None" t-out="part[1]"/>
 </template>
 
+<template id="search_tags_highlight" name="Website Searchbar: Tag Highlight">
+    <div class="d-flex gap-1 flex-wrap">
+        <span t-foreach="tags"
+            t-as="tag"
+            class="badge o_color_0">
+            <span t-foreach="enumerate(tag['parts'])"
+               t-as="part"
+               t-att-class="'fw-bold text-primary-emphasis' if part[0] % 2 else None"
+               t-out="part[1]" />
+        </span>
+    </div>
+</template>
+
 <template id="list_website_public_pages" name="Website Pages">
     <t t-call="website.layout">
         <div id="wrap">
@@ -3189,6 +3202,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                 <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-out="extra_link"
                     t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
+                <div t-if="result.get('tags')" t-out="result.get('tags')" class="my-2"/>
             </div>
             <div class="flex-shrink-0 ms-auto">
                 <t t-if="result.get('detail_strike')">
