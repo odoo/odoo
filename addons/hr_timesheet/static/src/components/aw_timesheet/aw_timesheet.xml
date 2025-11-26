@@ -53,8 +53,7 @@
                                 t-if="Object.keys(state.grouped[groupKey]).length &gt; 0">
                                 <t t-set="ids" t-value="parseJson(groupKey)"/>
                                 <h6 class="mb-2">
-                                    Project <t t-esc="projectName(ids.project_id)"/> /
-                                    Task <t t-esc="taskName(ids.task_id)"/>
+                                    <t t-esc="groupByTitle(ids)"/>
                                 </h6>
 
                                 <div class="table-responsive mb-2">
@@ -76,7 +75,7 @@
                                                             t-on-click.stop="() => this.onTake(groupKey, title)">Take</button>
                                                         <button class="btn btn-sm btn-secondary"
                                                             t-att-style="state.selectedRows.size > 0 ? 'visibility: hidden;' : ''"
-                                                            St-on-click.stop="() => this.onDelete(groupKey, title)">Delete</button>
+                                                            t-on-click.stop="() => this.onDelete(groupKey, title)">Delete</button>
                                                     </td>
                                                 </tr>
                                             </t>
@@ -149,7 +148,7 @@
                         <TimesheetTimer onSaveCallback="() => this.onSaveTimesheetForm()"/>
                     </t>
                     <t t-else="">
-                        <TimesheetTimer data="this.selectedData" 
+                        <TimesheetTimer data="this.selectedData"
                             onSaveCallback="(project_id, task_id, is_billable) => this.onSaveTimesheetForm(project_id, task_id, is_billable)"
                             onWriteTimesheet="() => this.onWriteTimesheet()"
                         />

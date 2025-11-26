@@ -237,7 +237,7 @@ export class ActivityWatchTimesheet extends Component {
 
         // only project in odoo url
         match = url.match(
-            new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:project|project\\.project)/(\\d+)(?:\\?|$)`)
+            new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:project|project\\.project)/(\\d+)(?:/[^?#]*)*(?:\\?|$)`)
         );
         if (match) {
             event.project_id = Number(match[1]);
@@ -296,7 +296,7 @@ export class ActivityWatchTimesheet extends Component {
                     for (const event of events) {
                         let eventType = watchers[index].client;
                         if (watchers[index].client === "aw-watcher-vscode") {
-                            event.name = _t("VsCode - %(folder)s", { folder: event.data.project });
+                            event.name = event.data.project === "unknown" ? _t("Development") : _t("VS Code - %(folder)s", { folder: event.data.project });
                             event.keyEvent = true;
                             event.type = "vs_code";
                         } else if (
@@ -559,13 +559,6 @@ export class ActivityWatchTimesheet extends Component {
                 }
             }
             const duration = (range.stop - range.start) / 1000;
-
-            /*
-            if (duration < 60) {
-                continue;
-            }
-            */
-
             if (!(projectTask in this.state.grouped)) {
                 this.state.grouped[projectTask] = {};
             }
@@ -588,31 +581,42 @@ export class ActivityWatchTimesheet extends Component {
             this.state.grouped[projectTask][name].duration += duration;
         }
 
+        const toDelete = new Set();
         for (const [groupKey, activities] of Object.entries(this.state.grouped)) {
-            for (const [title, { duration, start }] of Object.entries(activities)) {
+            for (const [title, { start }] of Object.entries(activities)) {
                 const eventKey = this.keyForWithDay(groupKey, title);
                 if (this.consumedEvents[eventKey]) {
-                    // can be done directly when adding
                     this.state.grouped[groupKey][title].duration -= this.consumedEvents[eventKey];
-                } else {
-                    const data = {
-                        start,
-                        duration,
-                        title,
-                        groupKey,
-                    };
-                    const { project_id, task_id } = JSON.parse(groupKey);
-
-                    if (project_id) {
-                        data.project = this.projectName(project_id);
-                    }
-
-                    if (task_id) {
-                        data.task = this.taskName(task_id);
-                    }
-
-                    this.state.records.push(data);
                 }
+
+                // we should not edit the object while looping
+                if (this.state.grouped[groupKey][title].duration < 60) {
+                    toDelete.add({groupKey, title});
+                    continue;
+                }
+
+                const data = {
+                    start,
+                    duration: this.state.grouped[groupKey][title].duration,
+                    title,
+                    groupKey,
+                };
+                const { project_id, task_id } = JSON.parse(groupKey);
+                if (project_id) {
+                    data.project = this.projectName(project_id);
+                }
+                if (task_id) {
+                    data.task = this.taskName(task_id);
+                }
+                this.state.records.push(data);
+            }
+        }
+
+        for (const {groupKey, title} of toDelete) {
+            delete this.state.grouped[groupKey][title];
+
+            if (Object.keys(this.state.grouped[groupKey]).length === 0) {
+                delete this.state.grouped[groupKey];
             }
         }
 
@@ -691,11 +695,27 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     projectName(id) {
-        return this.state.projectById[id] || "unmatched"; // manage if the project is wrong (not a valid key)
+        return this.state.projectById[id];
     }
 
     taskName(id) {
-        return this.state.taskById[id] || "unmatched"; // same
+        return this.state.taskById[id];
+    }
+
+    groupByTitle(ids) {
+        const project = this.projectName(ids.project_id);
+        const task = this.taskName(ids.task_id);
+
+        let title = _t("Unmatched");
+        if (project) {
+            if (task) {
+                title = `${project} / ${task}`;
+            } else {
+                title = project
+            }
+        }
+
+        return title;
     }
 
     getSuggestionParams(groupKey, title) {
