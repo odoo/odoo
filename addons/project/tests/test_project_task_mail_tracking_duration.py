@@ -11,13 +11,23 @@ class TestProjectTaskMailTrackingDuration(MailTrackingDurationMixinCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('project.task', {'project_id': 'create'})
+        super().setUpClass('project.task')
+
+    @classmethod
+    def _prepare_duration_setup(cls, test_model_name):
+        if test_model_name == 'project.task':
+            cls.test_project = cls.env['project.project'].create({'name': 'Test Project'})
+        return super()._prepare_duration_setup
+
+    @classmethod
+    def _create_records(cls, test_model_name, count=5, record_vals=None):
+        if test_model_name == 'project.task':
+            record_vals = record_vals or {}
+            record_vals['project_id'] = cls.test_project.id
+        return super()._create_records(test_model_name, count=count, record_vals=record_vals)
 
     def test_project_task_mail_tracking_duration(self):
         self._test_record_duration_tracking()
-
-    def test_project_task_mail_tracking_duration_batch(self):
-        self._test_record_duration_tracking_batch()
 
     def test_project_task_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()

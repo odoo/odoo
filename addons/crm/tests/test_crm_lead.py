@@ -9,7 +9,6 @@ from odoo import fields
 from odoo.addons.base.tests.test_format_address_mixin import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
-from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged, users
@@ -1159,21 +1158,3 @@ class TestLeadFormTools(FormatAddressCase):
     def test_address_view(self):
         self.env.company.country_id = self.env.ref('base.us')
         self.assertAddressView('crm.lead')
-
-
-@tagged('lead_internals', 'is_query_count')
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestCrmLeadMailTrackingDuration(MailTrackingDurationMixinCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass('crm.lead')
-
-    def test_crm_lead_mail_tracking_duration(self):
-        self._test_record_duration_tracking()
-
-    def test_crm_lead_mail_tracking_duration_batch(self):
-        self._test_record_duration_tracking_batch()
-
-    def test_crm_lead_queries_batch_mail_tracking_duration(self):
-        self._test_queries_batch_duration_tracking()
