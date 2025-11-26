@@ -324,7 +324,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         # Create/Update a forbidden task through child_ids
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             Task.create({'name': 'foo', 'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
-        with self.assertRaisesRegex(AccessError, "top-secret records"):
+        with self.assertRaisesRegex(AccessError, "not allowed to delete"):
             Task.create({'name': 'foo', 'child_ids': [Command.delete(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             Task.create({'name': 'foo', 'child_ids': [Command.unlink(self.task_no_collabo.id)]})
@@ -461,7 +461,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         # Create/Update a forbidden task through child_ids
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             task.write({'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
-        with self.assertRaisesRegex(AccessError, "top-secret records"):
+        with self.assertRaisesRegex(AccessError, "not allowed to delete"):
             task.write({'child_ids': [Command.delete(self.task_no_collabo.id)]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             task.write({'child_ids': [Command.unlink(self.task_no_collabo.id)]})

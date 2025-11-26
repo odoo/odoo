@@ -20,7 +20,6 @@ from odoo import api, fields, models, _, SUPERUSER_ID, modules
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.fields import Command, Domain
-from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import clean_context
 from odoo.tools import (
     date_utils,
@@ -4171,7 +4170,10 @@ class AccountMove(models.Model):
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
         logger_message = self._get_unlink_logger_message()
         self.line_ids.remove_move_reconcile()
-        self.line_ids.unlink()
+        if self.line_ids:
+            self.line_ids.unlink()
+            # see test_expense_main_flow
+            self.env.flush_all()  # Mimic the old behavior to flush dynamic line changes
         res = super().unlink()
         if logger_message:
             _logger.info(logger_message)

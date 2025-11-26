@@ -108,20 +108,17 @@ class GoogleCalendarSync(models.AbstractModel):
                 records_to_skip.with_context(send_updates=False).need_sync = False
 
     def unlink(self):
-        """We can't delete an event that is also in Google Calendar. Otherwise we would
+        """ We can't delete an event that is also in Google Calendar. Otherwise we would
         have no clue that the event must must deleted from Google Calendar at the next sync.
         """
         synced = self.filtered('google_id')
-        # LUL TODO find a way to get rid of this context key
-        if self.env.context.get('archive_on_error') and self._active_name:
-            synced.write({self._active_name: False})
-            self = self - synced
-        elif synced:
+        if synced and self._active_name:
             # Since we can not delete such an event (see method comment), we archive it.
             # Notice that archiving an event will delete the associated event on Google.
             # Then, since it has been deleted on Google, the event is also deleted on Odoo DB (_sync_google2odoo).
-            self.action_archive()
-            return True
+            synced.action_archive()
+            self = self - synced  # noqa: PLW0642
+
         return super().unlink()
 
     def _from_google_ids(self, google_ids):
