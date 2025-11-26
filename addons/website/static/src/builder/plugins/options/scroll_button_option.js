@@ -14,7 +14,9 @@ export class ScrollButtonOption extends BaseOptionComponent {
                 editingElement.dataset.snippet === "s_image_gallery"
                     ? _t("Min-Height")
                     : _t("Height"),
-            heightFieldEnabled: editingElement.dataset.snippet === "s_image_gallery",
+            heightFieldEnabled:
+                editingElement.dataset.snippet === "s_image_gallery" ||
+                editingElement.dataset.snippet === "s_google_map",
         }));
     }
 

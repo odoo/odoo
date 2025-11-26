@@ -25,7 +25,7 @@
             <BuilderSelectItem dataAttributeActionValue="'HYBRID'">Hybrid</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="&#8985; Style" preview="false" t-if="this.isActiveItem('roadmap_opt')">
+    <!-- <BuilderRow label.translate="&#8985; Style" preview="false" t-if="this.isActiveItem('roadmap_opt')">
         <BuilderSelect dataAttributeAction="'mapColor'">
             <BuilderSelectItem dataAttributeActionValue="">
                 <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>
@@ -58,6 +58,9 @@
                 <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg'"/>
             </BuilderSelectItem>
         </BuilderSelect>
+    </BuilderRow> -->
+    <BuilderRow label.translate="Height" t-if="this.state.isContainedInOtherSnippet">
+        <BuilderNumberInput styleAction="{ mainParam: 'height', force: true, allowImportant: true }" unit="'px'" min="0"/>
     </BuilderRow>
     <BuilderRow label.translate="Zoom" preview="false">
         <BuilderNumberInput dataAttributeAction="'mapZoom'" default="12" step="1" min="0" max="22"/>

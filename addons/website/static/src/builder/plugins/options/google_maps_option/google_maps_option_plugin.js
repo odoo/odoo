@@ -60,7 +60,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
             ResetMapColorAction,
         },
         // TODO remove when the snippet will have a "Height" option.
-        keep_overlay_options: (el) => el.matches(".s_google_map"),
+        // keep_overlay_options: (el) => el.matches(".s_google_map"),
     };
 
     setup() {
@@ -111,12 +111,11 @@ export class GoogleMapsOptionPlugin extends Plugin {
         this.recentlyDroppedSnippetDeferredInit.get(editingElement)?.resolve(true);
         if (mapsAPI) {
             this.mapsAPI = mapsAPI;
-            this.placesAPI = mapsAPI.places;
+            // this.placesAPI = mapsAPI.places;
         }
         // Try to fail early if there is a configuration issue.
         return (
-            !!this.placesAPI &&
-            !!(await this.getPlace(editingElement, editingElement.dataset.mapGps))
+            !!this.mapsAPI && !!(await this.getPlace(editingElement, editingElement.dataset.mapGps))
         );
     }
 
@@ -157,6 +156,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
             /** @type {{mapGps: Coordinates, pinAddress: string}} */
             const currentMapData = editingElement.dataset;
             const { mapGps, pinAddress } = currentMapData;
+            //TODO improve the handle of formatted adress more consistenly everywhere
             if (mapGps !== coordinates || pinAddress !== place.formatted_address) {
                 editingElement.dataset.mapGps = coordinates;
                 editingElement.dataset.pinAddress = place.formatted_address;
@@ -214,50 +214,22 @@ export class GoogleMapsOptionPlugin extends Plugin {
         if (place) {
             return place;
         }
+        const { Place } = await this.mapsAPI.importLibrary("places");
 
         const p = coordinates.substring(1).slice(0, -1).split(",");
-        const location = new this.mapsAPI.LatLng(p[0] || 0, p[1] || 0);
-        return new Promise((resolve) => {
-            const placesService = new this.placesAPI.PlacesService(document.createElement("div"));
-            placesService.nearbySearch(
-                {
-                    // Do a 'nearbySearch' followed by 'getDetails' to avoid using
-                    // GMaps Geocoder which the user may not have enabled... but
-                    // ideally Geocoder should be used to get the exact location at
-                    // those coordinates and to limit billing query count.
-                    location,
-                    radius: 1,
-                },
-                (results, status) => {
-                    const GMAPS_CRITICAL_ERRORS = [
-                        this.placesAPI.PlacesServiceStatus.REQUEST_DENIED,
-                        this.placesAPI.PlacesServiceStatus.UNKNOWN_ERROR,
-                    ];
-                    if (status === this.placesAPI.PlacesServiceStatus.OK) {
-                        placesService.getDetails(
-                            {
-                                placeId: results[0].place_id,
-                                fields: ["geometry", "formatted_address"],
-                            },
-                            (place, status) => {
-                                if (status === this.placesAPI.PlacesServiceStatus.OK) {
-                                    this.gpsMapCache.set(coordinates, place);
-                                    resolve(place);
-                                } else if (GMAPS_CRITICAL_ERRORS.includes(status)) {
-                                    resolve({ error: status });
-                                } else {
-                                    resolve();
-                                }
-                            }
-                        );
-                    } else if (GMAPS_CRITICAL_ERRORS.includes(status)) {
-                        resolve({ error: status });
-                    } else {
-                        resolve();
-                    }
-                }
-            );
-        });
+        const searchLocation = { lat: Number(p[0]) || 0, lng: Number(p[1]) || 0 };
+        const request = {
+            fields: ["location", "formattedAddress"],
+            locationRestriction: {
+                center: searchLocation,
+                radius: 10,
+            },
+        };
+        const { places } = await Place.searchNearby(request);
+        if (places.length) {
+            this.gpsMapCache.set(coordinates, places[0]);
+            return places[0];
+        }
     }
 
     /**

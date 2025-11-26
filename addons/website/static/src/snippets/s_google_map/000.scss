@@ -31,4 +31,38 @@ $s-google-map-desc-alpha: 0.80 !default;
             margin-left: 10px;
         }
     }
+    // &:hover .description {
+    //     background: $s-google-map-desc-hover-bg;
+    //     background: rgba($s-google-map-desc-hover-bg, $s-google-map-desc-hover-alpha);
+    //     color: color-contrast(rgba($s-google-map-desc-hover-bg, $s-google-map-desc-hover-alpha));
+    // }
+
+    @keyframes s_google_map_drop {
+      0% {
+        transform: translateY(-200px) scaleY(0.9);
+        opacity: 0;
+      }
+      5% {
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(0px) scaleY(1);
+        opacity: 1;
+      }
+      65% {
+        transform: translateY(-17px) scaleY(0.9);
+        opacity: 1;
+      }
+      75% {
+        transform: translateY(-22px) scaleY(0.9);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0px) scaleY(1);
+        opacity: 1;
+      }
+    }
+    .s_google_map_drop {
+      animation: s_google_map_drop 0.3s linear forwards 0.5s;
+    }
 }
