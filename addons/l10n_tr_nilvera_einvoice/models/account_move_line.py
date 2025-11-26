@@ -10,16 +10,22 @@ class AccountMoveLine(models.Model):
         compute="_compute_l10n_tr_ctsp_number",
         store=True,
         readonly=False,
+        help="This code is a unique identifier for the product in "
+        "Turkey's Centralized Trade and Stock Management System (CTSP).",
     )
     l10n_tr_seller_line_code = fields.Char(
         string="Seller Line Code",
         compute='_compute_l10n_tr_seller_line_code',
         store=True,
         readonly=False,
+        help="Within the scope of the IPAC, it refers to the reference line"
+             "number of the input (purchase/import) item on the document.",
     )
     l10n_tr_customer_line_code = fields.Char(
         string="Customer Line Code",
-        help="Customer Line Code (11 or fewer characters)",
+        help="Customer Line Code (11 or fewer characters). "
+             "Within the scope of the IPAC, it refers to the reference line "
+             "number of the exported product item on the document.",
         size=11,
         compute='_compute_l10n_tr_customer_line_code',
         store=True,
