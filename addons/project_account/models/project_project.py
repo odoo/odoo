@@ -37,7 +37,7 @@ class Project(models.Model):
                 self.env['account.move.line'].sudo()._query_analytic_accounts(),
             )
         )
-        query_string, query_param = query.select('balance', 'parent_state', 'account_move_line.company_currency_id', 'account_move_line.analytic_distribution', 'move_id', 'account_move_line.date')
+        query_string, query_param = query.select('account_move_line.balance', 'account_move_line.parent_state', 'account_move_line.company_currency_id', 'account_move_line.analytic_distribution', 'account_move_line.move_id', 'account_move_line.date')
         self._cr.execute(query_string, query_param)
         bills_move_line_read = self._cr.dictfetchall()
         if bills_move_line_read:

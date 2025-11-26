@@ -58,3 +58,88 @@ wTourUtils.registerWebsitePreviewTour(
         },
     ]
 );
+
+wTourUtils.registerWebsitePreviewTour(
+    "website_media_iframe_video_options",
+    {
+        test: true,
+        url: "/",
+        edition: true,
+    }, () => [
+        wTourUtils.dragNDrop({
+            id: "s_video",
+            name: "Video",
+        }),
+        {
+            content: "Select the Video",
+            trigger: "iframe #footer .media_iframe_video",
+        },
+        {
+            content: "Click on replace media",
+            trigger: "[data-replace-media='true']",
+        },
+        {
+            content: "Enter video link",
+            trigger: "#o_video_text",
+            run: "text https://youtu.be/nbso3NVz3p8",
+        },
+        {
+            content: "Check for preview to appear",
+            trigger: ".o_video_dialog_iframe",
+            run: () => {}, // This is a check.
+        },
+        {
+            content: "Toggle ON autoplay button",
+            trigger: ".o_video_dialog_options label:contains('Autoplay') .o_switch",
+            run: "click",
+        },
+        {
+            content: "Check '&autoplay=1' is present in URL",
+            trigger: ".o_video_dialog_form textarea",
+            async run() {
+                // Let the previous step performed. 
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                if (!this.$anchor[0].value.includes("&autoplay=1")) {
+                    throw new Error("After enabling autoplay, URL should include '&autoplay=1'");
+                }
+            }
+        },
+        {
+            content: "Add '&loop=1' in the video URL",
+            trigger: ".o_video_dialog_form",
+            run() {
+                const textarea = this.$anchor[0].querySelector("#o_video_text");
+                textarea.value = textarea.value + "&loop=1";
+                textarea.dispatchEvent(new Event("input"));
+            },
+        },
+        {
+            content: "Verify Loop option toggles ON automatically",
+            trigger: ".o_video_dialog_options label:contains('Loop') .o_switch",
+            async run() {
+                // Let the previous step performed. 
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                if (!this.$anchor[0].querySelector("input").checked) {
+                    throw new Error("After adding '&loop=1' in URL, Loop option should toggle ON");
+                }
+            },
+        },
+        {
+            content: "Click on 'add' button",
+            trigger: ".modal-footer button:contains('Add')",
+            run: "click",
+        },
+        {
+            content: "Ensure iframe has video src according to enabled options",
+            trigger: "iframe .media_iframe_video",
+            run() {
+                const src = this.$anchor[0].querySelector("iframe").src;
+                if (!src.includes("$autoplay=1") && !src.includes("&loop=1")) {
+                    throw new Error("Iframe should include '&autoplay=1' and '&loop=1'.");
+                }
+            },
+        },
+    ]
+);
+
+
