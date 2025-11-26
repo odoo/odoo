@@ -8,6 +8,69 @@ patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
         this.country_id = fields.One("res.country");
+<<<<<<< 0e855a58c53a56387a17464a3ccd5d0c827791fe
+||||||| 952add278ea4debb6215ca8363f446df84b9f9bc
+        this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
+        this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
+        let wasLookingForHelp = false;
+        /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
+        this.livechat_status = fields.Attr(undefined, {
+            onUpdate() {
+                if (this.livechat_status === "need_help") {
+                    wasLookingForHelp = true;
+                    this.unpinOnThreadSwitch = false;
+                    return;
+                }
+                if (wasLookingForHelp) {
+                    wasLookingForHelp = false;
+                    // Still the active thread; keep it pinned after leaving "need help" status.
+                    // The agent may interact with the thread, keeping it pinned, or it will be
+                    // unpinned on the next thread switch to avoid bloating the sidebar.
+                    this.unpinOnThreadSwitch = this.eq(this.store.discuss?.thread);
+                }
+            },
+        });
+        this.shadowedBySelf = 0;
+    },
+    get canLeave() {
+        const lookingForHelpCategory = this.store.discuss.livechatLookingForHelpCategory;
+        return (
+            super.canLeave &&
+            (!lookingForHelpCategory ||
+                lookingForHelpCategory.notEq(this.discussAppCategory) ||
+                this.self_member_id)
+        );
+=======
+        this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
+        this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
+        /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
+        this.livechat_status = fields.Attr(undefined, {
+            onUpdate() {
+                if (this.livechat_status === "need_help") {
+                    this.wasLookingForHelp = true;
+                    this.unpinOnThreadSwitch = false;
+                    return;
+                }
+                if (this.wasLookingForHelp) {
+                    this.wasLookingForHelp = false;
+                    // Still the active thread; keep it pinned after leaving "need help" status.
+                    // The agent may interact with the thread, keeping it pinned, or it will be
+                    // unpinned on the next thread switch to avoid bloating the sidebar.
+                    this.unpinOnThreadSwitch = this.eq(this.store.discuss?.thread);
+                }
+            },
+        });
+        this.shadowedBySelf = 0;
+    },
+    get canLeave() {
+        const lookingForHelpCategory = this.store.discuss.livechatLookingForHelpCategory;
+        return (
+            super.canLeave &&
+            (!lookingForHelpCategory ||
+                lookingForHelpCategory.notEq(this.discussAppCategory) ||
+                this.self_member_id)
+        );
+>>>>>>> 0250bf52126d554ede7eadbd85df84379563f9b6
     },
     _computeDiscussAppCategory() {
         if (this.channel?.channel_type !== "livechat") {
