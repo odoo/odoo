@@ -271,7 +271,9 @@ class CrmLead(models.Model):
                         'summary': values['activity_summary'],
                         'date_deadline': values['activity_date_deadline'],
                     })
-            lead.write(lead_values)
+
+            # access checked with '_assert_portal_write_access' at method beginning
+            lead.sudo().write(lead_values)
 
     def update_contact_details_from_portal(self, values):
         self._assert_portal_write_access()
