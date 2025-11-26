@@ -35,15 +35,9 @@ class DriverController(http.Controller):
 
         message_type = data.get('action', 'test_protocol') if device_identifier == IOT_IDENTIFIER else 'iot_action'
 
-        result = communication.handle_message(
+        return communication.handle_message(
             message_type, session_id=session_id, device_identifier=device_identifier, **data
         )
-        if result:
-            if result.get('status') == 'disconnected':
-                return False
-            event_manager.events.append(result)
-
-        return True
 
     @helpers.toggleable
     @route.iot_route(['/iot_drivers/event', '/hw_drivers/event'], type='jsonrpc', cors='*', csrf=False)

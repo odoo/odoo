@@ -36,8 +36,9 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
                 return {**base_response, 'status': 'disconnected'}
             start_operation_time = time.perf_counter()
             _logger.info("device '%s' action started", device_identifier)
-            main.iot_devices[device_identifier].action(kwargs)
+            res = main.iot_devices[device_identifier].action(kwargs)
             _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
+            return {**base_response, **res}
         case 'server_clear':
             helpers.disconnect_from_server()
             if server_logger:
