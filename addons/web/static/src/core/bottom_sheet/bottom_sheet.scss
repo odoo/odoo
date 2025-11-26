@@ -188,34 +188,6 @@
             }
         }
     }
-
-    // When bottom sheet is open, apply styles to the body
-    @at-root .bottom-sheet-open {
-        overflow: hidden;
-
-        // Scale down the main content
-        .o_navbar, .o_action_manager {
-            @media (prefers-reduced-motion: no-preference) {
-                transition: transform $o_BottomSheet_slideIn_duration ease;
-            }
-            transform: scale(.95) translateZ(0);
-            transform-origin: center top;
-        }
-
-        // Avoid blank on the side
-        &:not(.o_home_menu_background) .o_main_navbar {
-            box-shadow: 20px 0 0 $o-navbar-background, -20px 0 0 $o-navbar-background;
-        }
-
-        &:not(.bottom-sheet-open-multiple):has(.o_bottom_sheet_dismissing) {
-            .o_navbar, .o_action_manager {
-                @media (prefers-reduced-motion: no-preference) {
-                    transition: transform $o_BottomSheet_slideOut_duration ease;
-                }
-                transform: scale(1) translateZ(0);
-            }
-        }
-    }
 }
 
 // =============================================
