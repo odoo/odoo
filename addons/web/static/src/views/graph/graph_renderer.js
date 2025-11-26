@@ -401,7 +401,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLegendOptions() {
-        const { mode } = this.model.metaData;
+        const { mode, groupBy } = this.model.metaData;
         const legendOptions = {
             onHover: this.onLegendHover.bind(this),
             onLeave: this.onLegendLeave.bind(this),
@@ -432,11 +432,15 @@ export class GraphRenderer extends Component {
                     }),
             };
         } else {
-            legendOptions.position = "top";
-            legendOptions.align = "end";
+            legendOptions.position = "bottom";
+            legendOptions.align = "middle";
             const referenceColor = mode === "bar" ? "backgroundColor" : "borderColor";
             legendOptions.labels = {
                 generateLabels: (chart) => {
+                    // if no more than one groupBy, the legend is implicitly displayed inside the measure
+                    if (groupBy.length <= 1) {
+                        return [];
+                    }
                     const { data } = chart;
                     const labels = data.datasets.map((dataset, index) => ({
                         text: shortenLabel(dataset.label),
