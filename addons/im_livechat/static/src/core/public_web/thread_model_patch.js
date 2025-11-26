@@ -15,17 +15,16 @@ patch(Thread.prototype, {
         this.country_id = fields.One("res.country");
         this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
-        let wasLookingForHelp = false;
         /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
         this.livechat_status = fields.Attr(undefined, {
             onUpdate() {
                 if (this.livechat_status === "need_help") {
-                    wasLookingForHelp = true;
+                    this.wasLookingForHelp = true;
                     this.unpinOnThreadSwitch = false;
                     return;
                 }
-                if (wasLookingForHelp) {
-                    wasLookingForHelp = false;
+                if (this.wasLookingForHelp) {
+                    this.wasLookingForHelp = false;
                     // Still the active thread; keep it pinned after leaving "need help" status.
                     // The agent may interact with the thread, keeping it pinned, or it will be
                     // unpinned on the next thread switch to avoid bloating the sidebar.
