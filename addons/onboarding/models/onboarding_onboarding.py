@@ -124,6 +124,8 @@ class OnboardingOnboarding(models.Model):
 
     def _prepare_rendering_values(self):
         self.ensure_one()
+        if not self.current_progress_id:
+            self._search_or_create_progress()
         values = {
             'close_method': self.panel_close_action_name,
             'close_model': 'onboarding.onboarding',
