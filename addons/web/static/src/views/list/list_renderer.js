@@ -7,7 +7,7 @@ import { localization } from "@web/core/l10n/localization";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBus, useChildRef, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
@@ -147,6 +147,7 @@ export class ListRenderer extends Component {
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
         this.tableRef = useRef("table");
+        this.optionalColumnsDropdownRef = useChildRef();
         this.odoomark = odoomark;
 
         this.longTouchTimer = null;
@@ -2317,5 +2318,13 @@ export class ListRenderer extends Component {
             ev.preventDefault();
             this.toggleRecordSelection(record);
         }
+    }
+
+    onOptionalColumnsDropdownOpened() {
+        this.optionalColumnsDropdownRef.el
+            .querySelectorAll(".o-dropdown-item input[type='checkbox']")
+            .forEach((checkbox) => {
+                checkbox.setAttribute("data-available-offline", "");
+            });
     }
 }
