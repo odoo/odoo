@@ -136,20 +136,6 @@ const threadPatch = {
             inverse: "threadAsSelf",
         });
         this.scrollUnread = true;
-        // memberBusSubscription
-        this.toggleBusSubscription = fields.Attr(false, {
-            /** @this {import("models").Thread} */
-            compute() {
-                return (
-                    this.model === "discuss.channel" &&
-                    this.self_member_id?.memberSince >=
-                        this.store.env.services.bus_service.startedAt
-                );
-            },
-            onUpdate() {
-                this.store.updateBusSubscription();
-            },
-        });
     },
     /** Equivalent to DiscussChannel._allow_invite_by_email */
     get allow_invite_by_email() {

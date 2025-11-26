@@ -78,7 +78,6 @@ declare module "models" {
         self_member_id: ChannelMember;
         showCorrespondentCountry: Readonly<boolean>;
         showUnreadBanner: Readonly<boolean>;
-        toggleBusSubscription: boolean;
         typesAllowingCalls: Readonly<string[]>;
     }
 
