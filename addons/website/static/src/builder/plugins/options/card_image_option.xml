@@ -46,7 +46,7 @@
     <t t-if="state.hasCoverImage">
         <!-- Ratio  -->
         <BuilderRow label.translate="Ratio" level="1">
-            <BuilderSelect applyTo="'.o_card_img_wrapper'">
+            <BuilderSelect applyTo="':scope > .o_card_img_wrapper'">
                 <BuilderSelectItem id="'card_img_default_ratio_option'" classAction="''">Image default</BuilderSelectItem>
                 <BuilderSelectItem classAction="'ratio ratio-1x1'">Square</BuilderSelectItem>
                 <t t-if="isActiveItem('card_img_top_opt')">

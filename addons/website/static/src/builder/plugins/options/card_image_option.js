@@ -7,8 +7,14 @@ export class CardImageOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.state = useDomState((editingElement) => ({
-            hasCoverImage: !!editingElement.querySelector(".o_card_img_wrapper"),
-        }));
+        this.state = useDomState((editingElement) => {
+            // Filter to exclude cover images coming from nested cards
+            const coverImage = [...editingElement.querySelectorAll(".o_card_img_wrapper")].filter(
+                (node) => node.closest(".s_card") === editingElement
+            );
+            return {
+                hasCoverImage: !!coverImage.length,
+            };
+        });
     }
 }
