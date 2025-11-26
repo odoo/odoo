@@ -199,7 +199,6 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
-    # Epson ePoS Printer Configuration
     epson_printer_ip = fields.Char(
         string='Epson Printer IP',
         help=(
@@ -207,48 +206,11 @@ class PosConfig(models.Model):
             "'Automatic Certificate Update' option is enabled in the printer settings."
         ),
     )
-    # Epson Server Direct Print printer configuration
-    use_epson_server_direct_print = fields.Boolean(
-        string="Use Epson Server Direct Printer",
-        help="Configure your printer to retrieve receipts from the server",
-    )
-    epson_server_direct_print_url = fields.Char(
-        string="Epson Server Direct Print URL",
-        help="This URL needs to be set in the printer's configuration to enable server printing.",
-        readonly=True,
-        store=False,
-        default=lambda self: f"{self.get_base_url()}/point_of_sale/epson_server_direct_print/{self.id}/get_receipt_from_queue",
-    )
-    epson_server_direct_print_id = fields.Char(
-        string="Epson Server Direct Print ID",
-        help="This ID needs to be set in the printer's configuration to secure server printing.",
-        readonly=True,
-        store=False,
-        default=lambda self: self.env['ir.config_parameter'].sudo().get_str('database.uuid')[:30].strip(),  # 30 is the max size in printer settings
-    )
-    epson_server_pending_receipt_ids = fields.One2many(
-        'pos.printer.pending.receipt',
-        'pos_config_id',
-        string='Epson Server Direct Print Queue',
-    )
     use_fast_payment = fields.Boolean('Fast Payment Validation', help="Enable fast payment methods to validate orders on the product screen.")
     fast_payment_method_ids = fields.Many2many(
         'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
         store=True, help="These payment methods will be available for fast payment", readonly=False)
     statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
-
-    def add_receipt_to_print_queue(self, new_receipt):
-        """This method is called by the POS to add a receipt to the print queue.
-
-        :param new_receipt: The receipt content to print.
-        :return: A dictionary with the status of the operation.
-        """
-        self.ensure_one()
-        self.epson_server_pending_receipt_ids.create({
-            'pos_config_id': self.id,
-            'receipt': new_receipt,
-        })
-        return {"status": "success", "message": "Receipt added to print queue."}
 
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()
