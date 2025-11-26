@@ -1754,7 +1754,7 @@ class BaseModel(metaclass=MetaModel):
             spec: self._read_group_groupby(query.table, spec) for spec in all_groupby_specs
         }
         aggregates_terms: list[SQL] = [
-            self._read_group_select(spec, query) for spec in aggregates
+            self._read_group_select(query.table, spec) for spec in aggregates
         ]
         if groupby_terms:
             # grouping_select_sql: GROUPING(a, b)
@@ -1916,7 +1916,7 @@ class BaseModel(metaclass=MetaModel):
             for spec in groupby
         }
         aggregates_terms: list[SQL] = [
-            self._read_group_select(spec, query)
+            self._read_group_select(query.table, spec)
             for spec in aggregates
         ]
         select_args = [*[groupby_terms[spec] for spec in groupby], *aggregates_terms]
@@ -1947,7 +1947,7 @@ class BaseModel(metaclass=MetaModel):
         # return [(a1, b1, c1), (a2, b2, c2), ...]
         return list(zip(*column_result))
 
-    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
+    def _read_group_select(self, table: TableSQL, aggregate_spec: str) -> SQL:
         """ Return <SQL expression> corresponding to the given aggregation.
         The method also checks whether the fields used in the aggregate are
         accessible for reading.
@@ -1966,7 +1966,6 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError(f"Aggregate method is mandatory for {fname!r}")
 
         field = self._fields[fname]
-        table = query.table
         if func == 'sum_currency':
             if field.type != 'monetary':
                 raise ValueError(f'Aggregator "sum_currency" only works on currency field for {fname!r}')
@@ -1978,7 +1977,7 @@ class BaseModel(metaclass=MetaModel):
             )
             alias_rate = table._make_alias(f'{currency_field_name}__rates')
             condition = SQL("%s = %s", table[currency_field_name], alias_rate.id)
-            query.add_join('LEFT JOIN', alias_rate, rate_subquery_table, condition)
+            table._query.add_join('LEFT JOIN', alias_rate, rate_subquery_table, condition)
 
             return SQL(
                 "SUM(%s / COALESCE(%s, 1.0))",
@@ -2114,7 +2113,7 @@ class BaseModel(metaclass=MetaModel):
                 left, operator, right = item
                 if operator not in SUPPORTED:
                     raise ValueError(f"Invalid having clause {item!r}: supported comparators are {SUPPORTED}")
-                sql_left = self._read_group_select(left, query)
+                sql_left = self._read_group_select(query.table, left)
                 stack.append(SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], right))
             else:
                 raise ValueError(f"Invalid having clause {item!r}: it should be a domain-like clause")
@@ -2159,7 +2158,7 @@ class BaseModel(metaclass=MetaModel):
 
             if term not in groupby_terms:
                 try:
-                    sql_expr = self._read_group_select(term, query)
+                    sql_expr = self._read_group_select(query.table, term)
                 except ValueError as e:
                     raise ValueError(f"Order term {order_part!r} is not a valid aggregate nor valid groupby") from e
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))

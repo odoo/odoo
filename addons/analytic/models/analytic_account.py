@@ -125,7 +125,7 @@ class AccountAnalyticAccount(models.Model):
             self_context = self.with_context(analytic_plan_id=self.plan_id.id)
         return super(AccountAnalyticAccount, self_context).web_read(specification)
 
-    def _read_group_select(self, aggregate_spec, query):
+    def _read_group_select(self, table, aggregate_spec):
         # flag balance/debit/credit as aggregatable, and manually sum the values
         # from the records in the group
         if aggregate_spec in (
@@ -136,8 +136,8 @@ class AccountAnalyticAccount(models.Model):
             'credit:sum',
             'credit:sum_currency',
         ):
-            return super()._read_group_select('id:recordset', query)
-        return super()._read_group_select(aggregate_spec, query)
+            aggregate_spec = 'id:recordset'
+        return super()._read_group_select(table, aggregate_spec)
 
     def _read_group_postprocess_aggregate(self, aggregate_spec, raw_values):
         if aggregate_spec in (

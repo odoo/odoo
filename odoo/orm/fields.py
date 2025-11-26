@@ -967,7 +967,7 @@ class Field(typing.Generic[T]):
         model = env[self.model_name]
         query = model._as_query(ordered=False)
         try:
-            model._read_group_select(f"{self.name}:{self.aggregator}", query)
+            model._read_group_select(query.table, f"{self.name}:{self.aggregator}")
             return self.aggregator
         except (ValueError, AccessError):
             return None
