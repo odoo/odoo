@@ -1669,6 +1669,7 @@ class AccountMoveLine(models.Model):
                     if tracking_values := line._mail_track(ref_fields, empty_values)[1]:
                         line.move_id._message_log(
                             body=_("Journal Item %s created", line._get_html_link(title=f"#{line.id}")),
+                            message_type='tracking',
                             tracking_value_ids=[(0, 0, values) for values in tracking_values],
                         )
 
@@ -1796,6 +1797,7 @@ class AccountMoveLine(models.Model):
                             msg = _("Journal Item %s updated", line._get_html_link(title=f"#{line.id}"))
                             line.move_id._message_log(
                                 body=msg,
+                                message_type='tracking',
                                 tracking_value_ids=[(0, 0, values) for values in tracking_values],
                             )
             if 'analytic_line_ids' in vals:
@@ -1872,6 +1874,7 @@ class AccountMoveLine(models.Model):
                     if tracking_values := empty_line._mail_track(ref_fields, line)[1]:
                         line.move_id._message_log(
                             body=_("Journal Item %s deleted", line._get_html_link(title=f"#{line.id}")),
+                            message_type='tracking',
                             tracking_value_ids=[(0, 0, values) for values in tracking_values],
                         )
 

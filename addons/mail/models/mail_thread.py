@@ -712,6 +712,7 @@ class MailThread(models.AbstractModel):
                 record.message_post(
                     body=body,
                     author_id=author_id,
+                    message_type='tracking',
                     subtype_id=subtype.id,
                     tracking_value_ids=[(0, 0, values) for values in tracking_values],
                 )
@@ -719,6 +720,7 @@ class MailThread(models.AbstractModel):
                 record._message_log(
                     body=body,
                     author_id=author_id,
+                    message_type='tracking',
                     tracking_value_ids=[(0, 0, values) for values in tracking_values],
                 )
 
@@ -2196,6 +2198,7 @@ class MailThread(models.AbstractModel):
                      partner_ids=None, outgoing_email_to=False,
                      incoming_email_to=False, incoming_email_cc=False,
                      attachments=None, attachment_ids=None,
+                     tracking_values=None,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
@@ -2229,6 +2232,8 @@ class MailThread(models.AbstractModel):
         :param list attachment_ids: list of existing attachments to link to this message
             Should not be a list of commands. Attachment records attached to mail
             composer will be attached to the related document.
+        :param list tracking_values: list of tracking values, which are a dictionnary
+            of field-based tracking.
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2248,6 +2253,9 @@ class MailThread(models.AbstractModel):
             raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
         if message_type == 'user_notification':
             raise ValueError(_("Use message_notify to send a notification to an user."))
+        if (tracking_values or kwargs.get('tracking_value_ids')) and message_type != 'tracking':
+            _logger.warning('Posting tracking with message_type that is not tracking')
+            # raise ValueError(_("Tracking values should be included in tracking messages only."))
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
             format_error = not is_list_of(attachments, list) and not is_list_of(attachments, tuple)
@@ -2771,6 +2779,7 @@ class MailThread(models.AbstractModel):
             forbidden_names={
                 'incoming_email_cc', 'incoming_email_to', 'message_id',
                 'message_type', 'outgoing_email_to', 'parent_id',
+                'tracking_values', 'tracking_value_ids',
             }
         )
         if attachments:
@@ -2890,7 +2899,7 @@ class MailThread(models.AbstractModel):
                      author_id=None, email_from=None,
                      message_type='notification',
                      partner_ids=False,
-                     attachment_ids=False, tracking_value_ids=False):
+                     attachment_ids=False, tracking_values=False, tracking_value_ids=False):
         """ Shortcut allowing to post note on a document. See ``_message_log_batch``
         for more details. """
         self.ensure_one()
@@ -2900,14 +2909,16 @@ class MailThread(models.AbstractModel):
             author_id=author_id, email_from=email_from,
             message_type=message_type,
             partner_ids=partner_ids,
-            attachment_ids=attachment_ids, tracking_value_ids=tracking_value_ids
+            attachment_ids=attachment_ids,
+            tracking_values=tracking_values,
+            tracking_value_ids=tracking_value_ids,
         )
 
     def _message_log_batch(self, bodies, subject=False,
                            author_id=None, email_from=None,
                            message_type='notification',
                            partner_ids=False,
-                           attachment_ids=False, tracking_value_ids=False):
+                           attachment_ids=False, tracking_values=False, tracking_value_ids=False):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2924,6 +2935,9 @@ class MailThread(models.AbstractModel):
         # protect against side-effect prone usage
         if len(self) > 1 and (attachment_ids or tracking_value_ids):
             raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
+        if (tracking_values or tracking_value_ids) and message_type != 'tracking':
+            _logger.warning('Logging tracking with message_type that is not tracking')
+            # raise ValueError(_("Tracking values should be included in tracking messages only."))
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
 
@@ -2941,6 +2955,7 @@ class MailThread(models.AbstractModel):
             'is_internal': True,
             'subject': subject,
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            'tracking_values': tracking_values,
             'tracking_value_ids': tracking_value_ids,
             # recipients
             'email_add_signature': False,  # False as no notification -> no need to compute signature
@@ -3092,6 +3107,7 @@ class MailThread(models.AbstractModel):
             'res_id',
             'subject',
             'subtype_id',
+            'tracking_values',
             'tracking_value_ids',
         }
 

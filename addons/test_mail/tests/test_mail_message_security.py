@@ -731,7 +731,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         ))
         msg_record_public_with_tracking = self.env['mail.message'].create(dict(base_msg_vals,
             body='Public Comment',
-            message_type='notification',
+            message_type='tracking',
             model=self.record_public._name,
             res_id=self.record_public.id,
             subtype_id=self.ref('mail.mt_comment'),

@@ -484,7 +484,7 @@ class TestTrackingTemplate(TestTrackingCommon):
         )
         self.assertMessageFields(
             track_msg, {
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'subject': False,
                 'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
                 'tracking_values_fmt': [
@@ -994,6 +994,7 @@ class TestTrackingInternals(MailCommon):
         # some custom code generates tracking values on main_track
         main_track.message_post(
             body='Custom Log with Tracking',
+            message_type='tracking',
             tracking_value_ids=[
                 (0, 0, {
                     'field_id': self.env['ir.model.fields']._get(sub_track._name, 'secret').id,

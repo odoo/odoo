@@ -147,7 +147,7 @@ class MailMessage(models.Model):
         if operator not in ('in', 'not in'):
             return NotImplemented
 
-        return Domain('message_type', '=', 'notification') & Domain.OR(
+        return Domain('message_type', 'in', ('notification', 'tracking')) & Domain.OR(
             [('model', '=', model), ('res_id', 'in', self.env[model]._search(domain_factory(self, operator, value)))]
             for model, domain_factory in DOMAINS.items()
         )

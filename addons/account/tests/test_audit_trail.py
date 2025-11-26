@@ -87,7 +87,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         self.assertMessageFields(
             audit_trail, {
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values_fmt': [
                     ('name', 'char', 'MISC/2021/04/0001', 'track this!'),
                 ],
@@ -115,7 +115,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self._new_msgs, {
                 'account_audit_log_preview': 'Updated\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values_fmt': [
                     ('name', 'char', False, 'MISC/2021/04/0001'),
                     ('state', 'selection', 'Draft', 'Posted'),
@@ -130,7 +130,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self._new_msgs, {
                 'account_audit_log_preview': 'Updated\nPosted ⇨ Draft (Status)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values_fmt': [
                     ('state', 'selection', 'Posted', 'Draft'),
                 ],
@@ -144,7 +144,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self._new_msgs, {
                 'account_audit_log_preview': 'Updated\nMISC/2021/04/0001 ⇨ nawak (Number)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values_fmt': [
                     ('name', 'char', 'MISC/2021/04/0001', 'nawak'),
                 ],
@@ -186,7 +186,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         ], strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -225,7 +225,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         ], strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -277,7 +277,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         for msg, check_values in zip(self._new_msgs, exp_results, strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -289,7 +289,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self._new_msgs, {
                 'account_audit_log_preview': 'Updated\nFalse ⇨ True (Restrictive Audit Trail)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values_fmt': [('restrictive_audit_trail', 'boolean', 'False', 'True')],
             }
         )
