@@ -332,6 +332,7 @@ test("should not navigate table cells when table picker is open", async () => {
                     </tr>
                     <tr>
                         <td>
+                            <p data-selection-placeholder=""><br></p>
                             <table class="table table-bordered o_table">
                                 <tbody>
                                     <tr>
@@ -341,6 +342,7 @@ test("should not navigate table cells when table picker is open", async () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                         </td>
                     </tr>
                 </tbody>
