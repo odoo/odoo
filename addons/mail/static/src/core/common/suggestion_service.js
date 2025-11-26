@@ -1,4 +1,5 @@
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
+import { COMPOSER_TYPES } from "./composer";
 import { cleanTerm } from "@mail/utils/common/format";
 import { toRaw } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
@@ -38,11 +39,24 @@ export class SuggestionService {
         return delimiters;
     }
 
-    async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
+    /**
+     * @param {Object} [param0={}]
+     * @param {string} [param0.delimiter]
+     * @param {string} [param0.term]
+     * @param {Object} [options={}]
+     * @param {import("models").Thread} [options.thread]
+     * @param {AbortSignal} [options.abortSignal]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     */
+    async fetchSuggestions({ delimiter, term }, { thread, abortSignal, composerType } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@":
-                await this.fetchPartnersRoles(cleanedSearchTerm, thread, { abortSignal });
+                await this.fetchPartnersRoles(cleanedSearchTerm, {
+                    abortSignal,
+                    internalUsersOnly: composerType === COMPOSER_TYPES.NOTE,
+                    thread,
+                });
                 break;
             case "#":
                 await this.fetchThreads(cleanedSearchTerm, { abortSignal });
@@ -86,12 +100,17 @@ export class SuggestionService {
     }
     /**
      * @param {string} term
-     * @param {import("models").Thread} [thread]
+     * @param {Object} [options={}]
+     * @param {AbortSignal} [options.abortSignal]
+     * @param {boolean} [options.internalUsersOnly]
+     * @param {import("models").Thread} [options.thread]
      */
-    async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
+    async fetchPartnersRoles(term, { abortSignal, internalUsersOnly, thread } = {}) {
         const kwargs = { search: term };
         if (thread?.channel) {
             kwargs.channel_id = thread.id;
+        } else {
+            kwargs.internal_users_only = internalUsersOnly;
         }
         const data = await this.makeOrmCall(
             "res.partner",
@@ -166,16 +185,20 @@ export class SuggestionService {
      * @param {String} [param0.delimiter] can be one one of the following: ["@", "#"]
      * @param {String} [param0.term]
      * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
      * @param {import("models").Thread} [options.thread] prioritize and/or restrict
      *  result in the context of given thread
      * @returns {{ type: String, suggestions: Array }}
      */
-    searchSuggestions({ delimiter, term }, { thread } = {}) {
+    searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
         thread = toRaw(thread);
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
-                const partners = this.searchPartnerSuggestions(cleanedSearchTerm, thread);
+                const partners = this.searchPartnerSuggestions(cleanedSearchTerm, {
+                    composerType,
+                    thread,
+                });
                 const roles = this.searchRoleSuggestions(cleanedSearchTerm);
                 return {
                     type: "Partner",
@@ -221,21 +244,44 @@ export class SuggestionService {
         };
     }
 
-    isSuggestionValid(partner, thread) {
+    /**
+     * @param {import("models").Persona} [partner]
+     * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     * @param {import("models").Thread} [options.thread]
+     */
+    isPartnerSuggestionValid(partner, { composerType, thread } = {}) {
+        if (composerType === COMPOSER_TYPES.NOTE) {
+            return partner.partner_share === false && partner.notEq(this.store.odoobot);
+        }
         return (
             (this.store.self_user?.share === false || partner.mention_token) &&
             partner.notEq(this.store.odoobot)
         );
     }
 
-    getPartnerSuggestions(thread) {
+    /**
+     * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     * @param {import("models").Thread} [options.thread]
+     */
+    getPartnerSuggestions({ composerType, thread } = {}) {
         return Object.values(this.store["res.partner"].records).filter((partner) =>
-            this.isSuggestionValid(partner, thread)
+            this.isPartnerSuggestionValid(partner, {
+                composerType,
+                thread,
+            })
         );
     }
 
-    searchPartnerSuggestions(cleanedSearchTerm, thread) {
-        const partners = this.getPartnerSuggestions(thread);
+    /**
+     * @param {string} cleanedSearchTerm
+     * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     * @param {import("models").Thread} [options.thread]
+     */
+    searchPartnerSuggestions(cleanedSearchTerm, { composerType, thread } = {}) {
+        const partners = this.getPartnerSuggestions({ composerType, thread });
         const suggestions = [];
         for (const partner of partners) {
             if (!partner.name) {

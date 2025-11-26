@@ -686,7 +686,7 @@ test("Mentions in composer should still work when using pager", async () => {
     await patchUiSize({ size: SIZES.LG });
     await start();
     await openFormView("res.partner", partnerId_1, { resIds: [partnerId_1, partnerId_2] });
-    await click("button:text('Log note')");
+    await click("button:text('Send message')");
     await click(".o_pager_next");
     await insertText(".o-mail-Composer-input", "@");
     // all active records in DB with a name: Mitchell Admin | Hermit
@@ -786,4 +786,30 @@ test("can mark message as unread from chatter", async () => {
     await contains(".o_notification:text(Marked as unread)");
     await click(".o-mail-MessagingMenu-counter:text(1)");
     await contains(".o-mail-NotificationItem-text:text(John Doe: lorem ipsum)");
+});
+
+test("Can only mention internal users in Log note", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({
+        name: "External Partner",
+        email: "external@test.com",
+        partner_share: true,
+    });
+    await start();
+    await openFormView("res.partner");
+    await click("button:text('Send message')");
+    await insertText(".o-mail-Composer-input", "@ext");
+    await click(".o-mail-Composer-suggestion strong:text('External Partner')");
+    await click(".o-mail-Composer button:enabled:text('Send')");
+    await contains(".o-mail-Message a.o_mail_redirect:text('@External Partner')");
+    await click("button:text('Send message')");
+    await contains(".o-mail-Composer");
+    await insertText(".o-mail-Composer-input", "@ext");
+    await click(".o-mail-Composer-suggestion strong:text('External Partner')");
+    await click("button:text('Log note')");
+    await click(".o-mail-Composer button:enabled:text('Log')");
+    await contains(".o-mail-Message", { count: 2 });
+    await contains(".o-mail-Message:eq(0) .o-mail-Message-body.o-note");
+    await contains(".o-mail-Message:eq(0):has(:text('@External Partner'))");
+    await contains(".o-mail-Message:eq(0):not(:has(a.o_mail_redirect))");
 });

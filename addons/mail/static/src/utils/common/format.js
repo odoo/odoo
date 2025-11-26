@@ -192,7 +192,29 @@ export function addLink(node, transformChildren) {
     return getOuterHtml(node);
 }
 
-function generateMentionElement({ className, id, model, text }) {
+/**
+ * Generate a mention element (link or span) with the provided metadata.
+ *
+ * @param {Object} [param0={}]
+ * @param {string} [param0.className] CSS class name for the mention element
+ * @param {number} [param0.id] Record ID of the mentioned entity
+ * @param {string} [param0.model] Model name of the mentioned entity
+ * @param {string} [param0.text] Display text for the mention
+ * @param {boolean} [param0.readonly] If true, returns a non-clickable span; if false, returns a clickable link
+ * @returns {HTMLElement} Either an HTMLSpanElement(readonly) or HTMLAnchorElement(clickable)
+ */
+function generateMentionElement({ className, id, model, text, readonly }) {
+    if (readonly) {
+        const span = document.createElement("span");
+        setAttributes(span, {
+            class: "o-discuss-readonly-mention",
+            "data-oe-id": id,
+            "data-oe-model": model,
+            contenteditable: "false",
+        });
+        span.textContent = text;
+        return span;
+    }
     const link = document.createElement("a");
     setAttributes(link, {
         href: router.stateToUrl({ model: model, resId: id }),
@@ -208,14 +230,18 @@ function generateMentionElement({ className, id, model, text }) {
 
 /**
  * @param {import("models").ResPartner} partner
- * @param {import("models").Thread} thread
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread]
+ * @param {boolean} [params.readonly=false] If true, returns a non-clickable mention (<span>)
+ *   instead of a link (<a>). Used for log notes where external partners should not be clickable.
  */
-export function generatePartnerMentionElement(partner, thread) {
+export function generatePartnerMentionElement(partner, { thread, readonly } = {}) {
     return generateMentionElement({
         className: "o_mail_redirect",
         id: partner.id,
         model: "res.partner",
         text: `@${thread?.getPersonaName(partner) ?? partner.name}`,
+        readonly,
     });
 }
 
@@ -271,7 +297,7 @@ function generateMentionsLinks(
         const placeholder = `@-mention-partner-${partner.id}`;
         const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
         mentions.push({
-            link: generatePartnerMentionElement(partner, thread),
+            link: generatePartnerMentionElement(partner, { thread }),
             placeholder,
         });
         body = htmlReplace(body, text, placeholder);

@@ -13,6 +13,7 @@ export class MentionList extends Component {
     static props = {
         onSelect: { type: Function },
         close: { type: Function, optional: true },
+        composerType: { type: String },
         thread: { optional: true },
         type: { type: String },
     };
@@ -30,12 +31,12 @@ export class MentionList extends Component {
             fetch: (term) =>
                 this.suggestionService.fetchSuggestions(
                     { delimiter: this.delimiter, term },
-                    { thread: this.props.thread }
+                    { composerType: this.props.composerType, thread: this.props.thread }
                 ),
             filter: (term) =>
                 this.suggestionService.searchSuggestions(
                     { delimiter: this.delimiter, term },
-                    { thread: this.props.thread }
+                    { composerType: this.props.composerType, thread: this.props.thread }
                 ).suggestions,
             deps: () => [this.delimiter, this.props.thread],
         });
