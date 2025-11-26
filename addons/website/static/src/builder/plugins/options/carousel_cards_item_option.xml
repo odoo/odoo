@@ -5,4 +5,10 @@
     <CardImagePositionOption label.translate="Image Position"/>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <carousel_cards_item_option selector=".s_carousel_cards_item" applyTo=":scope > .s_carousel_cards_card"/>
+    </xpath>
+</t>
+
 </templates>

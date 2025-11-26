@@ -1,7 +1,8 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { basicHeaderOptionSettings } from "./basicHeaderOptionSettings";
+import { registry } from "@web/core/registry";
 
 export class HeaderTemplateOption extends BaseOptionComponent {
+    static id = "header_template_option";
     static template = "website.HeaderTemplateOption";
     static dependencies = ["headerOption"];
 
@@ -15,7 +16,7 @@ export class HeaderTemplateOption extends BaseOptionComponent {
     }
 }
 
-Object.assign(HeaderTemplateOption, basicHeaderOptionSettings);
+registry.category("website-options").add(HeaderTemplateOption.id, HeaderTemplateOption);
 
 export class HeaderTemplateChoice extends BaseOptionComponent {
     static template = "website.HeaderTemplateChoice";

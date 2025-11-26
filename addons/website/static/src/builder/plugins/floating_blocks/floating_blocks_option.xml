@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.FloatingBlocksOption">
+<t t-name="website.FloatingBlocksCardsOption">
     <BuilderRow label.translate="Cards">
         <BuilderButton
             type="'success'"
@@ -11,6 +11,9 @@
             Add Card
         </BuilderButton>
     </BuilderRow>
+</t>
+
+<t t-name="website.FloatingBlocksDesignOption">
     <hr/>
     <BuilderRow label.translate="Cards Design">
             Global options for all inner cards.
@@ -67,6 +70,25 @@
             </div>
         </div>
     </section>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='key_snippet_specific_options']" position="after">
+        <floating_blocks_cards_option
+            template="website.FloatingBlocksCardsOption"
+            selector=".s_floating_blocks"/>
+    </xpath>
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <floating_blocks_block_mobile_option
+            selector=".s_floating_blocks .s_floating_blocks_block"
+            applyTo=".container-fluid"/>
+        <floating_blocks_block_option selector=".s_floating_blocks .s_floating_blocks_block"/>
+    </xpath>
+    <xpath expr="//t[@id='bottom_options_hook']" position="after">
+        <floating_blocks_design_option
+            template="website.FloatingBlocksDesignOption"
+            selector=".s_floating_blocks"/>
+    </xpath>
 </t>
 
 </templates>

@@ -99,4 +99,55 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='page_options_hook']" position="after">
+        <footer_template_option
+            selector="#wrapwrap > footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <footer_colors_option
+            template="website.FooterColorsOption"
+            selector="#wrapwrap > footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <footer_width_option
+            template="website.FooterWidthOption"
+            selector="#wrapwrap > footer"
+            applyTo=":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <footer_slideout_option
+            template="website.FooterSlideoutOption"
+            selector="#wrapwrap > footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <footer_scroll_to_top_option
+            template="website.FooterScrollToTopOption"
+            selector="#wrapwrap > footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <toggle_footer_copyright_option
+            template="website.ToggleFooterCopyrightOption"
+            selector="#wrapwrap > footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <toggle_footer_cookies_policy_link_option
+            template="website.ToggleFooterCookiePolicyLinkOption"
+            selector="#wrapwrap:has(#website_cookies_bar) > footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <hide_footer_option
+            template="website.HideFooterOption"
+            selector="[data-main-object]:has(input.o_page_option_data[name='footer_visible']) #wrapwrap > footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <footer_border_option
+            template="website.FooterBorder"
+            selector="#wrapwrap > footer"
+            applyTo="#footer"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+    </xpath>
+</t>
+
 </templates>

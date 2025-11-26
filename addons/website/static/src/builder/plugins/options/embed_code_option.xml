@@ -17,4 +17,10 @@
         </BuilderButtonGroup>
     </BuilderRow>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <embed_code_option template="website.EmbedCodeOption" selector=".s_embed_code"/>
+    </xpath>
+</t>
 </templates>

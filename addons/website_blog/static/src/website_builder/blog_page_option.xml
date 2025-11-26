@@ -68,4 +68,15 @@
         />
     </BuilderRow>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='page_options_hook']" position="after">
+        <blog_page_option
+            selector="main:has(#o_wblog_post_main)"
+            title="Blog Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

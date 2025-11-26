@@ -1,5 +1,5 @@
 <templates>
     <t t-name="mass_mailing.BorderOption">
-        <BorderConfigurator label.translate="Border" withRoundCorner="this.withRoundCorner"/>
+        <BorderConfigurator label.translate="Border" withRoundCorner="this.props.withRoundCorner ?? true"/>
     </t>
 </templates>

@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { SearchbarOption } from "./searchbar_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
@@ -53,11 +52,10 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  *      };
  */
 
-class SearchbarOptionPlugin extends Plugin {
+export class SearchbarOptionPlugin extends Plugin {
     static id = "searchbarOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [SearchbarOption],
         builder_actions: {
             SetSearchTypeAction,
             SetOrderByAction,

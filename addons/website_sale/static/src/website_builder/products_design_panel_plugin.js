@@ -110,7 +110,7 @@ export class ProductsDesignPanelPlugin extends Plugin {
 /**
  * Handles suggestedClasses with clean slate approach and delegates to classAction/setClassRange
  */
-class ClassActionWithSuggestedAction extends BuilderAction {
+export class ClassActionWithSuggestedAction extends BuilderAction {
     static id = "classActionWithSave";
     static dependencies = ["builderActions"];
 
@@ -220,7 +220,7 @@ class ClassActionWithSuggestedAction extends BuilderAction {
     }
 }
 
-class SetGapAction extends BuilderAction {
+export class SetGapAction extends BuilderAction {
     static id = "setGap";
 
     isApplied() {

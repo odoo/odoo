@@ -17,4 +17,10 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <process_steps_option selector=".s_process_steps"/>
+    </xpath>
+</t>
+
 </templates>

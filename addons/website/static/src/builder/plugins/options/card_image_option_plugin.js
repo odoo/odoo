@@ -31,7 +31,7 @@ const imageRelatedStyles = [
     "--card-img-ratio-align", // kept for compatibility
 ];
 
-class CardImageOptionPlugin extends Plugin {
+export class CardImageOptionPlugin extends Plugin {
     static id = "cardImageOption";
     static dependencies = ["remove", "history", "builderOptions"];
     static shared = ["adaptRatio", "getDelta"];

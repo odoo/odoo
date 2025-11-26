@@ -451,4 +451,19 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <form_option
+            selector=".s_website_form"
+            applyTo="form"/>
+        <form_field_option_redraw
+            selector=".s_website_form_field"
+            exclude=".s_website_form_dnone"/>
+        <website_form_submit_option
+            template="website.s_website_form_submit_option"
+            selector=".s_website_form_submit"
+            exclude=".s_website_form_no_submit_options"/>
+    </xpath>
+</t>
+
 </templates>

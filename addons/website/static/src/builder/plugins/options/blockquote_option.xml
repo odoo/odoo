@@ -3,7 +3,7 @@
 
 <t t-name="website.BlockquoteOption">
     <t t-if="!this.props.disableWidth">
-        <BaseWebsiteBackgroundOption
+        <WebsiteBackgroundOption
             withColors="true"
             withImages="true"
             withShapes="true"
@@ -57,6 +57,16 @@
 
     <BorderConfigurator label.translate="Border"/>
     <ShadowOption/>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <blockquote_option selector=".s_blockquote" t-att-exclude="specialBlockquoteSelector"/>
+        <blockquote_option
+            t-att-selector="blockquoteParentHandlers"
+            t-att-applyTo="blockquoteDisableWidthApplyTo"
+            props='{ "disableWidth": true }'/>
+    </xpath>
 </t>
 
 </templates>

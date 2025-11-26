@@ -1,34 +1,10 @@
-import { EVENT_PAGE, EVENT_PAGE_MAIN } from "@website_event/website_builder/option_sequence";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-
-export class EventPageOption extends BaseOptionComponent {
-    static template = "website_event.EventPageOption";
-    static selector = "main:has(.o_wevent_event)";
-    static title = _t("Event Page");
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
-
-export class EventMainPageOption extends BaseOptionComponent {
-    static template = "website_event.EventMainPageOption";
-    static selector = "main:has(#o_wevent_event_main)";
-    static title = _t("Event Page");
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
 
 export class EventPageOptionPlugin extends Plugin {
     static id = "eventPageOption";
     resources = {
-        builder_options: [
-            withSequence(EVENT_PAGE, EventPageOption),
-            withSequence(EVENT_PAGE_MAIN, EventMainPageOption),
-        ],
         builder_actions: {
             DisplaySubMenuAction,
         },
@@ -60,7 +36,7 @@ export class DisplaySubMenuAction extends BuilderAction {
     }
 
     getEventObjectId() {
-        const isEventPage = this.editable.querySelector(EventPageOption.selector);
+        const isEventPage = this.editable.querySelector("main:has(.o_wevent_event)");
         if (!isEventPage) {
             return 0;
         }

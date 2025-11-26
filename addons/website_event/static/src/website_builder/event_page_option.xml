@@ -42,4 +42,22 @@
         </BuilderRow>
     </BuilderContext>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='page_options_hook']" position="after">
+        <event_page_option
+            template="website_event.EventPageOption"
+            selector="main:has(.o_wevent_event)"
+            title="Event Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+        <event_main_page_option
+            template="website_event.EventMainPageOption"
+            selector="main:has(#o_wevent_event_main)"
+            title="Event Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

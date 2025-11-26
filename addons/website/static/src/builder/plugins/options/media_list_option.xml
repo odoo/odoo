@@ -13,4 +13,10 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <media_list_option template="website.MediaListOption" selector=".s_media_list"/>
+    </xpath>
+</t>
+
 </templates>

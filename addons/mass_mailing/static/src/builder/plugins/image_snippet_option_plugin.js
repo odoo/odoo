@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class MassMailingImageSnippetOptionPlugin extends Plugin {
+export class MassMailingImageSnippetOptionPlugin extends Plugin {
     static id = "mass_mailing.imageSnippetOption";
     static dependencies = ["imageSnippetOption"];
     resources = {

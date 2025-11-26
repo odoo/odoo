@@ -23,4 +23,19 @@
             </BuilderRow>
         </t>
     </t>
+    
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='snippet_specific_options']" position="after">
+            <portal_option
+                template="website.PortalOption"
+                selector=".o_portal_index_card > a"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <portal_card_visibility_option
+                selector=".o_portal_wrap"
+                editableOnly="false"
+                reloadTarget="true"
+                groups='["website.group_website_designer"]'/>
+        </xpath>
+    </t>
 </templates>

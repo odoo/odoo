@@ -15,5 +15,10 @@
     </BuilderRow>
 </t>
 
-</templates>
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <timeline_option template="website.TimelineOption" selector=".s_timeline"/>
+    </xpath>
+</t>
 
+</templates>

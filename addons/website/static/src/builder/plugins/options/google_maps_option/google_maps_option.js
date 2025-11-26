@@ -1,13 +1,14 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { onMounted, onWillDestroy } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /** @import { Coordinates, Place } from './google_maps_option_plugin.js' */
 
 export class GoogleMapsOption extends BaseOptionComponent {
+    static id = "google_maps_option";
     static template = "website.GoogleMapsOption";
     static dependencies = ["googleMapsOption"];
-    static selector = ".s_google_map";
 
     async setup() {
         super.setup();
@@ -85,3 +86,5 @@ export class GoogleMapsOption extends BaseOptionComponent {
         this.state.formattedAddress = place?.formatted_address || "";
     }
 }
+
+registry.category("website-options").add(GoogleMapsOption.id, GoogleMapsOption);

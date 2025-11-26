@@ -1,12 +1,10 @@
 import { reactive } from "@web/owl2/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
-import { TranslateWebpageOption } from "./translate_webpage_option";
 
 /**
  * @typedef { Object } TranslateWebpageOptionShared
@@ -16,7 +14,7 @@ import { TranslateWebpageOption } from "./translate_webpage_option";
 /**
  * Action to translate the entire webpage using AI.
  */
-class TranslateToAction extends BuilderAction {
+export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
     static dependencies = ["translateWebpageOption"];
 
@@ -255,7 +253,6 @@ export class TranslateWebpageOptionPlugin extends Plugin {
         builder_actions: {
             TranslateToAction,
         },
-        builder_options: withSequence(1, TranslateWebpageOption),
     };
 
     getTranslationState() {

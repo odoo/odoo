@@ -25,4 +25,13 @@
             </BuilderRow>
         </xpath>
     </t>
+
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='snippet_specific_options']" position="after">
+            <nav_tabs_images_style_option
+                template="website.NavTabsImagesStyleOption"
+                selector=".s_tabs_images"
+                applyTo=".s_tabs_main"/>
+        </xpath>
+    </t>
 </templates>

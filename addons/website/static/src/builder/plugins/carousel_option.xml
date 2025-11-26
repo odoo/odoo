@@ -99,4 +99,14 @@
     </button>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <carousel_option
+            template="website.CarouselOption"
+            selector="section"
+            exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)"
+            applyTo=":scope > .carousel"/>
+    </xpath>
+</t>
+
 </templates>

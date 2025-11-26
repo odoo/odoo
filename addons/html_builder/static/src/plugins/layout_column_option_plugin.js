@@ -2,16 +2,12 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { getFirstItem, getNbColumns, getRow } from "@html_builder/utils/column_layout_utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
-import { LayoutColumnOption } from "@html_builder/plugins/layout_column_option";
-import { LAYOUT_COLUMN } from "@html_builder/utils/option_sequence";
 
-class LayoutColumnOptionPlugin extends Plugin {
+export class LayoutColumnOptionPlugin extends Plugin {
     static id = "LayoutColumnOption";
     static dependencies = ["clone", "selection"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        builder_options: [withSequence(LAYOUT_COLUMN, LayoutColumnOption)],
         on_cloned_handlers: this.onCloned.bind(this),
         builder_actions: {
             ChangeColumnCountAction,

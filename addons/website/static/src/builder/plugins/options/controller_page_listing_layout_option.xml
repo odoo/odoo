@@ -10,4 +10,15 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <controller_page_listing_layout_option
+            template="website.ControllerPageListingLayoutOption"
+            selector=".listing_layout_switcher"
+            title="Layout"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+    </xpath>
+</t>
+
 </templates>

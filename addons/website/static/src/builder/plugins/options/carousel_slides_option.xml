@@ -17,4 +17,13 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <carousel_slides_option
+            template="website.CarouselSlidesOption"
+            selector=".carousel .carousel-item"
+            exclude=".s_image_gallery .carousel-item"/>
+    </xpath>
+</t>
+
 </templates>

@@ -23,4 +23,13 @@
     </xpath>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <carousel_bottom_controllers_option
+            template="website.CarouselBottomControllersOption"
+            selector="section"
+            applyTo=".s_carousel_intro, .s_quotes_carousel_compact"/>
+    </xpath>
+</t>
+
 </templates>

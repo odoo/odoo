@@ -42,4 +42,13 @@
     </figure>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <carousel_cards_option
+            template="website.CarouselCardsOption"
+            selector="section"
+            applyTo=".s_carousel_cards"/>
+    </xpath>
+</t>
+
 </templates>

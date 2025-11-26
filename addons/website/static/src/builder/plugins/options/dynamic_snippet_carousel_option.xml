@@ -37,4 +37,10 @@
         </BuilderRow>
     </xpath>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <dynamic_snippet_carousel_option selector=".s_dynamic_snippet_carousel"/>
+    </xpath>
+</t>
 </templates>

@@ -26,4 +26,11 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <table_of_content_option template="website.TableOfContentOption" selector=".s_table_of_content"/>
+        <table_of_content_navbar_option template="website.TableOfContentNavbarOption" selector=".s_table_of_content_navbar_wrap"/>
+    </xpath>
+</t>
+
 </templates>

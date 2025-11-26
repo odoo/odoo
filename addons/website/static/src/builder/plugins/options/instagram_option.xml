@@ -7,4 +7,10 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <instagram_option template="website.InstagramOption" selector=".s_instagram_page"/>
+    </xpath>
+</t>
+
 </templates>

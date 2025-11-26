@@ -24,4 +24,10 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <progress_bar_option selector=".s_progress_bar"/>
+    </xpath>
+</t>
+
 </templates>

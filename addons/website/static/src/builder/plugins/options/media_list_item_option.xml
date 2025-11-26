@@ -3,7 +3,7 @@
 
 <t t-name="website.MediaListItemOption">
     <BuilderContext applyTo="':scope > .row'">
-        <BaseWebsiteBackgroundOption
+        <WebsiteBackgroundOption
             withColors="true"
             withImages="false"
             withColorCombinations="true"
@@ -50,6 +50,11 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <media_list_item_option selector=".s_media_list_item"/>
+    </xpath>
+</t>
 
 
 </templates>

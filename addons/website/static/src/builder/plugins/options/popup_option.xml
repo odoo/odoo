@@ -62,4 +62,18 @@
         <t t-set="isCookiesOption" t-value="true"/>
     </t>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <popup_option
+            template="website.PopupOption"
+            selector=".s_popup"
+            exclude="#website_cookies_bar"
+            applyTo=".modal"/>
+        <popup_cookies_option
+            template="website.PopupCookiesOption"
+            selector=".s_popup#website_cookies_bar"
+            applyTo=".modal"/>
+    </xpath>
+</t>
 </templates>

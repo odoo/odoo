@@ -22,7 +22,7 @@ To publish a member, set a *Level* in their contact form and click the *Publish*
         'demo/res_partner_demo.xml',
     ],
     'assets': {
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_partnership/static/src/website_builder/**/*',
         ],
         'web.assets_tests': [

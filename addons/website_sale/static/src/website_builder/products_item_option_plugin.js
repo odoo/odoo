@@ -2,10 +2,9 @@ import { reactive } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import { ProductsItemOption } from "./products_item_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-class ProductsItemOptionPlugin extends Plugin {
+export class ProductsItemOptionPlugin extends Plugin {
     static id = "productsItemOptionPlugin";
     static shared = [
         "setItemSize",
@@ -18,7 +17,6 @@ class ProductsItemOptionPlugin extends Plugin {
     itemSize = reactive({ x: 1, y: 1 });
 
     resources = {
-        builder_options: [ProductsItemOption],
         builder_actions: {
             SetItemSizeAction,
             ChangeSequenceAction,

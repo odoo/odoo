@@ -14,4 +14,10 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <faq_horizontal_option template="website.FaqHorizontalOption" selector=".s_faq_horizontal"/>
+    </xpath>
+</t>
+
 </templates>

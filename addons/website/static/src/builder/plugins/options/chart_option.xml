@@ -152,4 +152,10 @@
         <BuilderNumberInput dataAttributeAction="'borderWidth'" default="2" unit="'px'" saveUnit="''" min="0"/>
     </BuilderRow>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <chart_option selector=".s_chart"/>
+    </xpath>
+</t>
 </templates>

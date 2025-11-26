@@ -1,8 +1,10 @@
 import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { onWillStart } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 export class ProductsRibbonOption extends BaseOptionComponent {
+    static id = "products_ribbon_option";
     static template = 'website_sale.ProductsRibbonOptionPlugin';
     static dependencies = ['productsRibbonOptionPlugin'];
 
@@ -22,3 +24,5 @@ export class ProductsRibbonOption extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("website-options").add(ProductsRibbonOption.id, ProductsRibbonOption);

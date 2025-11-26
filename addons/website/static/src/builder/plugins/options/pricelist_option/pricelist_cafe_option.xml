@@ -12,4 +12,10 @@
     </BuilderContext>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <price_list_cafe_description_option template="website.PriceListCafeDescriptionOption" selector=".s_pricelist_cafe"/>
+    </xpath>
+</t>
+
 </templates>

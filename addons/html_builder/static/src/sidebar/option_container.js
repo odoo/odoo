@@ -1,5 +1,3 @@
-import { BorderConfigurator } from "../plugins/border_configurator_option";
-import { ShadowOption } from "../plugins/shadow_option";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
@@ -15,10 +13,6 @@ import {
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
     static dependencies = ["builderOptions", "overlayButtons", "builderOverlay", "remove", "clone"];
-    static components = {
-        BorderConfigurator,
-        ShadowOption,
-    };
     static props = {
         snippetModel: { type: Object },
         options: { type: Array },
@@ -81,10 +75,6 @@ export class OptionsContainer extends BaseOptionComponent {
     get title() {
         let title;
         for (const option of this.props.options) {
-            if (option.getSnippetTitle) {
-                title = option.getSnippetTitle.call(this);
-                continue;
-            }
             title = option.title || title;
         }
         const titleExtraInfo = this.props.containerTitle.getTitleExtraInfo

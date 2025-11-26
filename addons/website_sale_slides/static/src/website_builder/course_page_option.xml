@@ -7,5 +7,15 @@
     </BuilderRow>
 </t>
 
-</templates>
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='page_options_hook']" position="after">
+        <course_page_option
+            template="website_sales_slides.CoursePageOption"
+            selector="main:has(.o_wslides_course_header)"
+            title="Course Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
 
+</templates>

@@ -65,4 +65,10 @@
     <t t-call="website.MapDescriptionOption"/>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <google_maps_option selector=".s_google_map"/>
+    </xpath>
+</t>
+
 </templates>

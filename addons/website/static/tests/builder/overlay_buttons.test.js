@@ -5,15 +5,16 @@ import { advanceTime, animationFrame, expect, test } from "@odoo/hoot";
 import { queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
 import {
     addActionOption,
-    addOption,
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 defineWebsiteModels();
 
@@ -350,10 +351,12 @@ test("Applying an overlay button action should wait for the actions in progress"
             }
         },
     });
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'customAction'"/>`;
+        }
+    );
 
     const { getEditableContent, getEditor } = await setupWebsiteBuilder(`
         <div class="test-options-target">plop</div>

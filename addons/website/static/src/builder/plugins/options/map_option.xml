@@ -90,4 +90,10 @@
         </BuilderContext>
     </t>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <map_option template="website.mapOption" selector=".s_map"/>
+    </xpath>
+</t>
 </templates>

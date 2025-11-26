@@ -61,4 +61,12 @@
     </button>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <avatars_option
+            template="website.AvatarsOption"
+            selector=".s_avatars"/>
+    </xpath>
+</t>
+
 </templates>

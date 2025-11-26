@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+<t t-name="website.BuilderOptions">
+    <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.fa, .s_share i.fa, .social_media_img'"/>
+    <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.fa, i.fa'"/>
+    <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], ' + socialMediaElementsSelector"/>
+    <!-- Hook to extend the builder context (extra t-set values, selectors, ...). -->
+    <t id="context_hook"/>
+
+    <!-- Hook order guideline (option placement):
+        1) top_options_hook
+        2) background_options
+        3) Layout / Vertical Alignment (when relevant)
+        4) key_snippet_specific_options (for options above snippet_specific_options)
+        5) snippet_specific_options (default area, most options go here)
+        6) trailing bottom options (Animation / Visibility)
+        7) bottom_options_hook.
+        Keep other options between these anchors to preserve panel coherence.
+        For page options (page parts like header/footer), you can use the following hook: page_options_hook . -->
+    <div id="builder_options">
+        <!-- Hook for page-related options (header, footer, ...). -->
+        <t id="page_options_hook"/>
+
+        <!-- Hook for high-priority options that must appear at the top of the builder panel. -->
+        <t id="top_options_hook"/>
+
+        <t id="background_options">
+            <website_background_option
+                t-att-selector="blockquoteParentHandlers"
+                t-att-applyTo="blockquoteDisableWidthApplyTo"
+                props='{ "withColors": true,"withImages": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                selector="section"
+                applyTo=":scope > .carousel:not(.s_carousel_cards)"
+                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                selector=".s_process_step .s_process_step_number"
+                props='{ "withColors": true, "withImages": false, "withColorCombinations": false }'/>
+            <website_background_option
+                t-att-selector="cardParentHandlers"
+                t-att-applyTo="websiteBgApplyTo"
+                props='{ "withColors": true, "withImages": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                t-att-selector="websiteBackgroundBgColorImageOptionSelector"
+                t-att-exclude="websiteBackgroundBgColorImageOptionExclude"
+                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                t-att-selector="websiteBackgroundBgColorOptionSelector"
+                t-att-exclude="websiteBackgroundBgColorOptionExclude"
+                props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
+            <website_background_option
+                t-att-selector="baseOnlyBgImageSelector"
+                props='{ "withColors": false, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": false }'/>
+        </t>
+
+        <text_alignment_option
+            template="html_builder.TextAlignmentOption"
+            selector=".s_share, .s_text_highlight, .s_social_media"/>
+        <layout_option
+            selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
+            exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs, .s_tabs_images, .s_floating_blocks .s_floating_blocks_block, .s_banner_categories, .s_splash_intro"
+            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        <layout_grid_option
+            selector="section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro, section.s_banner_categories"
+            applyTo=":scope > *:has(> .row)"/>
+        <layout_column_option
+            selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"
+            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        <vertical_alignment_option
+            selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid"
+            applyTo=".row"/>
+        <vertical_alignment_option
+            selector=".s_pricelist_cafe"
+            applyTo=".row:has(.s_pricelist_cafe_col)"
+            props='{ "level": 0 }'/>
+        <vertical_alignment_option
+            selector=".s_attributes_vertical_col"
+            applyTo=":scope > .row"
+            props='{ "level": 0, "justify": false }'/>
+
+        <t id="image_options">
+            <replace_media_option
+                t-att-selector="replaceMediaOptionSelector"
+                t-attf-exclude="{{replaceMediaOptionExclude}}"/>
+            <font_awesome_option selector="span.fa, i.fa, .social_media_img" exclude="[data-oe-xpath]"/>
+            <video_size_option selector=".media_iframe_video"/>
+            <image_tool_option selector="img" exclude="[data-oe-type='image'] > img"/>
+            <image_pop_up_option template="website.ImagePopUpOption" selector="img" exclude="a img, header img, footer img, .s_image_gallery img"/>
+            <image_and_fa_option
+                template="html_builder.ImageAndFaOption"
+                selector="span.fa, i.fa, img"
+                t-attf-exclude="[data-oe-type='image'] > img, [data-oe-xpath], {{socialMediaElementsSelector}}"/>
+            <dynamic_svg_option t-att-selector="dynamicSVGSelector"/>
+            <grid_image_option selector="img"/>
+        </t>
+
+        <!-- Anchor for snippet options that must appear before the main snippet_specific_options group. -->
+        <t id="key_snippet_specific_options"/>
+        <!-- Main anchor for regular snippet-specific options (default placement). -->
+        <t id="snippet_specific_options"/>
+
+        <grid_columns_option template="website.GridColumnsOption" selector=".row.o_grid_mode > div.o_grid_item"/>
+        <border_option
+            template="website.BorderOption"
+            selector="section .row > div, section:has(.s_carousel_cards)"
+            t-attf-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize, .s_text_cover .row > .o_not_editable, {{cardParentHandlers}}, {{blockquoteParentHandlers}}"/>
+        <content_width_option
+            template="website.ContentWidthOption"
+            selector="section, .s_carousel .carousel-item, .s_carousel_intro_item"
+            exclude="[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *, .s_bento_banner section[data-name='Card'],.s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .o_no_content_width_option"
+            applyTo=":scope > .container, :scope > .container-fluid, :scope > .o_container_small"/>
+        <vertical_justify_option
+            template="html_builder.VerticalJustifyOption"
+            selector=".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item, .s_banner_categories .o_grid_item"
+            exclude=".o_grid_item_image"/>
+
+        <animate_option
+            selector=".o_animable, section .row > div, img, .fa, .btn"
+            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{specialBlockquoteSelector}}"/>
+        <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
+        <visibility_option selector="section, .s_hr"/>
+        <device_visibility_option
+            template="website.DeviceVisibilityOption"
+            t-att-selector="deviceVisibilityOptionSelector"
+            exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize, .s_website_form_submit"/>
+        <!-- Final hook for options that must appear after Animation / Visibility. -->
+        <t id="bottom_options_hook"/>
+    </div>
+</t>
+
+<!-- Key options are xpathed here because their templates are defined in html_builder (not in dedicated website files). -->
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='key_snippet_specific_options']" position="after">
+        <add_product_option
+            selector=".s_pricelist_boxed"
+            props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_boxed_item):not(:has(.row > div .s_pricelist_boxed_item))", "productSelector": ".s_pricelist_boxed_item" }'/>
+        <add_product_option
+            selector=".s_pricelist_boxed_section"
+            props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_boxed_item)", "productSelector": ".s_pricelist_boxed_item" }'/>
+        <add_product_option
+            selector=".s_pricelist_cafe"
+            props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_cafe_item):not(:has(.row > div .s_pricelist_cafe_item))", "productSelector": ".s_pricelist_cafe_item" }'/>
+        <add_product_option
+            selector=".s_pricelist_cafe .row > div"
+            props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_cafe_item)", "productSelector": ".s_pricelist_cafe_item" }'/>
+        <add_product_option
+            selector=".s_product_catalog"
+            props='{ "buttonApplyTo": ":scope > :has(.s_product_catalog_dish):not(:has(.row > div .s_product_catalog_dish))", "productSelector": ".s_product_catalog_dish" }'/>
+        <add_product_option
+            selector=".s_product_catalog .row > div"
+            props='{ "buttonApplyTo": ":scope > :has(.s_product_catalog_dish)", "productSelector": ".s_product_catalog_dish" }'/>
+    </xpath>
+</t>
+
+<!-- Same reason: these option templates are defined in html_builder, so we xpath them here to place them in snippet_specific_options. -->
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <button_style_option selector="a.btn"/>
+        <alert_option
+            template="html_builder.AlertOption"
+            selector=".s_alert"/>
+        <width_option template="html_builder.WidthOption" selector=".s_alert, .s_text_highlight"/>
+        <block_alignment_option template="html_builder.BlockAlignmentOption" selector=".s_alert, .s_text_highlight"/>
+        <size_option template="html_builder.SizeOption" selector=".s_alert"/>
+        <many2one_option
+            selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+            editableOnly="false"/>
+        <rating_option template="html_builder.RatingOption" selector=".s_rating"/>
+        <separator_option template="html_builder.SeparatorOption" selector=".s_hr" applyTo="hr"/>
+        <cta_badge_option template="html_builder.CTABadgeOption" selector=".s_cta_badge"/>
+        <badge_option template="html_builder.BadgeOption" selector=".s_badge"/>
+    </xpath>
+</t>
+
+<t t-name="website.TranslationBuilderOptions" t-inherit="website.BuilderOptions">
+    <xpath expr="//div" position="replace">
+        <div>
+            <translate_webpage_option selector="body" title="Translation" editableOnly="false"/>
+            <many2one_option
+                selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+                editableOnly="false"/>
+            <carousel_option
+                template="website.CarouselOption"
+                selector="section"
+                exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)"
+                applyTo=":scope > .carousel"/>
+            <carousel_bottom_controllers_option
+                template="website.CarouselBottomControllersOption"
+                selector="section"
+                applyTo=".s_carousel_intro, .s_quotes_carousel_compact"/>
+            <carousel_cards_option
+                template="website.CarouselCardsOption"
+                selector="section"
+                applyTo=".s_carousel_cards"/>
+            <t id="translation_options"/>
+        </div>
+    </xpath>
+</t>
+</templates>

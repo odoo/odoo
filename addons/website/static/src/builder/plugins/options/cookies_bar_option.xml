@@ -16,4 +16,11 @@
     </BuilderSelect>
 </BuilderRow>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <cookies_bar_option template="website.CookiesBarOption" selector="#website_cookies_bar" applyTo=".modal"/>
+    </xpath>
+</t>
+
 </templates>

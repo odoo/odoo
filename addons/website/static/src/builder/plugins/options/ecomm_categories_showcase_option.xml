@@ -61,4 +61,18 @@
     </xpath>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <ecomm_categories_showcase_option
+            template="website.EcommCategoriesShowcaseOption"
+            selector=".s_ecomm_categories_showcase"/>
+        <ecomm_categories_showcase_block_design
+            template="website.EcommCategoriesShowcaseBlockDesign"
+            selector=".s_ecomm_categories_showcase_block"/>
+        <ecomm_categories_showcase_blocks_design
+            template="website.EcommCategoriesShowcaseBlocksDesign"
+            selector=".s_ecomm_categories_showcase"/>
+    </xpath>
+</t>
+
 </templates>

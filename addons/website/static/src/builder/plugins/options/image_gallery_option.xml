@@ -143,4 +143,11 @@
     </div>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <image_gallery_images_option template="website.ImageGalleryImagesOption" selector=".s_image_gallery"/>
+        <image_gallery_option selector=".s_image_gallery"/>
+    </xpath>
+</t>
+
 </templates>

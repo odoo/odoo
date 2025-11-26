@@ -42,4 +42,12 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <searchbar_option
+            selector=".s_searchbar_input"
+            applyTo=".search-query"/>
+    </xpath>
+</t>
+
 </templates>

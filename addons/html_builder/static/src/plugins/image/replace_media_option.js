@@ -1,13 +1,10 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { _t } from "@web/core/l10n/translation";
-
-export const socialMediaElementsSelector = ".s_social_media i.fa, .s_share i.fa, .social_media_img";
+import { registry } from "@web/core/registry";
 
 export class ReplaceMediaOption extends BaseOptionComponent {
+    static id = "replace_media_option";
     static template = "html_builder.ReplaceMediaOption";
-    static selector = "img, .media_iframe_video, span.fa, i.fa";
-    static exclude = `[data-oe-xpath], ${socialMediaElementsSelector}`;
-    static name = "replaceMediaOption";
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
@@ -43,6 +40,8 @@ export class ReplaceMediaOption extends BaseOptionComponent {
         }
     }
 }
+
+registry.category("builder-options").add(ReplaceMediaOption.id, ReplaceMediaOption);
 
 export function isImageSupportedForStyle(img) {
     if (!img.parentElement) {

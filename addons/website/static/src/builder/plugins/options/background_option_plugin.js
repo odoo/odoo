@@ -24,7 +24,7 @@ function getBgVideoOrParallax(editingElement) {
     ); // Kept for compatibility.
 }
 
-class WebsiteBackgroundImageOptionPlugin extends Plugin {
+export class WebsiteBackgroundImageOptionPlugin extends Plugin {
     static id = "websiteBackgroundImageOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -32,7 +32,7 @@ class WebsiteBackgroundImageOptionPlugin extends Plugin {
     };
 }
 
-class WebsiteBackgroundShapeOptionPlugin extends Plugin {
+export class WebsiteBackgroundShapeOptionPlugin extends Plugin {
     static id = "websiteBackgroundShapeOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -40,7 +40,7 @@ class WebsiteBackgroundShapeOptionPlugin extends Plugin {
     };
 }
 
-class WebsiteBackgroundVideoPlugin extends Plugin {
+export class WebsiteBackgroundVideoPlugin extends Plugin {
     static id = "websiteBackgroundVideoPlugin";
     static dependencies = ["media"];
     static shared = [

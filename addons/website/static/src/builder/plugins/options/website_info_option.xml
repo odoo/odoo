@@ -9,4 +9,14 @@
         </BuilderContext>
     </t>
 
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='page_options_hook']" position="after">
+            <info_page_option
+                template="website.InfoPageOption"
+                selector="main:has(.o_website_info)"
+                title="Info Page"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+        </xpath>
+    </t>
 </templates>

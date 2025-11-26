@@ -65,4 +65,10 @@
         </BuilderButtonGroup>
     </BuilderRow>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <dynamic_snippet_option selector=".s_dynamic_snippet"/>
+    </xpath>
+</t>
 </templates>

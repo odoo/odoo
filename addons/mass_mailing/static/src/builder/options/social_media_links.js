@@ -4,12 +4,12 @@ import { onWillStart } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { user } from "@web/core/user";
 import { ResCompanyUpdateDialog } from "../components/company_update_dialog";
+import { registry } from "@web/core/registry";
 
 export class SocialMediaLinks extends BaseOptionComponent {
+    static id = "social_media_links";
     static template = "mass_mailing.SocialMediaLinks";
     static dependencies = ["builderActions", "history", "massMailingSocialMediaOptionPlugin"];
-    static name = "social_media_links";
-    static selector = ".s_social_media";
 
     /** @override */
     setup() {
@@ -220,3 +220,5 @@ export class SocialMediaLinks extends BaseOptionComponent {
         return this.dependencies["massMailingSocialMediaOptionPlugin"].getMedias();
     }
 }
+
+registry.category("mass_mailing-options").add(SocialMediaLinks.id, SocialMediaLinks);

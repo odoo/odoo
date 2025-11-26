@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-class BlogSearchbarOptionPlugin extends Plugin {
+export class BlogSearchbarOptionPlugin extends Plugin {
     static id = "blogSearchbarOption";
 
     /** @type {import("plugins").WebsiteResources} */

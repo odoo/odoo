@@ -2,11 +2,13 @@ import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
 import { onWillStart } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 export class DynamicSnippetProductsOption extends BaseOptionComponent {
+    static id = "dynamic_snippet_products_option";
     static template = "website_sale.DynamicSnippetProductsOption";
     static dependencies = ["dynamicSnippetProductsOption"];
-    static selector = ".s_dynamic_snippet_products";
+
     setup() {
         super.setup();
         const { fetchCategories, getModelNameFilter } =
@@ -31,6 +33,8 @@ export class DynamicSnippetProductsOption extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("website-options").add(DynamicSnippetProductsOption.id, DynamicSnippetProductsOption);
 
 export function getContextualFilterDomain(editable) {
     const productTemplateId = parseInt(editable.querySelector(

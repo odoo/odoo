@@ -37,4 +37,10 @@
 </BuilderContext>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <cover_properties_option selector=".o_record_cover_container" editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

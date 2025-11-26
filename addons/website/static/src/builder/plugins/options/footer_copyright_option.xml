@@ -53,4 +53,13 @@
     </t>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <footer_copyright_option
+            selector="#wrapwrap > footer .o_footer_copyright"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+    </xpath>
+</t>
+
 </templates>

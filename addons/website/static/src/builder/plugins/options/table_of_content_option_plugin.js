@@ -2,7 +2,6 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /**
  * Returns the TOC id and the heading id from a header element.
@@ -20,22 +19,11 @@ function getTocAndHeadingId(headingEl) {
     return { tocId: 0, headingId: 0 };
 }
 
-export class TableOfContentOption extends BaseOptionComponent {
-    static template = "website.TableOfContentOption";
-    static selector = ".s_table_of_content";
-}
-
-export class TableOfContentNavbarOption extends BaseOptionComponent {
-    static template = "website.TableOfContentNavbarOption";
-    static selector = ".s_table_of_content_navbar_wrap";
-}
-
-class TableOfContentOptionPlugin extends Plugin {
+export class TableOfContentOptionPlugin extends Plugin {
     static id = "tableOfContentOption";
     static dependencies = ["remove"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [TableOfContentOption, TableOfContentNavbarOption],
         builder_actions: {
             NavbarPositionAction,
         },

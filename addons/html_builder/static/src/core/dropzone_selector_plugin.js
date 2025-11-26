@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { CARD_PARENT_HANDLERS } from "./utils";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
@@ -6,9 +7,7 @@ import { Plugin } from "@html_editor/plugin";
  * @typedef {CSSSelector[]} so_snippet_addition_selector
  */
 
-const card_parent_handlers =
-    ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item";
-const special_cards_selector = `.s_card.s_timeline_card, div:is(${card_parent_handlers}) > .s_card`;
+const special_cards_selector = `.s_card.s_timeline_card, div:is(${CARD_PARENT_HANDLERS}) > .s_card`;
 
 const so_snippet_addition_drop_in =
     ":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section:not(.s_snippet_group), > div:not(.o_hook_drop_zone)))";

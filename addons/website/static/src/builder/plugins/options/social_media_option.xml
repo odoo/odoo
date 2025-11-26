@@ -48,4 +48,12 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <social_media_option
+            template="website.SocialMediaOption"
+            selector=".s_share, .s_social_media"/>
+    </xpath>
+</t>
+
 </templates>

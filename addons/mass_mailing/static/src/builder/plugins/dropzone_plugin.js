@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isPhrasingContent } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 
-class DropzonePlugin extends Plugin {
+export class DropzonePlugin extends Plugin {
     static id = "mass_mailing.DropzonePlugin";
 
     resources = {

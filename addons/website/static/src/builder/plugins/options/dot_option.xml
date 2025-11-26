@@ -13,4 +13,16 @@
     </BuilderRow>
 </t>
 
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <dot_lines_color_option
+            template="website.DotLinesColorOption"
+            selector=".s_timeline_list, .s_timeline_images, .s_timeline"/>
+        <dot_color_option
+            template="website.DotColorOption"
+            selector=".s_timeline_list .s_timeline_list_row, .s_timeline_images .s_timeline_images_row, .s_timeline .s_timeline_row"/>
+    </xpath>
+</t>
+
 </templates>

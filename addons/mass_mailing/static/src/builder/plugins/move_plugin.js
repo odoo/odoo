@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class MovePlugin extends Plugin {
+export class MovePlugin extends Plugin {
     static id = "mass_mailing.MovePlugin";
     static dependencies = ["move"];
     resources = {

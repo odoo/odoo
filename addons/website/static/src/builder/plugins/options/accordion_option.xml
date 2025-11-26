@@ -68,4 +68,11 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <accordion_option template="website.AccordionOption" selector=".s_accordion"/>
+        <accordion_item_option template="website.AccordionItemOption" selector=".s_accordion .accordion-item"/>
+    </xpath>
+</t>
+
 </templates>

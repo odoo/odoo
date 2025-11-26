@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+<t t-name="mass_mailing.BuilderOptions">
+    <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.fa, .s_share i.fa, .social_media_img'"/>
+    <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.fa, i.fa'"/>
+    <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], ' + socialMediaElementsSelector"/>
+    <t t-set="cardBorderOptionSelector"
+        t-value="`.s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div`"/>
+    <t t-set="textBorderOptionSelector" t-value="`.s_text_block, .o_mail_block_discount2`"/>
+    <t t-set="tableBorderOptionSelector" t-value="`table, table td, table tr`"/>
+    <t id="context_hook"/>
+
+    <div id="builder_options">
+        <t id="top_options_hook"/>
+        <company_team_shapes_width_option
+            template="mass_mailing.CompanyTeamShapesWidth"
+            selector=".s_company_team_shapes"/>
+        <record_snapshot_option selector=".s_record_snapshot"/>
+        <schedule_add_product_option
+            selector=".s_schedule:has(table)"
+            props='{ "productSelector": "tr" }'/>
+        <add_product_option
+            selector=".s_pricelist_boxed_section:has(> .container)"
+            props='{ "productSelector": ".container" }'/>
+
+        <replace_media_option
+            t-att-selector="replaceMediaOptionSelector"
+            t-attf-exclude="{{replaceMediaOptionExclude}}"/>
+        <video_size_option selector=".media_iframe_video"/>
+        <mass_mailing_image_tool_option selector="img" exclude="[data-oe-type='image'] > img"/>
+        <font_awesome_option
+            template="mass_mailing.FontAwesomeOption"
+            selector="span.fa, i.fa"/>
+        <image_and_fa_option
+            template="mass_mailing.ImageAndFaOption"
+            selector="span.fa, i.fa, img"/>
+        <text_alignment_option
+            template="html_builder.TextAlignmentOption"
+            selector=".s_share, .s_text_highlight, .s_social_media"/>
+        <button_style_option selector="a.btn"/>
+        <alert_option
+            template="html_builder.AlertOption"
+            selector=".s_alert"
+            exclude=".s_mail_alert .s_alert"/>
+        <social_media_option
+            template="mass_mailing.SocialMediaOption"
+            selector=".s_social_media"/>
+        <mass_mailing_border_option
+            t-att-selector="cardBorderOptionSelector"
+            applyTo=".card"/>
+        <mass_mailing_border_option
+            t-att-selector="textBorderOptionSelector"/>
+        <mass_mailing_border_option
+            t-att-selector="tableBorderOptionSelector"
+            props='{ "withRoundCorner": false }'/>
+        <layout_column_option
+            selector=".o_mail_snippet_general"
+            exclude=".s_reviews_wall"
+            applyTo=":scope > *:has(> .row:not(.s_nb_column_fixed)), * > .s_allow_columns"/>
+        <width_option
+            template="html_builder.WidthOption"
+            selector=".s_alert, .s_text_highlight, .s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight"/>
+        <mass_mailing_border_option selector=".s_mail_alert .s_alert"/>
+        <alert_option
+            template="mass_mailing.AlertOption"
+            selector=".s_mail_alert .s_alert"/>
+        <social_media_links selector=".s_social_media"/>
+        <block_alignment_option template="html_builder.BlockAlignmentOption" selector=".s_alert, .s_text_highlight"/>
+        <mass_mailing_cta_badge_option
+            template="mass_mailing.CTABadgeOption"
+            selector=".s_cta_badge"/>
+        <size_option template="html_builder.SizeOption" selector=".s_alert"/>
+        <many2one_option
+            selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+            editableOnly="false"/>
+        <layout_column_option
+            selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"
+            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        <vertical_alignment_option
+            selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid, .s_mail_block_event"
+            applyTo=".row"/>
+        <vertical_justify_option
+            template="html_builder.VerticalJustifyOption"
+            selector=".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item, .s_banner_categories .o_grid_item"
+            exclude=".o_grid_item_image"/>
+        <rating_option template="html_builder.RatingOption" selector=".s_rating"/>
+        <separator_option template="html_builder.SeparatorOption" selector=".s_hr" applyTo="hr"/>
+        <cta_badge_option template="html_builder.CTABadgeOption" selector=".s_cta_badge"/>
+        <mailing_background_option selector=".s_masonry_block > .container > .row > div:not(:has(.row)), .s_cover > .container > .row > div, .s_reviews_wall"/>
+        <color_picker_option
+            template="mass_mailing.ColorPickerOption"
+            selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
+            applyTo=".card-body, .card-footer"/>
+        <masonry_block_template_option
+            template="mass_mailing.MasonryBlockTemplateOption"
+            selector=".s_masonry_block"/>
+        <customer_testimonials_blockquote
+            template="mass_mailing.CustomerTestimonialsBlockquote"
+            selector=".s_reviews_wall .s_mail_blockquote"/>
+        <layout_column_option
+            selector=".s_reviews_wall .container"
+            applyTo=":scope > .row:has(> .s_mail_blockquote), :scope > .row > .s_allow_columns"/>
+        <!-- This selector targets all direct children of .oe_structure except nested structures -->
+        <color_picker_option
+            template="mass_mailing.ColorPickerOption"
+            selector=".note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)), .note-editable .oe_structure > .o_mail_snippet_general, .note-editable .oe_structure > .o_mail_snippet_general .o_cc, .s_mail_color_blocks_2 .row > div"
+            exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2"/>
+        <badge_option template="html_builder.BadgeOption" selector=".s_badge"/>
+        <mass_mailing_border_option
+            selector=".row > div"
+            t-attf-exclude=".o_mail_wrapper_td, .s_image_gallery .row > div, .row > .s_record_snapshot, {{cardBorderOptionSelector}}, {{textBorderOptionSelector}}, {{tableBorderOptionSelector}}"/>
+        <horizontal_padding_option
+            template="mass_mailing.HorizontalPaddingOption"
+            t-att-selector="horizontalPaddingOptionSelector"
+            exclude=".s_col_no_resize.row > div, .s_col_no_resize, img"/>
+        <vertical_padding_option
+            template="mass_mailing.VerticalPaddingOption"
+            selector=".o_mail_block_footer_social, .s_header_logo, .s_header_social"
+            exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
+        <snippet_visibility_option selector="section"/>
+        <t id="bottom_options_hook"/>
+    </div>
+</t>
+</templates>

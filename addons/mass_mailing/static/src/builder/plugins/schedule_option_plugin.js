@@ -1,21 +1,14 @@
-import { BaseAddProductOption } from "@html_builder/plugins/add_product_option";
-import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { BEGIN } from "@html_builder/utils/option_sequence";
+import { AddProductOption } from "@html_builder/plugins/add_product_option";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-export class MassMailingScheduleAddProductOption extends BaseAddProductOption {
-    static selector = ".s_schedule:has(table)";
-    productSelector = "tr";
-    buttonLabel = _t("Add Activity");
-}
-
-export class ScheduleOptionPlugin extends Plugin {
-    static id = "mass_mailing.ScheduleOptionPlugin";
-    resources = {
-        builder_options: [withSequence(BEGIN, MassMailingScheduleAddProductOption)],
+export class ScheduleAddProductOption extends AddProductOption {
+    static id = "schedule_add_product_option";
+    static defaultProps = {
+        buttonLabel: _t("Add Activity"),
     };
 }
 
-registry.category("mass_mailing-plugins").add(ScheduleOptionPlugin.id, ScheduleOptionPlugin);
+registry
+    .category("mass_mailing-options")
+    .add(ScheduleAddProductOption.id, ScheduleAddProductOption);

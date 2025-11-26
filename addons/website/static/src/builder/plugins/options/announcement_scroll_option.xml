@@ -54,4 +54,12 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <announcement_scroll_option
+            template="website.AnnouncementScrollOption"
+            selector="section.s_announcement_scroll"/>
+    </xpath>
+</t>
+
 </templates>
