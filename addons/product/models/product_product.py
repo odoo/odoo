@@ -153,11 +153,14 @@ class ProductProduct(models.Model):
         compute method is not subject to this restriction.  It therefore
         works as intended :-)
         """
+        now = self.env.cr.now()
         for record in self:
             if not record.id:
                 record.write_date = record._origin.write_date
                 continue
-            record.write_date = max(record.write_date or self.env.cr.now(), record.product_tmpl_id.write_date)
+            record.write_date = max(
+                record.write_date or now, record.product_tmpl_id.write_date or now
+            )
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""
