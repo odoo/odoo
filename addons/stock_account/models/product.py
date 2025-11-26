@@ -290,7 +290,7 @@ class ProductProduct(models.Model):
         if at_date:
             product_value_domain &= Domain([('date', '<=', at_date)])
 
-        product_values = self.env['product.value'].search(product_value_domain, order="date, id")
+        product_values = self.env['product.value'].sudo().search(product_value_domain, order="date, id")
         avco_value = 0
         avco_total_value = 0
         moves = moves_in | moves_out
@@ -451,7 +451,7 @@ class ProductProduct(models.Model):
                 continue
             new_standard_price = product._run_avco()[0]
             if new_standard_price:
-                product.with_context(disable_auto_revaluation=True).standard_price = new_standard_price
+                product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price
 
 
 class ProductCategory(models.Model):
