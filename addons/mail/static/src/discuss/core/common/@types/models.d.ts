@@ -36,7 +36,6 @@ declare module "models" {
         updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {
-        allow_invite_by_email: Readonly<boolean>;
         allowCalls: Readonly<boolean>;
         allowDescription: Readonly<boolean>;
         allowedToLeaveChannelTypes: Readonly<string[]>;
