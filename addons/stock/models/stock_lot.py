@@ -148,7 +148,7 @@ class StockLot(models.Model):
     def _compute_delivery_ids(self):
         delivery_ids_by_lot = self._find_delivery_ids_by_lot_iterative()
         for lot in self:
-            lot.delivery_ids = delivery_ids_by_lot[lot.id]
+            lot.delivery_ids = delivery_ids_by_lot.get(lot.id, [])
             lot.delivery_count = len(lot.delivery_ids)
 
     def _compute_last_delivery_partner_id(self):
@@ -156,7 +156,7 @@ class StockLot(models.Model):
         delivery_ids_by_lot = serial_products._find_delivery_ids_by_lot_iterative()
         (self - serial_products).last_delivery_partner_id = False
         for lot in serial_products:
-            if lot.product_id.tracking == 'serial' and len(delivery_ids_by_lot[lot.id]) > 0:
+            if lot.product_id.tracking == 'serial' and len(delivery_ids_by_lot.get(lot.id, [])) > 0:
                 lot.last_delivery_partner_id = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True)[0].partner_id
             else:
                 lot.last_delivery_partner_id = False
