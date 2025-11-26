@@ -30,7 +30,7 @@ patch(DiscussClientAction.prototype, {
     async restoreDiscussThread() {
         await super.restoreDiscussThread(...arguments);
         this.store.is_welcome_page_displayed ||=
-            this.store.discuss.thread?.default_display_mode === "video_full_screen";
+            this.store.discuss.thread?.channel.default_display_mode === "video_full_screen";
     },
     closeWelcomePage() {
         this.store.is_welcome_page_displayed = false;
