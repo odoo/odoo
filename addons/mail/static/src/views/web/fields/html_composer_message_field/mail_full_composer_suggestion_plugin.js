@@ -33,6 +33,7 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
             this.historySavePointRestore = this.dependencies.history.makeSavePoint();
             this.mentionList.open({
                 props: {
+                    composerType: this.config.composerType,
                     onSelect: this.onSelect.bind(this),
                     thread: this.config.thread,
                     type: ev.data === "@" ? "Partner" : "discuss.channel",

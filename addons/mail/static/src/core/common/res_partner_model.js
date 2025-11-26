@@ -47,6 +47,8 @@ export class ResPartner extends Record {
     name;
     /** @type {string} */
     display_name;
+    /** @type {boolean | undefined} */
+    partner_share;
     /** @type {string} */
     phone;
     /** @type {luxon.DateTime} */

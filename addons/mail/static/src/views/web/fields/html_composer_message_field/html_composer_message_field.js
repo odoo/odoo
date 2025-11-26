@@ -8,6 +8,7 @@ import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { markup, onWillUnmount } from "@odoo/owl";
+import { COMPOSER_TYPES } from "@mail/core/common/composer";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
@@ -88,6 +89,9 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 subtree: true,
             });
         };
+        config.composerType = this.props.record.data.subtype_is_log
+            ? COMPOSER_TYPES.NOTE
+            : COMPOSER_TYPES.MESSAGE;
         return config;
     }
 

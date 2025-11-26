@@ -14,7 +14,8 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
-import { trimEmptyBlocksAround } from "@mail/utils/common/format";
+import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
+import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
@@ -28,6 +29,7 @@ import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus } from "@o
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import {
+    createDocumentFragmentFromContent,
     htmlFormatList,
     htmlJoin,
     isHtmlEmpty,
@@ -58,7 +60,10 @@ const EDIT_CLICK_TYPE = {
     SAVE: "save",
 };
 export const MENTION_AMOUNT_WARNING = 50;
-
+export const COMPOSER_TYPES = {
+    NOTE: "note",
+    MESSAGE: "message",
+};
 class FullComposerRecoveryPopover extends Component {
     static props = ["composer", "onClickFullRecover", "onClickTextRecover", "close?"];
     static template = "mail.FullComposerRecoveryPopover";
@@ -263,6 +268,43 @@ export class Composer extends Component {
                 this.props.composer.forceCursorMove = false;
             },
             () => [this.props.composer.forceCursorMove]
+        );
+        useLayoutEffect(
+            () => {
+                if (!this.env.inChatter || !this.props.composer.mentionedPartners.length) {
+                    return;
+                }
+                const fragment = createDocumentFragmentFromContent(
+                    this.props.composer.composerHtml
+                );
+                const elements = fragment.querySelectorAll(
+                    `.o_mail_redirect, .o-discuss-readonly-mention`
+                );
+                let hasChanged = false;
+                for (const el of elements) {
+                    const partnerId = Number(el.dataset.oeId);
+                    const partner = this.props.composer.mentionedPartners.find(
+                        (p) => p.id === partnerId
+                    );
+                    if (
+                        partner.partner_share &&
+                        this.props.type === COMPOSER_TYPES.NOTE &&
+                        el.tagName === "A"
+                    ) {
+                        const span = generatePartnerMentionElement(partner, { readonly: true });
+                        el.replaceWith(span);
+                        hasChanged = true;
+                    } else if (el.tagName !== "A") {
+                        const link = generatePartnerMentionElement(partner);
+                        el.replaceWith(link);
+                        hasChanged = true;
+                    }
+                }
+                if (hasChanged) {
+                    this.props.composer.composerHtml = getInnerHtml(fragment);
+                }
+            },
+            () => [this.props.type]
         );
         useLayoutEffect(
             (isFullComposerOpen, restoredFromFullComposer, fullComposerButtonEl) => {

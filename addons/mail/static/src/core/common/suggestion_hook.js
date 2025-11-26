@@ -240,6 +240,7 @@ export class UseSuggestion {
             return undefined;
         }
         const { type, suggestions } = this.suggestionService.searchSuggestions(this.detection, {
+            composerType: this.comp.props.type,
             thread: this.thread,
         });
         if (!suggestions.length) {
@@ -265,6 +266,7 @@ export class UseSuggestion {
             await this.suggestionService.fetchSuggestions(this.detection, {
                 thread: this.thread,
                 abortSignal: this.abortController.signal,
+                composerType: this.comp.props.type,
             });
         } catch (e) {
             if (e instanceof ConnectionAbortedError) {
@@ -382,7 +384,7 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
 export function makeMentionFromOption(option, { thread } = {}) {
     let inlineElement;
     if (option.partner) {
-        inlineElement = generatePartnerMentionElement(option.partner, thread);
+        inlineElement = generatePartnerMentionElement(option.partner, { thread });
     } else if (option.isSpecial) {
         inlineElement = generateSpecialMentionElement(option.label);
     } else if (option.role) {
