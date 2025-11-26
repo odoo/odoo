@@ -95,6 +95,8 @@ export class DiscussChannel extends Record {
     }
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
+    /** @type {"not_fetched"|"fetching"|"fetched"} */
+    fetchChannelInfoState = "not_fetched";
     get memberListTypes() {
         return ["channel", "group"];
     }
