@@ -105,7 +105,7 @@ export async function freezeOdooData(model) {
                 if (pivotId && model.getters.getPivotCoreDefinition(pivotId).type !== "ODOO") {
                     continue;
                 }
-                sheet.cells[xc] = evaluatedCell.value.toString();
+                sheet.cells[xc] = toFrozenContent(evaluatedCell);
                 if (evaluatedCell.format) {
                     sheet.formats[xc] = getItemId(evaluatedCell.format, data.formats);
                 }
@@ -120,7 +120,7 @@ export async function freezeOdooData(model) {
                                 col,
                                 row,
                             });
-                            sheet.cells[xc] = evaluatedCell.value.toString();
+                            sheet.cells[xc] = toFrozenContent(evaluatedCell);
                             if (evaluatedCell.format) {
                                 sheet.formats[xc] = getItemId(evaluatedCell.format, data.formats);
                             }
@@ -154,6 +154,14 @@ export async function freezeOdooData(model) {
     data.lists = {};
     exportGlobalFiltersToSheet(model, data);
     return data;
+}
+
+function toFrozenContent(evaluatedCell) {
+    const value = evaluatedCell.value;
+    if (value === "") {
+        return '=""';
+    }
+    return value.toString();
 }
 
 /**
