@@ -34,7 +34,9 @@
 
     &:not(.o_kanban_ghost) {
         padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
-        border: $border-width solid $border-color;
+        border-width: var(--KanbanRecord-border-width, #{$border-width});
+        border-style: solid;
+        border-color: $border-color;
         background-color: $o-view-background-color;
 
         @include media-only(print) {
@@ -211,5 +213,8 @@
         &:not(:last-of-type) {
             border-bottom: $border-width solid $border-color;
         }
+    }
+    .o_kanban_ungrouped .o_kanban_record {
+        --KanbanRecord-border-width: #{$border-width} 0;
     }
 }
