@@ -20,3 +20,25 @@ registry.category("web_tour.tours").add("PosRestaurantRewardStay", {
             PosLoyalty.hasRewardLine("10% on your order", "-0.22", "1"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_loyalty_multi_device_deviceA", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.addOrderline("Coca-Cola", "3"),
+            PosLoyalty.hasRewardLine("Free Product - Coca-Cola", "-2.20", "1"),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_multi_device_deviceB", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("5"),
+            PosLoyalty.hasRewardLine("Free Product - Coca-Cola", "-2.20", "1"),
+            ProductScreen.orderLineHas("Coca-Cola", "3.0"),
+        ].flat(),
+});

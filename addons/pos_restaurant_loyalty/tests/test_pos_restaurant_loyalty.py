@@ -36,3 +36,35 @@ class TestPoSRestaurantLoyalty(TestFrontend):
         )
         order = self.env['pos.order'].search([])
         self.assertEqual(order.currency_id.round(order.amount_total), 1.98)
+
+    def test_loyalty_multi_device(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'buy_x_get_y_coca',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': [self.env['product.product'].search([('name', '=', 'Coca-Cola')]).ids],
+                'reward_point_mode': 'unit',
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.env['product.product'].search([('name', '=', 'Coca-Cola')]).id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.pos_config.id,
+            "test_loyalty_multi_device_deviceA",
+            login="pos_user",
+        )
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.pos_config.id,
+            "test_loyalty_multi_device_deviceB",
+            login="pos_user",
+        )

@@ -5,7 +5,7 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 
 patch(PosStore.prototype, {
     async setTable(table, orderUid = null) {
-        await super.setTable(...arguments);
         this.updateRewards();
+        await super.setTable(...arguments);
     },
 });
