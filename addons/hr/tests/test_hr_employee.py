@@ -10,6 +10,7 @@ from odoo.tests import Form, users, new_test_user, HttpCase, tagged, Transaction
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
+from psycopg2.errors import NotNullViolation
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -86,6 +87,10 @@ class TestHrEmployee(TestHrCommon):
         employee_form.work_email = 'raoul@example.com'
         employee = employee_form.save()
         self.assertEqual(employee.tz, _tz)
+
+    def test_employee_null_timezone(self):
+        with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
+            self.res_users_hr_officer.company_id.resource_calendar_id.write({'tz': None})
 
     def test_employee_from_user(self):
         _tz = 'Pacific/Apia'
