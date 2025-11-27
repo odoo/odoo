@@ -276,25 +276,6 @@ const threadPatch = {
     get showUnreadBanner() {
         return this.self_member_id?.message_unread_counter_ui > 0;
     },
-    get allowedToLeaveChannelTypes() {
-        return ["channel", "group"];
-    },
-    get canLeave() {
-        return (
-            this.allowedToLeaveChannelTypes.includes(this.channel?.channel_type) &&
-            this.group_ids.length === 0 &&
-            this.store.self_user
-        );
-    },
-    get allowedToUnpinChannelTypes() {
-        return ["chat"];
-    },
-    get canUnpin() {
-        return (
-            this.parent_channel_id ||
-            this.allowedToUnpinChannelTypes.includes(this.channel?.channel_type)
-        );
-    },
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",

@@ -4,9 +4,15 @@ declare module "models" {
     export interface DiscussCategory extends DiscussCategoryClass {}
 
     export interface DiscussChannel {
+        allowedToLeaveChannelTypes: Readonly<string[]>;
+        allowedToUnpinChannelTypes: Readonly<string[]>;
+        canLeave: Readonly<boolean>;
+        canUnpin: Readonly<boolean>;
         discuss_category_id: DiscussCategory;
+        isDisplayInSidebar: boolean;
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
+        subChannelsInSidebar: Thread[];
     }
     export interface Message {
         linkedSubChannel: Thread;
@@ -23,7 +29,6 @@ declare module "models" {
         categoryAsThreadWithCounter: DiscussAppCategory;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         discussAppCategory: DiscussAppCategory;
-        displayInSidebar: boolean;
         from_message_id: Message;
         hasSubChannelFeature: Readonly<boolean>;
         lastSubChannelLoaded: Thread|null;

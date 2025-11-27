@@ -11,7 +11,7 @@ patch(MessagingMenu.prototype, {
         }
     },
     canUnpinItem(thread) {
-        return thread.canUnpin && thread.self_member_id?.message_unread_counter === 0;
+        return thread.channel?.canUnpin && thread.self_member_id?.message_unread_counter === 0;
     },
     onSwipeLeftThreadNotification(thread) {
         const res = super.onSwipeLeftThreadNotification(...arguments);

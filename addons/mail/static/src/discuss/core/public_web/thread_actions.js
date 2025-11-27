@@ -36,11 +36,11 @@ registerThreadAction("show-threads", {
     sequenceGroup: 10,
 });
 registerThreadAction("leave", {
-    condition: ({ owner, thread }) =>
-        (thread?.canLeave || thread?.canUnpin) && !owner.isDiscussContent,
+    condition: ({ channel, owner }) =>
+        (channel?.canLeave || channel?.canUnpin) && !owner.isDiscussContent,
     icon: "fa fa-fw fa-sign-out",
-    name: ({ thread }) => (thread.canLeave ? _t("Leave Channel") : _t("Unpin Conversation")),
-    onSelected: ({ thread }) => (thread.canLeave ? thread.leaveChannel() : thread.unpin()),
+    name: ({ channel }) => (channel.canLeave ? _t("Leave Channel") : _t("Unpin Conversation")),
+    onSelected: ({ channel }) => (channel.canLeave ? channel.leaveChannel() : channel.unpin()),
     partition: ({ owner }) => owner.env.inChatWindow,
     sequence: 10,
     sequenceGroup: 40,

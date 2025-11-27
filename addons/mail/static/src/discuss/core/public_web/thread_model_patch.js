@@ -54,9 +54,6 @@ const threadPatch = {
         /** @type {import("models").Thread|null} */
         this.lastSubChannelLoaded = null;
     },
-    get canLeave() {
-        return !this.parent_channel_id && super.canLeave;
-    },
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.channel?.channel_type)) {
             return this.store.discuss.chatCategory;
