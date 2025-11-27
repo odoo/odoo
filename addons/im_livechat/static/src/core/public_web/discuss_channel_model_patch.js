@@ -13,5 +13,8 @@ const discussChannelPatch = {
             },
         });
     },
+    get allowedToLeaveChannelTypes() {
+        return [...super.allowedToLeaveChannelTypes, "livechat"];
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

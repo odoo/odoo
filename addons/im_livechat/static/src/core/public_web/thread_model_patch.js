@@ -18,9 +18,6 @@ patch(Thread.prototype, {
             this.channel.appAsLivechats?.defaultLivechatCategory
         );
     },
-    get allowedToLeaveChannelTypes() {
-        return [...super.allowedToLeaveChannelTypes, "livechat"];
-    },
     get correspondents() {
         return super.correspondents.filter(
             (correspondent) => correspondent.livechat_member_type !== "bot"

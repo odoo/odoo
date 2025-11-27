@@ -55,6 +55,25 @@ const discussChannelPatch = {
             { description }
         );
     },
+    get allowedToLeaveChannelTypes() {
+        return ["channel", "group"];
+    },
+    get allowedToUnpinChannelTypes() {
+        return ["chat"];
+    },
+    get canLeave() {
+        return (
+            !this.parent_channel_id &&
+            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
+            this.group_ids.length === 0 &&
+            this.store.self_user
+        );
+    },
+    get canUnpin() {
+        return (
+            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
+        );
+    },
     /**
      * Handle the notification of a new message based on the notification setting of the user.
      * Thread on mute:
