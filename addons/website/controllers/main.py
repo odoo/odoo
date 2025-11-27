@@ -408,6 +408,10 @@ class Website(Home):
             ]
         }
 
+    @http.route('/website/check_existing_link', type='jsonrpc', auth="user", website=True, readonly=True)
+    def check_existing_link(self, link):
+        return request.website.check_existing_page(link)
+
     @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True, readonly=True)
     def save_session_layout_mode(self, layout_mode, view_id):
         assert layout_mode in ('grid', 'list'), "Invalid layout mode"
