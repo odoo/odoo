@@ -1373,7 +1373,7 @@ class Base(models.AbstractModel):
 
         model_domain_image = self._search_panel_domain_image(field_name, model_domain,
                             enable_counters and no_extra,
-                            set_limit and limit,
+                            limit if set_limit else None,
                         )
         if enable_counters and not no_extra:
             count_domain_image = self._search_panel_domain_image(field_name, count_domain, True)
