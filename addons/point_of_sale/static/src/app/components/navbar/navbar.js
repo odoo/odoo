@@ -3,7 +3,6 @@ import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
-import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
@@ -27,7 +26,6 @@ export class Navbar extends Component {
     static components = {
         // FIXME POSREF remove some of these components
         CashierName,
-        ProxyStatus,
         SaleDetailsButton,
         Input,
         Dropdown,
