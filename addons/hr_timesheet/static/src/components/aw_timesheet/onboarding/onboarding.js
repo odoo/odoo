@@ -54,69 +54,95 @@ export class ActivityWatchOnboarding extends Component {
     }
 
     generateScript() {
-        const lines = [];
-        const INSTALL_DIR="$HOME/Documents/RaoufTesting";
-        const AW_URL="https://github.com/ActivityWatch/activitywatch/releases/download/v0.13.2/activitywatch-v0.13.2-linux-x86_64.zip";
-        const VSCODE_EXT_ID="activitywatch.aw-watcher-vscode";
-        const CHROME_EXT_ID="nglaklhklhcoonedhgnpgddginnjdadi";
-
-        lines.push("#!/bin/bash");
-        lines.push("set -e");
-        lines.push('');
-        lines.push('echo "Installing ActivityWatch - Raouf"');
-        lines.push('');
-        lines.push(`INSTALL_DIR="${INSTALL_DIR}"`);
-        lines.push('mkdir -p "$INSTALL_DIR"');
-        lines.push('cd "$INSTALL_DIR"');
-        lines.push('');
-        lines.push(`AW_URL="${AW_URL}"`);
-        lines.push('echo "Downloading ActivityWatch"');
-        lines.push('wget -O aw.zip "$AW_URL"');
-        lines.push('echo "ActivityWatch Downloaded"');
-        lines.push('unzip -o aw.zip');
-        lines.push('rm aw.zip');
-        lines.push('echo "ActivityWatch Unzipped"');
-        lines.push('');
-        lines.push('# for this poc, i\'m just focusing on chrome and vsCode on Linux, we will make it generic');
-
-        if (this.state.ideSelections.includes("vscode")) {
-            lines.push('echo "Installing VSCode extension"');
-            lines.push('if command -v code > /dev/null 2>&1; then');
-            lines.push(`  sudo -u "$USER" code --install-extension ${VSCODE_EXT_ID}`);
-            lines.push('else');
-            lines.push('  echo "VSCode not found"');
-            lines.push('fi');
-            lines.push('');
-        }
-        // should handle other ides
-
-        if (this.state.installWeb) {
-            lines.push('# important info to know, if the user uninstall the extension manually from the ui, it will move to the blocklist, and can\'t be installed again with this script');
-            lines.push('# as google said on the doc: If the user uninstalls your extension, you should respect that decision.');
-            lines.push('# ref: https://developer.chrome.com/docs/extensions/how-to/distribute/install-extensions#faq-uninstalls');
-            lines.push('# we should just inform the user and give him the link to do it manually via https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi');
-            lines.push('');
-            lines.push('echo "Installing Chrome extension"');
-            lines.push('declare -A EXTlist=( ["activitywatch-web-watcher"]="' + CHROME_EXT_ID + '" )');
-            lines.push('mkdir -p /opt/google/chrome/extensions');
-            lines.push('for i in "${!EXTlist[@]}"; do');
-            lines.push('  echo \'{"external_update_url": "https://clients2.google.com/service/update2/crx"}\' | sudo tee /opt/google/chrome/extensions/${EXTlist[$i]}.json > /dev/null');
-            lines.push('done');
-            lines.push('echo "Chrome extension, restart Chrome and verify via chrome://extensions/"');
-            lines.push('');
-        } // should check the extension for other browsers
-
-        // Start ActivityWatch
-        lines.push('echo "Starting ActivityWatch"');
         const odooUrl = window.location.origin;
-        // we need to check the conf file, it looks easier
-        lines.push("cd activitywatch");
-        lines.push("./aw-watcher-afk/aw-watcher-afk &");
-        lines.push("./aw-watcher-window/aw-watcher-window &");
-        lines.push(`./aw-server/aw-server --cors-origins ${odooUrl}`);
-        lines.push("echo 'Installation completed'");
+        const lines = [
+            "#!/bin/bash",
+            "set -e",
+            "",
+            'echo "Installing ActivityWatch - Raouf"',
+            "",
+            'INSTALL_DIR="$HOME/Documents/RaoufTesting"',
+            'WATCHERS_DIR="$INSTALL_DIR/activitywatch"',
+            'WRAPPER_SCRIPT="$INSTALL_DIR/start_watchers.sh"',
+            'LOG_FILE="$INSTALL_DIR/startup.log"',
+            "",
+            "mkdir -p \"$INSTALL_DIR\"",
+            "cd \"$INSTALL_DIR\"",
+            "",
+            "# Download AW",
+            'AW_URL="https://github.com/ActivityWatch/activitywatch/releases/download/v0.13.2/activitywatch-v0.13.2-linux-x86_64.zip"',
+            'echo "Downloading ActivityWatch"',
+            'wget -O aw.zip "$AW_URL"',
+            'echo "ActivityWatch Downloaded"',
+            "unzip -o aw.zip",
+            "rm aw.zip",
+            'echo "ActivityWatch Unzipped"',
+            ""
+        ];
 
-        const scriptText = lines.join("\n");
+        // for this poc, i'm just focusing on chrome and vsCode on Linux, we will make it generic
+        if (this.state.ideSelections.includes("vscode")) {
+            lines.push(
+                "# Install VSCode extension",
+                'if command -v code > /dev/null 2>&1; then',
+                '  sudo -u "$USER" code --install-extension activitywatch.aw-watcher-vscode',
+                "else",
+                '  echo "VSCode not found"',
+                "fi",
+                ""
+            );
+        }
+
+        // important info to know, if the user uninstall the extension manually from the ui, it will move to the blocklist, and can't be installed again with this script
+        // as google said on the doc: If the user uninstalls your extension, you should respect that decision.
+        // ref: https://developer.chrome.com/docs/extensions/how-to/distribute/install-extensions#faq-uninstalls
+        // we should just inform the user and give him the link to do it manually via https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi
+        if (this.state.installWeb) {
+            lines.push(
+                "# Install Chrome extension",
+                'declare -A EXTlist=( ["activitywatch-web-watcher"]="nglaklhklhcoonedhgnpgddginnjdadi" )',
+                "mkdir -p /opt/google/chrome/extensions",
+                'for i in "${!EXTlist[@]}"; do',
+                '  echo \'{"external_update_url": "https://clients2.google.com/service/update2/crx"}\' | sudo tee /opt/google/chrome/extensions/${EXTlist[$i]}.json > /dev/null',
+                "done",
+                'echo "Chrome extension installed. Restart Chrome and verify via chrome://extensions/"',
+                ""
+            );
+        }
+
+        // Wrapper script
+        const wrapperLines = [
+            "# Auto start config",
+            "cat > \"$WRAPPER_SCRIPT\" << 'EOF'",
+            "#!/bin/bash",
+            "set -e",
+            "",
+            'INSTALL_DIR="$HOME/Documents/RaoufTesting"',
+            'WATCHERS_DIR="$INSTALL_DIR/activitywatch"',
+            'LOG_FILE="$INSTALL_DIR/startup.log"',
+            "",
+            'AW_AFK="$WATCHERS_DIR/aw-watcher-afk/aw-watcher-afk"',
+            'AW_WINDOW="$WATCHERS_DIR/aw-watcher-window/aw-watcher-window"',
+            'AW_SERVER="$WATCHERS_DIR/aw-server/aw-server"',
+            "",
+            "cd \"$WATCHERS_DIR\"",
+            "",
+            "# Start watchers in background, log output",
+            '$AW_AFK >> "$LOG_FILE" 2>&1 &',
+            '$AW_WINDOW >> "$LOG_FILE" 2>&1 &',
+            `$AW_SERVER --cors-origins ${odooUrl} >> "$LOG_FILE" 2>&1 &`,
+            "EOF",
+            "",
+            "chmod +x \"$WRAPPER_SCRIPT\"",
+            '(crontab -l 2>/dev/null | grep -F "$WRAPPER_SCRIPT") || \\',
+            '    (crontab -l 2>/dev/null; echo "@reboot /bin/bash $WRAPPER_SCRIPT") | crontab -',
+            "",
+            'echo "Watchers will now run on every reboot."',
+            '/bin/bash "$WRAPPER_SCRIPT"',
+            'echo "Starting watchers now..."'
+        ];
+
+        const scriptText = [...lines, ...wrapperLines].join("\n");
         const blob = new Blob([scriptText], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
 
