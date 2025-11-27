@@ -36,7 +36,6 @@ export class CallParticipantCard extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rootHover = useHover("root");
-        this.resumeStreamHover = useHover("resumeStream");
         this.isMobileOS = isMobileOS();
         this.dragPos = undefined;
         this.isDrag = false;
