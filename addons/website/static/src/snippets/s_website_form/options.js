@@ -185,7 +185,7 @@ const FormEditor = options.Class.extend({
         if (!field.id) {
             field.id = weUtils.generateHTMLId();
         }
-        const params = { field: { ...field }, defaultName: escape(_t("Field")) };
+        const params = { field: { ...field }, defaultName: escape(field.string || _t("Field")) };
         if (["url", "email", "tel"].includes(field.type)) {
             params.field.inputType = field.type;
         }
@@ -1080,6 +1080,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * Set the name of the field on the label
      */
     setLabelText: function (previewMode, value, params) {
+        // If value is empty, use the original field label
+        if (!value.trim() && this.$target[0].dataset.translatedName) {
+            value = this.$target[0].dataset.translatedName;
+        }
         this.$target.find('.s_website_form_label_content').text(value);
         if (this._isFieldCustom()) {
             value = this._getQuotesEncodedName(value);

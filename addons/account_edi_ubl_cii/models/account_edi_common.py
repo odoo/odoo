@@ -382,7 +382,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         # clear the context, because creation of partner when importing should not depend on the context default values
         ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
-        bank_details = list(map(sanitize_account_number, bank_details))
+        bank_details = list(set(map(sanitize_account_number, bank_details)))
 
         if invoice.move_type in ('out_refund', 'in_invoice'):
             partner = invoice.partner_id
