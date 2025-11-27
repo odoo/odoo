@@ -7,7 +7,7 @@
             id="product_stock_availability"
         >
             <div t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template} d-flex flex-column gap-2">
-                <div id="out_of_stock_message">
+                <div id="out_of_stock_message" class="mb-3">
                     <t t-if="has_out_of_stock_message">
                         <div class="d-inline-flex align-items-center badge text-bg-danger text-wrap">
                             <i class="fa fa-circle text-danger me-2"/>
