@@ -995,16 +995,16 @@ test("Show start message of conversation", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Thread .fs-1", { text: "Welcome to #General!" });
+    await contains(".o-mail-Thread:has(:text('Welcome to #General!'))");
     await contains(".o-mail-Thread p", { text: "This is the start of the #General channel" });
     await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "ThreadOne" });
-    await contains(".o-mail-Thread .fs-1", { text: "ThreadOne" });
+    await contains(".o-mail-Thread:has(:text('ThreadOne'))");
     await contains(".o-mail-Thread p", { text: "Started by Mitchell Admin" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-    await contains(".o-mail-Thread .fs-1", { text: "Demo" });
+    await contains(".o-mail-Thread:has(:text('Demo'))");
     await contains(".o-mail-Thread p", { text: "This is the start of your direct chat with Demo" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin and Demo" });
-    await contains(".o-mail-Thread .fs-1", { text: "Mitchell Admin and Demo" });
+    await contains(".o-mail-Thread:has(:text('Mitchell Admin and Demo'))");
     await contains(".o-mail-Thread p", {
         text: "This is the start of Mitchell Admin and Demo group",
     });
