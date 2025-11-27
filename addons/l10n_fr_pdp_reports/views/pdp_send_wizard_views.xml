@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_fr_pdp_reports_view_send_wizard_form" model="ir.ui.view">
+        <field name="name">l10n.fr.pdp.send.wizard.form.reporting</field>
+        <field name="model">l10n.fr.pdp.send.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send Flow">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <p>Some invoices were excluded because of validation errors.  <button name="action_view_errors" type="object" class="oe_link" string="View invoices"/></p>
+                        <p invisible="flow_id.transmission_type == 'RE'">Click "Send anyway" to submit without them.</p>
+                        <p invisible="flow_id.transmission_type != 'RE'">Rectificative flows must include all invoices. Fix errors before sending.</p>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_send_anyway" type="object" class="btn-primary" string="Send anyway"
+                            invisible="flow_id.transmission_type == 'RE'"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_fr_pdp_reports_action_send_wizard" model="ir.actions.act_window">
+        <field name="name">Send Flow</field>
+        <field name="res_model">l10n.fr.pdp.send.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_fr_pdp_reports_view_send_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
