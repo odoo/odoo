@@ -7,7 +7,6 @@ import {
     makeContentsInline,
     removeClass,
     removeStyle,
-    splitTextNode,
     unwrapContents,
     wrapInlinesInBlocks,
 } from "../utils/dom";
@@ -39,7 +38,7 @@ import {
     lastLeaf,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
+import { childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { normalizeCursorPosition } from "@html_editor/utils/selection";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -170,7 +169,12 @@ export class DomPlugin extends Plugin {
         let insertBefore = false;
         if (selection.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !selection.startOffset;
-            splitTextNode(selection.startContainer, selection.startOffset, DIRECTIONS.LEFT);
+            if (
+                selection.startOffset !== 0 &&
+                selection.startOffset !== selection.startContainer.length
+            ) {
+                selection.startContainer.splitText(selection.startOffset);
+            }
             startNode = selection.startContainer;
         }
 
