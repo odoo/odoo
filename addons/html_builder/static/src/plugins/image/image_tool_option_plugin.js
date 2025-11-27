@@ -10,7 +10,11 @@ import {
     IMAGE_TOOL,
     ALIGNMENT_STYLE_PADDING,
 } from "@html_builder/utils/option_sequence";
-import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
+import {
+    ReplaceMediaOption,
+    searchSupportedParentLinkEl,
+    socialMediaElementsSelector,
+} from "./replace_media_option";
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -21,8 +25,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 export class ImageAndFaOption extends BaseOptionComponent {
     static template = "html_builder.ImageAndFaOption";
     static selector = "span.fa, i.fa, img";
-    static exclude =
-        "[data-oe-type='image'] > img, [data-oe-xpath], .s_social_media i.fa, .s_share i.fa";
+    static exclude = `[data-oe-type='image'] > img, [data-oe-xpath], ${socialMediaElementsSelector}`;
     static name = "imageAndFaOption";
 }
 class ImageToolOptionPlugin extends Plugin {

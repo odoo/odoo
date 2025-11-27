@@ -679,11 +679,16 @@ font[class*='bg-'] {
     padding: MAX($-base-padding, 1px) 0 MAX(($-bottom-factor * $-base-padding), ($-bottom-factor * 1px));
 }
 
+// Images as Icons
+.social_media_img {
+    object-fit: cover;
+}
 // Icons
 .fa {
-    $-size: map-get($spacers, 5);
-
     font-family: "FontAwesome" !important;
+}
+.fa, .social_media_img {
+    $-size: map-get($spacers, 5);
 
     &.rounded-circle,
     &.rounded,
