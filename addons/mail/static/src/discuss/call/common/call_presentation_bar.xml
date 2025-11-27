@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.CallPresentationBar">
+        <div class="o-discuss-CallPresentationBar w-100 px-1 py-2">
+            <div class="o-discuss-CallPresentationBar-container rounded-2 p-1 w-100 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2 ms-1 fw-medium overflow-hidden">
+                    <AvatarStack personas="presenterPersonas" max="2" containerClass="'z-0'"/>
+                    <div t-out="presenterText" t-att-title="presenterText" class="o-discuss-CallPresentationBar-presenterLabel opacity-75 text-truncate" t-att-class="{'o-self-presenter': rtc.selfSession.is_screen_sharing_on and rtc.screenAudioTrack}"/>
+                    <div t-if="rtc.selfSession.is_screen_sharing_on and rtc.screenAudioTrack" t-on-click="togglePresentationAudio" class="o-discuss-CallPresentationBar-presentationAudioContainer cursor-pointer opacity-75 opacity-100-hover d-flex align-items-center gap-2 overflow-hidden">
+                        <div class="o-discuss-CallPresentationBar-divider"/>
+                        <div class="text-truncate"><i class="fa fa-fw me-1" t-att-class="presentationAudio.enabled ? 'fa-volume-up' : 'fa-volume-off'"/>Presentation Audio</div>
+                        <div class="form-check form-switch" title="Toggle Presentation Audio">
+                            <input class="form-check-input" type="checkbox" role="switch" t-att-checked="presentationAudio.enabled"/>
+                        </div>
+                    </div>
+                </div>
+                <button t-if="rtc.selfSession.is_screen_sharing_on" class="btn btn-sm btn-secondary rounded flex-shrink-0" aria-label="Stop presenting" t-on-click="() => rtc.toggleVideo('screen', false)">Stop presenting</button>
+            </div>
+        </div>
+    </t>
+</templates>
