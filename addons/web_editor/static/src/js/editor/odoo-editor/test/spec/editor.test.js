@@ -1211,6 +1211,13 @@ X[]
                         contentAfter: unformat(`<div>a[]d</div>`),
                     });
                 });
+                it('should fill empty block with a <br>', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>[]<i class="fa fa-bug" contenteditable="false"></i></p>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
+                });
                 it('should delete the inline code style when removing its last character', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: unformat(`<div><code class="o_inline_code">ab</code>[]xyz</div>`),
@@ -2938,6 +2945,11 @@ X[]
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><img>[]</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><i class="fa fa-bug" contenteditable="false"></i>[]</p>',
                         stepFunction: deleteBackward,
                         contentAfter: '<p>[]<br></p>',
                     });
