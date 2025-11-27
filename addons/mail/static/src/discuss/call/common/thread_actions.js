@@ -5,8 +5,7 @@ import { CallSettings } from "@mail/discuss/call/common/call_settings";
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("call", {
-    condition: ({ channel, store, thread }) =>
-        thread?.allowCalls && !channel?.eq(store.rtc.channel),
+    condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-phone",
     name: ({ thread }) =>
         thread.rtc_session_ids.length > 0 ? _t("Join the Call") : _t("Start Call"),
@@ -16,8 +15,7 @@ registerThreadAction("call", {
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("camera-call", {
-    condition: ({ channel, store, thread }) =>
-        thread?.allowCalls && !channel?.eq(store.rtc.channel),
+    condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-video-camera",
     name: ({ thread }) =>
         thread.rtc_session_ids.length > 0
@@ -31,8 +29,8 @@ registerThreadAction("camera-call", {
 registerThreadAction("call-settings", {
     actionPanelComponent: CallSettings,
     actionPanelComponentProps: () => ({ isCompact: true }),
-    condition: ({ owner, store, thread }) =>
-        thread?.allowCalls &&
+    condition: ({ channel, owner, store }) =>
+        channel?.allowCalls &&
         (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-gear",

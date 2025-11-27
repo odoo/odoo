@@ -74,9 +74,6 @@ const threadPatch = {
             return this.store.discuss.channelCategory;
         }
     },
-    get allowCalls() {
-        return super.allowCalls && !this.parent_channel_id;
-    },
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel?.channel_type);
     },

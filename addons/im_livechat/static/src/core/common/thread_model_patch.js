@@ -54,9 +54,6 @@ patch(Thread.prototype, {
         }
         return super.showCorrespondentCountry;
     },
-    get typesAllowingCalls() {
-        return super.typesAllowingCalls.concat(["livechat"]);
-    },
 
     get allowDescription() {
         return this.channel?.channel_type === "livechat" || super.allowDescription;
