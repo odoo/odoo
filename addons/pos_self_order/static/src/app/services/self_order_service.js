@@ -289,6 +289,7 @@ export class SelfOrder extends Reactive {
         return this.filterPaymentMethods(this.models["pos.payment.method"].getAll()).length > 0;
     }
 
+    // TODO: Remove in master. This method is redundant as the same logic exists in _load_pos_self_data_domain.
     filterPaymentMethods(pms) {
         //based on _load_pos_self_data_domain from pos_payment_method.py
         return this.config.self_ordering_mode === "kiosk"
