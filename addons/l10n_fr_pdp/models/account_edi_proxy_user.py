@@ -1,4 +1,5 @@
 import logging
+import uuid
 from lxml import etree
 from markupsafe import Markup
 from types import MappingProxyType
@@ -67,6 +68,18 @@ PAYMENT_TYPE_CODES = MappingProxyType({
     'MEN': _lt("Amount collected (including tax)"),  # Montant encaissé (TTC)
 })
 
+DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_fr_pdp demo utils
+    'pilot_phase': lambda params: {
+        'annuaire_line_start_date': fields.Date.today(),
+        'pilot_phase': params['pdp_pilot_phase'],
+    },
+    'participant_status': lambda params: {},
+    'send_document': lambda params: {
+        'ppf_messages': [{'uid': f'demo_{uuid.uuid4()}', 'flow_id': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
+    },
+    'pdp_state': lambda params: {},
+}
+
 
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
@@ -107,7 +120,16 @@ class AccountEdiProxyClientUser(models.Model):
 
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
-        return super()._call_peppol_proxy(endpoint, params=params)
+        if (
+            self.env.company._get_peppol_edi_mode() == 'demo'
+            and (demo_endpoint := DEMO_ENDPOINTS.get(endpoint.split('/')[-1]))
+        ):
+            self.ensure_one()
+            if self.proxy_type != 'pdp':
+                raise UserError(self.env._('EDI user should be of type PDP'))
+            return demo_endpoint(params)
+        else:
+            return super()._call_peppol_proxy(endpoint, params)
 
     def _get_proxy_identification(self, company, proxy_type):
         if proxy_type != 'pdp':
@@ -238,11 +260,11 @@ class AccountEdiProxyClientUser(models.Model):
         self.ensure_one()
         processed_message_uuids = []
         other_messages = {}
-        for uuid, content in messages.items():
-            record = uuid_to_record[uuid]
+        for uid, content in messages.items():
+            record = uuid_to_record[uid]
             # In case of an error there is no 'document_type' in the content.
             if record._name != 'account.peppol.response' or 'document_type' in content and content['document_type'] != 'CrossDomainAcknowledgementAndResponse':
-                other_messages[uuid] = content
+                other_messages[uid] = content
                 continue
 
             peppol_response = record
@@ -257,11 +279,11 @@ class AccountEdiProxyClientUser(models.Model):
                     peppol_response.move_id._message_log(
                         body=self.env._("French e-invoicing response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
                     )
-                processed_message_uuids.append(uuid)
+                processed_message_uuids.append(uid)
                 continue
 
             peppol_response.peppol_state = content['state']
-            processed_message_uuids.append(uuid)
+            processed_message_uuids.append(uid)
 
             origin_move = peppol_response.move_id
             decoded_document = self._peppol_get_decoded_document(content)
@@ -394,32 +416,53 @@ class AccountEdiProxyClientUser(models.Model):
         ]
         original_moves = self.env['account.move'].search(origin_domain).grouped('peppol_message_uuid')
 
-        for uuid, content in messages.items():
+        for uid, content in messages.items():
             # We acknowledge all messages:
             # The original move / response are outgoing messages created locally. They will not be created later.
             flow_number = content['flow_number']
             if content['document_type'] in {'Invoice', 'CreditNote'}:
-                processed_messages[uuid] = self.env['account.move']
+                processed_messages[uid] = self.env['account.move']
                 origin_uuid = content['origin_peppol_message_uuid']
                 origin_move = original_moves.get(origin_uuid)
                 if not origin_uuid or not origin_move:
-                    _logger.warning('[Flow 1] The tax extract from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uuid, origin_uuid)
+                    _logger.warning('[Flow 1] The tax extract from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uid, origin_uuid)
                     continue
-                processed_messages[uuid] = self._pdp_import_tax_extract(uuid, content, origin_move[:1])
+                processed_messages[uid] = self._pdp_import_tax_extract(uid, content, origin_move[:1])
             elif content['document_type'] == 'CrossDomainAcknowledgementAndResponse' and flow_number in ('1', '6'):
-                processed_messages[uuid] = self.env['account.peppol.response']
+                processed_messages[uid] = self.env['account.peppol.response']
                 origin_uuid = content['origin_peppol_message_uuid']
                 origin_move = original_moves.get(origin_uuid)
                 if not origin_uuid or not origin_move:
                     flow_description = "tax extract" if flow_number == '1' else "status"
-                    _logger.warning('[Flow %s] The %s response from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', flow_number, flow_description, uuid, origin_uuid)
+                    _logger.warning('[Flow %s] The %s response from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', flow_number, flow_description, uid, origin_uuid)
                     continue
                 if content['direction'] == 'outgoing':
-                    processed_messages[uuid] = self._pdp_import_outgoing_response(uuid, content, origin_move[:1])
+                    processed_messages[uid] = self._pdp_import_outgoing_response(uid, content, origin_move[:1])
                 else:
-                    processed_messages[uuid] = self._pdp_import_incoming_response(uuid, content, origin_move[:1])
+                    processed_messages[uid] = self._pdp_import_incoming_response(uid, content, origin_move[:1])
+            elif content['document_type'] == 'CrossDomainAcknowledgementAndResponse' and flow_number == '10':
+                self._pdp_import_flow_10_response(uid, content)
+                processed_messages[uid] = True
 
         return processed_messages
+
+    def _pdp_import_flow_10_response(self, uuid, content):
+        flow_id = content['flow_id'].split('_')[-1]
+        flow = self.env['l10n.fr.pdp.reports.flow'].search([('pdp_flow_id', '=', flow_id)], limit=1)
+        if not flow:
+            _logger.warning('Flow 10 message with uuid %s and flow_id %s could not be linked '
+                            'to any flow 10', uuid, flow_id)
+            return
+        document = self._peppol_get_decoded_document(content)
+
+        flow.payload_id = self.env['ir.attachment'].create({
+            'name': f'message.{uuid}.xml',
+            'raw': document,
+            'res_model': flow._name,
+            'res_id': flow.id,
+            'type': 'binary',
+            'mimetype': 'application/xml',
+        })
 
     def _pdp_import_tax_extract(self, uuid, content, origin_move):
         if not origin_move:
