@@ -1,6 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { load } from "@odoo/o-spreadsheet";
+import { load, helpers } from "@odoo/o-spreadsheet";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
+
+const { schemeToColorScale } = helpers;
 
 defineSpreadsheetModels();
 defineSpreadsheetActions();
@@ -829,4 +831,43 @@ test("Odoo Menu references are converted starting from 19.1.1", () => {
         chart1: { type: "odooMenu", odooMenuId: "menu.menu_1" },
         chart2: { type: "odooMenu", odooMenuId: "menu.menu_2" },
     });
+});
+
+test("Odoo geo charts color scales are migrated", () => {
+    const data = {
+        version: "18.5.10",
+        sheets: [
+            {
+                figures: [
+                    {
+                        id: "fig1",
+                        tag: "chart",
+                        data: {
+                            chartId: "chart1",
+                            type: "odoo_geo",
+                            colorScale: "reds",
+                        },
+                    },
+                    {
+                        id: "fig1",
+                        tag: "carousel",
+                        data: {
+                            chartDefinitions: {
+                                chart2: {
+                                    type: "odoo_geo",
+                                    colorScale: "greens",
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+    const migratedData = load(data);
+    const figures = migratedData.sheets[0].figures;
+    expect(figures[0].data.colorScale).toEqual(schemeToColorScale("reds"));
+    expect(figures[1].data.chartDefinitions["chart2"].colorScale).toEqual(
+        schemeToColorScale("greens")
+    );
 });
