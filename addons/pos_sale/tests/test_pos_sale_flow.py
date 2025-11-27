@@ -1686,3 +1686,50 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env.flush_all()
         refund_payment.with_context(**payment_context).check()
         self.assertEqual(sale_order.order_line.qty_invoiced, 0)
+
+    def test_settle_order_with_multiple_uom(self):
+        """ Verify that a sale order with multiple UoM can be settled from the PoS."""
+        uom_a, uom_b = self.env['uom.uom'].create([{
+            "name": "UoM A"
+        }, {
+            "name": "UoM B"
+        }])
+
+        product_a, product_b = self.env['product.product'].create([{
+            "name": "Product A",
+            "available_in_pos": True,
+            "is_storable": True,
+            "lst_price": 10.0,
+            "uom_id": uom_a.id,
+            "taxes_id": [],
+        }, {
+            "name": "Product B",
+            "available_in_pos": True,
+            "is_storable": True,
+            "lst_price": 20.0,
+            "uom_id": uom_b.id,
+            "taxes_id": [],
+        }])
+
+        sale_order = self.env["sale.order"].sudo().create({
+            "partner_id": self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            "order_line": [
+                (0, 0, {
+                    "product_id": product_a.id,
+                    "name": product_a.name,
+                    "product_uom_qty": 2,
+                    "product_uom_id": uom_a.id,
+                    "price_unit": product_a.lst_price,
+                }),
+                (0, 0, {
+                    "product_id": product_b.id,
+                    "name": product_b.name,
+                    "product_uom_qty": 3,
+                    "product_uom_id": uom_b.id,
+                    "price_unit": product_b.lst_price,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('PoSSettleQuotation', login="accountman")
