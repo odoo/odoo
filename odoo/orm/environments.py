@@ -29,7 +29,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, MutableMapping
     from datetime import tzinfo
     from weakref import ReferenceType
-    from .identifiers import IdType, NewId
+    from .identifiers import IdType
     from .types import BaseModel, Field
 
     M = typing.TypeVar('M', bound=BaseModel)
@@ -527,9 +527,9 @@ class Environment(Mapping[str, "BaseModel"]):
         return self.registry.field_depends_context
 
     def execute_query(self, query: SQL) -> list[tuple]:
-        """ Execute the given query, fetch its result and it as a list of tuples
-        (or an empty list if no result to fetch).  The method automatically
-        flushes all the fields in the metadata of the query.
+        """ Execute the given query, fetch its result and return it as a list of
+        tuples (or an empty list if no result to fetch). The method
+        automatically flushes all the fields in the metadata of the query.
         """
         assert isinstance(query, SQL)
         _, _, fields_to_flush = query._sql_tuple
