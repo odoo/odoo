@@ -317,10 +317,12 @@ class StockPackage(models.Model):
         """ Unpacks quants directly inside the container, and remove contained packages from this package.
         """
         self.child_package_ids.parent_package_id = False
-        self.quant_ids.move_quants(message=self.env._("Quantities unpacked"), unpack=True)
-        # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
-        # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.quant_ids._quant_tasks()
+        if self.quant_ids:
+            quants = self.quant_ids
+            self.quant_ids.move_quants(message=self.env._("Quantities unpacked"), unpack=True)
+            # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
+            # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
+            quants._quant_tasks()
 
     def action_add_to_picking(self):
         picking = self.env['stock.picking'].browse(self.env.context.get('picking_id'))
