@@ -3950,7 +3950,7 @@ class BaseModel(metaclass=MetaModel):
                 column = SQL.identifier(fname)
                 # the type cast is necessary for some values, like NULLs
                 expr = SQL('"__tmp".%s::%s', column, SQL(field.column_type[1]))
-                if field.translate is True or getattr(field, "autonomous_lang", None):
+                if field.translate and (field.translate is True or getattr(field, "autonomous_lang", None)):
                     # this is the SQL equivalent of:
                     # None if expr is None else (
                     #     (column or {'en_US': next(iter(expr.values()))}) | expr
