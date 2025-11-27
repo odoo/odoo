@@ -14,7 +14,6 @@ import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
 from odoo.tools import json_default, SQL
-from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
@@ -41,11 +40,36 @@ def get_notify_payload_max_length(default=8000):
 NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 
 
+def fetch_bus_notifications(cr, channels, last=0, ignore_ids=None):
+    """Fetch notifications from the bus table.
+
+    :param cr: Database cursor.
+    :param channels: List of channels for which notifications should be fetched.
+        May contain channel names, model instances, or (model, string) tuples.
+    :param last: The ID of the last fetched notification. Defaults to 0.
+    :param ignore_ids: IDs to exclude.
+    :return: List of notifications.
+
+    """
+    conditions = [
+        SQL("channel IN %s", tuple(json_dump(channel_with_db(cr.dbname, c)) for c in channels)),
+        SQL("create_date > %s", fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT))
+        if last == 0
+        else SQL("id > %s", last),
+    ]
+    if ignore_ids:
+        conditions.append(SQL("id NOT IN %s", tuple(ignore_ids)))
+    where = SQL(" AND ").join(conditions)
+    cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
+    return [{"id": r[0], "message": json.loads(r[1])} for r in cr.fetchall()]
+
+
 # ---------------------------------------------------------
 # Bus
 # ---------------------------------------------------------
 def json_dump(v):
     return json.dumps(v, separators=(',', ':'), default=json_default)
+
 
 def hashable(key):
     if isinstance(key, list):
@@ -164,25 +188,7 @@ class BusBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
-        # first poll return the notification in the 'buffer'
-        if last == 0:
-            timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
-            domain = [('create_date', '>', timeout_ago)]
-        else:  # else returns the unread notifications
-            domain = [('id', '>', last)]
-        if ignore_ids:
-            domain.append(("id", "not in", ignore_ids))
-        channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
-        domain.append(('channel', 'in', channels))
-        notifications = self.sudo().search_read(domain, ["message"])
-        # list of notification to return
-        result = []
-        for notif in notifications:
-            result.append({
-                'id': notif['id'],
-                'message': json.loads(notif['message']),
-            })
-        return result
+        return fetch_bus_notifications(self.env.cr, channels, last, ignore_ids)
 
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)
@@ -192,12 +198,6 @@ class BusBus(models.Model):
 # ---------------------------------------------------------
 # Dispatcher
 # ---------------------------------------------------------
-
-class BusSubscription:
-    def __init__(self, channels, last):
-        self.last_notification_id = last
-        self.channels = channels
-
 
 class ImDispatch(threading.Thread):
     def __init__(self):

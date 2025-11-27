@@ -33,7 +33,7 @@ from odoo.service import model as service_model
 from odoo.service.server import CommonServer
 from odoo.tools import config
 
-from .models.bus import dispatch
+from .models.bus import dispatch, fetch_bus_notifications
 from .session_helpers import check_session, new_env
 
 _logger = logging.getLogger(__name__)
@@ -754,9 +754,8 @@ class Websocket:
     def _dispatch_bus_notifications(self):
         self._waiting_for_dispatch = False
         with acquire_cursor(self._session.db) as cr:
-            env = new_env(cr, self._session)
-            notifications = env['bus.bus']._poll(
-                self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
+            notifications = fetch_bus_notifications(
+                cr, self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
             )
             if not notifications:
                 return
