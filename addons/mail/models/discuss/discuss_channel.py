@@ -1227,6 +1227,11 @@ class DiscussChannel(models.Model):
             Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
             "channel_type",
             "create_uid",
+            Store.Attr(
+                "create_date",
+                predicate=lambda channel: channel.default_display_mode == "video_full_screen"
+                and channel.channel_type == "group",
+            ),
             Store.Many(
                 "channel_member_ids",
                 only_data=True,

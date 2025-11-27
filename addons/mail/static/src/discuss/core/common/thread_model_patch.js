@@ -7,6 +7,7 @@ import {
     nearestGreaterThanOrEqual,
 } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
@@ -144,6 +145,7 @@ const threadPatch = {
             inverse: "threadAsFirstUnread",
         });
         this.invited_member_ids = fields.Many("discuss.channel.member");
+        this.create_date = fields.Datetime();
         this.last_interest_dt = fields.Datetime();
         this.lastInterestDt = fields.Datetime({
             /** @this {import("models").Thread} */
@@ -302,6 +304,9 @@ const threadPatch = {
         return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
     },
     get displayName() {
+        if (this.default_display_mode === "video_full_screen" && !this.name) {
+            return this._getMeetingDisplayName();
+        }
         if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
             return this.self_member_id.custom_channel_name;
         }
@@ -323,6 +328,24 @@ const threadPatch = {
             return this.name;
         }
         return super.displayName;
+    },
+    _getMeetingDisplayName() {
+        const baseName = _t("Meeting");
+        if (!this.create_date) {
+            return baseName;
+        }
+        const tz = user?.tz;
+        const localizedDatetime = tz ? this.create_date.setZone(tz) : this.create_date.toLocal();
+        if (!localizedDatetime?.isValid) {
+            return baseName;
+        }
+        const formattedDate = localizedDatetime.toLocaleString(luxon.DateTime.DATETIME_MED, {
+            locale: user.lang,
+        });
+        return _t("%(meeting)s – %(datetime)s", {
+            meeting: baseName,
+            datetime: formattedDate,
+        });
     },
     async fetchChannelMembers() {
         if (this.fetchMembersState === "pending") {
