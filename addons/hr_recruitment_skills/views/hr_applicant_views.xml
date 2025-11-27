@@ -14,6 +14,7 @@
                                 <field mode="list" nolabel="1" name="current_applicant_skill_ids" widget="skills_one2many"
                                         context="{'default_applicant_id': id, 'no_timeline': True}" >
                                     <list
+                                        class="o_applicant_skills"
                                         decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
                                         decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
                                         decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=1)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
