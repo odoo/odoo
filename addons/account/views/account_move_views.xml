@@ -1074,6 +1074,7 @@
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
                                 <field name="invoice_date" nolabel="1" options="{'warn_future': true}"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
+                                       required="move_type in ('in_invoice', 'in_refund', 'in_receipt')"
                                        readonly="state != 'draft'"/>
 
                                 <field name="date" string="Accounting Date"
