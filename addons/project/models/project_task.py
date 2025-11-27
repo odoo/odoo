@@ -1837,6 +1837,7 @@ class ProjectTask(models.Model):
             return {}
         action = self.with_context({
             'search_view_ref': 'project.project_sharing_project_task_view_search',
+            'default_project_id': self.project_id.id,
         }).action_open_parent_task()
         action['views'] = [(self.env.ref('project.project_sharing_project_task_view_form').id, 'form')]
         action['search_view_id'] = self.env.ref("project.project_sharing_project_task_view_search").id
