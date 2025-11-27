@@ -119,3 +119,43 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
         # Confirm the coupon again
         new_pos_order.confirm_coupon_programs(coupon_data)
         check_coupon(40, 2)
+
+    def test_gift_card_partner(self):
+        """ Test that the gift card's partner is correctly set as the customer who bought it."""
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        LoyaltyProgram = self.env['loyalty.program']
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        gift_card_program = LoyaltyProgram.browse(
+            LoyaltyProgram.create_from_template('gift_card')['res_id']
+        )
+        gift_card_program.pos_report_print_id = self.env.ref('loyalty.report_gift_card')
+        self.main_pos_config.open_ui()
+        pos_order = self.env['pos.order'].create({
+            'config_id': self.main_pos_config.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'partner_id': test_partner.id,
+            'lines': [Command.create({
+                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
+                'price_unit': 50,
+                'discount': 0,
+                'qty': 1,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+            'amount_paid': 50.0,
+            'amount_total': 50.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+        })
+        coupon_data = {
+            '-1': {
+                'points': 50,
+                'program_id': gift_card_program.id,
+                'coupon_id': -1,
+                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
+                'code': 'test-code'
+            }
+        }
+        pos_order.confirm_coupon_programs(coupon_data)
+        loyalty_card = self.env['loyalty.card'].search([('code', '=', 'test-code')])
+        self.assertEqual(loyalty_card.partner_id, test_partner)
