@@ -2,7 +2,7 @@ import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { advanceTime, animationFrame, expect, test } from "@odoo/hoot";
-import { tick, waitFor } from "@odoo/hoot-dom";
+import { queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -242,6 +242,38 @@ test("Use the 'remove' overlay buttons: removing a grid item", async () => {
     expect(":iframe .row.o_grid_mode").toHaveAttribute("data-row-count", "4");
     expect(".overlay .oe_snippet_remove").toHaveCount(1);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .o_grid_item");
+});
+
+test("Use the 'remove' overlay buttons: closes the link popover if it is open during snippet removal", async () => {
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="row o_grid_mode" data-row-count="14">
+                    <div class="o_grid_item g-height-4 g-col-lg-7 col-lg-7" style="grid-area: 1 / 1 / 5 / 8; z-index: 1;">
+                        <p>TEST</p>
+                    </div>
+                    <div class="o_grid_item g-height-14 g-col-lg-5 col-lg-5" style="grid-area: 1 / 8 / 15 / 13; z-index: 2;">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    await contains(":iframe .g-height-14").click();
+    const p = queryOne(":iframe .g-height-14 p");
+    setSelection({ anchorNode: p, anchorOffset: 0, focusNode: p, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    await contains('.o-we-toolbar button[name="link"]').click();
+    expect(".o-we-linkpopover").toHaveCount(1);
+    expect(".overlay .o_overlay_options").toHaveCount(1);
+    expect(".overlay .oe_snippet_remove").toHaveCount(1);
+
+    // Check that the link popover is closed and the element has been removed.
+    await contains(".overlay .oe_snippet_remove").click();
+    expect(".o-we-linkpopover").toHaveCount(0);
+    expect(":iframe .g-height-14").toHaveCount(0);
+    expect(".overlay .oe_snippet_remove").toHaveCount(1);
 });
 
 test("Use the 'remove' overlay buttons: removing the last element will remove the parent", async () => {
