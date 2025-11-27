@@ -22,6 +22,13 @@
             <xpath expr="//div[@name='large_screen_job_page_div']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
+
+            <xpath expr="//div[@name='kanban_job_more_options']" position="inside">
+                <a class="dropdown-item d-flex position-relative">
+                    <field string="Published" name="website_published" widget="boolean_toggle"></field>
+                    Published
+                </a>
+            </xpath>
         </field>
     </record>
 

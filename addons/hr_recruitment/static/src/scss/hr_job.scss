@@ -12,14 +12,22 @@
                 --Ribbon-wrapper-width: 5rem;
                 --Ribbon-height: 1.9;
 
-                @include media-breakpoint-up(md) {
-                    min-width: 768px;
+                @include media-breakpoint-between(md, xxl) {
+                    min-width: calc(100vw - (#{$btn-font-size-sm} + #{$btn-padding-x-sm * 2} + #{map-get($spacers, 1) * 4})); // cscreen size reduced by the size of the closed search panel
                 }
 
                 &:not(.o_kanban_ghost) {
                     border: none;
                     border-bottom: $border-width solid $border-color;
                     justify-content: center;
+                }
+
+                .o_hr_recruitment_no-activity {
+                    visibility: var(--KanbanRecord-visibility, hidden);
+                }
+
+                &:hover .o_hr_recruitment_no-activity {
+                    --KanbanRecord-visibility: visible;
                 }
             }
 
@@ -43,21 +51,34 @@
         }
 
         .o_kanban_card_header {
-            --o-kanban-card-header-title-favorite-width: 1.4rem;
-
             margin-bottom: 1px;
 
-            .o_favorite {
-                width: var(--o-kanban-card-header-title-favorite-width);
+            .o_favorite a {
+                display: flex;
+                justify-content: center;
+                margin-right: map-get($spacers, 1);
+                width: var(--Avatar-size);
+
+                i {
+                    --Favorite-font-size: #{$h3-font-size};
+
+                    margin: 0 !important;
+                }
             }
 
-            & > div:where(:not(:first-child)) {
-                margin-left: var(--o-kanban-card-header-title-favorite-width);
+            .fa-envelope {
+                width: var(--Avatar-size);
+            }
+        }
+
+        @include media-breakpoint-down(xxl) {
+            .o_hr_recruitment_activity-col {
+                width: map-get($spacers, 3) *  3.5;
             }
         }
 
         .o_field_many2one_avatar_user .o_avatar{
-            column-gap: 0.375rem;
+            column-gap: map-get($spacers, 1);
         }
         
         .o_hr_recruitment_kanban_card_mobile_screen {
@@ -67,6 +88,12 @@
         &.o_kanban_grouped {
             .o_hr_recruitment_kanban_card_large_screen {
                 display: none;    
+            }
+        }
+
+        .o_dropdown_kanban {
+            @include media-breakpoint-down(xl) {
+                visibility: visible;
             }
         }
     }
@@ -89,15 +116,15 @@
 }
 
 .o_hr_recruitment_kanban {
-    .o_m2o_avatar {
-        --Avatar-size: 1.5em;
+    --Avatar-size: 1.5em;
 
+    .o_m2o_avatar {
         margin-right: 0px !important;
     }
 
     .number {
-        font-size: 1.8rem !important;
-        margin: 0 map-get($spacers, 2) 0 0;
+        font-size: 1.75rem !important;
+        margin: 0 map-get($spacers, 2) * .75 0 0;
         align-content: center;
         font-variant-numeric: tabular-nums;
     }
@@ -126,4 +153,12 @@
 
 .hr_recruitment_is_favorite_job .o_favorite a {
     display: flex;
+}
+
+[name="kanban_job_more_options"] .o_boolean_toggle {
+    margin-bottom: 0 !important;
+
+    label {
+        @include o-position-absolute(0, 0, 0, 0);
+    }
 }
