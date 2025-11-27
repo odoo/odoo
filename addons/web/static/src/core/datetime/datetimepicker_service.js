@@ -1,4 +1,4 @@
-import { markRaw, onPatched, onWillRender, reactive, useEffect, useRef } from "@odoo/owl";
+import { effect, markRaw, onPatched, onWillRender, reactive, useEffect, useRef } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
@@ -80,6 +80,17 @@ export const datetimePickerService = {
              * @param {DateTimePickerServiceParams} [params]
              */
             create(params = {}) {
+                /** @type {boolean[]} */
+                let inputsChanged = [];
+                let lastAppliedStringValue = "";
+                /** @type {(() => void) | null} */
+                let restoreTargetMargin = null;
+                let shouldFocus = false;
+                /** @type {Partial<DateTimePickerProps>} */
+                let stringProps = {};
+                /** @type {OwlRef | null} */
+                let targetRef = null;
+
                 /**
                  * Wrapper method on the "onApply" callback to only call it when the
                  * value has changed, and set other internal variables accordingly.
@@ -458,7 +469,8 @@ export const datetimePickerService = {
                     },
                     ...markValuesRaw(params.pickerProps),
                 };
-                const pickerProps = reactive(rawPickerProps, () => {
+                const pickerProps = reactive(rawPickerProps);
+                effect(() => {
                     // Update inputs
                     for (const [el, value] of zip(
                         getInputs(),
@@ -491,17 +503,6 @@ export const datetimePickerService = {
                         params.onClose?.();
                     },
                 });
-
-                /** @type {boolean[]} */
-                let inputsChanged = [];
-                let lastAppliedStringValue = "";
-                /** @type {(() => void) | null} */
-                let restoreTargetMargin = null;
-                let shouldFocus = false;
-                /** @type {Partial<DateTimePickerProps>} */
-                let stringProps = {};
-                /** @type {OwlRef | null} */
-                let targetRef = null;
 
                 if (params.useOwlHooks) {
                     if (typeof params.target === "string") {

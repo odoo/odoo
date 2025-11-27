@@ -1595,6 +1595,14 @@
         vnode.remove();
     }
 
+    // Reactivity system
+    var ComputationState;
+    (function (ComputationState) {
+        ComputationState[ComputationState["EXECUTED"] = 0] = "EXECUTED";
+        ComputationState[ComputationState["STALE"] = 1] = "STALE";
+        ComputationState[ComputationState["PENDING"] = 2] = "PENDING";
+    })(ComputationState || (ComputationState = {}));
+
     // Maps fibers to thrown errors
     const fibersInError = new WeakMap();
     const nodeErrorHandlers = new WeakMap();
@@ -1654,6 +1662,233 @@
                 console.error(e);
             }
             throw error;
+        }
+    }
+
+    let Effects;
+    let CurrentComputation;
+    function signal(value, opts) {
+        const atom = {
+            value,
+            observers: new Set(),
+            name: opts === null || opts === void 0 ? void 0 : opts.name,
+        };
+        const read = () => {
+            onReadAtom(atom);
+            return atom.value;
+        };
+        const write = (newValue) => {
+            if (typeof newValue === "function") {
+                newValue = newValue(atom.value);
+            }
+            if (Object.is(atom.value, newValue))
+                return;
+            atom.value = newValue;
+            onWriteAtom(atom);
+        };
+        return {
+            get: read,
+            set: write,
+        };
+    }
+    function effect(fn, opts) {
+        var _a, _b;
+        const effectComputation = {
+            state: ComputationState.STALE,
+            value: undefined,
+            compute() {
+                // In case the cleanup read an atom.
+                // todo: test it
+                CurrentComputation = undefined;
+                // `removeSources` is made by `runComputation`.
+                unsubscribeEffect(effectComputation);
+                CurrentComputation = effectComputation;
+                return fn();
+            },
+            sources: new Set(),
+            childrenEffect: [],
+            name: opts === null || opts === void 0 ? void 0 : opts.name,
+        };
+        (_b = (_a = CurrentComputation === null || CurrentComputation === void 0 ? void 0 : CurrentComputation.childrenEffect) === null || _a === void 0 ? void 0 : _a.push) === null || _b === void 0 ? void 0 : _b.call(_a, effectComputation);
+        updateComputation(effectComputation);
+        // Remove sources and unsubscribe
+        return () => {
+            // In case the cleanup read an atom.
+            // todo: test it
+            const previousComputation = CurrentComputation;
+            CurrentComputation = undefined;
+            unsubscribeEffect(effectComputation);
+            CurrentComputation = previousComputation;
+        };
+    }
+    // export function computed<T>(fn: () => T, opts?: Opts) {
+    //   // todo: handle cleanup
+    //   let computedComputation: Computation = {
+    //     state: ComputationState.STALE,
+    //     sources: new Set(),
+    //     isEager: true,
+    //     compute: () => {
+    //       return fn();
+    //     },
+    //     value: undefined,
+    //     name: opts?.name,
+    //   };
+    //   updateComputation(computedComputation);
+    // }
+    function derived(fn, opts) {
+        // todo: handle cleanup
+        let derivedComputation;
+        return () => {
+            derivedComputation !== null && derivedComputation !== void 0 ? derivedComputation : (derivedComputation = {
+                state: ComputationState.STALE,
+                sources: new Set(),
+                compute: () => {
+                    onWriteAtom(derivedComputation);
+                    return fn();
+                },
+                isDerived: true,
+                value: undefined,
+                observers: new Set(),
+                name: opts === null || opts === void 0 ? void 0 : opts.name,
+            });
+            updateComputation(derivedComputation);
+            return derivedComputation.value;
+        };
+    }
+    function onReadAtom(atom) {
+        if (!CurrentComputation)
+            return;
+        CurrentComputation.sources.add(atom);
+        atom.observers.add(CurrentComputation);
+    }
+    function onWriteAtom(atom) {
+        collectEffects(() => {
+            for (const ctx of atom.observers) {
+                if (ctx.state === ComputationState.EXECUTED) {
+                    if (ctx.isDerived)
+                        markDownstream(ctx);
+                    else
+                        Effects.push(ctx);
+                }
+                ctx.state = ComputationState.STALE;
+            }
+        });
+        batchProcessEffects();
+    }
+    function collectEffects(fn) {
+        if (Effects)
+            return fn();
+        Effects = [];
+        try {
+            return fn();
+        }
+        finally {
+        }
+    }
+    const batchProcessEffects = batched(processEffects);
+    function processEffects() {
+        if (!Effects)
+            return;
+        for (const computation of Effects) {
+            updateComputation(computation);
+        }
+        Effects = undefined;
+    }
+    function withoutReactivity(fn) {
+        return runWithComputation(undefined, fn);
+    }
+    function getCurrentComputation() {
+        return CurrentComputation;
+    }
+    function setComputation(computation) {
+        CurrentComputation = computation;
+    }
+    // todo: should probably use updateComputation instead.
+    function runWithComputation(computation, fn) {
+        const previousComputation = CurrentComputation;
+        CurrentComputation = computation;
+        let result;
+        try {
+            result = fn();
+        }
+        finally {
+            CurrentComputation = previousComputation;
+        }
+        return result;
+    }
+    function updateComputation(computation) {
+        var _a;
+        const state = computation.state;
+        if (computation.isDerived)
+            onReadAtom(computation);
+        if (state === ComputationState.EXECUTED)
+            return;
+        if (state === ComputationState.PENDING) {
+            computeSources(computation);
+            // If the state is still not stale after processing the sources, it means
+            // none of the dependencies have changed.
+            // todo: test it
+            if (computation.state !== ComputationState.STALE) {
+                computation.state = ComputationState.EXECUTED;
+                return;
+            }
+        }
+        // todo: test performance. We might want to avoid removing the atoms to
+        // directly re-add them at compute. Especially as we are making them stale.
+        removeSources(computation);
+        const previousComputation = CurrentComputation;
+        CurrentComputation = computation;
+        computation.value = (_a = computation.compute) === null || _a === void 0 ? void 0 : _a.call(computation);
+        computation.state = ComputationState.EXECUTED;
+        CurrentComputation = previousComputation;
+    }
+    function removeSources(computation) {
+        const sources = computation.sources;
+        for (const source of sources) {
+            const observers = source.observers;
+            observers.delete(computation);
+            // todo: if source has no effect observer anymore, remove its sources too
+            // todo: test it
+        }
+        sources.clear();
+    }
+    function unsubscribeEffect(effectComputation) {
+        removeSources(effectComputation);
+        cleanupEffect(effectComputation);
+        for (const children of effectComputation.childrenEffect) {
+            // Consider it executed to avoid it's re-execution
+            // todo: make a test for it
+            children.state = ComputationState.EXECUTED;
+            removeSources(children);
+            unsubscribeEffect(children);
+        }
+        effectComputation.childrenEffect.length = 0;
+    }
+    function cleanupEffect(computation) {
+        // the computation.value of an effect is a cleanup function
+        const cleanupFn = computation.value;
+        if (cleanupFn && typeof cleanupFn === "function") {
+            cleanupFn();
+            computation.value = undefined;
+        }
+    }
+    function markDownstream(derived) {
+        for (const observer of derived.observers) {
+            // if the state has already been marked, skip it
+            if (observer.state)
+                continue;
+            observer.state = ComputationState.PENDING;
+            if (observer.isDerived)
+                markDownstream(observer);
+            else
+                Effects.push(observer);
+        }
+    }
+    function computeSources(derived) {
+        for (const source of derived.sources) {
+            if (!("compute" in source))
+                continue;
+            updateComputation(source);
         }
     }
 
@@ -1778,13 +2013,16 @@
             const node = this.node;
             const root = this.root;
             if (root) {
-                try {
-                    this.bdom = true;
-                    this.bdom = node.renderFn();
-                }
-                catch (e) {
-                    node.app.handleError({ node, error: e });
-                }
+                // todo: should use updateComputation somewhere else.
+                runWithComputation(node.signalComputation, () => {
+                    try {
+                        this.bdom = true;
+                        this.bdom = node.renderFn();
+                    }
+                    catch (e) {
+                        node.app.handleError({ node, error: e });
+                    }
+                });
                 root.setCounter(root.counter - 1);
             }
         }
@@ -1916,11 +2154,6 @@
 
     // Special key to subscribe to, to be notified of key creation/deletion
     const KEYCHANGES = Symbol("Key changes");
-    // Used to specify the absence of a callback, can be used as WeakMap key but
-    // should only be used as a sentinel value and never called.
-    const NO_CALLBACK = () => {
-        throw new Error("Called NO_CALLBACK. Owl is broken, please report this to the maintainers.");
-    };
     const objectToString = Object.prototype.toString;
     const objectHasOwnProperty = Object.prototype.hasOwnProperty;
     // Use arrays because Array.includes is faster than Set.has for small arrays
@@ -1957,8 +2190,8 @@
      * @param value the value make reactive
      * @returns a reactive for the given object when possible, the original otherwise
      */
-    function possiblyReactive(val, cb) {
-        return canBeMadeReactive(val) ? reactive(val, cb) : val;
+    function possiblyReactive(val) {
+        return canBeMadeReactive(val) ? reactive(val) : val;
     }
     const skipped = new WeakSet();
     /**
@@ -1980,7 +2213,23 @@
     function toRaw(value) {
         return targets.has(value) ? targets.get(value) : value;
     }
-    const targetToKeysToCallbacks = new WeakMap();
+    const targetToKeysToAtomItem = new WeakMap();
+    function getTargetKeyAtom(target, key) {
+        let keyToAtomItem = targetToKeysToAtomItem.get(target);
+        if (!keyToAtomItem) {
+            keyToAtomItem = new Map();
+            targetToKeysToAtomItem.set(target, keyToAtomItem);
+        }
+        let atom = keyToAtomItem.get(key);
+        if (!atom) {
+            atom = {
+                value: undefined,
+                observers: new Set(),
+            };
+            keyToAtomItem.set(key, atom);
+        }
+        return atom;
+    }
     /**
      * Observes a given key on a target with an callback. The callback will be
      * called when the given key changes on the target.
@@ -1990,22 +2239,8 @@
      *  or deletion)
      * @param callback the function to call when the key changes
      */
-    function observeTargetKey(target, key, callback) {
-        if (callback === NO_CALLBACK) {
-            return;
-        }
-        if (!targetToKeysToCallbacks.get(target)) {
-            targetToKeysToCallbacks.set(target, new Map());
-        }
-        const keyToCallbacks = targetToKeysToCallbacks.get(target);
-        if (!keyToCallbacks.get(key)) {
-            keyToCallbacks.set(key, new Set());
-        }
-        keyToCallbacks.get(key).add(callback);
-        if (!callbacksToTargets.has(callback)) {
-            callbacksToTargets.set(callback, new Set());
-        }
-        callbacksToTargets.get(callback).add(target);
+    function onReadTargetKey(target, key) {
+        onReadAtom(getTargetKeyAtom(target, key));
     }
     /**
      * Notify Reactives that are observing a given target that a key has changed on
@@ -2016,60 +2251,16 @@
      * @param key the key that changed (or Symbol `KEYCHANGES` if a key was created
      *   or deleted)
      */
-    function notifyReactives(target, key) {
-        const keyToCallbacks = targetToKeysToCallbacks.get(target);
-        if (!keyToCallbacks) {
+    function onWriteTargetKey(target, key) {
+        const keyToAtomItem = targetToKeysToAtomItem.get(target);
+        if (!keyToAtomItem) {
             return;
         }
-        const callbacks = keyToCallbacks.get(key);
-        if (!callbacks) {
+        const atom = keyToAtomItem.get(key);
+        if (!atom) {
             return;
         }
-        // Loop on copy because clearReactivesForCallback will modify the set in place
-        for (const callback of [...callbacks]) {
-            clearReactivesForCallback(callback);
-            callback();
-        }
-    }
-    const callbacksToTargets = new WeakMap();
-    /**
-     * Clears all subscriptions of the Reactives associated with a given callback.
-     *
-     * @param callback the callback for which the reactives need to be cleared
-     */
-    function clearReactivesForCallback(callback) {
-        const targetsToClear = callbacksToTargets.get(callback);
-        if (!targetsToClear) {
-            return;
-        }
-        for (const target of targetsToClear) {
-            const observedKeys = targetToKeysToCallbacks.get(target);
-            if (!observedKeys) {
-                continue;
-            }
-            for (const [key, callbacks] of observedKeys.entries()) {
-                callbacks.delete(callback);
-                if (!callbacks.size) {
-                    observedKeys.delete(key);
-                }
-            }
-        }
-        targetsToClear.clear();
-    }
-    function getSubscriptions(callback) {
-        const targets = callbacksToTargets.get(callback) || [];
-        return [...targets].map((target) => {
-            const keysToCallbacks = targetToKeysToCallbacks.get(target);
-            let keys = [];
-            if (keysToCallbacks) {
-                for (const [key, cbs] of keysToCallbacks) {
-                    if (cbs.has(callback)) {
-                        keys.push(key);
-                    }
-                }
-            }
-            return { target, keys };
-        });
+        onWriteAtom(atom);
     }
     // Maps reactive objects to the underlying target
     const targets = new WeakMap();
@@ -2101,7 +2292,7 @@
      *  reactive has changed
      * @returns a proxy that tracks changes to it
      */
-    function reactive(target, callback = NO_CALLBACK) {
+    function reactive(target) {
         if (!canBeMadeReactive(target)) {
             throw new OwlError(`Cannot make the given value reactive`);
         }
@@ -2110,22 +2301,19 @@
         }
         if (targets.has(target)) {
             // target is reactive, create a reactive on the underlying object instead
-            return reactive(targets.get(target), callback);
+            return target;
         }
-        if (!reactiveCache.has(target)) {
-            reactiveCache.set(target, new WeakMap());
-        }
-        const reactivesForTarget = reactiveCache.get(target);
-        if (!reactivesForTarget.has(callback)) {
-            const targetRawType = rawType(target);
-            const handler = COLLECTION_RAW_TYPES.includes(targetRawType)
-                ? collectionsProxyHandler(target, callback, targetRawType)
-                : basicProxyHandler(callback);
-            const proxy = new Proxy(target, handler);
-            reactivesForTarget.set(callback, proxy);
-            targets.set(proxy, target);
-        }
-        return reactivesForTarget.get(callback);
+        const reactive = reactiveCache.get(target);
+        if (reactive)
+            return reactive;
+        const targetRawType = rawType(target);
+        const handler = COLLECTION_RAW_TYPES.includes(targetRawType)
+            ? collectionsProxyHandler(target, targetRawType)
+            : basicProxyHandler();
+        const proxy = new Proxy(target, handler);
+        reactiveCache.set(target, proxy);
+        targets.set(proxy, target);
+        return proxy;
     }
     /**
      * Creates a basic proxy handler for regular objects and arrays.
@@ -2133,7 +2321,7 @@
      * @param callback @see reactive
      * @returns a proxy handler object
      */
-    function basicProxyHandler(callback) {
+    function basicProxyHandler() {
         return {
             get(target, key, receiver) {
                 // non-writable non-configurable properties cannot be made reactive
@@ -2141,41 +2329,41 @@
                 if (desc && !desc.writable && !desc.configurable) {
                     return Reflect.get(target, key, receiver);
                 }
-                observeTargetKey(target, key, callback);
-                return possiblyReactive(Reflect.get(target, key, receiver), callback);
+                onReadTargetKey(target, key);
+                return possiblyReactive(Reflect.get(target, key, receiver));
             },
             set(target, key, value, receiver) {
                 const hadKey = objectHasOwnProperty.call(target, key);
                 const originalValue = Reflect.get(target, key, receiver);
                 const ret = Reflect.set(target, key, toRaw(value), receiver);
                 if (!hadKey && objectHasOwnProperty.call(target, key)) {
-                    notifyReactives(target, KEYCHANGES);
+                    onWriteTargetKey(target, KEYCHANGES);
                 }
                 // While Array length may trigger the set trap, it's not actually set by this
                 // method but is updated behind the scenes, and the trap is not called with the
                 // new value. We disable the "same-value-optimization" for it because of that.
                 if (originalValue !== Reflect.get(target, key, receiver) ||
                     (key === "length" && Array.isArray(target))) {
-                    notifyReactives(target, key);
+                    onWriteTargetKey(target, key);
                 }
                 return ret;
             },
             deleteProperty(target, key) {
                 const ret = Reflect.deleteProperty(target, key);
                 // TODO: only notify when something was actually deleted
-                notifyReactives(target, KEYCHANGES);
-                notifyReactives(target, key);
+                onWriteTargetKey(target, KEYCHANGES);
+                onWriteTargetKey(target, key);
                 return ret;
             },
             ownKeys(target) {
-                observeTargetKey(target, KEYCHANGES, callback);
+                onReadTargetKey(target, KEYCHANGES);
                 return Reflect.ownKeys(target);
             },
             has(target, key) {
                 // TODO: this observes all key changes instead of only the presence of the argument key
                 // observing the key itself would observe value changes instead of presence changes
                 // so we may need a finer grained system to distinguish observing value vs presence.
-                observeTargetKey(target, KEYCHANGES, callback);
+                onReadTargetKey(target, KEYCHANGES);
                 return Reflect.has(target, key);
             },
         };
@@ -2188,11 +2376,11 @@
      * @param target @see reactive
      * @param callback @see reactive
      */
-    function makeKeyObserver(methodName, target, callback) {
+    function makeKeyObserver(methodName, target) {
         return (key) => {
             key = toRaw(key);
-            observeTargetKey(target, key, callback);
-            return possiblyReactive(target[methodName](key), callback);
+            onReadTargetKey(target, key);
+            return possiblyReactive(target[methodName](key));
         };
     }
     /**
@@ -2203,14 +2391,14 @@
      * @param target @see reactive
      * @param callback @see reactive
      */
-    function makeIteratorObserver(methodName, target, callback) {
+    function makeIteratorObserver(methodName, target) {
         return function* () {
-            observeTargetKey(target, KEYCHANGES, callback);
+            onReadTargetKey(target, KEYCHANGES);
             const keys = target.keys();
             for (const item of target[methodName]()) {
                 const key = keys.next().value;
-                observeTargetKey(target, key, callback);
-                yield possiblyReactive(item, callback);
+                onReadTargetKey(target, key);
+                yield possiblyReactive(item);
             }
         };
     }
@@ -2222,12 +2410,12 @@
      * @param target @see reactive
      * @param callback @see reactive
      */
-    function makeForEachObserver(target, callback) {
+    function makeForEachObserver(target) {
         return function forEach(forEachCb, thisArg) {
-            observeTargetKey(target, KEYCHANGES, callback);
+            onReadTargetKey(target, KEYCHANGES);
             target.forEach(function (val, key, targetObj) {
-                observeTargetKey(target, key, callback);
-                forEachCb.call(thisArg, possiblyReactive(val, callback), possiblyReactive(key, callback), possiblyReactive(targetObj, callback));
+                onReadTargetKey(target, key);
+                forEachCb.call(thisArg, possiblyReactive(val), possiblyReactive(key), possiblyReactive(targetObj));
             }, thisArg);
         };
     }
@@ -2249,10 +2437,10 @@
             const ret = target[setterName](key, value);
             const hasKey = target.has(key);
             if (hadKey !== hasKey) {
-                notifyReactives(target, KEYCHANGES);
+                onWriteTargetKey(target, KEYCHANGES);
             }
             if (originalValue !== target[getterName](key)) {
-                notifyReactives(target, key);
+                onWriteTargetKey(target, key);
             }
             return ret;
         };
@@ -2267,9 +2455,9 @@
         return () => {
             const allKeys = [...target.keys()];
             target.clear();
-            notifyReactives(target, KEYCHANGES);
+            onWriteTargetKey(target, KEYCHANGES);
             for (const key of allKeys) {
-                notifyReactives(target, key);
+                onWriteTargetKey(target, key);
             }
         };
     }
@@ -2281,40 +2469,40 @@
      * reactives that the key which is being added or deleted has been modified.
      */
     const rawTypeToFuncHandlers = {
-        Set: (target, callback) => ({
-            has: makeKeyObserver("has", target, callback),
+        Set: (target) => ({
+            has: makeKeyObserver("has", target),
             add: delegateAndNotify("add", "has", target),
             delete: delegateAndNotify("delete", "has", target),
-            keys: makeIteratorObserver("keys", target, callback),
-            values: makeIteratorObserver("values", target, callback),
-            entries: makeIteratorObserver("entries", target, callback),
-            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
-            forEach: makeForEachObserver(target, callback),
+            keys: makeIteratorObserver("keys", target),
+            values: makeIteratorObserver("values", target),
+            entries: makeIteratorObserver("entries", target),
+            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target),
+            forEach: makeForEachObserver(target),
             clear: makeClearNotifier(target),
             get size() {
-                observeTargetKey(target, KEYCHANGES, callback);
+                onReadTargetKey(target, KEYCHANGES);
                 return target.size;
             },
         }),
-        Map: (target, callback) => ({
-            has: makeKeyObserver("has", target, callback),
-            get: makeKeyObserver("get", target, callback),
+        Map: (target) => ({
+            has: makeKeyObserver("has", target),
+            get: makeKeyObserver("get", target),
             set: delegateAndNotify("set", "get", target),
             delete: delegateAndNotify("delete", "has", target),
-            keys: makeIteratorObserver("keys", target, callback),
-            values: makeIteratorObserver("values", target, callback),
-            entries: makeIteratorObserver("entries", target, callback),
-            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
-            forEach: makeForEachObserver(target, callback),
+            keys: makeIteratorObserver("keys", target),
+            values: makeIteratorObserver("values", target),
+            entries: makeIteratorObserver("entries", target),
+            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target),
+            forEach: makeForEachObserver(target),
             clear: makeClearNotifier(target),
             get size() {
-                observeTargetKey(target, KEYCHANGES, callback);
+                onReadTargetKey(target, KEYCHANGES);
                 return target.size;
             },
         }),
-        WeakMap: (target, callback) => ({
-            has: makeKeyObserver("has", target, callback),
-            get: makeKeyObserver("get", target, callback),
+        WeakMap: (target) => ({
+            has: makeKeyObserver("has", target),
+            get: makeKeyObserver("get", target),
             set: delegateAndNotify("set", "get", target),
             delete: delegateAndNotify("delete", "has", target),
         }),
@@ -2326,18 +2514,18 @@
      * @param target @see reactive
      * @returns a proxy handler object
      */
-    function collectionsProxyHandler(target, callback, targetRawType) {
+    function collectionsProxyHandler(target, targetRawType) {
         // TODO: if performance is an issue we can create the special handlers lazily when each
         // property is read.
-        const specialHandlers = rawTypeToFuncHandlers[targetRawType](target, callback);
-        return Object.assign(basicProxyHandler(callback), {
+        const specialHandlers = rawTypeToFuncHandlers[targetRawType](target);
+        return Object.assign(basicProxyHandler(), {
             // FIXME: probably broken when part of prototype chain since we ignore the receiver
             get(target, key) {
                 if (objectHasOwnProperty.call(specialHandlers, key)) {
                     return specialHandlers[key];
                 }
-                observeTargetKey(target, key, callback);
-                return possiblyReactive(target[key], callback);
+                onReadTargetKey(target, key);
+                return possiblyReactive(target[key]);
             },
         });
     }
@@ -2371,7 +2559,6 @@
     // -----------------------------------------------------------------------------
     // Integration with reactivity system (useState)
     // -----------------------------------------------------------------------------
-    const batchedRenderFunctions = new WeakMap();
     /**
      * Creates a reactive object that will be observed by the current component.
      * Reading data from the returned object (eg during rendering) will cause the
@@ -2383,15 +2570,7 @@
      * @see reactive
      */
     function useState(state) {
-        const node = getCurrent();
-        let render = batchedRenderFunctions.get(node);
-        if (!render) {
-            render = batched(node.render.bind(node, false));
-            batchedRenderFunctions.set(node, render);
-            // manual implementation of onWillDestroy to break cyclic dependency
-            node.willDestroy.push(clearReactivesForCallback.bind(null, render));
-        }
-        return reactive(state, render);
+        return reactive(state);
     }
     class ComponentNode {
         constructor(C, props, app, parent, parentKey) {
@@ -2414,6 +2593,13 @@
             this.parent = parent;
             this.props = props;
             this.parentKey = parentKey;
+            this.pluginManager = parent ? parent.pluginManager : app.pluginManager;
+            this.signalComputation = {
+                value: undefined,
+                compute: () => this.render(false),
+                sources: new Set(),
+                state: ComputationState.EXECUTED,
+            };
             const defaultProps = C.defaultProps;
             props = Object.assign({}, props);
             if (defaultProps) {
@@ -2421,16 +2607,13 @@
             }
             const env = (parent && parent.childEnv) || app.env;
             this.childEnv = env;
-            for (const key in props) {
-                const prop = props[key];
-                if (prop && typeof prop === "object" && targets.has(prop)) {
-                    props[key] = useState(prop);
-                }
-            }
-            this.component = new C(props, env, this);
+            const previousComputation = getCurrentComputation();
+            setComputation(this.signalComputation);
+            this.component = new C(props, env, this.pluginManager.plugins, this);
             const ctx = Object.assign(Object.create(this.component), { this: this.component });
             this.renderFn = app.getTemplate(C.template).bind(this.component, ctx, this);
             this.component.setup();
+            setComputation(previousComputation);
             currentNode = null;
         }
         mountComponent(target, options) {
@@ -2445,7 +2628,11 @@
             }
             const component = this.component;
             try {
-                await Promise.all(this.willStart.map((f) => f.call(component)));
+                let prom;
+                withoutReactivity(() => {
+                    prom = Promise.all(this.willStart.map((f) => f.call(component)));
+                });
+                await prom;
             }
             catch (e) {
                 this.app.handleError({ node: this, error: e });
@@ -2554,15 +2741,10 @@
             if (defaultProps) {
                 applyDefaultProps(props, defaultProps);
             }
-            currentNode = this;
-            for (const key in props) {
-                const prop = props[key];
-                if (prop && typeof prop === "object" && targets.has(prop)) {
-                    props[key] = useState(prop);
-                }
-            }
-            currentNode = null;
-            const prom = Promise.all(this.willUpdateProps.map((f) => f.call(component, props)));
+            let prom;
+            withoutReactivity(() => {
+                prom = Promise.all(this.willUpdateProps.map((f) => f.call(component, props)));
+            });
             await prom;
             if (fiber !== this.fiber) {
                 return;
@@ -2669,10 +2851,6 @@
         // ---------------------------------------------------------------------------
         get name() {
             return this.component.constructor.name;
-        }
-        get subscriptions() {
-            const render = batchedRenderFunctions.get(this);
-            return render ? getSubscriptions(render) : [];
         }
     }
 
@@ -2790,9 +2968,10 @@
     }
 
     class Component {
-        constructor(props, env, node) {
+        constructor(props, env, plugins, node) {
             this.props = props;
             this.env = env;
+            this.plugins = plugins;
             this.__owl__ = node;
         }
         setup() { }
@@ -5816,7 +5995,7 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.8.1";
+    const version = "3.0.0-alpha";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -5910,6 +6089,172 @@
     // interactions with other code, such as test frameworks that override them
     Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 
+    // import { PluginCtor } from "./component";
+    class Plugin {
+        constructor() {
+            this.plugins = {};
+            this.resources = {};
+            this.__meta__ = { isDestroyed: false };
+            // getResource(name: string) {
+            //   // todo
+            // }
+            // dispatchTo(resourceName, ...args) {
+            //   for (let handler of this.getResource(name)) {
+            //     if (typeof handler === "function") {
+            //       handler(...args);
+            //     } else {
+            //       throw new Error("resource value should be a function")
+            //     }
+            //   }
+            // }
+        }
+        setup() { }
+        destroy() { }
+        get isDestroyed() {
+            return this.__meta__.isDestroyed;
+        }
+    }
+    Plugin.id = "";
+    Plugin.dependencies = [];
+    // can act and replace another plugin
+    // static replaceOtherPlugin: null | string = null;
+    // can define the type of resources, and some information, such as, is the
+    // resource global or not
+    Plugin.resources = {};
+    class PluginManager {
+        constructor(parent, Plugins) {
+            this._children = [];
+            this._parent = parent;
+            parent === null || parent === void 0 ? void 0 : parent._children.push(this);
+            this.plugins = parent ? Object.create(parent.plugins) : {};
+            this.resources = parent ? Object.create(parent.resources) : {};
+            // instantiate all plugins
+            const plugins = [];
+            const PLUGINS = Array.isArray(Plugins) ? Plugins : Plugins();
+            for (let P of toposort(PLUGINS, this.plugins)) {
+                if (P.resources) {
+                    for (let r in P.resources) {
+                        const sources = reactive({});
+                        const fn = derived(() => {
+                            const result = [];
+                            for (let name in sources) {
+                                const plugin = sources[name];
+                                const value = plugin.resources[r];
+                                if (Array.isArray(value)) {
+                                    result.push(...value);
+                                }
+                                else {
+                                    result.push(value);
+                                }
+                            }
+                            return result;
+                        });
+                        this.resources[r] = { sources, fn };
+                    }
+                }
+                const p = new P();
+                plugins.push(p);
+                this.plugins[P.id] = p;
+                for (let dep of P.dependencies) {
+                    p.plugins[dep] = this.plugins[dep];
+                }
+            }
+            // aggregate resources
+            for (let name in this.plugins) {
+                const p = this.plugins[name];
+                for (let r in p.resources) {
+                    this.resources[r].sources[name] = p;
+                    //     const value = p.resources[r];
+                    //     if (Array.isArray(value)) {
+                    //       this.resources[r].push(...value);
+                    //     } else {
+                    //       this.resources[r].push(value);
+                    // }
+                }
+            }
+            // setup phase
+            for (let p of plugins) {
+                p.setup();
+            }
+        }
+        destroy() {
+            for (let children of this._children) {
+                children.destroy();
+            }
+            const plugins = [];
+            for (let id in this.plugins) {
+                if (this.plugins.hasOwnProperty(id)) {
+                    const plugin = this.plugins[id];
+                    // resources
+                    for (let r in plugin.resources) {
+                        delete this.resources[r].sources[id];
+                    }
+                    plugins.push(this.plugins[id]);
+                    delete this.plugins[id];
+                }
+            }
+            while (plugins.length) {
+                const plugin = plugins.pop();
+                plugin.destroy();
+                plugin.__meta__.isDestroyed = true;
+            }
+        }
+        getPlugin(name) {
+            return this.plugins[name] || null;
+        }
+        getResource(name) {
+            return this.resources[name].fn();
+        }
+    }
+    function toposort(Plugins, plugins) {
+        const visited = new Set();
+        const temp = new Set();
+        const sorted = [];
+        const mapping = {};
+        for (const P of Plugins) {
+            if (!P.id.length) {
+                throw new Error(`Plugin ${P.name} has no id`);
+            }
+            if (P.id in mapping) {
+                throw new Error("A plugin with the same ID is already defined");
+            }
+            mapping[P.id] = P;
+        }
+        const visit = (P) => {
+            if (visited.has(P.id))
+                return;
+            if (temp.has(P.id)) {
+                throw new Error(`Circular dependency: ${P.id}`);
+            }
+            temp.add(P.id);
+            for (const dep of P.dependencies || []) {
+                const Dep = mapping[dep];
+                if (Dep) {
+                    visit(Dep);
+                }
+                else {
+                    if (!(dep in plugins)) {
+                        throw new Error(`Missing dependency "${dep}" for plugin "${P.id}"`);
+                    }
+                }
+            }
+            temp.delete(P.id);
+            visited.add(P.id);
+            sorted.push(P);
+        };
+        for (const P of Plugins) {
+            visit(P);
+        }
+        return sorted;
+    }
+    function usePlugins(Plugins) {
+        const node = getCurrent();
+        const manager = new PluginManager(node.pluginManager, Plugins);
+        node.pluginManager = manager;
+        node.component.plugins = manager.plugins;
+        onWillDestroy(() => manager.destroy());
+    }
+
     let hasBeenLogged = false;
     const apps = new Set();
     window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = { apps, Fiber, RootFiber, toRaw, reactive });
@@ -5922,6 +6267,7 @@
             this.name = config.name || "";
             this.Root = Root;
             apps.add(this);
+            this.pluginManager = new PluginManager(null, config.Plugins || []);
             if (config.test) {
                 this.dev = true;
             }
@@ -6137,6 +6483,47 @@
         return stopped;
     };
 
+    class Registry {
+        constructor(name, type) {
+            this._map = reactive(Object.create(null));
+            this._name = name || "registry";
+            this._type = type;
+            const entries = derived(() => {
+                return Object.entries(this._map)
+                    .sort((el1, el2) => el1[1][0] - el2[1][0])
+                    .map(([str, elem]) => [str, elem[1]]);
+            });
+            const items = derived(() => entries().map((e) => e[1]));
+            Object.defineProperty(this, "items", {
+                get() {
+                    return items;
+                },
+            });
+            Object.defineProperty(this, "entries", {
+                get() {
+                    return entries;
+                },
+            });
+        }
+        set(key, value, sequence = 50) {
+            if (this._type) {
+                const error = validateType(key, value, this._type);
+                // todo: move error handling in validation.js
+                if (error) {
+                    throw new Error("Invalid type: " + error);
+                }
+            }
+            this._map[key] = [sequence, value];
+        }
+        get(key, defaultValue) {
+            const hasKey = key in this._map;
+            if (!hasKey && arguments.length < 2) {
+                throw new Error(`KeyNotFoundError: Cannot find key "${key}" in this registry`);
+            }
+            return hasKey ? this._map[key][1] : defaultValue;
+        }
+    }
+
     function status(component) {
         switch (component.__owl__.status) {
             case 0 /* NEW */:
@@ -6210,21 +6597,26 @@
      *      NaN !== NaN, which will cause the effect to rerun on every patch.
      */
     function useEffect(effect, computeDependencies = () => [NaN]) {
+        const context = getCurrent().component.__owl__.signalComputation;
         let cleanup;
         let dependencies;
-        onMounted(() => {
-            dependencies = computeDependencies();
+        const runEffect = () => runWithComputation(context, () => {
             cleanup = effect(...dependencies);
         });
+        const computeDependenciesWithContext = () => runWithComputation(context, computeDependencies);
+        onMounted(() => {
+            dependencies = computeDependenciesWithContext();
+            runEffect();
+        });
         onPatched(() => {
-            const newDeps = computeDependencies();
+            const newDeps = computeDependenciesWithContext();
             const shouldReapply = newDeps.some((val, i) => val !== dependencies[i]);
             if (shouldReapply) {
                 dependencies = newDeps;
                 if (cleanup) {
                     cleanup();
                 }
-                cleanup = effect(...dependencies);
+                runEffect();
             }
         });
         onWillUnmount(() => cleanup && cleanup());
@@ -6288,9 +6680,14 @@
     exports.Component = Component;
     exports.EventBus = EventBus;
     exports.OwlError = OwlError;
+    exports.Plugin = Plugin;
+    exports.PluginManager = PluginManager;
+    exports.Registry = Registry;
     exports.__info__ = __info__;
     exports.batched = batched;
     exports.blockDom = blockDom;
+    exports.derived = derived;
+    exports.effect = effect;
     exports.htmlEscape = htmlEscape;
     exports.loadFile = loadFile;
     exports.markRaw = markRaw;
@@ -6307,6 +6704,7 @@
     exports.onWillUnmount = onWillUnmount;
     exports.onWillUpdateProps = onWillUpdateProps;
     exports.reactive = reactive;
+    exports.signal = signal;
     exports.status = status;
     exports.toRaw = toRaw;
     exports.useChildSubEnv = useChildSubEnv;
@@ -6314,19 +6712,21 @@
     exports.useEffect = useEffect;
     exports.useEnv = useEnv;
     exports.useExternalListener = useExternalListener;
+    exports.usePlugins = usePlugins;
     exports.useRef = useRef;
     exports.useState = useState;
     exports.useSubEnv = useSubEnv;
     exports.validate = validate;
     exports.validateType = validateType;
     exports.whenReady = whenReady;
+    exports.withoutReactivity = withoutReactivity;
     exports.xml = xml;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2025-09-23T07:17:45.055Z';
-    __info__.hash = '5211116';
+    __info__.date = '2025-11-24T12:25:05.119Z';
+    __info__.hash = 'a9a622b';
     __info__.url = 'https://github.com/odoo/owl';
 
 

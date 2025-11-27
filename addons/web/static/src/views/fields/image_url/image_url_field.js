@@ -3,8 +3,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState } from "@odoo/owl";
-import { useRecordObserver } from "@web/model/relational_model/utils";
+import { Component, effect, useState } from "@odoo/owl";
 
 export class ImageUrlField extends Component {
     static template = "web.ImageUrlField";
@@ -22,8 +21,8 @@ export class ImageUrlField extends Component {
             src: this.props.record.data[this.props.name],
         });
 
-        useRecordObserver((record) => {
-            this.state.src = record.data[this.props.name];
+        effect(() => {
+            this.state.src = this.props.record.data[this.props.name];
         });
     }
 

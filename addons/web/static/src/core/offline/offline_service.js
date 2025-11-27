@@ -1,4 +1,4 @@
-import { reactive, useState } from "@odoo/owl";
+import { effect, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -38,45 +38,40 @@ export const offlineService = {
             status.offline = false;
         }
 
-        const status = reactive(
-            {
-                offline: false,
-            },
-            () => {
-                if (status.offline) {
-                    // Disable everything in the UI that isn't marked as available offline
-                    offlineUI();
-                    // Create an observer instance linked to the callback function to keep disabling
-                    // buttons that would appear in the DOM while being offline
-                    observer = new MutationObserver((mutationList) => {
-                        if (status.offline && mutationList.find((m) => m.addedNodes.length > 0)) {
-                            offlineUI();
-                        }
-                    });
-                    observer.observe(document.body, {
-                        childList: true, // listen for direct children being added/removed
-                        subtree: true, // also observe descendants (not just direct children)
-                    });
+        const status = reactive({ offline: false });
+        effect(() => {
+            if (status.offline) {
+                // Disable everything in the UI that isn't marked as available offline
+                offlineUI();
+                // Create an observer instance linked to the callback function to keep disabling
+                // buttons that would appear in the DOM while being offline
+                observer = new MutationObserver((mutationList) => {
+                    if (status.offline && mutationList.find((m) => m.addedNodes.length > 0)) {
+                        offlineUI();
+                    }
+                });
+                observer.observe(document.body, {
+                    childList: true, // listen for direct children being added/removed
+                    subtree: true, // also observe descendants (not just direct children)
+                });
 
-                    // Repeatedly check if connection is back
-                    let delay = 2000;
-                    const _checkConnection = async () => {
-                        if (status.offline) {
-                            await checkConnection();
-                            // exponential backoff, with some jitter
-                            delay = delay * 1.5 + 500 * Math.random();
-                            timeout = browser.setTimeout(_checkConnection, delay);
-                        }
-                    };
-                    timeout = browser.setTimeout(_checkConnection, delay);
-                } else {
-                    onlineUI();
-                    observer?.disconnect();
-                    browser.clearTimeout(timeout);
-                }
+                // Repeatedly check if connection is back
+                let delay = 2000;
+                const _checkConnection = async () => {
+                    if (status.offline) {
+                        await checkConnection();
+                        // exponential backoff, with some jitter
+                        delay = delay * 1.5 + 500 * Math.random();
+                        timeout = browser.setTimeout(_checkConnection, delay);
+                    }
+                };
+                timeout = browser.setTimeout(_checkConnection, delay);
+            } else {
+                onlineUI();
+                observer?.disconnect();
+                browser.clearTimeout(timeout);
             }
-        );
-        status.offline; // activate the reactivity!
+        });
 
         rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             status.offline = ev.detail.error instanceof ConnectionLostError;
@@ -92,5 +87,5 @@ export const offlineService = {
 registry.category("services").add("offline", offlineService);
 
 export function useOfflineStatus() {
-    return useState(useService("offline").status);
+    return useService("offline").status;
 }

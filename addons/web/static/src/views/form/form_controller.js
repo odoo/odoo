@@ -1,41 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { makeContext } from "@web/core/context";
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { registry } from "@web/core/registry";
-import { SIZES } from "@web/core/ui/ui_service";
-import { user } from "@web/core/user";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { omit } from "@web/core/utils/objects";
-import { createElement, parseXML } from "@web/core/utils/xml";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { useSetupAction } from "@web/search/action_hook";
-import { Layout } from "@web/search/layout";
-import { usePager } from "@web/search/pager_hook";
-import { standardViewProps } from "@web/views/standard_view_props";
-import { isX2Many } from "@web/views/utils";
-import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
-import { ViewButton } from "@web/views/view_button/view_button";
-import { Field } from "@web/views/fields/field";
-import { useModel } from "@web/model/model";
-import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { useViewCompiler } from "@web/views/view_compiler";
-import { useDeleteRecords } from "@web/views/view_hook";
-import { Widget } from "@web/views/widgets/widget";
-import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
-
-import { ButtonBox } from "./button_box/button_box";
-import { FormCompiler } from "./form_compiler";
-import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
-import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
-import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
-
 import {
     Component,
+    effect,
     onError,
     onMounted,
-    onRendered,
     onWillUnmount,
     status,
     useComponent,
@@ -43,9 +10,39 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
-import { FetchRecordError } from "@web/model/relational_model/errors";
-import { effect } from "@web/core/utils/reactive";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { makeContext } from "@web/core/context";
+import { useDebugCategory } from "@web/core/debug/debug_context";
+import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { SIZES } from "@web/core/ui/ui_service";
+import { user } from "@web/core/user";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { omit } from "@web/core/utils/objects";
+import { createElement, parseXML } from "@web/core/utils/xml";
+import { useModel } from "@web/model/model";
+import { FetchRecordError } from "@web/model/relational_model/errors";
+import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { useSetupAction } from "@web/search/action_hook";
+import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { Layout } from "@web/search/layout";
+import { usePager } from "@web/search/pager_hook";
+import { Field } from "@web/views/fields/field";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { isX2Many } from "@web/views/utils";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
+import { useViewCompiler } from "@web/views/view_compiler";
+import { useDeleteRecords } from "@web/views/view_hook";
+import { Widget } from "@web/views/widgets/widget";
+import { ButtonBox } from "./button_box/button_box";
+import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
+import { FormCompiler } from "./form_compiler";
+import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
+import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
 const viewRegistry = registry.category("views");
 
@@ -213,16 +210,20 @@ export class FormController extends Component {
             this.model.config.fields = fields;
         };
         this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
+        this.model.whenReady.promise.then(() => {
+            effect(() => {
+                if (this.model.root && status(this) !== "destroyed") {
+                    this.env.config.setDisplayName(this.displayName());
+                }
+            });
+        });
 
         onMounted(() => {
-            effect(
-                (model) => {
-                    if (status(this) === "mounted") {
-                        this.props.updateActionState({ resId: model.root.resId });
-                    }
-                },
-                [this.model]
-            );
+            effect(() => {
+                if (status(this) === "mounted") {
+                    this.props.updateActionState({ resId: this.model.root.resId });
+                }
+            });
         });
 
         onError((error) => {
@@ -302,10 +303,6 @@ export class FormController extends Component {
                     onUpdate: ({ offset }) => this.onPagerUpdate({ offset, resIds }),
                 };
             }
-        });
-
-        onRendered(() => {
-            this.env.config.setDisplayName(this.displayName());
         });
 
         const { disableAutofocus } = this.archInfo;

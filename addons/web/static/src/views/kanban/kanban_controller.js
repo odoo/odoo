@@ -1,29 +1,6 @@
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
-import { omit } from "@web/core/utils/objects";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { useSetupAction } from "@web/search/action_hook";
-import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
-import { Layout } from "@web/search/layout";
-import { usePager } from "@web/search/pager_hook";
-import { SearchBar } from "@web/search/search_bar/search_bar";
-import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { session } from "@web/session";
-import { useModelWithSampleData } from "@web/model/model";
-import { standardViewProps } from "@web/views/standard_view_props";
-import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
-import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { KanbanCogMenu } from "./kanban_cog_menu";
-import { KanbanRenderer } from "./kanban_renderer";
-import { useProgressBar } from "./progress_bar_hook";
-import { SelectionBox } from "@web/views/view_components/selection_box";
-
 import {
     Component,
+    effect,
     onMounted,
     onWillStart,
     useEffect,
@@ -31,8 +8,30 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { user } from "@web/core/user";
+import { useService } from "@web/core/utils/hooks";
+import { omit } from "@web/core/utils/objects";
+import { useModelWithSampleData } from "@web/model/model";
+import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { useSetupAction } from "@web/search/action_hook";
+import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { Layout } from "@web/search/layout";
+import { usePager } from "@web/search/pager_hook";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+import { session } from "@web/session";
+import { standardViewProps } from "@web/views/standard_view_props";
+import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
+import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { SelectionBox } from "@web/views/view_components/selection_box";
+import { useDeleteRecords, useExportRecords } from "@web/views/view_hook";
+import { KanbanCogMenu } from "./kanban_cog_menu";
 import { QuickCreateState } from "./kanban_record_quick_create";
-import { effect } from "@web/core/utils/reactive";
+import { KanbanRenderer } from "./kanban_renderer";
+import { useProgressBar } from "./progress_bar_hook";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -118,15 +117,12 @@ export class KanbanController extends Component {
         this.headerButtons = archInfo.headerButtons;
 
         this.quickCreateState = new QuickCreateState(archInfo.quickCreateView);
-        effect(
-            ({ isOpen }) => {
-                if (isOpen && this.model.useSampleModel) {
-                    this.model.removeSampleDataInGroups();
-                    this.model.useSampleModel = false;
-                }
-            },
-            [this.quickCreateState]
-        );
+        effect(() => {
+            if (this.quickCreateState.isOpen && this.model.useSampleModel) {
+                this.model.removeSampleDataInGroups();
+                this.model.useSampleModel = false;
+            }
+        });
 
         this.rootRef = useRef("root");
         useViewButtons(this.rootRef, {

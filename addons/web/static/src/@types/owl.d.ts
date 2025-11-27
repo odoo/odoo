@@ -1,3 +1,3 @@
 declare module "@odoo/owl" {
-    export * from "@odoo/owl/dist/types/owl";
+    export * from "@web/../lib/owl/owl"
 }
