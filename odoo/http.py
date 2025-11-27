@@ -2821,7 +2821,7 @@ class Json2Dispatcher(Dispatcher):
 
     @classmethod
     def is_compatible_with(cls, request):
-        return request.httprequest.mimetype in cls.mimetypes
+        return request.httprequest.mimetype in cls.mimetypes or not request.httprequest.content_length
 
     def dispatch(self, endpoint, args):
         # "args" are the path parameters, "id" in /web/image/<id>
