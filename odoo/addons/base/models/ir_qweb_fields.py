@@ -237,6 +237,11 @@ class IrQwebFieldFloat(models.AbstractModel):
         if precision is None:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
 
+        if min_precision := options['min_precision']:
+            int_part, dec_part = formatted.split('.')
+            dec_part = dec_part.ljust(min_precision, '0')
+            formatted = f'{int_part}.{dec_part}'
+
         return formatted
 
     @api.model
@@ -244,6 +249,8 @@ class IrQwebFieldFloat(models.AbstractModel):
         if 'precision' not in options and 'decimal_precision' not in options:
             _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
+        if 'min_precision' not in options:
+            options |= {'min_precision': record._fields[field_name].get_min_digits(record.env)}
         return super().record_to_html(record, field_name, options)
 
 

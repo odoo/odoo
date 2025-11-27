@@ -99,11 +99,12 @@ class Float(Field[float]):
 
     type = 'float'
     _digits: str | tuple[int, int] | None = None  # digits argument passed to class initializer
+    _min_digits: str | int | None = None
     falsy_value = 0.0
     aggregator = 'sum'
 
-    def __init__(self, string: str | Sentinel = SENTINEL, digits: str | tuple[int, int] | Sentinel | None = SENTINEL, **kwargs):
-        super().__init__(string=string, _digits=digits, **kwargs)
+    def __init__(self, string: str | Sentinel = SENTINEL, digits: str | tuple[int, int] | Sentinel | None = SENTINEL, min_digits: str | int | Sentinel = None, **kwargs):
+        super().__init__(string=string, _digits=digits, _min_digits=min_digits, **kwargs)
 
     @property
     def _column_type(self):
@@ -122,10 +123,19 @@ class Float(Field[float]):
         else:
             return self._digits
 
+    def get_min_digits(self, env: Environment) -> int | None:
+        if isinstance(self._min_digits, str):
+            return env['decimal.precision'].precision_get(self._min_digits)
+        else:
+            return self._min_digits
+
     _related__digits = property(attrgetter('_digits'))
 
     def _description_digits(self, env: Environment) -> tuple[int, int] | None:
         return self.get_digits(env)
+
+    def _description_min_digits(self, env: Environment) -> int | None:
+        return self.get_min_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         value_float = value = float(value or 0.0)

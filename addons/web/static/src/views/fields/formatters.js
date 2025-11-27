@@ -137,6 +137,9 @@ export function formatFloat(value, options = {}) {
     if (!options.digits && options.field) {
         options.digits = options.field.digits;
     }
+    if (!options.minDigits && options.field) {
+        options.minDigits = options.field.min_digits;
+    }
     return formatFloatNumber(value, options);
 }
 formatFloat.extractOptions = ({ attrs, options }) => {
@@ -151,7 +154,8 @@ formatFloat.extractOptions = ({ attrs, options }) => {
     const humanReadable = !!options.human_readable;
     const decimals = options.decimals || 0;
     const trailingZeros = !options.hide_trailing_zeros;
-    return { decimals, digits, humanReadable, trailingZeros };
+    const minDigits = options.min_digits
+    return { decimals, digits, humanReadable, trailingZeros, minDigits };
 };
 
 /**

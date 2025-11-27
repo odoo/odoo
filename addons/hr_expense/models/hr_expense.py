@@ -192,7 +192,7 @@ class HrExpense(models.Model):
         string="Unit Price",
         compute='_compute_price_unit', precompute=True, store=True, required=True, readonly=True,
         copy=True,
-        digits='Product Price',
+        digits=0, min_digits='Product Price',
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
