@@ -1,9 +1,16 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor, advanceTime, animationFrame } from "@odoo/hoot-dom";
+import {
+    queryFirst,
+    queryOne,
+    setInputRange,
+    waitFor,
+    advanceTime,
+    animationFrame,
+} from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import { testImg } from "./image_test_helpers";
+import { onRpcReal, testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
 
@@ -53,7 +60,104 @@ test("Should set a shape on an image", async () => {
         "data-file-name",
         "s_text_image.svg"
     );
-    expect(":iframe .test-options-target img").toHaveAttribute("data-shape-colors", ";;;;");
+});
+
+test("Should remove all shape related dataset items when removing the shape", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+
+    await selectImageShape("html_builder/geometric/geo_shuriken");
+    await waitSidebarUpdated();
+
+    await contains(
+        "[data-label='Shape'] button[data-action-id='setImageShape'] i.oi-close"
+    ).click();
+
+    await waitSidebarUpdated();
+
+    const src = queryOne(":iframe .test-options-target img").getAttribute("src");
+    expect(":iframe .test-options-target").toHaveInnerHTML(
+        `<img src="${src}"
+              data-attachment-id="1"
+              data-original-id="1"
+              data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+              data-mimetype-before-conversion="image/webp"
+              class="o_modified_image_to_save"
+              data-mimetype="image/webp">`
+    );
+});
+
+test("Changing the shape from the one that has an animation speed to the one that doesn't removes the speed attribute", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    onRpcReal("/html_builder/static/image_shapes/composition/composition_line_2.svg");
+    await contains(":iframe .test-options-target img").click();
+
+    await selectImageShape("html_builder/composition/composition_line_2");
+    await waitSidebarUpdated();
+
+    await setInputRange("[data-action-id='setImageShapeSpeed'] input", 1.2);
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-shape-animation-speed", "1.2");
+
+    await selectImageShape("html_builder/geometric/geo_shuriken");
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").not.toHaveAttribute("data-shape-animation-speed");
+});
+
+test("Changing the shape from the one that has a transform option to the one that doesn't removes the flip and rotate attributes", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    onRpcReal("/html_builder/static/image_shapes/geometric/geo_triangle.svg");
+    await contains(":iframe .test-options-target img").click();
+
+    await selectImageShape("html_builder/geometric/geo_triangle");
+    await waitSidebarUpdated();
+
+    await contains(`[data-action-id='flipImageShape'][title='Horizontal flip']`).click();
+    await contains(`[data-action-id='rotateImageShape'][title="Rotate left"]`).click();
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute("data-shape-flip", "x");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-shape-rotate", "270");
+
+    await selectImageShape("html_builder/geometric/geo_shuriken");
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").not.toHaveAttribute("data-shape-flip");
+    expect(":iframe .test-options-target img").not.toHaveAttribute("data-shape-rotate");
+});
+
+test("Should clean useless saved attributes when entering edit mode", async () => {
+    const imgEl = `
+        <img src='/web/image/website.s_text_image_default_image'
+            data-attachment-id="1" data-original-id="1"
+            data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+            data-mimetype-before-conversion="image/webp"
+            data-file-name="s_sidegrid_default_image_2.svg"
+            data-shape-colors=";;;;"
+            data-shape-flip="x"
+            >
+        `;
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${imgEl}
+        </div>
+    `);
+    expect(":iframe .test-options-target").toHaveInnerHTML(
+        `<img src="/web/image/website.s_text_image_default_image"
+            data-attachment-id="1" data-original-id="1"
+            data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+            data-mimetype-before-conversion="image/webp">`
+    );
 });
 
 test("Should set a shape on a GIF", async () => {
@@ -227,7 +331,7 @@ test("Should change the shape color of an image with a class color", async () =>
         "#F0CDA8;#F0CDA8;#F6F5F4;;#1B1319"
     );
 });
-test("Should not show transform action on shape that cannot bet transformed", async () => {
+test("Should not show transform action on shape that cannot be transformed", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
