@@ -81,10 +81,11 @@ class Module(Command):
             help="names of the modules to be uninstalled")
         upgrade_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',
-            help="name of the modules to be upgraded, use 'base' if you want to upgrade everything")
+            help="name of the modules to be upgraded, use 'base' or 'all' if you want to upgrade everything")
         upgrade_parser.add_argument(
             '--outdated', action='store_true',
-            help="only update modules that have a newer version on disk",
+            help="only update modules that have a newer version on disk. "
+                 "If 'all' is used as `modules` argument, this applies to all installed modules.",
         )
 
     def run(self, cmdargs):
@@ -119,10 +120,16 @@ class Module(Command):
             or self._get_zip_path(module)
         }
 
-    def _get_modules(self, env, module_names):
+    def _get_module_model(self, env):
         Module = env['ir.module.module']
         Module.update_list()
-        return Module.search([('name', 'in', module_names)])
+        return Module
+
+    def _get_all_installed_modules(self, env):
+        return self._get_module_model(env).search([['state', '=', 'installed']])
+
+    def _get_modules(self, env, module_names):
+        return self._get_module_model(env).search([('name', 'in', module_names)])
 
     @contextmanager
     def _create_env_context(self, db_name):
@@ -156,8 +163,11 @@ class Module(Command):
 
     def _upgrade(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
-            valid_module_names = self._get_module_names(parsed_args.modules)
-            upgradable_modules = self._get_modules(env, valid_module_names)
+            if 'all' in parsed_args.modules:
+                upgradable_modules = self._get_all_installed_modules(env)
+            else:
+                valid_module_names = self._get_module_names(parsed_args.modules)
+                upgradable_modules = self._get_modules(env, valid_module_names)
             if parsed_args.outdated:
                 upgradable_modules = upgradable_modules.filtered(
                     lambda x: parse_version(x.installed_version) > parse_version(x.latest_version),
