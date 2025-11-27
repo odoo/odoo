@@ -11,4 +11,6 @@ class AccountMove(models.Model):
         refunded_order = None if self.reversed_entry_id else self.pos_order_ids.refunded_order_id
         if refunded_order:
             vals['refunded_document'] = refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission')
+        if self.pos_order_ids:
+            vals['was_simplified_invoice'] = self.pos_order_ids[0].l10n_es_edi_is_originally_simplified
         return vals

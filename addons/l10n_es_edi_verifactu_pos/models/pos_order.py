@@ -51,6 +51,7 @@ class PosOrder(models.Model):
         string="Veri*Factu Refund Reason",
         copy=False,
     )
+    l10n_es_edi_is_originally_simplified = fields.Boolean(default=False)
 
     @api.depends('state', 'l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_document_ids',
                  'l10n_es_edi_verifactu_document_ids.state', 'l10n_es_edi_verifactu_document_ids.errors')
@@ -134,6 +135,11 @@ class PosOrder(models.Model):
 
         return errors
 
+    def _get_l10n_es_edi_is_simplified(self):
+        self.ensure_one()
+
+        return not self.refunded_order_id or self.l10n_es_edi_verifactu_refund_reason == 'R5'
+
     def _l10n_es_edi_verifactu_get_record_values(self, cancellation=False):
         self.ensure_one()
 
@@ -175,7 +181,7 @@ class PosOrder(models.Model):
             'delivery_date': False,
             'description': None,
             'invoice_date': self.date_order.date(),
-            'is_simplified': not refunded_order or self.l10n_es_edi_verifactu_refund_reason == 'R5',
+            'is_simplified': self._get_l10n_es_edi_is_simplified(),
             # NOTE: invoice with negative amounts possible (when no `refunded_order` specified)
             'verifactu_move_type': 'correction_incremental' if refunded_order else 'invoice',
             'sign': -1 if refunded_order else 1,
@@ -239,6 +245,8 @@ class PosOrder(models.Model):
 
         if self.l10n_es_edi_verifactu_required and not self.to_invoice:
             self._l10n_es_edi_verifactu_mark_for_next_batch()
+            if self._get_l10n_es_edi_is_simplified():
+                self.write({'l10n_es_edi_is_originally_simplified': True})
 
         return res
 
