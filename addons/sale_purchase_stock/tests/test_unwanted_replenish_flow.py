@@ -133,3 +133,39 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
         self.orderpoint_A.invalidate_recordset(fnames=['lead_horizon_date'])
         self.orderpoint_A._compute_qty_to_order_computed()
         self.assertFalse(self.orderpoint_A.unwanted_replenish, 'Orderpoint A shall not be set to unwanted_replenish')
+
+    def test_rfq_grouping_for_dropshipping(self):
+        # RFQ's should not be grouped when dropshipping.
+        try:
+            dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        except ValueError:
+            self.skipTest('This test requires the following module: stock_dropshipping')
+
+        dropshipped_product = self.env['product.product'].create({
+            'name': 'Dropshipped Product',
+            'type': 'consu',
+            'is_storable': True,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.vendor.id,
+            })],
+            'route_ids': dropship_route.ids,
+        })
+
+        self.vendor.group_rfq = "all"
+
+        so1 = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                    'product_id': dropshipped_product.id,
+                    'product_uom_qty': 2,
+                    'price_unit': 200.0,
+                }),
+            ],
+        })
+        so1.action_confirm()
+        so2 = so1.copy()
+        so2.action_confirm()
+
+        po = (so1 | so2)._get_purchase_orders()
+        self.assertTrue(po.button_confirm())
+        self.assertNotEqual(len(po.ids), 1)
