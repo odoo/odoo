@@ -115,7 +115,7 @@ const ThreadPatch = {
                     }
                 }
                 if (!filterVideos) {
-                    for (const member of this.invited_member_ids) {
+                    for (const member of this.channel.invited_member_ids) {
                         invitationCards.push({ key: "member_" + member.id, member });
                     }
                 }

@@ -143,6 +143,7 @@ export class DiscussChannel extends Record {
             }
         },
     });
+    invited_member_ids = fields.Many("discuss.channel.member");
     lastMessageSeenByAllId = fields.Attr(undefined, {
         /** @this {import("models").DiscussChannel} */
         compute() {
