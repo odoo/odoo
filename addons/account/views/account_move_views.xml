@@ -1470,17 +1470,6 @@
                                                     ('country_id', '=', False),
                                                 ]"/>
 
-                                        <!-- Buttons -->
-                                        <button name="action_automatic_entry"
-                                                type="object"
-                                                icon="fa-calendar"
-                                                string="Cut-Off"
-                                                aria-label="Change Period"
-                                                class="float-end"
-                                                column_invisible="parent.move_type == 'entry' or parent.state != 'posted'"
-                                                invisible="account_internal_group not in ('income', 'expense')"
-                                                context="{'default_action': 'change_period'}"/>
-
                                         <!-- Others fields -->
                                         <field name="tax_line_id" column_invisible="True"/>
                                         <field name="company_currency_id" column_invisible="True"/>
