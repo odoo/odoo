@@ -20,7 +20,7 @@ patch(PosOrder.prototype, {
         return this.customer_count;
     },
     setCustomerCount(count) {
-        this.customer_count = Math.max(count, 0);
+        this.customer_count = Math.max(count, 1);
     },
     getTable() {
         return this.table_id;
