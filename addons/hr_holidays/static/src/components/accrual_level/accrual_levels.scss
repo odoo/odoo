@@ -10,7 +10,7 @@
 }
 
 .o_accrual {
-  .o_field_accrual, .o_field_selection, .o_field_day_selection, .o_field_filterable_selection {
+  .o_field_accrual, .o_field_selection, .o_field_filterable_selection {
     width: fit-content !important;
 
     &:not(.o_readonly_modifier) > *:first-child {
@@ -20,7 +20,7 @@
       field-sizing: content;
     }
 
-    &:not(.o_field_selection, .o_field_day_selection, .o_field_filterable_selection) > *:first-child {
+    &:not(.o_field_selection, .o_field_filterable_selection) > *:first-child {
       max-width: 8ch;
     }
   }
