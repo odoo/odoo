@@ -17,4 +17,16 @@
         <field name="code">model._cron_pdp_send_lifecycles()</field>
         <field name="state">code</field>
     </record>
+
+    <data noupdate="1">
+        <record id="ir_cron_l10n_fr_pdp_generate_flows" model="ir.cron">
+            <field name="name">PDP Generate Flux 10 Flows</field>
+            <field name="model_id" ref="l10n_fr_pdp.model_l10n_fr_pdp_reports_flow"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_and_send_flows()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
 </odoo>
