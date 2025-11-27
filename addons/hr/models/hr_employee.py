@@ -2157,3 +2157,41 @@ class HrEmployee(models.Model):
     def action_cancel_departure(self):
         self.ensure_one()
         self.departure_id.unlink()
+
+    def _get_employee_working_periods(self, start, stop):
+        working_periods = {employee: [] for employee in self.ids}
+
+        if self.ids:
+            start, stop = fields.Datetime.from_string(start), fields.Datetime.from_string(stop)
+
+            employees_with_contract = dict(
+                self.env["hr.version"].sudo()._read_group(
+                    domain=[
+                        ("employee_id", "in", self.ids),
+                        ('contract_date_start', '!=', False),
+                    ],
+                    groupby=["employee_id"],
+                    aggregates=["__count"],
+                )
+            )
+            contracts = self.sudo()._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+            employees_with_contract_in_current_scale = []
+            for contract in contracts:
+                employee_id = contract.employee_id.id
+                end_datetime = contract.contract_date_end and contract.contract_date_end + relativedelta(hour=23, minute=59, second=59)
+                if end_datetime:
+                    end_datetime = end_datetime.replace(tzinfo=self.env.tz).astimezone(UTC).replace(tzinfo=None)
+                    end_datetime = fields.Datetime.to_string(end_datetime)
+                employees_with_contract_in_current_scale.append(employee_id)
+                working_periods[employee_id].append({
+                    "start": fields.Datetime.to_string(contract.contract_date_start),
+                    "end": end_datetime,
+                })
+            for employee in self - self.env["hr.employee"].browse(employees_with_contract_in_current_scale):
+                if employees_with_contract.get(employee):
+                    continue
+                working_periods[employee.id].append({
+                    "start": start,
+                    "end": stop,
+                })
+        return working_periods
