@@ -17,12 +17,18 @@ function isResizable(el) {
  * @property { BuilderOverlayPlugin['showOverlayPreview'] } showOverlayPreview
  * @property { BuilderOverlayPlugin['hideOverlayPreview'] } hideOverlayPreview
  * @property { BuilderOverlayPlugin['refreshOverlays'] } refreshOverlays
+ * @property { BuilderOverlayPlugin['toggleOverlaysVisibility'] } toggleOverlaysVisibility
  */
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["localOverlay", "history", "operation"];
-    static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
+    static shared = [
+        "refreshOverlays",
+        "showOverlayPreview",
+        "hideOverlayPreview",
+        "toggleOverlaysVisibility",
+    ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         step_added_handlers: this.refreshOverlays.bind(this),
@@ -46,6 +52,7 @@ export class BuilderOverlayPlugin extends Plugin {
         );
         /** @type {[BuilderOverlay]} */
         this.overlays = [];
+        this.previewElement = null;
         // Refresh the overlays position everytime their target size changes.
         this.resizeObserver = new ResizeObserver(() => this.refreshPositions());
 
@@ -129,6 +136,18 @@ export class BuilderOverlayPlugin extends Plugin {
                 }
             }
         }
+
+        // If we had a preview overlay, display it only
+        if (this.previewElement) {
+            this.toggleOverlaysVisibility(false);
+            const overlayToShow = this.overlays.find(
+                (overlay) => overlay.overlayTarget === this.previewElement
+            );
+            if (overlayToShow) {
+                overlayToShow.toggleOverlayPreview(true);
+                overlayToShow.toggleOverlayVisibility(true);
+            }
+        }
     }
 
     removeBuilderOverlays() {
@@ -160,6 +179,7 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     showOverlayPreview(el) {
+        this.previewElement = el;
         // Hide all the active overlays.
         this.toggleOverlaysVisibility(false);
         // Show the preview of the one corresponding to the given element.
@@ -172,6 +192,7 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     hideOverlayPreview(el) {
+        this.previewElement = null;
         // Remove the preview.
         const overlayToHide = this.overlays.find((overlay) => overlay.overlayTarget === el);
         if (!overlayToHide) {

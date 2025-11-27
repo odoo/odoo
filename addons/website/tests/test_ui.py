@@ -739,3 +739,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         # It should go in edit mode if we are not on the FR page even if FR is
         # available
         self.start_tour('/', 'alt_a_edit', login='admin')
+
+    def test_multiple_carousel(self):
+        self.start_tour("/", "carousel_multiple_edit", login="admin")
