@@ -12,9 +12,9 @@ class PosPaymentMethod(models.Model):
         return []
 
     def _get_payment_method_type(self):
-        selection = [('none', 'None required'), ('terminal', 'Terminal')]
+        selection = [('none', self.env._("None required")), ('terminal', self.env._("Terminal"))]
         if self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
-            selection.append(('qr_code', 'Bank App (QR Code)'))
+            selection.append(('qr_code', self.env._("Bank App (QR Code)")))
         return selection
 
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
