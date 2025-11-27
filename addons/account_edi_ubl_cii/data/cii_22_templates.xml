@@ -195,7 +195,11 @@
                             </t>
 
                             <!-- VAT. -->
-                            <ram:SpecifiedTaxRegistration t-if="record.company_id.vat">
+                            <ram:SpecifiedTaxRegistration t-if="record.fiscal_position_id.foreign_vat">
+                                <ram:ID schemeID="VA" t-out="record.fiscal_position_id.foreign_vat"/>
+                            </ram:SpecifiedTaxRegistration>
+
+                            <ram:SpecifiedTaxRegistration t-elif="record.company_id.vat">
                                 <ram:ID schemeID="VA" t-out="record.company_id.vat"/>
                             </ram:SpecifiedTaxRegistration>
                         </ram:SellerTradeParty>

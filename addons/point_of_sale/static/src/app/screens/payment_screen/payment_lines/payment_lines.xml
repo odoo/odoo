@@ -94,7 +94,8 @@
                                         </div>
                                     </t>
                                     <t t-else="">
-                                        <div></div>
+                                        <!-- Todo: remove in master -->
+                                        <div class="d-none"></div>
                                     </t>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversed'">
