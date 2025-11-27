@@ -25,12 +25,9 @@ import {
     serverState,
     contains as webContains,
 } from "@web/../tests/web_test_helpers";
-import { Domain } from "@web/core/domain";
 import { formatDate, serializeDate } from "@web/core/l10n/dates";
-import { deepEqual, omit } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/objects";
 import { getOrigin } from "@web/core/utils/urls";
-import { DynamicList } from "@web/model/relational_model/dynamic_list";
-import { RelationalModel } from "@web/model/relational_model/relational_model";
 
 const { DateTime } = luxon;
 
@@ -59,24 +56,6 @@ const archs = {
     `,
 };
 
-function patchActivityDomain(load, params) {
-    if (params.domain) {
-        // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
-        const domain = new Domain(params.domain);
-        const newDomain = Domain.removeDomainLeaves(domain.toList(), ["activity_ids.active"]);
-        if (!deepEqual(domain.toList(), newDomain.toList())) {
-            return load({
-                ...params,
-                domain: newDomain.toList(),
-                context: params.context
-                    ? { ...params.context, active_test: false }
-                    : { active_test: false },
-            });
-        }
-    }
-    return load(params);
-}
-
 describe.current.tags("desktop");
 defineTestMailModels();
 beforeEach(async () => {
@@ -84,16 +63,6 @@ beforeEach(async () => {
     // and that it uses HTMLElement.animate()
     disableAnimations();
     mockDate("2023-04-08 10:00:00", 0);
-    patchWithCleanup(DynamicList.prototype, {
-        async load(params) {
-            return patchActivityDomain(super.load.bind(this), params);
-        },
-    });
-    patchWithCleanup(RelationalModel.prototype, {
-        async load(params) {
-            return patchActivityDomain(super.load.bind(this), params);
-        },
-    });
     pyEnv = await startServer();
     const mailTemplateIds = pyEnv["mail.template"].create([
         { name: "Template1" },
@@ -486,10 +455,10 @@ test("activity view: activity_ids condition in domain", async () => {
     await expect.waitForSteps([
         // load view requests
         [["activity_ids.active", "in", [true, false]]],
-        [[1, "=", 1]], // Due to the relational model patch above that removes it
+        [["activity_ids.active", "in", [true, false]]],
         // pager requests
         [["activity_ids.active", "in", [true, false]]],
-        [[1, "=", 1]], // Due to the dynamic list patch above that removes it
+        [["activity_ids.active", "in", [true, false]]],
     ]);
 });
 

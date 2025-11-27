@@ -3248,7 +3248,9 @@ export class Model extends Array {
                 criterion = [criterion[0], "in", childIds];
             }
             // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
-            const field = this._fields[criterion[0]] || {};
+            const splitCriterion0 = safeSplit(criterion[0], ".");
+            const field = this._fields[splitCriterion0[0]] || {};
+
             if (isX2MField(field) && criterion[1] === "=") {
                 if (criterion[2] === false) {
                     // if undefined value asked, domain.js require equality with empty array
@@ -3256,6 +3258,21 @@ export class Model extends Array {
                 } else {
                     criterion = [criterion[0], "in", [criterion[2]]];
                 }
+            }
+
+            if (splitCriterion0.length > 1 && isX2MField(field)) {
+                const inverse = {
+                    "not in": "in",
+                    "!=": "=",
+                };
+                const result = this.env[field.relation]._filter([
+                    [splitCriterion0[1], inverse[criterion[1]] ?? criterion[1], criterion[2]],
+                ]);
+                criterion = [
+                    splitCriterion0[0],
+                    inverse[criterion[1]] ? "not in" : "in",
+                    [...result].map((r) => r.id),
+                ];
             }
             return criterion;
         });
