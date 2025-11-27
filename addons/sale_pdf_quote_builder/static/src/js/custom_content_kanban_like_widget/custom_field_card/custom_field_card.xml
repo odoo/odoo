@@ -11,6 +11,7 @@
                         t-model.lazy="this.props.value"
                         t-on-change="(ev) => { this.props.onChange(this.props.value) }"
                         t-att-placeholder="this.placeholder"
+                        t-att-disabled="this.props.disabled"
                         class="customFieldCardTextArea form-control overflow-y-hidden"
                     />
                 </span>

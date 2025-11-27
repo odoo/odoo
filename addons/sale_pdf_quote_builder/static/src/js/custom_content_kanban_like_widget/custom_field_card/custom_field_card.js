@@ -10,6 +10,7 @@ export class CustomFieldCard extends Component {
         name: String,
         value: String,
         onChange: Function,
+        disabled: { type: Boolean, default: false },
     };
 
     setup() {
