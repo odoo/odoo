@@ -980,3 +980,85 @@ test("Update unread counter when receiving new message", async () => {
     );
     await contains(".o-discuss-badge", { text: "2" });
 });
+<<<<<<< 0eda6c3f27b13c85bea5819edda58ee7f81f9b9a
+||||||| ab174cc161719d81ccf16d0eba523a6ea53d81b2
+
+test("Show start message of conversation", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create([
+        { name: "ThreadOne", parent_channel_id: channelId, channel_type: "channel" },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "group",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-Thread .fs-1", { text: "Welcome to #General!" });
+    await contains(".o-mail-Thread p", { text: "This is the start of the #General channel" });
+    await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "ThreadOne" });
+    await contains(".o-mail-Thread .fs-1", { text: "ThreadOne" });
+    await contains(".o-mail-Thread p", { text: "Started by Mitchell Admin" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains(".o-mail-Thread .fs-1", { text: "Demo" });
+    await contains(".o-mail-Thread p", { text: "This is the start of your direct chat with Demo" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin and Demo" });
+    await contains(".o-mail-Thread .fs-1", { text: "Mitchell Admin and Demo" });
+    await contains(".o-mail-Thread p", {
+        text: "This is the start of Mitchell Admin and Demo group",
+    });
+});
+=======
+
+test("Show start message of conversation", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create([
+        { name: "ThreadOne", parent_channel_id: channelId, channel_type: "channel" },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "group",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-Thread:has(:text('Welcome to #General!'))");
+    await contains(".o-mail-Thread p", { text: "This is the start of the #General channel" });
+    await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "ThreadOne" });
+    await contains(".o-mail-Thread:has(:text('ThreadOne'))");
+    await contains(".o-mail-Thread p", { text: "Started by Mitchell Admin" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains(".o-mail-Thread:has(:text('Demo'))");
+    await contains(".o-mail-Thread p", { text: "This is the start of your direct chat with Demo" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin and Demo" });
+    await contains(".o-mail-Thread:has(:text('Mitchell Admin and Demo'))");
+    await contains(".o-mail-Thread p", {
+        text: "This is the start of Mitchell Admin and Demo group",
+    });
+});
+>>>>>>> fcba80ac097e7ea87fe2edff757c447be4f328cd
