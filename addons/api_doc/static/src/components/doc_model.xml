@@ -76,14 +76,15 @@
         </a>
     </aside>
 
-    <div t-if="state.error" class="d-flex flex-nowrap align-items-center justify-content-center w-100 h-100">
-        <div class="alert error mt-1 d-flex flex-nowrap flex-column">
-            <h5 class="mb-2 d-flex flex-nowrap align-items-center">
-                <i class="pe-1 fa fa-exclamation-triangle" aria-hidden="true"></i>
-                <span>Error while loading model</span>
-            </h5>
-            <div t-out="state.error.message"></div>
-        </div>
+    <div
+        t-if="state.error and !modelStore.activeModel"
+        class="d-flex flex-nowrap align-items-center justify-content-center w-100 h-100"
+    >
+        <DocErrorDialog
+            name="modelStore.error.name"
+            status="modelStore.error.status"
+            traceback="modelStore.error.traceback"
+        />
     </div>
 </t>
 
