@@ -48,8 +48,8 @@ class Website(models.Model):
         template_id = self.env['ir.config_parameter'].sudo().get_param(
             'sale.default_confirmation_template'
         )
-        default_template = template_id and self.env['mail.template'].browse(int(template_id))
-        if default_template.exists():
+        default_template = template_id and self.env['mail.template'].browse(int(template_id)).exists()
+        if default_template:
             return default_template
         return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
 
