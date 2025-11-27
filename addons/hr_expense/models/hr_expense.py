@@ -1414,7 +1414,7 @@ class HrExpense(models.Model):
             expense.write({
                 'approval_state': 'approved',
                 'manager_id': self.env.user.id,
-                'approval_date': fields.Date.context_today(expense),
+                'approval_date': fields.Datetime().now(),
             })
         self.update_activities_and_mails()
 
