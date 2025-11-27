@@ -85,6 +85,7 @@ patch(PosStore.prototype, {
     async setCustomerCount(o = false) {
         const currentOrder = o || this.getOrder();
         const count = await makeAwaitable(this.dialog, NumberPopup, {
+            startingValue: currentOrder.customer_count,
             feedback: (buffer) => {
                 const value = this.env.utils.formatCurrency(
                     currentOrder?.amountPerGuest(parseInt(buffer, 10) || 0) || 0
@@ -92,7 +93,7 @@ patch(PosStore.prototype, {
                 return value ? `${value} / ${_t("Guest")}` : "";
             },
         });
-        const guestCount = parseInt(count, 10) || 0;
+        const guestCount = parseInt(count, 10) || currentOrder.customer_count;
         if (guestCount == 0 && currentOrder.lines.length === 0) {
             this.removeOrder(currentOrder);
             this.navigate("FloorScreen");
