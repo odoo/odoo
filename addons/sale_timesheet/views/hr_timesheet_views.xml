@@ -67,22 +67,20 @@
                     />
                 </div>
             </xpath>
-            <xpath expr="//group" position="before">
+            <xpath expr="//div[@name='button_box']" position="inside">
                 <t groups="sales_team.group_sale_salesman">
                     <field name="order_id" invisible="1"/>
                     <field name="reinvoice_move_id" invisible="1"/>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="fa-dollar" invisible="not order_id">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Sales Order</span>
-                            </div>
-                        </button>
-                        <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not reinvoice_move_id">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Invoice</span>
-                            </div>
-                        </button>
-                    </div>
+                    <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="fa-dollar" invisible="not order_id">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Sales Order</span>
+                        </div>
+                    </button>
+                    <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not reinvoice_move_id">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Invoice</span>
+                        </div>
+                    </button>
                 </t>
             </xpath>
         </field>
