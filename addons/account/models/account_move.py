@@ -1991,7 +1991,7 @@ class AccountMove(models.Model):
         partner_id = record.partner_id.commercial_partner_id
         credit_to_invoice = partner_id.credit_to_invoice - exclude_amount
         total_credit = partner_id.credit + credit_to_invoice + current_amount
-        if not partner_id.credit_limit or total_credit <= partner_id.credit_limit:
+        if partner_id.credit_limit_mode == 'no_limit' or total_credit <= partner_id.credit_limit:
             return ''
         msg = _(
             '%(partner_name)s has reached its credit limit of: %(credit_limit)s',

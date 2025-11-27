@@ -336,8 +336,10 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Ensure we don't have access to accounting fields
         with self.assertRaises(AccessError, msg="We shouldn't have access to credit"):
-            order.partner_id.credit_limit = 1e12
-        order.sudo().partner_id.credit_limit = self.product_a.list_price
+            order.partner_id.custom_credit_limit = 1e12
+            order.partner_id.credit_limit_mode = 'no_limit'
+        order.sudo().partner_id.credit_limit_mode = 'custom'
+        order.sudo().partner_id.custom_credit_limit = self.product_a.list_price
 
         with Form(order) as order_form:
             with order_form.order_line.new() as sol:
