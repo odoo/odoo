@@ -27,7 +27,7 @@ export class FaResizeAction extends ClassAction {
 }
 export class FontAwesomeOptionComponent extends BaseOptionComponent {
     static template = "website.FontAwesomeOption";
-    static selector = "span.fa, i.fa";
+    static selector = "span.fa, i.fa, .social_media_img";
     static exclude = "[data-oe-xpath]";
     static components = { BorderConfigurator };
     setup() {

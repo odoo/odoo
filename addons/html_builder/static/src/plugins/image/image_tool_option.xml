@@ -2,29 +2,31 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageToolOption">
-    <ImageShapeOption />
-    <BuilderRow label.translate="Description"
-        tooltip.translate="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
-        <BuilderTextInput
-            action="'alt'"
-            placeholder.translate="Alt tag"
-            />
-    </BuilderRow>
-    <BuilderRow label.translate="Tooltip"
-        tooltip.translate="'Title tag' is shown as a tooltip when you hover the picture.">
-        <BuilderTextInput
-            attributeAction="'title'"
-            placeholder.translate="Title tag" />
-    </BuilderRow>
+    <t t-if="!state.isSocialMediaImg">
+        <ImageShapeOption />
+        <BuilderRow label.translate="Description"
+            tooltip.translate="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+            <BuilderTextInput
+                action="'alt'"
+                placeholder.translate="Alt tag"
+                />
+        </BuilderRow>
+        <BuilderRow label.translate="Tooltip"
+            tooltip.translate="'Title tag' is shown as a tooltip when you hover the picture.">
+            <BuilderTextInput
+                attributeAction="'title'"
+                placeholder.translate="Title tag" />
+        </BuilderRow>
+    </t>
     <BuilderRow label.translate="Transform" preview="false">
         <div class="btn-group o-hb-button-group">
             <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
             <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>
-        <ImageTransformOption t-if="!state.isImageAnimated" />
+        <ImageTransformOption t-if="!state.isImageAnimated and !state.isSocialMediaImg" />
     </BuilderRow>
     <ImageFilterOption />
-    <t t-if="!state.isGridMode">
+    <t t-if="!state.isGridMode and !state.isSocialMediaImg">
         <MediaSizeOption/>
     </t>
     <ImageFormatOption />

@@ -9,3 +9,7 @@ patch(HtmlImageSelector.prototype, {
         return domain;
     },
 });
+
+patch(HtmlImageSelector, {
+    mediaExtraClasses: [...HtmlImageSelector.mediaExtraClasses, "social_media_img"],
+});

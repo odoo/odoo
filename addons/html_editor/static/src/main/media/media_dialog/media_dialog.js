@@ -261,6 +261,9 @@ export class MediaDialog extends Component {
                     })
                 );
             }
+
+            element.classList.add(...this.extraClassesToAdd());
+
             element.classList.remove(...this.initialIconClasses);
             element.classList.remove("o_modified_image_to_save");
             element.classList.remove("oe_edited_link");
@@ -269,6 +272,10 @@ export class MediaDialog extends Component {
             );
         });
         return elements;
+    }
+
+    extraClassesToAdd() {
+        return [];
     }
 
     selectMedia(media, tabId, multiSelect) {

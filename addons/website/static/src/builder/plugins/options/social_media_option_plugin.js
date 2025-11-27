@@ -11,6 +11,7 @@ import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE, ANIMATE } from "@html_builder/util
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { AnimateOption } from "./animate_option";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { socialMediaElementsSelector } from "@html_builder/plugins/image/replace_media_option";
 
 /**
  * @typedef { Object } SocialMediaOptionShared
@@ -128,7 +129,7 @@ export class SocialMediaOption extends BaseOptionComponent {
 
 export class SocialMediaAnimateOption extends AnimateOption {
     static selector = ".s_social_media, .s_share";
-    static applyTo = ".s_social_media i.fa, .s_share i.fa";
+    static applyTo = socialMediaElementsSelector;
 }
 
 class SocialMediaOptionPlugin extends Plugin {
