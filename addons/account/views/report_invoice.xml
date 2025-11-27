@@ -439,11 +439,17 @@
                                         <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
                                             <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-10 col-md-9'}">
                                                 <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
-                                                    <td>
+                                                    <!--
+                                                        This is required in stable to void breaking xpath to show_payment_term_details//td,
+                                                        which is illegal because a td cannot be alone.
+                                                        To be removed in master.
+                                                    -->
+                                                    <table class="d-none"><tbody><tr><td/></tr></tbody></table>
+                                                    <div id="early_payment_discount">
                                                         <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                                                               t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)">30.00</span> due if paid before
                                                         <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)">2024-01-01</span>
-                                                    </td>
+                                                    </div>
                                                 </t>
                                                 <t t-if="len(payment_term_details) > 1" t-foreach="payment_term_details" t-as="term">
                                                     <div>
@@ -504,6 +510,7 @@
                                 <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
                                     <span t-field="o.narration"/>
                                 </div>
+                                <div class="oe_structure"></div>
                             </div>
                         </div>
                     </div>
