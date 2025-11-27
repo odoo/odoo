@@ -1154,12 +1154,6 @@ class SaleOrder(models.Model):
                 raise UserError(error_msg)
 
         self.order_line._validate_analytic_distribution()
-
-        for order in self:
-            if order.partner_id in order.message_partner_ids:
-                continue
-            order.message_subscribe([order.partner_id.id])
-
         self.write(self._prepare_confirmation_values())
 
         # Context key 'default_name' is sometimes propagated up to here.
