@@ -1,6 +1,7 @@
 /* global StripeTerminal */
 
 import { _t } from "@web/core/l10n/translation";
+import { loadJS } from "@web/core/assets";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
@@ -20,11 +21,7 @@ export class PaymentStripe extends PaymentInterface {
     async stripeFetchConnectionToken() {
         // Do not cache or hardcode the ConnectionToken.
         try {
-            const data = await this.pos.data.call(
-                "pos.payment.method",
-                "stripe_connection_token",
-                []
-            );
+            const data = await this.callPaymentMethod("stripe_connection_token", []);
             if (data.error) {
                 throw data.error;
             }
@@ -54,7 +51,7 @@ export class PaymentStripe extends PaymentInterface {
     async checkReader() {
         try {
             if (!this.terminal) {
-                const createStripeTerminal = this.createStripeTerminal();
+                const createStripeTerminal = await this.createStripeTerminal();
                 if (!createStripeTerminal) {
                     throw _t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED.");
                 }
@@ -216,8 +213,9 @@ export class PaymentStripe extends PaymentInterface {
         return true;
     }
 
-    createStripeTerminal() {
+    async createStripeTerminal() {
         try {
+            await loadJS("https://js.stripe.com/terminal/v1/");
             this.terminal = StripeTerminal.create({
                 onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
                 onUnexpectedReaderDisconnect: this.stripeUnexpectedDisconnect.bind(this),
@@ -255,15 +253,10 @@ export class PaymentStripe extends PaymentInterface {
 
     async capturePayment(paymentIntentId, amount = null, context = {}) {
         try {
-            const data = await this.pos.data.call(
-                "pos.payment.method",
-                "stripe_capture_payment",
-                [paymentIntentId],
-                {
-                    amount,
-                    context,
-                }
-            );
+            const data = await this.callPaymentMethod("stripe_capture_payment", [paymentIntentId], {
+                amount,
+                context,
+            });
             if (data.error) {
                 throw data.error;
             }
@@ -277,7 +270,7 @@ export class PaymentStripe extends PaymentInterface {
 
     async fetchPaymentIntentClientSecret(payment_method, amount) {
         try {
-            const data = await this.pos.data.call("pos.payment.method", "stripe_payment_intent", [
+            const data = await this.callPaymentMethod("stripe_payment_intent", [
                 [payment_method.id],
                 amount,
             ]);

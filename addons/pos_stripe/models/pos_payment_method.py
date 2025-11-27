@@ -20,6 +20,9 @@ class PosPaymentMethod(models.Model):
         params += ['stripe_serial_number']
         return params
 
+    def _allowed_actions_in_self_order(self):
+        return super()._allowed_actions_in_self_order() + ['stripe_connection_token', 'stripe_payment_intent', 'stripe_capture_payment']
+
     @api.constrains('stripe_serial_number')
     def _check_stripe_serial_number(self):
         for payment_method in self:
