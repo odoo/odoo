@@ -541,7 +541,7 @@ _FALSE_DOMAIN = DomainBool(False)
 
 class DomainNot(Domain):
     """Negation domain, contains a single child"""
-    OPERATOR = '!'
+    OPERATOR: typing.ClassVar[str] = '!'
 
     __slots__ = ('child',)
     child: Domain
@@ -585,9 +585,9 @@ class DomainNot(Domain):
 
 class DomainNary(Domain):
     """Domain for a nary operator: AND or OR with multiple children"""
-    OPERATOR: str
-    OPERATOR_SQL: SQL = SQL(" ??? ")
-    ZERO: DomainBool = _FALSE_DOMAIN  # default for lint checks
+    OPERATOR: typing.ClassVar[str]
+    OPERATOR_SQL: typing.ClassVar[SQL] = SQL(" ??? ")
+    ZERO: typing.ClassVar[DomainBool] = _FALSE_DOMAIN  # default for lint checks
 
     __slots__ = ('children',)
     children: tuple[Domain, ...]
