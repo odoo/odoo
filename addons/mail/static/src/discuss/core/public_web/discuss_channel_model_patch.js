@@ -15,6 +15,9 @@ const discussChannelPatch = {
         this.store.env.services.bus_service.deleteChannel(this.busChannel);
         super.delete(...arguments);
     },
+    get allowCalls() {
+        return super.allowCalls && !this.parent_channel_id;
+    },
     /**
      * Handle the notification of a new message based on the notification setting of the user.
      * Thread on mute:
