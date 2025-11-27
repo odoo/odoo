@@ -204,6 +204,9 @@ actual arch.
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
     invalid_locators = fields.Json(compute='_compute_invalid_locators')
+    # used mainly for technical sort and find of views, as well to give specific
+    # ACLs for specific flows like email marketing (snippets management)
+    technical_usage = fields.Selection(selection=[], string="View's Technical Usage")
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')

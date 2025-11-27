@@ -367,12 +367,17 @@ export class SnippetModel extends Reactive {
             template_key: this.snippetsName,
             snippet_key: snippetKey,
             thumbnail_url: thumbnailURL,
+            technical_usage: this.getTechnicalUsage(),
             context,
         });
 
         // Reload the snippets so the sidebar is up to date.
         await this.reload();
         return savedName;
+    }
+
+    getTechnicalUsage() {
+        return false;
     }
 
     setSnippetName(snippetsDocument) {

@@ -720,8 +720,8 @@ class IrUiView(models.Model):
     def _get_snippet_addition_view_key(self, template_key, key):
         return '%s.%s' % (template_key, key)
 
-    def _get_used_names_domain(self, name):
-        used_names_domain = super()._get_used_names_domain(name)
+    def _get_used_names_domain(self, name, technical_usage):
+        used_names_domain = super()._get_used_names_domain(name, technical_usage)
         current_website = self.env['website'].browse(self.env.context.get('website_id'))
         return used_names_domain & Domain(current_website.website_domain())
 

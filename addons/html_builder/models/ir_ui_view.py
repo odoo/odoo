@@ -35,7 +35,7 @@ class IrUiView(models.Model):
         snippet_view.name = name
 
     @api.model
-    def save_snippet(self, name, arch, template_key, snippet_key, thumbnail_url):
+    def save_snippet(self, name, arch, template_key, snippet_key, thumbnail_url, technical_usage=False):
         """
         Saves a new snippet arch so that it appears with the given name when
         using the given snippets template.
@@ -48,12 +48,14 @@ class IrUiView(models.Model):
             the snippet from which the snippet to save originates
         :param thumbnail_url: the url of the thumbnail to use when displaying
             the snippet to save
+        :param technical_usage: identifies the context in which the snippet is
+            saved, e.g. 'mass_mailing'.
         """
         app_name = template_key.split('.')[0]
         snippet_key = '%s_%s' % (snippet_key, uuid.uuid4().hex)
         full_snippet_key = '%s.%s' % (app_name, snippet_key)
 
-        used_names = self.env['ir.ui.view'].search(self._get_used_names_domain(name)).mapped("name")
+        used_names = self.env['ir.ui.view'].search(self._get_used_names_domain(name, technical_usage)).mapped("name")
         name = self._find_available_name(name, used_names)
 
         # html to xml to add '/' at the end of self closing tags like br, ...
@@ -70,6 +72,7 @@ class IrUiView(models.Model):
             'key': full_snippet_key,
             'type': 'qweb',
             'arch': xml_arch,
+            'technical_usage': technical_usage,
         }
         new_snippet_view_values.update(self._snippet_save_view_values_hook())
         custom_snippet_view = self.create(new_snippet_view_values)
@@ -96,6 +99,7 @@ class IrUiView(models.Model):
             'name': name + ' Block',
             'key': self._get_snippet_addition_view_key(template_key, snippet_key),
             'inherit_id': custom_section.id,
+            'technical_usage': technical_usage,
             'type': 'qweb',
             'arch': """
                 <data inherit_id="%s">
@@ -206,8 +210,8 @@ class IrUiView(models.Model):
         return '%s.%s' % (template_key, key)
 
     @api.model
-    def _get_used_names_domain(self, name):
-        return Domain('name', '=like', '%s%%' % name)
+    def _get_used_names_domain(self, name, technical_usage):
+        return Domain('name', '=like', '%s%%' % name) & Domain('technical_usage', '=', technical_usage)
 
     @api.model
     def _snippet_save_view_values_hook(self):

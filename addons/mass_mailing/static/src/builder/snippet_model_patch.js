@@ -10,4 +10,7 @@ export const massMailingSnippetModelPatch = {
         });
         snippetCopyEl.removeAttribute("data-filter-domain");
     },
+    getTechnicalUsage() {
+        return "mass_mailing";
+    }
 };
