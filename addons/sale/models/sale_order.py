@@ -89,10 +89,11 @@ class SaleOrder(models.Model):
     create_date = fields.Datetime(  # Override of default create_date field from ORM
         string="Creation Date", index=True, readonly=True)
     commitment_date = fields.Datetime(
-        string="Delivery Date", copy=False,
+        string="Promised Delivery", copy=False,
         help="This is the delivery date promised to the customer. "
              "If set, the delivery order will be scheduled based on "
              "this date rather than product lead times.")
+    delivery_date = fields.Datetime(string="Delivery Date", compute='_compute_delivery_date')
     date_order = fields.Datetime(
         string="Order Date",
         required=True, copy=False,
@@ -870,6 +871,11 @@ class SaleOrder(models.Model):
                 if product_msg := line.sale_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
             order.sale_warning_text = '\n'.join(warnings)
+
+    @api.depends('commitment_date', 'expected_date')
+    def _compute_delivery_date(self):
+        for order in self:
+            order.delivery_date = order.commitment_date or order.expected_date
 
     #=== CONSTRAINT METHODS ===#
 

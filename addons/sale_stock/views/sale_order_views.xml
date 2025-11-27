@@ -30,9 +30,16 @@
                 <div class="o_row">
                     <field name="expected_date" invisible="1"/>  <!-- Needed for the placeholder widget -->
                     <field name="commitment_date" options="{'placeholder_field': 'expected_date'}"/>
+                    <field
+                        name="delivery_status"
+                        class="oe_inline"
+                        invisible="state != 'sale'"
+                        decoration-success="delivery_status == 'full'"
+                        decoration-warning="delivery_status == 'partial'"
+                        decoration-info="delivery_status in ['pending', 'started']"
+                        widget="badge"/>
                 </div>
                 <field name="effective_date" invisible="not effective_date"/>
-                <field name="delivery_status" invisible="state != 'sale'"/>
             </div>
             <xpath expr="//page[@name='other_information']//field[@name='commitment_date']" position="after">
                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" invisible="not show_json_popover"/>
@@ -79,18 +86,19 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
-            <field name="commitment_date" position="attributes">
+            <field name="delivery_date" position="attributes">
                 <attribute name="decoration-danger">
                     (
                         (
-                            commitment_date &lt; effective_date
-                            or commitment_date &lt; datetime.datetime.combine(
-                                datetime.date.today(),
-                                datetime.time(0,0,0)
-                            ).to_utc().strftime('%Y-%m-%d %H:%M:%S')
+                            (
+                                (commitment_date or expected_date) &lt; effective_date
+                                or (commitment_date or expected_date) &lt; datetime.datetime.combine(
+                                    datetime.date.today(),
+                                    datetime.time(0,0,0)
+                                ).to_utc().strftime('%Y-%m-%d %H:%M:%S')
+                            )
+                            and delivery_status in ['pending', 'started']
                         )
-                        and delivery_status in ['pending', 'started']
-                        and effective_date &lt;= commitment_date
                         or delivery_status == 'partial'
                     )
                 </attribute>

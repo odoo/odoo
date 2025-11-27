@@ -107,6 +107,12 @@ class SaleOrder(models.Model):
                 picking.products_availability_state == 'late' for picking in order.picking_ids
             )
 
+    @api.depends('effective_date')
+    def _compute_delivery_date(self):
+        super()._compute_delivery_date()
+        for order in self:
+            order.delivery_date = order.effective_date or order.delivery_date
+
     def _search_late_availability(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
             return NotImplemented

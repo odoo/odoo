@@ -129,8 +129,9 @@
 
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                 <field name="date_order" optional="show" readonly="state in ['cancel', 'sale']"/>
-                <field name="commitment_date" optional="hide"/>
-                <field name="expected_date" optional="hide"/>
+                <field name="delivery_date" string="Delivery Date" optional="hide"
+                    decoration-muted="not commitment_date"
+                    decoration-danger="(commitment_date and (expected_date &lt; commitment_date or commitment_date &lt; context_today().strftime('%Y-%m-%d'))) and state in ['draft', 'sent']"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
