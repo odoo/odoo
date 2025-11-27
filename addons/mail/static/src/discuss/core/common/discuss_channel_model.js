@@ -82,6 +82,16 @@ export class DiscussChannel extends Record {
     }
     /** @type {"video_full_screen"|undefined} */
     default_display_mode;
+    get typesAllowingCalls() {
+        return ["chat", "channel", "group"];
+    }
+    get allowCalls() {
+        return (
+            !this.isTransient &&
+            this.typesAllowingCalls.includes(this.channel_type) &&
+            !this.correspondent?.persona.eq(this.store.odoobot)
+        );
+    }
     channel_member_ids = fields.Many("discuss.channel.member", {
         inverse: "channel_id",
         onDelete: (r) => r?.delete(),
