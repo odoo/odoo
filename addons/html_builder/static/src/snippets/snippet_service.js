@@ -8,6 +8,7 @@ import { user } from "@web/core/user";
 import { markup, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { loadImageInfo, removeOnImageChangeAttrs } from "@html_editor/utils/image_processing";
 
 export class SnippetModel extends Reactive {
     constructor(services, { snippetsName, context }) {
@@ -156,7 +157,7 @@ export class SnippetModel extends Reactive {
                 for (const processor of Object.values(processors)) {
                     processor(this.snippetsName, this.snippetsDocument);
                 }
-                this.computeSnippetTemplates(this.snippetsDocument);
+                await this.computeSnippetTemplates(this.snippetsDocument);
                 this.setSnippetName(this.snippetsDocument);
             })();
         }
@@ -180,7 +181,7 @@ export class SnippetModel extends Reactive {
         return this.load();
     }
 
-    computeSnippetTemplates(snippetsDocument) {
+    async computeSnippetTemplates(snippetsDocument) {
         const snippetsBody = snippetsDocument.body;
         this.snippetsByCategory = {};
         for (const snippetCategory of snippetsBody.querySelectorAll("snippets")) {
@@ -190,7 +191,7 @@ export class SnippetModel extends Reactive {
                     id: uniqueId(),
                     title: snippetEl.getAttribute("name"),
                     name: snippetEl.children[0].dataset.snippet,
-                    content: snippetEl.children[0],
+                    content: await this.adaptSnippetContent(snippetEl.children[0]),
                     viewId: parseInt(snippetEl.dataset.oeSnippetId),
                     key: snippetEl.dataset.oeSnippetKey,
                     thumbnailSrc: snippetEl.dataset.oeThumbnail,
@@ -254,6 +255,45 @@ export class SnippetModel extends Reactive {
             }
         }
         this.snippetsByCategory["snippet_custom_content"] = customInnerContent;
+    }
+
+    async adaptSnippetContent(el) {
+        // Apply missing image processing.
+        const processImgEls = el.querySelectorAll("img[data-original-src]:not([src])");
+        await Promise.all(
+            [...processImgEls].map(async (img) => {
+                if (removeOnImageChangeAttrs.some((attr) => !!img.dataset[attr])) {
+                    const originalSrc = img.dataset.originalSrc;
+                    delete img.dataset.originalSrc;
+                    if (originalSrc.startsWith("/html_editor/image_shape/")) {
+                        img.src = "/web/image/" + originalSrc.split("/")[3];
+                    } else {
+                        img.src = originalSrc;
+                    }
+                    await loadImageInfo(img); // TODO needed ??
+                    // TODO find out how to call image_post_process_plugin's processImage
+                    const processImage = async () => {};
+                    let imgDataURL = await processImage(img, {});
+                    if (originalSrc.startsWith("/web_editor/image_shape/")) {
+                        // Reuse the SVG that already takes the options into account.
+                        const response = await window.fetch(originalSrc);
+                        const svg = await response.text();
+                        // Not using a regex replace because Safari
+                        // does not support negative lookahead.
+                        // /(?<=image[^>]+xlink:href=")data:image\/.*;base64,[^"]*/
+                        const match = svg.match(/image[^>]+xlink:href="data:image\/.*;base64,/);
+                        const begin = svg.indexOf("data:image/", match.index);
+                        const end = svg.indexOf('"', begin);
+                        const updatedSvg =
+                            svg.substring(0, begin) + imgDataURL + svg.substring(end);
+                        imgDataURL = "data:image/svg+xml;base64," + window.btoa(updatedSvg);
+                        img.dataset.mimetype = "image/svg+xml";
+                    }
+                    img.src = imgDataURL;
+                }
+            })
+        );
+        return el;
     }
 
     async deleteCustomSnippet(snippet) {
