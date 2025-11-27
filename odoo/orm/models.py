@@ -507,8 +507,7 @@ class BaseModel(metaclass=MetaModel):
                 models.append(model)
                 fields_to_flush.extend(model._fields[fname] for fname in field_names)
 
-        code, params, to_flush = table_sql._sql_tuple
-        return SQL(code, *params, to_flush=(*to_flush, *fields_to_flush))
+        return SQL("%s", table_sql, to_flush=fields_to_flush)
 
     @property
     def _constraint_methods(self):
