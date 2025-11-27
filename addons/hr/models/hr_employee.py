@@ -2234,3 +2234,68 @@ class HrEmployee(models.Model):
         self.ensure_one()
         self.action_unarchive()
         self.departure_id.unlink()
+
+    def _get_working_periods_by_field(self, start, stop, field_key):
+        """
+        Compute working periods for employees grouped by a related field.
+
+        This method builds a mapping of working periods for each employee,
+        grouped by the provided ``field_key`` (e.g. resource_id, user_id).
+        It considers employee contracts and falls back to the full period
+        if no contract exists.
+
+        :param start: Start datetime of the period (string or datetime).
+        :param stop: End datetime of the period (string or datetime).
+        :param field_key: Name of the relational field on hr.employee used
+                        to group working periods.
+                          Example values:
+                            - 'resource_id'
+                            - 'user_id'
+                            - any Many2one field usable in views
+                          This allows the result to align with views that
+                          operate on non-employee models.
+        """
+
+        working_periods = {employee[field_key].id: [] for employee in self}
+
+        if self.ids:
+            start, stop = fields.Datetime.from_string(start), fields.Datetime.from_string(stop)
+
+            # Fetch employees that have at least one version with a contract
+            employees_with_contract = self.env["hr.version"].sudo().search_fetch(
+                domain=[
+                    ("employee_id", "in", self.ids),
+                    ('contract_date_start', '!=', False),
+                ],
+                field_names=["employee_id"],
+            ).employee_id
+
+            # Directly search for overlapping contracts to optimize performance
+            contracts = self.env["hr.version"].sudo().search([
+                ('employee_id', 'in', employees_with_contract.ids),
+                ('contract_date_start', '!=', False),
+                ('contract_date_start', '<=', stop.date()),
+                '|',
+                ('contract_date_end', '>=', start.date()),
+                ('contract_date_end', '=', False),
+            ])
+
+            employees_with_contract_in_current_scale = []
+            for contract in contracts:
+                employee = contract.employee_id
+                field_key_id = employee[field_key].id
+                end_datetime = contract.contract_date_end and contract.contract_date_end + relativedelta(hour=23, minute=59, second=59)
+                if end_datetime:
+                    end_datetime = end_datetime.replace(tzinfo=self.env.tz).astimezone(UTC).replace(tzinfo=None)
+                    end_datetime = fields.Datetime.to_string(end_datetime)
+                employees_with_contract_in_current_scale.append(employee.id)
+                working_periods[field_key_id].append({
+                    "start": fields.Datetime.to_string(contract.contract_date_start),
+                    "end": end_datetime,
+                })
+            for employee in self - employees_with_contract:
+                working_periods[employee[field_key].id].append({
+                    "start": start,
+                    "end": stop,
+                })
+        return working_periods
