@@ -449,7 +449,7 @@
                 <form action="/my/security" method="post" class="oe_reset_password_form">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="op" value="password"/>
-                    <div class="mb-4">
+                    <div class="mb-4 o_caps_lock_warning">
                         <label for="current">Password:</label>
                         <div class="input-group input-group-sm">
                             <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
@@ -478,7 +478,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 o_caps_lock_warning">
                         <label for="new2">Verify New Password:</label>
                         <div class="input-group input-group-sm">
                             <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
