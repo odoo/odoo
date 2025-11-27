@@ -197,3 +197,12 @@ class IrHttp(models.AbstractModel):
     @api.deprecated("Deprecated since 19.0, use get_all_currencies on 'res.currency'")
     def get_currencies(self):
         return self.env['res.currency'].get_all_currencies()
+
+    @classmethod
+    def _get_allowed_robots_routes(cls):
+        """Override this method to return a list of allowed routes.
+
+        :return: A list of URL paths that should be allowed by robots.txt
+              Examples: ['/social_instagram/', '/sitemap.xml', '/web/']
+        """
+        return []

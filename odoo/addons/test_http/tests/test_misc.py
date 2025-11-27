@@ -146,7 +146,7 @@ class TestHttpMisc(TestHttpBase):
             self.assertEqual(res.text, file.getvalue())
 
     def test_misc7_robotstxt(self):
-        self.nodb_url_open('/robots.txt').raise_for_status()
+        self.url_open('/robots.txt').raise_for_status()
 
     def test_misc8_concurrency_error(self):
         with (

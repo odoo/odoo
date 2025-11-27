@@ -95,6 +95,26 @@ class IrModuleModule(models.Model):
                     for website in websites_to_update:
                         module._theme_load(website)
 
+            website_module = self.env['ir.module.module'].search([('name', '=', 'website')], limit=1)
+            is_website_installed = website_module.state == 'installed'
+
+            if module.state not in {'to install', 'to remove', 'to upgrade'}:
+                continue
+
+            is_website = module.name == 'website'
+            depends_on_website = any('website' in dep.name for dep in module.dependencies_id)
+
+            # Skip: removing a website-dependent module when website is not
+            # installed
+            if module.state == 'to remove' and depends_on_website and not is_website_installed:
+                continue
+
+            # Update robots.txt if:
+            # - Installing/upgrading website module, OR
+            # - Installing/upgrading a website-dependent module
+            if (is_website and module.state != 'to remove') or (depends_on_website and not is_website):
+                self.env['website']._upsert_robots_txt_attachment()
+
         return super(IrModuleModule, self).write(vals)
 
     def _get_module_data(self, model_name):
