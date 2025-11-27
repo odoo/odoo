@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_l10n_fr_pdp_reports_generate_flows" model="ir.cron">
+            <field name="name">PDP Generate Flux 10 Flows</field>
+            <field name="model_id" ref="l10n_fr_pdp_reports.model_l10n_fr_pdp_flow_aggregator"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_generate_daily_flows()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="ir_cron_l10n_fr_pdp_reports_send_flows" model="ir.cron">
+            <field name="name">PDP Send Ready Flux 10 Flows</field>
+            <field name="model_id" ref="l10n_fr_pdp_reports.model_l10n_fr_pdp_flow"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_ready_flows()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="ir_cron_l10n_fr_pdp_reports_sync_transport_status" model="ir.cron">
+            <field name="name">PDP Sync Flux 10 Transport Statuses</field>
+            <field name="model_id" ref="l10n_fr_pdp_reports.model_l10n_fr_pdp_flow"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_sync_transport_statuses()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+        </record>
+    </data>
+</odoo>

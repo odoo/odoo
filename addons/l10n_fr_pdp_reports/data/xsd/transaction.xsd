@@ -1,0 +1,700 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="transaction"
+xmlns:trs="transaction"
+xmlns:param="parametre">
+<xs:import namespace="parametre" schemaLocation="parametre.xsd"/>
+    <xs:complexType name="TransactionsReportType">
+            <xs:sequence>
+                <xs:element name="ReportPeriod" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>TG-7 : Période concernant la transmission</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="StartDate" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-17 : Date de début de la période de transmission</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="EndDate" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-18 : Date de fin de la période de transmission</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Invoice" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>TG-8 : Facture</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ID" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-19 : Identification de la Facture.</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="IssueDate" type ="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-20 : Date d'émission facture initiale / facture rectificative</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="TypeCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-21 : Code de type de facture</xs:documentation>
+                                </xs:annotation>
+                            </xs:element> 
+                            <xs:element name="CurrencyCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-22 : Code de devise de la facture</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="DueDate" type="xs:string" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-201 : Date d'échéance</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="TaxDueDateTypeCode" type="xs:string" minOccurs="0" maxOccurs="1">    
+                                <xs:annotation>
+                                    <xs:documentation>TT-24 : Code de date d'exigibilité de la taxe sur la valeur ajoutée</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="IncludedNote" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>TG-9 : Note de facture</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Subject" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-26 : Code du sujet de la note de facture</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="Content" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-27 : Note de facture</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="BusinessProcess" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TG-10 : Controle du processus</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="ID" type="xs:string" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-28 : Type de processus métier (cadre de facturation)</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element> 
+                                        <xs:element name="TypeID" type="xs:string" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-29 : Type de profil (e-invoicing, e-reporting, facture etc..)</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element> 
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ReferencedDocument" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>TG-11 : RÉFÉRENCE À UNE FACTURE ANTÉRIEURE</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="ID" type="xs:string" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-30 : Référence à une facture antérieure</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="IssueDate" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-31 : Date d'émission de facture antérieure</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Seller" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TG-12 : Groupe de termes métiers fournissant des informations sur le Vendeur</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="CompanyId" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-33 : Identifiant du vendeur</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="param:CompanyIdType">
+                                                        <xs:attribute name="schemeId" use ="required" type="xs:string">
+                                                            <xs:annotation>
+                                                                <xs:documentation>TT-33-1 : Identifiant du schéma</xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="TaxRegistrationId" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-34 : Identifiant à la TVA du vendeur</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="param:sellerTaxRegistrationId">
+                                                        <xs:attribute name="qualifyingId" use="required" type="xs:string">
+                                                            <xs:annotation>
+                                                                <xs:documentation>TT-34-0 : Qualifiant d'identifiant à la TVA du vendeur</xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="PostalAddress" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-13 : Adresse postale du vendeur</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="CountryId" type="xs:string" minOccurs="1" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-35 : Code de pays du vendeur</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Buyer" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TG-14 : Acheteur</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="CompanyId" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-36 : Identifiant de l'acheteur</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="param:CompanyIdType">
+                                                        <xs:attribute name="schemeId" use="required" type="xs:string">
+                                                            <xs:annotation>
+                                                                <xs:documentation>TT-37 : Identifiant du schéma</xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute> 
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                         <xs:element name="TaxRegistrationId" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-38 : Identifiant à la TVA  de l'acheteur</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="param:buyerTaxRegistrationId">
+                                                        <xs:attribute name="qualifyingId" use="required" type="xs:string">
+                                                            <xs:annotation>
+                                                                <xs:documentation>TT-38-0 : Qualifiant d'identifiant à la TVA de l'acheteur</xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="PostalAddress" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-15 : Adresse postale de l'acheteur</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="CountryId" type="xs:string" minOccurs="1" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-39 : Code pays de l'acheteur</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="SellerTaxRepresentative" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TG-16 : Représentant fiscal du vendeur</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="TaxRegistrationId" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-122 : Identifiant à la TVA du représentant fiscal du vendeur</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="param:sellerTaxRegistrationId">
+                                                        <xs:attribute name="schemeId" use="required" type="xs:string">
+                                                            <xs:annotation>
+                                                                <xs:documentation>TT-40 : Identifiant du schéma de l'identifiant TVA du représentant fiscal du vendeur</xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Delivery" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>TG-17 : Informations de livraison</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Date" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-41 : Date effective de livraison</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="Location" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-19 : Adresse de livraison</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="LineOne" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-103 : Adresse de livraison - Ligne 1</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="LineTwo" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-104 : Adresse de livraison - Ligne 2</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="LineThree" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-105 : Adresse de livraison - Ligne 3</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="CityName" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-106 : Localité adresse de livraison</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="PostalZone" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-107 : Code postal adresse de livraison</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="CountrySubentity" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-108 : Subdivision du pays</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="CountryId" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-44 : Code de pays</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="InvoicePeriod" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TG-18 : Période de facturation</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="StartDate" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-42 : Date de début de période de facturation</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="EndDate" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-43 : Date de fin de période de facturation</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="AllowanceCharge" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>TG-20 : Remise au niveau du document ou TG-21 : Charges ou frais au niveau du document</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Amount" type="xs:decimal" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-45 : Montant de la remise au niveau document ou TT-48 : Montant des charges</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>                                   
+                                        <xs:element name="TaxCategoryCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-46 : Code de type de TVA de la remise au niveau du document ou TT-49 : Code de type de TVA des charges</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="TaxPercent" type="xs:decimal" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-47 : Taux de TVA de la remise au niveau du document ou TT-50 : Taux de TVA des charges ou frais au niveau du document</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="ChargeIndicator" use="required" type="xs:boolean">
+                                        <xs:annotation>
+                                            <xs:documentation>Indicateur de Charge</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="MonetaryTotal" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TG-22 : Totaux du document</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="TaxExclusiveAmount" type="xs:decimal" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-51 : Montant total de la facture hors TVA</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="TaxAmount" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-52 : Montant total de TVA de la facture</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:decimal">
+                                                        <xs:attribute name="CurrencyCode" use="required" type="xs:string">
+                                                            <xs:annotation>
+                                                                <xs:documentation>TT-202 : Identifiant de la devise</xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="TaxSubTotal" minOccurs ="1" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>TG-23 : Ventilation de la TVA</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="TaxableAmount" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-54 : Base d'imposition du type de TVA</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="TaxAmount" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-55 : Montant de la TVA pour chaque type de TVA</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="TaxCategory" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-194 : Catégorie de Taxe</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Code" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-56 : Code de type de TVA</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="Percent" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-57 : Taux de type de TVA</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="TaxExemptionReason" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-58 : Motif d'exonération de la TVA</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="TaxExemptionReasonCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-59 : Code de motif d'exonération de la TVA</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Line" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>TG-24 : Ligne de facture</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Note" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-61 : Note de ligne de facture</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Code" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-61-0 : Code du sujet de la note de ligne</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="Comment" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-61-1 : Note de ligne de facture</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="BilledQuantity" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-62 : Quantité facturée</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:decimal">
+                                                        <xs:attribute name="UnitCode" type="xs:string">
+                                                            <xs:annotation>
+                                                                <xs:documentation>TT-63 : Code de l'unité de mesure de la quantité facturée</xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="ReferencedDocument" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-40 : RÉFÉRENCE À UNE FACTURE ANTÉRIEURE</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="ID" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-300 : ID de la facture antérieure</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="IssueDate" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-301 : Date de facture antérieure</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Delivery" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-41 : Détail de l'adresse de livraison à la ligne</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-302 : Nom du lieu de livraison</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="Location" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TG-42 : ADRESSE POSTALE DE LIVRAISON A LA LIGNE</xs:documentation>
+                                                        </xs:annotation>
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="LineOne" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation>TT-303 : Adresse de livraison - Ligne 1</xs:documentation>
+                                                                    </xs:annotation>
+                                                                </xs:element>
+                                                                <xs:element name="CityName" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation>TT-304 : Localité de livraison</xs:documentation>
+                                                                    </xs:annotation>
+                                                                </xs:element>
+                                                                <xs:element name="PostalZone" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation>TT-305 : Code postal de livraison</xs:documentation>
+                                                                    </xs:annotation>
+                                                                </xs:element>
+                                                                <xs:element name="CountrySubentity" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation>TT-306 : Subdivision du pays</xs:documentation>
+                                                                    </xs:annotation>
+                                                                </xs:element>
+                                                                <xs:element name="CountryId" type="xs:string" minOccurs="1" maxOccurs="1">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation>TT-307 : Code de pays</xs:documentation>
+                                                                    </xs:annotation>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="InvoicePeriod" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-25 : Période de facturation d'une ligne</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="StartDate" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-65 : Date de début de période de facturation d'une ligne</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="EndDate" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-66 : Date de fin de période de facturation d'une ligne</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="AllowanceCharge" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-26 : Remise de ligne de facture ou TG-27 : Charge ou frais d'une ligne de facture</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Amount" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-67 : Montant d'une remise, hors TVA ou TT-68 : Montant des charges ou frais</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="ChargeIndicator" use="required" type="xs:boolean">
+                                                    <xs:annotation>
+                                                        <xs:documentation>Indicateur de Charge</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:attribute>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Price" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-28 : Détail du prix</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="PriceAmount" type="xs:decimal" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-69 : Prix net de l'article</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="AllowanceChargeAmount" type="xs:decimal" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-70 : Rabais sur le prix de l'article</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                    <xs:element name="AllowanceChargeBaseAmount" type="xs:decimal" minOccurs="0" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-71 : Prix brut de l'article</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Product" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TG-30 : Information sur l'article</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
+                                                        <xs:annotation>
+                                                            <xs:documentation>TT-76 : Nom de l'article</xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Transactions" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>TG-31 : Transactions</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Date" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-77 : Date</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="TransactionsCurrency" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-78 : Code devise transactions</xs:documentation>
+                                </xs:annotation>
+                            </xs:element> 
+                            <xs:element name="TaxDueDateTypeCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-80 : Option paiement TVA</xs:documentation>
+                                </xs:annotation>
+                            </xs:element> 
+                            <xs:element name="CategoryCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-81 : Catégorie de transactions</xs:documentation>
+                                </xs:annotation>
+                            </xs:element> 
+                            <xs:element name="TaxExclusiveAmount" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-82 : Montant total H.T.</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="TaxTotal" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-83 : Montant total TVA</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="TransactionsCount" type="xs:integer" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>TT-85 : Nombre de transactions</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="TaxSubtotal" minOccurs="1" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>TG-32 : Répartition TVA</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="TaxPercent" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-86 : Taux</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="TaxableAmount" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-87 : Base imposition</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="TaxTotal" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-88 : Montant TVA</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+</xs:schema>

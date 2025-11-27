@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ccts="urn:un:unece:uncefact:documentation:2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2">
+	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
+	<cbc:ProfileID>S1</cbc:ProfileID>
+	<cbc:ID>S2F4_REPORT2025_xxx</cbc:ID>
+	<cbc:IssueDate>2025-09-10</cbc:IssueDate>
+	<cbc:DueDate>2025-09-30</cbc:DueDate>
+	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+	<cbc:Note>#REG#VENDEUR SARL au capital de 50 000 EUR</cbc:Note>
+	<cbc:Note>#ABL#RCS MAVILLE 100 000 009</cbc:Note>
+	<cbc:Note>#AAI#35 ma rue a moi,75018 PARIS, FR – contact@vendeur.fr - www.levendeur.fr  – N° TVA : FR88 100 000 009</cbc:Note>
+	<cbc:Note>#PMD#Payé le 09/09/2025 par chèque bancaire</cbc:Note>
+	<cbc:Note>#PMT#Une indemnité forfaitaire de 40 € sera également exigée, conformément à l’article L441-10 du Code de commerce.</cbc:Note>
+	<cbc:Note>#AAB#Aucun escompte accordé en cas de paiement anticipé.</cbc:Note>
+	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+	<cbc:AccountingCost>REF COMPTABLE ACHETEURC3</cbc:AccountingCost>
+	<cbc:BuyerReference>C3_2516</cbc:BuyerReference>
+	<cac:InvoicePeriod>
+		<cbc:StartDate>2026-01-01</cbc:StartDate>
+		<cbc:EndDate>2026-12-31</cbc:EndDate>
+		<cbc:DescriptionCode>432</cbc:DescriptionCode>
+	</cac:InvoicePeriod>
+	<cac:OrderReference>
+		<cbc:ID>S2F4_REPORT</cbc:ID>
+		<cbc:SalesOrderID>LV0001</cbc:SalesOrderID>
+	</cac:OrderReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID schemeID="IT">REF_CLIENTC3</cbc:ID>
+		<cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+	</cac:AdditionalDocumentReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0225">100000009_STATUTS</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0088">2345678901234</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>NOM MATELAS</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>1 rue de paix</cbc:StreetName>
+				<cbc:AdditionalStreetName>ligne 2 vendeur</cbc:AdditionalStreetName>
+				<cbc:CityName>PARIS</cbc:CityName>
+				<cbc:PostalZone>75000</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>FR</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>FR99999999999</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>LEVENDEURC3</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0002">100000009</cbc:CompanyID>
+				<cbc:CompanyLegalForm>SARL AU CAPITAL DE 50 000 EUROS</cbc:CompanyLegalForm>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>MME CONTACT(DEP ADV)</cbc:Name>
+				<cbc:Telephone>01 02 03 04 05</cbc:Telephone>
+				<cbc:ElectronicMail>contact@vendeur.fr</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0211">IT00987654321</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0088">IT00987654321</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PostalAddress>
+				<cbc:StreetName>987654321</cbc:StreetName>
+				<cbc:AdditionalStreetName>METACORTEX</cbc:AdditionalStreetName>
+				<cbc:CityName>Scala Ritiro</cbc:CityName>
+				<cbc:PostalZone>98152</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>IT</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>IT00987654321</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>METACORTEX</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0002">200000008</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Contatto ACQUISTI(METACORTEX)</cbc:Name>
+				<cbc:Telephone>03465007753</cbc:Telephone>
+				<cbc:ElectronicMail>contatto-acquisti@metacortex.it</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:Delivery>
+		<cac:DeliveryLocation>
+			<cac:Address>
+				<cbc:StreetName>Via Francesco Crispi 226</cbc:StreetName>
+				<cbc:CityName>Palermo</cbc:CityName>
+				<cbc:PostalZone>90139</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>IT</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:Address>
+		</cac:DeliveryLocation>
+		<cac:DeliveryParty>
+			<cac:PartyName>
+				<cbc:Name>Nom</cbc:Name>
+			</cac:PartyName>
+		</cac:DeliveryParty>
+	</cac:Delivery>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode name="Chèque">20</cbc:PaymentMeansCode>
+		<cbc:PaymentID>F202500003_200000008</cbc:PaymentID>
+		<cac:PayeeFinancialAccount>
+			<cbc:ID>FR20 1254 2547 2569 8542 5874 698</cbc:ID>
+			<cbc:Name>MON COMPTE BANCAIRE</cbc:Name>
+			<cac:FinancialInstitutionBranch>
+				<cbc:ID>BIC1234567</cbc:ID>
+			</cac:FinancialInstitutionBranch>
+		</cac:PayeeFinancialAccount>
+	</cac:PaymentMeans>
+	<cac:PaymentTerms>
+		<cbc:Note>PAIEMENT 30 JOURS NET</cbc:Note>
+	</cac:PaymentTerms>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">0</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">400000.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">0</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID>E</cbc:ID>
+				<cbc:Percent>0</cbc:Percent>
+                <cbc:TaxExemptionReasonCode>VATEX-EU-151</cbc:TaxExemptionReasonCode>
+				<cbc:TaxExemptionReason>Exonération de TVA selon Art 262 du CGI. Vente dans l'UE</cbc:TaxExemptionReason>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">400000.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">400000.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">400000.00</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="EUR">0.00</cbc:AllowanceTotalAmount>
+		<cbc:ChargeTotalAmount currencyID="EUR">0.00</cbc:ChargeTotalAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="EUR">400000.00</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="NAR">15</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">400000.00</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Description>Bien 4</cbc:Description>
+			<cbc:Name>Ligne Facture4_Scenario2</cbc:Name>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>E</cbc:ID>
+				<cbc:Percent>0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">400000.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="NAR">15</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>
