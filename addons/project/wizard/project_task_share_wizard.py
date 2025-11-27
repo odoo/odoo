@@ -6,5 +6,5 @@ class TaskShareWizard(models.TransientModel):
     _inherit = ['portal.share']
     _description = 'Task Sharing'
 
-    task_id = fields.Many2one('project.task', default=lambda self: self.res_id)
+    task_id = fields.Many2one('project.task', default=lambda self: self.env.context.get('active_id'))
     project_privacy_visibility = fields.Selection(related='task_id.project_privacy_visibility')

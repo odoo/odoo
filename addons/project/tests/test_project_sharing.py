@@ -2,7 +2,7 @@
 
 from odoo.exceptions import AccessError
 from odoo.fields import Command, Domain
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, new_test_user
 from odoo.tools import mute_logger
 
 from .test_project_base import TestProjectCommon
@@ -660,3 +660,22 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard.action_send_mail()
         self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should still be a follower after sharing the project")
         self.assertEqual(len(project.message_follower_ids), 2, "number of followers should be 2")
+
+    def test_task_sharing_default_values(self):
+        self.task = self.env['project.task'].create({
+            'name': 'Test Share Task',
+        })
+        portal_user = new_test_user(self.env, login='portal-user', groups='base.group_portal')
+        self.wizard_ctx = {
+            "active_id": self.task.id,
+            "active_model": "project.task",
+        }
+        wizard = self.env['task.share.wizard'].with_context(self.wizard_ctx).create({
+            "partner_ids": [Command.set([portal_user.partner_id.id])]
+        })
+        self.assertEqual(wizard.res_id, self.task.id, "res_id should be set from context")
+        self.assertEqual(wizard.res_model, "project.task", "res_model should be set from context")
+        self.assertEqual(
+            wizard.task_id.id, self.task.id,
+            "task_id default must match active_id"
+        )
