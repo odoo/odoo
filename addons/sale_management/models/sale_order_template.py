@@ -89,13 +89,41 @@ class SaleOrderTemplate(models.Model):
     @api.constrains('company_id', 'sale_order_template_line_ids', 'sale_order_template_option_ids')
     def _check_company_id(self):
         for template in self:
-            companies = template.mapped('sale_order_template_line_ids.product_id.company_id') | template.mapped('sale_order_template_option_ids.product_id.company_id')
-            if len(companies) > 1:
-                raise ValidationError(_("Your template cannot contain products from multiple companies."))
-            elif companies and companies != template.company_id:
+            restricted_products = (
+                template.sale_order_template_line_ids.product_id
+                | template.sale_order_template_option_ids.product_id
+            ).filtered('company_id')
+            if not restricted_products:
+                continue
+
+            if not template.company_id:
                 raise ValidationError(_(
-                    "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n Please change the company of your template or remove the products from other companies.",
-                    product_company=', '.join(companies.mapped('display_name')),
+                    "Your template cannot contain products from specific companies if it's shared"
+                    " between companies. Please restrict the template access, or remove those"
+                    " products."
+                ))
+
+            authorized_products = restricted_products.filtered_domain(
+                self.env['product.product']._check_company_domain(template.company_id)
+            )
+            if unauthorized_products := restricted_products - authorized_products:
+                unaccessible_companies = unauthorized_products.company_id
+                if len(unaccessible_companies) > 1:
+                    raise ValidationError(_(
+                        "Your template belongs to company %(template_company)s but contains"
+                        " products from other companies (%(product_company)s) that are not"
+                        " accessible to %(template_company)s.\nPlease change the company of your"
+                        " template or remove the products from other companies.",
+                        product_company=', '.join(unaccessible_companies.mapped('display_name')),
+                        template_company=template.company_id.display_name,
+                    ))
+
+                raise ValidationError(_(
+                    "Your template belongs to company %(template_company)s but contains"
+                    " products from company (%(product_company)s) that are not"
+                    " accessible to %(template_company)s.\nPlease change the company of your"
+                    " template or remove the products from other companies.",
+                    product_company=unaccessible_companies.display_name,
                     template_company=template.company_id.display_name,
                 ))
 
