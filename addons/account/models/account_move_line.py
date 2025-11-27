@@ -1959,12 +1959,15 @@ class AccountMoveLine(models.Model):
         if domain.is_false():
             return {}
 
+        query_line = self._search(domain, limit=1)
+        query_line.add_where('account_account.id = account_move_line.account_id')
+
         # Override in order to not read the complete move line table and use the index instead
         query_account = self.env['account.account']._search([
             ('company_ids', 'in', self.env.companies.ids),
             ('code', '!=', False),
-            ('line_ids', 'any', domain),
         ])
+        query_account.add_where(SQL('EXISTS(%s)', query_line.select()))
         account_codes = self.env.execute_query(query_account.select(SQL("DISTINCT %s", query_account.table.code)))
         return {
             (root := self.env['account.root']._from_account_code(code)).id: {'id': root.id, 'display_name': root.display_name}
