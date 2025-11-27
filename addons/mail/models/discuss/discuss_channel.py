@@ -537,7 +537,10 @@ class DiscussChannel(models.Model):
                 'guest_id': guest.id,
                 'channel_id': channel.id,
             } for guest in guests - existing_members.guest_id]
-            new_members = self.env['discuss.channel.member'].create(members_to_create)
+            if channel.parent_channel_id and channel.parent_channel_id.has_access("write"):
+                new_members = self.env["discuss.channel.member"].sudo().create(members_to_create)
+            else:
+                new_members = self.env["discuss.channel.member"].create(members_to_create)
             all_new_members += new_members
             for member in new_members:
                 payload = {
