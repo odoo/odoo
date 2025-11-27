@@ -37,7 +37,6 @@ declare module "models" {
     }
     export interface Thread {
         allowCalls: Readonly<boolean>;
-        allowDescription: Readonly<boolean>;
         allowedToLeaveChannelTypes: Readonly<string[]>;
         allowedToUnpinChannelTypes: Readonly<string[]>;
         avatar_cache_key: string;
