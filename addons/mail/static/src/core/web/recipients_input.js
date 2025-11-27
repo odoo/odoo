@@ -228,21 +228,8 @@ export class RecipientsInput extends Component {
         });
     }
 
-    /**
-     * @param {SuggestedRecipient} recipient
-     * @returns {boolean}
-     */
-    hasRecipient(recipient) {
-        return this.getAllMailThreadRecipients().some(
-            (current) => current.email === recipient.email
-        );
-    }
-
     /** @param {SuggestedRecipient} recipient */
     insertAdditionalRecipient(recipient) {
-        if (this.hasRecipient(recipient)) {
-            return;
-        }
         this.props.thread.additionalRecipients.push(recipient);
     }
 
