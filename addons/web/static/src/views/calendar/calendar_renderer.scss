@@ -362,17 +362,6 @@
                 }
             }
 
-            .fc-timegrid-event-harness-inset{
-                transition: right .3s, left .3s;
-
-                &:has(.fc-event.o_cw_custom_highlight:not(.fc-dragging)) {
-                    z-index: $zindex-modal !important;
-                    right: 0 !important;
-                    left: 0 !important;
-                    margin-right: 0 !important;
-                }
-            }
-
             // Avoid pointer event on the "Now Indicator" (red line)
             .fc-timegrid-now-indicator-line {
                 pointer-events: none;
