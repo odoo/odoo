@@ -11,6 +11,11 @@ def _pre_init_pdp(env):
         create_column(env.cr, "account_move", "pdp_ppf_lifecycle_state", "varchar")
         create_column(env.cr, "account_move", "pdp_lifecycle_residual", "numeric")
         create_column(env.cr, "account_peppol_response", "pdp_ppf_state", "varchar")
+        create_column(env.cr, "account_move", "l10n_fr_pdp_last_flow_id", "int4")
+        create_column(env.cr, "account_move", "l10n_fr_pdp_status", "varchar")
+        create_column(env.cr, "account_move", "l10n_fr_pdp_flow_10_report_type", "varchar")
+        create_column(env.cr, "account_move", "l10n_fr_pdp_flow_10_operation_type", "varchar")
+        create_column(env.cr, "account_move", "l10n_fr_pdp_has_error", "bool")
 
 
 def _post_init_pdp(env):
