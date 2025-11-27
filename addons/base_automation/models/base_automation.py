@@ -29,6 +29,13 @@ DOMAIN_FIELDS_RE = re.compile(r"""
 """, re.VERBOSE)
 
 
+def job_log_level(status, duration):
+    return (logging.ERROR if status != 'done'
+        else logging.WARNING if duration > 1
+        else logging.INFO if duration > .1
+        else logging.DEBUG)
+
+
 def _get_domain_fields(env, model, domain):
     IrModelFields = env["ir.model.fields"]
     if not domain:
@@ -828,11 +835,7 @@ class BaseAutomation(models.Model):
                 # log the action duration; also store it for dumpstacks
                 duration = time.monotonic() - last_stopwatches.pop()[1]
                 stopwatches[self.id] = stopwatches.get(self.id, 0) + duration
-                del self.env.cr.cache['base_automation_last_stopwatch']
-                level = (logging.ERROR if status != 'done'
-                    else logging.WARNING if duration > 1
-                    else logging.INFO if duration > .1
-                    else logging.DEBUG)
+                level = job_log_level(status, duration)
                 _logger.log(level, "%s %r (%s) %s (%s; %s/%s records; duration %.3fs)",
                     self._description, self.sudo().name, self.id,
                     status, trigger, record_no, len(records), duration)
