@@ -2,7 +2,7 @@ import { test } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { clickCheckbox, pasteHtml } from "../_helpers/user_actions";
-import { click } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 
 test("should do nothing if do not click on the checkbox", async () => {
     await testEditor({
@@ -86,6 +86,38 @@ test("should uncheck an empty item", async () => {
         contentAfter: unformat(`
             <ul class="o_checklist">
                 <li class="o_checked">[]<br></li>
+            </ul>`),
+    });
+});
+
+test("tripleclick on checkbox should not select the list content", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <ul class="o_checklist">
+                <li>test</li>
+            </ul>`),
+        stepFunction: async (editor) => {
+            const li = editor.editable.querySelector("li");
+            const { top, left } = li.getBoundingClientRect();
+            await manuallyDispatchProgrammaticEvent(li, "mousedown", {
+                detail: 3,
+                clientX: left - 10,
+                clientY: top + 10,
+            });
+            await manuallyDispatchProgrammaticEvent(li, "mouseup", {
+                detail: 3,
+                clientX: left - 10,
+                clientY: top + 10,
+            });
+            await manuallyDispatchProgrammaticEvent(li, "click", {
+                detail: 3,
+                clientX: left - 10,
+                clientY: top + 10,
+            });
+        },
+        contentAfter: unformat(`
+            <ul class="o_checklist">
+                <li class="o_checked">[]test</li>
             </ul>`),
     });
 });
