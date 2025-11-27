@@ -139,21 +139,21 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries([
             """
             SELECT
-                GROUPING("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                "test_read_group_task__user_ids"."user_id",
+                GROUPING("test_read_group_task__user_ids__rel"."user_id", "test_read_group_task"."key"),
+                "test_read_group_task__user_ids__rel"."user_id",
                 "test_read_group_task"."key",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
                 COUNT(*),
                 SUM("test_read_group_task"."integer")
             FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids" ON (
-                    "test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id"
+                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids__rel" ON (
+                    "test_read_group_task"."id" = "test_read_group_task__user_ids__rel"."task_id"
                 )
             WHERE "test_read_group_task"."id" IN %s
             GROUP BY GROUPING SETS (
-                ("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                ("test_read_group_task__user_ids"."user_id"))
-            ORDER BY "test_read_group_task__user_ids"."user_id" ASC,
+                ("test_read_group_task__user_ids__rel"."user_id", "test_read_group_task"."key"),
+                ("test_read_group_task__user_ids__rel"."user_id"))
+            ORDER BY "test_read_group_task__user_ids__rel"."user_id" ASC,
                 "test_read_group_task"."key" ASC
             """,
             """
@@ -186,21 +186,21 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries([
             """
             SELECT
-                GROUPING("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                "test_read_group_task__user_ids"."user_id",
+                GROUPING("test_read_group_task__user_ids__rel"."user_id", "test_read_group_task"."key"),
+                "test_read_group_task__user_ids__rel"."user_id",
                 "test_read_group_task"."key",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
                 COUNT(*),
                 SUM("test_read_group_task"."integer")
             FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids" ON (
-                    "test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id"
+                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids__rel" ON (
+                    "test_read_group_task"."id" = "test_read_group_task__user_ids__rel"."task_id"
                 )
             WHERE "test_read_group_task"."id" IN %s
             GROUP BY GROUPING SETS (
-                ("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                ("test_read_group_task__user_ids"."user_id"))
-            ORDER BY "test_read_group_task__user_ids"."user_id" DESC,
+                ("test_read_group_task__user_ids__rel"."user_id", "test_read_group_task"."key"),
+                ("test_read_group_task__user_ids__rel"."user_id"))
+            ORDER BY "test_read_group_task__user_ids__rel"."user_id" DESC,
                 "test_read_group_task"."key" ASC
             """,
             """

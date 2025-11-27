@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.models import TableSQL
 from odoo.tools import SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
 
@@ -66,7 +67,6 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         # to be able to reduce the number of treated records in the query by limiting them to the one corresponding to
         # the ids that are returned from this sub query.
         project_task_query = self.env['project.task']._search(task_specific_domain, **kwargs)
-        self.env.flush_query(project_task_query.subselect())
 
         # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join
         # on `ir_model_fields` table.
@@ -79,7 +79,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         interval = date_groupby.split(':')[1]
         sql_interval = '1 %s' % interval if interval != 'quarter' else '3 month'
 
-        simple_date_groupby_sql = self._read_group_groupby('project_task_burndown_chart_report', f"date:{interval}", main_query)
+        simple_date_groupby_sql = self._read_group_groupby(TableSQL('project_task_burndown_chart_report', self, main_query), f"date:{interval}")
         # Removing unexistant table name from the expression
         simple_date_groupby_sql = self.env.cr.mogrify(simple_date_groupby_sql).decode()
         simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
@@ -237,10 +237,10 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         non_task_specific_domain = filter_domain_leaf(domain, lambda field: field not in self.task_specific_fields)
         return non_task_specific_domain, task_specific_domain
 
-    def _read_group_select(self, aggregate_spec, query):
+    def _read_group_select(self, table, aggregate_spec):
         if aggregate_spec == '__count':
             return SQL("SUM(%s)", SQL.identifier(self._table, '__count'))
-        return super()._read_group_select(aggregate_spec, query)
+        return super()._read_group_select(table, aggregate_spec)
 
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         self._validate_group_by(groupby)

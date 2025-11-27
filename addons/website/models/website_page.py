@@ -240,38 +240,26 @@ class WebsitePage(models.Model):
         most_specific_pages = self.env['website']._get_website_pages(
             domain=base_domain, order=order
         )
-        results = most_specific_pages.filtered_domain(domain)  # already sudo
-        v_arch_db = self.env['ir.ui.view']._field_to_sql('v', 'arch_db')
 
         if with_description and search and most_specific_pages:
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
-            rows = self.env.execute_query(SQL(
-                """
-                SELECT DISTINCT %(table)s.id
-                FROM %(table)s
-                LEFT JOIN ir_ui_view v ON %(table)s.view_id = v.id
-                WHERE (v.name ILIKE %(search)s
-                OR %(v_arch_db)s ILIKE %(search)s)
-                AND %(table)s.id IN %(ids)s
-                LIMIT %(limit)s
-                """,
-                table=SQL.identifier(self._table),
-                search=f"%{escape_psql(search)}%",
-                v_arch_db=v_arch_db,
-                ids=tuple(most_specific_pages.ids),
-                limit=len(most_specific_pages.ids),
-            ))
-            ids = {row[0] for row in rows}
-            if ids:
-                ids.update(results.ids)
-                domain = base_domain & Domain('id', 'in', ids)
-                model = self.sudo() if search_detail.get('requires_sudo') else self
-                results = model.search(
-                    domain,
-                    limit=len(ids),
-                    order=search_detail.get('order', order)
+            custom_view_domain = Domain.custom(
+                to_sql=lambda table: SQL(
+                    "%(name)s ILIKE %(search)s OR %(arch_db)s ILIKE %(search)s",
+                    name=table.name,
+                    arch_db=table.arch_db,
+                    search=f"%{escape_psql(search)}%",
                 )
+            )
+            # most_specific_pages is already filtered and ordered
+            pages = self.sudo().with_context(active_test=False).search(
+                Domain('view_id', 'any', custom_view_domain)
+                & Domain('id', 'in', most_specific_pages.ids)
+            )
+            # just update the domain for filtering
+            domain |= Domain('id', 'in', pages.ids)
+        results = most_specific_pages.filtered_domain(domain)  # already sudo
 
         def filter_page(search, page, all_pages):
             # Exclude pages that do not pass ACL.

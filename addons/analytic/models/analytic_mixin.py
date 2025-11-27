@@ -4,7 +4,6 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.models import Query
 from odoo.tools import SQL, unique
 from odoo.tools.float_utils import float_compare, float_round
 
@@ -95,28 +94,29 @@ class AnalyticMixin(models.AbstractModel):
         # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
         ids = [str(id_) for id_ in ids if id_]  # list of ids -> list of string
         if operator == 'in':
-            return Domain.custom(to_sql=lambda model, alias, query: SQL(
+            return Domain.custom(to_sql=lambda table: SQL(
                 "%s && %s",
-                self._query_analytic_accounts(alias),
+                self._query_analytic_accounts(table._alias),
                 ids,
             ))
         else:
-            return Domain.custom(to_sql=lambda model, alias, query: SQL(
+            return Domain.custom(to_sql=lambda table: SQL(
                 "(NOT %s && %s OR %s IS NULL)",
-                self._query_analytic_accounts(alias),
+                self._query_analytic_accounts(table._alias),
                 ids,
-                model._field_to_sql(alias, 'analytic_distribution', query),
+                table.analytic_distribution,
             ))
 
-    def _read_group_groupby(self, alias: str, groupby_spec: str, query: Query) -> SQL:
+    def _read_group_groupby(self, table, groupby_spec) -> SQL:
         """To group by `analytic_distribution`, we first need to separate the analytic_ids and associate them with the ids to be counted
         Do note that only '__count' can be passed in the `aggregates`"""
         if groupby_spec == 'analytic_distribution':
+            query = table._query
             query._joins = {
                 'distribution': (SQL(), SQL(
                     r"""(SELECT DISTINCT %s, (regexp_matches(jsonb_object_keys(%s), '\d+', 'g'))[1]::int AS account_id FROM %s WHERE %s)""",
                     self._get_count_id(query),
-                    self._field_to_sql(self._table, 'analytic_distribution', query),
+                    table.analytic_distribution,
                     query.from_clause,
                     query.where_clause,
                 ), SQL())
@@ -126,23 +126,22 @@ class AnalyticMixin(models.AbstractModel):
             query._where_clauses = []
             return SQL("account_id")
 
-        return super()._read_group_groupby(alias, groupby_spec, query)
+        return super()._read_group_groupby(table, groupby_spec)
 
-    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
-        if query.table == 'distribution' and aggregate_spec != '__count':
+    def _read_group_select(self, table, aggregate_spec: str) -> SQL:
+        if table._alias == 'distribution' and aggregate_spec != '__count':
             raise ValueError(f"analytic_distribution grouping does not accept {aggregate_spec} as aggregate.")
-        return super()._read_group_select(aggregate_spec, query)
+        return super()._read_group_select(table, aggregate_spec)
 
     def _get_count_id(self, query):
-        ids = {
-            'account_move_line': "move_id",
-            'purchase_order_line': "order_id",
-            'account_asset': "id",
-            'hr_expense': "id",
-        }
-        if query.table not in ids:
-            raise ValueError(f"{query.table} does not support analytic_distribution grouping.")
-        return SQL(ids.get(query.table))
+        match query.table._alias:
+            case 'account_move_line':
+                return SQL('move_id')
+            case 'purchase_order_line':
+                return SQL('order_id')
+            case 'account_asset' | 'hr_expense':
+                return SQL('id')
+        raise ValueError(f"{query.table._alias} does not support analytic_distribution grouping.")
 
     def filtered_domain(self, domain):
         # Filter based on the accounts used (i.e. allowing a name_search) instead of the distribution

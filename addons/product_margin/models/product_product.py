@@ -54,12 +54,12 @@ class ProductProduct(models.Model):
         'total_margin', 'expected_margin', 'total_margin_rate', 'expected_margin_rate',
     )}
 
-    def _read_group_select(self, aggregate_spec, query):
+    def _read_group_select(self, table, aggregate_spec):
         # the purpose of this override is to flag the aggregates above as such:
         # field._description_aggregator() should simply not fail
         if aggregate_spec in self._SPECIAL_SUM_AGGREGATES:
             return SQL()
-        return super()._read_group_select(aggregate_spec, query)
+        return super()._read_group_select(table, aggregate_spec)
 
     @api.model
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):

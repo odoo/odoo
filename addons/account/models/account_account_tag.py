@@ -41,31 +41,30 @@ class AccountAccountTag(models.Model):
         self.check_access('read')
         query = self._as_query(ordered=False)
         id2expression = {tag_id: vals for tag_id, *vals in self.env.execute_query(query.select(
-            SQL.identifier(query.table, 'id'),
-            self._field_to_sql(query.table, 'report_expression_id', query),
-            self._field_to_sql(query.table, 'balance_negate', query),
+            query.table.id,
+            query.table.report_expression_id,
+            query.table.balance_negate,
         ))}
         for tag in self:
             tag.report_expression_id, tag.balance_negate = id2expression.get(tag._origin.id, (False, False))
 
-    def _compute_sql_report_expression_id(self, alias, query):
-        rhs_alias = query.make_alias(alias, 'expression')
-        query.add_join(
-            kind='LEFT JOIN',
-            alias=rhs_alias,
-            table='account_report_expression',
-            condition=SQL(
+    def _join_report_expression(self, table):
+        expr_t = table._make_alias('expression', self.env['account.report.expression'])
+        table._query.add_join(
+            'LEFT JOIN', expr_t, None, SQL(
                 "%s->>'en_US' = LTRIM(%s, '-')",
-                SQL.identifier(alias, 'name'),
-                SQL.identifier(rhs_alias, 'formula'),
+                SQL.identifier(table._alias, 'name'),
+                expr_t.formula,
             ),
         )
-        return SQL.identifier(rhs_alias, 'id')
+        return expr_t
 
-    def _compute_sql_balance_negate(self, alias, query):
-        self._compute_sql_report_expression_id(alias, query)  # generate the join
-        rhs_alias = query.make_alias(alias, 'expression')
-        return SQL("STARTS_WITH(%s, '-')", SQL.identifier(rhs_alias, 'formula'))
+    def _compute_sql_report_expression_id(self, table):
+        return self._join_report_expression(table).id
+
+    def _compute_sql_balance_negate(self, table):
+        expr_t = self._join_report_expression(table)
+        return SQL("STARTS_WITH(%s, '-')", expr_t.formula)
 
     @api.model_create_multi
     def create(self, vals_list):

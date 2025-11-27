@@ -66,7 +66,7 @@ from odoo.exceptions import UserError
 from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
 from .identifiers import NewId
-from .query import Query
+from .query import Query, TableSQL
 from .utils import COLLECTION_TYPES, parse_field_expr
 
 if typing.TYPE_CHECKING:
@@ -286,7 +286,7 @@ class Domain:
     @staticmethod
     def custom(
         *,
-        to_sql: Callable[[BaseModel, str, Query], SQL],
+        to_sql: Callable[[TableSQL], SQL],
         predicate: Callable[[BaseModel], bool] | None = None,
     ) -> DomainCustom:
         """Create a custom domain.
@@ -469,7 +469,7 @@ class Domain:
         """Implementation of domain for one level of optimizations."""
         return self
 
-    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+    def _to_sql(self, table: TableSQL) -> SQL:
         """Build the SQL to inject into the query.  The domain should be optimized first."""
         raise NotImplementedError
 
@@ -521,7 +521,7 @@ class DomainBool(Domain):
     def _as_predicate(self, records):
         return lambda _: self.value
 
-    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+    def _to_sql(self, table: TableSQL) -> SQL:
         return SQL("TRUE") if self.value else SQL("FALSE")
 
 
@@ -570,9 +570,8 @@ class DomainNot(Domain):
         predicate = self.child._as_predicate(records)
         return lambda rec: not predicate(rec)
 
-    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
-        condition = self.child._to_sql(model, alias, query)
-        return SQL("(%s) IS NOT TRUE", condition)
+    def _to_sql(self, table: TableSQL) -> SQL:
+        return SQL("(%s) IS NOT TRUE", self.child._to_sql(table))
 
 
 class DomainNary(Domain):
@@ -679,10 +678,9 @@ class DomainNary(Domain):
                     return self
         return self.apply(children)
 
-    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+    def _to_sql(self, table: TableSQL) -> SQL:
         return SQL("(%s)", self.OPERATOR_SQL.join(
-            c._to_sql(model, alias, query)
-            for c in self.children
+            child._to_sql(table) for child in self.children
         ))
 
 
@@ -755,7 +753,7 @@ class DomainCustom(Domain):
 
     def __new__(
         cls,
-        sql: Callable[[BaseModel, str, Query], SQL],
+        sql: Callable[[TableSQL], SQL],
         filtered: Callable[[BaseModel], bool] | None = None,
     ):
         """Create a new domain.
@@ -791,8 +789,8 @@ class DomainCustom(Domain):
     def __iter__(self):
         yield self
 
-    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
-        return self._sql(model, alias, query)
+    def _to_sql(self, table: TableSQL) -> SQL:
+        return self._sql(table)
 
 
 class DomainCondition(Domain):
@@ -989,7 +987,11 @@ class DomainCondition(Domain):
 
     def _optimize_field_search_method(self, model: BaseModel) -> Domain:
         field = self._field(model)
-        model._check_field_access(field, 'read')
+        if not model.env.su:
+            model._check_field_access(field, 'read')
+            if field.compute_sudo:
+                # run search in sudo because the compute is done in sudo as well
+                model = model.sudo()
         operator, value = self.operator, self.value
         # use the `Field.search` function
         original_exception = None
@@ -1089,16 +1091,17 @@ class DomainCondition(Domain):
         func = field.filter_function(records, field_expr, positive_operator, value)
         return func if positive_operator == operator else lambda rec: not func(rec)
 
-    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+    def _to_sql(self, table: TableSQL) -> SQL:
         field_expr, operator, value = self.field_expr, self.operator, self.value
         assert operator in STANDARD_CONDITION_OPERATORS, \
             f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
         assert self._opt_level >= OptimizationLevel.FULL, \
             f"Must fully optimize before generating the query {(field_expr, operator, value)}"
 
+        model = table._model
         field = self._field(model)
         model._check_field_access(field, 'read')
-        return field.condition_to_sql(field_expr, operator, value, model, alias, query)
+        return field.condition_to_sql(table, field_expr, operator, value)
 
 
 # --------------------------------------------------

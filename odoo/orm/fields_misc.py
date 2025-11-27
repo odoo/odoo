@@ -12,8 +12,7 @@ from .fields import Field
 from .identifiers import IdType
 
 if typing.TYPE_CHECKING:
-    from .models import BaseModel
-    from .query import Query
+    from .query import TableSQL
 
 # integer needs to be imported before Id because of `type` attribute clash
 from . import fields_numeric  # noqa: F401
@@ -34,12 +33,12 @@ class Boolean(Field[bool]):
     def convert_to_export(self, value, record):
         return bool(value)
 
-    def _condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def _condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         if operator not in ('in', 'not in'):
-            return super()._condition_to_sql(field_expr, operator, value, model, alias, query)
+            return super()._condition_to_sql(table, field_expr, operator, value)
 
         # get field and check access
-        sql_field = model._field_to_sql(alias, field_expr, query)
+        sql_field = table[field_expr]
 
         # express all conditions as (field_expr, 'in', possible_values)
         possible_values = (
@@ -119,11 +118,11 @@ class Id(Field[IdType | typing.Literal[False]]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return value
 
-    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
+    def to_sql(self, table: TableSQL) -> SQL:
         # do not flush, just return the identifier
         assert self.store, 'id field must be stored'
         # id is never flushed
-        return SQL.identifier(alias, self.name)
+        return SQL.identifier(table._alias, self.name)
 
     def expression_getter(self, field_expr):
         if field_expr != 'id.origin':

@@ -6,11 +6,11 @@ import enum
 import json
 import logging
 import re
+import typing
 from binascii import crc32
 from collections import defaultdict
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from odoo.fields import Field
     from collections.abc import Iterable
 
@@ -31,7 +31,7 @@ __all__ = [
 
 _schema = logging.getLogger('odoo.schema')
 
-IDENT_RE = re.compile(r'^[a-z0-9_][a-z0-9_$\-]*$', re.I)
+IDENT_RE = re.compile(r'^[a-z0-9_][a-z0-9_$\-]*$', re.IGNORECASE)
 
 _CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -42,7 +42,18 @@ _CONFDELTYPES = {
 }
 
 
-class SQL:
+class _SQLMeta(type):
+    @staticmethod
+    def identifier(name: str, subname: str | None = None, to_flush: Field | None = None) -> SQL:
+        """ Return an SQL object that represents an identifier. """
+        assert name.isidentifier() or IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
+        if subname is None:
+            return SQL(f'"{name}"', to_flush=to_flush)
+        assert subname.isidentifier() or IDENT_RE.match(subname), f"{subname!r} invalid for SQL.identifier()"
+        return SQL(f'"{name}"."{subname}"', to_flush=to_flush)
+
+
+class SQL(metaclass=_SQLMeta):
     """ An object that wraps SQL code with its parameters, like::
 
         sql = SQL("UPDATE TABLE foo SET a = %s, b = %s", 'hello', 42)
@@ -63,35 +74,57 @@ class SQL:
             SQL("%s = %s", SQL.identifier(columnname), value),
         )
 
-    The combined SQL code is given by ``sql.code``, while the corresponding
-    combined parameters are given by the list ``sql.params``. This allows to
-    combine any number of SQL terms without having to separately combine their
-    parameters, which can be tedious, bug-prone, and is the main downside of
-    `psycopg2.sql <https://www.psycopg.org/docs/sql.html>`.
+    The combined result is available in ``_sql_tuple`` which contains ``code``,
+    ``params``, ``to_flush``. This allows to combine any number of SQL terms
+    without having to separately combine their parameters, which can be tedious,
+    bug-prone, and is the main downside of `psycopg2.sql
+    <https://www.psycopg.org/docs/sql.html>`.
+    The metadata ``to_flush`` contains fields on which the SQL code depends on.
 
     The second purpose of the wrapper is to discourage SQL injections. Indeed,
     if ``code`` is a string literal (not a dynamic string), then the SQL object
     made with ``code`` is guaranteed to be safe, provided the SQL objects
     within its parameters are themselves safe.
-
-    The wrapper may also contain some metadata ``to_flush``.  If not ``None``,
-    its value is a field which the SQL code depends on.  The metadata of a
-    wrapper and its parts can be accessed by the iterator ``sql.to_flush``.
     """
-    __slots__ = ('__code', '__params', '__to_flush')
+    __slots__ = ()
 
-    __code: str
-    __params: tuple
-    __to_flush: tuple[Field, ...]
+    @typing.overload
+    def __new__[T: SQL](cls: type[T], *a, **kw) -> T:
+        ...
 
-    # pylint: disable=keyword-arg-before-vararg
-    def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
+    @typing.overload
+    def __new__(cls: type[SQL], code: typing.LiteralString | SQL, /, *args, to_flush: Field | Iterable[Field] | None = None, **kw) -> LiteralSQL:
+        ...
+
+    def __new__(cls, *a, **kw):
+        if cls is SQL:
+            cls = LiteralSQL  # noqa: PLW0642
+        return object.__new__(cls)
+
+    _sql_tuple: tuple[str, tuple, tuple[Field, ...]]
+    """ The tuple used to execute the query: (code, params, to_flush) """
+
+    def __eq__(self, other):
+        if not isinstance(other, SQL):
+            return False
+        return self._sql_tuple[:2] == other._sql_tuple[:2]
+
+    def __hash__(self):
+        return hash(self._sql_tuple[:2])
+
+    def __bool__(self):
+        return bool(self._sql_tuple[0])
+
+
+class LiteralSQL(SQL):
+    __slots__ = ('__sql_tuple',)
+    __sql_tuple: tuple[str, tuple, tuple[Field, ...]]
+
+    def __init__(self, code: typing.LiteralString | SQL = "", /, *args, to_flush: Field | Iterable[Field] | None = None, **kwargs):
         if isinstance(code, SQL):
             if args or kwargs or to_flush:
                 raise TypeError("SQL() unexpected arguments when code has type SQL")
-            self.__code = code.__code
-            self.__params = code.__params
-            self.__to_flush = code.__to_flush
+            self.__sql_tuple = code._sql_tuple
             return
 
         # validate the format of code and parameters
@@ -102,14 +135,13 @@ class SQL:
             code, args = named_to_positional_printf(code, kwargs)
         elif not args:
             code % ()  # check that code does not contain %s
-            self.__code = code
-            self.__params = ()
             if to_flush is None:
-                self.__to_flush = ()
+                to_flush = ()
             elif hasattr(to_flush, '__iter__'):
-                self.__to_flush = tuple(to_flush)
+                to_flush = tuple(to_flush)
             else:
-                self.__to_flush = (to_flush,)
+                to_flush = (to_flush,)
+            self.__sql_tuple = (code, (), to_flush)
             return
 
         code_list = []
@@ -117,9 +149,10 @@ class SQL:
         to_flush_list = []
         for arg in args:
             if isinstance(arg, SQL):
-                code_list.append(arg.__code)
-                params_list.extend(arg.__params)
-                to_flush_list.extend(arg.__to_flush)
+                arg_code, arg_params, arg_to_flush = arg._sql_tuple
+                code_list.append(arg_code)
+                params_list.extend(arg_params)
+                to_flush_list.extend(arg_to_flush)
             else:
                 code_list.append("%s")
                 params_list.append(arg)
@@ -129,38 +162,19 @@ class SQL:
             else:
                 to_flush_list.append(to_flush)
 
-        self.__code = code.replace('%%', '%%%%') % tuple(code_list)
-        self.__params = tuple(params_list)
-        self.__to_flush = tuple(to_flush_list)
+        code = code.replace('%%', '%%%%') % tuple(code_list)
+        params = tuple(params_list)
+        to_flush = tuple(to_flush_list)
+        self.__sql_tuple = (code, params, to_flush)
 
     @property
-    def code(self) -> str:
-        """ Return the combined SQL code string. """
-        return self.__code
-
-    @property
-    def params(self) -> list:
-        """ Return the combined SQL code params as a list of values. """
-        return list(self.__params)
-
-    @property
-    def to_flush(self) -> Iterable[Field]:
-        """ Return an iterator on the fields to flush in the metadata of
-        ``self`` and all of its parts.
-        """
-        return self.__to_flush
+    def _sql_tuple(self):
+        # property makes the attribute read-only
+        return self.__sql_tuple
 
     def __repr__(self):
-        return f"SQL({', '.join(map(repr, [self.__code, *self.__params]))})"
-
-    def __bool__(self):
-        return bool(self.__code)
-
-    def __eq__(self, other):
-        return isinstance(other, SQL) and self.__code == other.__code and self.__params == other.__params
-
-    def __hash__(self):
-        return hash((self.__code, self.__params))
+        code, params, _ = self.__sql_tuple
+        return f"SQL({', '.join(map(repr, [code, *params]))})"
 
     def join(self, args: Iterable) -> SQL:
         """ Join SQL objects or parameters with ``self`` as a separator. """
@@ -170,22 +184,14 @@ class SQL:
             return SQL()
         if len(args) == 1 and isinstance(args[0], SQL):
             return args[0]
-        if not self.__params:
-            return SQL(self.__code.join("%s" for arg in args), *args)
+        code, params, to_flush = self.__sql_tuple
+        if not params:
+            return SQL(code.join(("%s",) * len(args)), *args, to_flush=to_flush)
         # general case: alternate args with self
         items = [self] * (len(args) * 2 - 1)
         for index, arg in enumerate(args):
             items[index * 2] = arg
         return SQL("%s" * len(items), *items)
-
-    @classmethod
-    def identifier(cls, name: str, subname: (str | None) = None, to_flush: (Field | None) = None) -> SQL:
-        """ Return an SQL object that represents an identifier. """
-        assert name.isidentifier() or IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
-        if subname is None:
-            return cls(f'"{name}"', to_flush=to_flush)
-        assert subname.isidentifier() or IDENT_RE.match(subname), f"{subname!r} invalid for SQL.identifier()"
-        return cls(f'"{name}"."{subname}"', to_flush=to_flush)
 
 
 def existing_tables(cr, tablenames):
@@ -595,7 +601,7 @@ def add_index(cr, indexname, tablename, definition, *, unique: bool, comment='')
     cr.execute(query, log_exceptions=False)
     if query_comment:
         cr.execute(query_comment, log_exceptions=False)
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
+    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition)
 
 
 def drop_index(cr, indexname, tablename):

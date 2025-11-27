@@ -8,7 +8,6 @@ from odoo.orm.models import (
     LOG_ACCESS_COLUMNS,
     MAGIC_COLUMNS,
     READ_GROUP_DISPLAY_FORMAT,
-    READ_GROUP_NUMBER_GRANULARITY,
     AbstractModel,
     BaseModel,
     MetaModel,
@@ -22,9 +21,10 @@ from odoo.orm.models import (
 )
 from odoo.orm.model_classes import is_model_class, is_model_definition
 from odoo.orm.models_transient import TransientModel
-from odoo.orm.query import Query
+from odoo.orm.query import Query, TableSQL
 from odoo.orm.table_objects import Constraint, Index, UniqueIndex
 from odoo.orm.utils import (
+    READ_GROUP_NUMBER_GRANULARITY,
     READ_GROUP_TIME_GRANULARITY,
     check_object_name,
     check_pg_name,

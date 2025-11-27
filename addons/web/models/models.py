@@ -1274,29 +1274,27 @@ class Base(models.AbstractModel):
             return formatter_property_tags
 
         if property_type in ('date', 'datetime'):
+            interval = READ_GROUP_TIME_GRANULARITY[func]
+            # Date / Datetime are not JSONifiable, so they are stored as raw text
+            fmt = DEFAULT_SERVER_DATE_FORMAT if property_type == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
             def formatter_property_datetime(value):
                 if not value:
                     return False, Domain(fullname, '=', False)
 
-                # Date / Datetime are not JSONifiable, so they are stored as raw text
-                db_format = '%Y-%m-%d' if property_type == 'date' else '%Y-%m-%d %H:%M:%S'
-                fmt = DEFAULT_SERVER_DATE_FORMAT if property_type == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
-
                 if func == 'week':
                     # the value is the first day of the week (based on local)
-                    start = value.strftime(db_format)
-                    end = (value + datetime.timedelta(days=7)).strftime(db_format)
+                    start = value
                 else:
-                    start = (date_utils.start_of(value, func)).strftime(db_format)
-                    end = (date_utils.end_of(value, func) + datetime.timedelta(minutes=1)).strftime(db_format)
+                    start = date_utils.start_of(value, func)
+                end = start + interval
 
                 label = babel.dates.format_date(
                     value,
                     format=READ_GROUP_DISPLAY_FORMAT[func],
                     locale=get_lang(self.env).code,
                 )
-                return (value.strftime(fmt), label), Domain(fullname, '>=', start) & Domain(fullname, '<', end)
+                return (value.strftime(fmt), label), Domain(fullname, '>=', start.strftime(fmt)) & Domain(fullname, '<', end.strftime(fmt))
 
             return formatter_property_datetime
 

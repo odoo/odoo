@@ -135,22 +135,15 @@ class DiscussChannelMember(models.Model):
         if operator != 'in':
             return NotImplemented
 
-        def custom_pinned(model: models.BaseModel, alias, query):
-            channel_model = model.browse().channel_id
-            channel_alias = query.make_alias(alias, 'channel_id')
-            query.add_join("LEFT JOIN", channel_alias, channel_model._table, SQL(
-                "%s = %s",
-                model._field_to_sql(alias, 'channel_id'),
-                channel_model._field_to_sql(channel_alias, 'id'),
-            ))
+        def custom_pinned(table):
             return SQL(
                 """(%(unpin)s IS NULL
                     OR %(last_interest)s >= %(unpin)s
                     OR %(channel_last_interest)s >= %(unpin)s
                 )""",
-                unpin=model._field_to_sql(alias, "unpin_dt", query),
-                last_interest=model._field_to_sql(alias, "last_interest_dt", query),
-                channel_last_interest=channel_model._field_to_sql(channel_alias, "last_interest_dt", query),
+                unpin=table.unpin_dt,
+                last_interest=table.last_interest_dt,
+                channel_last_interest=table.channel_id.last_interest_dt,
             )
 
         return Domain.custom(to_sql=custom_pinned)

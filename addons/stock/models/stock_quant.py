@@ -325,16 +325,16 @@ class StockQuant(models.Model):
         """ Only allowed fields should be modified """
         return super(StockQuant, self.with_context(inventory_mode=True))._load_records_write(values)
 
-    def _read_group_select(self, aggregate_spec, query):
+    def _read_group_select(self, table, aggregate_spec):
         if aggregate_spec == 'inventory_quantity:sum' and self.env.context.get('inventory_report_mode'):
             return SQL("NULL")
         if aggregate_spec == 'available_quantity:sum':
-            sql_quantity = self._read_group_select('quantity:sum', query)
-            sql_reserved_quantity = self._read_group_select('reserved_quantity:sum', query)
+            sql_quantity = self._read_group_select(table, 'quantity:sum')
+            sql_reserved_quantity = self._read_group_select(table, 'reserved_quantity:sum')
             return SQL("%s - %s", sql_quantity, sql_reserved_quantity)
         if aggregate_spec == 'inventory_quantity_auto_apply:sum':
-            return self._read_group_select('quantity:sum', query)
-        return super()._read_group_select(aggregate_spec, query)
+            return self._read_group_select(table, 'quantity:sum')
+        return super()._read_group_select(table, aggregate_spec)
 
     @api.model
     def get_import_templates(self):

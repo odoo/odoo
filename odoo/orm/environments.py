@@ -528,25 +528,19 @@ class Environment(Mapping[str, "BaseModel"]):
     def _field_depends_context(self):
         return self.registry.field_depends_context
 
-    def flush_query(self, query: SQL) -> None:
-        """ Flush all the fields in the metadata of ``query``. """
-        fields_to_flush = tuple(query.to_flush)
-        if not fields_to_flush:
-            return
-
-        fnames_to_flush = defaultdict[str, OrderedSet[str]](OrderedSet)
-        for field in fields_to_flush:
-            fnames_to_flush[field.model_name].add(field.name)
-        for model_name, field_names in fnames_to_flush.items():
-            self[model_name].flush_model(field_names)
-
     def execute_query(self, query: SQL) -> list[tuple]:
         """ Execute the given query, fetch its result and it as a list of tuples
         (or an empty list if no result to fetch).  The method automatically
         flushes all the fields in the metadata of the query.
         """
         assert isinstance(query, SQL)
-        self.flush_query(query)
+        _, _, fields_to_flush = query._sql_tuple
+        if fields_to_flush:
+            fnames_to_flush = defaultdict[str, OrderedSet[str]](OrderedSet)
+            for field in fields_to_flush:
+                fnames_to_flush[field.model_name].add(field.name)
+            for model_name, field_names in fnames_to_flush.items():
+                self[model_name].flush_model(field_names)
         self.cr.execute(query)
         return [] if self.cr.description is None else self.cr.fetchall()
 
@@ -856,8 +850,8 @@ class Cache:
 
             # select the column for the given ids
             query = Query(model)
-            sql_id = SQL.identifier(model._table, 'id')
-            sql_field = model._field_to_sql(model._table, field.name, query)
+            sql_id = query.table.id
+            sql_field = query.table[field.name]
             if field.type == 'binary' and (
                 model.env.context.get('bin_size') or model.env.context.get('bin_size_' + field.name)
             ):
