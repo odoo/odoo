@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="flux10_transaction_report">
+        <t t-set="document" t-value="report.get('document') or {}"/>
+        <t t-set="period" t-value="report.get('period') or {}"/>
+        <t t-set="invoices" t-value="report.get('invoices') or []"/>
+        <t t-set="invoice_payments" t-value="report.get('invoice_payments') or []"/>
+        <t t-set="transaction_summaries" t-value="report.get('transaction_summaries') or []"/>
+        <t t-set="transaction_payments" t-value="report.get('transaction_payments') or []"/>
+        <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ReportDocument>
+                <Id t-out="document.get('id')"/>
+                <Name t-out="document.get('name')"/>
+                <IssueDateTime>
+                    <DateTimeString t-out="document.get('issue_datetime')"/>
+                </IssueDateTime>
+                <TypeCode t-out="document.get('type_code')"/>
+                <Sender>
+                    <t t-set="sender" t-value="document.get('sender') or {}"/>
+                    <Id t-if="sender.get('id')" t-att-schemeId="sender.get('scheme_id')" t-out="sender.get('id')"/>
+                    <Name t-if="sender.get('name')" t-out="sender.get('name')"/>
+                    <RoleCode t-if="sender.get('role_code')" t-out="sender.get('role_code')"/>
+                    <URIUniversalCommunication t-if="sender.get('email')">
+                        <URIID t-out="sender.get('email')"/>
+                    </URIUniversalCommunication>
+                </Sender>
+                <Issuer>
+                    <t t-set="issuer" t-value="document.get('issuer') or {}"/>
+                    <Id t-if="issuer.get('id')" t-att-schemeId="issuer.get('scheme_id')" t-out="issuer.get('id')"/>
+                    <Name t-if="issuer.get('name')" t-out="issuer.get('name')"/>
+                    <RoleCode t-if="issuer.get('role_code')" t-out="issuer.get('role_code')"/>
+                    <URIUniversalCommunication t-if="issuer.get('email')">
+                        <URIID t-out="issuer.get('email')"/>
+                    </URIUniversalCommunication>
+                </Issuer>
+            </ReportDocument>
+            <t t-if="invoices or transaction_summaries">
+                <TransactionsReport>
+                    <ReportPeriod>
+                        <StartDate t-out="period.get('start_date')"/>
+                        <EndDate t-out="period.get('end_date')"/>
+                    </ReportPeriod>
+                    <t t-foreach="invoices" t-as="invoice">
+                        <Invoice>
+                            <ID t-out="invoice.get('id')"/>
+                            <IssueDate t-out="invoice.get('issue_date')"/>
+                            <TypeCode t-out="invoice.get('type_code')"/>
+                            <CurrencyCode t-if="invoice.get('currency')" t-out="invoice.get('currency')"/>
+                            <DueDate t-if="invoice.get('due_date')" t-out="invoice.get('due_date')"/>
+                            <TaxDueDateTypeCode t-if="invoice.get('tax_due_date_type_code')" t-out="invoice.get('tax_due_date_type_code')"/>
+                            <IncludedNote t-foreach="invoice.get('notes') or []" t-as="note">
+                                <Subject t-out="note.get('subject')"/>
+                                <Content t-out="note.get('content')"/>
+                            </IncludedNote>
+                            <BusinessProcess t-if="invoice.get('business_process')">
+                                <t t-set="bp" t-value="invoice.get('business_process')"/>
+                                <ID t-out="bp.get('id')"/>
+                                <TypeID t-out="bp.get('type_id')"/>
+                            </BusinessProcess>
+                            <t t-set="preceding_refs" t-value="invoice.get('preceding_invoice_references') or ([invoice.get('preceding_invoice_reference')] if invoice.get('preceding_invoice_reference') else [])"/>
+                            <ReferencedDocument t-foreach="preceding_refs" t-as="prec">
+                                <ID t-out="prec.get('id')"/>
+                                <IssueDate t-if="prec.get('issue_date')" t-out="prec.get('issue_date')"/>
+                            </ReferencedDocument>
+                            <Seller>
+                                <t t-set="seller" t-value="invoice.get('seller') or {}"/>
+                                <CompanyId t-if="seller.get('company_id')" t-att-schemeId="seller.get('company_scheme')" t-out="seller.get('company_id')"/>
+                                <TaxRegistrationId t-if="seller.get('vat')" qualifyingId="VAT" t-out="seller.get('vat')"/>
+                                <PostalAddress t-if="seller.get('country')">
+                                    <CountryId t-out="seller.get('country')"/>
+                                </PostalAddress>
+                            </Seller>
+                            <Buyer>
+                                <t t-set="buyer" t-value="invoice.get('buyer') or {}"/>
+                                <CompanyId t-if="buyer.get('company_id')" t-att-schemeId="buyer.get('company_scheme')" t-out="buyer.get('company_id')"/>
+                                <TaxRegistrationId t-if="buyer.get('vat')" qualifyingId="VAT" t-out="buyer.get('vat')"/>
+                                <PostalAddress t-if="buyer.get('country')">
+                                    <CountryId t-out="buyer.get('country')"/>
+                                </PostalAddress>
+                            </Buyer>
+                            <SellerTaxRepresentative t-if="invoice.get('seller_fiscal_representative_vat')">
+                                <TaxRegistrationId schemeId="VAT" t-out="invoice.get('seller_fiscal_representative_vat')"/>
+                            </SellerTaxRepresentative>
+                            <Delivery t-if="invoice.get('delivery')">
+                                <t t-set="delivery" t-value="invoice.get('delivery')"/>
+                                <Date t-if="delivery.get('date')" t-out="delivery.get('date')"/>
+                                <Location>
+                                    <LineOne t-if="delivery.get('name')" t-out="delivery.get('name')"/>
+                                    <LineTwo t-if="delivery.get('line1')" t-out="delivery.get('line1')"/>
+                                    <LineThree t-if="delivery.get('line2')" t-out="delivery.get('line2')"/>
+                                    <CityName t-if="delivery.get('city')" t-out="delivery.get('city')"/>
+                                    <PostalZone t-if="delivery.get('postal_zone')" t-out="delivery.get('postal_zone')"/>
+                                    <CountryId t-if="delivery.get('country')" t-out="delivery.get('country')"/>
+                                </Location>
+                            </Delivery>
+                            <InvoicePeriod t-if="invoice.get('invoice_period')">
+                                <t t-set="inv_period" t-value="invoice.get('invoice_period')"/>
+                                <StartDate t-out="inv_period.get('start_date')"/>
+                                <EndDate t-out="inv_period.get('end_date')"/>
+                            </InvoicePeriod>
+                            <AllowanceCharge t-foreach="invoice.get('allowance_charges') or []" t-as="allowance" t-att-ChargeIndicator="'true' if allowance.get('charge_indicator') else 'false'">
+                                <Amount t-out="flow._format_amount(allowance.get('amount') or 0.0)"/>
+                                <TaxCategoryCode t-if="allowance.get('tax_category_code')" t-out="allowance.get('tax_category_code')"/>
+                                <TaxPercent t-if="allowance.get('tax_percent')" t-out="allowance.get('tax_percent')"/>
+                            </AllowanceCharge>
+                            <MonetaryTotal>
+                                <TaxExclusiveAmount t-out="flow._format_amount(invoice.get('monetary_total', {}).get('tax_exclusive_amount') or 0.0)"/>
+                                <TaxAmount t-att-CurrencyCode="invoice.get('monetary_total', {}).get('tax_currency') or 'EUR'" t-out="flow._format_amount(invoice.get('monetary_total', {}).get('tax_amount') or 0.0)"/>
+                            </MonetaryTotal>
+                            <TaxSubTotal t-foreach="invoice.get('tax_subtotals') or []" t-as="tax_sub">
+                                <TaxableAmount t-out="flow._format_amount(tax_sub.get('taxable_amount') or 0.0)"/>
+                                <TaxAmount t-out="flow._format_amount(tax_sub.get('tax_amount') or 0.0)"/>
+                                <TaxCategory>
+                                    <Code t-if="tax_sub.get('tax_category_code')" t-out="tax_sub.get('tax_category_code')"/>
+                                    <Percent t-out="tax_sub.get('tax_percent')"/>
+                                    <TaxExemptionReason t-if="tax_sub.get('tax_reason')" t-out="tax_sub.get('tax_reason')"/>
+                                    <TaxExemptionReasonCode t-if="tax_sub.get('tax_reason_code')" t-out="tax_sub.get('tax_reason_code')"/>
+                                </TaxCategory>
+                            </TaxSubTotal>
+                            <Line t-foreach="invoice.get('lines') or []" t-as="line">
+                                <Note t-if="line.get('note')">
+                                    <Code t-if="line.get('note').get('code')" t-out="line.get('note').get('code')"/>
+                                    <Comment t-if="line.get('note').get('comment')" t-out="line.get('note').get('comment')"/>
+                                </Note>
+                                <BilledQuantity t-att-UnitCode="line.get('unit_code')" t-out="line.get('quantity')"/>
+                                <ReferencedDocument t-if="line.get('preceding_invoice_reference')">
+                                    <t t-set="line_ref" t-value="line.get('preceding_invoice_reference')"/>
+                                    <ID t-if="line_ref.get('id')" t-out="line_ref.get('id')"/>
+                                    <IssueDate t-if="line_ref.get('issue_date')" t-out="line_ref.get('issue_date')"/>
+                                </ReferencedDocument>
+                                <Price>
+                                    <PriceAmount t-out="flow._format_amount(line.get('price_unit_net') or 0.0)"/>
+                                    <AllowanceChargeBaseAmount t-out="flow._format_amount(line.get('price_unit_gross') or 0.0)"/>
+                                </Price>
+                                <Product>
+                                    <Name t-if="line.get('description')" t-out="line.get('description')"/>
+                                </Product>
+                            </Line>
+                        </Invoice>
+                    </t>
+                    <t t-foreach="transaction_summaries" t-as="summary">
+                        <Transactions>
+                            <Date t-out="summary.get('date')"/>
+                            <TransactionsCurrency t-out="summary.get('currency')"/>
+                            <TaxDueDateTypeCode t-if="summary.get('tax_due_date_type_code')" t-out="summary.get('tax_due_date_type_code')"/>
+                            <CategoryCode t-out="summary.get('category_code')"/>
+                            <TaxExclusiveAmount t-out="flow._format_amount(summary.get('tax_exclusive_amount') or 0.0)"/>
+                            <TaxTotal t-out="flow._format_amount(summary.get('tax_total') or 0.0)"/>
+                            <TransactionsCount t-if="summary.get('transactions_count') is not None" t-out="summary.get('transactions_count')"/>
+                            <TaxSubtotal t-foreach="summary.get('vat_breakdown') or []" t-as="vat">
+                                <TaxPercent t-out="vat.get('vat_rate')"/>
+                                <TaxableAmount t-out="flow._format_amount(vat.get('amount_untaxed') or 0.0)"/>
+                                <TaxTotal t-out="flow._format_amount(vat.get('amount_tax') or 0.0)"/>
+                            </TaxSubtotal>
+                        </Transactions>
+                    </t>
+                </TransactionsReport>
+            </t>
+            <t t-if="invoice_payments or transaction_payments">
+                <PaymentsReport>
+                    <ReportPeriod>
+                        <StartDate t-out="period.get('start_date')"/>
+                        <EndDate t-out="period.get('end_date')"/>
+                    </ReportPeriod>
+                    <t t-foreach="invoice_payments" t-as="payment">
+                        <t t-set="invoice_payment" t-value="payment.get('payment') or {}"/>
+                        <t t-set="payment_issue_date" t-value="payment.get('issue_date') or payment.get('date')"/>
+                        <t t-set="payment_date" t-value="invoice_payment.get('date') or payment.get('date')"/>
+                        <t t-set="payment_subtotals" t-value="invoice_payment.get('subtotals') or payment.get('subtotals') or []"/>
+                        <Invoice t-if="payment_subtotals">
+                            <InvoiceID t-out="payment.get('invoice_id')"/>
+                            <IssueDate t-out="payment_issue_date"/>
+                            <Payment>
+                                <Date t-out="payment_date"/>
+                                <SubTotals t-foreach="payment_subtotals" t-as="subtotal">
+                                    <TaxPercent t-out="subtotal.get('tax_percent')"/>
+                                    <CurrencyCode t-if="subtotal.get('currency')" t-out="subtotal.get('currency')"/>
+                                    <Amount t-out="flow._format_amount(subtotal.get('amount') or 0.0)"/>
+                                </SubTotals>
+                            </Payment>
+                        </Invoice>
+                    </t>
+                    <t t-foreach="transaction_payments" t-as="payment">
+                        <Transactions>
+                            <Payment>
+                                <Date t-out="payment.get('date')"/>
+                                <SubTotals t-foreach="payment.get('subtotals') or []" t-as="subtotal">
+                                    <TaxPercent t-out="subtotal.get('tax_percent')"/>
+                                    <CurrencyCode t-if="subtotal.get('currency')" t-out="subtotal.get('currency')"/>
+                                    <Amount t-out="flow._format_amount(subtotal.get('amount') or 0.0)"/>
+                                </SubTotals>
+                            </Payment>
+                        </Transactions>
+                    </t>
+                </PaymentsReport>
+            </t>
+        </Report>
+    </template>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ereporting="ereporting-PPF-V1.0"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:rep="report"
+xmlns:trs="transaction"
+xmlns:pay="payment">
+
+    <xs:import namespace="report" schemaLocation="report.xsd"/>
+    <xs:import namespace="transaction" schemaLocation="transaction.xsd"/>
+    <xs:import namespace="payment" schemaLocation="payment.xsd"/>
+
+    <xs:element name="Report" type="ReportType">
+        <xs:annotation>
+            <xs:documentation>TB-0 : Rapport</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="ReportType">
+        <xs:sequence>
+            <xs:element name="ReportDocument" type="rep:ReportDocumentType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TB-1 : Flux 10 racine</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TransactionsReport" type="trs:TransactionsReportType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TB-2 : Transmission des transactions flux 10.1 et 10.3</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PaymentsReport" type="pay:PaymentsReportType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TB-3 : Transmission des paiements flux 10.2 et 10.4</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
