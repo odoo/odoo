@@ -16,7 +16,7 @@ registerWebsitePreviewTour(
     },
     () => [
         ...clickOnSnippet(
-            ".s_title.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]"
+            ".s_title.o_savable.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]"
         ),
         changeOption("Block", ".oe_snippet_save"),
         goBackToBlocks(),
@@ -39,7 +39,7 @@ registerWebsitePreviewTour(
         {
             content: "Check that the custom snippet does not have branding",
             trigger:
-                ":iframe #wrap .s_title.custom:not([data-oe-model]):not([data-oe-id]):not([data-oe-field]):not([data-oe-xpath])",
+                ":iframe #wrap .s_title.custom:not([data-oe-model]):not([data-oe-id]):not([data-oe-field]):not([data-oe-xpath]):not(.o_savable)",
         },
     ]
 );
