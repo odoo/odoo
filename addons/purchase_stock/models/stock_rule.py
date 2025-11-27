@@ -334,7 +334,7 @@ class StockRule(models.Model):
             ('user_id', '=', partner.buyer_id.id),
             ('currency_id', '=', currency.id),
         )
-        if partner.group_rfq == 'default':
+        if partner.group_rfq == 'default' or self.picking_type_id.code == 'dropship':
             if values.get('reference_ids'):
                 domain += (('reference_ids', 'in', tuple(values['reference_ids'].ids)),)
         date_planned = fields.Datetime.from_string(values['date_planned'])
