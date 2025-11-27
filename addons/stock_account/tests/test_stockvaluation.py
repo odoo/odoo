@@ -280,6 +280,16 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move8.remaining_qty, 0.0)  # unused in internal moves
         self.assertEqual(move9.remaining_qty, 0.0)  # unused in out moves
 
+    def test_fifo_perpetual_3(self):
+        """ Make sure that the fifo valuation is correct for non-integer quantities.
+        """
+        product = self.product_fifo
+
+        move1 = self._make_in_move(product, 1.9, 10)
+
+        self.assertAlmostEqual(move1.remaining_qty, 1.9)
+        self.assertAlmostEqual(move1.remaining_value, 19)
+
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard
         price, receive in multiple times the delivered quantity and run _fifo_vacuum to compensate.
