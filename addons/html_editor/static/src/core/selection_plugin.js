@@ -247,9 +247,13 @@ export class SelectionPlugin extends Plugin {
         this.activeSelection = this.makeActiveSelection();
     }
 
-    onTripleClick() {
+    onTripleClick(ev) {
         const selectionData = this.getSelectionData();
         if (selectionData.documentSelectionIsInEditable) {
+            if (this.delegateTo("triple_click_overrides", ev)) {
+                // If the override is handled, we don't do anything.
+                return;
+            }
             const { documentSelection } = selectionData;
             const block = closestBlock(documentSelection.anchorNode);
             const [anchorNode, anchorOffset] = getDeepestPosition(block, 0);
