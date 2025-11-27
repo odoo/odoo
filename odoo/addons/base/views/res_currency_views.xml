@@ -103,7 +103,6 @@
                     <field name="name"/>
                     <field name="symbol"/>
                     <field name="full_name"/>
-                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -115,7 +114,7 @@
                                         <span class="badge rounded-pill"><t t-esc="record.symbol.value"/></span>
                                     </div>
                                     <div class="col-5 text-end">
-                                        <t t-if="! record.active.raw_value"><span class="badge rounded-pill bg-light border">inactive</span></t>
+                                        <field name="active" widget="boolean_toggle"/>
                                     </div>
                                 </div>
                                 <div class="row">
