@@ -4,9 +4,10 @@ import requests
 from base64 import b64encode
 from freezegun import freeze_time
 from unittest import mock
+from unittest.mock import patch
 from urllib.parse import quote_plus
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tools.misc import file_open
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
@@ -23,6 +24,10 @@ FILE_PATH = 'l10n_fr_pdp/tests/test_files/assets'
 
 
 class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
+    # Use a date after Feb decade/month end to place transaction/payment flows in grace/closed by default.
+    TEST_TODAY = fields.Date.from_string('2025-03-05')
+    TEST_INVOICE_DATE = fields.Date.from_string('2025-02-05')
+    TEST_PAYMENT_DATE = fields.Date.from_string('2025-02-15')
 
     @classmethod
     @TestUblCiiCommon.setup_country('fr')
@@ -89,6 +94,10 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0239843188',
         })
+        cls.startClassPatcher(patch(
+            'odoo.addons.l10n_fr_pdp.models.pdp_flow.PdpFlow._get_pdp_proxy_user',
+            return_value=False,
+        ))
 
     # -------------------------------------------------------------------------
     # REQUEST HANDLING
