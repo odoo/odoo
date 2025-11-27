@@ -290,7 +290,7 @@ if parse_version(importlib.metadata.version('werkzeug')) >= parse_version('2.0.2
 # The default duration of a user session cookie. Inactive sessions are reaped
 # server-side as well with a threshold that can be set via an optional
 # config parameter `sessions.max_inactivity_seconds` (default: SESSION_LIFETIME)
-SESSION_LIFETIME = 60 * 60 * 24 * 7
+SESSION_LIFETIME = 60 * 60 * 24 * 1
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
