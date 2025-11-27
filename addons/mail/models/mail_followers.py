@@ -37,35 +37,6 @@ class MailFollowers(models.Model):
     email = fields.Char('Email', related='partner_id.email')
     is_active = fields.Boolean('Is Active', related='partner_id.active')
 
-    def _invalidate_documents(self, vals_list=None):
-        """ Invalidate the cache of the documents followed by ``self``.
-
-        Modifying followers change access rights to individual documents. As the
-        cache may contain accessible/inaccessible data, one has to refresh it.
-        """
-        to_invalidate = defaultdict(list)
-        for record in (vals_list or [{'res_model': rec.res_model, 'res_id': rec.res_id} for rec in self]):
-            if record.get('res_id'):
-                to_invalidate[record.get('res_model')].append(record.get('res_id'))
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        res._invalidate_documents(vals_list)
-        return res
-
-    def write(self, vals):
-        if 'res_model' in vals or 'res_id' in vals:
-            self._invalidate_documents()
-        res = super().write(vals)
-        if any(x in vals for x in ['res_model', 'res_id', 'partner_id']):
-            self._invalidate_documents()
-        return res
-
-    def unlink(self):
-        self._invalidate_documents()
-        return super().unlink()
-
     _mail_followers_res_partner_res_model_id_uniq = models.Constraint(
         'unique(res_model,res_id,partner_id)',
         'Error, a partner cannot follow twice the same object.',
