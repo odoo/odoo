@@ -6,6 +6,7 @@ from . import test_ir_model
 from . import test_ir_websocket
 from . import test_notify
 from . import test_websocket_caryall
+from . import test_websocket_check_session
 from . import test_close_websocket_after_tour
 from . import test_websocket_controller
 from . import test_websocket_rate_limiting
