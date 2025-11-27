@@ -1379,8 +1379,7 @@ test("ensure messaging menu shows standalone inbox messages", async () => {
 
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem .badge", { text: "1" });
+    await contains(".o-mail-NotificationItem .badge");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message-author", { text: "Partner1" });
     await contains(".o-mail-Message-textContent", { text: "Message with needaction" });

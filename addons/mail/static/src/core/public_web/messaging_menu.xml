@@ -14,9 +14,9 @@
             <t t-foreach="visibleStandaloneMessages" name="standaloneInboxMessages" t-as="message" t-key="message.id">
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
-                    counter="1"
                     datetime="message?.datetime"
                     iconSrc="store.DEFAULT_AVATAR"
+                    important="true"
                     hasMarkAsReadButton="1"
                     muted="0"
                     onClick="(isMarkAsRead) => this.onClickInboxMsg(isMarkAsRead, message)"
