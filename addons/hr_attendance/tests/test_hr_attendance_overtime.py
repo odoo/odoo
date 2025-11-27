@@ -394,8 +394,10 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertAlmostEqual(attendance.overtime_hours, 4, 2)
 
         # Total overtime for that day : 4 hours
-        overtime_1 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id),
-                                                              ('date', '=', datetime(2023, 1, 2))])
+        overtime_1 = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', datetime(2023, 1, 2)),
+        ])
         self.assertAlmostEqual(overtime_1.duration, 4, 2)
 
         # Multi attendance case
@@ -424,8 +426,10 @@ class TestHrAttendanceOvertime(HttpCase):
         # 21:00 -> 23:00 should contain 2 hours of overtime
         self.assertAlmostEqual(m_attendance_3.overtime_hours, 2, 2)
 
-        overtime_2 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id),
-                                                                ('date', '=', datetime(2023, 1, 3))])
+        overtime_2 = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', datetime(2023, 1, 3)),
+        ])
         # Total overtime for that day : 5 hours
         self.assertEqual(sum(overtime_2.mapped('duration')), 5)
 
@@ -459,8 +463,10 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertAlmostEqual(early_attendance.overtime_hours, 5)
 
         # Total overtime for that day : 5 hours
-        overtime_record = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.europe_employee.id),
-                                                              ('date', '=', datetime(2024, 5, 28))])
+        overtime_record = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.europe_employee.id),
+            ('date', '=', datetime(2024, 5, 28)),
+        ])
         self.assertAlmostEqual(overtime_record.duration, 5)
 
         # Check that the calendar's timezones take priority and that overtimes and attendances dates are consistent
@@ -477,8 +483,10 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertAlmostEqual(early_attendance2.overtime_hours, 4)
 
         # Total overtime for the 29th (not the 30th): 5 hours
-        overtime_record2 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.europe_employee.id),
-                                                              ('date', '=', datetime(2024, 5, 29))])
+        overtime_record2 = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.europe_employee.id),
+            ('date', '=', datetime(2024, 5, 29)),
+        ])
         self.assertAlmostEqual(overtime_record2.duration, 4)
 
     @freeze_time("2024-02-01 23:00:00")
@@ -487,16 +495,17 @@ class TestHrAttendanceOvertime(HttpCase):
             'auto_check_out': True,
             'auto_check_out_tolerance': 1
         })
-        self.env['hr.attendance'].create([{
-            'employee_id': self.employee.id,
-            'check_in': datetime(2024, 2, 1, 8, 0),
-            'check_out': datetime(2024, 2, 1, 11, 0)
-        },
-        {
-            'employee_id': self.employee.id,
-            'check_in': datetime(2024, 2, 1, 11, 0),
-            'check_out': datetime(2024, 2, 1, 13, 0)
-        }
+        self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2024, 2, 1, 8, 0),
+                'check_out': datetime(2024, 2, 1, 11, 0)
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2024, 2, 1, 11, 0),
+                'check_out': datetime(2024, 2, 1, 13, 0)
+            }
         ])
 
         attendance_utc_pending = self.env['hr.attendance'].create({
@@ -610,15 +619,17 @@ class TestHrAttendanceOvertime(HttpCase):
             'auto_check_out': True,
             'auto_check_out_tolerance': 1
         })
-        morning, afternoon = Attendance.create([{
-            'employee_id': self.employee.id,
-            'check_in': datetime(2024, 1, 1, 8, 0),
-            'check_out': datetime(2024, 1, 1, 12, 0)
-        },
-        {
-            'employee_id': self.employee.id,
-            'check_in': datetime(2024, 1, 1, 13, 0)
-        }])
+        morning, afternoon = Attendance.create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2024, 1, 1, 8, 0),
+                'check_out': datetime(2024, 1, 1, 12, 0)
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2024, 1, 1, 13, 0)
+            }
+        ])
 
         with freeze_time("2024-01-01 22:00:00"):
             Attendance._cron_auto_check_out()
@@ -996,7 +1007,7 @@ class TestHrAttendanceOvertime(HttpCase):
             ('employee_id', '=', self.employee.id),
         ])
 
-        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 2.0, 2)
+        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 5.0, 2)
         self._check_overtimes(overtimes, [
             {  # monday 18:00->19:00 (weekly + monday daily)
                 'date': date(2025, 8, 18),
@@ -1030,8 +1041,145 @@ class TestHrAttendanceOvertime(HttpCase):
             ],
         })
 
-        self.assertEqual(ruleset.rule_ids.timing_type, 'work_days',
-                 "Employee work Timing type should default to 'work_days' when not set.")
+        self.assertEqual(ruleset.rule_ids.timing_type, 'work_days', "Employee work Timing type should default to 'work_days' when not set.")
+
+    def test_weekly_undertime_ignored(self):
+        """Weekly undertime must NOT be created."""
+        version = self.employee._get_version(date(2025, 8, 20))
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Weekly Only',
+            'rule_ids': [
+                Command.create({
+                    'name': "40h/week",
+                    'base_off': 'quantity',
+                    'quantity_period': 'week',
+                    'expected_hours': 40,
+                }),
+            ],
+        })
+        version.ruleset_id = ruleset
+
+        # Total week hours = 35h
+        self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 1, 6, 8, 0),
+                'check_out': datetime(2025, 1, 6, 16, 0),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 1, 7, 8, 0),
+                'check_out': datetime(2025, 1, 7, 16, 0),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 1, 8, 8, 0),
+                'check_out': datetime(2025, 1, 8, 16, 0),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 1, 9, 8, 0),
+                'check_out': datetime(2025, 1, 9, 16, 0),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 1, 10, 8, 0),
+                'check_out': datetime(2025, 1, 10, 16, 0),
+            },
+        ])
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id)
+        ])
+
+        self.assertEqual(len(overtimes), 0)
+        self.assertAlmostEqual(overtimes.duration, 0, 2, "There should be 0 hours of undertime.")
+
+    def test_contract_based_rules_ignored_for_flexible_resources(self):
+        """Rules that rely on expected_hours_from_contract must not apply for employees using a flexible schedule."""
+        version = self.flexible_employee._get_version(date(2025, 8, 20))
+        # Rule asking expected hours from contract/day
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Contract-based daily',
+            'rule_ids': [Command.create({
+                'name': 'From contract 8h/day',
+                'base_off': 'quantity',
+                'quantity_period': 'day',
+                'expected_hours_from_contract': True,
+            })],
+        })
+        version.ruleset_id = ruleset
+
+        # Flexible employee: create a short attendance that WOULD produce undertime if contract-based rules applied
+        self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2025, 8, 20, 9, 0),
+            'check_out': datetime(2025, 8, 20, 16, 0),  # 6h, would be -2 if contract expected = 8
+        })
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.flexible_employee.id),
+            ('date', '=', date(2025, 8, 20)),
+        ])
+        # No overtime/undertime must be created for flexible resources when rule expects contract hours
+        self.assertFalse(overtimes)
+        self.assertAlmostEqual(self.flexible_employee.total_overtime, 0.0, 2)
+
+    def test_overtime_rule_combined_quantity_timing(self):
+        """When timing-based overtime exists and a quantity rule asks for fewer overtime hours,
+        the quantity rule should take its hours from the timing overtimes (partial overlap),
+        producing one interval with only the timing rule and one interval shared by timing+quantity.
+        """
+        # ensure the employee version for the date uses the new ruleset
+        version = self.employee._get_version(date(2021, 1, 2))
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Combined Ruleset',
+            'rule_ids': [
+                Command.create({
+                    'name': "Weekend Timing",
+                    'base_off': 'timing',
+                    'timing_type': 'non_work_days',
+                }),
+                Command.create({
+                    'name': "Small Daily Qty",
+                    'base_off': 'quantity',
+                    'quantity_period': 'day',
+                    'expected_hours_from_contract': False,
+                    'expected_hours': 2,  # employee will work 3h -> quantity overtime = 1h
+                }),
+            ],
+        })
+        version.ruleset_id = ruleset
+
+        # Create a single attendance on a non-working day (Saturday 2021-01-02) of 3 hours (8->11).
+        # Timing rule will mark the full 3h as overtime; quantity rule requests only 1h:
+        # resulting intervals should be 2h (timing only) and 1h (timing + quantity).
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 2, 8, 0),
+            'check_out': datetime(2021, 1, 2, 11, 0),
+        })
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2021, 1, 2)),
+        ])
+
+        # total overtime must be 3 hours (3h timing), split into 2h timing-only + 1h timing+quantity
+        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 3.0, 2)
+
+        # Expect two intervals (2h + 1h). Do not rely on ordering; just assert lengths/durations present.
+        durations = sorted([round(ot.duration, 6) for ot in overtimes])
+        self.assertEqual(durations, sorted([2.0, 1.0]))
+
+        timing_rule = ruleset.rule_ids.filtered(lambda r: r.base_off == 'timing')
+        quantity_rule = ruleset.rule_ids.filtered(lambda r: r.base_off == 'quantity')
+
+        # Check at least one overtime interval contains both rules (the shared 1h interval)
+        self.assertTrue(any(
+            {timing_rule.id, quantity_rule.id}.issubset(set(ot.rule_ids.ids))
+            for ot in overtimes
+        ))
 
     def test_employee_overtime_with_multiple_attendance_lines(self):
         """Validate that multiple overtime lines for today are summed correctly

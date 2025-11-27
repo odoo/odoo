@@ -67,6 +67,19 @@ def _last_hours_as_intervals(starting_intervals, hours):
     return Intervals(last_hours_intervals)
 
 
+def _extend_intervals_for_undertime(base_intervals, missing_hours):
+    if not base_intervals:
+        return Intervals()
+
+    last_intervals = list(base_intervals)
+    start, end, attendance = last_intervals[-1]
+
+    extended_start = start - relativedelta(hours=missing_hours)
+    last_intervals[-1] = (extended_start, end, attendance)
+
+    return Intervals(last_intervals)
+
+
 class HrAttendanceOvertimeRule(models.Model):
     _name = 'hr.attendance.overtime.rule'
     _description = "Overtime Rule"
@@ -364,20 +377,28 @@ class HrAttendanceOvertimeRule(models.Model):
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
                 # # Handle undertime: convert missing hours into intervals to be deducted later
-                if period == 'day' and overtime_quantity < 0:
+                if period == 'day' and rule.compensable_as_leave and overtime_quantity < 0:
                     missing_hours = abs(overtime_quantity)
 
                     new_intervals = _last_hours_as_intervals(
                         starting_intervals=attendances_by[period][date],
                         hours=missing_hours,
                     )
+
+                    covered_hours = sum((end - start).total_seconds() / 3600 for (start, end, _) in new_intervals)
+                    if covered_hours < missing_hours:
+                        remaining = missing_hours - covered_hours
+                        new_intervals = _extend_intervals_for_undertime(
+                            base_intervals=new_intervals,
+                            missing_hours=remaining
+                        )
                     for start, end, attendance in new_intervals:
                         date = attendance[0].date
                         quantity_intervals_by_date[date].append((start, end, rule))
                         undertime_flag[date, start, end] = True
 
                     continue
-                if period == 'week' and overtime_quantity < 0:
+                if period == 'week' and rule.compensable_as_leave and overtime_quantity < 0:
                     continue
                 if overtime_quantity <= rule.employer_tolerance:
                     continue
