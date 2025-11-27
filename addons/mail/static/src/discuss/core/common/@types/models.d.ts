@@ -36,11 +36,7 @@ declare module "models" {
         updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {
-        allowedToLeaveChannelTypes: Readonly<string[]>;
-        allowedToUnpinChannelTypes: Readonly<string[]>;
         avatar_cache_key: string;
-        canLeave: Readonly<boolean>;
-        canUnpin: Readonly<boolean>;
         channel: DiscussChannel;
         channel_name_member_ids: ChannelMember[];
         computeCorrespondent: () => ChannelMember;
