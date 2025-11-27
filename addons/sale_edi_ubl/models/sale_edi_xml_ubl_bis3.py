@@ -277,6 +277,8 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             line.pop('deferred_end_date', False)
             if not line.get('product_id'):
                 line_logs.append(_("Could not retrieve the product named: %(name)s", name=line['name']))
+            if line.get('discount'):  # Exclude discounts
+                line.pop('discount')
         lines_vals += allowance_charges_line_vals
 
         # Update order with lines excluding discounts
