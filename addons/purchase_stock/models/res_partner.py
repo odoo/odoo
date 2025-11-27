@@ -21,7 +21,7 @@ class ResPartner(models.Model):
     group_rfq = fields.Selection(
         [('default', 'On Order'), ('day', 'Daily'), ('week', 'Weekly'), ('all', 'Always')],
         string='Group RFQ', required=True, default='default', help="Define if RFQ should be grouped \
-        together based on expected arrival.\n \
+        together based on expected arrival, except for dropship operations.\n \
         On Order: Replenishment needs will be grouped together except for MTO.\n \
         Daily: Replenishment needs will be grouped if the expected arrival is the same day\n \
         Weekly: Replenishment needs will be grouped if the expected arrival is the same week or week day\n \
