@@ -256,7 +256,7 @@ export class LinkPopover extends Component {
         useExternalListener(this.props.document, "pointerdown", onPointerDown);
         if (this.props.document !== document) {
             // Listen to pointerdown outside the iframe
-            useExternalListener(document, "pointerdown", onPointerDown);
+            useExternalListener(document, "pointerdown", onPointerDown, { capture: true });
         }
     }
 
