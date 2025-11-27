@@ -137,6 +137,7 @@ export class ListPlugin extends Plugin {
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         move_node_whitelist_selectors: "ol, ul",
         before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
+        triple_click_overrides: this.handleTripleClick.bind(this),
     };
 
     setup() {
@@ -963,6 +964,16 @@ export class ListPlugin extends Plugin {
             }
             ev.preventDefault();
             this.dependencies.history.addStep();
+        }
+    }
+
+    handleTripleClick(ev) {
+        const node = ev.target;
+        const isChecklistItem =
+            node.tagName === "LI" && this.getListMode(node.parentElement) === "CL";
+        if (isChecklistItem && this.isPointerInsideCheckbox(node, ev.offsetX, ev.offsetY)) {
+            // If pointer is inside checkbox, prevent tripleclick selection.
+            return true;
         }
     }
 
