@@ -77,6 +77,12 @@ export class DiscussChannel extends Record {
             (this.channel_type === "channel" && !this.group_public_id)
         );
     }
+    get allowDescriptionsTypes() {
+        return ["channel", "group"];
+    }
+    get allowDescription() {
+        return this.allowDescriptionsTypes.includes(this.channel_type);
+    }
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     }
