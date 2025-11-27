@@ -4,6 +4,7 @@
 from . import ir_http
 from . import ir_mail_server
 from . import ir_model
+from . import ir_ui_view
 from . import link_tracker
 from . import mail_blacklist
 from . import mailing_subscription  # keep before due to decorated m2m
