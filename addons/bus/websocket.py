@@ -5,35 +5,36 @@ import hashlib
 import json
 import logging
 import os
-import psycopg2
 import random
+import selectors
 import socket
 import struct
-import selectors
 import threading
 import time
 from collections import defaultdict, deque
 from contextlib import closing, suppress
 from enum import IntEnum
 from itertools import count
-from psycopg2.pool import PoolError
 from queue import PriorityQueue
 from urllib.parse import urlparse
 from weakref import WeakSet
 
-from werkzeug.local import LocalStack
+import psycopg2
+from psycopg2.pool import PoolError
 from werkzeug.datastructures import ImmutableMultiDict, MultiDict
 from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
+from werkzeug.local import LocalStack
 
 import odoo
 from odoo import modules
-from .models.bus import dispatch
-from .session_helpers import check_session, new_env
-from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
+from odoo.http import Request, Response, SessionExpiredException, get_default_session, root
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
 from odoo.service.server import CommonServer
 from odoo.tools import config
+
+from .models.bus import dispatch
+from .session_helpers import check_session, new_env
 
 _logger = logging.getLogger(__name__)
 
