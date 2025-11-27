@@ -305,6 +305,10 @@ class AccountChartTemplate(models.AbstractModel):
         if account_group_count:
             data.pop('account.group', None)
 
+            for vals in data.get('account.account', {}).values():
+                if vals.get('group_id'):
+                    vals.pop('group_id', None)
+
         current_taxes = self.env['account.tax'].with_context(active_test=False).search([
             *self.env['account.tax']._check_company_domain(company),
         ])
