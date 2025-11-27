@@ -2634,19 +2634,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice.currency_id, chf,
                          "Changing to a journal with a set currency should change invoice currency")
 
-    def test_onchange_payment_reference(self):
-        """
-        Ensure payment reference propagation from move to payment term
-        line is done correctly
-        """
-        payment_term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
-        with Form(self.invoice) as move_form:
-            move_form.payment_reference = 'test'
-        self.assertEqual(payment_term_line.name, 'test')
-        with Form(self.invoice) as move_form:
-            move_form.payment_reference = False
-        self.assertEqual(payment_term_line.name, False, 'Payment term line was not changed')
-
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """
         Ensure that taxes are recomputed correctly when product uom and
@@ -2870,6 +2857,19 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.save()
         self.invoice.action_post()
         self.assertEqual(payment_term_line.name, 'XYZ', 'Manual name of payment term line should be kept')
+
+    def test_recompute_of_line_name(self):
+        """
+        Ensure name of the line is recomputed when Customer Reference is modified
+        """
+        invoice = self.init_invoice(move_type='out_invoice', products=self.product_a, post=True)
+        line = invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+
+        invoice.ref = "test"
+        self.assertEqual(line.name, f'test - {invoice.payment_reference}')
+
+        invoice.ref = "ABCDEF"
+        self.assertEqual(line.name, f'ABCDEF - {invoice.payment_reference}')
 
     def test_duplicate_invoice_with_separate_discount_acccount(self):
         """When a separate discount account, make sure that discount lines don't have a tax_id set
