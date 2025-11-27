@@ -132,20 +132,11 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
 
         const currentScreen = pos.router.state.current;
         if (currentScreen === "LoginScreen" && login && employee) {
-            const isRestaurant = pos.config.module_pos_restaurant;
             const selectedScreen =
                 pos.previousScreen && pos.previousScreen !== "LoginScreen"
                     ? pos.previousScreen
-                    : isRestaurant
-                    ? "FloorScreen"
-                    : "ProductScreen";
-            const props = {
-                orderUuid: pos.selectedOrderUuid,
-            };
-            if (selectedScreen === "FloorScreen") {
-                delete props.orderUuid;
-            }
-            pos.navigate(selectedScreen, props);
+                    : pos.defaultPage;
+            pos.navigate(selectedScreen.page, selectedScreen.params);
         }
 
         return employee;
