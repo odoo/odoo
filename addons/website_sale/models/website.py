@@ -48,8 +48,16 @@ class Website(models.Model):
         template_id = self.env['ir.config_parameter'].sudo().get_int(
             'sale.default_confirmation_template'
         )
+<<<<<<< dd8451812f1e20320d656395cf634e57c57813da
         default_template = template_id and self.env['mail.template'].browse(template_id)
         if default_template.exists():
+||||||| 952add278ea4debb6215ca8363f446df84b9f9bc
+        default_template = template_id and self.env['mail.template'].browse(int(template_id))
+        if default_template.exists():
+=======
+        default_template = template_id and self.env['mail.template'].browse(int(template_id)).exists()
+        if default_template:
+>>>>>>> 25cd19e1beb63763dfc06399ab86253c84622164
             return default_template
         return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
 
