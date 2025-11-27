@@ -20,6 +20,9 @@ const discussChannelPatch = {
             inverse: "channelAsCustomerHistory",
         });
     },
+    get allowDescriptionTypes() {
+        return [...super.allowDescriptionTypes, "livechat"];
+    },
     get typesAllowingCalls() {
         return [...super.typesAllowingCalls, "livechat"];
     },

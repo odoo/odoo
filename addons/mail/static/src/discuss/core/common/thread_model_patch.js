@@ -298,6 +298,16 @@ const threadPatch = {
     get allowDescription() {
         return ["channel", "group"].includes(this.channel?.channel_type);
     },
+    get typesAllowingCalls() {
+        return ["chat", "channel", "group"];
+    },
+    get allowCalls() {
+        return (
+            !this.isTransient &&
+            this.typesAllowingCalls.includes(this.channel?.channel_type) &&
+            !this.correspondent?.persona.eq(this.store.odoobot)
+        );
+    },
     get invitationLink() {
         if (!this.uuid || this.channel?.channel_type === "chat") {
             return undefined;
