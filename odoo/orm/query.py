@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -131,7 +132,7 @@ class Query:
         :param str link: used to generate the alias for the joined table, this string should
             represent the relationship (the link) between both tables.
         """
-        # TODO use TableSQL._join
+        warnings.warn("Since 20.0, use TableSQL.join or add_join", DeprecationWarning, stacklevel=2)
         assert lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
         rhs_alias = self.make_alias(lhs_alias, link)
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
@@ -145,7 +146,7 @@ class Query:
         See the documentation of :meth:`join` for a better overview of the
         arguments and what they do.
         """
-        # TODO use TableSQL._join
+        warnings.warn("Since 20.0, use TableSQL.join or add_join", DeprecationWarning, stacklevel=2)
         assert lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
         rhs_alias = self.make_alias(lhs_alias, link)
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
@@ -253,12 +254,15 @@ class Query:
             #   JOIN (SELECT * FROM unnest(%s) WITH ORDINALITY) AS "stuff__ids"
             #       ON ("stuff"."id" = "stuff__ids"."unnest")
             #   ORDER BY "stuff__ids"."ordinality"
-            alias = self.join(
-                self.table._alias, 'id',
-                SQL('(SELECT * FROM unnest(%s) WITH ORDINALITY)', list(ids)), 'unnest',
-                'ids',
+            table = self.table
+            alias = table._make_alias('ids')
+            self.add_join(
+                'JOIN',
+                alias,
+                SQL('(SELECT * FROM unnest(%s) WITH ORDINALITY)', list(ids)),
+                SQL('%s = %s', table.id, alias.unnest),
             )
-            self.order = SQL.identifier(alias, 'ordinality')
+            self.order = alias.ordinality
         else:
             self.add_where(SQL("%s IN %s", self.table.id, ids))
         self._ids = ids

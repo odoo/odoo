@@ -12,52 +12,37 @@ class QueryTestCase(BaseCase):
         query = Query(None, 'product_product', SQL.identifier('product_product'))
         query.add_where('1=1')
         # add inner join
-        template = query.join('product_product', 'product_template_id', 'product_template', 'id', 'template')
-        self.assertEqual(template, 'product_product__template')
-        # add left join
-        alias = query.left_join("product_product", "user_id", "res_user", "id", "user_id")
-        self.assertEqual(alias, 'product_product__user_id')
+        query.add_join('JOIN', 'aaa', 'product_template', SQL('aaa.id = "product_product"."product_template"'))
 
         self.assertEqual(query.from_clause._sql_tuple[0],
-            '"product_product" JOIN "product_template" AS "product_product__template" ON ("product_product"."product_template_id" = "product_product__template"."id") LEFT JOIN "res_user" AS "product_product__user_id" ON ("product_product"."user_id" = "product_product__user_id"."id")')
+            '"product_product" JOIN "product_template" AS "aaa" ON (aaa.id = "product_product"."product_template")')
         self.assertEqual(query.where_clause._sql_tuple[0],
             "1=1")
 
-    def test_query_chained_explicit_joins(self):
-        query = Query(None, 'product_product', SQL.identifier('product_product'))
-        # add inner join
-        template = query.join('product_product', 'product_template_id', 'product_template', 'id', 'template')
-        self.assertEqual(template, 'product_product__template')
-        # add CHAINED left join
-        alias = query.left_join("product_product__template", "user_id", "res_user", "id", "user_id")
-        self.assertEqual(alias, 'product_product__template__user_id')
-
-        self.assertEqual(query.from_clause._sql_tuple[0],
-            '"product_product" JOIN "product_template" AS "product_product__template" ON ("product_product"."product_template_id" = "product_product__template"."id") LEFT JOIN "res_user" AS "product_product__template__user_id" ON ("product_product__template"."user_id" = "product_product__template__user_id"."id")')
-        self.assertFalse(query.where_clause._sql_tuple[0])
-
-    def test_raise_missing_lhs(self):
-        query = Query(None, 'product_product', SQL.identifier('product_product'))
-        with self.assertRaises(AssertionError):
-            query.join("product_template", "categ_id", "product_category", "id", "categ_id")
-
     def test_long_aliases(self):
         query = Query(None, 'product_product', SQL.identifier('product_product'))
-        tmp = query.join('product_product', 'product_tmpl_id', 'product_template', 'id', 'product_tmpl_id')
-        self.assertEqual(tmp, 'product_product__product_tmpl_id')
+
+        def query_join(table, lhs_column, rhs_table, rhs_column='id'):
+            cotable = table._make_alias(lhs_column)
+            condition = SQL("%s = %s", table[lhs_column], cotable[rhs_column])
+            query.add_join('JOIN', cotable, rhs_table, condition)
+            return cotable
+
+        tmp = query_join(query.table, 'product_tmpl_id', 'product_template')
+        self.assertEqual(tmp._alias, 'product_product__product_tmpl_id')
         # no hashing
-        tmp_cat = query.join(tmp, 'product_category_id', 'product_category', 'id', 'product_category_id')
-        self.assertEqual(tmp_cat, 'product_product__product_tmpl_id__product_category_id')
+        tmp_cat = query_join(tmp, 'product_category_id', 'product_category')
+        self.assertEqual(tmp_cat._alias, 'product_product__product_tmpl_id__product_category_id')
         # hashing to limit identifier length
-        tmp_cat_cmp = query.join(tmp_cat, 'company_id', 'res_company', 'id', 'company_id')
-        self.assertEqual(tmp_cat_cmp, 'product_product__product_tmpl_id__product_category_id__9f0ddff7')
-        tmp_cat_stm = query.join(tmp_cat, 'salesteam_id', 'res_company', 'id', 'salesteam_id')
-        self.assertEqual(tmp_cat_stm, 'product_product__product_tmpl_id__product_category_id__953a466f')
+        tmp_cat_cmp = query_join(tmp_cat, 'company_id', 'res_company')
+        self.assertEqual(tmp_cat_cmp._alias, 'product_product__product_tmpl_id__product_category_id__9f0ddff7')
+        tmp_cat_stm = query_join(tmp_cat, 'salesteam_id', 'res_company')
+        self.assertEqual(tmp_cat_stm._alias, 'product_product__product_tmpl_id__product_category_id__953a466f')
         # extend hashed identifiers
-        tmp_cat_cmp_par = query.join(tmp_cat_cmp, 'partner_id', 'res_partner', 'id', 'partner_id')
-        self.assertEqual(tmp_cat_cmp_par, 'product_product__product_tmpl_id__product_category_id__56d55687')
-        tmp_cat_stm_par = query.join(tmp_cat_stm, 'partner_id', 'res_partner', 'id', 'partner_id')
-        self.assertEqual(tmp_cat_stm_par, 'product_product__product_tmpl_id__product_category_id__00363fdd')
+        tmp_cat_cmp_par = query_join(tmp_cat_cmp, 'partner_id', 'res_partner')
+        self.assertEqual(tmp_cat_cmp_par._alias, 'product_product__product_tmpl_id__product_category_id__56d55687')
+        tmp_cat_stm_par = query_join(tmp_cat_stm, 'partner_id', 'res_partner')
+        self.assertEqual(tmp_cat_stm_par._alias, 'product_product__product_tmpl_id__product_category_id__00363fdd')
 
     def test_table_expression(self):
         query = Query(None, 'foo', SQL.identifier('foo'))
@@ -69,7 +54,8 @@ class QueryTestCase(BaseCase):
         self.assertEqual(from_clause, '(SELECT id FROM foo) AS "bar"')
 
         query = Query(None, 'foo', SQL.identifier('foo'))
-        query.join('foo', 'bar_id', SQL('(SELECT id FROM foo)'), 'id', 'bar')
+        table = query.table._make_alias('bar')
+        query.add_join('JOIN', table, SQL('(SELECT id FROM foo)'), SQL("%s = %s", query.table.bar_id, table.id))
         from_clause = query.from_clause._sql_tuple[0]
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
 
