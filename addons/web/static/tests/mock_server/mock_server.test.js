@@ -409,6 +409,7 @@ test("performRPC: search_count", async () => {
 
 test("performRPC: search_count with domain", async () => {
     Partner._records.push({ id: 4, name: "José" });
+    Bar._records[2].partner_ids.push(4);
 
     await makeMockServer();
     const result = await ormRequest({
@@ -417,6 +418,40 @@ test("performRPC: search_count with domain", async () => {
         args: [[["name", "=", "José"]]],
     });
     expect(result).toBe(1);
+});
+
+test("performRPC: search_count using x2Many nested fields", async () => {
+    Partner._records.push({ id: 4, name: "José" });
+    Bar._records[2].partner_ids.push(4);
+
+    await makeMockServer();
+    for (const [domain, expectedCount] of [
+        [[["partner_ids.name", "!=", "Not exists"]], 6],
+        [[["partner_ids.name", "=", "Jean-Michel"]], 2],
+        [[["partner_ids.name", "!=", "Jean-Michel"]], 4],
+        [[["partner_ids.name", "=", "José"]], 1],
+        [[["partner_ids.name", "!=", "José"]], 5],
+        [[["partner_ids.name", "in", ["Jean-Michel"]]], 2],
+        [[["partner_ids.name", "not in", ["Jean-Michel"]]], 4],
+        [[["partner_ids.name", "in", ["Jean-Michel", "José"]]], 3],
+        [[["partner_ids.name", "not in", ["Jean-Michel", "José"]]], 3],
+        [[["partner_ids.active", "in", [true, false]]], 3],
+        [
+            [
+                ["partner_ids.active", "in", [true, false]],
+                ["name", "=", "xxx"],
+            ],
+            1,
+        ],
+        // Note that comparison of X2Many with false doesn't work
+    ]) {
+        const resultNested = await ormRequest({
+            model: "bar",
+            method: "search_count",
+            args: [domain],
+        });
+        expect(resultNested).toBe(expectedCount);
+    }
 });
 
 test("performRPC: search_count with domain matching no record", async () => {
