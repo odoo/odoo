@@ -39,6 +39,10 @@
         margin-top: map-get($spacers, 1) / 2;
     }
 
+    &.o-isUiSmall:not(.o-editing) .o-mail-Composer-mainActions {
+        margin-top: map-get($spacers, 1) * 6 / 4;
+    }
+
     &:not(.o-focused) {
         .o-mail-Composer-input::placeholder {
             opacity: 50%;
@@ -128,6 +132,11 @@
     .o-mail-Composer.o-isUiSmall & {
         padding-top: 7px;
         padding-bottom: 7px;
+    }
+
+    .o-mail-Composer.o-isUiSmall:not(.o-editing) & {
+        padding-top: 12px;
+        padding-bottom: 12px;
     }
 }
 
