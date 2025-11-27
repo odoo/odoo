@@ -15,7 +15,7 @@ export class CarouselItemHeaderMiddleButtons extends Component {
         this.state = useDomState((editingElement) => {
             const carouselItemsNumber = editingElement.parentElement.children.length;
             return {
-                disableRemove: carouselItemsNumber === 1,
+                hasMultiItems: carouselItemsNumber > 1,
             };
         });
     }

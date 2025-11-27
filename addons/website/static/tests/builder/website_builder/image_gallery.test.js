@@ -207,7 +207,7 @@ test("Cloning an image gallery should produce a unique ID", async () => {
 test("Changing layout of an image gallery to grid should remove size option on images", async () => {
     await setupWebsiteBuilder(
         `
-        <section class="s_image_gallery o_masonry" data-columns="2">
+        <section class="s_image_gallery o_masonry" data-columns="2" data-snippet="s_images_wall">
             <div class="container">
                 <div class="o_masonry_col col-lg-6">
                     <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
