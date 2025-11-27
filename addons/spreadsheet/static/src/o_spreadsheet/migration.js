@@ -1,6 +1,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
+const { tokenize, parse, convertAstNodes, astToFormula, helpers } = spreadsheet;
 const { migrationStepRegistry } = spreadsheet.registries;
+const { schemeToColorScale } = helpers;
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -167,6 +168,33 @@ migrationStepRegistry.add("19.1.1", {
         }
         delete data.chartOdooMenusReferences;
         data.odooLinkReferences = odooDataSourceRefs;
+        return data;
+    },
+});
+
+migrationStepRegistry.add("19.1.2", {
+    migrate(data) {
+        for (const sheet of data.sheets || []) {
+            for (const figure of sheet.figures || []) {
+                if (figure.tag === "chart" && figure.data.type === "odoo_geo") {
+                    if ("colorScale" in figure.data && typeof figure.data.colorScale === "string") {
+                        figure.data.colorScale = schemeToColorScale(figure.data.colorScale);
+                    }
+                }
+                if (figure.tag === "carousel") {
+                    for (const definition of Object.values(figure.data.chartDefinitions) || []) {
+                        if (definition.type === "odoo_geo") {
+                            if (
+                                "colorScale" in definition &&
+                                typeof definition.colorScale === "string"
+                            ) {
+                                definition.colorScale = schemeToColorScale(definition.colorScale);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return data;
     },
 });
