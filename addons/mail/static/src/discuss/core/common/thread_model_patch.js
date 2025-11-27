@@ -62,7 +62,6 @@ const threadPatch = {
             },
             inverse: "threadAsFirstUnread",
         });
-        this.invited_member_ids = fields.Many("discuss.channel.member");
         this.markReadSequential = useSequential();
         this.markedAsUnread = false;
         this.markingAsRead = false;

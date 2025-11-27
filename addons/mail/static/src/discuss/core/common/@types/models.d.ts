@@ -54,7 +54,6 @@ declare module "models" {
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
         invitationLink: Readonly<unknown|string>;
-        invited_member_ids: ChannelMember[];
         leaveChannel: () => Promise<void>;
         leaveChannelRpc: () => void;
         markAsFetched: () => Promise<void>;
