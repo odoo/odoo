@@ -333,6 +333,11 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <form string="Meetings" class="o_calendar_event_form_quick_create" js_class="calendar_quick_create_form_view">
+                <div class="o_unavailable_attendees_alert alert alert-warning border-0 d-flex flex-wrap m-0 mb-3" role="alert"
+                    invisible="not unavailable_partner_ids or allday">
+                    <span class="me-1">The following attendees are not available at the selected time</span>
+                    <field name="unavailable_partner_ids" widget="many2many_tags"/>
+                </div>
                 <field name="invalid_email_partner_ids" invisible="1"/> <!--used in many2many_attendees widget-->
                 <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
                     <i class="fa fa-fw flex-shrink-0 fa-tag text-600 me-2" title="Booking Name"/>
