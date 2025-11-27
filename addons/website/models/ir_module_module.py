@@ -262,12 +262,21 @@ class IrModuleModule(models.Model):
             return model
         # use active_test to also unlink archived models
         # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
-        orphans = model.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search([
+        orphan_candidates = model.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search([
             ('key', '=like', self.name + '.%'),
             ('website_id', '=', website.id),
             ('theme_template_id', '=', False),
         ])
-        orphans.unlink()
+        # Only delete true orphans: website-specific views whose generic parent
+        # no longer exists. COW views (created when users edit generic views)
+        # have the same key as their generic parent and should NOT be deleted.
+        true_orphans = orphan_candidates.filtered(
+            lambda v: not model.search_count([
+                ('key', '=', v.key),
+                ('website_id', '=', False),
+            ])
+        )
+        true_orphans.unlink()
 
     def _theme_get_upstream(self):
         """
