@@ -148,33 +148,67 @@ class L10nAccountWithholdWizard(models.TransientModel):
     # ===== MOVE CREATION METHODS =====
     def action_create_and_post_withhold(self):
         self.ensure_one()
-        related_move_id = self.related_move_id
-        withholding_account_id = self.company_id.withholding_tax_control_account_id
-        if not withholding_account_id:
-            raise UserError(_("Please configure the withholding control account from the settings"))
+        tax_amount = 0.0
+        header_vals = {
+            'move_type': 'entry',
+            'date': self.date,
+            'journal_id': self.journal_id.id,
+            'company_id': self.company_id.id,
+            'partner_id': self.related_move_id.partner_id.id,
+            'currency_id': self.currency_id.id,
+            'l10n_withholding_ref_move_id': self.related_move_id.id,
+        }
 
-        # Withhold creation and posting
-        vals = self._prepare_withhold_header()
-        move_lines = self._prepare_withhold_move_lines(withholding_account_id)
-        vals['line_ids'] = [Command.create(line) for line in move_lines]
-        withhold = self.with_company(self.company_id).env['account.move'].create(vals)
-        withhold.action_post()
+        line_vals = []
 
-        # Reconcile withhold with related move
-        wh_reconc = withhold.line_ids.filtered(
+        line_vals.append(Command.create({
+            'quantity': 1.0,
+            'price_unit': self.base,
+            'debit': self.base,
+            'credit': 0.0,
+            'account_id': self.company_id.withholding_tax_control_account_id.id,
+            'tax_ids': [Command.set([self.tax_id.id])],
+        }))
+        tax_amount += self.amount
+
+        # balancing line (credit)
+        line_vals.append(Command.create({
+            'quantity': 1.0,
+            'price_unit': self.base,
+            'debit': 0.0,
+            'credit': self.base,
+            'account_id': self.company_id.withholding_tax_control_account_id.id,
+            'tax_ids': False,
+        }))
+
+        # Balance line with partner account (debit)
+        line_vals.append(Command.create({
+            'quantity': 1.0,
+            'debit': tax_amount,
+            'price_unit': tax_amount,
+            'credit': 0.0,
+            'account_id': self.related_move_id.partner_id.property_account_payable_id.id,
+            'tax_ids': False,
+        }))
+        tax_account = self.tax_id.invoice_repartition_line_ids.filtered(lambda r: r.repartition_type == 'tax').account_id
+        line_vals.append(Command.create({
+            'quantity': 1.0,
+            'debit': 0.0,
+            'price_unit': tax_amount,
+            'credit': tax_amount,
+            'account_id': tax_account.id,
+            'tax_ids': False,
+        }))
+        move_id = self.with_company(self.company_id).env['account.move'].create({
+            **header_vals,
+            'line_ids': line_vals,
+        })
+        move_id.action_post()
+        wh_reconc = move_id.line_ids.filtered(
             lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable'))
-        inv_reconc = related_move_id.line_ids.filtered(
+        inv_reconc = self.related_move_id.line_ids.filtered(
             lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable') and not l.reconciled)
         (inv_reconc + wh_reconc).reconcile()
-
-        withhold._message_log(
-            body=Markup("%s: <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
-                _("Withhold created from"),
-                related_move_id._name,
-                related_move_id.id,
-                related_move_id.name
-            ))
-        return withhold
 
     def _prepare_withhold_header(self):
         """ Prepare the header for the withhold entry """
@@ -192,6 +226,7 @@ class L10nAccountWithholdWizard(models.TransientModel):
         """
         Prepare the move lines for the withhold entry
         """
+
         def append_vals(quantity, price_unit, debit, credit, account_id, tax_ids):
             return {
                 'quantity': quantity,
@@ -217,17 +252,22 @@ class L10nAccountWithholdWizard(models.TransientModel):
         debit = self.base if withhold_type in ('in_withhold', 'out_refund_withhold') else 0.0
         credit = 0.0 if withhold_type in ('in_withhold', 'out_refund_withhold') else self.base
         vals.append(append_vals(1.0, self.base, debit, credit, withholding_account_id, [Command.set(self.tax_id.ids)]))
-        total_amount = self.base
+        self.base = self.base
         total_tax = self.amount
 
         # Create move line for the base amount
-        debit = 0.0 if withhold_type in ('in_withhold', 'out_refund_withhold') else total_amount
-        credit = total_amount if withhold_type in ('in_withhold', 'out_refund_withhold') else 0.0
-        vals.append(append_vals(1.0, total_amount, debit, credit, withholding_account_id, False))
+        debit = 0.0 if withhold_type in ('in_withhold', 'out_refund_withhold') else self.base
+        credit = self.base if withhold_type in ('in_withhold', 'out_refund_withhold') else 0.0
+        vals.append(append_vals(1.0, self.base, debit, credit, withholding_account_id, False))
 
         # Create move line for the tax amount
         debit = total_tax if withhold_type in ('in_withhold', 'out_refund_withhold') else 0.0
         credit = 0.0 if withhold_type in ('in_withhold', 'out_refund_withhold') else total_tax
-        vals.append(append_vals(1.0, total_tax, debit, credit, partner_account, False))
+        vals.append(append_vals(1.0, 0, debit, credit, partner_account, False))
+
+        # Create move line for the tax amount
+        debit = 0.0 if withhold_type in ('in_withhold', 'out_refund_withhold') else total_tax
+        credit = total_tax if withhold_type in ('in_withhold', 'out_refund_withhold') else 0.0
+        vals.append(append_vals(1.0, 0, debit, credit, partner_account, False))
 
         return vals

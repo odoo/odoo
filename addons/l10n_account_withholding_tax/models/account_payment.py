@@ -9,7 +9,6 @@ class AccountPayment(models.Model):
     # Fields declaration
     # ------------------
 
-    display_withholding = fields.Boolean(compute='_compute_display_withholding')
     should_withhold_tax = fields.Boolean(
         string='Apply Withholding Tax',
         help="Whether or not to apply withholding taxes on this payment.",
@@ -17,11 +16,6 @@ class AccountPayment(models.Model):
         readonly=False,
         store=True,
         copy=False,
-    )
-    withholding_line_ids = fields.One2many(
-        string='Withholding Lines',
-        comodel_name='account.payment.withholding.line',
-        inverse_name='payment_id',
     )
     withholding_payment_account_id = fields.Many2one(related="payment_method_line_id.payment_account_id")
     # We may need to manually set an account, for this we want it to not be readonly by default.
@@ -53,37 +47,10 @@ class AccountPayment(models.Model):
                 )
                 tax_amount = taxes_res['total_included'] - taxes_res['total_excluded']
             record.withhold_tax_amount = abs(tax_amount)
-            # breakpoint()
-            # record.amount = record.withhold_base_amount
 
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
-
-    @api.depends('company_id')
-    def _compute_display_withholding(self):
-        """ The withholding feature should not show on companies which does not contain any withholding taxes. """
-        for company, payments in self.grouped('company_id').items():
-            if not company:
-                payments.display_withholding = False
-                continue
-
-            withholding_taxes = self.env['account.tax'].search([
-                *self.env['account.tax']._check_company_domain(company),
-                ('is_withholding_tax_on_payment', '=', True),
-            ])
-            for payment in self:
-                # To avoid displaying things for nothing, also ensure to only consider withholding taxes matching the payment type.
-                payment_domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=payment.company_id, payment_type=payment.payment_type)
-                payment_withholding_taxes = withholding_taxes.filtered_domain(payment_domain)
-
-                payment.display_withholding = bool(payment_withholding_taxes)
-
-    @api.depends('withholding_line_ids')
-    def _compute_should_withhold_tax(self):
-        """ Ensures that we display the line table if any withholding line has been added to the payment. """
-        for payment in self:
-            payment.should_withhold_tax = bool(payment.withholding_line_ids)
 
     @api.depends('company_id')
     def _compute_withholding_hide_tax_base_account(self):
@@ -99,25 +66,6 @@ class AccountPayment(models.Model):
         """ Update the computation to reset the account when should_withhold_tax is unchecked. """
         super()._compute_outstanding_account_id()
 
-    # ----------------------------
-    # Onchange, Constraint methods
-    # ----------------------------
-
-    @api.onchange('withholding_line_ids')
-    def _onchange_withholding_line_ids(self):
-        """
-        Any time a line is edited, we want to check if we need to recompute the placeholders.
-        The idea is to try and display accurate placeholders on lines whose tax have a sequence set.
-        """
-        self.ensure_one()
-        if (
-            not self.display_withholding
-            or not self.withholding_line_ids._need_update_withholding_lines_placeholder()
-        ):
-            return
-
-        self.withholding_line_ids._update_placeholders()
-
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
@@ -129,9 +77,9 @@ class AccountPayment(models.Model):
             line_ids=line_ids,
         )
 
-        if self.withholding_line_ids and not self.outstanding_account_id:
+        if self.withhold_base_amount and self.withhold_tax_id and self.withhold_tax_amount and not self.outstanding_account_id:
             tax_amount = 0.0
-            total_amount = sum(self.withholding_line_ids.mapped('base_amount'))
+            total_amount = self.withhold_base_amount
             header_vals = {
                 'move_type': 'entry',
                 'ref': self.memo,
@@ -144,20 +92,18 @@ class AccountPayment(models.Model):
 
             line_vals = []
 
-            for line in self.withholding_line_ids:
-                tax_account = line.tax_id.invoice_repartition_line_ids.filtered(lambda r: r.repartition_type == 'tax').account_id
-                line_vals.append(Command.create({
-                    'quantity': 1.0,
-                    'price_unit': line.base_amount,
-                    'debit': line.base_amount,
-                    'credit': 0.0,
-                    'account_id': self.company_id.withholding_tax_control_account_id.id,
-                    'tax_ids': [Command.set([line.tax_id.id])],
-                }))
-                tax_amount += line.amount
-                self.withhold_tax_id = line.tax_id
-                self.withhold_base_amount = line.withholding_base_amount
-                self.withhold_tax_amount = tax_amount
+            tax_account = self.withhold_tax_id.invoice_repartition_line_ids.filtered(lambda r: r.repartition_type == 'tax').account_id
+            line_vals.append(Command.create({
+                'quantity': 1.0,
+                'price_unit': total_amount,
+                'debit': total_amount,
+                'credit': 0.0,
+                'account_id': self.company_id.withholding_tax_control_account_id.id,
+                'tax_ids': [Command.set([self.withhold_tax_id.id])],
+            }))
+            self.withhold_tax_id = self.withhold_tax_id
+            self.withhold_base_amount = self.withhold_base_amount
+            self.withhold_tax_amount = self.withhold_tax_amount
 
             # balancing line (credit)
             line_vals.append(Command.create({
@@ -198,7 +144,8 @@ class AccountPayment(models.Model):
     @api.model
     def _get_trigger_fields_to_synchronize(self):
         # EXTEND account to add the withholding fields in the list.
-        return super()._get_trigger_fields_to_synchronize() + ('withholding_line_ids', 'should_withhold_tax')
+        # return super()._get_trigger_fields_to_synchronize() + ('withholding_line_ids', 'should_withhold_tax')
+        return super()._get_trigger_fields_to_synchronize() + ('should_withhold_tax',)
 
     # def _synchronize_to_moves(self, changed_fields):
     #     """ Updates the synchronization in order to ensure that the entry takes into account changes in the withholding lines. """
@@ -259,24 +206,24 @@ class AccountPayment(models.Model):
         """ Ensure that the generated payment entry takes into account the withholding lines. """
         # EXTEND account
         move_vals = super()._generate_move_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance, line_ids=line_ids)
-        if not self.withholding_line_ids or not self.should_withhold_tax:
+        if not self.withhold_tax_amount or not self.should_withhold_tax:
             return move_vals
         withhold_vals = []
-        tax_amount = 0.0
-        total_amount = sum(self.withholding_line_ids.mapped('base_amount'))
+        tax_amount = self.withhold_tax_amount
+        total_amount = self.withhold_base_amount
 
-        for line in self.withholding_line_ids:
-            tax_account = line.tax_id.invoice_repartition_line_ids.filtered(
-                lambda r: r.repartition_type == 'tax').account_id
-            withhold_vals.append(Command.create({
-                'quantity': 1.0,
-                'price_unit': line.base_amount,
-                'debit': line.base_amount,
-                'credit': 0.0,
-                'account_id': self.company_id.withholding_tax_control_account_id.id,
-                'tax_ids': [Command.set([line.tax_id.id])],
-            }))
-            tax_amount += line.amount
+        tax_account = self.withhold_tax_id.invoice_repartition_line_ids.filtered(lambda r: r.repartition_type == 'tax').account_id
+        withhold_vals.append(Command.create({
+            'quantity': 1.0,
+            'price_unit': total_amount,
+            'debit': total_amount,
+            'credit': 0.0,
+            'account_id': self.company_id.withholding_tax_control_account_id.id,
+            'tax_ids': [Command.set([self.withhold_tax_id.id])],
+        }))
+        self.withhold_tax_id = self.withhold_tax_id
+        self.withhold_base_amount = self.withhold_base_amount
+        self.withhold_tax_amount = self.withhold_tax_amount
 
         # balancing line (credit)
         withhold_vals.append(Command.create({
@@ -308,16 +255,6 @@ class AccountPayment(models.Model):
             'tax_ids': False,
             'is_withhold_line': True,
         }))
-
-        for line in move_vals['line_ids']:
-            move_line = line[2]
-            amount_currency = move_line['amount_currency']
-            if amount_currency > 0.0:
-                line[2]['debit'] -= tax_amount
-                line[2]['amount_currency'] -= tax_amount
-            else:
-                line[2]['credit'] -= tax_amount
-                line[2]['amount_currency'] += tax_amount
 
         move_vals['line_ids'] += withhold_vals
         return move_vals

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
             <group name="group1" position="inside">
-                <field name="should_withhold_tax" invisible="not display_withholding"/>
+                <field name="should_withhold_tax"/>
                 <field name="withhold_tax_id" invisible="not should_withhold_tax"/>
                 <field name="withhold_base_amount" invisible="not should_withhold_tax"/>
                 <field name="withhold_tax_amount" invisible="not should_withhold_tax"/>

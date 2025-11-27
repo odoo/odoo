@@ -10,7 +10,6 @@ class AccountPaymentRegister(models.TransientModel):
     # Fields declaration
     # ------------------
 
-    display_withholding = fields.Boolean(compute='_compute_display_withholding')
     should_withhold_tax = fields.Boolean(
         string='Withhold Tax Amounts',
         readonly=False,
@@ -28,10 +27,6 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=False,
     )
     withhold_tax_amount = fields.Monetary(string="Withholding Tax Amount", compute='_compute_withhold_tax_amount')
-    amount_after_withholding = fields.Monetary(
-        string="Amount After Withholding",
-        compute='_compute_amount_after_withholding',
-    )
     withhold_account_ids = fields.Many2many(
         comodel_name='account.account',
         compute='_compute_withhold_account_ids',
@@ -66,12 +61,6 @@ class AccountPaymentRegister(models.TransientModel):
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
-
-    @api.depends('amount', 'withhold_tax_amount', 'should_withhold_tax')
-    def _compute_amount_after_withholding(self):
-        for wizard in self:
-            if wizard.should_withhold_tax:
-                wizard.amount_after_withholding = wizard.amount - wizard.withhold_tax_amount
 
     @api.depends('withhold_tax_id', 'should_withhold_tax')
     def _compute_withhold_base_amount(self):
@@ -120,7 +109,7 @@ class AccountPaymentRegister(models.TransientModel):
                 )
                 tax_amount = taxes_res['total_included'] - taxes_res['total_excluded']
             wizard.withhold_tax_amount = abs(tax_amount)
-            wizard.amount = wizard.withhold_base_amount
+            wizard.amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.should_withhold_tax else wizard.withhold_base_amount
 
     @api.depends('withholding_payment_account_id', 'should_withhold_tax')
     def _compute_withholding_outstanding_account_id(self):
@@ -150,34 +139,6 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.withholding_outstanding_account_id = wizard.withholding_outstanding_account_id
             else:
                 wizard.withholding_outstanding_account_id = latest_payment[0]['outstanding_account_id'][0]
-
-    @api.depends('company_id', 'can_edit_wizard', 'can_group_payments', 'group_payment')
-    def _compute_display_withholding(self):
-        """ The withholding feature should not show on companies which does not contain any withholding taxes. """
-        for company, wizards in self.grouped('company_id').items():
-            if not company:
-                wizards.display_withholding = False
-                continue
-
-            withholding_taxes = self.env['account.tax'].search([
-                *self.env['account.tax']._check_company_domain(company),
-                ('is_withholding_tax_on_payment', '=', True),
-            ])
-            for wizard in self:
-                # To avoid displaying things for nothing, also ensure to only consider withholding taxes matching the payment type.
-                payment_type = wizard.payment_type
-                if any(line.is_refund for line in wizard.line_ids):
-                    # In case of refunds, the payment type won't match the type_tax_use, we need to invert it.
-                    if wizard.payment_type == 'inbound':
-                        payment_type = 'outbound'
-                    else:
-                        payment_type = 'inbound'
-
-                wizard_domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=wizard.company_id, payment_type=payment_type)
-                wizard_withholding_taxes = withholding_taxes.filtered_domain(wizard_domain)
-
-                will_create_multiple_entry = not wizard.can_edit_wizard or (wizard.can_group_payments and not wizard.group_payment)
-                wizard.display_withholding = bool(wizard_withholding_taxes) and not will_create_multiple_entry
 
     @api.depends('company_id')
     def _compute_withholding_hide_tax_base_account(self):
@@ -210,23 +171,27 @@ class AccountPaymentRegister(models.TransientModel):
         withholding_account = self.company_id.withholding_tax_control_account_id
         if not withholding_account:
             raise UserError(self.env._("Please configure the withholding control account from the settings"))
-        payment_vals['withholding_line_ids'] = [(Command.create({
-                'analytic_distribution': False,
-                'analytic_precision': 2,
-                'name': False,
-                'placeholder_type': 'given_by_sequence',
-                'previous_placeholder_type': False,
-                'tax_id': self.withhold_tax_id.id,
-                'source_base_amount_currency': self.withhold_base_amount,
-                'source_base_amount': self.withhold_base_amount,
-                'source_tax_amount_currency': self.withhold_tax_amount,
-                'source_tax_amount': self.withhold_tax_amount,
-                'source_currency_id': 1,
-                'source_tax_id': False,
-                'base_amount': self.withhold_base_amount,
-                'amount': self.withhold_tax_amount,
-                'account_id': withholding_account.id,
-        }))]
+        # payment_vals['withholding_line_ids'] = [(Command.create({
+        #         'analytic_distribution': False,
+        #         'analytic_precision': 2,
+        #         'name': False,
+        #         'placeholder_type': 'given_by_sequence',
+        #         'previous_placeholder_type': False,
+        #         'tax_id': self.withhold_tax_id.id,
+        #         'source_base_amount_currency': self.withhold_base_amount,
+        #         'source_base_amount': self.withhold_base_amount,
+        #         'source_tax_amount_currency': self.withhold_tax_amount,
+        #         'source_tax_amount': self.withhold_tax_amount,
+        #         'source_currency_id': 1,
+        #         'source_tax_id': False,
+        #         'base_amount': self.withhold_base_amount,
+        #         'amount': self.withhold_tax_amount,
+        #         'account_id': withholding_account.id,
+        # }))]
+        payment_vals['should_withhold_tax'] = self.should_withhold_tax
+        payment_vals['withhold_base_amount'] = self.withhold_base_amount
+        payment_vals['withhold_tax_amount'] = self.withhold_tax_amount
+        payment_vals['withhold_tax_id'] = self.withhold_tax_id.id
         return payment_vals
 
     # ----------------
