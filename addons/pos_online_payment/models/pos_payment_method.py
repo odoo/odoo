@@ -97,7 +97,9 @@ class PosPaymentMethod(models.Model):
             vals['payment_method_type'] = 'none'
 
     def _get_payment_terminal_selection(self):
-        return super(PosPaymentMethod, self)._get_payment_terminal_selection() if not self.is_online_payment else []
+        if len(self) == 1 and self.is_online_payment:
+            return []
+        return super()._get_payment_terminal_selection()
 
     @api.depends('type')
     def _compute_hide_use_payment_terminal(self):
