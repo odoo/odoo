@@ -1173,6 +1173,13 @@ X[]
                         contentAfter: unformat(`<div>a[]d</div>`),
                     });
                 });
+                it('should fill empty block with a <br>', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>[]<i class="fa fa-bug" contenteditable="false"></i></p>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
+                });
             });
         });
         describe('Selection not collapsed', () => {
@@ -2849,6 +2856,11 @@ X[]
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><img>[]</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><i class="fa fa-bug" contenteditable="false"></i>[]</p>',
                         stepFunction: deleteBackward,
                         contentAfter: '<p>[]<br></p>',
                     });
