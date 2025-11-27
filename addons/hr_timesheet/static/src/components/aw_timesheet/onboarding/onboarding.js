@@ -10,11 +10,7 @@ export class ActivityWatchOnboarding extends Component {
         os: this.detectOS(),
         isDev: false,
         ideSelections: [],
-        watchers: ["aw-watcher-afk", "aw-watcher-window"],
-        installWeb: false,
-        odooDomain: "",
-        scriptGenerated: false,
-        scriptText: "",
+        installWeb: true,
     });
 
     // Browser & OS detection
@@ -35,36 +31,26 @@ export class ActivityWatchOnboarding extends Component {
         return "Unknown";
     }
 
-    // Event handlers
     toggleDev(ev) {
         this.state.isDev = ev.target.checked;
-        if (!this.state.isDev) this.state.ideSelections = [];
+        if (!this.state.isDev) {
+            this.state.ideSelections = [];
+        }
     }
 
     toggleIDE(ev) {
         const ide = ev.target.value;
         if (ev.target.checked) {
-            if (!this.state.ideSelections.includes(ide)) this.state.ideSelections.push(ide);
+            if (!this.state.ideSelections.includes(ide)) {
+                this.state.ideSelections.push(ide);
+            }
         } else {
             this.state.ideSelections = this.state.ideSelections.filter(i => i !== ide);
         }
     }
 
-    toggleWatcher(ev) {
-        const watcher = ev.target.value;
-        if (ev.target.checked) {
-            if (!this.state.watchers.includes(watcher)) this.state.watchers.push(watcher);
-        } else {
-            this.state.watchers = this.state.watchers.filter(w => w !== watcher);
-        }
-    }
-
     toggleWebWatcher(ev) {
         this.state.installWeb = ev.target.checked;
-    }
-
-    setOdooDomain(ev) {
-        this.state.odooDomain = ev.target.value;
     }
 
     generateScript() {
@@ -93,7 +79,6 @@ export class ActivityWatchOnboarding extends Component {
         lines.push('');
         lines.push('# for this poc, i\'m just focusing on chrome and vsCode on Linux, we will make it generic');
 
-        // VSCode
         if (this.state.ideSelections.includes("vscode")) {
             lines.push('echo "Installing VSCode extension"');
             lines.push('if command -v code > /dev/null 2>&1; then');
@@ -103,8 +88,8 @@ export class ActivityWatchOnboarding extends Component {
             lines.push('fi');
             lines.push('');
         }
+        // should handle other ides
 
-        // Chrome extension
         if (this.state.installWeb) {
             lines.push('# important info to know, if the user uninstall the extension manually from the ui, it will move to the blocklist, and can\'t be installed again with this script');
             lines.push('# as google said on the doc: If the user uninstalls your extension, you should respect that decision.');
@@ -119,23 +104,29 @@ export class ActivityWatchOnboarding extends Component {
             lines.push('done');
             lines.push('echo "Chrome extension, restart Chrome and verify via chrome://extensions/"');
             lines.push('');
-        }
+        } // should check the extension for other browsers
 
         // Start ActivityWatch
         lines.push('echo "Starting ActivityWatch"');
-        lines.push('# Run aw-server (should fill the cors link from input field in odoo)');
-        lines.push(`(cd "$INSTALL_DIR/activitywatch/aw-server" && ./aw-server --port 5700 &)`);
-        lines.push('# Run aw-watcher-afk because with aw-server, they\'re buggy sometimes');
-        if (this.state.watchers.includes("aw-watcher-afk")) lines.push('(cd "$INSTALL_DIR/activitywatch/aw-watcher-afk" && ./aw-watcher-afk &)');
-        lines.push('# same to make sure they\'re working');
-        if (this.state.watchers.includes("aw-watcher-window")) lines.push('(cd "$INSTALL_DIR/activitywatch/aw-watcher-window" && ./aw-watcher-window &)');
-        lines.push('');
-        lines.push('echo "Installation completed"');
+        const odooUrl = window.location.origin;
+        // we need to check the conf file, it looks easier
+        lines.push("cd activitywatch");
+        lines.push("./aw-watcher-afk/aw-watcher-afk &");
+        lines.push("./aw-watcher-window/aw-watcher-window &");
+        lines.push(`./aw-server/aw-server --cors-origins ${odooUrl}`);
+        lines.push("echo 'Installation completed'");
 
-        this.state.scriptText = lines.join("\n");
-        this.state.scriptGenerated = true;
+        const scriptText = lines.join("\n");
+        const blob = new Blob([scriptText], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "start.sh";
+        a.click();
+
+        URL.revokeObjectURL(url);
     }
-
 }
 
 ActivityWatchOnboarding.template = "hr_timesheet.OnboardingPage";

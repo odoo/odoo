@@ -400,7 +400,7 @@ export class ActivityWatchTimesheet extends Component {
             ],
         ]);
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
-        const baseUrl = "http://localhost:5700";
+        const baseUrl = "http://localhost:5600";
         const todayStart = this.state.currentDate.toISO();
         const todayEnd = this.state.currentDate.endOf("day").toISO();
         const events = await this.loadAwEvents(baseUrl, todayStart, todayEnd);
