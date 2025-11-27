@@ -1,8 +1,7 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, effect, useState } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "../standard_field_props";
 
 export class BooleanField extends Component {
@@ -14,8 +13,8 @@ export class BooleanField extends Component {
 
     setup() {
         this.state = useState({});
-        useRecordObserver((record) => {
-            this.state.value = record.data[this.props.name];
+        effect(() => {
+            this.state.value = this.props.record.data[this.props.name];
         });
     }
 

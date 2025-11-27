@@ -1,4 +1,4 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { expect, getFixture, queryRect, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -12,7 +12,7 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, reactive, useRef, useState, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -1314,34 +1314,32 @@ test("multi-level dropdown: keynav when rtl direction", async () => {
 
 test.tags("desktop");
 test("multi-level dropdown: submenu keeps position when patched", async () => {
-    expect.assertions(6);
-
-    patchWithCleanup(Dropdown.prototype, {
+    class TestDropdown extends Dropdown {
         setup() {
-            super.setup(...arguments);
+            super.setup();
             if (this.hasParent) {
                 onMounted(() => {
                     expect.step(`submenu mounted`);
                 });
-                let previousMenuRect;
-                onPatched(() => {
-                    expect.step(`submenu patched`);
-                    if (this.state.isOpen && this.menuRef.el) {
-                        const subMenuRect = this.menuRef.el.getBoundingClientRect();
-                        if (previousMenuRect) {
-                            expect(subMenuRect.top).toBe(previousMenuRect.top);
-                            expect(subMenuRect.left).toBe(previousMenuRect.left);
-                        }
-                        previousMenuRect = subMenuRect;
-                    }
-                });
             }
-        },
-    });
+        }
+    }
+
+    class TestDropdownItem extends DropdownItem {
+        setup() {
+            super.setup();
+            onMounted(() => {
+                expect.step(`menuitem mounted`);
+            });
+            onWillUnmount(() => {
+                expect.step(`menuitem unmounted`);
+            });
+        }
+    }
 
     let parentState;
     class Parent extends Component {
-        static components = { Dropdown, DropdownItem };
+        static components = { Dropdown: TestDropdown, DropdownItem: TestDropdownItem };
         static props = [];
         static template = xml`
                 <Dropdown>
@@ -1357,7 +1355,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                 </Dropdown>
             `;
         setup() {
-            this.state = useState({ foo: false });
+            this.state = reactive({ foo: false });
             parentState = this.state;
         }
     }
@@ -1373,15 +1371,21 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     // Open the submenu
     await click(".two");
     await animationFrame();
+    const menuRect = queryRect(".o-dropdown--menu-submenu");
+    expect.verifySteps([]);
+
     // Change submenu content
     parentState.foo = true;
     await animationFrame();
-    expect.verifySteps(["submenu patched"]);
+    expect.verifySteps(["menuitem mounted"]);
+    const menuRectWithItem = queryRect(".o-dropdown--menu-submenu");
+    expect(menuRectWithItem.top).toBe(menuRect.top);
+    expect(menuRectWithItem.left).toBe(menuRect.left);
 
     // Change submenu content
     parentState.foo = false;
     await animationFrame();
-    expect.verifySteps(["submenu patched"]);
+    expect.verifySteps(["menuitem unmounted"]);
 });
 
 test.tags("desktop");

@@ -1,7 +1,7 @@
 import { Component, xml } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 
-import { advanceTime, animationFrame, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, expect, microTick, test } from "@odoo/hoot";
 import {
     getService,
     makeMockEnv,
@@ -56,6 +56,7 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
     expect(`.checkbox_to_disable`).not.toHaveAttribute("disabled");
 
     getService("offline").status.offline = true;
+    await microTick();
     expect(`.button_to_disable`).toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
     expect(`.checkbox_to_disable`).toHaveAttribute("disabled");
@@ -64,6 +65,7 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
     expect(`.checkbox_to_disable`).toHaveClass("o_disabled_offline");
 
     getService("offline").status.offline = false;
+    await microTick();
     expect(`.button_to_disable`).not.toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
     expect(`.checkbox_to_disable`).not.toHaveAttribute("disabled");
@@ -117,6 +119,7 @@ test("Repeatedly check connection when going offline", async () => {
 
     // go offline
     env.services.offline.status.offline = true;
+    await microTick();
 
     expect(env.services.offline.status.offline).toBe(true);
     await advanceTime(2000); // first version_info check

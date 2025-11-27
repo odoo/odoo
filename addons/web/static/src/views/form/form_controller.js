@@ -35,16 +35,15 @@ import {
     Component,
     onError,
     onMounted,
-    onRendered,
     onWillUnmount,
     status,
     useComponent,
     useEffect,
     useRef,
     useState,
+    effect,
 } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
-import { effect } from "@web/core/utils/reactive";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 const viewRegistry = registry.category("views");
@@ -215,14 +214,11 @@ export class FormController extends Component {
         this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
 
         onMounted(() => {
-            effect(
-                (model) => {
-                    if (status(this) === "mounted") {
-                        this.props.updateActionState({ resId: model.root.resId });
-                    }
-                },
-                [this.model]
-            );
+            effect(() => {
+                if (status(this) === "mounted") {
+                    this.props.updateActionState({ resId: this.model.root.resId });
+                }
+            });
         });
 
         onError((error) => {
@@ -304,8 +300,10 @@ export class FormController extends Component {
             }
         });
 
-        onRendered(() => {
-            this.env.config.setDisplayName(this.displayName());
+        onMounted(() => {
+            effect(() => {
+                this.env.config.setDisplayName(this.displayName());
+            });
         });
 
         const { disableAutofocus } = this.archInfo;

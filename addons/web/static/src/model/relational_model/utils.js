@@ -1,4 +1,11 @@
-import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
+import {
+    markup,
+    onWillDestroy,
+    onWillStart,
+    onWillUpdateProps,
+    useComponent,
+    effect,
+} from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import {
@@ -10,7 +17,6 @@ import {
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { omit } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
@@ -769,29 +775,24 @@ export function useRecordObserver(callback) {
         const { promise, resolve, reject } = Promise.withResolvers();
         const effectId = currentId;
         let firstCall = true;
-        effect(
-            (record) => {
-                if (firstCall) {
-                    firstCall = false;
-                    return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
-                } else {
-                    return batched(
-                        (record) => {
-                            if (effectId !== currentId) {
-                                // effect doesn't clean up when the component is unmounted.
-                                // We must do it manually.
-                                return;
-                            }
-                            return Promise.resolve(callback(record, props))
-                                .then(resolve)
-                                .catch(reject);
-                        },
-                        () => new Promise((res) => window.requestAnimationFrame(res))
-                    )(record);
-                }
-            },
-            [props.record]
-        );
+        effect(() => {
+            if (firstCall) {
+                firstCall = false;
+                return Promise.resolve(callback(props.record, props)).then(resolve).catch(reject);
+            } else {
+                return batched(
+                    (record) => {
+                        if (effectId !== currentId) {
+                            // effect doesn't clean up when the component is unmounted.
+                            // We must do it manually.
+                            return;
+                        }
+                        return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
+                    },
+                    () => new Promise((res) => window.requestAnimationFrame(res))
+                )(props.record);
+            }
+        });
         return promise;
     };
     onWillDestroy(() => {

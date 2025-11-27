@@ -51,9 +51,6 @@ test("reactivity: useState & update getter object", async () => {
     });
 
     await mountInput(() => {
-        const state = useState(pickerProps);
-        state.value; // artificially subscribe to value
-
         useDateTimePicker({
             get pickerProps() {
                 return pickerProps;
@@ -145,7 +142,7 @@ test("value is not updated if it did not change", async () => {
     expect.verifySteps(["2023-07-07"]);
 });
 
-test("close popover when owner component is unmounted", async() => {
+test("close popover when owner component is unmounted", async () => {
     class Child extends Component {
         static components = { DateTimeInput };
         static props = [];
@@ -162,7 +159,7 @@ test("close popover when owner component is unmounted", async() => {
                     value: [false, false],
                     type: "date",
                     range: true,
-                }
+                },
             });
         }
     }
