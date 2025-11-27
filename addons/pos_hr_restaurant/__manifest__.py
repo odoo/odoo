@@ -14,6 +14,9 @@ This module adapts the behavior of the PoS when the pos_hr and pos_restaurant ar
         'point_of_sale._assets_pos': [
             'pos_hr_restaurant/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'pos_hr_restaurant/static/tests/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

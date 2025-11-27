@@ -115,20 +115,15 @@ export class CashierSelector {
 
         const currentScreen = this.pos.router.state.current;
         if (currentScreen === "LoginScreen" && login && employee) {
-            const isRestaurant = this.pos.config.module_pos_restaurant;
-            const selectedScreen =
-                this.pos.previousScreen && this.pos.previousScreen !== "LoginScreen"
-                    ? this.pos.previousScreen
-                    : isRestaurant
-                    ? "FloorScreen"
-                    : "ProductScreen";
+            const selectedScreen = this.pos.defaultPage;
             const props = {
+                ...selectedScreen?.params,
                 orderUuid: this.pos.selectedOrderUuid,
             };
-            if (selectedScreen === "FloorScreen") {
+            if (selectedScreen.page === "FloorScreen") {
                 delete props.orderUuid;
             }
-            this.pos.navigate(selectedScreen, props);
+            this.pos.navigate(selectedScreen.page, props);
         }
 
         return employee;
