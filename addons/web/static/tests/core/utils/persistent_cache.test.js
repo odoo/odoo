@@ -94,3 +94,14 @@ test("PersistentCache: can cache a simple call", async () => {
         value: { test: 456 },
     });
 });
+
+test("rejected promise is rejected for all reads", async () => {
+    const persistentCache = new PersistentCache("mockRpc", 1);
+    const fail = async () => {
+        throw new Error("fetch failed");
+    }
+    const promA = persistentCache.read("table", "key", fail);
+    const promB = persistentCache.read("table", "key", fail);
+    await expect(promA).rejects.toThrow("fetch failed");
+    await expect(promB).rejects.toThrow("fetch failed");
+});
