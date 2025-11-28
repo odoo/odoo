@@ -351,6 +351,35 @@ class TestDictTools(BaseCase):
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
+class TestDiffTools(BaseCase):
+    def test_diff_zip(self):
+        self.assertEqual(
+            list(misc.diff_zip(['a', 'b', 'c'], ['a', 'b', 'c'])),
+            [('a', 'a'), ('b', 'b'), ('c', 'c')],
+        )
+        self.assertEqual(
+            list(misc.diff_zip(['a', 'b', 'x', 'c'], ['a', 'b', 'c'])),
+            [('a', 'a'), ('b', 'b'), ('x', None), ('c', 'c')],
+        )
+        self.assertEqual(
+            list(misc.diff_zip(['a', 'b', 'c'], ['a', 'x', 'b', 'c'])),
+            [('a', 'a'), (None, 'x'), ('b', 'b'), ('c', 'c')],
+        )
+        self.assertEqual(
+            list(misc.diff_zip(['a', 'b', 'c'], ['x', 'y', 'z', 'c'])),
+            [('a', None), ('b', None), (None, 'x'), (None, 'y'), (None, 'z'), ('c', 'c')],
+        )
+        self.assertEqual(
+            list(misc.diff_zip(['w', 'a', 'x', 'b', 'c', 'z'], ['a', 'b', 'y', 'c'])),
+            [('w', None), ('a', 'a'), ('x', None), ('b', 'b'), (None, 'y'), ('c', 'c'), ('z', None)],
+        )
+        self.assertEqual(
+            list(misc.diff_zip(['a', 'b', 'y', 'c'], ['w', 'a', 'x', 'b', 'c', 'z'])),
+            [(None, 'w'), ('a', 'a'), (None, 'x'), ('b', 'b'), ('y', None), ('c', 'c'), (None, 'z')],
+        )
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFormatLang(TransactionCase):
     def test_value_and_digits(self):
         self.assertEqual(misc.formatLang(self.env, 100.23, digits=1), '100.2')
