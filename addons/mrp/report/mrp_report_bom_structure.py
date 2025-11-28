@@ -304,7 +304,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         if not is_minimized:
 
-            operations = self._get_operation_line(product, bom, float_round(current_quantity, precision_rounding=1, rounding_method='UP'), level + 1, index, bom_report_line, simulated_leaves_per_workcenter)
+            operations = self._get_operation_line(product, bom, float_round(current_quantity, precision_digits=self.env['decimal.precision'].precision_get('Product Unit'), rounding_method='UP'), level + 1, index, bom_report_line, simulated_leaves_per_workcenter)
             bom_report_line['operations'] = operations
             bom_report_line['operations_cost'] = sum(op['bom_cost'] for op in operations)
             bom_report_line['operations_time'] = sum(op['quantity'] for op in operations)
