@@ -32,7 +32,7 @@ class OdooIMAP4(IMAP4):
     def check_unread_messages(self):
         self.select()
         _result, data = self.search(None, '(UNSEEN)')
-        self._unread_messages = data[0].split()
+        self._unread_messages = data[0].split() if data and data[0] else []
         self._unread_messages.reverse()
         return len(self._unread_messages)
 
