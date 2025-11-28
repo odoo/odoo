@@ -1004,11 +1004,13 @@ registry.category("web_tour.tours").add("test_remove_archived_product_from_cache
 registry.category("web_tour.tours").add("test_preset_timing_retail", {
     steps: () =>
         [
+            Chrome.freezeDateTime(1764583200000), // 1 dec 2025 - 10:00
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.selectPreset("Dine in", "Delivery"),
             PartnerList.clickPartner("A simple PoS man!"),
+            Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("15:00"),
             Chrome.presetTimingSlotIs("15:00"),
             Chrome.createFloatingOrder(),
