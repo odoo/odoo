@@ -9,6 +9,7 @@ import { BuilderComponent } from "./builder_component";
 import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
+    revertPreview,
     useBuilderComponent,
     useDomState,
     useHasPreview,
@@ -101,9 +102,7 @@ export function useColorPickerBuilderComponent() {
         onPreview,
         onPreviewRevert: () => {
             previewValue = null;
-            // The `next` will cancel the previous operation, which will revert
-            // the operation in case of a preview.
-            comp.env.editor.shared.operation.next();
+            revertPreview(comp.env.editor);
         },
     };
 }
