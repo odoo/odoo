@@ -1111,3 +1111,13 @@ class TestHrAttendanceOvertime(HttpCase):
 
             self.assertAlmostEqual(attendance_company_be.overtime_hours, 8, 2, "Employee from Company 1 should have overtime for working on a public holiday.")
             self.assertAlmostEqual(attendance_company_de.overtime_hours, 0, 2, "Employee from Company 2 should not have overtime for working on a non-holiday day.")
+
+    def test_officer_access_on_overtime_records(self):
+        user1 = new_test_user(self.env, login='user1', groups='hr_attendance.group_hr_attendance_officer', company_id=self.company.id).with_company(self.company)
+        self.other_employee.attendance_manager_id = user1.id
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.other_employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 20, 0)
+        })
+        self.assertTrue(attendance.with_user(user1).linked_overtime_ids.rule_ids.has_access("read"))
