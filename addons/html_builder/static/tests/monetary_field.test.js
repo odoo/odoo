@@ -42,7 +42,6 @@ test("should restrict the monetary field to digits, dot, and comma only", async 
     const monetaryField = queryOne(":iframe span.span-in-currency span.oe_currency_value");
 
     // Cursor at end of monetary field.
-    editor.shared.selection.focusEditable();
     editor.shared.selection.setSelection({
         anchorNode: monetaryField,
         anchorOffset: nodeSize(monetaryField),
