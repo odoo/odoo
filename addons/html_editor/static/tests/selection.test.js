@@ -226,6 +226,23 @@ test("press 'ctrl+a' in 'contenteditable' should only select his content", async
     );
 });
 
+test.tags("focus required");
+test("should focus the nearest editable ancestor when selection is inside a non-editable", async () => {
+    const { editor } = await setupEditor(
+        `<div contenteditable="false"><p contenteditable="true">[test]</p></div>`
+    );
+    const p = queryOne('p[contenteditable="true"]');
+    expect(p).toBeFocused();
+
+    // Moved focus outside of the editable
+    p.blur();
+    expect(document.body).toBeFocused();
+
+    editor.shared.selection.focusEditable();
+    // Focus should be on the closest editable element of the selection
+    expect(p).toBeFocused();
+});
+
 test("restore a selection when you are not in the editable shouldn't move the focus", async () => {
     class TestInput extends Component {
         static template = xml`<input t-ref="input" t-att-value="'eee'" class="test"/>`;
