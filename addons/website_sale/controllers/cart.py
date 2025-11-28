@@ -451,6 +451,7 @@ class Cart(PaymentPortal):
         if not lines:
             return {}
 
+        show_tax = order.website_id.show_line_subtotals_tax_selection == 'tax_included'
         return {
             'currency_id': order.currency_id.id,
             'lines': [
@@ -461,7 +462,10 @@ class Cart(PaymentPortal):
                     'name': line._get_line_header(),
                     'combination_name': line._get_combination_name(),
                     'description': line._get_sale_order_line_multiline_description_variants(),
-                    'price_total': line.price_unit * added_qty_per_line[line.id],
+                    'price_total': (
+                        line.price_reduce_taxinc
+                        if show_tax else line.price_reduce_taxexcl
+                    ) * added_qty_per_line[line.id],
                     **self._get_additional_cart_notification_information(line),
                 } for line in lines
             ],
