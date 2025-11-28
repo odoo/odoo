@@ -63,6 +63,7 @@ class ProductProduct(models.Model):
         Used to compute margins on sale orders.""")
     volume = fields.Float('Volume', digits='Volume')
     weight = fields.Float('Weight', digits='Stock Weight')
+    net_weight = fields.Float('Weight (net)', digits='Stock Weight')
 
     pricelist_rule_ids = fields.One2many(
         string="Pricelist Rules",
