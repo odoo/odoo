@@ -7,17 +7,4 @@
     </xpath>
   </t>
 
-  <t t-name="point_of_sale.Dialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="extension">
-    <xpath expr="//Dialog" position="attributes">
-      <attribute name="contentClass">'o_confirmation_dialog ' + (props.contentClass || '')</attribute>
-    </xpath>
-  </t>
-
-  <t t-name="point_of_sale.AlertDialog" t-inherit="web.AlertDialog" t-inherit-mode="extension">
-    <xpath expr="//Dialog" position="attributes">
-      <attribute name="size">'md'</attribute>
-      <attribute name="contentClass">'o_alert_dialog ' + (props.contentClass || '')</attribute>
-    </xpath>
-  </t>
-
 </templates>
