@@ -48,6 +48,7 @@ export class InvoiceButton extends Component {
                 this.dialog.add(AlertDialog, {
                     title: _t("Network Error"),
                     body: _t("Unable to download invoice."),
+                    showReloadButton: true,
                 });
             }
         }
