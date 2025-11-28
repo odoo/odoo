@@ -1016,3 +1016,5 @@ test("DiskCache: multiple consecutive calls, empty cache, fallback fails", async
         "error call 3: my RPCError",
     ]);
 });
+
+// If good, TODO: tests for evicting ramcache and disk
