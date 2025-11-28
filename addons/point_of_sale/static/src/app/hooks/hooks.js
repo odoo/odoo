@@ -53,6 +53,7 @@ export function useErrorHandlers() {
             await dialog.add(AlertDialog, {
                 title: _t("Unknown Error"),
                 body: _t("The order could not be sent to the server due to an unknown error"),
+                showReloadButton: true,
             });
         }
     };
