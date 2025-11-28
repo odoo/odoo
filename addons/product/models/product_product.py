@@ -29,11 +29,14 @@ class ProductProduct(models.Model):
         'Variant Price Extra', compute='_compute_product_price_extra',
         digits='Product Price',
         help="This is the sum of the extra price of all attributes")
-    # lst_price: catalog value + extra, context dependent (uom)
+    # lst_price: catalog value + extra, or custom value
     lst_price = fields.Float(
-        'Sales Price', compute='_compute_product_lst_price',
-        digits='Product Price', inverse='_set_product_lst_price',
-        help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
+        'Sales Price',
+        compute='_compute_product_lst_price',
+        digits='Product Price',
+        readonly=False,
+        store=True,
+        help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -316,34 +319,15 @@ class ProductProduct(models.Model):
     def _compute_is_product_variant(self):
         self.is_product_variant = True
 
-    @api.onchange('lst_price')
-    def _set_product_lst_price(self):
-        for product in self:
-            if self.env.context.get('uom'):
-                value = self.env['uom.uom'].browse(self.env.context['uom'])._compute_price(product.lst_price, product.uom_id)
-            else:
-                value = product.lst_price
-            value -= product.price_extra
-            product.write({'list_price': value})
-
     @api.depends("product_template_attribute_value_ids.price_extra")
     def _compute_product_price_extra(self):
         for product in self:
             product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
 
     @api.depends('list_price', 'price_extra')
-    @api.depends_context('uom')
     def _compute_product_lst_price(self):
-        to_uom = None
-        if 'uom' in self.env.context:
-            to_uom = self.env['uom.uom'].browse(self.env.context['uom'])
-
         for product in self:
-            if to_uom:
-                list_price = product.uom_id._compute_price(product.list_price, to_uom)
-            else:
-                list_price = product.list_price
-            product.lst_price = list_price + product.price_extra
+            product.lst_price = product.list_price + product.price_extra
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
@@ -1112,8 +1096,8 @@ class ProductProduct(models.Model):
 
     def _get_attributes_extra_price(self):
         self.ensure_one()
-
-        return self.price_extra + self.env.context.get('no_variant_attributes_price_extra', 0)
+        price_extra = self.lst_price - self.list_price
+        return price_extra + self.env.context.get('no_variant_attributes_price_extra', 0)
 
     def _price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company

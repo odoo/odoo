@@ -79,14 +79,14 @@ class AccountTestInvoicingCommon(ProductCommon):
         # ==== Products ====
         cls.product_a = cls._create_product(
             name='product_a',
-            lst_price=1000.0,
+            list_price=1000.0,
             standard_price=800.0,
             uom_id=cls.uom_unit.id,
         )
         cls.product_b = cls._create_product(
             name='product_b',
             uom_id=cls.uom_dozen.id,
-            lst_price=200.0,
+            list_price=200.0,
             standard_price=160.0,
             property_account_income_id=cls.copy_account(cls.company_data['default_account_revenue']).id,
             property_account_expense_id=cls.copy_account(cls.company_data['default_account_expense']).id,

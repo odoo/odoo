@@ -300,6 +300,12 @@ class TestVariants(ProductVariantsCommon):
             one_variant_template.with_company(company_b).standard_price
         )
 
+    def test_variant_extra_price_when_lst_price_set_manually(self):
+        variant = self.product
+        self.assertEqual(variant._get_attributes_extra_price(), 0)
+        variant.lst_price = 500
+        self.assertEqual(variant._get_attributes_extra_price(), 480)
+
     @mute_logger('odoo.models.unlink')
     def test_archive_variant(self):
         template = self.env['product.template'].create({
