@@ -549,7 +549,7 @@ class StockMove(models.Model):
 
     def _account_analytic_entry_move(self):
         for move in self:
-            analytic_line_vals = move._prepare_analytic_lines()
+            analytic_line_vals = move.sudo()._prepare_analytic_lines()
             if analytic_line_vals:
                 move.analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(analytic_line_vals)
 

@@ -1072,7 +1072,7 @@ export class Orderline extends PosModel {
         var taxes_ids = this.tax_ids || product.taxes_id;
         taxes_ids = taxes_ids.filter((t) => t in this.pos.taxes_by_id);
         var taxdetail = {};
-        var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
+        var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order?.fiscal_position);
 
         var all_taxes = this.compute_all(
             product_taxes,
