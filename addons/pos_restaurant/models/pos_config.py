@@ -8,7 +8,6 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
-    iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.', copy=False)
     default_screen = fields.Selection([('tables', 'Tables'), ('register', 'Register')], string='Default Screen', default='tables')
     use_course_allocation = fields.Boolean(string="Enable Course Allocation")

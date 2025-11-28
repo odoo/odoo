@@ -23,6 +23,11 @@
                     label.translate="Customer Note"
                     class="buttonClass"
                     icon="'fa fa-sticky-note'"/>
+                <button t-if="pos.config.iface_printbill" t-att-class="buttonClass"
+                    t-att-disabled="!pos.getOrder()?.getOrderlines()?.length"
+                    t-on-click="clickPrintBill">
+                    <i class="fa fa-print me-1"></i>Bill
+                </button>
                 <button t-if="this.pos.cashier._role != 'minimal'" class="o_pricelist_button" t-att-class="buttonClass" t-on-click="() => this.clickPricelist()">
                     <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
                     <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />

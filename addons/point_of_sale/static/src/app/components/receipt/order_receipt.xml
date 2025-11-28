@@ -4,6 +4,7 @@
         <div class="pos-receipt p-2">
             <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
             <ReceiptHeader order="order" />
+            <div t-if="!order.finalized" class="text-center fs-2 mb-1">Pro forma receipt</div>
             <div class="pt-3"/>
             <OrderDisplay order="order" t-slot-scope="scope" mode="'receipt'">
                 <t t-set="line" t-value="scope.line"/>
