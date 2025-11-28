@@ -54,6 +54,7 @@ export class ActivityWatchTimesheet extends Component {
         return {
             records: [],
             grouped: {},
+            workingHours: 0,
             billableTimesheets: [],
             nonBillableTimesheets: [],
             totalTime: 0,
@@ -629,22 +630,20 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     async loadTimesheets() {
-        const todayStart = this.state.currentDate.toISO();
-        // get timesheets
-        // so_line, project_id, task_id should be added only if the right modules are installed
-        const fields = ["id", "name", "date", "project_id", "task_id", "unit_amount", "so_line"];
-        const domain = [
-            ["date", "=", todayStart.split("T")[0]],
-            ["user_id", "=", user.userId],
-        ];
-
+        const today = this.state.currentDate.toISO().split("T")[0];
         this.state.billableTimesheets = [];
         this.state.nonBillableTimesheets = [];
         this.state.totalTime = 0;
         this.state.billableTime = 0;
         this.state.nonBillableTime = 0;
 
-        const timesheets = await this.orm.searchRead("account.analytic.line", domain, fields);
+        const timesheetData = await this.orm.call(
+            "account.analytic.line",
+            "get_aw_timesheet_data",
+            [today]
+        );
+        this.state.workingHours = timesheetData.working_hours;
+        const timesheets = timesheetData.timesheets;
         for (const timesheet of timesheets) {
             if (timesheet.so_line) {
                 this.state.billableTimesheets.push(timesheet);
@@ -801,10 +800,11 @@ export class ActivityWatchTimesheet extends Component {
         }
 
         const name = this.getGroupedNames(Array.from(this.state.selectedRows));
-        const roundedAmount = roundTimeSpent({
-            minutesSpent: totalAmount,
-            ...this.roundingValues,
-        });
+        const roundedAmount =
+            roundTimeSpent({
+                minutesSpent: totalAmount,
+                ...this.roundingValues,
+            }) / 60;
 
         return {
             project_id,

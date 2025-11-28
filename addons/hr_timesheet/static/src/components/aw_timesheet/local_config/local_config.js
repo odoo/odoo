@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
-import { loadFrequency } from '../aw_local_config';
+import { loadFrequency } from "../aw_local_config";
 
 export class FrequencyViewer extends Component {
     setup() {

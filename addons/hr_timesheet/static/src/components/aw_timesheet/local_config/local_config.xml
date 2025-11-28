@@ -20,8 +20,8 @@
                     <tbody>
                         <t t-foreach="getRowStats(row)" t-as="stat" t-key="stat_index">
                             <tr>
-                                <td><t t-esc="stat.project_id?.display_name || unmatched"/></td>
-                                <td><t t-esc="stat.task_id?.display_name || unmatched"/></td>
+                                <td><t t-esc="stat.project_id?.display_name || 'unmatched'"/></td>
+                                <td><t t-esc="stat.task_id?.display_name || 'unmatched'"/></td>
                                 <td><t t-esc="stat.billable"/></td>
                                 <td><t t-esc="stat.count"/></td>
                             </tr>

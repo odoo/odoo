@@ -50,7 +50,7 @@ class AccountAnalyticLine(models.Model):
                 name = slot.get('name') or ''
                 role_name = slot.get('role_id')[1] if slot.get('role_id') else None
                 slot['name'] = (
-                    name if len(name) <= 64
+                    name if 0 < len(name) <= 64
                     else role_name
                     or _("%(truncated_name)s...", truncated_name=name[:64])
                     or _("Shift")

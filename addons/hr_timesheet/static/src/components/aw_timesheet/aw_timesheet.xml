@@ -30,7 +30,7 @@
                             t-on-click.stop="() => state.groupBy = 'project'"
                             data-tooltip="Project"
                         >
-                            <i class="fa fa-folder-open-o"></i>
+                            Project
                         </button>
                         <button type="button"
                             class="btn btn-secondary o_switch_view"
@@ -38,7 +38,7 @@
                             t-on-click.stop="() => state.groupBy = 'timeline'"
                             data-tooltip="Timeline"
                         >
-                            <i class="fa fa-clock-o"></i>
+                            Timeline
                         </button>
                     </div>
                 </div>
@@ -155,11 +155,15 @@
                     </t>
                 </div>
 
+                <div t-if="state.workingHours !== false" class="mb-4 mt-2 fw-bold">
+                    Total: <t t-esc="formatDuration(state.billableTime + state.nonBillableTime)"/> / <t t-esc="formatDuration(state.workingHours)"/>
+                </div>
+
                 <!-- Billable section -->
                 <div class="mb-4">
                     <h6 class="fw-bold text-success mb-2">
                         Billable -
-                        <t t-esc="state.billableTime.toFixed(2)"/>h
+                        <t t-esc="formatDuration(state.billableTime)"/>
                         (<t t-esc="state.billablePercentage.toFixed(2)"/>%)
                     </h6>
                     <t t-if="state.billableTimesheets.length === 0">
@@ -186,7 +190,7 @@
                 <div class="d-flex flex-column flex-grow-1" style="min-height: 0;">
                     <h6 class="fw-bold text-success mb-2">
                         Non-Billable -
-                        <t t-esc="state.nonBillableTime.toFixed(2)"/>h
+                        <t t-esc="formatDuration(state.nonBillableTime)"/>
                         (<t t-esc="state.nonBillablePercentage.toFixed(2)"/>%)
                     </h6>
                     <t t-if="state.nonBillableTimesheets.length === 0">
