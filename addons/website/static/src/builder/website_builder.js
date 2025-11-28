@@ -2,7 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -18,6 +18,7 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
+import { router } from "@web/core/browser/router";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.
@@ -56,7 +57,33 @@ export class WebsiteBuilder extends Component {
                 this.dialog.add(TranslatorInfoDialog);
             }
             this.websiteEditService?.clearRpcCache();
+            this.isGuardActive = true;
+            this.pendingHistoryCleanup = false;
+            this.pushHistoryState();
         });
+        onWillUnmount(() => {
+            // If the guard entry is still on top (e.g. save path).
+            if (this.isGuardActive) {
+                this.pendingHistoryCleanup = true;
+                Promise.resolve().then(() => {
+                    if (!this.pendingHistoryCleanup) {
+                        return;
+                    }
+                    this.pendingHistoryCleanup = false;
+                    if (history.state?.skipRouteChange) {
+                        router.skipLoad = true;
+                        history.back();
+                    }
+                });
+            }
+        });
+    }
+
+    pushHistoryState() {
+        const state = { skipRouteChange: true };
+        history.state?.skipRouteChange
+            ? history.replaceState(state, "")
+            : history.pushState(state, "");
     }
 
     updateTooltip(ev) {
@@ -94,6 +121,9 @@ export class WebsiteBuilder extends Component {
                 cancel: () => {},
             });
         } else {
+            if (history.state?.skipRouteChange) {
+                history.replaceState({ ...history.state, skipRouteChange: false }, "");
+            }
             this.props.builderProps.closeEditor();
         }
         this.reloadAfterTimeout();
@@ -114,20 +144,27 @@ export class WebsiteBuilder extends Component {
             return true;
         }
         if (this.editor.shared.history.canUndo()) {
-            let continueProcess = true;
+            let shouldCloseEditor = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
                     body: _t("If you proceed, your changes will be lost"),
                     confirmLabel: _t("Continue"),
                     confirm: () => resolve(),
                     cancel: () => {
-                        continueProcess = false;
+                        shouldCloseEditor = false;
                         resolve();
                     },
                 });
             });
-            return continueProcess;
+            if (shouldCloseEditor) {
+                this.isGuardActive = false;
+                this.props.builderProps.closeEditor();
+            } else {
+                this.pushHistoryState();
+            }
+            return false;
         }
+        this.isGuardActive = false;
         return true;
     }
 
