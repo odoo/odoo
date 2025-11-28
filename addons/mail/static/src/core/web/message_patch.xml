@@ -10,9 +10,9 @@
                         </p>
                     </t>
                     <t t-if="message.trackingValues.length">
-                        <ul class="mb-0 list-unstyled">
+                        <ul class="mb-0 list-unstyled d-flex flex-column gap-1">
                             <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
-                                <li class="o-mail-Message-tracking mb-1" role="group">
+                                <li class="o-mail-Message-tracking" role="group">
                                     <span class="o-mail-Message-trackingOld text-muted fw-bold" t-out="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.oldValue)"/>
                                     <t t-if="!trackingValue.fieldInfo.isPropertyField">
                                         <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-2 text-600"/>
