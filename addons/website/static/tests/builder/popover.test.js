@@ -1,10 +1,11 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { expect, test } from "@odoo/hoot";
-import { queryFirst, queryOne, scroll, waitFor, waitUntil } from "@odoo/hoot-dom";
+import { click, queryFirst, queryOne, scroll, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
 
@@ -59,4 +60,35 @@ test("Popovers scroll with iframe", async () => {
     await contains(".o-we-linkpopover select[name=link_type]").select("custom");
     await contains(".o-we-linkpopover button.custom-text-picker").click();
     await expectScroll(".o_popover:has(> .o_font_color_selector)");
+});
+
+test.tags("focus required");
+test("closing the link popover should re-open the toolbar", async () => {
+    await setupWebsiteBuilder(`
+        <section class="first-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    const p = queryOne(":iframe p");
+    setSelection({ anchorNode: p, anchorOffset: 0, focusNode: p, focusOffset: 1 });
+
+    await waitFor(".o-we-toolbar");
+    await contains('.o-we-toolbar button[name="link"]').click();
+
+    // While the link popover is open, the toolbar should be hidden
+    await expectElementCount(".o-we-toolbar", 0);
+    await expectElementCount(".o-we-linkpopover", 1);
+
+    // Closing the link popover should bring the toolbar back
+    await click(".o_we_discard_link");
+
+    await expectElementCount(".o-we-linkpopover", 0);
+    await expectElementCount(".o-we-toolbar", 1);
 });

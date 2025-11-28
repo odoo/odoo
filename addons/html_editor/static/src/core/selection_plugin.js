@@ -257,6 +257,7 @@ export class SelectionPlugin extends Plugin {
         if (this.document !== document) {
             const focusEditable = () => {
                 this.focusEditableDocument = true;
+                this.dispatchTo("selection_enter_handlers");
             };
             const unFocusEditable = (ev) => {
                 if (this.focusEditableDocument) {
