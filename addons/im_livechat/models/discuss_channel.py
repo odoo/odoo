@@ -43,7 +43,6 @@ class DiscussChannel(models.Model):
         "discuss_channel_im_livechat_expertise_rel",
         "discuss_channel_id",
         "im_livechat_expertise_id",
-        related="livechat_agent_history_ids.agent_expertise_ids",
         store=True,
     )
     livechat_agent_history_ids = fields.One2many(
@@ -895,8 +894,9 @@ class DiscussChannel(models.Model):
 
             # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
             create_member_params = {'livechat_member_type': 'agent'}
-            if chatbot_script_step:
+            if chatbot_script_step.operator_expertise_ids:
                 create_member_params['agent_expertise_ids'] = chatbot_script_step.operator_expertise_ids.ids
+                channel_sudo.livechat_expertise_ids |= chatbot_script_step.operator_expertise_ids
             channel_sudo._add_new_members_to_channel(
                 create_member_params=create_member_params,
                 inviting_partner=bot_partner_id,

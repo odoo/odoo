@@ -270,3 +270,52 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             channel._gc_bot_only_ongoing_sessions()
         self.assertTrue(channel.livechat_end_dt)
+
+    def test_expertises_added_from_discuss_are_kept(self):
+        bob = self._create_operator()
+        jane = self._create_operator()
+        dog_expertise = self.env["im_livechat.expertise"].create({"name": "Dog"})
+        operator_expertise_ids = dog_expertise
+        chatbot_script = self.env["chatbot.script"].create({"title": "Testing Bot"})
+        self.env["chatbot.script.step"].create(
+            [
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "message": "Hello, how can I help you?",
+                    "step_type": "free_input_single",
+                },
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "operator_expertise_ids": operator_expertise_ids,
+                    "step_type": "forward_operator",
+                },
+            ]
+        )
+        self.livechat_channel.user_ids = jane
+        self.livechat_channel.rule_ids = [Command.create({"chatbot_script_id": chatbot_script.id})]
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "chatbot_script_id": chatbot_script.id,
+                "channel_id": self.livechat_channel.id,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self.make_jsonrpc_request(
+            "/chatbot/step/trigger",
+            {"channel_id": channel.id, "chatbot_script_id": chatbot_script.id},
+        )
+        self.assertIn(jane.partner_id, channel.livechat_agent_history_ids.partner_id)
+        self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids)
+        cat_expertise = self.env["im_livechat.expertise"].create({"name": "Cat"})
+        self.authenticate(jane.login, jane.login)
+        self.make_jsonrpc_request(
+            "/im_livechat/conversation/write_expertises",
+            {
+                "channel_id": channel.id,
+                "orm_commands": [Command.link(cat_expertise.id)],
+            },
+        )
+        self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
+        channel._add_members(users=bob)
+        self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
