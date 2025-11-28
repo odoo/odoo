@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime
-from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import Form, HttpCase, new_test_user
+from odoo.tests import HttpCase, new_test_user
 from odoo.tests.common import tagged
 
 

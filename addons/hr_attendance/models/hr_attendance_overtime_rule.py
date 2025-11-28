@@ -367,39 +367,27 @@ class HrAttendanceOvertimeRule(models.Model):
         ):
             period = rule.quantity_period
             for date in attendances_by[period]:
-                if attendances.employee_id.resource_calendar_id.flexible_hours or not attendances.employee_id.resource_calendar_id:
+                if rule.expected_hours_from_contract and attendances.employee_id.resource_calendar_id.flexible_hours:
                     continue
-                elif rule.expected_hours_from_contract:
+                if rule.expected_hours_from_contract:
                     expected_hours = self._get_expected_hours_from_contract(date, version_map[employee][date], period)
                 else:
                     expected_hours = rule.expected_hours
 
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
-                # # Handle undertime: convert missing hours into intervals to be deducted later
-                if period == 'day' and rule.compensable_as_leave and overtime_quantity < 0:
-                    missing_hours = abs(overtime_quantity)
-
-                    new_intervals = _last_hours_as_intervals(
-                        starting_intervals=attendances_by[period][date],
-                        hours=missing_hours,
+                # Handle undertime: convert missing hours into intervals to be deducted later
+                if overtime_quantity < 0:
+                    success = rule._get_undertime_intervals_by_date(
+                        date,
+                        period,
+                        overtime_quantity,
+                        attendances_by,
+                        quantity_intervals_by_date,
+                        undertime_flag,
                     )
-
-                    covered_hours = sum((end - start).total_seconds() / 3600 for (start, end, _) in new_intervals)
-                    if covered_hours < missing_hours:
-                        remaining = missing_hours - covered_hours
-                        new_intervals = _extend_intervals_for_undertime(
-                            base_intervals=new_intervals,
-                            missing_hours=remaining
-                        )
-                    for start, end, attendance in new_intervals:
-                        date = attendance[0].date
-                        quantity_intervals_by_date[date].append((start, end, rule))
-                        undertime_flag[date, start, end] = True
-
-                    continue
-                if period == 'week' and rule.compensable_as_leave and overtime_quantity < 0:
-                    continue
+                    if success:
+                        continue
                 if overtime_quantity <= rule.employer_tolerance:
                     continue
                 if overtime_quantity < overtime_hours_by[period][date]:
@@ -509,3 +497,10 @@ class HrAttendanceOvertimeRule(models.Model):
                     )
                     continue
                 rule.information_display = timing_types[rule.timing_type]
+
+    def _get_undertime_intervals_by_date(self, date, period, overtime_quantity, attendances_by, quantity_intervals_by_date, undertime_flag):
+        """
+        Fallback stub method allowing safe undertime calls;
+        overridden by optional modules to apply real undertime logic.
+        """
+        return False
