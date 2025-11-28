@@ -371,7 +371,7 @@
                                     <p class="mb-0">
                                         <field name="name" invisible="not name" class="fw-bold"/>
                                         <field name="type" invisible="name" class="fw-bold"/>
-                                        <i t-if="record.type.raw_value != 'contact'" t-att-title="record.type.value" class="fa ms-2 text-muted" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img"/>
+                                        <i t-if="record.type.raw_value != 'contact'" t-att-data-tooltip="record.type.value" class="fa ms-2 text-muted" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img"/>
                                     </p>
                                     <field invisible="not parent_id" name="parent_id" class="text-muted"/>
                                 </div>
