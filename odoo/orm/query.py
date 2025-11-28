@@ -76,7 +76,7 @@ class Query:
         self.groupby: SQL | None = None
         self._order_groupby: list[SQL] = []
         self.having: SQL | None = None
-        self._order: SQL | None = None
+        self.order: SQL | None = None
         self.limit: int | None = None
         self.offset: int | None = None
 
@@ -154,14 +154,6 @@ class Query:
         return rhs_alias
 
     @property
-    def order(self) -> SQL | None:
-        return self._order
-
-    @order.setter
-    def order(self, value: SQL | LiteralString | None):
-        self._order = SQL(value) if value is not None else None  # pylint: disable = sql-injection
-
-    @property
     def table(self) -> TableSQL:
         """ The query's main table, i.e., the first one in the FROM clause. """
         alias = next(iter(self._joins))
@@ -195,7 +187,7 @@ class Query:
             SQL(" WHERE %s", self.where_clause) if self._where_clauses else _SQL_EMPTY,
             SQL(" GROUP BY %s", self.groupby) if self.groupby else _SQL_EMPTY,
             SQL(" HAVING %s", self.having) if self.having else _SQL_EMPTY,
-            SQL(" ORDER BY %s", self._order) if self._order else _SQL_EMPTY,
+            SQL(" ORDER BY %s", self.order) if self.order else _SQL_EMPTY,
             SQL(" LIMIT %s", int(self.limit)) if self.limit is not None else _SQL_EMPTY,
             SQL(" OFFSET %s", int(self.offset)) if self.offset else _SQL_EMPTY,
         )
