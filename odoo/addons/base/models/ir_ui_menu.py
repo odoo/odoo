@@ -252,12 +252,12 @@ class IrUiMenu(models.Model):
         visible_menus = visible_menus.filtered(lambda menu: menu.id in app_info)
 
         xmlids = visible_menus._get_menuitems_xmlids()
-        icon_attachments = self.env['ir.attachment'].sudo().search_read(
+        icon_attachments = self.env['ir.attachment'].sudo().search_fetch(
             domain=[('res_model', '=', 'ir.ui.menu'),
                     ('res_id', 'in', visible_menus._ids),
                     ('res_field', '=', 'web_icon_data')],
-            fields=['res_id', 'datas', 'mimetype'])
-        icon_attachments_res_id = {attachment['res_id']: attachment for attachment in icon_attachments}
+            field_names=['res_id', 'datas', 'mimetype'])
+        icon_attachments_res_id = {attachment.res_id: attachment for attachment in icon_attachments}
 
         menus_dict = {}
         action_ids_by_type = defaultdict(list)
@@ -281,8 +281,8 @@ class IrUiMenu(models.Model):
                 'action_model': action_model,
                 'action_id': action_id,
                 'web_icon': menu.web_icon,
-                'web_icon_data': attachment['datas'].decode() if attachment else False,
-                'web_icon_data_mimetype': attachment['mimetype'] if attachment else False,
+                'web_icon_data': attachment.datas.decode() if attachment else False,
+                'web_icon_data_mimetype': attachment.mimetype if attachment else False,
                 'xmlid': xmlids.get(menu_id, ""),
             }
 

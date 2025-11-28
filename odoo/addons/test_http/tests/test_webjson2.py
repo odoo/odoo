@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import json
 from datetime import datetime, timedelta
 from http import HTTPStatus
 from textwrap import dedent
 from unittest.mock import patch
 
 from odoo.tests import Like, get_db_name, mute_logger, new_test_user, tagged
-from odoo.tools.json import json_default
 from odoo.tools.misc import submap
 
 from .test_common import TestHttpBase
@@ -248,8 +246,7 @@ class TestHttpWebJson_2(TestHttpBase):
             'raw': b'x  \x01-',
         })
         expected_datas = 'eCAgAS0='  # base64-encoded raw value
-        expected_raw = 'x  \\u0001-'
-        values = (attachment.id, expected_datas, expected_raw)
+        values = (attachment.id, expected_datas, expected_datas)
         res = self.db_url_open(
             '/json/2/ir.attachment/search_read',
             data=r'{"domain": [["id", "=", %d]], "fields": ["datas", "raw"], "limit": 1}' % attachment.id,
