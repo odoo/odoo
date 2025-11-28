@@ -1,5 +1,5 @@
 import { xml } from "@odoo/owl";
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     advanceTime,
     animationFrame,
@@ -128,55 +128,71 @@ test("elements within iframe can't be clicked while the builder is being set up"
     expect.verifySteps(["button clicked"]);
 });
 
-test.tags("desktop");
-test("BuilderMany2One: save on preview", async () => {
-    class Test extends models.Model {
-        _name = "test";
-        _records = [
-            { id: 1, name: "First" },
-            { id: 2, name: "Second" },
-            { id: 3, name: "Third" },
-        ];
-        name = fields.Char();
-    }
-    onRpc("test", "name_search", () => [
-        [1, "First"],
-        [2, "Second"],
-        [3, "Third"],
-    ]);
-
-    defineModels([Test]);
-
-    addBuilderAction({
-        testAction: class extends BuilderAction {
-            static id = "testAction";
-            apply({ editingElement, value }) {
-                editingElement.textContent = JSON.parse(value).name;
-                editingElement.dataset.test = value;
-            }
-            getValue({ editingElement }) {
-                return editingElement.dataset.test;
-            }
-        },
-    });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10" preview="true"/>`;
+describe.tags("desktop");
+describe("BuilderMany2One: exit editor when previewing", () => {
+    beforeEach(async () => {
+        class Test extends models.Model {
+            _name = "test";
+            _records = [
+                { id: 1, name: "First" },
+                { id: 2, name: "Second" },
+                { id: 3, name: "Third" },
+            ];
+            name = fields.Char();
         }
-    );
+        onRpc("test", "name_search", () => [
+            [1, "First"],
+            [2, "Second"],
+            [3, "Third"],
+        ]);
 
-    await setupWebsiteBuilder(`<div class="test-options-target">Homepage</div>`);
-    await contains(":iframe .test-options-target").click();
-    await contains(".btn.o-dropdown").click();
-    await waitFor(".o-dropdown-item:contains(First)");
-    await animationFrame();
-    expect(":iframe .test-options-target").toHaveText("First", {
-        message: "It should preview the first element",
+        defineModels([Test]);
+
+        addBuilderAction({
+            testAction: class extends BuilderAction {
+                static id = "testAction";
+                apply({ editingElement, value }) {
+                    editingElement.textContent = JSON.parse(value).name;
+                    editingElement.dataset.test = value;
+                }
+                getValue({ editingElement }) {
+                    return editingElement.dataset.test;
+                }
+            },
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10" preview="true"/>`;
+            }
+        );
+
+        await setupWebsiteBuilder(`<div class="test-options-target">Homepage</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains(".btn.o-dropdown").click();
+        await waitFor(".o-dropdown-item:contains(First)");
+        await animationFrame();
+        expect(":iframe .test-options-target").toHaveText("First", {
+            message: "It should preview the first element",
+        });
     });
-    await press(["alt", "s"]);
-    await waitForEndOfOperation();
-    expect(":iframe .test-options-target").toHaveText("Homepage", {
-        message: "The preview should have been reverted",
+
+    test("save", async () => {
+        await press(["alt", "s"]);
+        await waitForEndOfOperation();
+        expect(":iframe .test-options-target").toHaveText("Homepage", {
+            message: "The preview should have been reverted",
+        });
+    });
+
+    test("discard", async () => {
+        await press(["alt", "j"]);
+        await waitForEndOfOperation();
+        expect(".o_dialog").toHaveCount(0, {
+            message: "There should be no confirmation dialog since we didn't modify anything",
+        });
+        expect(":iframe .test-options-target").toHaveText("Homepage", {
+            message: "The preview should have been reverted",
+        });
     });
 });

@@ -44,6 +44,7 @@ import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plug
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { revertPreview } from "@html_builder/core/utils";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -102,7 +103,8 @@ export class WebsiteBuilder extends Component {
         });
     }
 
-    discard() {
+    async discard() {
+        await revertPreview(this.editor);
         if (this.editor.shared.history.canUndo()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
