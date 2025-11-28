@@ -2068,7 +2068,7 @@ class AccountMoveLine(models.Model):
             return {}
 
         query_line = self._search(domain, limit=1)
-        query_line.add_where('account_account.id = account_move_line.account_id')
+        query_line.add_where(SQL('account_account.id = account_move_line.account_id'))
 
         # Override in order to not read the complete move line table and use the index instead
         query_account = self.env['account.account']._search([

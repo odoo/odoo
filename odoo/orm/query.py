@@ -114,9 +114,9 @@ class Query:
         self._joins[alias] = (sql_kind, table, condition)
         self._ids = self._ids and None
 
-    def add_where(self, where_clause: LiteralString | SQL, where_params=()):
+    def add_where(self, where_clause: SQL):
         """ Add a condition to the where clause. """
-        self._where_clauses.append(SQL(where_clause, *where_params))  # pylint: disable = sql-injection
+        self._where_clauses.append(where_clause)
         self._ids = self._ids and None
 
     def join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str) -> str:
@@ -245,7 +245,7 @@ class Query:
             "Method set_result_ids() can only be called on a virgin Query"
         ids = tuple(ids)
         if not ids:
-            self.add_where("FALSE")
+            self.add_where(SQL("FALSE"))
         elif ordered:
             # This guarantees that self.select() returns the results in the
             # expected order of ids:
