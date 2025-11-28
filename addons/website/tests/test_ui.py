@@ -12,6 +12,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.web_editor.controllers.main import Web_Editor
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.fields import Command
+from odoo.tools import mute_logger
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -760,3 +761,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         # It should go in edit mode if we are not on the FR page even if FR is
         # available
         self.start_tour('/', 'alt_a_edit', login='admin')
+
+    @mute_logger("odoo.http")
+    def test_website_replace_remove_image(self):
+        self.start_tour("/", "website_replace_remove_image", login="admin")

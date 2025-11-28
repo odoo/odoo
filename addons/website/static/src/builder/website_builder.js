@@ -9,7 +9,7 @@ import { TranslateSetupEditorPlugin } from "./plugins/translate_setup_editor_plu
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -40,6 +40,7 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
+import { router, routerBus } from "@web/core/browser/router";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -94,6 +95,36 @@ export class WebsiteBuilder extends Component {
                 this.dialog.add(TranslatorInfoDialog);
             }
         });
+        useEffect(
+            () => {
+                // Back navigation is handled with an additional state in the
+                // history, used to capture the popstate event.
+                const pushState = () => history.pushState({ skipRouteChange: true }, "");
+                pushState();
+
+                const leaveOnBackNavigation = async () => {
+                    (await this.onBeforeLeave())
+                        ? this.props.builderProps.closeEditor()
+                        : pushState();
+                };
+
+                const skipLoadOnBeforeRouteChange = () => {
+                    router.skipLoad = true;
+                };
+
+                routerBus.addEventListener("BEFORE_ROUTE_CHANGE", skipLoadOnBeforeRouteChange);
+                window.addEventListener("popstate", leaveOnBackNavigation);
+
+                return () => {
+                    routerBus.removeEventListener(
+                        "BEFORE_ROUTE_CHANGE",
+                        skipLoadOnBeforeRouteChange
+                    );
+                    window.removeEventListener("popstate", leaveOnBackNavigation);
+                };
+            },
+            () => []
+        );
     }
 
     discard() {
