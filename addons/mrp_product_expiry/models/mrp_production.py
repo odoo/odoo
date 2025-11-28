@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
 
 from odoo import models, _
 
@@ -18,7 +19,7 @@ class MrpProduction(models.Model):
         # user already confirmed the wizard about using expired lots.
         if self.env.context.get('skip_expired'):
             return False
-        expired_lot_ids = self.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).lot_id.ids
+        expired_lot_ids = self.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert or (ml.removal_date and ml.removal_date <= datetime.datetime.now())).lot_id.ids
         if expired_lot_ids:
             return {
                 'name': _('Confirmation'),
