@@ -71,7 +71,7 @@ const ThreadPatch = {
                     return;
                 }
                 this.promoteFullscreen =
-                    this.videoCountNotSelf > 0 && this.chat_window?.isOpen
+                    this.videoCountNotSelf > 0 && this.channel?.chatWindow?.isOpen
                         ? CALL_PROMOTE_FULLSCREEN.ACTIVE
                         : CALL_PROMOTE_FULLSCREEN.INACTIVE;
             },
