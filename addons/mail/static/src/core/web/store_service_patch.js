@@ -23,14 +23,20 @@ const StorePatch = {
             onUpdate() {
                 this.onUpdateActivityGroups();
             },
-            sort(g1, g2) {
-                /**
-                 * Sort by model ID ASC but always place the activity group for "mail.activity" model at
-                 * the end (other activities).
-                 */
-                const getSortId = (activityGroup) =>
-                    activityGroup.model === "mail.activity" ? Number.MAX_VALUE : activityGroup.id;
-                return getSortId(g1) - getSortId(g2);
+        });
+        this.sortedActivityGroups = fields.Attr([], {
+            compute() {
+                return this.activityGroups.slice().sort((g1, g2) => {
+                    /**
+                     * Sort by model ID ASC but always place the activity group for "mail.activity" model at
+                     * the end (other activities).
+                     */
+                    const getSortId = (activityGroup) =>
+                        activityGroup.model === "mail.activity"
+                            ? Number.MAX_VALUE
+                            : activityGroup.id;
+                    return getSortId(g1) - getSortId(g2);
+                });
             },
         });
         this.globalCounter = fields.Attr(0, {

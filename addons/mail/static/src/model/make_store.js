@@ -141,7 +141,11 @@ export function makeStore(env, { localRegistry } = {}) {
                             }
                             // ensure each field write goes through the updatingAttrs method exactly once
                             if (record._.updatingAttrs.has(name)) {
-                                record[name] = val;
+                                if (record._.updatingReactives.has(name)) {
+                                    record[name] = val.value;
+                                } else {
+                                    record[name] = val;
+                                }
                                 return true;
                             }
                             return store.MAKE_UPDATE(function recordSet() {

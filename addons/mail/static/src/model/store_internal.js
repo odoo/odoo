@@ -1,7 +1,7 @@
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
-import { htmlEscape, markup, toRaw } from "@odoo/owl";
+import { htmlEscape, markRaw, markup, reactive, toRaw } from "@odoo/owl";
 import { RecordInternal } from "./record_internal";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { IS_DELETED_SYM, isCommand, isMany } from "./misc";
@@ -220,7 +220,19 @@ export class StoreInternal extends RecordInternal {
         }
         if (shouldChange) {
             record._.updatingAttrs.set(fieldName, true);
-            targetRecord[fieldName] = newValue;
+            if (
+                newValue !== null &&
+                typeof newValue === "object" &&
+                ["Object", "Array", "Set", "Map", "WeakMap"].includes(
+                    Object.prototype.toString.call(toRaw(newValue)).slice(8, -1)
+                )
+            ) {
+                record._.updatingReactives.set(fieldName, true);
+                record._proxy[fieldName] = markRaw({ value: reactive(newValue) });
+                record._.updatingReactives.delete(fieldName);
+            } else {
+                targetRecord[fieldName] = newValue;
+            }
             record._.updatingAttrs.delete(fieldName);
         }
     }

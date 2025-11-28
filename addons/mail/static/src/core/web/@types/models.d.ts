@@ -17,6 +17,7 @@ declare module "models" {
         activity_counter_bus_id: number;
         activityCounter: number;
         activityGroups: Object[];
+        sortedActivityGroups: Object[];
         computeGlobalCounter: () => number;
         globalCounter: number;
         history: Thread;

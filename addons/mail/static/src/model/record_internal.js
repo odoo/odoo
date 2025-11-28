@@ -67,6 +67,7 @@ export class RecordInternal {
     fieldsDefault = new Map();
     uses = new RecordUses();
     updatingAttrs = new Map();
+    updatingReactives = new Map();
     proxyUsed = new Map();
     /** @type {string} */
     localId;
