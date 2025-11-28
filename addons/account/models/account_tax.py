@@ -469,6 +469,7 @@ class AccountTax(models.Model):
 
         self.ensure_one()
 
+        # TDE check this
         if self.is_used:
             repartition_line_str_field_id = self.env['ir.model.fields']._get('account.tax', 'repartition_lines_str').id
             for tracked_value_id in kwargs['tracking_value_ids']:

@@ -247,8 +247,8 @@ class Base(models.AbstractModel):
         behavior. Also consider inheriting from ``mail.thread``. """
         if len(self) > 1:
             raise ValueError(f"Expected empty or single record: {self}")
-        updated = set()
-        tracking_value_ids = []
+        updated_fnames = set()
+        tracking_values = []
 
         fields_track_info = self._mail_track_order_fields(tracked_fields)
         for col_name, _sequence in fields_track_info:
@@ -271,26 +271,27 @@ class Base(models.AbstractModel):
                     # track the change only if the parent changed
                     continue
 
-                updated.add(col_name)
-                tracking_value_ids.extend(
-                    [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
+                updated_fnames.add(col_name)
+                tracking_values.extend(
+                    self.env['mail.tracking.value']._create_tracking_values_property(
                         property_, col_name, tracked_fields[col_name], self,
-                    )]
+                    )
                     # Show the properties in the same order as in the definition
                     for property_ in initial_value[::-1]
                     if property_['type'] not in ('separator', 'html') and property_.get('value')
                 )
                 continue
 
-            updated.add(col_name)
-            tracking_value_ids.append(
-                [0, 0, self.env['mail.tracking.value']._create_tracking_values(
+            updated_fnames.add(col_name)
+            tracking_values.append(
+                self.env['mail.tracking.value']._create_tracking_values(
                     initial_value, new_value,
                     col_name, tracked_fields[col_name],
-                    self
-                )])
+                    self,
+                )
+            )
 
-        return updated, tracking_value_ids
+        return updated_fnames, tracking_values
 
     def _mail_track_order_fields(self, tracked_fields):
         """ Order tracking, based on sequence found on field definition. When

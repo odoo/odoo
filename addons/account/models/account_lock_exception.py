@@ -209,6 +209,7 @@ class AccountLock_Exception(models.Model):
             )
             company.sudo().message_post(
                 body=company_chatter_message,
+                message_type='tracking',
                 tracking_value_ids=tracking_value_ids,
             )
 
@@ -255,6 +256,7 @@ class AccountLock_Exception(models.Model):
         )
 
     def _get_audit_trail_during_exception_domain(self):
+        # TDE check this
         self.ensure_one()
 
         common_message_domain = [

@@ -62,11 +62,6 @@
 </div>
 <!-- CONTENT -->
 <div t-out="message.body" style="font-size: 13px;"/>
-<ul t-if="tracking_values">
-    <t t-foreach="tracking_values" t-as="tracking">
-        <li><t t-out="tracking[0]"/>: <t t-if="tracking[1]" t-out="tracking[1]"/><em t-else="">None</em> &#8594; <t t-if="tracking[2]" t-out="tracking[2]"/><em t-else="">None</em></li>
-    </t>
-</ul>
 <t name="o_signature">
     <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" class="o_signature" style="font-size: 13px;"/>
 </t>
@@ -170,11 +165,6 @@
 
         <template id="notification_preview">
 <div style="display: none; max-height: 0px; overflow: hidden; color:#fff; font-size:0px; line-height:0px">
-    <t t-if="tracking_values">
-        <t t-out="tracking_values[0][0]"/>: <t t-out="tracking_values[0][1]"/> &#8594; <t t-out="tracking_values[0][2]"/>
-        <t t-if="len(tracking_values) > 1"> |...</t>
-        <t t-if="message.preview"> | </t>
-    </t>
     <t t-if="subtype_internal">Internal communication: </t><t t-out="message.preview"/>
     <!--Trailing whitespace to push back email content so that it doesn't appear in preview. Specific characters to use may change over time -->
     <t t-out="'&#847; &#8203; ' * 140"/>

@@ -15,7 +15,7 @@ from contextlib import contextmanager
 from datetime import timedelta
 from freezegun import freeze_time
 from functools import partial
-from lxml import html
+from lxml import etree, html
 from markupsafe import Markup
 from random import randint
 from unittest.mock import patch
@@ -35,8 +35,9 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, RecordCapturer, new_test_user
 from odoo.tools import mute_logger
 from odoo.tools.mail import (
-    email_normalize, email_normalize_all, email_split, email_split_and_format_normalize, formataddr
+    email_normalize, email_split_and_format_normalize, formataddr
 )
+from odoo.tools.misc import format_amount
 from odoo.tools.translate import code_translations
 
 _logger = logging.getLogger(__name__)
@@ -807,16 +808,15 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                         sorted(tools.mail.email_split_and_format_normalize(fvalue)),
                         f'Message: expected {fvalue} for {fname}, got {message[fname]}',
                     )
-                # not really a field but hey, have to find shortcuts
-                elif fname == 'tracking_field_names':
-                    found = message.sudo().mapped('tracking_value_ids.field_id.name')
-                    self.assertEqual(
-                        sorted(found), sorted(fvalue),
-                        f'Message: expected {fvalue} for {fname}, got {found}',
-                    )
                 # tracking values themselves, a shortcut
                 elif fname == 'tracking_values':
                     self.assertTracking(message, fvalue, strict=True)
+                elif fname == 'tracking_values_fmt':
+                    self.assertTrackingInBody(message, fvalue)
+                # body is tracking appended to posted body
+                elif fname == 'body' and 'tracking_values_fmt' in fields_values:
+                    # TDE check: probably try to concatenate both ?
+                    self.assertIn(fvalue, message.body)
                 else:
                     self.assertEqual(
                         message[fname], fvalue,
@@ -1030,11 +1030,46 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     # ------------------------------------------------------------
 
     def assertTracking(self, message, data, strict=False):
-        tracking_values = message.sudo().tracking_value_ids
-        if strict:
-            self.assertEqual(len(tracking_values), len(data),
-                             'Tracking: tracking does not match')
+        """ Check generated tracking linked to a given message.
 
+        :param data: list of tracking values, a tuple containing
+            field_name: technical name of field (str). If properties: tuple().
+            field_type: type of field (boolean, many2one, ...)
+            old_value: value before change
+            new_value: value after change. If monetary: tuple (new_value, currency);
+        """
+        tracking_values = message.sudo().tracking_value_ids
+        tracking_info = '\n'.join(
+            f'{t.field_id.name} ({t.field_id.ttype}: char: {t.old_value_char} -> {t.new_value_char} / '
+            f'int: {t.old_value_integer}->{t.new_value_integer} '
+            f'dt: {t.old_value_datetime}->{t.new_value_datetime} '
+            f'({t.field_info})'
+            for t in tracking_values
+        )
+        if strict:
+            exp_fnames = sorted([i[0] for i in data])
+            fnames = sorted([t.field_id.name for t in tracking_values])
+            info = f'Field names: expected {exp_fnames}, received {fnames}'
+            self.assertEqual(len(tracking_values), len(data),
+                             f'Tracking: invalid number of tracking: {info}\n{tracking_info}')
+
+        for field_name, value_type, old_value, new_value in data:
+            if isinstance(value_type, tuple):
+                value_type, prop_field_string, prop_type = value_type
+                tracking = tracking_values.filtered(lambda track: track.field_id.name == field_name and prop_field_string == (track.field_info or {}).get('desc'))
+                self.assertEqual(
+                    len(tracking), 1,
+                    f'Tracking: not found for {field_name}: sub-field {prop_field_string}\n{tracking_info}')
+            else:
+                prop_field_string, prop_type = False, False
+                tracking = tracking_values.filtered(lambda track: track.field_id.name == field_name)
+                self.assertEqual(len(tracking), 1, f'Tracking: not found for {field_name}\n{tracking_info}')
+            self.assertTrackingValue(
+                tracking, prop_field_string or field_name, prop_type or value_type,
+                old_value, new_value,
+            )
+
+    def assertTrackingValue(self, tracking, field_name, value_type, old_value, new_value):
         suffix_mapping = {
             'boolean': 'integer',
             'char': 'char',
@@ -1045,31 +1080,119 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             'many2many': 'char',
             'one2many': 'char',
             'selection': 'char',
+            'tags': 'char',
             'text': 'text',
         }
+        msg_base = f'Tracking: {field_name} ({value_type}: '
+        if value_type in suffix_mapping:
+            old_value_fname = f'old_value_{suffix_mapping[value_type]}'
+            new_value_fname = f'new_value_{suffix_mapping[value_type]}'
+            self.assertEqual(tracking[old_value_fname], old_value,
+                             msg_base + f'expected {old_value}, received {tracking[old_value_fname]})')
+            self.assertEqual(tracking[new_value_fname], new_value,
+                             msg_base + f'expected {new_value}, received {tracking[new_value_fname]})')
+        elif value_type == 'many2one':
+            self.assertEqual(tracking.old_value_integer, (old_value and old_value.id) or False)
+            self.assertEqual(tracking.new_value_integer, (new_value and new_value.id) or False)
+            self.assertEqual(tracking.old_value_char, (old_value and old_value.display_name) or '')
+            self.assertEqual(tracking.new_value_char, (new_value and new_value.display_name) or '')
+        elif value_type == 'monetary':
+            new_value, currency = new_value
+            self.assertEqual(tracking.currency_id, currency)
+            self.assertEqual(tracking.old_value_float, old_value)
+            self.assertEqual(tracking.new_value_float, new_value)
+        else:
+            self.assertEqual(1, 0, f'Tracking: unsupported tracking test on {value_type}')
+
+    def assertTrackingInBody(self, message, data):
+        """ Check generated tracking inside a given message's body.
+
+        :param data: list of tracking values, a tuple containing
+            field_name: display name of field (str)
+            field_type: type of field (boolean, many2one, ...)
+            old_value: value before change
+            new_value: value after change
+        """
+        body = message.sudo().body
+        html = etree.fromstring(body, parser=etree.HTMLParser())
+        tracking_node = html.xpath("//div[@class='o-track']")
+        if not data:
+            self.assertFalse(tracking_node)
+            return
+        self.assertEqual(len(tracking_node), 1, 'Should have only 1 tracking html node')
+        tracking_html = etree.tostring(tracking_node[0], encoding='unicode', pretty_print=True)
+        tracking_html = tracking_html[21:-6]
+
+        trackings = []
+        track_re = re.compile(r'\s*(.*?)<b>(.*?)</b>\s*<i>(.*?)</i>\s*')
+        for match in track_re.finditer(tracking_html):
+            old_value_group = match.group(1).strip()
+            old_value = old_value_group.split('➜')[0].strip().lstrip('<br/>')  # find "old value"
+            new_value = match.group(2).strip()
+            fname = match.group(3).strip()
+            trackings.append((fname, old_value, new_value))
+        tracking_info = '\n'.join(
+            f'{t[0]}: {t[1]} -> {t[2]}'
+            for t in trackings
+        )
+        self.assertEqual(len(trackings), len(data),
+                            'Tracking: tracking does not match')
+
         for field_name, value_type, old_value, new_value in data:
-            tracking = tracking_values.filtered(lambda track: track.field_id.name == field_name)
-            self.assertEqual(len(tracking), 1, f'Tracking: not found for {field_name}')
-            msg_base = f'Tracking: {field_name} ({value_type}: '
-            if value_type in suffix_mapping:
-                old_value_fname = f'old_value_{suffix_mapping[value_type]}'
-                new_value_fname = f'new_value_{suffix_mapping[value_type]}'
-                self.assertEqual(tracking[old_value_fname], old_value,
-                                 msg_base + f'expected {old_value}, received {tracking[old_value_fname]})')
-                self.assertEqual(tracking[new_value_fname], new_value,
-                                 msg_base + f'expected {new_value}, received {tracking[new_value_fname]})')
-            if value_type == 'many2one':
-                self.assertEqual(tracking.old_value_integer, old_value and old_value.id or False)
-                self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
-                self.assertEqual(tracking.old_value_char, old_value and old_value.display_name or '')
-                self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
-            elif value_type == 'monetary':
+            if isinstance(field_name, (list, tuple)):
+                field_name, field_string = field_name
+            else:
+                field_string = self.env[message.model].fields_get([field_name], attributes={'string'})[field_name]['string']
+            if isinstance(value_type, tuple):
+                value_type, prop_field_string, prop_type = value_type
+                tracking = next(
+                    (t for t in trackings if t[0] == prop_field_string),
+                    [],
+                )
+                self.assertTrue(tracking, f'Tracking: not found for property field {field_name}: property {prop_field_string}\n{tracking_info}')
+            else:
+                prop_field_string, prop_type = False, False
+                tracking = next(
+                    (t for t in trackings if t[0] == field_string),
+                    [],
+                )
+                self.assertTrue(tracking, f'Tracking: not found for {field_name}\n{tracking_info}')
+            self.assertTrackingValueInBody(
+                tracking, prop_type or value_type, old_value, new_value,
+            )
+
+    def assertTrackingValueInBody(self, tracking, value_type, old_value, new_value):
+        msg_base = f'Tracking: {tracking[0]} ({value_type})'
+        if value_type == 'many2one':
+            old_value = (old_value and old_value.display_name) or 'None'
+            new_value = (new_value and new_value.display_name) or 'None'
+        elif value_type in ('char', 'many2many', 'one2many', 'selection', 'text'):
+            old_value = old_value or 'None'
+            new_value = new_value or 'None'
+        elif value_type == 'date':
+            old_value = fields.Date.to_string(old_value) if old_value is not False else 'None'
+            new_value = fields.Date.to_string(new_value) if new_value is not False else 'None'
+        elif value_type == 'datetime':
+            old_value = fields.Datetime.to_string(old_value) if old_value is not False else 'None'
+            new_value = fields.Datetime.to_string(new_value) if new_value is not False else 'None'
+        elif value_type in ('integer', 'float'):
+            old_value = str(old_value) if old_value is not False else 'None'
+            new_value = str(new_value) if new_value is not False else 'None'
+        elif value_type == 'monetary':
+            currency = None
+            if isinstance(old_value, (list, tuple)):
+                old_value, currency = old_value
+            if isinstance(new_value, (list, tuple)):
                 new_value, currency = new_value
-                self.assertEqual(tracking.currency_id, currency)
-                self.assertEqual(tracking.old_value_float, old_value)
-                self.assertEqual(tracking.new_value_float, new_value)
-            if value_type not in suffix_mapping and value_type not in {'many2one', 'monetary'}:
-                self.assertEqual(1, 0, f'Tracking: unsupported tracking test on {value_type}')
+            if currency:
+                old_value = format_amount(self.env, old_value, currency, trailing_zeroes=False) if old_value is not False else 'None'
+                new_value = format_amount(self.env, new_value, currency, trailing_zeroes=False) if new_value is not False else 'None'
+            else:
+                old_value = str(old_value) if old_value is not False else 'None'
+                new_value = str(new_value) if new_value is not False else 'None'
+                currency
+        self.assertEqual(tracking[1], old_value, f'{msg_base}: wrong old, expected {old_value}, received {tracking[1]}')
+        self.assertEqual(tracking[2], new_value, f'{msg_base}: wrong new, expected {new_value}, received {tracking[2]}')
 
 
 class MailCase(common.TransactionCase, MockEmail, BusCase):
@@ -1954,11 +2077,6 @@ class MailCommon(MailCase):
         </t>
     </div>
     <t t-out="message.body"/>
-    <ul t-if="tracking_values">
-        <li t-foreach="tracking_values" t-as="tracking">
-            <t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> -&gt; <t t-out="tracking[2]"/>
-        </li>
-    </ul>
     <div t-if="signature" t-out="signature"/>
     <div t-if="show_footer">
         <p>Sent by <t t-out="company.name"/></p>
