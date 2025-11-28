@@ -2584,12 +2584,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_quantity_package_of_non_basic_unit', login="pos_user")
 
-    def test_attribute_order(self):
+    def test_attribute_order_with_pricelist(self):
         product = self.env['product.template'].create({
             'name': 'Product Test',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'taxes_id': [Command.create({
+                'name': 'Tax 16%',
+                'amount': 16,
+            })],
         })
 
         attribute_3 = self.env['product.attribute'].create({
@@ -2638,9 +2641,14 @@ class TestUi(TestPointOfSaleHttpCommon):
             'value_ids': [(6, 0, attribute_1.value_ids.ids)],
             'sequence': 1,
         })
+        self.main_pos_config.pricelist_id.item_ids = [Command.create({
+            'compute_price': 'fixed',
+            'fixed_price': 50,
+            'product_id': product.product_variant_ids[0].id,
+        })]
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_attribute_order', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_attribute_order_with_pricelist', login="pos_user")
 
     def test_preset_timing_retail(self):
         """
