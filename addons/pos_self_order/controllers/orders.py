@@ -72,7 +72,6 @@ class PosSelfOrderController(http.Controller):
             'res.partner': self.env['res.partner']._load_pos_self_data_read(order.partner_id, config),
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
-            'pos.payment.method': self.env['pos.payment.method']._load_pos_self_data_read(order.payment_ids.mapped('payment_method_id'), config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
         }
 
