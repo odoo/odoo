@@ -244,6 +244,7 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get title() {
+<<<<<<< 8e9c2788225aa1e4b483fc082c7bd5ebd7de4b1b
         const overridedValues = {};
         const order = this.pos.getOrder();
         if (order) {
@@ -259,6 +260,19 @@ export class ProductConfiguratorPopup extends Component {
 
         const product = this.product || this.props.productTemplate;
         const info = product.getTaxDetails({ overridedValues });
+||||||| 618fde96d0a3526194b12cf734c999e4080e67f4
+        const info = this.props.productTemplate.getProductPriceInfo(this.product, this.pos.company);
+        const name = this.props.productTemplate.display_name;
+=======
+        const order = this.pos.getOrder();
+        const pricelist = order.pricelist_id || this.pos.config.pricelist_id;
+        const info = this.props.productTemplate.getProductPriceInfo(
+            this.product,
+            this.pos.company,
+            pricelist
+        );
+        const name = this.props.productTemplate.display_name;
+>>>>>>> 5cbf4a45403cdb59603fd284b8d43b0d01122003
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
         return `${this.props.productTemplate.display_name} | ${total}`;
     }
