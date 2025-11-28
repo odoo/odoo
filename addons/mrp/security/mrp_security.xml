@@ -101,5 +101,16 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="res_partner_rule_edit_all" model="ir.rule">
+        <field name="name">edit all (mrp)</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="groups" eval="[Command.set([ref('mrp.group_mrp_manager')])]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
 </data>
 </odoo>

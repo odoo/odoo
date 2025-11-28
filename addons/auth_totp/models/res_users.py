@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -12,8 +11,9 @@ from datetime import datetime, timedelta
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied, UserError
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import sql
+from odoo.tools import sql, SQL
 
 from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
 
@@ -40,15 +40,11 @@ class ResUsers(models.Model):
         if not sql.column_exists(self.env.cr, self._table, "totp_secret"):
             self.env.cr.execute("ALTER TABLE res_users ADD COLUMN totp_secret varchar")
 
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
-
     def _mfa_type(self):
         r = super()._mfa_type()
         if r is not None:
             return r
-        if self.totp_enabled:
+        if self.sudo().totp_enabled:
             return 'totp'
 
     def _mfa_url(self):
@@ -59,9 +55,13 @@ class ResUsers(models.Model):
             return '/web/login/totp'
 
     @api.depends('totp_secret')
+    @api.depends_context('uid')
     def _compute_totp_enabled(self):
+        if not (self.env.su or self.env.user.has_group('base.group_erp_manager')):
+            self.totp_enabled = False
+            self = self.filtered(lambda u: u._origin == self.env.user).with_prefetch()  # noqa: PLW0642
         for r, v in zip(self, self.sudo()):
-            r.totp_enabled = bool(v.totp_secret)
+            r.totp_enabled = v.totp_secret not in (False, 'false')
 
     def _rpc_api_keys_only(self):
         # 2FA enabled means we can't allow password-based RPC
@@ -231,10 +231,9 @@ class ResUsers(models.Model):
             self.env.cr.execute('UPDATE res_users SET totp_secret = %s WHERE id=%s', (secret, user.id))
 
     def _totp_enable_search(self, operator, value):
-        value = not value if operator == '!=' else value
-        if value:
-            self.env.cr.execute("SELECT id FROM res_users WHERE totp_secret IS NOT NULL")
-        else:
-            self.env.cr.execute("SELECT id FROM res_users WHERE totp_secret IS NULL OR totp_secret='false'")
-        result = self.env.cr.fetchall()
-        return [('id', 'in', [x[0] for x in result])]
+        if operator != 'in':
+            return NotImplemented
+        domain = Domain.custom(to_sql=lambda model, alias, query: SQL("%s <> 'false'", SQL.identifier(alias, 'totp_secret')))
+        if not (self.env.su or self.env.user.has_group('base.group_erp_manager')):
+            domain &= Domain('id', '=', self.env.uid)
+        return domain

@@ -3629,8 +3629,11 @@ class TestX2many(TransactionExpressionCase):
         })
         self.assertTrue(field.unlink())
 
+
+class SudoCommands(TransactionCaseWithUserDemo):
+
     @mute_logger('odoo.addons.base.models.ir_model')
-    @users('portal')
+    @users('demo')
     def test_sudo_commands(self):
         """Test manipulating a x2many field using Commands with `sudo` or with another user (`with_user`)
         is not allowed when the destination model is flagged `_allow_sudo_commands = False` and the transaction user
@@ -3675,7 +3678,7 @@ class TestX2many(TransactionExpressionCase):
                 })
             # 1.1 Command.UPDATE
             # Case: a public/portal updating his user to add himself a group
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.update(my_partner.user_ids[0].id, {
                         'group_ids': [self.env.ref('base.group_system').id],
@@ -3689,28 +3692,28 @@ class TestX2many(TransactionExpressionCase):
                 })
             # 1.3 Command.UNLINK
             # Case: a public user unlinking the public partner and the public user to mess with the database
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.unlink(my_partner.user_ids[0].id)],
                 })
             # 1.4 Command.LINK
-            # Case: a public/portal user changing the `partner_id` of an admin,
+            # Case: a normal user changing the `partner_id` of an admin,
             # to change the email address of the user and ask for a reset password.
             # We get a read error since Command.link need to read the corecord first, see One2many.write_real
-            with self.assertRaisesRegex(AccessError, "doesn't have 'read' access to"):
+            with self.assertRaisesRegex(AccessError, "doesn't have 'write' access to"):
                 my_partner.write({
                     'user_ids': [Command.link(admin_user.id)],
                 })
             # 1.5 Command.CLEAR
             # Case: a public user unlinking the public partner and the public user just to mess with the database
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.clear()],
                 })
             # 1.6 Command.SET
-            # Case: a public/portal user changing the `partner_id` of an admin,
+            # Case: a normal user changing the `partner_id` of an admin,
             # to change the email address of the user and ask for a reset password.
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.set([admin_user.id])],
                 })
@@ -3741,14 +3744,14 @@ class TestX2many(TransactionExpressionCase):
             (self.env['test_orm.user'].sudo(), u.sudo()),
         ]:
             # 2.0 Command.CREATE
-            # Case: a public/portal user creating a new users with arbitrary values
+            # Case: a normal user creating a new users with arbitrary values
             with self.assertRaisesRegex(AccessError, "not allowed to create 'test_orm.group'"):
                 User.create({
                     'name': 'foo',
                     'group_ids': [Command.create({})],
                 })
             # 2.1 Command.UPDATE
-            # Case: a public/portal updating his user to add himself a group
+            # Case: a normal updating his user to add himself a group
             with self.assertRaisesRegex(AccessError, "not allowed to modify 'test_orm.group'"):
                 my_user.write({
                     'group_ids': [Command.update(my_user.group_ids[0].id, {})],

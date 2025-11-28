@@ -62,7 +62,7 @@ import typing
 import warnings
 from datetime import date, datetime, time, timedelta, timezone
 
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
 from .identifiers import NewId
@@ -988,7 +988,8 @@ class DomainCondition(Domain):
     def _optimize_field_search_method(self, model: BaseModel) -> Domain:
         field = self._field(model)
         if not model.env.su:
-            model._check_field_access(field, 'read')
+            if self.operator not in ('any!', 'not any!'):
+                model._check_field_access(field, 'read')
             if field.compute_sudo:
                 # run search in sudo because the compute is done in sudo as well
                 model = model.sudo()
@@ -1013,7 +1014,7 @@ class DomainCondition(Domain):
                 return ~Domain(computed_domain, internal=True)
         # compatibility for any!
         try:
-            if operator in ('any!', 'not any!'):
+            if operator in ('any!', 'not any!') and not isinstance(original_exception, AccessError):
                 # Not strictly equivalent! If a search is executed, it will be done using sudo.
                 computed_domain = DomainCondition(self.field_expr, operator.rstrip('!'), value)
                 computed_domain = computed_domain._optimize_field_search_method(model.sudo())

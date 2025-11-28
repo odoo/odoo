@@ -2622,6 +2622,8 @@ class BaseModel(metaclass=MetaModel):
         if self.env.user._has_group('base.group_no_one'):
             if field.groups == NO_ACCESS:
                 allowed_groups_msg = _("always forbidden")
+            elif not field.groups:
+                allowed_groups_msg = _("custom field access rules")
             else:
                 groups_list = [self.env.ref(g) for g in field.groups.split(',')]
                 groups = self.env['res.groups'].union(*groups_list).sorted('id')

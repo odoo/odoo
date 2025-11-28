@@ -31,14 +31,15 @@ class ResUsers(models.Model):
         ('inbox', 'In Odoo')],
         'Notification', required=True, default='email',
         compute='_compute_notification_type', inverse='_inverse_notification_type', store=True,
+        user_writeable=True,
         help="Policy on how to handle Chatter notifications:\n"
              "- By Emails: notifications are sent to your email address\n"
              "- In Odoo: notifications appear in your Odoo Inbox")
     presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
     # OOO management
-    out_of_office_from = fields.Datetime()
-    out_of_office_to = fields.Datetime()
-    out_of_office_message = fields.Html('Vacation Responder')
+    out_of_office_from = fields.Datetime(user_writeable=True)
+    out_of_office_to = fields.Datetime(user_writeable=True)
+    out_of_office_message = fields.Html('Vacation Responder', user_writeable=True)
     is_out_of_office = fields.Boolean('Out of Office', compute='_compute_is_out_of_office')
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
@@ -51,7 +52,6 @@ class ResUsers(models.Model):
         "ir.mail_server",
         "Outgoing Mail Server",
         compute='_compute_outgoing_mail_server_id',
-        groups='base.group_user',
     )
     outgoing_mail_server_type = fields.Selection(
         [('default', 'Default')],
@@ -59,9 +59,8 @@ class ResUsers(models.Model):
         compute='_compute_outgoing_mail_server_id',
         required=True,
         default='default',
-        groups='base.group_user',
     )
-    has_external_mail_server = fields.Boolean(compute='_compute_has_external_mail_server')
+    has_external_mail_server = fields.Boolean(compute='_compute_has_external_mail_server', compute_sudo=True)
 
     def _compute_has_external_mail_server(self):
         self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_str(
@@ -120,15 +119,21 @@ class ResUsers(models.Model):
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
         inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
-        inbox_users.write({"group_ids": [Command.link(inbox_group.id)]})
-        (self - inbox_users).write({"group_ids": [Command.unlink(inbox_group.id)]})
+        inbox_users.sudo().write({"group_ids": [Command.link(inbox_group.id)]})
+        (self - inbox_users).sudo().write({"group_ids": [Command.unlink(inbox_group.id)]})
 
     @api.depends_context("uid")
     def _compute_can_edit_role(self):
         self.can_edit_role = self.env["res.role"].sudo(False).has_access("write")
 
     @api.depends("email")
+    @api.depends_context("uid")
     def _compute_outgoing_mail_server_id(self):
+        if not (self.env.su or self.env.user.has_group('base.group_user')):
+            self.outgoing_mail_server_id = False
+            self.outgoing_mail_server_type = 'default'
+            # compute only for the current user
+            self = self.filtered(lambda u: u._origin == self.env.user).with_prefetch()  # noqa: PLW0642
         mail_servers = self.env['ir.mail_server'].sudo().search(fields.Domain.AND([
             [('from_filter', 'ilike', '_@_')],
             fields.Domain.OR([[
@@ -151,30 +156,6 @@ class ResUsers(models.Model):
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + [
-            "can_edit_role",
-            "is_out_of_office",
-            "notification_type",
-            "out_of_office_from",
-            "out_of_office_message",
-            "out_of_office_to",
-            "role_ids",
-            "has_external_mail_server",
-            "outgoing_mail_server_id",
-            "outgoing_mail_server_type",
-        ]
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + [
-            "notification_type",
-            "out_of_office_from",
-            "out_of_office_message",
-            "out_of_office_to",
-        ]
 
     @api.model_create_multi
     def create(self, vals_list):

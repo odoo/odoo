@@ -843,7 +843,7 @@ class ResPartner(models.Model):
             self.invalidate_recordset(['user_ids'])
             users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
             if users:
-                if self.env['res.users'].sudo(False).has_access('write'):
+                if users.sudo(False).has_access('write'):
                     error_msg = _('You cannot archive contacts linked to an active user.\n'
                                   'You first need to archive their associated user.\n\n'
                                   'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))

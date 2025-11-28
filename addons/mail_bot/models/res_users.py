@@ -21,10 +21,6 @@ class ResUsers(models.Model):
         ], string="OdooBot Status", readonly=True, required=False)  # keep track of the state: correspond to the code of the last message sent
     odoobot_failed = fields.Boolean(readonly=True)
 
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['odoobot_state']
-
     def _on_webclient_bootstrap(self):
         super()._on_webclient_bootstrap()
         if self._is_internal() and self.odoobot_state in [False, "not_initialized"]:

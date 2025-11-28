@@ -19,6 +19,28 @@
             <field name="domain_force">['|', '|', ('partner_share', '=', False), ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
         </record>
 
+        <record id="res_partner_rule_edit_all" model="ir.rule">
+            <field name="name">edit all</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="groups" eval="[Command.set([ref('base.group_partner_manager')])]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="res_partner_rule_write_self" model="ir.rule">
+            <field name="name">self user write access</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="groups" eval="[Command.set([ref('base.group_user')])]"/>
+            <field name="domain_force">[('id', '=', user.partner_id.id)]</field>
+            <field name="perm_read" eval="False"/> <!-- read: already handled by commercial partner -->
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
         <record model="ir.rule" id="res_partner_portal_public_rule">
             <field name="name">res_partner: portal/public: read access on my commercial partner</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -145,11 +167,44 @@
             <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'in', company_ids)]</field>
         </record>
 
+        <record id="res_users_rule_edit_all" model="ir.rule">
+            <field name="name">edit all</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="groups" eval="[Command.set([ref('base.group_erp_manager')])]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="res_users_rule_read_all" model="ir.rule">
+            <field name="name">read all</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="groups" eval="[Command.set([ref('base.group_user')])]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="res_users_rule_write_self" model="ir.rule">
+            <field name="name">self user write access</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="groups" eval="[Command.set([ref('base.group_user')])]"/>
+            <field name="domain_force">[('id', '=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
         <record id="res_users_rule_portal" model="ir.rule">
             <field name="name">portal user access</field>
             <field name="model_id" ref="model_res_users"/>
             <field name="groups" eval="[Command.set([ref('base.group_portal')])]"/>
             <field name="domain_force">[('commercial_partner_id', '=', user.commercial_partner_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
 
         <record id="change_password_own_rule" model="ir.rule">

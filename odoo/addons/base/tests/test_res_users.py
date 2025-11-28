@@ -302,6 +302,7 @@ class TestUsers(UsersCommonCase):
         non_existing_user = User.browse(last_user_id.id + 1)
         self.assertFalse(non_existing_user._compute_session_token('session_id'))
 
+
 @tagged('post_install', '-at_install', 'groups')
 class TestUsers2(UsersCommonCase):
 
@@ -442,61 +443,56 @@ class TestUsers2(UsersCommonCase):
             with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['Membre', 'Portal', 'Foo / Small user group']"):
                 user_form.save()
 
-    @users('portal_1')
+    @users('user_internal', 'portal_1')
     @mute_logger('odoo.addons.base.models.ir_model')
-    def test_self_writeable_fields(self):
-        """Check that a portal user:
-            - can write on fields in SELF_WRITEABLE_FIELDS on himself,
-            - cannot write on fields not in SELF_WRITEABLE_FIELDS on himself,
-            - and none of the above on another user than himself.
+    def test_user_writeable_fields(self):
+        """ Check for writeable fields.
+
+        Check that a normal user: can write only on user_writeable fields.
+        Check that a portal user: cannot write on themselves.
         """
         self.assertIn(
             "post_install",
             self.test_tags,
             "This test **must** be `post_install` to ensure the expected behavior despite other modules",
         )
+        user_writeable_fields = [
+            name
+            for name, field in self.env["res.users"]._fields.items()
+            if getattr(field, 'user_writeable', False)
+        ]
         self.assertIn(
             "email",
-            self.env['res.users'].SELF_WRITEABLE_FIELDS,
-            "For this test to make sense, 'email' must be in the `SELF_WRITEABLE_FIELDS`",
+            user_writeable_fields,
+            "For this test to make sense, 'email' must be `user_writeable`",
         )
         self.assertNotIn(
             "login",
-            self.env['res.users'].SELF_WRITEABLE_FIELDS,
-            "For this test to make sense, 'login' must not be in the `SELF_WRITEABLE_FIELDS`",
+            user_writeable_fields,
+            "For this test to make sense, 'login' must not be `user_writeable`",
         )
 
-        me = self.env["res.users"].browse(self.env.user.id)
-        other = self.env["res.users"].browse(self.user_portal_2.id)
+        me = self.env.user.with_env(self.env)
+        other = self.user_portal_2.with_env(self.env)
 
-        # Allow to write a field in the SELF_WRITEABLE_FIELDS
-        me.email = "foo@bar.com"
-        self.assertEqual(me.email, "foo@bar.com")
-        # Disallow to write a field not in the SELF_WRITEABLE_FIELDS
+        # Allow to write a field in the user_writeable_fields for internal users
+        # only
+        if self.env.user._has_group('base.group_user'):
+            me.email = "foo@bar.com"
+            self.assertEqual(me.email, "foo@bar.com")
+        else:
+            with self.assertRaises(AccessError):
+                me.email = "foo@bar.com"
+        # Disallow to write a field not in the user_writeable_fields
         with self.assertRaises(AccessError):
             me.login = "foo"
 
-        # Disallow to write a field in the SELF_WRITEABLE_FIELDS on another user
+        # Disallow to write a field in the user_writeable_fields on another user
         with self.assertRaises(AccessError):
             other.email = "foo@bar.com"
-        # Disallow to write a field not in the SELF_WRITEABLE_FIELDS on another user
+        # Disallow to write a field not in the user_writeable_fields on another user
         with self.assertRaises(AccessError):
             other.login = "foo"
-
-    @users('user_internal')
-    def test_self_readable_writeable_fields_preferences_form(self):
-        """Test that a field protected by a `groups='...'` with a group the user doesn't belong to
-        but part of the `SELF_WRITEABLE_FIELDS` is shown in the user profile preferences form and is editable"""
-        my_user = self.env['res.users'].browse(self.env.user.id)
-        self.assertIn(
-            'name',
-            my_user.SELF_WRITEABLE_FIELDS,
-            "This test doesn't make sense if not tested on a field part of the SELF_WRITEABLE_FIELDS"
-        )
-        self.patch(self.env.registry['res.users']._fields['name'], 'groups', 'base.group_system')
-        with Form(my_user, view='base.view_users_form_simple_modif') as UserForm:
-            UserForm.name = "Raoulette Poiluchette"
-        self.assertEqual(my_user.name, "Raoulette Poiluchette")
 
     @warmup
     def test_write_group_ids_performance(self):

@@ -172,33 +172,9 @@ class ResUsers(models.Model):
         company_ids = companies if isinstance(companies, str) else models.to_record_ids(companies)
         return Domain('company_ids', 'in', company_ids)
 
-    @property
-    def SELF_READABLE_FIELDS(self):
-        """ The list of fields a user can read on their own user record.
-        In order to add fields, please override this property on model extensions.
-        """
-        return [
-            'signature', 'company_id', 'login', 'email', 'name', 'image_1920',
-            'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
-            'tz_offset', 'group_ids', 'partner_id', 'write_date', 'action_id',
-            'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
-            'share', 'device_ids', 'api_key_ids', 'phone', 'display_name',
-        ]
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        """ The list of fields a user can write on their own user record.
-        In order to add fields, please override this property on model extensions.
-        """
-        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz', 'api_key_ids', 'phone']
-
-    @api.model
-    @tools.ormcache(cache='stable')
-    def _self_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
-        """Readable and writable fields by portal users."""
-        readable = frozenset(self.SELF_READABLE_FIELDS)
-        writeable = frozenset(self.SELF_WRITEABLE_FIELDS)
-        return readable, writeable
+    def _valid_field_parameter(self, field, name):
+        # see `_has_field_access``
+        return name == 'user_writeable' or super()._valid_field_parameter(field, name)
 
     def _default_groups(self):
         """Default groups for employees
@@ -222,8 +198,8 @@ class ResUsers(models.Model):
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
-    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
-    signature = fields.Html(string="Email Signature", compute='_compute_signature', readonly=False, store=True)
+    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys", user_writeable=True)
+    signature = fields.Html(string="Email Signature", compute='_compute_signature', readonly=False, store=True, user_writeable=True)
     active = fields.Boolean(default=True)
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
@@ -242,17 +218,22 @@ class ResUsers(models.Model):
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
     # context is set.
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company.id,
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        user_writeable=True,
+        default=lambda self: self.env.company.id,
         help='The default company for this user.', context={'user_preference': True})
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
         string='Companies', default=lambda self: self.env.company.ids)
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
-    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    name = fields.Char(related='partner_id.name', inherited=True, readonly=False, user_writeable=True)
+    email = fields.Char(related='partner_id.email', inherited=True, readonly=False, user_writeable=True)
     email_domain_placeholder = fields.Char(compute="_compute_email_domain_placeholder")
-    phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False)
+    phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False, user_writeable=True)
+    image_1920 = fields.Binary(related='partner_id.image_1920', inherited=True, readonly=False, user_writeable=True)
+    lang = fields.Selection(related='partner_id.lang', inherited=True, readonly=False, user_writeable=True)
+    tz = fields.Selection(related='partner_id.tz', inherited=True, readonly=False, user_writeable=True)
 
     group_ids = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups(), help="Groups explicitly assigned to the user")
     all_group_ids = fields.Many2many('res.groups', string="Groups and implied groups",
@@ -554,25 +535,16 @@ class ResUsers(models.Model):
         if not self.env.ref('base.group_system').user_ids:
             raise ValidationError(_("You must have at least an administrator user."))
 
-    def onchange(self, values, field_names, fields_spec):
-        # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
-        # Put field values in the cache.
-        if self == self.env.user:
-            [self.sudo()[field_name] for field_name in self._self_accessible_fields()[0]]
-        return super().onchange(values, field_names, fields_spec)
-
-    def read(self, fields=None, load='_classic_read'):
-        readable, _ = self._self_accessible_fields()
-        if fields and self == self.env.user and all(key in readable or key.startswith('context_') for key in fields):
-            # safe fields only, so we read as super-user to bypass access rights
-            self = self.sudo()
-        return super().read(fields=fields, load=load)
-
+    @api.model
     def _has_field_access(self, field, operation):
-        return super()._has_field_access(field, operation) or (
-            operation == 'read'
-            and self._origin == self.env.user
-            and field.name in self._self_accessible_fields()[0]
+        # For writing a field, the user has elevated privileges (sudo or manager
+        # group) or the field is marked as user_writeable. The records which the
+        # user can change are protected by record rules.
+        return super()._has_field_access(field, operation) and (
+            operation != 'write'
+            or getattr(field, 'user_writeable', False)
+            or self.env.su
+            or self.env.user.has_group('base.group_erp_manager')
         )
 
     @api.model_create_multi
@@ -602,17 +574,6 @@ class ResUsers(models.Model):
         if vals.get('active'):
             # unarchive partners before unarchiving the users
             self.partner_id.action_unarchive()
-        if self == self.env.user:
-            writeable = self._self_accessible_fields()[1]
-            for key in list(vals):
-                if key not in writeable:
-                    break
-            else:
-                if 'company_id' in vals:
-                    if vals['company_id'] not in self.env.user.company_ids.ids:
-                        del vals['company_id']
-                # safe fields only, so we write as super-user to bypass access rights
-                self = self.sudo()
 
         res = super().write(vals)
 
@@ -1320,33 +1281,6 @@ class ResUsers(models.Model):
     def _mfa_url(self):
         """ If an MFA method is enabled, returns the URL for its second step. """
         return
-
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        res = super().fields_get(allfields, attributes=attributes)
-
-        # add self readable/writable fields
-        readable_fields, writeable_fields = self._self_accessible_fields()
-        missing = (writeable_fields | readable_fields).difference(res.keys())
-        if allfields:
-            missing = missing.intersection(allfields)
-        if missing:
-            self = self.sudo()  # noqa: PLW0642
-            res.update({
-                key: dict(values, readonly=key not in writeable_fields, searchable=False)
-                for key, values in super().fields_get(sorted(missing), attributes).items()
-            })
-        return res
-
-    def _get_view_postprocessed(self, view, arch, **options):
-        arch, models = super()._get_view_postprocessed(view, arch, **options)
-        if view == self.env.ref('base.view_users_form_simple_modif'):
-            tree = etree.fromstring(arch)
-            for node_field in tree.xpath('//field[@__groups_key__]'):
-                if node_field.get('name') in self.SELF_READABLE_FIELDS:
-                    node_field.attrib.pop('__groups_key__')
-            arch = etree.tostring(tree)
-        return arch, models
 
 
 ResUsersPatchedInTest = ResUsers

@@ -130,9 +130,9 @@ class ProductPublicCategory(models.Model):
     def _search_has_published_products(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        published_categ_ids = self._search(
-            [('product_tmpl_ids.is_published', 'in', True)]
-        ).get_result_ids()
+        published_categ_ids = self.search_fetch(
+            [('product_tmpl_ids.is_published', 'in', True)], ['parent_path']
+        ).ids
         # Note that if the `value` is False, the ORM will invert the domain below
         return [
             '|',
