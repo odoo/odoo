@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_splash_intro" name="Splash Intro">
+    <section class="s_splash_intro o_full_screen_height oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_colored_level pt88 pb88" style="background-image: url('/web/image/website.s_splash_intro_default_image');">
+        <div class="o_we_bg_filter bg-black-15"/>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <p class="lead text-muted"><strong>Find the solution for you</strong></p>
+                    <h1 class="display-3">Built for Impact.<br/>Designed to Inspire.</h1>
+                    <p><br/></p>
+                    <p>
+                        <a t-att-href="cta_btn_href" class="btn btn-lg btn-primary o_translate_inline"><t t-out="cta_btn_text">Discover More</t></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <a class="o_scroll_button rounded-circle align-items-center justify-content-center mx-auto mb-4 o_cc o_cc1 o_not_editable" href="#" title="Scroll down to next section">
+            <i class="fa fa-angle-down fa-2x"/>
+        </a>
+    </section>
+</template>
+
+<asset id="website.s_splash_intro_000_scss" name="Splash Intro 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_splash_intro/000.scss</path>
+</asset>
+
+</odoo>

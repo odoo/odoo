@@ -145,6 +145,7 @@
         'views/snippets/s_shape_image.xml',
         'views/snippets/s_empowerment.xml',
         'views/snippets/s_split_intro.xml',
+        'views/snippets/s_splash_intro.xml',
         'views/snippets/s_text_highlight.xml',
         'views/snippets/s_pricelist_cafe.xml',
         'views/snippets/s_progress_bar.xml',
