@@ -2115,3 +2115,26 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_req_form.employee_id = self.employee_responsible
 
         self.assertFalse(leave_req_form.can_approve)
+
+    def test_duration_display_with_flexible_and_half_day_timeoff_type(self):
+        """
+        Verify that a one-day leave on a flexible calendar displays a duration
+        of 1 day, even when using a half-day time off type.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'hours_per_day': 8.0,
+            'full_time_required_hours': 40,
+            'flexible_hours': True,
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        leave_full_day = self.env['hr.leave'].create({
+            'name': 'Test full day',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_half.id,
+            'request_date_from': '2025-11-28',
+            'request_date_to': '2025-11-28',
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'pm',
+        })
+        self.assertEqual(leave_full_day.duration_display, '1 days')
