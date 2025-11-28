@@ -528,6 +528,7 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
 registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
     steps: () =>
         [
+            Chrome.freezeDateTime(1764583200000), // 1 dec 2025 - 10:00
             Chrome.startPoS(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
@@ -541,6 +542,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             Dialog.confirm(),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickPresetTimingSlot(),
+            Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("15:00"),
             Chrome.presetTimingSlotIs("15:00"),
             Chrome.clickPlanButton(),
