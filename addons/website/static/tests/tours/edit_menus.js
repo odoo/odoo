@@ -155,7 +155,6 @@ registerWebsitePreviewTour('edit_menus', {
     },
     // Edit the menu item from the "edit menu" popover button
     ...clickOnEditAndWaitEditMode(),
-    clickOnExtraMenuItem({}, true),
     {
         content: "Wait for the builder sidebar to fully open",
         trigger: ":iframe .editor_enable",
@@ -172,6 +171,7 @@ registerWebsitePreviewTour('edit_menus', {
             await delay(200);
         },
     },
+    clickOnExtraMenuItem({}, true),
     ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
     {
         content: "Click on the popover Edit Menu button",
