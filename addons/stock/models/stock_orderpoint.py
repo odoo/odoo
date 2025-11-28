@@ -766,10 +766,10 @@ class StockWarehouseOrderpoint(models.Model):
 
                 # Log an activity on product template for failed orderpoints.
                 for orderpoint, error_msg in all_orderpoints_exceptions:
-                    existing_activity = self.env['mail.activity'].search([
+                    existing_activity = self.env['mail.activity'].search_count([
                         ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
                         ('res_model_id', '=', self.env.ref('product.model_product_template').id),
-                        ('note', '=', error_msg)])
+                        ('note', 'like', error_msg)], limit=1)
                     if not existing_activity:
                         orderpoint.product_id.product_tmpl_id.sudo().activity_schedule(
                             'mail.mail_activity_data_warning',
