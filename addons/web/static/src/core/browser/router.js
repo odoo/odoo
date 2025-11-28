@@ -280,6 +280,11 @@ browser.addEventListener("popstate", (ev) => {
         return;
     }
     state = ev.state?.nextState || router.urlToState(new URL(browser.location));
+    // In Edit mode, the website builder also listens to "popstate" on window.
+    // This handler fires first and would trigger ROUTE_CHANGE before the
+    // builder can intercept it. BEFORE_ROUTE_CHANGE lets the builder set
+    // `router.skipLoad` to prevent that.
+    routerBus.trigger("BEFORE_ROUTE_CHANGE");
     // Some client actions want to handle loading their own state. This is a ugly hack to allow not
     // reloading the webclient's state when they manipulate history.
     if (!ev.state?.skipRouteChange && !router.skipLoad) {

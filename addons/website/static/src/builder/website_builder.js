@@ -9,7 +9,7 @@ import { TranslateSetupEditorPlugin } from "./plugins/translate_setup_editor_plu
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -45,6 +45,7 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
+import { router, routerBus } from "@web/core/browser/router";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -107,20 +108,76 @@ export class WebsiteBuilder extends Component {
             }
             this.websiteEditService?.clearRpcCache();
         });
+        useEffect(
+            () => {
+                // Initialize a unique history guard for this mount, track
+                // whether it still needs cleanup, and cancel any pending
+                // cleanup from a previous mount to avoid unintended navigation.
+                const historyGuardId = Date.now();
+                let isGuardActive = true;
+                browser.clearTimeout(this.pendingHistoryCleanup);
+
+                // Back navigation is handled with an additional state in the
+                // history, used to capture the popstate event.
+                const pushState = () => {
+                    const state = {
+                        ...(history.state || {}),
+                        skipRouteChange: true,
+                        websiteBuilderHistoryGuardId: historyGuardId,
+                    };
+                    history.state?.skipRouteChange
+                        ? history.replaceState(state, "")
+                        : history.pushState(state, "");
+                };
+
+                pushState();
+
+                const leaveOnBackNavigation = async () => {
+                    isGuardActive = false;
+                    if (await this.onBeforeLeave()) {
+                        this.props.builderProps.closeEditor();
+                    } else {
+                        pushState();
+                        isGuardActive = true;
+                    }
+                };
+
+                const skipLoadOnBeforeRouteChange = () => {
+                    router.skipLoad = true;
+                };
+
+                routerBus.addEventListener("BEFORE_ROUTE_CHANGE", skipLoadOnBeforeRouteChange);
+                window.addEventListener("popstate", leaveOnBackNavigation);
+
+                return () => {
+                    routerBus.removeEventListener(
+                        "BEFORE_ROUTE_CHANGE",
+                        skipLoadOnBeforeRouteChange
+                    );
+                    window.removeEventListener("popstate", leaveOnBackNavigation);
+                    // If the guard entry is still on top (e.g. save path, not
+                    // back-navigation path), pop it so the user doesn't need to
+                    // press back twice after leaving edit mode.
+                    if (isGuardActive) {
+                        // Delay cleanup to avoid race with remount/router;
+                        // Ensures we only remove our own guard and don’t
+                        // trigger incorrect or extra navigation.
+                        this.pendingHistoryCleanup = browser.setTimeout(() => {
+                            if (history.state?.websiteBuilderHistoryGuardId === historyGuardId) {
+                                router.skipLoad = true;
+                                history.back();
+                            }
+                            this.pendingHistoryCleanup = null;
+                        });
+                    }
+                };
+            },
+            () => []
+        );
     }
 
     discard() {
-        if (this.editor.shared.history.canUndo()) {
-            this.dialog.add(ConfirmationDialog, {
-                body: _t(
-                    "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
-                ),
-                confirm: () => this.props.builderProps.closeEditor(),
-                cancel: () => {},
-            });
-        } else {
-            this.props.builderProps.closeEditor();
-        }
+        history.back();
     }
 
     onBeforeUnload(event) {
@@ -141,7 +198,9 @@ export class WebsiteBuilder extends Component {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
-                    body: _t("If you proceed, your changes will be lost"),
+                    body: _t(
+                        "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
+                    ),
                     confirmLabel: _t("Continue"),
                     confirm: () => resolve(),
                     cancel: () => {
@@ -152,6 +211,7 @@ export class WebsiteBuilder extends Component {
             });
             return continueProcess;
         }
+        this.dialog.closeAll();
         return true;
     }
 
