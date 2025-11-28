@@ -446,6 +446,7 @@ class CustomerPortal(Controller):
             ),
             'vat_label': request.env._("VAT"),
             'discard_url': callback or '/my/addresses',
+            'needs_address': True,
         }
 
     def _is_used_as_billing(self, address_type, **kwargs):

@@ -1074,6 +1074,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'website_sale_order': order_sudo,
             'only_services': order_sudo.only_services,
             'discard_url': callback or (is_anonymous_cart and '/shop/cart') or '/shop/checkout',
+            'needs_address': self._needs_address(),
         }
 
     def _get_default_country(self, order_sudo=False, **kwargs):
