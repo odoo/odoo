@@ -1,3 +1,5 @@
+import { AddSnippetDialogSandboxed } from "./snippet_viewer/add_snippet_dialog";
+
 export const massMailingSnippetModelPatch = {
     cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers) {
         super.cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers);
@@ -12,5 +14,8 @@ export const massMailingSnippetModelPatch = {
     },
     getTechnicalUsage() {
         return "mass_mailing";
-    }
+    },
+    getAddSnippetDialogClass() {
+        return AddSnippetDialogSandboxed;
+    },
 };
