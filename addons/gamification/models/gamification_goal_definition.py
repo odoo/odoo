@@ -103,7 +103,7 @@ class GamificationGoalDefinition(models.Model):
                 domain = safe_eval(definition.domain, {
                     'user': self.env.user.with_user(self.env.user)
                 })
-                Domain(domain).validate(Model, in_db=True)
+                Domain(domain).validate(Model)
             except (ValueError, SyntaxError) as e:
                 msg = e
                 if isinstance(e, SyntaxError):
