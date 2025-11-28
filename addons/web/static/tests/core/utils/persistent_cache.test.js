@@ -607,3 +607,18 @@ test("DiskCache: multiple consecutive calls, call once fallback", async () => {
 
     expect.verifySteps(["fallback", "onFinish0", "onFinish1", "onFinish2", "onFinish3"]);
 });
+
+test("DiskCache: rejected promise is rejected for all reads", async () => {
+    const persistentCache = new PersistentCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+    const fail = async () => {
+        throw new Error("fetch failed");
+    }
+    const promA = persistentCache.read("table", "key", fail);
+    const promB = persistentCache.read("table", "key", fail);
+    await expect(promA).rejects.toThrow("fetch failed");
+    await expect(promB).rejects.toThrow("fetch failed");
+});
