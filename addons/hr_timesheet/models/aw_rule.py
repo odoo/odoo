@@ -33,7 +33,6 @@ class AwRule(models.Model):
     )
     task_id = fields.Many2one("project.task", domain="[('project_id', '=?', project_id)]", string="Task")
     always_active = fields.Boolean(default=False)
-    primary = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     match_count = fields.Integer(
         string="Capture Groups", compute="_compute_match_count", default=0,

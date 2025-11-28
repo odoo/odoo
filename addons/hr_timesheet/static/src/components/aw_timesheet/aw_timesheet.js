@@ -209,7 +209,6 @@ export class ActivityWatchTimesheet extends Component {
                     event.name = rule.type;
                 }
                 event.always_active = rule.always_active;
-                event.primary = rule.primary;
                 event.type = rule.type;
                 event.keyEvent = true;
                 return;
@@ -238,7 +237,9 @@ export class ActivityWatchTimesheet extends Component {
 
         // only project in odoo url
         match = url.match(
-            new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:project|project\\.project)/(\\d+)(?:/[^?#]*)*(?:\\?|$)`)
+            new RegExp(
+                `^${odooUrl}(?:/[^?#]*)*/(?:project|project\\.project)/(\\d+)(?:/[^?#]*)*(?:\\?|$)`
+            )
         );
         if (match) {
             event.project_id = Number(match[1]);
@@ -297,7 +298,10 @@ export class ActivityWatchTimesheet extends Component {
                     for (const event of events) {
                         let eventType = watchers[index].client;
                         if (watchers[index].client === "aw-watcher-vscode") {
-                            event.name = event.data.project === "unknown" ? _t("Development") : _t("VS Code - %(folder)s", { folder: event.data.project });
+                            event.name =
+                                event.data.project === "unknown"
+                                    ? _t("Development")
+                                    : _t("VS Code - %(folder)s", { folder: event.data.project });
                             event.keyEvent = true;
                             event.type = "vs_code";
                         } else if (
@@ -389,16 +393,7 @@ export class ActivityWatchTimesheet extends Component {
         this.resetState();
         this.awRules = await this.orm.call("aw.rule", "search_read", [
             [],
-            [
-                "regex",
-                "type",
-                "template",
-                "project_id",
-                "task_id",
-                "always_active",
-                "primary",
-                "sequence",
-            ],
+            ["regex", "type", "template", "project_id", "task_id", "always_active", "sequence"],
         ]);
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
         const baseUrl = "http://localhost:5600";
@@ -512,7 +507,6 @@ export class ActivityWatchTimesheet extends Component {
         }
 
         let prevKeyyEvent = null;
-        let primaryEventSeen = false;
         let prevProjectId = false;
         let prevTaskId = false;
         for (const range of ranges) {
@@ -521,22 +515,11 @@ export class ActivityWatchTimesheet extends Component {
             }
 
             let projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
-            if (range.primary) {
-                // when rule is primary => we change project and task (to dicuss if we should have one of them mandatory)
-                // it doesn't make sens to set primary event without project and task
-                prevKeyyEvent = range.name;
-                primaryEventSeen = true;
-                prevProjectId = range.project_id || false;
-                prevTaskId = range.task_id || false;
-                // vals changed
-                projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
-                // non primary key event can only overide a previous non primary key event, but not primary events
-            } else if (range.keyEvent || this.localConfig[prevKeyyEvent]) {
-                // no primary key events preceed this event
-                if (!primaryEventSeen && range.keyEvent) {
+            if (range.keyEvent || this.localConfig[prevKeyyEvent]) {
+                if (range.keyEvent) {
                     prevKeyyEvent = range.name;
                 }
-                if (!primaryEventSeen || (!prevProjectId && !prevTaskId)) {
+                if (!prevProjectId && !prevTaskId) {
                     if (range.keyEvent && (range.project_id || range.task_id)) {
                         prevProjectId = range.project_id;
                         prevTaskId = range.task_id;
@@ -592,7 +575,7 @@ export class ActivityWatchTimesheet extends Component {
 
                 // we should not edit the object while looping
                 if (this.state.grouped[groupKey][title].duration < 60) {
-                    toDelete.add({groupKey, title});
+                    toDelete.add({ groupKey, title });
                     continue;
                 }
 
@@ -613,7 +596,7 @@ export class ActivityWatchTimesheet extends Component {
             }
         }
 
-        for (const {groupKey, title} of toDelete) {
+        for (const { groupKey, title } of toDelete) {
             delete this.state.grouped[groupKey][title];
 
             if (Object.keys(this.state.grouped[groupKey]).length === 0) {
@@ -710,7 +693,7 @@ export class ActivityWatchTimesheet extends Component {
             if (task) {
                 title = `${project} / ${task}`;
             } else {
-                title = project
+                title = project;
             }
         }
 
