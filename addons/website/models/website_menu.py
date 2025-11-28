@@ -193,7 +193,8 @@ class WebsiteMenu(models.Model):
                     or (not controller_page_sudo.view_id._handle_visibility(do_raise=False)
                         and controller_page_sudo.view_id._get_cached_visibility() != "password")):
                     visible = False
-
+            if menu.parent_id and not menu.parent_id.is_visible:
+                visible = False
             menu.is_visible = visible
 
     def _clean_url(self):
