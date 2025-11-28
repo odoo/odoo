@@ -157,8 +157,8 @@ class WebsiteVisitor(models.Model):
                 "last_track_ids",
                 [Store.One("page_id", ["name"]), "visit_datetime"],
                 value=lambda visitor: self.env["website.track"]
+                .sudo()
                 .browse(results.get(visitor.id))
                 .with_prefetch(all_track_ids),
-                sudo=True,
             ),
         ]
