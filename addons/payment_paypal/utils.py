@@ -16,11 +16,12 @@ def format_partner_address(partner):
     address_mapping = {
         'address_line_1': partner.street,
         'address_line_2': partner.street2,
-        'admin_area_1': partner.state_id.code,
+        'admin_area_1': partner.state_id.code if partner.state_id else None,
         'admin_area_2': partner.city,
         'postal_code': partner.zip,
-        'country_code': partner.country_code,
+        'country_code': partner.country_code if partner.country_code else None,
     }
+    # Only include non-empty values, filtering out None and False values
     address_vals.update(
         address={key: value for key, value in address_mapping.items() if value},
     )
