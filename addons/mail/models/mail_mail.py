@@ -496,9 +496,12 @@ class MailMail(models.Model):
         # `datas` (binary field) could bloat the browse cache, triggering
         # soft/hard mem limits with temporary data.
         # attachments sorted by increasing ID to match front-end and upload ordering
-        email_attachments = [(a['name'], a['raw'], a['mimetype'])
-                             for a in attachments.sudo().sorted('id').read(['name', 'raw', 'mimetype'])
-                             if a['raw'] is not False]
+        attachments.sudo().fetch(['name', 'raw', 'mimetype'])
+        email_attachments = [
+            (a.name, a.raw, a.mimetype)
+            for a in attachments.sudo().sorted('id')
+            if a.raw is not False
+        ]
 
         # Build final list of email values with personalized body for recipient
         results = []

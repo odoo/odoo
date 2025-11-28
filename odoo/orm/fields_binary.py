@@ -118,6 +118,26 @@ class Binary(Field):
             return bytes(value)
         return False if value is None else value
 
+    def convert_to_write(self, value, record):
+        return self.convert_to_cache(value, record) or False
+
+    def convert_to_read(self, value, record, use_display_name=True):
+        if not value:
+            return False
+        if (
+            not isinstance(value, bytes)
+            or record.env.context.get('bin_size')
+            or record.env.context.get('bin_size_' + self.name)
+        ):
+            return value
+        if (self.related_field or self).name in ('raw', 'db_datas'):
+            # Most of fields are encoded in base64 in odoo and this is used to
+            # send data to the client. The 'raw' field is an exception and when
+            # reading it, we don't want to crash and transparently behave as
+            # other fields.
+            value = base64.b64encode(value)
+        return value.decode()
+
     def compute_value(self, records):
         bin_size_name = 'bin_size_' + self.name
         if records.env.context.get('bin_size') or records.env.context.get(bin_size_name):
