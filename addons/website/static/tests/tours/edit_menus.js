@@ -12,6 +12,7 @@ import {
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
+<<<<<<< 5375b865570efb714720096c34aeec2e833dd1f9
 registry.category("web_tour.tours").add("parent_child_menu", {
     url: "/odoo/action-website.action_website_menu",
     steps: () => [
@@ -19,11 +20,362 @@ registry.category("web_tour.tours").add("parent_child_menu", {
             content: "Open Menu Form View",
             trigger: ".o_list_button_add",
             run: "click",
+||||||| ccaa86d2c6b959a51a294a58ad91fa202f84e6eb
+registerWebsitePreviewTour('edit_menus', {
+    url: '/',
+}, () => [
+    // Add a megamenu item from the menu.
+    {
+        trigger: ":iframe #wrapwrap",
+    },
+    {
+        content: "open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        run: "click",
+    },
+    {
+        trigger: ".o_website_dialog:visible",
+    },
+    {
+        content: "Trigger the link dialog (click 'Add Mega Menu Item')",
+        trigger: '.modal:not(.o_inactive_modal) .modal-body a:eq(1)',
+        run: "click",
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input',
+        run: "edit Megaaaaa!",
+    },
+    {
+        content: "Confirm the mega menu label",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
+    },
+    {
+        content: "Save the new menu",
+        trigger: '.modal-footer .btn-primary',
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.oe_menu_editor))",
+    },
+    {
+        trigger: ":iframe body:contains(welcome to your)",
+    },
+    clickOnExtraMenuItem({}, true),
+    {
+        content: "There should be a new megamenu item.",
+        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+    },
+    // Add a menu item in edit mode.
+    ...clickOnEditAndWaitEditMode(),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
+    {
+        content: "Click on Edit Menu",
+        trigger: '.o-we-linkpopover a.js_edit_menu',
+        run: "click",
+    },
+    {
+        trigger: ".o_website_dialog:visible",
+    },
+    {
+        content: "Trigger the link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+        run: "click",
+    },
+    {
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+    },
+    {
+        content: "Confirm the new menu entry without a label",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        content: "It didn't save without a label. Fill label input.",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+        run: "edit Random!",
+    },
+    {
+        content: "Remove the URL input value",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input#url_input",
+        run: "edit ",
+    },
+    {
+        content: "Confirm the new menu entry without a url",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        content: "It didn't save without URL input value. Fill url input.",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input#url_input",
+        run: "edit #",
+    },
+    {
+        content: "Confirm the new menu entry with # url",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        trigger: '.oe_menu_editor .js_menu_label:contains("Random!")',
+    },
+    {
+        content: "Save the website menu with the new entry",
+        trigger: '.modal:not(.o_inactive_modal) .modal-footer .btn-primary',
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
+    // Edit the new menu item from the "edit link" popover button
+    clickOnExtraMenuItem({}, true),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Random!')", "Random!"),
+    {
+        content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
+        trigger: ':iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
+    },
+    {
+        content: "Click on Edit Link",
+        trigger: '.o-we-linkpopover a.o_we_edit_link',
+        run: "click",
+    },
+    {
+        content: "Change the label",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: "edit Modnar",
+    },
+    {
+        content: "Confirm the new label",
+        trigger: '.modal-footer .btn-primary',
+        run: "click",
+    },
+    ...clickOnSave(),
+    clickOnExtraMenuItem({}, true),
+    {
+        content: "Label should have changed",
+        trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
+    },
+    // Edit the menu item from the "edit menu" popover button
+    ...clickOnEditAndWaitEditMode(),
+    clickOnExtraMenuItem({}, true),
+    {
+        content: "Wait for the builder sidebar to fully open",
+        trigger: ":iframe .editor_enable",
+        run: async function() {
+            // Entering the edit mode opens the builder sidebar, which triggers
+            // multiple iframe resize events, which in turn rebuilds the extra
+            // menu items dropdown (see `auto_hide_menu.js` resize handler).
+            //
+            // We wait briefly to ensure all recalculations complete,
+            // avoiding race conditions when opening the link popover.
+            //
+            // NOTE: the delay below (200ms) matches the CSS `transition-delay`
+            // defined for `o-website-builder_sidebar`.
+            await delay(200);
+=======
+registerWebsitePreviewTour('edit_menus', {
+    url: '/',
+}, () => [
+    // Add a megamenu item from the menu.
+    {
+        trigger: ":iframe #wrapwrap",
+    },
+    {
+        content: "open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        run: "click",
+    },
+    {
+        trigger: ".o_website_dialog:visible",
+    },
+    {
+        content: "Trigger the link dialog (click 'Add Mega Menu Item')",
+        trigger: '.modal:not(.o_inactive_modal) .modal-body a:eq(1)',
+        run: "click",
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input',
+        run: "edit Megaaaaa!",
+    },
+    {
+        content: "Confirm the mega menu label",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
+    },
+    {
+        content: "Save the new menu",
+        trigger: '.modal-footer .btn-primary',
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.oe_menu_editor))",
+    },
+    {
+        trigger: ":iframe body:contains(welcome to your)",
+    },
+    clickOnExtraMenuItem({}, true),
+    {
+        content: "There should be a new megamenu item.",
+        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+    },
+    // Add a menu item in edit mode.
+    ...clickOnEditAndWaitEditMode(),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
+    {
+        content: "Click on Edit Menu",
+        trigger: '.o-we-linkpopover a.js_edit_menu',
+        run: "click",
+    },
+    {
+        trigger: ".o_website_dialog:visible",
+    },
+    {
+        content: "Trigger the link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+        run: "click",
+    },
+    {
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+    },
+    {
+        content: "Confirm the new menu entry without a label",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        content: "It didn't save without a label. Fill label input.",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+        run: "edit Random!",
+    },
+    {
+        content: "Remove the URL input value",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input#url_input",
+        run: "edit ",
+    },
+    {
+        content: "Confirm the new menu entry without a url",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        content: "It didn't save without URL input value. Fill url input.",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input#url_input",
+        run: "edit #",
+    },
+    {
+        content: "Confirm the new menu entry with # url",
+        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        trigger: '.oe_menu_editor .js_menu_label:contains("Random!")',
+    },
+    {
+        content: "Save the website menu with the new entry",
+        trigger: '.modal:not(.o_inactive_modal) .modal-footer .btn-primary',
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
+    // Edit the new menu item from the "edit link" popover button
+    clickOnExtraMenuItem({}, true),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Random!')", "Random!"),
+    {
+        content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
+        trigger: ':iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
+    },
+    {
+        content: "Click on Edit Link",
+        trigger: '.o-we-linkpopover a.o_we_edit_link',
+        run: "click",
+    },
+    {
+        content: "Change the label",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: "edit Modnar",
+    },
+    {
+        content: "Confirm the new label",
+        trigger: '.modal-footer .btn-primary',
+        run: "click",
+    },
+    ...clickOnSave(),
+    clickOnExtraMenuItem({}, true),
+    {
+        content: "Label should have changed",
+        trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
+    },
+    // Edit the menu item from the "edit menu" popover button
+    ...clickOnEditAndWaitEditMode(),
+    {
+        content: "Wait for the builder sidebar to fully open",
+        trigger: ":iframe .editor_enable",
+        run: async function() {
+            // Entering the edit mode opens the builder sidebar, which triggers
+            // multiple iframe resize events, which in turn rebuilds the extra
+            // menu items dropdown (see `auto_hide_menu.js` resize handler).
+            //
+            // We wait briefly to ensure all recalculations complete,
+            // avoiding race conditions when opening the link popover.
+            //
+            // NOTE: the delay below (200ms) matches the CSS `transition-delay`
+            // defined for `o-website-builder_sidebar`.
+            await delay(200);
+>>>>>>> 3f171b7243dd6db275186a07716285ddbafeb269
         },
+<<<<<<< 5375b865570efb714720096c34aeec2e833dd1f9
         {
             content: "Insert Menu Name",
             trigger: "input[id='name_0']",
             run: "edit Parent",
+||||||| ccaa86d2c6b959a51a294a58ad91fa202f84e6eb
+    },
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
+    {
+        content: "Click on the popover Edit Menu button",
+        trigger: '.o-we-linkpopover a.js_edit_menu',
+        run: "click",
+    },
+    {
+        content: "Click on the dialog Edit Menu button",
+        trigger: '.oe_menu_editor .js_menu_label:contains("Modnar")',
+        run() {
+            const liEl = this.anchor.closest('[data-menu-id]');
+            liEl.querySelector('button.js_edit_menu').click();
+=======
+    },
+    clickOnExtraMenuItem({}, true),
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
+    {
+        content: "Click on the popover Edit Menu button",
+        trigger: '.o-we-linkpopover a.js_edit_menu',
+        run: "click",
+    },
+    {
+        content: "Click on the dialog Edit Menu button",
+        trigger: '.oe_menu_editor .js_menu_label:contains("Modnar")',
+        run() {
+            const liEl = this.anchor.closest('[data-menu-id]');
+            liEl.querySelector('button.js_edit_menu').click();
+>>>>>>> 3f171b7243dd6db275186a07716285ddbafeb269
         },
         {
             content: "Insert Menu URL",
