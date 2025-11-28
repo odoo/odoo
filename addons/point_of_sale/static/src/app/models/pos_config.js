@@ -87,7 +87,9 @@ export class PosConfig extends Base {
             return [];
         }
         const available_pricelists = new Set(this.available_pricelist_ids);
-        available_pricelists.add(this.pricelist_id);
+        if (this.pricelist_id) {
+            available_pricelists.add(this.pricelist_id);
+        }
         return Array.from(available_pricelists);
     }
 }
