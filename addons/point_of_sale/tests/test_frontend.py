@@ -2221,6 +2221,23 @@ class TestUi(TestPointOfSaleHttpCommon):
         product_template._create_product_variant(product_template_attribute_values[1])
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_dynamic_product_price', login="pos_user")
 
+    def test_default_pricelist_when_creating_partner(self):
+        """
+        When creating a new partner from the PoS, the pricelist displayed by default should
+        be the default pricelist set in the PoS configuration.
+        """
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Default Pricelist'
+        })
+        self.main_pos_config.write({
+            'available_pricelist_ids': [Command.set([pricelist.id])],
+            'pricelist_id': pricelist.id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with self.assertLogs(level='WARNING') as log_catcher:
+            self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_default_pricelist_when_creating_partner', login="pos_user")
+        self.assertTrue(all("Missing widget" in output for output in log_catcher.output))
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
