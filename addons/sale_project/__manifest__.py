@@ -31,6 +31,7 @@ This module allows to generate a project/task from sales orders.
     'assets': {
         'web.assets_backend': [
             'sale_project/static/src/components/**/*',
+            'sale_project/static/src/core/**/*',
             'sale_project/static/src/views/**/*',
         ],
         'web.assets_tests': [
