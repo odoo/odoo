@@ -129,7 +129,7 @@ export class PersistentCache {
             this.ramCache.delete(table, key); // remove rejected prom from ram cache
             def.reject(error);
         };
-        const prom = fallback().then(onFullfilled, onRejected);
+        fallback().then(onFullfilled, onRejected);
         if (ramValue) {
             ramValue.then((value) => {
                 def.resolve(deepCopy(value));
@@ -137,7 +137,7 @@ export class PersistentCache {
                 fromCache.resolve();
             });
         } else {
-            this.ramCache.write(table, key, prom);
+            this.ramCache.write(table, key, def);
             this.indexedDB.read(table, key).then(async (result) => {
                 if (result) {
                     let decrypted;
