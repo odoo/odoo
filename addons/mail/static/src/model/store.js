@@ -1,4 +1,5 @@
 import { Record } from "./record";
+import { RecordList } from "./record_list";
 import { STORE_SYM, modelRegistry } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
 
@@ -161,6 +162,11 @@ export class Store extends Record {
                                 for (let c = 0; c < count; c++) {
                                     usingRecord2[name2].delete(record);
                                 }
+                            } else if (
+                                usingRecord2.Model._.fieldsOne.get(name2) &&
+                                usingRecord2[name2] instanceof RecordList
+                            ) {
+                                usingRecord2[name2].clear();
                             } else {
                                 usingRecord2[name2] = undefined;
                             }

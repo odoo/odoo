@@ -78,7 +78,7 @@ export function makeStore(env, { localRegistry } = {}) {
                             record._.gettingField = true;
                             const val = recordFullProxy[name];
                             record._.gettingField = false;
-                            if (isRelation(Model, name)) {
+                            if (isRelation(Model, name) && val !== undefined) {
                                 const recordListFullProxy = val._proxy;
                                 if (isMany(Model, name)) {
                                     return recordListFullProxy;
