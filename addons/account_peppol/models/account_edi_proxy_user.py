@@ -208,6 +208,7 @@ class AccountEdiProxyClientUser(models.Model):
                             default_move_type='in_invoice',
                             default_peppol_move_state=content['state'],
                             default_peppol_message_uuid=uuid,
+                            default_journal_id=journal.id,
                         )\
                         ._create_document_from_attachment(attachment.id)
                     move._message_log(body=_('Peppol document has been received successfully'))
