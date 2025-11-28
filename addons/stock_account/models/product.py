@@ -295,6 +295,7 @@ class ProductProduct(models.Model):
         avco_total_value = 0
         moves = moves_in | moves_out
         moves = moves.sorted('date, id')
+        moves_in = moves_in.sorted('date, id')
 
         # If the last value was defined by the user just return it
         if product_values and not moves_in:
