@@ -284,7 +284,6 @@ $-o-bg-colors-custom: null;
 }
 
 .form-check-input[type="checkbox"]:checked {
-    background-size: 100% 100%;
     animation: check-grow 300ms ease-in-out;
 }
 
@@ -299,6 +298,7 @@ $-o-bg-colors-custom: null;
     .form-check-input:checked {
         background-color: $o-success;
         border-color: $o-success;
+        animation: none;
     }
 
     .form-check-input:focus {
