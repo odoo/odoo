@@ -31,5 +31,6 @@ from . import (
     test_search,
     test_sort,
     test_timeit,
+    test_unlink,
     test_views,
 )
