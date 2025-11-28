@@ -36,6 +36,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { patch } from "@web/core/utils/patch";
 import { getOrigin, url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
@@ -2207,6 +2208,29 @@ test("Prettify message links", async () => {
     await contains(".o-mail-Message", { text: "TestPartner" });
     await contains(".o-mail-Message .fa.fa-comment");
     await contains(".o-mail-Message", { text: url(`/mail/message/100`) });
+});
+
+test("Clicking message link does not open a new tab", async () => {
+    patch(window, {
+        open() {
+            throw new Error("Clicking message link should not open a new tab");
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Channel" });
+    const otherChannelId = pyEnv["discuss.channel"].create({ name: "Other Channel" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Message on other channel",
+        res_id: otherChannelId,
+        model: "discuss.channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", `${url(`/mail/message/${messageId}`)}`);
+    await press("Enter");
+    await click(".o_message_redirect");
+    await contains(".o-mail-DiscussContent-threadName[title='Other Channel']");
+    await contains(".o-mail-Message", { text: "Message on other channel" });
 });
 
 test("should delete link preview along with message", async () => {
