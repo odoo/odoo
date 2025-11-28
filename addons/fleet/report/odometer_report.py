@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from psycopg2 import sql
-
 from odoo import tools
 from odoo import fields, models
+from odoo.tools.sql import SQL
 
 
 class OdometerReport(models.Model):
@@ -20,7 +19,7 @@ class OdometerReport(models.Model):
     recorded_date = fields.Date('Date', readonly=True)
 
     def init(self):
-        query = """
+        query = SQL("""
             -- Step 1: Cast vehicle_odometer timestamp
             WITH vehicle_odometer AS (
                 SELECT odometer.vehicle_id, odometer.value, CAST(odometer.date AS TIMESTAMP) AS reading_date
@@ -225,11 +224,11 @@ class OdometerReport(models.Model):
                 SELECT vehicle_id, recorded_date + INTERVAL '1 month' AS recorded_date, odometer_value, mileage_delta FROM final_results
                 ORDER BY vehicle_id, recorded_date
             ) t
-        """
+        """)
 
-        self.env.cr.execute(query)
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute(
-            sql.SQL("CREATE or REPLACE VIEW {} as ({})").format(
-                sql.Identifier(self._table),
-                sql.SQL(query)))
+        self.env.cr.execute(SQL(
+            "CREATE or REPLACE VIEW %s as (%s)",
+            SQL.identifier(self._table),
+            query,
+        ))
