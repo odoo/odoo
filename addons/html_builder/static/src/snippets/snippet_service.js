@@ -122,7 +122,7 @@ export class SnippetModel extends Reactive {
      */
     openSnippetDialog(snippet, { onSelect, onClose }, editor) {
         this.dialog.add(
-            AddSnippetDialog,
+            this.getAddSnippetDialogClass(),
             {
                 selectedSnippet: snippet,
                 snippetModel: this,
@@ -135,6 +135,10 @@ export class SnippetModel extends Reactive {
             },
             { onClose }
         );
+    }
+
+    getAddSnippetDialogClass() {
+        return AddSnippetDialog;
     }
 
     load() {
