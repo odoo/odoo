@@ -710,8 +710,14 @@
                                     <field name="date"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <field name="state" widget="label_selection" class="ms-auto"
-                                    options="{'classes': {'draft': 'default', 'posted': 'success'}}" />
+                                <field name="status_in_payment"
+                                    widget="badge" class="ms-auto"
+                                    decoration-info="status_in_payment == 'draft'"
+                                    decoration-danger="status_in_payment == 'cancel'"
+                                    decoration-muted="status_in_payment in ('posted', 'sent', 'partial')"
+                                    decoration-success="status_in_payment in ('in_payment', 'paid', 'reversed')"
+                                    invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
+                                />
                             </footer>
                         </t>
                     </templates>
@@ -1352,7 +1358,7 @@
                                         </sheet>
                                     </form>
                                 </field>
-                                <group col="12" class="oe_invoice_lines_tab overflow-hidden">
+                                <group col="12" class="oe_invoice_lines_tab overflow-hidden pt-3 pt-md-0">
                                     <group colspan="8">
                                         <field name="narration" placeholder="Terms and Conditions" nolabel="1"/>
                                     </group>

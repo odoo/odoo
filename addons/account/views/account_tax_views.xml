@@ -57,6 +57,44 @@
             </field>
         </record>
 
+        <record id="tax_repartition_line_kanban" model="ir.ui.view">
+            <field name="name">account.tax.repartition.line.kanban</field>
+            <field name="model">account.tax.repartition.line</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="card">
+                            <div class="card-body d-flex justify-content-center gap-1 flex-wrap">
+                                <field name="factor_percent" digits="[1, 2]" invisible="repartition_type == 'base'"/>
+                                <span invisible="repartition_type == 'base'">%</span>
+                                <field name="repartition_type"/>
+                                <span invisible="not account_id">on</span>
+                                <field name="account_id" invisible="not account_id"/>
+                                <div class="w-100" invisible="not tag_ids"/>
+                                <field name="tag_ids" widget="many2many_tags" class="oe_inline"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="tax_repartition_line_form" model="ir.ui.view">
+            <field name="name">account.tax.repartition.line.form</field>
+            <field name="model">account.tax.repartition.line</field>
+            <field name="arch" type="xml">
+                <form string="Account Tax Repartition Line">
+                    <group>
+                        <field name="factor_percent"/>
+                        <field name="repartition_type"/>
+                        <field name="account_id"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                        <field name="use_in_tax_closing" widget="boolean_toggle"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="account_tax_view_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tax.search</field>
             <field name="model">account.tax</field>
@@ -184,10 +222,10 @@
                             <group invisible="amount_type == 'group'">
                                 <field name="country_code" invisible="1"/>
                                 <group string="Distribution for Invoices" class="mw-100">
-                                    <field name="invoice_repartition_line_ids" nolabel="1" colspan="2"/>
+                                    <field name="invoice_repartition_line_ids" nolabel="1" colspan="2" context="{'default_document_type': 'invoice'}"/>
                                 </group>
                                 <group string="Distribution for Refunds" class="mw-100">
-                                    <field name="refund_repartition_line_ids" nolabel="1" colspan="2"/>
+                                    <field name="refund_repartition_line_ids" nolabel="1" colspan="2" context="{'default_document_type': 'refund'}"/>
                                 </group>
                             </group>
                             <field name="children_tax_ids" invisible="amount_type != 'group' or type_tax_use == 'none'" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">

@@ -18,7 +18,14 @@
     </t>
 
     <t t-name="account.JournalUploadLink">
-        <a t-att-class="props.btnClass" href="#" t-out="props.linkText" draggable="false"/>
+        <a t-att-class="props.btnClass" href="#" draggable="false">
+            <div class="d-sm-none">
+                <i class="fa fa-upload"></i>
+            </div>
+            <div class="d-none d-sm-block">
+                <t t-out="props.linkText"/>
+            </div>
+        </a>
     </t>
 
 </templates>

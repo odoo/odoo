@@ -46,11 +46,28 @@
             </field>
         </record>
 
+        <record id="view_bank_statement_kanban" model="ir.ui.view">
+            <field name="name">account.bank.statement.kanban</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="currency_id" invisible="1"/> <!-- Needed for monetary widget -->
+                            <div><field name="date"/> - <field name="name"/></div>
+                            <div><field name="journal_id"/> - <field name="company_id"/></div>
+                            <div class="text-end mt-3">Starting <field name="balance_start"/> - Ending <field name="balance_end_real"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
 
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
-            <field name="view_mode">list,pivot,graph,form</field>
+            <field name="view_mode">list,kanban,pivot,graph,form</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
