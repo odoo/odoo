@@ -174,7 +174,7 @@ class AccountJournal(models.Model):
                 company_ids=companies.ids,
                 lock_date=lock_date,
             ))
-        self.env.cr.execute(SQL(' UNION ALL '.join(['%s'] * len(queries)), *queries))
+        self.env.cr.execute(SQL(' UNION ALL ').join(queries))
         return self.env.cr.fetchall()
 
     def _get_moves_to_hash(self, include_pre_last_hash, early_stop):

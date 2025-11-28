@@ -1394,9 +1394,9 @@ class PropertiesCase(TestPropertiesMixin):
 
         expected = ["""
             UPDATE "test_orm_message"
-            SET "attributes" = "__tmp"."attributes"::jsonb,
-                "write_date" = "__tmp"."write_date"::timestamp,
-                "write_uid" = "__tmp"."write_uid"::int4
+            SET "attributes" = "__tmp"."attributes"::"jsonb",
+                "write_date" = "__tmp"."write_date"::"timestamp",
+                "write_uid" = "__tmp"."write_uid"::"int4"
             FROM (VALUES %s) AS "__tmp"("id", "attributes", "write_date", "write_uid")
             WHERE "test_orm_message"."id" = "__tmp"."id"
         """]

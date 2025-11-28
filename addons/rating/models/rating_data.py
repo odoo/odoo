@@ -3,6 +3,7 @@
 
 import operator
 
+from odoo.tools import SQL
 from odoo.tools.float_utils import float_compare
 
 RATING_AVG_TOP = 3.66
@@ -31,6 +32,14 @@ OPERATOR_MAPPING = {
     '<=': operator.le,
     '>': operator.gt,
     '>=': operator.ge,
+}
+OPMAP = {
+    'in': SQL('in'),
+    'not in': SQL('not in'),
+    '<': SQL('<'),
+    '<=': SQL('<='),
+    '>': SQL('>'),
+    '>=': SQL('>='),
 }
 
 def _rating_avg_to_text(rating_avg):

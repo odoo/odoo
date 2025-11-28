@@ -100,11 +100,9 @@ class ResConfigSettings(models.TransientModel):
         if not column_exists(self.env.cr, "res_company", column):
             create_column(self.env.cr, "res_company", column, "boolean")
             self.env.cr.execute(SQL(
-                f"""
-                    UPDATE res_company
-                    SET {column} = true
-                    WHERE id = {self.env.company.id}
-                """
+                "UPDATE res_company SET %s = true WHERE id = %s",
+                SQL.identifier(column),
+                self.env.company.id,
             ))
 
     def l10n_in_edi_buy_iap(self):

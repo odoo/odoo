@@ -7,8 +7,7 @@ from collections import defaultdict
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import SQL
-from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
-
+from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING, OPMAP
 
 PROJECT_TASK_READABLE_FIELDS = {
     'allow_timesheets',
@@ -121,7 +120,7 @@ class ProjectTask(models.Model):
              WHERE remaining_hours > 0
                AND allocated_hours > 0
                AND remaining_hours / allocated_hours %s %s
-        )""", SQL.identifier(self._table), SQL(operator), value)
+        )""", SQL.identifier(self._table), OPMAP[operator], value)
         return [('id', 'in', sql)]
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'allocated_hours')

@@ -2097,14 +2097,14 @@ class IrModelAccess(models.Model):
             SELECT m.model
               FROM ir_model_access a
               JOIN ir_model m ON (m.id = a.model_id)
-             WHERE a.perm_%s
+             WHERE %s
                AND a.active
                AND (
                     a.group_id IS NULL OR
                     a.group_id IN %s
                 )
             GROUP BY m.model
-        """, SQL(mode), tuple(group_ids) or (None,)))
+        """, SQL.identifier('a', f'perm_{mode}'), group_ids or (None,)))
 
         return frozenset(v[0] for v in rows)
 

@@ -208,27 +208,33 @@ class MailTrackingDurationMixin(models.AbstractModel):
         stage_table_alias_name = base_query.make_alias(self._table, self._track_duration_field)
 
         # We only need to add a JOIN if the stage table is not already present in the query's _joins attribute.
-        from_add_join = ''
+        from_add_join = SQL()
         if not base_query._joins or not stage_table_alias_name in base_query._joins:
-            from_add_join = """
+            from_add_join = SQL(
+                """
                 INNER JOIN %(stage_table)s AS %(stage_table_alias_name)s
                     ON %(stage_table_alias_name)s.id = %(table)s.%(stage_field)s
-            """
+                """,
+                table=SQL.identifier(self._table),
+                stage_field=SQL.identifier(self._track_duration_field),
+                stage_table=SQL.identifier(self[self._track_duration_field]._table),
+                stage_table_alias_name=SQL.identifier(stage_table_alias_name),
+            )
 
         # Items with a date_last_stage_update inferior to that number of months will not be returned by the search function.
         max_rotting_months = self.env['ir.config_parameter'].sudo().get_int('crm.lead.rot.max.months') or 12
 
         # We use a F-string so that the from_add_join is added with its %s parameters before the query string is processed
-        query = f"""
+        query = """
             WITH perishables AS (
                 SELECT  %(table)s.id AS id,
                         (
                             %(table)s.date_last_stage_update + %(stage_table_alias_name)s.rotting_threshold_days * interval '1 day'
                         ) AS date_rot
                 FROM %(from_clause)s
-                    {from_add_join}
+                    %(from_add_join)s
                 WHERE
-                    %(table)s.date_last_stage_update > %(today)s - INTERVAL '%(max_rotting_months)s months'
+                    %(table)s.date_last_stage_update > %(today)s - INTERVAL %(max_rotting_months)s
                     AND %(where_clause)s
             )
             SELECT id
@@ -236,15 +242,15 @@ class MailTrackingDurationMixin(models.AbstractModel):
             WHERE %(today)s >= date_rot
 
         """
-        self.env.cr.execute(SQL(query,
+        self.env.cr.execute(SQL(
+            query,
             table=SQL.identifier(self._table),
-            stage_table=SQL.identifier(self[self._track_duration_field]._table),
             stage_table_alias_name=SQL.identifier(stage_table_alias_name),
-            stage_field=SQL.identifier(self._track_duration_field),
             today=self.env.cr.now(),
             where_clause=base_query.where_clause,
             from_clause=base_query.from_clause,
-            max_rotting_months=max_rotting_months,
+            max_rotting_months=f"{max_rotting_months} months",
+            from_add_join=from_add_join,
         ))
         rows = self.env.cr.dictfetchall()
         return [('id', operator, [r['id'] for r in rows])]

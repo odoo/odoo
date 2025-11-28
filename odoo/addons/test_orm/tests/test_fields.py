@@ -4636,7 +4636,7 @@ def update(model, *fnames):
     fnames = sorted(fnames + ('write_uid', 'write_date'))
     columns = ", ".join(f'"{column}"' for column in fnames)
     assignments = ", ".join(
-        f'"{fname}" = "__tmp"."{fname}"::{model._fields[fname].column_type[1]}'
+        f'"{fname}" = "__tmp"."{fname}"::"{model._fields[fname].column_type[0]}"'
         for fname in fnames
     )
     return (
