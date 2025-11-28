@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 from freezegun import freeze_time
 
 from odoo import fields, _
@@ -163,41 +162,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
         operator_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
-        page_1, page_2 = self.env["website.page"].create(
-            [
-                {
-                    "name": "Test Page 1",
-                    "type": "qweb",
-                    "url": "/page_1",
-                    "website_id": self.env.ref("website.default_website").id,
-                },
-                {
-                    "name": "Test Page 2",
-                    "type": "qweb",
-                    "url": "/page_2",
-                    "website_id": self.env.ref("website.default_website").id,
-                },
-            ]
-        )
-        track_ids = self.env["website.track"].create(
-            [
-                {
-                    "page_id": page_1.id,
-                    "visitor_id": self.visitor.id,
-                    "visit_datetime": self.base_datetime - datetime.timedelta(minutes=20),
-                },
-                {
-                    "page_id": page_2.id,
-                    "visitor_id": self.visitor.id,
-                    "visit_datetime": self.base_datetime - datetime.timedelta(minutes=10),
-                },
-                {
-                    "page_id": page_1.id,
-                    "visitor_id": self.visitor.id,
-                    "visit_datetime": self.base_datetime,
-                },
-            ]
-        )
         self.assertEqual(
             Store().add(channel).get_result(),
             {
@@ -312,24 +276,24 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     {"id": self.env.ref("website.default_website").id, "name": "My Website"}
                 ],
                 "website.page": [
-                    {"id": page_1.id, "name": "Test Page 1"},
-                    {"id": page_2.id, "name": "Test Page 2"},
+                    {"id": self.page_1.id, "name": "Test Page 1"},
+                    {"id": self.page_2.id, "name": "Test Page 2"},
                 ],
                 "website.track": [
                     {
-                        "id": track_ids[2].id,
-                        "page_id": page_1.id,
-                        "visit_datetime": fields.Datetime.to_string(track_ids[2].visit_datetime),
+                        "id": self.track_ids[2].id,
+                        "page_id": self.page_1.id,
+                        "visit_datetime": fields.Datetime.to_string(self.track_ids[2].visit_datetime),
                     },
                     {
-                        "id": track_ids[1].id,
-                        "page_id": page_2.id,
-                        "visit_datetime": fields.Datetime.to_string(track_ids[1].visit_datetime),
+                        "id": self.track_ids[1].id,
+                        "page_id": self.page_2.id,
+                        "visit_datetime": fields.Datetime.to_string(self.track_ids[1].visit_datetime),
                     },
                     {
-                        "id": track_ids[0].id,
-                        "page_id": page_1.id,
-                        "visit_datetime": fields.Datetime.to_string(track_ids[0].visit_datetime),
+                        "id": self.track_ids[0].id,
+                        "page_id": self.page_1.id,
+                        "visit_datetime": fields.Datetime.to_string(self.track_ids[0].visit_datetime),
                     },
                 ],
                 "website.visitor": [
@@ -338,7 +302,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "display_name": f"Website Visitor #{self.visitor.id}",
                         "id": self.visitor.id,
                         "lang_id": self.env.ref("base.lang_en").id,
-                        "last_track_ids": track_ids.ids[::-1],
+                        "last_track_ids": self.track_ids.ids[::-1],
                         "partner_id": False,
                         "website_id": self.env.ref("website.default_website").id,
                     }

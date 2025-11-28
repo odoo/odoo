@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import random
 
 from odoo import fields
@@ -51,6 +52,41 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
             for _ in range(self.max_sessions_per_operator)
         ])
         self.visitor_demo, self.visitor = self.visitors[0], self.visitors[1]
+        self.page_1, self.page_2 = self.env["website.page"].create(
+            [
+                {
+                    "name": "Test Page 1",
+                    "type": "qweb",
+                    "url": "/page_1",
+                    "website_id": self.env.ref("website.default_website").id,
+                },
+                {
+                    "name": "Test Page 2",
+                    "type": "qweb",
+                    "url": "/page_2",
+                    "website_id": self.env.ref("website.default_website").id,
+                },
+            ],
+        )
+        self.track_ids = self.env["website.track"].create(
+            [
+                {
+                    "page_id": self.page_1.id,
+                    "visitor_id": self.visitor.id,
+                    "visit_datetime": self.base_datetime - datetime.timedelta(minutes=20),
+                },
+                {
+                    "page_id": self.page_2.id,
+                    "visitor_id": self.visitor.id,
+                    "visit_datetime": self.base_datetime - datetime.timedelta(minutes=10),
+                },
+                {
+                    "page_id": self.page_1.id,
+                    "visitor_id": self.visitor.id,
+                    "visit_datetime": self.base_datetime,
+                },
+            ],
+        )
 
         self.livechat_base_url = self.livechat_channel.get_base_url()
 
