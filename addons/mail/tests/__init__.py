@@ -6,6 +6,7 @@ from . import test_font_to_img
 from . import test_ir_mail_server
 from . import test_ir_ui_menu
 from . import test_ir_websocket
+from . import test_kpi_provider
 from . import test_link_preview
 from . import test_mail_activity
 from . import test_mail_composer
