@@ -454,9 +454,9 @@ class ModelConverter(ir_http.ModelConverter):
         # Allow to current_website_id directly in route domain
         args['current_website_id'] = env['website'].get_current_website().id
         domain = safe_eval(self.domain, args)
+        domain = Domain(domain)
         if dom:
-            domain += dom
-        for record in Model.search(domain):
-            # return record so URL will be the real endpoint URL as the record will go through `slug()`
-            # the same way as endpoint URL is retrieved during dispatch (301 redirect), see `to_url()` from ModelConverter
-            yield record
+            domain &= Domain(dom)
+        # return record so URL will be the real endpoint URL as the record will go through `slug()`
+        # the same way as endpoint URL is retrieved during dispatch (301 redirect), see `to_url()` from ModelConverter
+        yield from Model.search(domain)
