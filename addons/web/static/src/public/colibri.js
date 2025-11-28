@@ -379,6 +379,19 @@ export class Colibri {
             }
         }
 
+        for (const tOut of this.tOuts) {
+            const [nodes, , initialValue] = tOut;
+            if (!initialValue) {
+                continue;
+            }
+            for (const node of nodes) {
+                if (initialValue.has(node)) {
+                    const value = initialValue.get(node);
+                    this.applyTOut(node, value);
+                }
+            }
+        }
+
         for (const cleanup of this.cleanups.reverse()) {
             cleanup();
         }
