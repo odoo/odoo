@@ -118,6 +118,7 @@ class ResConfigSettings(models.TransientModel):
     group_pos_preset = fields.Boolean(string="Presets", implied_group="point_of_sale.group_pos_preset", help="Hide or show the Presets menu in the Point of Sale configuration.")
     pos_use_fast_payment = fields.Boolean(related='pos_config_id.use_fast_payment', readonly=False)
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
+    pos_iface_printbill = fields.Boolean(related='pos_config_id.iface_printbill', readonly=False)
 
     def open_payment_method_form(self):
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)

@@ -18,9 +18,6 @@
                         </div>
                     </div>
                 </setting>
-                <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill"  invisible="not pos_module_pos_restaurant or use_kiosk_mode">
-                    <field name="pos_iface_printbill"/>
-                </setting>
                 <setting help="Split total or order lines" id="iface_splitbill"  documentation="/applications/sales/point_of_sale/restaurant/bill_printing.html" invisible="not pos_module_pos_restaurant or use_kiosk_mode">
                     <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
                 </setting>

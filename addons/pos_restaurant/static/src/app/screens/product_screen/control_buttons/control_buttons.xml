@@ -14,11 +14,6 @@
             position="before">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="pos.config.module_pos_restaurant">
-                <button t-if="pos.config.iface_printbill" t-att-class="buttonClass"
-                    t-att-disabled="!pos.getOrder()?.getOrderlines()?.length"
-                    t-on-click="clickPrintBill">
-                    <i class="fa fa-print me-1"></i>Bill
-                </button>
                 <button t-att-class="buttonClass" t-on-click="clickTableGuests">
                     <span t-esc="currentOrder?.getCustomerCount() || 0" t-attf-class="rounded-circle text-bg-dark fw-bolder small me-1 {{ui.isSmall ? 'px-1' : 'px-2 py-1'}}"/>
                     <span>Guests</span>

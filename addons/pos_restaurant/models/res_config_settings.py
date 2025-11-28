@@ -7,7 +7,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     pos_floor_ids = fields.Many2many(related='pos_config_id.floor_ids', readonly=False)
-    pos_iface_printbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_default_screen = fields.Selection(related="pos_config_id.default_screen", readonly=False)
     pos_use_course_allocation = fields.Boolean(related='pos_config_id.use_course_allocation', readonly=False)
@@ -17,11 +16,9 @@ class ResConfigSettings(models.TransientModel):
         for res_config in self:
             if not res_config.pos_module_pos_restaurant:
                 res_config.update({
-                    'pos_iface_printbill': False,
                     'pos_iface_splitbill': False,
                 })
             else:
                 res_config.update({
-                    'pos_iface_printbill': res_config.pos_config_id.iface_printbill,
                     'pos_iface_splitbill': res_config.pos_config_id.iface_splitbill,
                 })

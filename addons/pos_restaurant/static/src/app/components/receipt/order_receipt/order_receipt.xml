@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="pos_restaurant.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
-        <xpath expr="//ReceiptHeader" position="after">
-            <div t-if="!order.finalized" class="fs-2 mb-1">Pro forma receipt</div>
-        </xpath>
-    </t>
     <t t-name="pos_restaurant.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('cashier')]" position="after">
             <t t-if="order.table_id or order.self_ordering_table_id" t-esc="tableName"/>
