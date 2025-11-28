@@ -465,6 +465,15 @@ function useWithLoadingEffect(getAllActions) {
     return withLoadingEffect;
 }
 
+export function revertPreview(editor) {
+    if (editor.isDestroyed) {
+        return;
+    }
+    // The `next` will cancel the previous operation, which will revert
+    // the operation in case of a preview.
+    return editor.shared.operation.next();
+}
+
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
@@ -513,9 +522,7 @@ export function useClickableBuilderComponent() {
         },
         revert: () => {
             preventNextPreview = false;
-            // The `next` will cancel the previous operation, which will revert
-            // the operation in case of a preview.
-            comp.env.editor.shared.operation.next();
+            revertPreview(comp.env.editor);
         },
     };
 
