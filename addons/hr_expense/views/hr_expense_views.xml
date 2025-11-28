@@ -325,10 +325,11 @@
                                 <field name="employee_id" widget="many2one_avatar_employee"
                                        options="{'display_avatar_name': True}"
                                        readonly="True"/>
-                                <field class="ms-auto" name="state" widget="label_selection"
-                                        options="{'classes': {
-                                        'draft': 'default', 'submitted': 'warning', 'refused': 'danger', 'posted': 'warning',
-                                        'approved': 'success', 'in_payment': 'success', 'paid': 'success'}}"/>
+                                <field name="state" widget="badge" class="ms-auto"
+                                       decoration-info="state == 'draft'"
+                                       decoration-success="state in ['approved', 'posted', 'in_payment', 'paid']"
+                                       decoration-warning="state == 'submitted'"
+                                       decoration-danger="state == 'refused'"/>
                             </div>
                             <field class="mt8 text-muted" name="date"/>
                         </t>

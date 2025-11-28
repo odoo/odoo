@@ -59,7 +59,7 @@
             <field name="name">account.payment.kanban</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" create="0" group_create="0" sample="1">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="currency_id"/>
                     <templates>
                         <t t-name="card">
@@ -74,8 +74,8 @@
                                     <field name="date"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <field name="state" widget="label_selection" class="ms-auto"
-                                    options="{'classes': {'draft': 'default', 'posted': 'success'}}" />
+                                <field name="state" widget="badge" class="ms-auto"
+                                    decoration-info="state == 'draft'" decoration-warning="state == 'in_process'" decoration-success="state == 'paid'"/>
                             </footer>
                         </t>
                     </templates>
