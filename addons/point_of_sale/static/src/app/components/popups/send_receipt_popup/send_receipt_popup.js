@@ -56,6 +56,7 @@ export class SendReceiptPopup extends Component {
                 body: _t(
                     "This order is not yet synced to server. Make sure it is synced then try again."
                 ),
+                showReloadButton: true,
             });
             return Promise.reject();
         }
