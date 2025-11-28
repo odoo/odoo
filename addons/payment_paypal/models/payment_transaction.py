@@ -55,7 +55,9 @@ class PaymentTransaction(models.Model):
         """
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         if self.partner_id.is_public:
-            invoice_address_vals = {'address': {'country_code': self.company_id.country_code}}
+            # For public partners, use company's country code if available
+            country_code = self.company_id.country_code or self.currency_id.country_code or 'US'
+            invoice_address_vals = {'address': {'country_code': country_code}}
             shipping_address_vals = {}
         else:
             invoice_address_vals = paypal_utils.format_partner_address(self.partner_id)
