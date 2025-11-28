@@ -58,6 +58,7 @@ function defaultErrorHandler(env, error, originalError) {
         env.services.dialog.add(AlertDialog, {
             title: _t("Unknown Error"),
             body: _t("Unable to show information about this error."),
+            showReloadButton: true,
         });
     }
     return true;
