@@ -31,4 +31,15 @@
         </BuilderContext>
     </t>
 
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//switchable_views" position="after">
+            <jobs_page_option
+                template="website_hr_recruitment.JobsPageOption"
+                selector="main:has(.o_website_hr_recruitment_jobs_list)"
+                title="Jobs Page"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+        </xpath>
+    </t>
+
 </templates>

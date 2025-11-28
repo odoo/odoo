@@ -22,11 +22,17 @@
 </t>
 
 <t t-name="website_mass_mailing.MailingListSubscribeFormOption">
-
     <BuilderRow label.translate="Placeholder">
         <BuilderTextInput attributeAction="'placeholder'" applyTo="'.s_newsletter_subscribe_form_input'"/>
     </BuilderRow>
+</t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <mailing_list_subscribe_form_option
+            template="website_mass_mailing.MailingListSubscribeFormOption"
+            selector=".s_newsletter_subscribe_form"/>
+    </xpath>
 </t>
 
 </templates>

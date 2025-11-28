@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <newsletter_layout_option
+            template="website_mass_mailing.NewsletterLayoutOption"
+            selector=".s_newsletter_block"
+            applyTo=":scope > .container, :scope > .container-fluid, :scope > .o_container_small"/>
+        <newsletter_subscribe_common_option
+            selector=".s_newsletter_list"
+            exclude=".s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list, .s_newsletter_centered .s_newsletter_list, .s_newsletter_grid .s_newsletter_list, .s_newsletter_aside .s_newsletter_list"/>
+         <newsletter_subscribe_common_option
+            selector=".o_newsletter_popup"
+            exclude=".s_newsletter_list"/>
+    </xpath>
+</t>
+
+</templates>

@@ -1,21 +1,11 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ProductsRibbonOption } from "./product_ribbon_options";
 
-export class ProductHeaderShopOption2 extends ProductsRibbonOption {
-    static name = 'ProductsRibbonOption';
-    static selector = "#products_grid .oe_product";
-    static editableOnly = false;
-    static groups = ['website.group_website_designer'];
-}
-
-class ProductsRibbonOptionPlugin extends Plugin {
+export class ProductsRibbonOptionPlugin extends Plugin {
     static id = 'productsRibbonOptionPlugin';
     static dependencies = ['history'];
     static shared = [
@@ -35,9 +25,6 @@ class ProductsRibbonOptionPlugin extends Plugin {
     count = reactive({ value: 0 });
 
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC_NEXT, ProductHeaderShopOption2),
-        ],
         builder_actions: {
             SetRibbonAction,
             CreateRibbonAction,
@@ -275,7 +262,7 @@ class ProductsRibbonOptionPlugin extends Plugin {
     }
 }
 
-class SetRibbonAction extends BuilderAction {
+export class SetRibbonAction extends BuilderAction {
     static id = 'setRibbon';
     static dependencies = ['productsRibbonOptionPlugin'];
     setup(){
@@ -318,7 +305,7 @@ class SetRibbonAction extends BuilderAction {
         );
     }
 }
-class CreateRibbonAction extends BuilderAction {
+export class CreateRibbonAction extends BuilderAction {
     static id = 'createRibbon';
     static dependencies = ['productsRibbonOptionPlugin']
     setup(){
@@ -349,7 +336,7 @@ class CreateRibbonAction extends BuilderAction {
         return this.ribbonOptions._setRibbon(editingElement.querySelector('.o_ribbons'), ribbon);
     }
 }
-class ModifyRibbonAction extends BuilderAction {
+export class ModifyRibbonAction extends BuilderAction {
     static id = 'modifyRibbon';
     static dependencies = ['productsRibbonOptionPlugin', 'history'];
     setup() {
@@ -390,7 +377,7 @@ class ModifyRibbonAction extends BuilderAction {
         return res
     }
 }
-class DeleteRibbonAction extends BuilderAction {
+export class DeleteRibbonAction extends BuilderAction {
     static id = 'deleteRibbon';
     static dependencies = ['productsRibbonOptionPlugin'];
     setup() {

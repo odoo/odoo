@@ -1,14 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { useState, onWillStart } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
-export class WebsiteCRMPartnersPage extends BaseOptionComponent {
+export class WebsiteCRMPartnersPageOption extends BaseOptionComponent {
+    static id = "website_crm_partners_page_option"
     static template = "website_crm_partner_assign.PartnersPageOption";
-    static selector = "main:has(#oe_structure_website_partnership_layout_1):has(.o_wcrm_filters_top)";
-    static title = _t("Partners Page");
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
 
     setup() {
         super.setup();
@@ -22,3 +19,6 @@ export class WebsiteCRMPartnersPage extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("builder-options").add(WebsiteCRMPartnersPageOption.id, WebsiteCRMPartnersPageOption);
+

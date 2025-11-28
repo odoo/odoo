@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { ProductPageOption } from "./product_page_option";
+import { PRODUCT_PAGE_OPTION_SELECTOR } from "./product_page_option";
 import { rpc } from "@web/core/network/rpc";
 import { isImageCorsProtected } from "@html_editor/utils/image";
 import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
@@ -8,12 +8,11 @@ import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/bu
 import { BuilderAction } from "@html_builder/core/builder_action";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
-class ProductPageOptionPlugin extends Plugin {
+export class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
     static shared = ["forceCarouselRedraw"];
     resources = {
-        builder_options: ProductPageOption,
         builder_actions: {
             ProductPageContainerWidthAction,
             ProductPageContainerOrderAction,
@@ -44,7 +43,7 @@ class ProductPageOptionPlugin extends Plugin {
                 el.textContent = el.getAttribute("placeholder");
             }
 
-            const mainEl = el.querySelector(ProductPageOption.selector);
+            const mainEl = el.querySelector(PRODUCT_PAGE_OPTION_SELECTOR);
             if (!mainEl) {
                 return;
             }
@@ -68,18 +67,13 @@ class ProductPageOptionPlugin extends Plugin {
                 }
             });
         },
-        patch_builder_options: [
-            {
-                target_name: 'ProductsRibbonOption',
-                target_element: 'selector',
-                method: 'add',
-                value: ProductPageOption.selector,
-            },
-        ],
+        builder_options_context: {
+            productPageOptionSelector: PRODUCT_PAGE_OPTION_SELECTOR,
+        }
     };
 
     setup() {
-        const mainEl = this.document.querySelector(ProductPageOption.selector);
+        const mainEl = this.document.querySelector(PRODUCT_PAGE_OPTION_SELECTOR);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
@@ -184,7 +178,7 @@ export class BaseProductPageAction extends BuilderAction {
     static id = "baseProductPage";
     setup() {
         this.reload = {};
-        const mainEl = this.document.querySelector(ProductPageOption.selector);
+        const mainEl = this.document.querySelector(PRODUCT_PAGE_OPTION_SELECTOR);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');

@@ -14,7 +14,22 @@
     <BuilderRow label.translate="Leaderboard">
         <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.toggle_leaderboard']}"/>
     </BuilderRow>
+</t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <courses_list_page_option
+            template="website_slides.CoursesListPageOption"
+            selector="main:has(.o_wslides_home_main)"
+            title="Courses Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+        <courses_list_aside_page_option
+            template="website_slides.CoursesListAsidePageOption"
+            selector="main:has(.o_wslides_home_aside_loggedin)"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
 </t>
 
 </templates>

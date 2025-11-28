@@ -1,20 +1,14 @@
-import { DYNAMIC_SNIPPET_CAROUSEL } from "@website/builder/plugins/options/dynamic_snippet_carousel_option_plugin";
 import { setDatasetIfUndefined } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import {
-    DynamicSnippetProductsOption,
-    getContextualFilterDomain,
-} from "./dynamic_snippet_products_option";
+import { getContextualFilterDomain } from "./dynamic_snippet_products_option";
 
-class DynamicSnippetProductsOptionPlugin extends Plugin {
+export class DynamicSnippetProductsOptionPlugin extends Plugin {
     static id = "dynamicSnippetProductsOption";
     static dependencies = ["dynamicSnippetCarouselOption"];
     static shared = ["fetchCategories", "getModelNameFilter"];
     modelNameFilter = "product.product";
     resources = {
-        builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, DynamicSnippetProductsOption),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
@@ -26,7 +20,7 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
         this.categories = undefined;
     }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(DynamicSnippetProductsOption.selector)) {
+        if (snippetEl.matches(".s_dynamic_snippet_products")) {
             for (const [optionName, value] of [
                 ["productCategoryId", "all"],
                 ["showVariants", true],
@@ -44,7 +38,7 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
         return this.modelNameFilter;
     }
     onTemplateUpdated({ el, template }) {
-        if (el.matches(DynamicSnippetProductsOption.selector)) {
+        if (el.matches(".s_dynamic_snippet_products")) {
             this.dependencies.dynamicSnippetCarouselOption.updateTemplateSnippetCarousel(
                 el,
                 template

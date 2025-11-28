@@ -11,4 +11,13 @@
         />
     </BuilderRow>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <blog_post_tags_option
+            selector=".o_wblog_post_page_cover[data-res-model='blog.post']"
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

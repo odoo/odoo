@@ -251,6 +251,7 @@ export class TranslateWebpageOptionPlugin extends Plugin {
         builder_actions: {
             TranslateToAction,
         },
+        // TODO DUAU: check how to manage translation options
         builder_options: withSequence(1, TranslateWebpageOption),
     };
 

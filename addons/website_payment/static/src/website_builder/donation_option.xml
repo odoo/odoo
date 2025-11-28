@@ -102,4 +102,10 @@
     </div>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <donation_option selector=".s_donation"/>
+    </xpath>
+</t>
+
 </templates>

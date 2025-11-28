@@ -31,13 +31,12 @@
     <xpath expr="//replace_media_option" position="after">
         <product_image_option
             template="website_sale.ProductImageOption"
-            t-att-selector="'.o_wsale_product_images :is(' + replaceMediaOptionSelector + ')'"
+            t-attf-selector=".o_wsale_product_images :is({{replaceMediaOptionSelector}})"
             t-att-exclude="replaceMediaOptionExclude"/>
     </xpath>
-    <!-- former patch_builder_options -->
     <xpath expr="//replace_media_option" position="attributes">
-        <attribute name="t-att-exclude">
-            replaceMediaOptionExclude + ', .o_wsale_product_images :is(' + replaceMediaOptionSelector + ')'
+        <attribute name="t-attf-exclude">
+            {{replaceMediaOptionExclude}}, .o_wsale_product_images :is({{replaceMediaOptionSelector}})
         </attribute>
     </xpath>
 </t>

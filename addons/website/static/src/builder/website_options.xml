@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website.BuilderOptions" t-inherit="html_builder.BuilderOptions">
-        <!-- To add t-set if needed -->
+        <!-- To add t-set if needed --> optionId
         <xpath expr="//t[@t-set][last()]" position="after">
         </xpath>
 
@@ -27,7 +27,7 @@
             <media_list_option template="website.MediaListOption" selector=".s_media_list"/>
             <!-- 7 -->
             <add_product_pricelist_boxed_option
-                template="html_builder.AddProductOption"
+            template="html_builder.AddProductOption"
                 selector=".s_pricelist_boxed"
                 props='{ "buttonApplyTo": ":scope > :has(.s_pricelist_boxed_item):not(:has(.row > div .s_pricelist_boxed_item))", "productSelector": ".s_pricelist_boxed_item" }'/>
             <!-- 8 -->
@@ -222,6 +222,7 @@
                 editableOnly="false"/>
             <!-- 71 -->
             <dot_color_option template="website.DotColorOption" selector=".s_timeline_images .s_timeline_images_row"/>
+            <!-- TODO DUAU: all modules specific options were between those two, should I add a "hook" there? -->
             <!-- 105 -->
             <layout_option
                 selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
@@ -334,8 +335,10 @@
                 groups='["website.group_website_designer"]'/>
             <!-- 134 -->
             <language_selector_option
+                template="website.LanguageSelectorOption"
                 selector="#wrapwrap > header nav.navbar .o_header_language_selector"
                 groups='["website.group_website_designer"]'
+                reloadTarget="true"
                 editableOnly="false"/>
             <!-- 135 -->
             <content_width_option
@@ -353,6 +356,7 @@
             <header_navigation_option
                 selector="#wrapwrap > header"
                 editableOnly="false"
+                reloadTarget="true"
                 groups='["website.group_website_designer"]'/>
             <!-- 138 -->
             <process_steps_option selector=".s_process_steps"/>

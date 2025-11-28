@@ -7,7 +7,7 @@ import {  NewsletterSubscribeCommonOptionBase } from "./newsletter_subscribe_com
 import { getElementsWithOption, filterExtends } from "@html_builder/utils/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-class MailingListSubscribeOptionPlugin extends Plugin {
+export class MailingListSubscribeOptionPlugin extends Plugin {
     static id = "mailingListSubscribeOption";
     static dependencies = ["savePlugin"];
     static shared = ["fetchMailingLists"];
@@ -20,6 +20,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
     };
 
     setup() {
+        // TODO DUAU: check how to manage that
         this.newsletterOptions = filterExtends(
             this.getResource("builder_options"),
             NewsletterSubscribeCommonOptionBase,

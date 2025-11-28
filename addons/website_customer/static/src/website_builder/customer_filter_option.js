@@ -1,15 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { onWillStart } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
 export class CustomerFilterOption extends BaseOptionComponent {
+    static id = "customer_filter_option";
     static template = "website_customer.CustomerFilterOption";
-    static selector =
-        "main:not(:has(#oe_structure_website_partnership_layout_1)):has(.o_wcrm_filters_top)";
-    static groups = ["website.group_website_designer"];
-    static title = _t("Customers Page");
-    static editableOnly = false;
 
     setup() {
         super.setup();
@@ -19,3 +15,5 @@ export class CustomerFilterOption extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("builder-options").add(CustomerFilterOption.id, CustomerFilterOption);

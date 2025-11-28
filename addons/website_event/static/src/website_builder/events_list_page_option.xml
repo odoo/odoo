@@ -56,4 +56,14 @@
     </BuilderContext>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <events_list_page_option
+            template="website_event.EventsListPageOption"
+            selector="main:has(.o_wevent_events_list)"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

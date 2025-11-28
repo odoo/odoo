@@ -24,4 +24,12 @@
         </BuilderRow>
     </t>
 
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//switchable_views" position="after">
+            <supported_payment_methods_options
+                template="website_payment.SupportedPaymentMethodsOption"
+                selector=".s_supported_payment_methods"/>
+        </xpath>
+    </t>
+
 </templates>

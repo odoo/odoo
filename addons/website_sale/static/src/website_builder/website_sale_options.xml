@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <add_to_cart_option selector=".s_add_to_cart"/>
+        <checkout_page_option
+            template="website_sale.checkoutPageOption"
+            selector="main:has(.oe_website_sale .o_wizard)"
+            title="Checkout Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+        <dynamic_snippet_category_item_options
+            template="website_sale.dynamicSnippetCategoryItemOptions"
+            selector=".s_dynamic_category_item, .all_products"
+            title="Category"
+            editableOnly="false"/>
+        <product_attribute_option
+            template="website_sale.ProductAttributeOption"
+            selector="#product_detail .o_wsale_product_attribute"
+            editableOnly="false"
+            reloadTarget="true"/>
+        <product_header_category_option
+            template="website_sale.ProductHeaderCategoryOption"
+            selector="#products_grid:has(header.o_wsale_products_header_is_category)"
+            title="Category Header"
+            editableOnly="false"
+            reloadTarget="true"
+            groups='["website.group_website_designer"]'/>
+        <product_header_shop_option
+            template="website_sale.ProductHeaderShopOption"
+            selector="#products_grid:has(header.o_wsale_products_header_is_shop)"
+            title="Shop Header"
+            editableOnly="false"
+            reloadTarget="true"/>
+        <products_item_option
+            selector="#products_grid .oe_product"
+            title="Product"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <products_list_page_option
+            selector="main:has(#o_wsale_container)"
+            applyTo="#o_wsale_container"
+            title="Products Page"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+        <product_page_option
+            t-att-selector="productPageOptionSelector"
+            title="Product Page"
+            editableOnly="false"/>
+    </xpath>
+
+    <xpath expr="//navbar_logo_option" position="after">
+        <products_ribbon_option
+            t-attf-selector="#products_grid .oe_product, {{productPageOptionSelector}}"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+    </xpath>
+
+    <xpath expr="//header_elements_option" position="after">
+        <show_empty_option
+            template="website_sale.ShowEmptyOption"
+            selector="#wrapwrap > header"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+    </xpath>
+
+    <xpath expr="//device_visibility_option" position="after">
+        <dynamic_snippet_products_option selector=".s_dynamic_snippet_products"/>
+        <dynamic_snippet_category_option
+            selector="section.s_dynamic_snippet_category"
+            groups='["website.group_website_designer"]'/>
+    </xpath>
+</t>
+
+</templates>

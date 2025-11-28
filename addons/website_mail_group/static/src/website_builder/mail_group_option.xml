@@ -12,4 +12,13 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <mail_group_option
+            template="website_mail_group.MailGroupOption"
+            selector=".s_group"/>
+    </xpath>
+</t>
+
+
 </templates>

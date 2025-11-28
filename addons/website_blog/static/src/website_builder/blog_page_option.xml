@@ -50,4 +50,16 @@
         </BuilderRow>
     </BuilderContext>
 </t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <blog_page_option
+            template="website_blog.BlogPageOption"
+            selector="main:has(#o_wblog_post_main)"
+            title="Blog Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

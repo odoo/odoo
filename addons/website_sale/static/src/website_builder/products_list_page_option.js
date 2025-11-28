@@ -1,17 +1,15 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { _t } from "@web/core/l10n/translation";
 import { products_sort_mapping } from "@website_sale/website_builder/shared";
+import { registry } from "@web/core/registry";
 
 export class ProductsListPageOption extends BaseOptionComponent {
+    static id = "products_list_page_option";
     static template = "website_sale.ProductsListPageOption";
-    static selector = "main:has(#o_wsale_container)";
-    static applyTo = "#o_wsale_container";
-    static title = _t("Products Page");
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
 
     setup() {
         super.setup();
         this.products_sort_mapping = products_sort_mapping;
     }
 }
+
+registry.category("builder-options").add(ProductsListPageOption.id, ProductsListPageOption);

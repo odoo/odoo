@@ -1,9 +1,9 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
 
 export class BlogPostTagsOption extends BaseOptionComponent {
+    static id = "blog_post_tags_option";
     static template = "website_blog.BlogPostTagsOption";
-    static selector = ".o_wblog_post_page_cover[data-res-model='blog.post']";
-    static editableOnly = false;
 
     setup() {
         super.setup();
@@ -12,3 +12,5 @@ export class BlogPostTagsOption extends BaseOptionComponent {
         }));
     }
 }
+
+registry.category("builder-options").add(BlogPostTagsOption.id, BlogPostTagsOption);

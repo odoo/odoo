@@ -3,13 +3,11 @@ import { PreviewableWebsiteConfigAction } from "@website/builder/plugins/customi
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { ProductsListPageOption } from "@website_sale/website_builder/products_list_page_option";
 
-class ProductsListPageOptionPlugin extends Plugin {
+export class ProductsListPageOptionPlugin extends Plugin {
     static id = "productsListPageOptionPlugin";
 
     resources = {
-        builder_options: [ProductsListPageOption],
         builder_actions: {
             SetShopContainerAction,
             SetPpgAction,

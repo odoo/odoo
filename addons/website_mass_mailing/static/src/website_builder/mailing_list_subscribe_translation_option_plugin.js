@@ -13,6 +13,8 @@ const exclude = [
     ".s_newsletter_grid .s_newsletter_list",
 ].join(", ");
 
+// translation plugin will check later
+
 export class ToggleThanksMessageBlockOption extends BaseOptionComponent {
     static template = "website_mass_mailing.ToggleThanksMessageTranslationOption";
     static selector = selector;

@@ -3,7 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 
-class RecaptchaSubscribeOptionPlugin extends Plugin {
+export class RecaptchaSubscribeOptionPlugin extends Plugin {
     static id = "recaptchaSubscribeOption";
     static dependencies = ["websiteSession"];
     static shared = ["hasRecaptcha"];

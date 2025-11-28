@@ -1,15 +1,12 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { onWillStart, onMounted, useState, useRef } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
 export class ProductsItemOption extends BaseOptionComponent {
+    static id = "products_item_option";
     static template = "website_sale.ProductsItemOptionPlugin";
     static dependencies = ["productsItemOptionPlugin"];
-    static selector = "#products_grid .oe_product";
-    static title = _t("Product");
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
 
     setup() {
         super.setup();
@@ -100,3 +97,5 @@ export class ProductsItemOption extends BaseOptionComponent {
         this.addClassToTableCells(j + 1, i + 1, "selected");
     }
 }
+
+registry.category("builder-options").add(ProductsItemOption.id, ProductsItemOption);

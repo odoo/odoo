@@ -1,23 +1,11 @@
 
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class WishlistPageOption extends BaseOptionComponent {
-    static template = "website_sale.WishlistPageOption";
-    static selector = "main:has(.o_wishlist_table)";
-    static applyTo = ".o_wishlist_table";
-    static editableOnly = false;
-    static title = _t("Wishlist Page");
-    static groups = ["website.group_website_designer"];
-}
-
-class WishlistPageOptionPlugin extends Plugin {
+export class WishlistPageOptionPlugin extends Plugin {
     static id = "wishlistPageOption";
     resources = {
-        builder_options: WishlistPageOption,
         builder_actions: {
             WishlistGridColumnsAction,
             WishlistMobileColumnsAction,

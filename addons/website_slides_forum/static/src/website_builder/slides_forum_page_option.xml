@@ -7,4 +7,16 @@
     </BuilderRow>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <slides_forum_option
+            template="website_slides_forum.slidesForumOption"
+            selector="main:has(#o_wforum_forums_index_list)"
+            title="Slides Forum Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+
+    </xpath>
+</t>
+
 </templates>

@@ -1,12 +1,12 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+
+export const PRODUCT_PAGE_OPTION_SELECTOR = "main:has(.o_wsale_product_page)";
 
 export class ProductPageOption extends BaseOptionComponent {
+    static id = "product_page_option";
     static template = "website_sale.ProductPageOption";
     static dependencies = ["productPageOption"];
-    static selector = "main:has(.o_wsale_product_page)";
-    static title = _t("Product Page");
-    static editableOnly = false;
 
     setup() {
         super.setup();
@@ -39,3 +39,5 @@ export class ProductPageOption extends BaseOptionComponent {
         });
     }
 }
+
+registry.category("builder-options").add(ProductPageOption.id, ProductPageOption);

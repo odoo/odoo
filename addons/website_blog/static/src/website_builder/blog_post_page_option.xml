@@ -53,4 +53,15 @@
     </BuilderContext>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <blog_post_page_option
+            template="website_blog.blogPostPageOption"
+            selector="main:has(#o_wblog_index_content)"
+            title="Blogs Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

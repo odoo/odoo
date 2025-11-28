@@ -18,4 +18,15 @@
     </BuilderContext>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <forum_page_option
+            template="website_forum.forumPageOption"
+            selector="main:has(#o_wforum_forums_index_list)"
+            title="Forum Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

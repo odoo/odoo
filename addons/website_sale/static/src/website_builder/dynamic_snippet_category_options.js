@@ -2,9 +2,10 @@ import { useDomState } from '@html_builder/core/utils';
 import { onWillStart } from '@odoo/owl';
 import { useService } from '@web/core/utils/hooks';
 import { DynamicSnippetOption } from '@website/builder/plugins/options/dynamic_snippet_option';
-
+import { registry } from '@web/core/registry';
 
 export class DynamicSnippetCategoryOption extends DynamicSnippetOption {
+    static id = 'dynamic_snippet_category_option';
     static template = 'website_sale.DynamicSnippetCategoryOptions';
 
     setup() {
@@ -25,3 +26,5 @@ export class DynamicSnippetCategoryOption extends DynamicSnippetOption {
         });
     }
 }
+
+registry.category("builder-options").add(DynamicSnippetCategoryOption.id, DynamicSnippetCategoryOption);

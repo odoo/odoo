@@ -82,10 +82,6 @@ export class OptionsContainer extends BaseOptionComponent {
     get title() {
         let title;
         for (const option of this.props.options) {
-            if (option.getSnippetTitle) {
-                title = option.getSnippetTitle.call(this);
-                continue;
-            }
             title = option.title || title;
         }
         const titleExtraInfo = this.props.containerTitle.getTitleExtraInfo

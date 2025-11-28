@@ -5,7 +5,6 @@ export class HeaderNavigationOption extends BaseOptionComponent {
     static id = "header_navigation_option";
     static template = "website.HeaderNavigationOption";
     static dependencies = ["customizeWebsite"];
-    static reloadTarget = true;
 
     setup() {
         super.setup();

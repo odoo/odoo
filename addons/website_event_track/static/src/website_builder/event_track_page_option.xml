@@ -18,4 +18,21 @@
     </BuilderContext>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <event_track_page_option_topbar
+            template="website_event_track.eventTrackPageOptionTopbar"
+            selector="main:has(.o_weagenda_topbar_filters)"
+            title="Event Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+        <event_track_page_option
+            template="website_event_track.EventTrackPageOption"
+            selector="main:has(.o_wesession_index)"
+            title="Event Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

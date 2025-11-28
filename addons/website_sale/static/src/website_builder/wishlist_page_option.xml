@@ -34,4 +34,16 @@
     </div>
 </t>
 
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//switchable_views" position="after">
+        <wishlist_page_option
+            template="website_sale.WishlistPageOption"
+            selector="main:has(.o_wishlist_table)"
+            applyTo=".o_wishlist_table"
+            title="Wishlist Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
 </templates>

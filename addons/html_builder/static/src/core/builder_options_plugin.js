@@ -596,10 +596,20 @@ export class BuilderOptionsPlugin extends Plugin {
         return options;
     }
 
+    // TODO DUAU: for title, in the template, should it be title.translate? How are translations managed?
     createOptionClassFromNode(node) {
         const optionId = node.tagName.toLowerCase();
-        const { template, selector, exclude, applyTo, editableOnly, groups, props } =
-            this.getOptionAttributes(node);
+        const {
+            template,
+            selector,
+            exclude,
+            applyTo,
+            title,
+            editableOnly,
+            reloadTarget,
+            groups,
+            props,
+        } = this.getOptionAttributes(node);
         if (!selector) {
             throw new Error(`Missing selector name in builder option ${optionId}`);
         }
@@ -613,7 +623,9 @@ export class BuilderOptionsPlugin extends Plugin {
                 selector,
                 exclude,
                 applyTo,
+                title,
                 editableOnly,
+                reloadTarget,
                 groups,
                 props,
             });
@@ -632,35 +644,44 @@ export class BuilderOptionsPlugin extends Plugin {
             ComplexOptionClass.selector ||
             ComplexOptionClass.exclude ||
             ComplexOptionClass.applyTo ||
+            ComplexOptionClass.title ||
             !ComplexOptionClass.editableOnly ||
+            ComplexOptionClass.reloadTarget ||
             ComplexOptionClass.groups
         ) {
             throw new Error(
-                `Can't have selector, exclude, applyTo, editableOnly, groups in BaseOptionComponent: ${optionId}`
+                `Can't have selector, exclude, applyTo, title, editableOnly, groups in BaseOptionComponent: ${optionId}`
             );
         }
         if (Object.keys(ComplexOptionClass.props).length !== 0) {
-            console.error(`props ${optionId}:`, Object.keys(ComplexOptionClass.props).length);
+            console.log(`props ${optionId}:`, Object.keys(ComplexOptionClass.props).length);
         }
         const OptionClass = { [optionId]: class extends ComplexOptionClass {} }[optionId];
         return Object.assign(OptionClass, {
             selector,
             exclude,
             applyTo,
+            title,
             editableOnly,
+            reloadTarget,
             groups,
             props: { ...(OptionClass.props || {}), ...props },
         });
     }
 
-    createOptionClass(name, { template, selector, exclude, applyTo, editableOnly, groups, props }) {
+    createOptionClass(
+        name,
+        { template, selector, exclude, applyTo, title, editableOnly, reloadTarget, groups, props }
+    ) {
         const OptionClass = { [name]: class extends BaseOptionComponent {} }[name];
         return Object.assign(OptionClass, {
             template,
             selector,
             exclude,
             applyTo,
+            title,
             editableOnly,
+            reloadTarget,
             groups,
             props,
         });
@@ -674,7 +695,9 @@ export class BuilderOptionsPlugin extends Plugin {
             selector: node.getAttribute("selector"),
             exclude: node.getAttribute("exclude"),
             applyTo: node.getAttribute("applyTo") || undefined,
+            title: node.getAttribute("title"),
             editableOnly: node.getAttribute("editableOnly") !== "false",
+            reloadTarget: node.getAttribute("reloadTarget") === "true",
             groups: jsonGroups ? JSON.parse(jsonGroups) : [],
             props: jsonProps ? JSON.parse(jsonProps) : {},
         };
@@ -713,9 +736,7 @@ export class BuilderOptionsPlugin extends Plugin {
     getBuilderOptionsConstants() {
         if (!this.builderOptionsConstants) {
             const resourceResult = this.getResource("builder_options_context");
-            console.warn("resourceResult", resourceResult);
             const constants = Object.assign({}, ...resourceResult);
-            console.warn("constants", constants);
             this.builderOptionsConstants = Object.freeze(constants);
         }
         return this.builderOptionsConstants;

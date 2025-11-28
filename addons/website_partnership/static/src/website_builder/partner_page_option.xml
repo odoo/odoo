@@ -7,4 +7,15 @@
         </BuilderRow>
     </t>
 
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//switchable_views" position="after">
+            <partner_page_option
+                template="website_partnership.PartnerPageOption"
+                selector="main:has(#oe_structure_website_partnership_partner_1):not(:has(.o_wcrm_filters_top))"
+                title="Partner Page"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+        </xpath>
+    </t>
+
 </templates>
