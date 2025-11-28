@@ -1695,6 +1695,54 @@ def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):
     return handle_style(diff, custom_style, dark_color_scheme)
 
 
+def diff_zip(items1: list, items2: list):
+    """ Return pairs of matching items in both lists, which represents the diff
+    between the lists. The elements of the pairs ``(item1, item2)`` are either
+    elements of ``items1`` (resp. ``items2``) or ``None``, where the latter
+    represents a non-matching item.
+    For instance, ``diff_zip(list('abcd'), list('acde'))`` returns the pairs::
+
+        ('a', 'a'), ('b', None), ('c', 'c'), ('d', 'd'), (None, 'e')
+    """
+    size1, size2 = len(items1), len(items2)
+
+    def _iter_block(index1, index2):
+        """ Iterate on coordinates in range(index1, size1) x range(index2, size2)
+        in increasing distance order, the distance being the sum of both indices.
+        The pairs are returned in the following order::
+
+            (index1, index2),
+            (index1 + 1, index2), (index1, index2 + 1),
+            (index1 + 2, index2), (index1 + 1, index2 + 1), (index1, index2 + 2),
+            ...,
+        """
+        dist1, dist2 = size1 - index1, size2 - index2
+        for delta in range(dist1 + dist2 - 1):
+            # delta1 + delta2 == delta
+            for delta2 in range(min(delta + 1, dist2)):
+                if (delta1 := delta - delta2) < dist1:
+                    yield index1 + delta1, index2 + delta2
+
+    index1, index2 = 0, 0  # next indices to match
+    while index1 < size1:
+        # find the closest matching pair from (index1, index2)
+        for current1, current2 in _iter_block(index1, index2):
+            if items1[current1] == items2[current2]:
+                for it in range(index1, current1):
+                    yield (items1[it], None)
+                for it in range(index2, current2):
+                    yield (None, items2[it])
+                yield (items1[current1], items2[current2])
+                index1, index2 = current1 + 1, current2 + 1
+                break
+        else:
+            break
+    for it in range(index1, size1):
+        yield (items1[it], None)
+    for it in range(index2, size2):
+        yield (None, items2[it])
+
+
 def hmac(env, scope, message, hash_function=hashlib.sha256):
     """Compute HMAC with `database.secret` config parameter as key.
 

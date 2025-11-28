@@ -178,3 +178,55 @@ First differing element 0:
         # check that the transaction has been rolled back and we can perform
         # queries again
         self.env.cr.execute('select 1')
+
+    def test_assertQueries(self):
+        query = 'select f1 from "test_testing_utilities_a" where id=%s  order by id'
+        params = [42]
+
+        with self.assertQueries(["""
+            SELECT f1
+            FROM "test_testing_utilities_a"
+            WHERE id = %s
+            ORDER BY id
+        """, """
+            SELECT f1 FROM "test_testing_utilities_a" WHERE id = %s ORDER BY id
+        """]):
+            self.env.cr.execute(query, params)
+            self.env.cr.execute(query, params)
+
+        # less queries than expected
+        expected = 'SELECT f1 FROM "test_testing_utilities_a" WHERE id = %s ORDER BY id'
+        msg = (
+            f"Not the expected queries : \n"
+            f"=== {query}\n"
+            f"--- {expected}"
+        )
+        with self.assertRaisesRegex(AssertionError, msg):
+            with self.assertQueries([expected, expected]):
+                self.env.cr.execute(query, params)
+
+        # more queries than expected
+        msg = (
+            f"Not the expected queries : \n"
+            f"=== {query}\n"
+            fr"\+\+\+ {query}"
+        )
+        with self.assertRaisesRegex(AssertionError, msg):
+            with self.assertQueries([expected]):
+                self.env.cr.execute(query, params)
+                self.env.cr.execute(query, params)
+
+        # non-matching queries
+        msg = (
+            f"Not the expected queries : \n"
+            f"=== {query}\n"
+            f'--- SELECT f1 FROM "test_testing_utilities_a" ORDER BY id\n'
+            fr"\+\+\+ {query}"
+        )
+        with self.assertRaisesRegex(AssertionError, msg):
+            with self.assertQueries([
+                'SELECT f1 FROM "test_testing_utilities_a" WHERE id = %s ORDER BY id',
+                'SELECT f1 FROM "test_testing_utilities_a" ORDER BY id',
+            ]):
+                self.env.cr.execute(query, params)
+                self.env.cr.execute(query, params)
