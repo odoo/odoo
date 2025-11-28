@@ -43,15 +43,12 @@ class SixDriver(CtypesTerminalDriver):
             ctypes.c_char_p,                # char *currency_str
 
             ctypes.c_char_p,                # char *transaction_id,
-            ctypes.c_int,                   # int transaction_id_size
             ctypes.c_char_p,                # char *merchant_receipt
             ctypes.c_char_p,                # char *customer_receipt
-            ctypes.c_int,                   # int receipt_size
-            ctypes.c_char_p,                # char *card
-            ctypes.c_int,                   # int card_size
+            ctypes.c_char_p,                # char *card_number
+            ctypes.c_char_p,                # char *card_brand
             ctypes.POINTER(ctypes.c_int),   # int *error_code
             ctypes.c_char_p,                # char *error
-            ctypes.c_int,                   # int error_size
         ]
 
         self.TIMAPI.six_terminal_balance.argtypes = [
