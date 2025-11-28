@@ -10,6 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { Plugin } from "@html_editor/plugin";
+import { revertPreview } from "@html_builder/core/utils";
 import { websiteSnippetModelPatch } from "./snippet_model";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
@@ -44,7 +45,8 @@ export class WebsiteBuilder extends Component {
         });
     }
 
-    discard() {
+    async discard() {
+        await revertPreview(this.editor);
         if (this.editor.shared.history.canUndo()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
