@@ -1252,3 +1252,38 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move_duplicate = move.copy()
         self.assertTrue(move_duplicate)
         self.assertFalse(move_duplicate.partner_id)
+
+    def test_balance_move_currency_rounding(self):
+        """Test that if we create a journal entry from an import balanced in foreign currency,
+        the created entry is balanced in the company currency."""
+        self.env['res.currency.rate'].search([('name', '=', '2017-01-01')]).rate = 0.134068
+        move = self.env['account.move'].with_context(import_file=True).create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2019-01-01'),
+            'line_ids': [
+                Command.create({
+                    'amount_currency': -34.9,
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'currency_id': self.currency_data['currency'].id,
+                }),
+                Command.create({
+                    'amount_currency': 2.69,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'currency_id': self.currency_data['currency'].id,
+                }),
+                Command.create({
+                    'amount_currency': 32.21,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'currency_id': self.currency_data['currency'].id,
+                }),
+            ],
+        })
+        self.assertRecordValues(move.line_ids, [
+                {'balance': -260.32},
+                {'balance': 20.06},
+                {'balance': 240.25},
+                {
+                    'balance': 0.01,
+                    'account_id': self.company_data['company'].expense_currency_exchange_account_id.id,
+                },
+            ])

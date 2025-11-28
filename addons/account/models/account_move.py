@@ -2510,6 +2510,9 @@ class AccountMove(models.Model):
                     self._sanitize_vals(vals)
                 stolen_moves = self.browse(set(move for vals in vals_list for move in self._stolen_move(vals)))
                 moves = super().create(vals_list)
+                # correct exchange rate only on import, if balance isn't specified
+                if self.env.context.get('import_file', False) and not any('balance' in line[2] for line in vals_list[0].get('line_ids', []) if line[0] == Command.CREATE):
+                    moves._correct_exchange_rate_rounding_error()
                 exit_stack.enter_context(self.env.protecting([protected for vals, move in zip(vals_list, moves) for protected in self._get_protected_vals(vals, move)]))
                 container['records'] = moves | stolen_moves
             for move, vals in zip(moves, vals_list):
@@ -4073,6 +4076,27 @@ class AccountMove(models.Model):
             references = [ref.strip() for ref in move.invoice_origin.split(',')] if move.invoice_origin else []
             move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
         return self
+
+    def _correct_exchange_rate_rounding_error(self):
+        balancing_lines_vals = []
+        for move in self:
+            currency = move.line_ids.currency_id
+            if len(currency) != 1 or currency == move.company_currency_id:
+                continue
+            sum_balance = move.company_currency_id.round(sum(line.balance for line in move.line_ids))
+            sum_amount_currency = currency.round(sum(line.amount_currency for line in move.line_ids))
+            if currency.is_zero(sum_amount_currency) and not move.company_currency_id.is_zero(sum_balance):
+                balancing_account = move.company_id.income_currency_exchange_account_id if sum_balance > 0 else move.company_id.expense_currency_exchange_account_id
+                balancing_line_vals = {
+                    'name': 'Exchange Rate Rounding Difference',
+                    'move_id': move.id,
+                    'account_id': balancing_account.id,
+                    'balance': -sum_balance,
+                    'amount_currency': 0.0,
+                    'currency_id': move.line_ids.currency_id.id,
+                }
+                balancing_lines_vals.append(balancing_line_vals)
+        self.env['account.move.line'].create(balancing_lines_vals)
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
