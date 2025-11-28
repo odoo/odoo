@@ -1,7 +1,6 @@
 import logging
 import requests
 from hashlib import md5
-from lxml import etree
 from markupsafe import Markup
 from urllib import parse
 
@@ -150,6 +149,40 @@ class ResPartner(models.Model):
             return None
         return response.content
 
+    @api.model
+    def _nemhandel_lookup_participant(self, edi_identification):
+        """NAPTR DNS nemhandel participant lookup through Odoo's Nemhandel proxy"""
+        if (edi_mode := self.env.company._get_nemhandel_edi_mode()) == 'demo':
+            return
+
+        sml_zone = f"edel.sml{'-demo' if edi_mode == 'test' else ''}.dataudveksling.dk"
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['nemhandel'][edi_mode]
+        query = parse.urlencode({'peppol_identifier': edi_identification.lower(), 'zone': sml_zone})
+        endpoint = f'{origin}/api/peppol/1/lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=TIMEOUT)
+        except requests.exceptions.RequestException as e:
+            _logger.error("failed to query nemhandel participant %s: %s", edi_identification, e)
+            return
+
+        if not response.ok:
+            _logger.info('unsuccessful response %s when querying nemhandel participant %s', response.status_code, edi_identification)
+            return
+
+        try:
+            decoded_response = response.json()
+        except ValueError:
+            _logger.error('invalid JSON response %s when querying nemhandel participant %s', response.status_code, edi_identification)
+            return
+
+        if error := decoded_response.get('error'):
+            if error.get('code') != 'NOT_FOUND':
+                _logger.error('error when querying nemhandel participant %s: %s', edi_identification, error.get('message', 'unknown error'))
+            return
+
+        return decoded_response.get('result')
+
     def _l10n_dk_nemhandel_log_verification_state_update(self, company, old_value, new_value):
         # log the update of the nemhandel verification state
         # we do this instead of regular tracking because of the customized message
@@ -182,17 +215,24 @@ class ResPartner(models.Model):
 
     @api.model
     def _check_nemhandel_participant_exists(self, participant_info, edi_identification):
-        participant_info = etree.fromstring(participant_info)
-        participant_identifier = participant_info.findtext('{*}ParticipantIdentifier')
-        service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
-        if service_metadata is None:
-            return False
-        service_href = service_metadata.attrib.get('href', '')
+        service_href = ''
+        if isinstance(participant_info, dict):
+            participant_identifier = participant_info.get('identifier', '')
+            if services := participant_info.get('services', []):
+                service_href = services[0].get('href', '')
+        else:
+            # DEPRECATED: we now use Odoo peppol API to fetch participant info and get a json response
+            # keeping this branch for compatibility
+            participant_identifier = participant_info.findtext('{*}ParticipantIdentifier') or ''
+            service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
+            if service_metadata is not None:
+                service_href = service_metadata.attrib.get('href', '')
+
         nemhandel_user = self.env.company.sudo().nemhandel_edi_user
         edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode')
-        smp_nemhandel_url = 'http://smp-demo.nemhandel.dk' if edi_mode == 'test' else 'http://smp.nemhandel.dk'
+        smp_nemhandel_url = 'smp-demo.nemhandel.dk' if edi_mode == 'test' else 'smp.nemhandel.dk'
 
-        return edi_identification == participant_identifier and service_href.startswith(smp_nemhandel_url)
+        return edi_identification.lower() == participant_identifier.lower() and parse.urlsplit(service_href).netloc == smp_nemhandel_url
 
     def _update_nemhandel_state_per_company(self, vals=None):
         partners = self.env['res.partner']
@@ -256,7 +296,7 @@ class ResPartner(models.Model):
             return 'not_verified'
 
         edi_identification = f"{self.nemhandel_identifier_type}:{self.nemhandel_identifier_value}".lower()
-        participant_info = self._get_nemhandel_participant_info(edi_identification)
+        participant_info = self._nemhandel_lookup_participant(edi_identification)
         if participant_info is None:
             return 'not_valid'
 
