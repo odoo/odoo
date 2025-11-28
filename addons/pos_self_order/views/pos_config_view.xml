@@ -10,4 +10,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="pos_config_view_form_inherit_pos_self_order" model="ir.ui.view">
+        <field name="name">pos.config.form.inherited.pos.self.order</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="multiple_employee_session" position="attributes">
+                <attribute name="invisible">self_ordering_mode == 'kiosk'</attribute>
+            </setting>
+        </field>
+    </record>
 </odoo>
