@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="model_fields_report.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <div class="btn-group me-2" role="group">
+                <button 
+                    t-att-class="state.isForceMode ? 'btn btn-warning' : 'btn btn-primary'"
+                    t-on-click="() => state.isForceMode ? this.onForceRefreshClick() : this.onRefreshClick()"
+                    t-att-disabled="state.loading">
+                    <t t-if="state.isForceMode">
+                        <i class="fa fa-bolt me-1"/>
+                        Force Refresh<br/><t t-esc="state.refresh_time"/>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-refresh me-1" t-att-class="{'fa-spin': state.loading}"/>
+                        <t t-if="state.refresh_time">
+                            Refresh<br/><t t-esc="state.refresh_time"/>
+                        </t>
+                    </t>
+                </button>
+                <button 
+                    t-att-class="state.isForceMode ? 'btn btn-warning' : 'btn btn-primary'"
+                    type="button" 
+                    t-on-click="() => state.isForceMode = !state.isForceMode"
+                    t-att-disabled="state.loading">
+                    <i t-att-class="state.isForceMode ? 'fa fa-refresh' : 'fa fa-bolt'"/>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>
+

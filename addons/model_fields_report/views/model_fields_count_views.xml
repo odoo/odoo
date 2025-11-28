@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_model_fields_count_list" model="ir.ui.view">
+        <field name="name">model.fields.count.list</field>
+        <field name="model">model.fields.count</field>
+        <field name="arch" type="xml">
+            <list string="Model Fields Count" create="false" edit="false" delete="false" js_class="model_fields_count_list">
+            
+                <field name="model"/>
+                <field name="field_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_model_fields_count" model="ir.actions.act_window">
+        <field name="name">Model Fields Count</field>
+        <field name="res_model">model.fields.count</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Model Fields Count Report
+            </p>
+            <p>
+                This report shows the number of fields for each model in the system.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item in Settings -->
+    <menuitem 
+        id="menu_model_fields_count"
+        name="Model Fields Count"
+        parent="base.menu_custom"
+        action="action_model_fields_count"
+        sequence="100"
+        groups="base.group_system"/>
+</odoo>
+

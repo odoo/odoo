@@ -237,6 +237,8 @@ class IrModel(models.Model):
                            help="Total number of records in this model")
     fold_name = fields.Char(string="Fold Field", help="In a Kanban view where columns are records of this model, the value "
         "of this (boolean) field determines which column should be folded by default.")
+    materialized_refresh_time = fields.Datetime(string="Materialized View Last Refresh Time")
+    materialized_refresh_duration = fields.Integer(string="Materialized View Last Refresh Duration")
 
     @api.depends()
     def _inherited_models(self):
