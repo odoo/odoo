@@ -352,12 +352,6 @@ class AccountMoveSendWizard(models.TransientModel):
     def _update_preferred_settings(self):
         """If the partner's settings are not set, we use them as partner's default."""
         self.ensure_one()
-        if (
-            self.sending_methods
-            and len(self.sending_methods) == 1
-            and not self.move_id.partner_id.with_company(self.company_id).invoice_sending_method
-        ):
-            self.move_id.partner_id.with_company(self.company_id).sudo().invoice_sending_method = self.sending_methods[0]
         if not self.move_id.partner_id.invoice_template_pdf_report_id and self.pdf_report_id != self._get_default_pdf_report_id(self.move_id):
             self.move_id.partner_id.sudo().invoice_template_pdf_report_id = self.pdf_report_id
 
