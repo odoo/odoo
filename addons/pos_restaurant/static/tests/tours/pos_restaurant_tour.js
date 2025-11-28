@@ -410,13 +410,13 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Product Test"),
-            Chrome.freezeDateTime(1739370000000),
+            Chrome.freezeDateTime(1739354400000), // 12 feb 2025 - 10:00
             Dialog.confirm("Add"),
             // Cutomer Note on orderline
             ProductScreen.addCustomerNote("Test customer note - orderline"),
             ProductScreen.totalAmountIs("10"),
             checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
-                visibleInDom: ["14:20", "Value 1", "Eat in", "Test customer note - orderline"],
+                visibleInDom: ["10:00", "Value 1", "Eat in", "Test customer note - orderline"],
                 invisibleInDom: ["DUPLICATA!"],
             }),
             ProductScreen.clickOrderButton(),
@@ -433,13 +433,14 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             ...ProductScreen.clickSelectedLine("Water"),
             ProductScreen.addInternalNote("To Serve"),
             checkPreparationTicketData([{ name: "Water", qty: 1 }], {
-                visibleInDom: ["14:20", "To Serve"],
+                visibleInDom: ["10:00", "To Serve"],
                 invisibleInDom: ["colorIndex"],
             }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
+            Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("12:00"),
             Chrome.presetTimingSlotIs("12:00"),
             checkPreparationTicketData([{ name: "Water", qty: 1 }], {
@@ -605,13 +606,14 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
 registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
     steps: () =>
         [
-            Chrome.freezeDateTime(1749965940000), // June 15, 2025
+            Chrome.freezeDateTime(1749981600000), // June 15, 2025 - 10:00
             Chrome.startPoS(),
             FloorScreen.clickNewOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             TextInputPopup.inputText("John"),
             Dialog.confirm(),
+            Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("12:00"),
             Chrome.presetTimingSlotIs("12:00"),
             Chrome.clickPlanButton(),
@@ -628,6 +630,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             Chrome.selectPresetDateButton("06/16/2025"),
+            Chrome.presetTimingSlotHourExists("09:00"),
             Chrome.selectPresetTimingSlotHour("11:00"),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(3, "06/16/2025", false),

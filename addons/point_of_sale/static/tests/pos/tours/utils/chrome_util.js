@@ -176,6 +176,12 @@ export function presetTimingSlotIs(hour) {
 export function selectPresetTimingSlotHour(hour) {
     return { trigger: `.modal button:contains('${hour}')`, run: "click" };
 }
+export function presetTimingSlotHourNotExists(hour) {
+    return { trigger: negate(`.modal button:visible:contains('${hour}')`) };
+}
+export function presetTimingSlotHourExists(hour) {
+    return { trigger: `.modal button:contains('${hour}')` };
+}
 export function clickRegister() {
     return { trigger: ".pos-leftheader .register-label", run: "click" };
 }
