@@ -50,9 +50,10 @@ export class PersistentCache {
                 def.resolve(result);
             }
         });
-        const prom = fallback()
+        fallback()
             .then((result) => {
                 this.indexedDB.write(table, key, result);
+                this.ramCache.write(table, key, Promise.resolve(result));
                 def.resolve(result);
                 return result;
             })
@@ -60,7 +61,7 @@ export class PersistentCache {
                 this.ramCache.delete(table, key);
                 def.reject(error);
             });
-        this.ramCache.write(table, key, prom);
+        this.ramCache.write(table, key, def);
         return def;
     }
 
