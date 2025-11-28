@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_attribute_order", {
+registry.category("web_tour.tours").add("test_attribute_order_with_pricelist", {
     steps: () =>
         [
             Chrome.startPoS(),
@@ -132,11 +132,12 @@ registry.category("web_tour.tours").add("test_attribute_order", {
             ProductConfigurator.pickRadio("Value 1"),
             ProductConfigurator.pickRadio("Value 2"),
             ProductConfigurator.pickRadio("Value 3"),
+            ProductConfigurator.checkTitle("Product Test | $ 58.00 | VAT: Tax 16% (= $ 8.00)"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Product Test",
                 "1",
-                "10",
+                "58",
                 "Value 1, Value 2, Value 3"
             ),
         ].flat(),

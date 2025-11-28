@@ -26,6 +26,14 @@ export function pickMulti(name) {
         },
     ];
 }
+export function checkTitle(name) {
+    return [
+        {
+            content: `check title is properly created`,
+            trigger: `.modal-header h4:contains('${name}')`,
+        },
+    ];
+}
 export function selectedMulti(name) {
     return [
         {
