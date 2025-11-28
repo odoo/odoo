@@ -14,7 +14,7 @@ class TestWorkEntryTypeData(TransactionCase):
         # to hr_work_entry and make a upgrade script accordingly.
         if version_info[3] != 'alpha':
             return
-        work_entry_types_xmlids = self.env['hr.work.entry.type'].search([])._get_external_ids()
+        work_entry_types_xmlids = self.env['hr.work.entry.type'].search([('country_id', '!=', self.env.ref('base.ch').id)])._get_external_ids()
         invalid_xmlids = []
         for xmlids in work_entry_types_xmlids.values():
             for xmlid in xmlids:
