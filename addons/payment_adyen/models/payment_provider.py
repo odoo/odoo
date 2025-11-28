@@ -4,6 +4,7 @@ import json
 import re
 
 from odoo import _, api, fields, models
+from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -48,7 +49,6 @@ class PaymentProvider(models.Model):
     adyen_api_url_prefix = fields.Char(
         string="API URL Prefix",
         help="The base URL for the API endpoints",
-        required_if_provider='adyen',
         copy=False,
     )
 
@@ -159,11 +159,11 @@ class PaymentProvider(models.Model):
 
         version = const.API_ENDPOINT_VERSIONS[endpoint]
         endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
-        prefix_ = self.adyen_api_url_prefix.rstrip('/')  # Remove potential trailing slash.
-        endpoint = endpoint.lstrip('/')  # Remove potential leading slash.
-        test_mode_ = self.state == 'test'
-        prefix_ = f'{prefix_}.adyen' if test_mode_ else f'{prefix_}-checkout-live.adyenpayments'
-        return f'https://{prefix_}.com/checkout/V{version}/{endpoint}'
+        if self.state == 'enabled':
+            domain = f'{self.adyen_api_url_prefix}-checkout-live.adyenpayments.com'
+        else:  # test
+            domain = 'checkout-test.adyen.com'
+        return urljoin(f'https://{domain}', f'checkout/V{version}/{endpoint}')
 
     def _build_request_headers(self, method, *args, idempotency_key=None, **kwargs):
         """Override of `payment` to include the API key and idempotency key in the headers."""
