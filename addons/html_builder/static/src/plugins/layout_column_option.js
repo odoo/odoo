@@ -6,7 +6,7 @@ export class LayoutColumnOption extends BaseOptionComponent {
     static components = {
         SelectNumberColumn,
     };
-    static selector = "section.s_features_grid, section.s_process_steps";
+    static selector = "section.s_features_grid, section.s_process_steps, section.s_splash_intro";
     static applyTo = ":scope > *:has(> .row), :scope > .s_allow_columns";
     static name = "layoutColumnOption";
 }
