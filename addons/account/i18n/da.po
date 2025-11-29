@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-21 14:35+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"PO-Revision-Date: 2025-11-28 16:23+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/da/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -8504,7 +8504,7 @@ msgstr "Gruppe for moms"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Group payments into a single batch to ease the reconciliation process"
 msgstr ""
-"Gruppér betalingerne til ét enkelt parti for at gøre afstemningen nemmere"
+"Gruppér betalingerne til én enkelt batch for at gøre afstemningen nemmere"
 
 #. module: account
 #. odoo-python
@@ -8557,6 +8557,11 @@ msgstr "Har ændret skatteposition"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
 msgid "Has Iban Warning"
 msgstr "Har IBAN-advarsel"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
+msgid "Has Invalid Analytics"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
@@ -9177,7 +9182,7 @@ msgstr "Uforanderlig, ingen huller i sekvensen #"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
 msgid "Inbound"
-msgstr "Indkommende"
+msgstr "Indgående"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_line_ids
@@ -10210,7 +10215,7 @@ msgstr "Journalposter"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
 msgid "Journal Items (DEPRECATED)"
-msgstr ""
+msgstr "Journalposter (FORÆLDET)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11014,8 +11019,8 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the "
 "name of the full reconcile if it exists."
 msgstr ""
-"Matchende tal for denne linje, 'P' hvis den kun delvist afstemt, eller "
-"navnet på hele afstemningen, hvis den eksisterer."
+"Matchende tal for denne linje: ‘P’, hvis den kun er delvist afstemt, eller "
+"navnet på hele afstemningen, hvis denne findes."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -14921,7 +14926,7 @@ msgstr "Vis aktive skatter"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Show all records whose next activity date is past"
-msgstr "Vis alle poster med næste aktivitetsdato før i dag"
+msgstr "Vis alle poster, hvis næste aktivitetsdato er før i dag"
 
 #. module: account
 #. odoo-python
@@ -17036,7 +17041,7 @@ msgid ""
 "reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Dette gør det muligt at samle betalinger i ét parti og forenkler "
+"Dette gør det muligt at samle betalinger i én batch og forenkler "
 "afstemningsprocessen.\n"
 "-Dette installerer modulet account_batch_payment."
 
@@ -17268,8 +17273,8 @@ msgstr "Denne tilbagevendende postering bogføres til og med denne dato."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This setting cannot be changed after an invoice is created."
-msgstr "Denne indstilling kan ikke ændres, efter at en faktura er oprettet."
+msgid "This setting locks once a journal entry is created."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19273,8 +19278,8 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"Det er ikke muligt at ændre en konto for at forhindre afstemning, hvis der "
-"stadig afventes nogle delvise afstemninger."
+"Det er ikke muligt at ændre en konto for at forhindre afstemning, så længe "
+"der stadig afventes delvise afstemninger."
 
 #. module: account
 #. odoo-python
@@ -20020,6 +20025,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Betalingskvittering (Reference {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "This setting cannot be changed after an invoice is created."
+#~ msgstr "Denne indstilling kan ikke ændres, efter at en faktura er oprettet."
 
 #~ msgid ""
 #~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"

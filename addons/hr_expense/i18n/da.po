@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 14:52+0000\n"
+"PO-Revision-Date: 2025-11-28 16:21+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_expense/da/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -174,9 +174,9 @@ msgid ""
 "paid expenses. You can alternatively specify one in the Journal for the "
 "%(method)s payment method."
 msgstr ""
-"Der skal angives en standardkonto for udestående fakturaer i indstillingerne"
-" for udgifter dækket af virksomheden. Alternativt kan du angive en konto for"
-" betalingsformen %(method)sdirekte i journalen."
+"Der skal angives en standardkonto for udestående fakturaer i indstillingerne "
+"for udgifter dækket af virksomheden. Alternativt kan du angive en konto for "
+"betalingsformen %(method)sdirekte i journalen."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -896,8 +896,8 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
-"Det var ikke muligt at sende e-mails vedrørende indsendte udgifter. Der blev"
-" ikke fundet en gyldig e-mailadresse for virkomheden."
+"Det var ikke muligt at sende e-mails vedrørende indsendte udgifter. Der blev "
+"ikke fundet en gyldig e-mailadresse for virkomheden."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
@@ -1196,7 +1196,7 @@ msgstr "Frokost med kunde 12.32 dollars"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Vedhæftning"
+msgstr "Primære vedhæftning"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__manager_id
@@ -1404,7 +1404,8 @@ msgid ""
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo har gennemgået din udgift, dit produkt, din virksomhed og din journal, men kunne ikke finde noget.\n"
+"Odoo har gennemgået din udgift, dit produkt, din virksomhed og din journal, "
+"men kunne ikke finde noget.\n"
 "Hjælp Odoo med at finde en konto ved at oprette en udgiftskonto.\n"
 "%(expense)s %(expense_name)s.\n"
 
@@ -1788,8 +1789,8 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Send en e-mail til dette e-mailalias, og vedhæft kvitteringen for at oprette"
-" en udgift med et klik. Hvis det første ord i emnefelt indeholder en "
+"Send en e-mail til dette e-mailalias, og vedhæft kvitteringen for at oprette "
+"en udgift med et klik. Hvis det første ord i emnefelt indeholder en "
 "kategoris interne reference eller samme kategorinavn, tildeles den "
 "tilsvarende kategori automatisk. Indtast udgiftens beløb i e-mailemnet, så "
 "det også angives på udgiften."
@@ -1808,7 +1809,7 @@ msgstr "Indstillinger"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records whose next activity date is past"
-msgstr "Vis alle poster med en næste aktivitetsdato, der er før i dag"
+msgstr "Vis alle poster, hvis næste aktivitetsdato er før i dag"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
@@ -1879,7 +1880,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Submit"
-msgstr "Indsend"
+msgstr "Send"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1966,8 +1967,7 @@ msgstr "Kontoen, hvor virksomhedens udestående udgifter registreres."
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
-msgstr ""
-"Virksomhedens standardjournal til registrering af medarbejderudgifter."
+msgstr "Virksomhedens standardjournal til registrering af medarbejderudgifter."
 
 #. module: hr_expense
 #. odoo-python
@@ -2055,7 +2055,7 @@ msgstr "Skal sendes"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Submit"
-msgstr "Skal indsendes"
+msgstr "Skal sendes"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -2237,9 +2237,9 @@ msgid ""
 "allowances for mileage, per diem, accommodation"
 "                                             or meal."
 msgstr ""
-"Hvis prisen på et momsfradragsberettiget produkt er under 0, kan brugeren,"
-"                                             der anvender det, kun ændre "
-"mængden og ikke udgiftens beløb. For udgiftskategorier, der betales af "
+"Hvis prisen på et momsfradragsberettiget produkt er under 0, kan "
+"brugeren,                                             der anvender det, kun "
+"ændre mængden og ikke udgiftens beløb. For udgiftskategorier, der betales af "
 "virksomheden til en fast pris,                                             "
 "skal du anvende en pris, der ikke er 0. Det gælder eksempelvis "
 "kilometertillæg, rejsefradrag, kost eller logi."

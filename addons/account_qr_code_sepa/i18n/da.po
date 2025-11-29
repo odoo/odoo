@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-10-29 14:39+0000\n"
+"PO-Revision-Date: 2025-11-27 17:03+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_qr_code_sepa/da/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_qr_code_sepa
 #: model:ir.model,name:account_qr_code_sepa.model_res_partner_bank
@@ -31,19 +31,23 @@ msgstr "Bankkonti"
 #. odoo-python
 #: code:addons/account_qr_code_sepa/models/res_bank.py:0
 msgid "Can't generate a SEPA QR Code with the %s currency."
-msgstr ""
+msgstr "Det er ikke muligt at generere en SEPA-QR-kode med valutaen %s."
 
 #. module: account_qr_code_sepa
 #. odoo-python
 #: code:addons/account_qr_code_sepa/models/res_bank.py:0
 msgid "Can't generate a SEPA QR code if the account type isn't IBAN."
 msgstr ""
+"Det er ikke muligt at generere en SEPA-QR-kode, hvis kontooplysningerne ikke "
+"er i IBAN-format."
 
 #. module: account_qr_code_sepa
 #. odoo-python
 #: code:addons/account_qr_code_sepa/models/res_bank.py:0
 msgid "Can't generate a SEPA QR code with a non SEPA iban."
 msgstr ""
+"Kan ikke generere en SEPA-QR-kode med en konto, der ikke er i SEPA-IBAN-"
+"format."
 
 #. module: account_qr_code_sepa
 #: model:ir.model.fields,field_description:account_qr_code_sepa.field_res_partner_bank__display_name
@@ -59,7 +63,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_qr_code_sepa/models/res_bank.py:0
 msgid "SEPA Credit Transfer QR"
-msgstr "SEPA Kredit Overførsel QR"
+msgstr "QR til SEPA-overførsel"
 
 #. module: account_qr_code_sepa
 #. odoo-python
@@ -68,5 +72,5 @@ msgid ""
 "The account receiving the payment must have an account holder name or "
 "partner name set."
 msgstr ""
-"Kontoen der modtager betalingen skal have et kontoholder navn eller partner "
-"navn angivet."
+"Kontoen, der modtager betalingen, skal have angivet et kontoholder- eller "
+"partnernavn."

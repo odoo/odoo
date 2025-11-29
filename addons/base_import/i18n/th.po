@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-11-28 18:36+0000\n"
 "PO-Revision-Date: 2025-08-25 07:15+0000\n"
 "Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -71,8 +71,7 @@ msgstr "ระดับสูง"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "After each batch import, this delay is applied to avoid unthrottled calls"
-msgstr ""
-"หลังจากการนำเข้าในแต่ละชุด ความล่าช้านี้จะถูกนำมาใช้เพื่อหลีกเลี่ยงการเรียกที่ไม่ถูกควบคุม"
+msgstr "หลังจากการนำเข้าในแต่ละชุด ความล่าช้านี้จะถูกนำมาใช้เพื่อหลีกเลี่ยงการเรียกที่ไม่ถูกควบคุม"
 
 #. module: base_import
 #. odoo-javascript
@@ -85,8 +84,8 @@ msgstr "อนุญาตให้จับคู่กับฟิลด์ย
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "เกิดปัญหาโดยไม่ทราบสาเหตุในระหว่างการนำเข้า (การเชื่อมต่ออาจขาดหาย เกินขีดจำกัดข้อมูล "
@@ -154,10 +153,9 @@ msgstr "คอลัมน์ %(column)s มีค่าไม่ถูกต้
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
-msgstr ""
-"คอลัมน์ %(column)s มีค่าไม่ถูกต้อง เกิดข้อผิดพลาดในบรรทัด %(line)d: %(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
+msgstr "คอลัมน์ %(column)s มีค่าไม่ถูกต้อง เกิดข้อผิดพลาดในบรรทัด %(line)d: %(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -180,8 +178,7 @@ msgstr "ความคิดเห็น"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
 "ไม่สามารถเรียกข้อมูล URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
@@ -301,11 +298,11 @@ msgstr "เกิดข้อผิดพลาดขณะนำเข้าบ
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"เกิดข้อผิดพลาดขณะนำเข้าบันทึก: แถวทั้งหมดควรมีขนาดเท่ากัน แต่แถวหัวเรื่องมี "
-"%(title_row_entries)d รายการในขณะที่แถวแรกมี %(first_row_entries)d รายการ "
+"เกิดข้อผิดพลาดขณะนำเข้าบันทึก: แถวทั้งหมดควรมีขนาดเท่ากัน แต่แถวหัวเรื่องมี %"
+"(title_row_entries)d รายการในขณะที่แถวแรกมี %(first_row_entries)d รายการ "
 "คุณอาจต้องเปลี่ยนตัวอักษรตัวคั่น"
 
 #. module: base_import
@@ -403,10 +400,9 @@ msgstr "การจัดรูปแบบ"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
-msgstr ""
-"พบข้อมูลรูปภาพที่ไม่ถูกต้อง ควรนำเข้ารูปภาพเป็น URL หรือข้อมูลที่เข้ารหัส base64"
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
+msgstr "พบข้อมูลรูปภาพที่ไม่ถูกต้อง ควรนำเข้ารูปภาพเป็น URL หรือข้อมูลที่เข้ารหัส base64"
 
 #. module: base_import
 #. odoo-javascript
@@ -520,8 +516,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"รูปแบบเซลล์ไม่ถูกต้องที่แถว %(แถว)s คอลัมน์ %(col)s: %(cell_value)s โดยมีรูปแบบ: "
-"%(cell_format)s เนื่องจากไม่รองรับรูปแบบ (%(format_type)s)"
+"รูปแบบเซลล์ไม่ถูกต้องที่แถว %(แถว)s คอลัมน์ %(col)s: %(cell_value)s โดยมีรูปแบบ: %"
+"(cell_format)s เนื่องจากไม่รองรับรูปแบบ (%(format_type)s)"
 
 #. module: base_import
 #. odoo-python
@@ -798,6 +794,22 @@ msgid "The file will be imported by batches"
 msgstr "ไฟล์จะถูกนำเข้าทีละชุด"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -830,17 +842,16 @@ msgstr "ติดตามประวัติระหว่างการน
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
-"ไม่สามารถโหลดไฟล์ \"{extension}\" ได้: ต้องใช้โมดูล Python \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr "ไม่สามารถโหลดไฟล์ \"{extension}\" ได้: ต้องใช้โมดูล Python \"{modname}\""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr ""
-"รูปแบบไฟล์ที่ไม่รองรับ \"{}\" การนำเข้ารองรับเฉพาะ CSV, ODS, XLS และ XLSX"
+msgstr "รูปแบบไฟล์ที่ไม่รองรับ \"{}\" การนำเข้ารองรับเฉพาะ CSV, ODS, XLS และ XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -865,8 +876,8 @@ msgstr "อัปโหลดไฟล์ของคุณ"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 "ใช้ HH เป็นเวลาหลายชั่วโมงในระบบ 24 ชั่วโมง ใช้ II ร่วมกับ 'p' สำหรับระบบ 12 ชั่วโมง "
 "คุณสามารถใช้รูปแบบที่กำหนดเองนอกเหนือจากคำแนะนำที่ให้ไว้ เว้นว่างไว้เพื่อให้ Odoo เดารูปแบบ "
@@ -876,14 +887,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
-"ใช้ YYYY เพื่อแสดงปี MM สำหรับเดือน และ DD สำหรับวัน รวมตัวคั่น เช่น จุด เครื่องหมายทับ หรือขี"
-"ดกลาง คุณสามารถใช้รูปแบบที่กำหนดเองนอกเหนือจากคำแนะนำที่ให้ไว้ เว้นว่างไว้เพื่อให้ Odoo เดารู"
-"ปแบบ (แนะนำ)"
+"ใช้ YYYY เพื่อแสดงปี MM สำหรับเดือน และ DD สำหรับวัน รวมตัวคั่น เช่น จุด เครื่องหมายทับ "
+"หรือขีดกลาง คุณสามารถใช้รูปแบบที่กำหนดเองนอกเหนือจากคำแนะนำที่ให้ไว้ เว้นว่างไว้เพื่อให้ Odoo "
+"เดารูปแบบ (แนะนำ)"
 
 #. module: base_import
 #. odoo-javascript
@@ -902,8 +913,7 @@ msgstr "ผู้ใช้"
 msgid ""
 "Warning: ignores the labels line, empty lines and lines composed only of "
 "empty cells"
-msgstr ""
-"คำเตือน: ละเว้นบรรทัดป้ายกำกับ บรรทัดว่าง และบรรทัดที่ประกอบด้วยเซลล์ว่างเท่านั้น"
+msgstr "คำเตือน: ละเว้นบรรทัดป้ายกำกับ บรรทัดว่าง และบรรทัดที่ประกอบด้วยเซลล์ว่างเท่านั้น"
 
 #. module: base_import
 #. odoo-javascript
