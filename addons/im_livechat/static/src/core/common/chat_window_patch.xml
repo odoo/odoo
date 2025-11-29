@@ -4,7 +4,7 @@
         <xpath expr="//*[@name='thread content']" position="replace">
             <t>$0</t>
             <t t-if="props.chatWindow.livechatStep === CW_LIVECHAT_STEP.CONFIRM_CLOSE">
-                <CloseConfirmation onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
+                <CloseConfirmation channelName="channel.displayName" onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
             </t>
         </xpath>
         <xpath expr="//Composer" position="replace">
