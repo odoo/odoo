@@ -44,6 +44,7 @@ export class TextField extends Component {
         useInputField({
             getValue: () => this.props.record.data[this.props.name] || "",
             refName: "textarea",
+            parse: (v) => this.parse(v),
             preventLineBreaks: !this.props.lineBreaks,
         });
         useSpellCheck({ refName: "textarea" });
@@ -51,6 +52,17 @@ export class TextField extends Component {
         useAutoresize(this.textareaRef, { minimumHeight: this.minimumHeight });
 
         this.selectionStart = this.props.record.data[this.props.name]?.length || 0;
+    }
+
+    get shouldTrim() {
+        return this.props.record.fields[this.props.name].trim;
+    }
+
+    parse(value) {
+        if (this.shouldTrim) {
+            return value.trim();
+        }
+        return value;
     }
 
     async onBlur() {
