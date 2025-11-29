@@ -4,3 +4,8 @@ upgrade_19_1.add("discuss_sidebar_category_folded_im_livechat.category_default",
     key: "DiscussAppCategory,im_livechat.category_default:is_open",
     value: false,
 });
+
+upgrade_19_1.add("im_livechat.no_livechat_info_default_open", {
+    key: "DiscussApp,undefined:isLivechatInfoPanelOpenByDefault",
+    value: false,
+});
