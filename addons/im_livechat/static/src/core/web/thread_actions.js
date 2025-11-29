@@ -15,6 +15,12 @@ registerThreadAction("livechat-info", {
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-info",
     name: _t("Information"),
+    actionPanelOpen: ({ store }) => {
+        store.discuss.isLivechatInfoPanelOpenByDefault = true;
+    },
+    actionPanelClose: ({ store }) => {
+        store.discuss.isLivechatInfoPanelOpenByDefault = false;
+    },
     sequence: 10,
     sequenceGroup: 7,
 });
