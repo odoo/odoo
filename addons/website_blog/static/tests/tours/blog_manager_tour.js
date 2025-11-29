@@ -1,8 +1,4 @@
-import {
-    clickOnSave,
-    registerWebsitePreviewTour,
-    clickOnEditAndWaitEditMode,
-} from "@website/js/tours/tour_utils";
+import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 /**
  * Makes sure that blog are only managable by Blog Manager Group.
@@ -33,7 +29,10 @@ registerWebsitePreviewTour(
             trigger: "button.o_form_button_save",
             run: "click",
         },
-        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Wait for editor to open",
+            trigger: ":iframe body.editor_enable",
+        },
         {
             content: "Edit blog title",
             trigger: ":iframe [data-oe-expression='blog_post.name']",
