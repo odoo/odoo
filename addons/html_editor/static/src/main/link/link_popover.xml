@@ -170,7 +170,13 @@
                         </span>
                         <div class="ms-1 w-100">
                             <div class="d-flex">
-                                <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
+                                <a
+                                    href="#"
+                                    t-att-target="linkPreviewTarget"
+                                    t-attf-href="{{ state.url }}"
+                                    class="o_we_url_link fw-bold flex-grow-1 text-truncate"
+                                    t-attf-title="{{ state.urlTitle }}"
+                                >
                                     <t t-esc="state.urlTitle"/>
                                 </a>
                                 <div class="flex-grow-1 d-flex justify-content-end gap-2">
