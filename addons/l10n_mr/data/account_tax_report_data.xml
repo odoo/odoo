@@ -199,7 +199,7 @@
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_deductions_prev_month" model="account.report.line">
-                        <field name="name">Credit carried forward to previous month</field>
+                        <field name="name">Credit carried forward from previous month</field>
                         <field name="code">mr_deductions_prev_month</field>
                         <field name="expression_ids">
                             <record id="tax_report_deductions_prev_month_carryover" model="account.report.expression">
@@ -289,7 +289,7 @@
                         </field>
                     </record>
                     <record id="tax_report_vat_net_total" model="account.report.line">
-                        <field name="name">Net VAT (line 15 - line 16)</field>
+                        <field name="name">Net VAT payable (line 15 - line 16)</field>
                         <field name="code">mr_vat_net_total</field>
                         <field name="expression_ids">
                             <record id="tax_report_vat_net_total_expr" model="account.report.expression">

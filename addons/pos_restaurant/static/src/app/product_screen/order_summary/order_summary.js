@@ -22,8 +22,9 @@ patch(OrderSummary.prototype, {
     },
     async unbookTable() {
         const order = this.pos.get_order();
-        await this.pos.deleteOrders([order]);
         this.pos.showScreen(this.pos.firstScreen);
+        order.state = "cancel";
+        await this.pos.deleteOrders([order]);
     },
     showUnbookButton() {
         if (this.pos.selectedTable) {

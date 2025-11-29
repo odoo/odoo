@@ -10,6 +10,9 @@
                     <div class="o_setting_right_pane border-0">
                         <div invisible="account_peppol_proxy_state not in ('sender', 'receiver', 'smp_registration')">
                             Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/> <field name="account_peppol_proxy_state" class="oe_inline o_form_label text-lowercase" readonly="1"/> invoices and credit notes.
+                            <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
+                                (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode" />)
+                            </span>
                         </div>
                         <div invisible="account_peppol_proxy_state != 'rejected'">
                             You registration has been rejected, the reason has been sent to you via email.

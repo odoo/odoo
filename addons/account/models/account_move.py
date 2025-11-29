@@ -306,7 +306,7 @@ class AccountMove(models.Model):
     made_sequence_gap = fields.Boolean(compute='_compute_made_sequence_gap', store=True)  # store wether this is the first move breaking the natural sequencing
     show_name_warning = fields.Boolean(store=False)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
-    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True, depends=['company_id'])
     company_price_include = fields.Selection(related='company_id.account_price_include', readonly=True)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move')], string='Attachments')
     audit_trail_message_ids = fields.One2many(
@@ -3003,6 +3003,9 @@ class AccountMove(models.Model):
             ):
                 # Changing the type of an invoice using 'switch to refund' feature or just changing the currency.
                 round_from_tax_lines = False
+            elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
+                # Removed a base line affecting the taxes.
+                round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
             elif field_has_changed(moves_values_before, move, 'invoice_currency_rate') and not field_has_changed(moves_values_before, move, 'invoice_date'):
                 # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
                 round_from_tax_lines = 'reapply_currency_rate'
@@ -3032,9 +3035,6 @@ class AccountMove(models.Model):
                     and any(line[field] for line in changed_lines for field in ('amount_currency', 'balance'))
                 ):
                     continue
-            elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
-                # Removed a base line affecting the taxes.
-                round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
             else:
                 continue
 

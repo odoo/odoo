@@ -429,6 +429,21 @@ class TestIrModel(TransactionCase):
         self.assertEqual(monetary_field.currency_field, "x_good_currency",
                          "The currency field in monetary should have x_good_currency as name")
 
+    def test_invalid_field_domain(self):
+        """Ensure assigning an invalid domain raises ValidationError."""
+        field_ripeness_id = self.env['ir.model.fields']._get('x_bananas', 'x_ripeness_id')
+
+        valid_domain = "[('x_name', '=', 'Green')]"
+        invalid_domain = "[('x_name', '=', Green)]"  # Green without quotes
+
+        field_ripeness_id.domain = valid_domain
+
+        with self.assertRaises(ValidationError) as error:
+            field_ripeness_id.domain = invalid_domain
+
+        self.assertIn('An error occurred while evaluating the domain', str(error.exception))
+        self.assertEqual(field_ripeness_id.domain, valid_domain)
+
 @tagged('-at_install', 'post_install')
 class TestIrModelEdition(TransactionCase):
     def test_new_ir_model_fields_related(self):

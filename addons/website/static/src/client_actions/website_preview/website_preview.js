@@ -492,6 +492,7 @@ export class WebsitePreview extends Component {
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {
             this.iframe.el.dispatchEvent(new KeyboardEvent('keyup', ev));
         });
+        this.iframefallback.el?.contentDocument.documentElement.replaceChildren();
     }
 
     /**
@@ -524,23 +525,10 @@ export class WebsitePreview extends Component {
         const websiteDoc = this.iframe.el?.contentDocument;
         const fallbackDoc = this.iframefallback.el?.contentDocument;
         if (!this.websiteContext.edition && websiteDoc && fallbackDoc) {
-            if (websiteDoc.head) {
-                fallbackDoc.head
-                    .querySelectorAll("link[rel='stylesheet'], style")
-                    .forEach((el) => el.remove());
-                for (const el of websiteDoc.head.querySelectorAll(
-                    "link[rel='stylesheet'], style"
-                )) {
-                    fallbackDoc.head.appendChild(el.cloneNode(true));
-                }
-            }
-            if (websiteDoc.body) {
-                fallbackDoc.body.replaceWith(websiteDoc.body.cloneNode(true));
-                this.iframefallback.el.classList.remove("d-none");
-                getScrollingElement(fallbackDoc).scrollTop =
-                    getScrollingElement(websiteDoc).scrollTop;
-                this._cleanIframeFallback();
-            }
+            fallbackDoc.documentElement.replaceWith(websiteDoc.documentElement.cloneNode(true));
+            this.iframefallback.el.classList.remove("d-none");
+            getScrollingElement(fallbackDoc).scrollTop = getScrollingElement(websiteDoc).scrollTop;
+            this._cleanIframeFallback();
         }
     }
     _onPageHide() {

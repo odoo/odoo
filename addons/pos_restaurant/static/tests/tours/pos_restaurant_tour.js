@@ -22,6 +22,7 @@ import {
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { delay } from "@odoo/hoot-dom";
+import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -806,5 +807,44 @@ registry.category("web_tour.tours").add("test_reload_order_line_removed", {
             refresh(),
             FloorScreen.clickTable("5"),
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", quantity: 1 })),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_children_qty_updated_with_note", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickOrderButton(),
+            ProductScreen.clickNumpad("3"),
+            ProductScreen.clickInternalNoteButton(),
+            TextInputPopup.inputText("test note"),
+            Dialog.confirm(),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            Order.doesNotHaveLine({
+                productName: "Office Combo",
+                quantity: 1,
+                internalNote: "test note",
+            }),
+            Order.hasLine({ productName: "Combo Product 2", quantity: 1 }),
+            Order.hasLine({ productName: "Combo Product 4", quantity: 1 }),
+            Order.hasLine({ productName: "Combo Product 6", quantity: 1 }),
+            Order.hasLine({
+                productName: "Office Combo",
+                quantity: 2,
+                internalNote: "test note",
+            }),
+            Order.hasLine({ productName: "Combo Product 2", quantity: 2 }),
+            Order.hasLine({ productName: "Combo Product 4", quantity: 2 }),
+            Order.hasLine({ productName: "Combo Product 6", quantity: 2 }),
         ].flat(),
 });
