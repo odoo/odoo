@@ -1380,6 +1380,20 @@ describe("link preview", () => {
         expect("a.o_we_replace_title_btn").toHaveCount(1);
         expect("button.o_we_replace_title_btn").toHaveCount(0);
     });
+    test("should open same-page links with anchor in current tab", async () => {
+        onRpc("/html_editor/link_preview_internal", () => ({}));
+        onRpc("/", () => ({}));
+        await setupEditor(`<p>This is a <a href="${window.origin}/#section">li[]nk</a></p>`);
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover .o_we_url_link").toHaveAttribute("target", "_self");
+    });
+    test("should open same-page links without anchor in new tab", async () => {
+        onRpc("/html_editor/link_preview_internal", () => ({}));
+        onRpc("/section", () => ({}));
+        await setupEditor(`<p>This is a <a href="${window.origin}/section">li[]nk</a></p>`);
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover .o_we_url_link").toHaveAttribute("target", "_blank");
+    });
 });
 
 describe("link in templates", () => {

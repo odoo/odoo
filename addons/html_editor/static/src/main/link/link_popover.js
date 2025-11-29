@@ -6,6 +6,7 @@ import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { useColorPicker } from "@web/core/color_picker/color_picker";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 
 const DEFAULT_CUSTOM_TEXT_COLOR = "#714B67";
 const DEFAULT_CUSTOM_FILL_COLOR = "#ffffff";
@@ -98,6 +99,10 @@ export class LinkPopover extends Component {
 
         const computedStyle = this.props.document.defaultView.getComputedStyle(linkElement);
         const currentRelValues = linkElement.rel.split(" ");
+        this.linkPreviewTarget =
+            linkElement.hash?.length && this.isAbsoluteURLInCurrentDomain(linkElement.href)
+                ? "_self"
+                : "_blank";
         this.state = useState({
             editing: this.props.LinkPopoverState.editing,
             // `.getAttribute("href")` instead of `.href` to keep relative url
@@ -685,37 +690,8 @@ export class LinkPopover extends Component {
     isAttachmentUrl() {
         return !!this.state.url.match(/\/web\/content\/\d+/);
     }
-    /**
-     * Checks if the given URL is using the domain where the content being
-     * edited is reachable, i.e. if this URL should be stripped of its domain
-     * part and converted to a relative URL if put as a link in the content.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    isAbsoluteURLInCurrentDomain() {
-        // First check if it is a relative URL: if it is, we don't want to check
-        // further as we will always leave those untouched.
-        let hasProtocol;
-        try {
-            hasProtocol = !!new URL(this.state.url).protocol;
-        } catch {
-            hasProtocol = false;
-        }
-        if (!hasProtocol) {
-            return false;
-        }
 
-        const urlObj = new URL(this.state.url, window.location.origin);
-        // Chosen heuristic to detect someone trying to enter a link using
-        // its Odoo instance domain. We just suppose it should be a relative
-        // URL (if unexpected behavior, the user can just not enter its Odoo
-        // instance domain but its real domain, or opt-out from the domain
-        // stripping). Mentioning an .odoo.com domain, especially its own
-        // one, is always a bad practice anyway.
-        return (
-            urlObj.origin === window.location.origin ||
-            new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(urlObj.origin)
-        );
+    isAbsoluteURLInCurrentDomain(url = this.state.url) {
+        return isAbsoluteURLInCurrentDomain(url);
     }
 }
