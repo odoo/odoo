@@ -7,9 +7,12 @@ import {
     convertCSSColorToRgba,
 } from "@web/core/utils/colors";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class GradientPicker extends Component {
-    static components = { ColorPicker, CheckBox };
+    static components = { ColorPicker, CheckBox, Dropdown, DropdownItem };
     static template = "html_editor.GradientPicker";
     static props = {
         onGradientChange: { type: Function, optional: true },
@@ -39,6 +42,7 @@ export class GradientPicker extends Component {
         this.knobRef = useRef("gradientAngleKnob");
 
         this.onToggleRepeatingBound = this.onToggleRepeating.bind(this);
+        this.isMobileOS = isMobileOS();
 
         if (this.props.selectedGradient && isColorGradient(this.props.selectedGradient)) {
             // initialization of the gradient with the selected value

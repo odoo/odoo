@@ -3,11 +3,29 @@
     <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}"
         t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root">
         <div class="px-1 mb-1 pt-2 d-flex">
-            <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
-                <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === tab.id ? 'active' : ''}"
-                    t-on-click="() => this.setTab(tab.id)">
-                    <t t-out="tab.name" />
-                </button>
+            <t t-if="isMobileOS">
+                <Dropdown>
+                    <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
+                        <span class="px-1" t-esc="state.activeTab"/>
+                        <i class="fa fa-caret-down ms-2"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="this.tabs" t-as="item" t-key="item.id">
+                            <DropdownItem
+                                onSelected="() => this.setTab(item.id)">
+                                    <t t-esc="item.name"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </t>
+            <t t-else="">
+                <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
+                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === tab.id ? 'active' : ''}"
+                        t-on-click="() => this.setTab(tab.id)">
+                        <t t-out="tab.name" />
+                    </button>
+                </t>
             </t>
             <div class="flex-grow-1" />
             <button t-attf-class="btn btn-sm fa fa-trash #{ isDarkTheme ? 'btn-secondary' : 'btn-light'}"

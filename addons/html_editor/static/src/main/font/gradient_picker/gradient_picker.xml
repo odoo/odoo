@@ -4,11 +4,32 @@
 
             <div class="align-items-center d-flex justify-content-between my-3 o_type_row">
                 Type
-                <span class="d-flex justify-content-between">
-                    <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'linear' ? 'active' : ''}}" t-on-click="() => this.selectType('linear')"> Linear </button>
-                    <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'radial' ? 'active' : ''}}" t-on-click="() => this.selectType('radial')"> Radial </button>
-                    <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'conic' ? 'active' : ''}}" t-on-click="() => this.selectType('conic')"> Conic </button>
-                </span>
+                <t t-if="isMobileOS">
+                    <Dropdown>
+                        <button class="btn btn-light d-flex justify-content-between w-100 ms-2 border border-dark rounded-0">
+                            <span class="px-1" t-esc="this.state.type"/>
+                            <i class="fa fa-caret-down ms-2"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <DropdownItem onSelected="() => this.selectType('linear')">
+                                Linear
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.selectType('radial')">
+                                Radial
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.selectType('conic')">
+                                Conic
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                </t>
+                <t t-else="">
+                    <span class="d-flex justify-content-between">
+                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'linear' ? 'active' : ''}}" t-on-click="() => this.selectType('linear')"> Linear </button>
+                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'radial' ? 'active' : ''}}" t-on-click="() => this.selectType('radial')"> Radial </button>
+                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'conic' ? 'active' : ''}}" t-on-click="() => this.selectType('conic')"> Conic </button>
+                    </span>
+                </t>
             </div>
 
             <div t-if="this.state.type === 'radial'">

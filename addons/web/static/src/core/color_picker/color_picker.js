@@ -5,6 +5,9 @@ import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/
 import { cookie } from "@web/core/browser/cookie";
 import { POSITION_BUS } from "../position/position_hook";
 import { registry } from "../registry";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -34,7 +37,7 @@ export const DEFAULT_THEME_COLOR_VARS = [
 
 export class ColorPicker extends Component {
     static template = "web.ColorPicker";
-    static components = { CustomColorPicker };
+    static components = { CustomColorPicker, Dropdown, DropdownItem };
     static props = {
         state: {
             type: Object,
@@ -86,6 +89,7 @@ export class ColorPicker extends Component {
         this.onApplyCallback = () => {};
         this.onPreviewRevertCallback = () => {};
         this.getPreviewColor = () => {};
+        this.isMobileOS = isMobileOS();
 
         this.state = useState({
             activeTab: this.props.state.selectedTab || this.getDefaultTab(),
