@@ -82,6 +82,7 @@ patch(DiscussApp.prototype, {
         });
         this.lastThread = fields.One("mail.thread");
         this.livechats = fields.Many("discuss.channel", { inverse: "appAsLivechats" });
+        this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, { localStorage: true });
     },
 
     _threadOnUpdate() {
