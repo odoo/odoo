@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-22 18:39+0000\n"
-"PO-Revision-Date: 2025-11-21 02:36+0000\n"
+"PO-Revision-Date: 2025-11-25 09:48+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
 "sale_stock/tr/>\n"
@@ -49,7 +49,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Varış bekleniyor"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -182,6 +182,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Mavi: Teslim Edilmedi/Başlatıldı\n"
+"            Turuncu: Kısmen Teslim Edildi\n"
+"            Yeşil: Tamamen Teslim Edildi"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -355,12 +358,12 @@ msgstr "Incoterm Konumu"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr ""
+msgstr "Incoterm ayrıntıları"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Incoterm:"
-msgstr ""
+msgstr "Incoterm:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -544,6 +547,9 @@ msgid ""
 "                replenishment propositions, shipping connectors, barcode "
 "scanner, etc."
 msgstr ""
+"Rezervasyonlar, lokasyon yönetimi, akıllı sistemler ile geri siparişleri "
+"azaltın\n"
+"                ikmal teklifleri, nakliye konektörleri, barkod tarayıcı vb."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -678,7 +684,7 @@ msgstr "Ürün Teslimat Politikası"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 msgid "Started"
-msgstr ""
+msgstr "Başladı"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -732,6 +738,10 @@ msgid ""
 "                        You should probably update the partner on this "
 "document."
 msgstr ""
+"Satış Siparişinde teslimat adresi değiştirildi<br/>\n"
+"                        <strong> \"%(old_address)s\"</strong> adresinden "
+"<strong>\"%(new_address)s\"</strong> adresine,\n"
+"                        Muhtemelen bu belgedeki ortağı güncellemelisiniz."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -750,6 +760,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
+"Bir satış siparişi satırı, halihazırda teslim edilen miktarın altına "
+"düşürülemez. Bunun yerine, envanterinizde bir iade oluşturun."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -817,13 +829,13 @@ msgstr "Sevkıyatın ne zaman başlatılacağı"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
-msgstr ""
+msgstr "Farklı bir şirkette teslimat kullanarak hat için bir deponuz olmalıdır."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
-msgstr ""
+msgstr "Devam etmek için satış siparişinizde bir depo ayarlamanız gerekir."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

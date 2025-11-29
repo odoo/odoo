@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
-"PO-Revision-Date: 2025-11-21 02:23+0000\n"
+"PO-Revision-Date: 2025-11-28 16:27+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_proxy_client/da/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -30,6 +30,8 @@ msgid ""
 "A user already exists with theses credentials on our server. Please check "
 "your information."
 msgstr ""
+"Der findes allerede en bruger med disse loginoplysninger på serveren. "
+"Kontrollér venligst dine oplysninger."
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
@@ -74,12 +76,12 @@ msgstr "Oprettet den"
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_certificate_key
 msgid "Cryptographic Keys"
-msgstr ""
+msgstr "Kryptografiske nøgler"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__demo
 msgid "Demo mode"
-msgstr ""
+msgstr "Demotilstand"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
@@ -89,17 +91,17 @@ msgstr "Vis navn"
 #. module: account_edi_proxy_client
 #: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
 msgid "EDI Proxy User"
-msgstr ""
+msgstr "EDI-proxybruger"
 
 #. module: account_edi_proxy_client
 #: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
 msgid "EDI Proxy Users"
-msgstr ""
+msgstr "EDI-proxybrugere"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_mode
 msgid "EDI operating mode"
-msgstr ""
+msgstr "EDI-driftstilstand"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
@@ -124,6 +126,11 @@ msgid ""
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
+"Ugyldig signatur for anmodningen. Dette kan skyldes en anden forbindelse til "
+"Odoo-serverens endepunkt, eller hvis du har duplikeret din database. \n"
+"\n"
+"Hvis du er usikker på, hvordan du løser problemet, bedes du kontakte vores "
+"support."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
@@ -143,7 +150,7 @@ msgstr "Privat nøgle"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__prod
 msgid "Production mode"
-msgstr ""
+msgstr "Produktionstilstand"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__proxy_type
@@ -196,16 +203,17 @@ msgstr ""
 msgid ""
 "The url that this service tried to contact does not exist. The url was “%s”"
 msgstr ""
+"Den URL, som denne tjeneste har anmodet om, findes ikke. URL'en var \"%s\""
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_company_proxy
 msgid "This company has an active user already created for this EDI type"
-msgstr ""
+msgstr "Denne virksomhed har allerede en aktiv bruger for denne EDI-type"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
 msgid "This edi identification is already assigned to an active user"
-msgstr ""
+msgstr "Denne EDI-identifikation er allerede knyttet til en aktiv bruger"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client

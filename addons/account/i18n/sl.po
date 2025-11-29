@@ -23,9 +23,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 06:42+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-28 18:36+0000\n"
+"PO-Revision-Date: 2025-11-27 16:49+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "account/sl/>\n"
 "Language: sl\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -90,7 +90,7 @@ msgstr " za '%s'"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " valid until %s"
-msgstr "velja do %s"
+msgstr " velja do %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -150,7 +150,7 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (ločen od %(user)s na %(date)s)%(attachment_extension)s"
+"%(attachment_name)s (razvezal %(user)s na %(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -268,7 +268,7 @@ msgstr "(Od)blokiraj plačilo"
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "(copy)"
-msgstr " (kopija)"
+msgstr "(kopija)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -15182,8 +15182,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
-" %s Predloge grafikona ne bi smeli izbrati neposredno. Namesto tega bi "
-"morali neposredno izbrati predlogo grafikona, ki se nanaša na vašo državo."
+"Predloge grafikona %s ne bi smeli izbrati neposredno. Namesto tega bi morali "
+"neposredno izbrati predlogo grafikona, ki se nanaša na vašo državo."
 
 #. module: account
 #. odoo-python
@@ -16761,8 +16761,8 @@ msgstr "Ta ponavljajoča se selitev bo objavljena do vključno tega datuma."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This setting cannot be changed after an invoice is created."
-msgstr "Te nastavitve ni mogoče spremeniti po ustvarjanju računa."
+msgid "This setting locks once a journal entry is created."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19483,6 +19483,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Potrdilo o plačilu (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "This setting cannot be changed after an invoice is created."
+#~ msgstr "Te nastavitve ni mogoče spremeniti po ustvarjanju računa."
 
 #~ msgid ""
 #~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
