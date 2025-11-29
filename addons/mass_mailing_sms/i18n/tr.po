@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 02:56+0000\n"
-"PO-Revision-Date: 2025-11-20 17:36+0000\n"
+"PO-Revision-Date: 2025-11-22 21:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/"
 "mass_mailing_sms/tr/>\n"
@@ -84,6 +84,10 @@ msgid ""
 "                        <i class=\"fa fa-phone\"/> Contacts\n"
 "                    </span>"
 msgstr ""
+"<br/>\n"
+"                    <span class=\"text-muted\">\n"
+"                        <i class=\"fa fa-phone\"/> Kontaklar\n"
+"                   </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -98,6 +102,8 @@ msgid ""
 "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages could not be delivered.</span>"
 msgstr ""
+"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+"teslim edilemedi.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -105,6 +111,8 @@ msgid ""
 "<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\">This "
 "SMS marketing is scheduled for </span>"
 msgstr ""
+"<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\">Bu "
+"pazarlama SMS'i şu tarihler için planlanmıştır </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -112,6 +120,8 @@ msgid ""
 "<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages are being processed.</span>"
 msgstr ""
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS'ler "
+"işleniyor.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -119,6 +129,8 @@ msgid ""
 "<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
 "Text Messages are in queue and will be sent soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS şu "
+"an sırada ve yakında gönderilecektir.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -126,6 +138,8 @@ msgid ""
 "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages have been sent.</span>"
 msgstr ""
+"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS'ler "
+"gönderildi.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
@@ -166,7 +180,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This SMS could not be delivered.</strong>"
-msgstr ""
+msgstr "<strong>Bu SMS teslim edilemedi.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
@@ -217,7 +231,7 @@ msgstr "Ek Sayısı"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_authentication
 msgid "Authentication Error\""
-msgstr ""
+msgstr "Kimlik Doğrulama Hatası\""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -328,12 +342,12 @@ msgstr "Yapılandırma"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_country_not_supported
 msgid "Country Not Supported"
-msgstr ""
+msgstr "Ülke Desteklenmiyor"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "Ülkeye Özel Kayıt Gerekli"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
@@ -444,7 +458,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_to
 msgid "From / To identic"
-msgstr ""
+msgstr "Kimden / Kime özdeş"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
@@ -498,7 +512,7 @@ msgstr "Devre dışı bırakma bağlantısını dahil et"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_callback
 msgid "Incorrect callback URL"
-msgstr ""
+msgstr "Yanlış geri arama URL'si"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
@@ -542,7 +556,7 @@ msgstr "Yetersiz kredi"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_invalid_destination
 msgid "Invalid Destination"
-msgstr ""
+msgstr "Geçersiz Hedef"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -569,7 +583,7 @@ msgstr "Son Güncelleme"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_tracker
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "SMS'i postalama/sms izleme modellerine bağlayın"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
@@ -614,7 +628,7 @@ msgstr "Posta İstatistikleri"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_tracker__mailing_trace_id
 msgid "Mailing Trace"
-msgstr ""
+msgstr "E-posta Takibi"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__mailing_type
@@ -664,7 +678,7 @@ msgstr "Mesajlar"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_missing
 msgid "Missing From Number"
-msgstr ""
+msgstr "Numaradan Eksik"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
@@ -901,7 +915,7 @@ msgstr "SMS İzlemeleri"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_tracker_ids
 msgid "SMS Trackers"
-msgstr ""
+msgstr "SMS Takip Cihazları"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_sms_winner_selection
@@ -950,7 +964,7 @@ msgstr "SMS Gönderme Sihirbazı"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send Test"
-msgstr ""
+msgstr "Test Gönder"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -960,7 +974,7 @@ msgstr "Örnek SMS Gönder"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send a sample SMS for testing purpose to the numbers below."
-msgstr ""
+msgstr "Test amacıyla aşağıdaki numaralara örnek bir SMS gönderin."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_server

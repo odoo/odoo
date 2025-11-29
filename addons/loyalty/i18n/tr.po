@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-18 01:16+0000\n"
-"PO-Revision-Date: 2025-11-12 14:15+0000\n"
+"PO-Revision-Date: 2025-11-22 21:20+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/loyalty/"
 "tr/>\n"
@@ -322,11 +322,13 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount"
 " of coupon points defined as the coupon value</span>"
 msgstr ""
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Kupon değeri "
+"olarak tanımlanan kupon puanı miktarını verin</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span invisible=\"not clear_wallet\"> (or more)</span>"
-msgstr ""
+msgstr "<span invisible=\"not clear_wallet\"> (veya daha fazlası)</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -338,6 +340,12 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"not will_send_mail\">\n"
+"                            Oluştur ve Gönder \n"
+"                       </span>\n"
+"                        <span invisible=\"will_send_mail\">\n"
+"                            Oluşturmak \n"
+"                       </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -549,7 +557,7 @@ msgstr "Otomatik"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Automatic promo: 10% off on orders higher than $50"
-msgstr ""
+msgstr "Otomatik promosyon: 10% off 50$ üzeri siparişlerde"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
@@ -573,7 +581,7 @@ msgstr "Barkod"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Buy 10 products to get 10$ off on the 11th one"
-msgstr ""
+msgstr "10 ürün satın alın, 11. üründe 10$ indirim kazanın"
 
 #. module: loyalty
 #. odoo-python
@@ -757,7 +765,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
-msgstr ""
+msgstr "Sıfırdan bir tane oluşturun veya aşağıdaki şablonları kullanın:"
 
 #. module: loyalty
 #. odoo-javascript
@@ -919,7 +927,7 @@ msgstr "İndirim nokta(lar)ı"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Discount product"
-msgstr ""
+msgstr "İndirimli ürün"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -1007,14 +1015,14 @@ msgstr "Son Kullanma Tarihi"
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "Expiration date cannot be set on a loyalty card."
-msgstr ""
+msgstr "Bir sadakat kartında son kullanma tarihi belirlenemez."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fidelity Card"
-msgstr ""
+msgstr "Sadakat Kartı"
 
 #. module: loyalty
 #. odoo-python
@@ -1028,7 +1036,7 @@ msgstr "Sadakat Kartları"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
-msgstr ""
+msgstr "Gelecekteki siparişleri ödemek için e-Cüzdanınızı doldurun"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1119,7 +1127,7 @@ msgstr "Hediye Kartları Oluşturma"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers"
-msgstr ""
+msgstr "Benzersiz kuponlar oluşturun ve müşterilerinizle paylaşın"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1131,7 +1139,7 @@ msgstr "e-Cüzdan oluşturun"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Get 10% off on some products, with a code"
-msgstr ""
+msgstr "Bir kod ile bazı ürünlerde 10% indirim alın"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1339,7 +1347,7 @@ msgstr "Logo"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty Card"
-msgstr ""
+msgstr "Sadakat Kartı"
 
 #. module: loyalty
 #. odoo-python
@@ -1434,7 +1442,7 @@ msgstr "Çoklu Ürün"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Next Order Coupon"
-msgstr ""
+msgstr "Sonraki Sipariş Kuponu"
 
 #. module: loyalty
 #. odoo-python
@@ -1681,7 +1689,7 @@ msgstr "Ödül Puanı Modu"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_domain
 msgid "Reward Product Domain"
-msgstr ""
+msgstr "Ödül Ürün Alanı"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
@@ -1729,7 +1737,7 @@ msgstr "Seçilmiş Müşteriler"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
+msgstr "Ürün satın alınmasını sağlayan hediye kartları satın"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1741,7 +1749,7 @@ msgstr "Gönder"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send a coupon after an order, valid for next purchase"
-msgstr ""
+msgstr "Siparişten sonra bir sonraki satın alma için geçerli bir kupon gönderin"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1813,7 +1821,7 @@ msgstr "İndirim kesinlikle olumlu olmalıdır."
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_to
 msgid "The end date is included in the validity period of this program"
-msgstr ""
+msgstr "Bitiş tarihi bu programın geçerlilik süresine dahildir"
 
 #. module: loyalty
 #. odoo-python
@@ -1852,7 +1860,7 @@ msgstr "Ödül ürün miktarı kesinlikle pozitif olmalıdır."
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_from
 msgid "The start date is included in the validity period of this program"
-msgstr ""
+msgstr "Başlangıç tarihi bu programın geçerlilik süresine dahildir"
 
 #. module: loyalty
 #. odoo-python
@@ -1861,6 +1869,8 @@ msgstr ""
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
 msgstr ""
+"Geçerlilik süresinin başlangıç tarihi bitiş tarihinden önce veya bitiş "
+"tarihine eşit olmalıdır."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -1887,6 +1897,8 @@ msgid ""
 "This pricelist may not be archived. It is being used for active promotion "
 "programs: %s"
 msgstr ""
+"Bu fiyat listesi arşivlenmeyebilir. Aktif promosyon programları için "
+"kullanılmaktadır: %s"
 
 #. module: loyalty
 #. odoo-python
@@ -2000,7 +2012,7 @@ msgstr "İleti Gönder"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Win points with each purchase, and claim gifts"
-msgstr ""
+msgstr "Her alışverişte puan kazanın ve hediye talep edin"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
@@ -2023,6 +2035,8 @@ msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
 msgstr ""
+"'Kuponlar ve Sadakat' bölümünde kullanıldığı için %(name)s adresini "
+"silemezsiniz. Lütfen bunun yerine arşivleyin."
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
@@ -2096,7 +2110,7 @@ msgstr "satın alınan ürün(ler)"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr ""
+msgstr "sadakat ödülü"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2174,7 +2188,7 @@ msgstr "Kullanım"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "used)"
-msgstr ""
+msgstr "kullanılmış)"
 
 #. module: loyalty
 #. odoo-python
