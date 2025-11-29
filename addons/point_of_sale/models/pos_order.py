@@ -471,10 +471,13 @@ class PosOrder(models.Model):
     @api.depends('lines.margin', 'is_total_cost_computed')
     def _compute_margin(self):
         for order in self:
+            sign = -1 if order.is_refund else 1
             if order.is_total_cost_computed:
                 order.margin = sum(order.lines.mapped('margin'))
-                amount_untaxed = order.currency_id.round(sum(line.price_subtotal for line in order.lines))
-                order.margin_percent = not float_is_zero(amount_untaxed, precision_rounding=order.currency_id.rounding) and order.margin / amount_untaxed or 0
+                amount_untaxed = order.currency_id.round(sum(line.price_subtotal for line in order.lines)) * sign
+                order.margin_percent = not float_is_zero(amount_untaxed, precision_rounding=order.currency_id.rounding) \
+                                        and order.margin / amount_untaxed \
+                                        or 0
             else:
                 order.margin = 0
                 order.margin_percent = 0
@@ -1781,12 +1784,15 @@ class PosOrderLine(models.Model):
     @api.depends('price_subtotal', 'total_cost')
     def _compute_margin(self):
         for line in self:
+            sign = -1 if line.order_id.is_refund else 1
             if line.product_id.type == 'combo':
                 line.margin = 0
                 line.margin_percent = 0
             else:
-                line.margin = line.price_subtotal - line.total_cost
-                line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
+                line.margin = (line.price_subtotal * sign) - line.total_cost
+                line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) \
+                                        and line.margin / (line.price_subtotal * sign) \
+                                        or 0
 
     def _prepare_base_line_for_taxes_computation(self):
         self.ensure_one()
