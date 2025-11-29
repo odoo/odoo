@@ -33,7 +33,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @property {boolean} [write]
  * @property {Function | null} onDelete
  *
- * @typedef {import("services").Services} Services
+ * @typedef {import("services").ServiceFactories} Services
  */
 
 import {

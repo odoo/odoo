@@ -10,7 +10,7 @@ export class OutdatedPageWatcherService {
 
     /**
      * @param {import("@web/env").OdooEnv}
-     * @param {Partial<import("services").Services>} services
+     * @param {Partial<import("services").ServiceFactories>} services
      */
     setup(env, { bus_service, multi_tab, notification }) {
         this.notification = notification;

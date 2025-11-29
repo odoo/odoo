@@ -12,7 +12,7 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} OdooEnv
- * @property {import("services").Services} services
+ * @property {import("services").ServiceFactories} services
  * @property {EventBus} bus
  * @property {string} debug
  * @property {boolean} [isSmall]

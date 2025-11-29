@@ -7,7 +7,7 @@ export const busLogsService = {
     dependencies: ["bus_service", "worker_service"],
     /**
      * @param {import("@web/env").OdooEnv}
-     * @param {Partial<import("services").Services>} services
+     * @param {Partial<import("services").ServiceFactories>} services
      */
     start(env, { bus_service, worker_service }) {
         const state = reactive({

@@ -18,7 +18,7 @@ export class BusMonitoringService {
 
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {Partial<import("services").ServiceFactories>} services
      */
     setup(env, { bus_service }) {
         bus_service.addEventListener("BUS:WORKER_STATE_UPDATED", ({ detail }) =>
