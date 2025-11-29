@@ -166,15 +166,15 @@ test("can close confirm livechat with keyboard", async () => {
     await triggerHotkey("Enter");
     await contains(".o-mail-Thread:not([data-transient])");
     await triggerHotkey("Escape");
-    await contains(".o-livechat-CloseConfirmation", {
-        text: "Leaving will end the live chat. Do you want to proceed?",
-    });
+    await contains(
+        ".o-livechat-CloseConfirmation:has(:text('Leaving will end the live chat with Mitchell Admin. Are you sure you want to continue?'))"
+    );
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", { count: 0 });
     await triggerHotkey("Escape");
-    await contains(".o-livechat-CloseConfirmation", {
-        text: "Leaving will end the live chat. Do you want to proceed?",
-    });
+    await contains(
+        ".o-livechat-CloseConfirmation:has(:text('Leaving will end the live chat with Mitchell Admin. Are you sure you want to continue?'))"
+    );
     await triggerHotkey("Enter");
     await expect.waitForSteps(["/im_livechat/visitor_leave_session"]);
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
