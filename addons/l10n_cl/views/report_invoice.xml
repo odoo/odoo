@@ -159,7 +159,7 @@
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-field"></attribute>
             <attribute name="t-out">line_amounts['price_item_document']</attribute>
-            <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
+            <attribute name="t-options">{"widget": "float", "precision": line_amounts['main_currency'].decimal_places}</attribute>
         </xpath>
 
         <xpath expr="//th[@name='th_discount']" position="after">
