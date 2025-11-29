@@ -61,6 +61,17 @@ test("basic rendering char field", async () => {
     expect(".o_field_text textarea").toHaveValue("Description\nas\ntext");
 });
 
+test("char field with widget='text' trims trailing spaces", async () => {
+    Product._fields.name = fields.Char({ trim: true });
+    await mountView({
+        type: "form",
+        resModel: "product",
+        arch: '<form><field name="name" widget="text"/></form>',
+    });
+    await fieldTextArea("name").edit("test  ");
+    expect(".o_field_text textarea").toHaveValue("test");
+});
+
 test("render following an onchange", async () => {
     Product._fields.name = fields.Char({
         onChange: (record) => {
