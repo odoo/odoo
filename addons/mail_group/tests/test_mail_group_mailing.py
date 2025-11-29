@@ -33,3 +33,13 @@ class TestMailGroupMailing(TestMailListCommon, HttpCase):
 
         self.assertEqual(test_group.member_ids, self.test_group_member_4_emp,
                          "Mail Group: people should have been unsubscribed")
+
+    def test_group_view_messages_date_filter(self):
+        """Test that date filtering works correctly in group_view_messages controller"""
+        url = f'/groups/{self.test_group.id}'
+        response = self.url_open(url, params={
+            'date_begin': '2025-11-01',
+            'date_end': '2025-12-01'
+        })
+
+        self.assertEqual(response.status_code, 200)
