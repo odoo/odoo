@@ -46,7 +46,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-11-21 14:14+0000\n"
+"PO-Revision-Date: 2025-11-27 14:13+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/base/fi/>"
 "\n"
@@ -55,7 +55,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -14390,19 +14390,17 @@ msgstr ""
 "Kaksivaiheinen tunnistus (TOTP)\n"
 "================================\n"
 "Antaa käyttäjien määrittää kaksivaiheisen tunnistuksen käyttäjätililleen\n"
-"lisäsuojausta varten käyttämällä aikapohjaisia kertakäyttösalasanoja "
-"(TOTP).\n"
+"lisäsuojausta varten. Hyödyntää aikapohjaisia kertakäyttösalasanoja (TOTP).\n"
 "\n"
-"Kun se on otettu käyttöön, käyttäjän on syötettävä 6-numeroinen koodi, "
-"jonka\n"
-"todennussovellus antoi, ennen kuin hänelle myönnetään pääsy järjestelmään.\n"
-"Kaikkia tunnetuimpia tunnistautumissovelluksia tuetaan.\n"
+"Kun se on otettu käyttöön, käyttäjän on syötettävä "
+"tunnistautumissovelluksen\n"
+"antama 6-numeroinen koodi ennen pääsyä järjestelmään.\n"
+"Kaikki tunnetuimmat tunnistautumissovellukset on tuettu.\n"
 "\n"
-"Huomautus: luontaisesti kaksivaiheinen todennus estää käyttäjien "
-"salasanapohjaisen RPC-käytön kohteissa,\n"
-"joissa se on otettu käyttöön. Jotta käyttäjä voisi suorittaa RPC-skriptejä, "
-"hänen on\n"
-"asetettava API-avaimet korvaamaan pääsalasana.\n"
+"Huomio: kaksivaiheinen todennus estää käyttäjien salasanapohjaisen RPC-"
+"käytön kohteissa,\n"
+"joissa se on otettu käyttöön. Suorittaakseen RPC-skriptejä, käyttäjän on\n"
+"määritettävä API-avaimet korvaamaan pääsalasanan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
@@ -23243,7 +23241,7 @@ msgstr "Yrityksen nimi"
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_company_name
 #: model:ir.model.fields,field_description:base.field_res_users__commercial_company_name
 msgid "Company Name Entity"
-msgstr "Yrityksen nimen entiteetti"
+msgstr "Yrityksen nimi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

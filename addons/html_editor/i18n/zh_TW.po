@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 19:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -417,7 +417,7 @@ msgstr "程式碼"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
 msgid "Code copied to the clipboard."
 msgstr ""
 
@@ -465,15 +465,9 @@ msgstr "轉換為直欄"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
 msgid "Copy"
 msgstr "複製"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Copy Link"
-msgstr "複製連結"
 
 #. module: html_editor
 #. odoo-javascript
@@ -615,6 +609,7 @@ msgstr "錯誤：無法從媒體庫中獲取下載 URL。"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit"
 msgstr "編輯"
 
@@ -1104,6 +1099,12 @@ msgstr "連結"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Link Popover"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Link copied to clipboard."
 msgstr "連結已複製至剪貼簿。"
@@ -1182,6 +1183,12 @@ msgstr "中等字號章節標題。"
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Missing File"
 msgstr "缺漏檔案"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
+msgid "Modules"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1680,6 +1687,18 @@ msgstr "選取媒體"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button shape"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_family_plugin.js:0
 msgid "Select font family"
 msgstr "選擇字型"
@@ -1740,12 +1759,6 @@ msgstr "設定形狀：縮圖"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Shape"
-msgstr "圖形"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Show optimized images"
 msgstr "顯示最佳化圖片"
@@ -1767,7 +1780,6 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Size"
 msgstr "大小"
 
@@ -1892,8 +1904,9 @@ msgstr "日期時間值 %(value)s 不符合 %(format)s 格式"
 msgid ""
 "The document was already saved from someone with a different history for "
 "model \"%(model)s\", field \"%(field)s\" with id \"%(id)d\"."
-msgstr "文件已由其他有不同歷史記錄的人儲存。歷史記錄相異項目：模型 %(model)s、欄位 "
-"%(field)s 連識別碼 %(id)d。"
+msgstr ""
+"文件已由其他有不同歷史記錄的人儲存。歷史記錄相異項目：模型 %(model)s、欄位 %"
+"(field)s 連識別碼 %(id)d。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2355,6 +2368,12 @@ msgstr "影片"
 #: model:ir.model,name:html_editor.model_ir_websocket
 msgid "websocket message handling"
 msgstr "WebSocket 訊息處理"
+
+#~ msgid "Copy Link"
+#~ msgstr "複製連結"
+
+#~ msgid "Shape"
+#~ msgstr "圖形"
 
 #~ msgid "Hide Dailymotion logo"
 #~ msgstr "隱藏Dailymotion標誌"

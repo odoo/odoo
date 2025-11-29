@@ -4,13 +4,14 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 22:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"PO-Revision-Date: 2025-11-27 09:05+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "html_editor/fi/>\n"
 "Language: fi\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -35,7 +36,7 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
 msgstr ""
-"'Otsikkotunniste' näytetään työkaluvihjeenä, kun viet kuvan yläpuolelle."
+"'Otsikkotunniste' näytetään vihjetekstinä viedessäsi hiiren kuvan ylle."
 
 #. module: html_editor
 #. odoo-javascript
@@ -416,7 +417,7 @@ msgstr "Koodi"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
 msgid "Code copied to the clipboard."
 msgstr ""
 
@@ -464,15 +465,9 @@ msgstr "Muunna sarakkeiksi"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
 msgid "Copy"
 msgstr "Kopioi"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Copy Link"
-msgstr "Kopioi linkki"
 
 #. module: html_editor
 #. odoo-javascript
@@ -614,6 +609,7 @@ msgstr "VIRHE: latausurlia ei saatu mediakirjastosta."
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit"
 msgstr "Muokkaa"
 
@@ -728,7 +724,7 @@ msgstr "Joustava"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 msgid "Flip Horizontal"
-msgstr "Käännä vaakasuoraan"
+msgstr "Käännä vaakasuunnassa"
 
 #. module: html_editor
 #. odoo-javascript
@@ -974,7 +970,7 @@ msgstr "Lisää kenttä"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "Insert a horizontal rule separator"
-msgstr "Lisää vaakasuora sääntöerotin"
+msgstr "Lisää vaakasuuntainen sääntöerotin"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1103,6 +1099,12 @@ msgstr "Linkki"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Link Popover"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Link copied to clipboard."
 msgstr "Linkki kopioitu leikepöydälle."
@@ -1182,6 +1184,12 @@ msgstr "Keskipitkän jakson otsikko"
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Missing File"
 msgstr "Puuttuva tiedosto"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
+msgid "Modules"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1682,6 +1690,18 @@ msgstr "Valitse media"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button shape"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_family_plugin.js:0
 msgid "Select font family"
 msgstr "Valitse fonttiperhe"
@@ -1742,12 +1762,6 @@ msgstr "Aseta muoto: Pienoiskuva"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Shape"
-msgstr "Muoto"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Show optimized images"
 msgstr "Näytä optimoidut kuvat"
@@ -1769,7 +1783,6 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Size"
 msgstr "Koko"
 
@@ -1895,8 +1908,8 @@ msgid ""
 "The document was already saved from someone with a different history for "
 "model \"%(model)s\", field \"%(field)s\" with id \"%(id)d\"."
 msgstr ""
-"Asiakirja on jo tallennettu joltain, jolla on eri historia mallin "
-"\"%(model)s\", kentän \"%(field)s\" ja tunnuksen \"%(id)d\" osalta."
+"Asiakirja on jo tallennettu joltain, jolla on eri historia mallin \"%"
+"(model)s\", kentän \"%(field)s\" ja tunnuksen \"%(id)d\" osalta."
 
 #. module: html_editor
 #. odoo-javascript
@@ -2292,7 +2305,7 @@ msgstr "Youtube"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 msgid "Zoom In"
-msgstr "Lähennä"
+msgstr "Suurenna"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2364,6 +2377,12 @@ msgstr "videot"
 #: model:ir.model,name:html_editor.model_ir_websocket
 msgid "websocket message handling"
 msgstr "websocket-viestien käsittely"
+
+#~ msgid "Copy Link"
+#~ msgstr "Kopioi linkki"
+
+#~ msgid "Shape"
+#~ msgstr "Muoto"
 
 #~ msgid "Hide Dailymotion logo"
 #~ msgstr "Piilota Dailymotion-logo"

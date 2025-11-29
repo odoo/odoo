@@ -14,13 +14,14 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 15:18+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-25 07:29+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/fi/>\n"
 "Language: fi\n"
@@ -262,6 +263,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Manuaalisesti: Maksa tai vastaanota maksu millä tahansa Odoon ulkopuolisella "
+"menetelmällä.\n"
+"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma "
+"maksutapansa. Pyydä maksutapahtuma kortilla/kortille yhteistyökumppanin "
+"tallentaman maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
+"Shekki: Maksa laskut shekillä ja tulosta se Odoosta.\n"
+"Erätalletus: Kerää useita asiakasshekkejä kerralla luomalla ja lähettämällä "
+"erätalletuksen pankillesi. Vaatii moduulin account_batch_payment.\n"
+"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto "
+"pankillesi. Vaatii moduulin account_iso20022.\n"
+"SEPA-suoraveloitus: Saat maksut SEPA-alueella kumppanisi sinulle myöntämällä "
+"valtuutuksella. Vaatii moduulin account_iso20022.\n"
+"U.S. ISO20022: Maksa Yhdysvalloissa lähettämällä ISO20022-tiedosto "
+"pankillesi. Vaatii moduulin account_iso20022.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -403,6 +418,8 @@ msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
 msgstr ""
+"Antamasi shekkinumero (%(num)s) ylittää suurimman sallitun arvon %(max)d. "
+"Syötä pienempi numero."
 
 #. module: account_check_printing
 #. odoo-python

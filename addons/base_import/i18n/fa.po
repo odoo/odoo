@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
 "PO-Revision-Date: 2025-11-12 13:02+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
@@ -187,8 +187,8 @@ msgstr "نظرها"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"نمی‌توان URL را بازیابی کرد.: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"نمی‌توان URL را بازیابی کرد.: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -310,9 +310,9 @@ msgid ""
 "(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "خطا در حین وارد کردن سوابق: همه ردیف‌ها باید هم اندازه باشند، اما ردیف عنوان "
-"دارای %(title_row_entries)d eورودی است در حالی که ردیف اول دارای "
-"%(first_row_entries)d. است. شما ممکن است نیاز داشته باشید کاراکتر جداکننده "
-"را تغییر دهید."
+"دارای %(title_row_entries)d eورودی است در حالی که ردیف اول دارای %"
+"(first_row_entries)d. است. شما ممکن است نیاز داشته باشید کاراکتر جداکننده را "
+"تغییر دهید."
 
 #. module: base_import
 #. odoo-javascript
@@ -802,6 +802,22 @@ msgstr "فایل شامل خطاهای مسدودکننده است (به پای�
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "The file will be imported by batches"
 msgstr "فایل به صورت دسته ای وارد می شود"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

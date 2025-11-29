@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-20 16:11+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"PO-Revision-Date: 2025-11-28 07:26+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/vi/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -608,6 +608,8 @@ msgid ""
 "Any self-billed invoices / credit notes received via Peppol will be created "
 "in draft in this journal. Defaults to the first sale journal."
 msgstr ""
+"Bất kỳ giấy báo có/hóa đơn tự xuất nào nhận qua Peppol sẽ được tạo dưới dạng "
+"bản nháp trong sổ nhật ký này. Mặc định sẽ là sổ nhật ký bán hàng đầu tiên."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -915,9 +917,9 @@ msgid ""
 "this database'."
 msgstr ""
 "Không thể kết nối với Điểm truy cập Peppol. Điều này có thể xảy ra nếu bạn "
-"khôi phục cơ sở dữ liệu từ bản sao lưu hoặc sao chép nó mà không thực hiện "
-"quá trình trung hòa. Để khắc phục, vui lòng truy cập Cài đặt &gt; Kế toán "
-"&gt; Cài đặt Peppol và nhấp vào 'Kết nối lại cơ sở dữ liệu này'."
+"khôi phục cơ sở dữ liệu từ bản sao lưu hoặc sao chép nó mà chưa trung hoà. "
+"Để khắc phục, vui lòng truy cập Cài đặt > Kế toán > Cài đặt Peppol và nhấp "
+"vào 'Kết nối lại cơ sở dữ liệu này'."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -962,6 +964,9 @@ msgid ""
 "Peppol.You can still disable reception by disabling the self-billing "
 "document types below."
 msgstr ""
+"Nếu được kích hoạt, bạn có thể gửi và nhận hóa đơn tự xuất qua Peppol. Bạn "
+"vẫn có thể tắt chức năng nhận hóa đơn bằng cách tắt các loại chứng từ tự "
+"xuất dưới đây."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_activate_self_billing_sending
@@ -1407,6 +1412,10 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Địa chỉ email liên hệ chính để nhận thông tin và thông báo liên quan đến kết "
+"nối Peppol.\n"
+"Cụ thể, email này được Odoo sử dụng để kết nối lại tài khoản Peppol của bạn "
+"trong trường hợp thay đổi cơ sở dữ liệu."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1500,7 +1509,7 @@ msgstr "Lưu"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
-msgstr ""
+msgstr "Công ty đã chọn"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1927,6 +1936,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"Trường này được sử dụng để chỉ ra rằng token người dùng EDI không đồng bộ "
+"với máy chủ proxy. Nó được đặt thành True khi token cần được làm mới hoặc "
+"cập nhật."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -2211,11 +2223,10 @@ msgid ""
 "                                        Make sure to reconnect the correct "
 "database."
 msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Your endpoint"
-msgstr "Endpoint của bạn"
+"Cơ sở dữ liệu của bạn hiện không còn được kết nối với Peppol. Điều này có "
+"thể do việc sao chép hoặc khôi phục cơ sở dữ liệu.\n"
+"                                        Hãy đảm bảo kết nối lại với đúng cơ "
+"sở dữ liệu."
 
 #. module: account_peppol
 #. odoo-python
@@ -2285,6 +2296,9 @@ msgstr "để gửi hoá đơn, nhưng hoá đơn này"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "sử dụng"
+
+#~ msgid "Your endpoint"
+#~ msgstr "Endpoint của bạn"
 
 #~ msgid "Please verify partner configuration in partner settings."
 #~ msgstr "Vui lòng xác minh cấu hình đối tác trong cài đặt đối tác."

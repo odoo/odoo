@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-20 06:11+0000\n"
+"PO-Revision-Date: 2025-11-28 01:36+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/stock/"
 "ja/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -416,18 +416,18 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
-"* ベンダー：ベンダー: ベンダーからの製品の供給元ロケーションを表す仮想ロケー"
-"ション。\n"
+"* 仕入先：仕入先からのプロダクトの供給元ロケーションを表す仮想ロケーション。"
+"\n"
 "* バーチャル：子ロケーションを集約し、倉庫の階層構造を作成するためのバーチャ"
 "ルロケーション。直接商品を含むことはできません。\n"
 "* 内部：倉庫内の物理的なロケーション、\n"
 "* 顧客：顧客：顧客へ送られる製品の仕向け地を表す仮想ロケーション。\n"
-"* 在庫ロス：在庫レベルを修正するために行われる在庫操作（物理的な在庫）のカウ"
-"ンターパートとして機能する仮想ロケーション。\n"
-"* 生産：生産：生産業務の仮想的な相手拠点。すなわち、この場所は部品を消費し、"
-"完成品を生産する。\n"
-"* トランジット：トランジット：企業間または倉庫間のオペレーションに使用される"
-"相手拠点。"
+"* 在庫損失：在庫レベルを修正するために行われる在庫オペレーション（物理的な在"
+"庫）の相手先として機能する仮想ロケーション。\n"
+"* 製造：製造業務の仮想的な相手拠点。すなわち、この場所は部品を消費し、完成品"
+"を生産する。\n"
+"* トランジット：企業間または倉庫間のオペレーションに使用される相手先ロケーシ"
+"ョン。"
 
 #. module: stock
 #. odoo-python
@@ -727,12 +727,12 @@ msgstr "<span class=\"col-6\">待機中</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span class=\"ms-1\">Products with no package assigned</span>"
-msgstr ""
+msgstr "<span class=\"ms-1\">梱包が指定されていないプロダクト</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<span class=\"mt0 float-start\">No assigned package</span>"
-msgstr ""
+msgstr "<span class=\"mt0 float-start\">指定梱包なし</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4867,12 +4867,12 @@ msgstr "在庫ロケーション"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss"
-msgstr "在庫ロス"
+msgstr "在庫損失"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss Locations"
-msgstr ""
+msgstr "在庫損失ロケーション"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name

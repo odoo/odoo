@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:36+0000\n"
-"PO-Revision-Date: 2025-11-20 03:04+0000\n"
+"PO-Revision-Date: 2025-11-24 12:08+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/sale/"
 "vi/>\n"
@@ -39,6 +39,12 @@ msgid ""
 "            UBL-RequestForQuotation file will work as well.\n"
 "        "
 msgstr ""
+"\n"
+"            Nếu khách hàng của bạn sử dụng Odoo 18 trở lên, dữ liệu khách "
+"hàng\n"
+"và các dòng đơn bán hàng sẽ được tạo tự động. Bất kỳ tệp PDF nào khác\n"
+"chứa tệp UBL-RequestForQuotation đính kèm cũng sẽ hoạt động.\n"
+"        "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
@@ -2125,7 +2131,7 @@ msgstr "Kết nối với phần mềm của bạn"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr "Liên kết"
+msgstr "Đơn vị vận chuyển"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -2341,12 +2347,12 @@ msgstr "Khách hàng"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr "Liên kết DHL"
+msgstr "Đơn vị vận chuyển DHL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "Liên kết DHL Express"
+msgstr "Đơn vị vận chuyển DHL Express"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2750,7 +2756,7 @@ msgstr "Đơn hàng trùng lặp"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Liên kết Easypost"
+msgstr "Đơn vị vận chuyển Easypost"
 
 #. module: sale
 #. odoo-javascript
@@ -2777,7 +2783,7 @@ msgstr "Nhập giá trị tùy chỉnh"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
 msgid "Envia.com Connector"
-msgstr "Liên kết Envia.com"
+msgstr "Đơn vị vận chuyển Envia.com"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2824,7 +2830,7 @@ msgstr "Dòng bổ sung với %s"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex_rest
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
-msgstr "Liên kết FedEx"
+msgstr "Đơn vị vận chuyển FedEx"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -4986,7 +4992,7 @@ msgstr "Gửi một email"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr "Liên kết Sendcloud"
+msgstr "Đơn vị vận chuyển Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5054,7 +5060,7 @@ msgstr "Địa chỉ giao hàng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr "Liên kết Shiprocket"
+msgstr "Đơn vị vận chuyển Shiprocket"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
@@ -5170,7 +5176,7 @@ msgstr "Email cụ thể"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr "Liên kết Starshipit"
+msgstr "Đơn vị vận chuyển Starshipit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5831,13 +5837,13 @@ msgstr "Nhập để tìm một sản phẩm..."
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups_rest
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
-msgstr "Liên kết UPS"
+msgstr "Đơn vị vận chuyển UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps_rest
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
-msgstr "Liên kết USPS"
+msgstr "Đơn vị vận chuyển USPS"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
@@ -6236,7 +6242,7 @@ msgstr "xuất hóa đơn tự động: gửi hóa đơn đã sẵn sàng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr "Liên kết bpost"
+msgstr "Đơn vị vận chuyển bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
