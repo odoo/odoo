@@ -4,7 +4,10 @@ import { patch } from "@web/core/utils/patch";
 patch(DiscussContent.prototype, {
     actionPanelAutoOpenFn() {
         if (!this.threadActions.activeAction) {
-            this.threadActions.actions.find((a) => a.id === "livechat-info")?.actionPanelOpen();
+            if (this.store.discuss.isLivechatInfoPanelOpenByDefault) {
+                this.threadActions.actions.find((a) => a.id === "livechat-info")?.actionPanelOpen();
+            }
+            return;
         }
         super.actionPanelAutoOpenFn();
     },
