@@ -13,22 +13,23 @@
 # Layna Nascimento, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 19:08+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-11-27 09:03+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/stock/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -381,6 +382,8 @@ msgstr "(código de barras serial)"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "), a replenishment must be done to reach the maximum level of stock ("
 msgstr ""
+"), é necessário realizar uma reposição para atingir o nível máximo de "
+"estoque ("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
@@ -428,6 +431,21 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* Fornecedor: local virtual que representa a localização de origem dos "
+"produtos provenientes dos seus fornecedores\n"
+"* Virtual: local virtual utilizado para criar uma estrutura hierárquica para "
+"o seu armazém, agregando locais secundários. Não pode conter produtos "
+"diretamente\n"
+"* Interno: locais físicos dentro dos seus armazéns\n"
+"* Cliente: local virtual que representa o local de destino dos produtos "
+"enviados aos seus clientes\n"
+"* Perda de inventário: local virtual que serve como contrapartida a "
+"operações de inventário realizadas para corrigir os níveis de estoque "
+"(inventários físicos)\n"
+"* Produção: Local virtual contraparte para operações de produção. Ou seja, "
+"este local consome componentes e produz produtos acabados\n"
+"* Trânsito: Local contraparte que deve ser utilizado para operações entre "
+"empresas ou entre armazéns"
 
 #. module: stock
 #. odoo-python

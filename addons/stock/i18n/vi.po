@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-20 16:10+0000\n"
+"PO-Revision-Date: 2025-11-25 07:30+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/stock/"
 "vi/>\n"
@@ -2316,6 +2316,9 @@ msgid ""
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"Thiết lập khoảng thời gian để hệ thống kích hoạt quy tắc tái đặt hàng sớm "
+"hơn, từ đó giúp chủ động bổ sung hàng và tránh chậm trễ, hoặc đặt về ('0 "
+"ngày') để chỉ đặt hàng đúng lúc cần, hạn chế tồn kho dư thừa."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -2804,12 +2807,12 @@ msgstr "DEMO_UOM"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr "Liên kết DHL"
+msgstr "Đơn vị vận chuyển DHL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "Liên kết DHL Express"
+msgstr "Đơn vị vận chuyển DHL Express"
 
 #. module: stock
 #. odoo-javascript
@@ -2862,10 +2865,10 @@ msgid ""
 "future arrival is expected after the minimum quantity is reached (potential "
 "stockout). Check the Forecast Report."
 msgstr ""
-"Ngày hạn chót để đặt hàng nhằm tránh tình trạng tồn kho dưới mức tối thiểu. "
-"Nếu không có đơn hàng nào được đặt trong khi có hạn chót, điều này có thể do "
-"dự kiến sẽ có lô hàng đến sau khi đạt mức tồn kho tối thiểu (có thể xảy ra "
-"tình trạng thiếu hàng). Kiểm tra Báo cáo Dự báo."
+"Ngày hạn chót để đặt hàng nhằm tránh tình trạng tồn kho xuống dưới mức tối "
+"thiểu. Nếu không có đơn hàng nào được đặt trong khi có hạn chót, điều này có "
+"thể do dự kiến sẽ có lô hàng đến sau khi đạt mức tồn kho tối thiểu (có thể "
+"xảy ra tình trạng thiếu hàng). Kiểm tra Báo cáo dự báo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -3647,7 +3650,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Liên kết Easypost"
+msgstr "Đơn vị vận chuyển Easypost"
 
 #. module: stock
 #. odoo-python
@@ -3743,7 +3746,7 @@ msgstr "Nhập mô tả"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
 msgid "Envia.com Connector"
-msgstr "Liên kết Envia.com"
+msgstr "Đơn vị vận chuyển Envia.com"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
@@ -3838,7 +3841,7 @@ msgstr "Tháng 2"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
-msgstr "Liên kết FedEx"
+msgstr "Đơn vị vận chuyển FedEx"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -8848,7 +8851,7 @@ msgstr "Gửi email"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr "Liên kết Sendcloud"
+msgstr "Đơn vị vận chuyển Sendcloud"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
@@ -9068,7 +9071,7 @@ msgstr "Vận chuyển: Gửi bằng email"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr "Liên kết Shiprocket"
+msgstr "Đơn vị vận chuyển Shiprocket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -9318,7 +9321,7 @@ msgstr "Được gắn sao"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr "Liên kết Starshipit"
+msgstr "Đơn vị vận chuyển Starshipit"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -10750,13 +10753,13 @@ msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
-msgstr "Liên kết UPS"
+msgstr "Đơn vị vận chuyển UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
-msgstr "Liên kết USPS"
+msgstr "Đơn vị vận chuyển USPS"
 
 #. module: stock
 #. odoo-javascript
@@ -12002,7 +12005,7 @@ msgstr "barcodelookup.com"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr "Liên kết bpost"
+msgstr "Đơn vị vận chuyển bpost"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest

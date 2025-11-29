@@ -15,13 +15,14 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-19 13:23+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-11-24 12:09+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "website_payment/fi/>\n"
 "Language: fi\n"
@@ -99,11 +100,15 @@ msgid ""
 "payments.\n"
 "                        </span>"
 msgstr ""
+"<span class=\"oe_inline pe-0\">\n"
+"                            Ota maksupalveluntarjoaja käyttöön "
+"verkkomaksujen hyväksymiseksi.\n"
+"                       </span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "<span class=\"oe_inline px-0\">or</span>"
-msgstr ""
+msgstr "<span class=\"oe_inline px-0\">tai</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -134,11 +139,13 @@ msgstr "<span class=\"s_donation_currency pe-1\">$</span>50"
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "<span>Enable a payment provider to accept online payments.</span>"
 msgstr ""
+"<span>Ota maksupalveluntarjoaja käyttöön verkkomaksujen "
+"hyväksymiseksi.</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "<span>or</span>"
-msgstr ""
+msgstr "<span>tai</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -225,7 +232,7 @@ msgstr "Konfiguroi"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Configure Payment Methods"
-msgstr ""
+msgstr "Määritä maksutavat"
 
 #. module: website_payment
 #. odoo-javascript
@@ -314,7 +321,7 @@ msgstr "Lahjoituspainike"
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Donation Payment"
-msgstr ""
+msgstr "Lahjoitusmaksu"
 
 #. module: website_payment
 #. odoo-python
@@ -362,12 +369,12 @@ msgstr "Syötä kelvollinen numero!"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "Löydä maksupalveluntarjoaja"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Find another provider"
-msgstr ""
+msgstr "Löydä toinen palveluntarjoaja"
 
 #. module: website_payment
 #. odoo-javascript
@@ -447,7 +454,7 @@ msgstr "Nimi vaaditaan."
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
 msgid "No published payment methods"
-msgstr ""
+msgstr "Ei julkaistuja maksutapoja"
 
 #. module: website_payment
 #. odoo-javascript
@@ -581,7 +588,7 @@ msgstr "Ei ole mitään maksettavaa."
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
 msgid "View providers"
-msgstr ""
+msgstr "Näytä palveluntarjoajat"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -589,6 +596,7 @@ msgid ""
 "Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring "
 "charges."
 msgstr ""
+"Visa, Mastercard, Maestro, Google Pay, Apple Pay, jne. sekä toistuvat maksut."
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id

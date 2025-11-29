@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-20 16:09+0000\n"
+"PO-Revision-Date: 2025-11-28 04:36+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "project/vi/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -1090,6 +1090,8 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"Gán vai trò cho các nhiệm vụ trong mẫu dự án của bạn.\n"
+"Khi tạo dự án mới từ mẫu, chọn ai sẽ đảm nhận từng vai trò."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1850,6 +1852,9 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"Số ngày trước khi các nhiệm vụ ở giai đoạn này bị coi là quá hạn. Đặt bằng 0 "
+"để vô hiệu hóa. Việc thay đổi tham số này sẽ không ảnh hưởng đến trạng thái/"
+"ngày của các tài nguyên đã được cập nhật trước khi thay đổi."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
@@ -2404,6 +2409,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"Cấp quyền truy cập cho người dùng bằng cách thêm họ làm người theo dõi — có "
+"thể cho cả dự án hoặc từng nhiệm vụ riêng lẻ. Người dùng nội bộ sẽ tự động "
+"có quyền truy cập vào các nhiệm vụ mà họ được phân công."
 
 #. module: project
 #. odoo-javascript
@@ -2585,6 +2593,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Nếu bật, giai đoạn này sẽ hiển thị dưới dạng thu gọn trong chế độ Kanban và "
+"Danh sách của dự án. Các dự án ở giai đoạn thu gọn được coi là đã đóng."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2595,8 +2605,8 @@ msgid ""
 "remains in this stage."
 msgstr ""
 "Nếu được thiết lập, yêu cầu đánh giá sẽ được gửi tự động qua email cho khách "
-"hàng khi tác vụ đạt đến giai đoạn này. \n"
-"Hoặc, yêu cầu sẽ được gửi định kỳ miễn là tác vụ vẫn ở trong giai đoạn này."
+"hàng khi nhiệm vụ đạt đến giai đoạn này. \n"
+"Hoặc, yêu cầu sẽ được gửi định kỳ miễn là nhiệm vụ vẫn ở trong giai đoạn này."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -5713,7 +5723,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
-#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -5843,6 +5852,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Khi bạn tạo một dự án từ mẫu, bạn có thể chọn nhân viên đảm nhận từng vai "
+"trò. Những nhân viên này sẽ được thêm vào các nhiệm vụ, cùng với những người "
+"đã được phân công trước đó."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14

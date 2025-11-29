@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
 "PO-Revision-Date: 2025-11-17 19:01+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -416,7 +416,7 @@ msgstr "코드"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
 msgid "Code copied to the clipboard."
 msgstr ""
 
@@ -464,15 +464,9 @@ msgstr "열로 변환"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
 msgid "Copy"
 msgstr "복사"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Copy Link"
-msgstr "링크 복사"
 
 #. module: html_editor
 #. odoo-javascript
@@ -614,6 +608,7 @@ msgstr "오류: 미디어 라이브러리에서 다운로드 URL을 가져올 �
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit"
 msgstr "편집"
 
@@ -1103,6 +1098,12 @@ msgstr "링크"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Link Popover"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Link copied to clipboard."
 msgstr "링크가 클립보드에 복사되었습니다."
@@ -1182,6 +1183,12 @@ msgstr "중간 섹션 제목"
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Missing File"
 msgstr "파일 누락"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
+msgid "Modules"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1682,6 +1689,18 @@ msgstr "미디어 선택"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button shape"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_family_plugin.js:0
 msgid "Select font family"
 msgstr "글꼴 패밀리 선택"
@@ -1742,12 +1761,6 @@ msgstr "모양 설정: 썸네일"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Shape"
-msgstr "배경 디자인"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Show optimized images"
 msgstr "최적화된 이미지 보기"
@@ -1769,7 +1782,6 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Size"
 msgstr "사이즈"
 
@@ -1895,8 +1907,8 @@ msgid ""
 "The document was already saved from someone with a different history for "
 "model \"%(model)s\", field \"%(field)s\" with id \"%(id)d\"."
 msgstr ""
-"문서가 이미 \"%(model)s\" 모델, \"%(field)s\" 필드에 대해 다른 기록을 가진 "
-"사람이 ID \"%(id)d\"로 저장했습니다."
+"문서가 이미 \"%(model)s\" 모델, \"%(field)s\" 필드에 대해 다른 기록을 가진 사"
+"람이 ID \"%(id)d\"로 저장했습니다."
 
 #. module: html_editor
 #. odoo-javascript
@@ -2227,8 +2239,9 @@ msgstr "예"
 msgid ""
 "You can not replace a field by this image. If you want to use this image, "
 "first save it on your computer and then upload it here."
-msgstr "이 이미지로 필드를 바꿀 수 없습니다. 사용하려면 먼저 이미지를 컴퓨터에 "
-"저장한 다음 여기에 업로드하세요."
+msgstr ""
+"이 이미지로 필드를 바꿀 수 없습니다. 사용하려면 먼저 이미지를 컴퓨터에 저장"
+"한 다음 여기에 업로드하세요."
 
 #. module: html_editor
 #. odoo-javascript
@@ -2361,6 +2374,12 @@ msgstr "동영상"
 #: model:ir.model,name:html_editor.model_ir_websocket
 msgid "websocket message handling"
 msgstr "웹소켓 메시지 처리"
+
+#~ msgid "Copy Link"
+#~ msgstr "링크 복사"
+
+#~ msgid "Shape"
+#~ msgstr "배경 디자인"
 
 #~ msgid "Hide Dailymotion logo"
 #~ msgstr "Dailymotion 로고 숨기기"
