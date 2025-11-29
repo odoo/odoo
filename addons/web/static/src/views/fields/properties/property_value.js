@@ -117,8 +117,15 @@ export class PropertyValue extends Component {
                     return;
                 }
                 // maybe the record display name has changed
-                await record.load();
-                const recordData = extractData(record.data);
+                const records = await this.orm.read(
+                    record.resModel,
+                    [record.resId],
+                    ["display_name"],
+                    {
+                        context: this.context,
+                    }
+                );
+                const recordData = extractData(records[0]);
                 await this.onValueChange([recordData]);
             },
             fieldString: this.props.string,
@@ -304,7 +311,7 @@ export class PropertyValue extends Component {
                 newValue = 0;
             }
         } else if (["many2one", "many2many"].includes(this.props.type)) {
-            newValue = this.props.type === "many2many" ? newValue[0] : newValue;
+            newValue = newValue[0];
             if (newValue && newValue.id && newValue.display_name === undefined) {
                 // The "Search more" option in the Many2XAutocomplete component
                 // only return the record ID, and not the name. But we need to name
