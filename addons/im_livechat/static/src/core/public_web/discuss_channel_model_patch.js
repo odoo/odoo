@@ -1,3 +1,4 @@
+import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 import { fields } from "@mail/model/misc";
 
@@ -111,11 +112,20 @@ const discussChannelPatch = {
     },
     async leaveChannel() {
         if (this.livechatShouldAskLeaveConfirmation) {
-            await this.askLeaveConfirmation(
-                _t("Leaving will end the live chat. Do you want to proceed?")
-            );
+            this.store.env.services.dialog.add(MessageConfirmDialog, {
+                message: this.newestPersistentOfAllMessage,
+                confirmText: _t("Leave Conversation"),
+                onConfirm: async () => await super.leaveChannel(...arguments),
+                prompt: _t("Here's the most recent message:"),
+                size: "xl",
+                title: _t(
+                    "Leaving will end the live chat with %(channel_name)s. Are you sure you want to continue?",
+                    { channel_name: this.displayName }
+                ),
+            });
+        } else {
+            await super.leaveChannel(...arguments);
         }
-        super.leaveChannel(...arguments);
     },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

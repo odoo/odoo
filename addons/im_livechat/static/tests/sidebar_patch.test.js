@@ -279,7 +279,7 @@ test("Active category item should be visible even if the category is closed", as
 
 test("Clicking on leave button leaves the channel", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({
@@ -291,11 +291,20 @@ test("Clicking on leave button leaves the channel", async () => {
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
+    pyEnv["mail.message"].create({
+        body: "Last message from Visitor",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
     await click("[title='Chat Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
+    await contains(
+        ".modal-header:has(:text('Leaving will end the live chat with Visitor 11. Are you sure you want to continue?'))"
+    );
+    await contains(".modal-body .o-mail-Message-body:has(:text('Last message from Visitor'))");
     await click("button:contains(Leave Conversation)");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Visitor 11" });
 });
