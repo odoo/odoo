@@ -1051,7 +1051,7 @@ test("properties: many2many", async () => {
  * modal should correspond to the selected model and should be updated dynamically.
  */
 test.tags("desktop");
-test("properties: many2one 'Search more...'", async () => {
+test("properties: many2one 'Search more...' +  internal link save keeps data", async () => {
     onRpc(({ method, model }) => {
         if (["has_access", "has_group"].includes(method)) {
             return true;
@@ -1065,6 +1065,8 @@ test("properties: many2one 'Search more...'", async () => {
                 { model: "partner", display_name: "Partner" },
                 { model: "res.users", display_name: "User" },
             ];
+        } else if (method === "get_formview_id") {
+            return false;
         }
     });
 
@@ -1092,6 +1094,14 @@ test("properties: many2one 'Search more...'", async () => {
             <field name="id"/>
             <field name="display_name"/>
         </list>`;
+    User._views[["form", false]] = /* xml */ `
+        <form>
+            <sheet>
+                <group>
+                    <field name="display_name"/>
+                </group>
+            </sheet>
+        </form>`;
     User._views[["list", false]] = /* xml */ `
         <list>
             <field name="id"/>
@@ -1161,6 +1171,21 @@ test("properties: many2one 'Search more...'", async () => {
     await animationFrame();
     // Checking the model loaded
     expect.verifySteps(["res.users"]);
+
+    // Select the first value
+    await click(".o_list_table tbody tr:first-child td[name='display_name']");
+    await animationFrame();
+
+    // Click on external button
+    await click(".o_properties_external_button");
+    await animationFrame();
+
+    // Click on Save & close button
+    await click(".modal .o_form_button_save");
+    await animationFrame();
+
+    // Check that value does not disappear
+    expect(".o_field_property_definition_value input").toHaveValue("Alice");
 });
 
 test("properties: date(time) property manipulations", async () => {
