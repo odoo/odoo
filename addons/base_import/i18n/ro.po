@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-11-28 18:36+0000\n"
 "PO-Revision-Date: 2025-11-16 08:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -91,8 +91,8 @@ msgstr "Permite potrivirea cu subcâmpuri"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "A apărut o problemă necunoscută în timpul importului (posibil conexiune "
@@ -151,8 +151,7 @@ msgstr "Anulează"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
-"Faceți clic pe „Reluare” pentru a continua cu importul, reluând la rândul "
-"%s."
+"Faceți clic pe „Reluare” pentru a continua cu importul, reluând la rândul %s."
 
 #. module: base_import
 #. odoo-python
@@ -164,11 +163,11 @@ msgstr "Coloana %(column)s conține valori incorecte (valoare: %(value)s)"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
-"Coloana %(column)s conține valori incorecte. Eroare în linia %(line)d: "
-"%(error)s"
+"Coloana %(column)s conține valori incorecte. Eroare în linia %(line)d: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -191,11 +190,10 @@ msgstr "Comentarii"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Nu s-a putut prelua URL-ul: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Nu s-a putut prelua URL-ul: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -260,6 +258,7 @@ msgstr "Întârziere după fiecare lot"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -314,12 +313,12 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Eroare la importul înregistrărilor: toate rândurile trebuie să aibă aceeași "
-"dimensiune, dar rândul de titlu are %(title_row_entries)d intrări în timp ce"
-" primul rând are%(first_row_entries)d. Poate fi necesar să schimbați "
+"dimensiune, dar rândul de titlu are %(title_row_entries)d intrări în timp ce "
+"primul rând are%(first_row_entries)d. Poate fi necesar să schimbați "
 "caracterul separatorului."
 
 #. module: base_import
@@ -345,6 +344,12 @@ msgstr "Fișierele Excel sunt recomandate deoarece formatarea este automată."
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "ID extern"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Field '%(field)s' does not accept date/time values."
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -413,8 +418,8 @@ msgstr "Formatare"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "Datele imaginii nu sunt valide, imaginile trebuie importate ca URL-uri sau "
 "date codificate în baza64."
@@ -440,6 +445,7 @@ msgstr "Iată începutul fișierului pe care nu l-am putut importa:"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -464,9 +470,9 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
-"Dacă modelul folosește openchatter, urmărirea istoricului va seta abonamente"
-" și va trimite notificări în timpul importului, dar va duce la un import mai"
-" lent."
+"Dacă modelul folosește openchatter, urmărirea istoricului va seta abonamente "
+"și va trimite notificări în timpul importului, dar va duce la un import mai "
+"lent."
 
 #. module: base_import
 #. odoo-python
@@ -535,8 +541,7 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
-"Valoare invalidă a celulei la rândul %(row)s, coloana %(col)s: "
-"%(cell_value)s"
+"Valoare invalidă a celulei la rândul %(row)s, coloana %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -809,6 +814,22 @@ msgid "The file will be imported by batches"
 msgstr "Fișierul va fi importat în loturi"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -841,7 +862,8 @@ msgstr "Urmărește istoric în timpul importului"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 "Nu se poate încărca fișierul \"{extension}\": este necesar modulul Python "
 "\"{modname}\""
@@ -852,8 +874,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Format fișier nesuportat \"{}\", import suportat numai pentru  CSV, ODS, XLS"
-" și XLSX"
+"Format fișier nesuportat \"{}\", import suportat numai pentru  CSV, ODS, XLS "
+"și XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -878,8 +900,8 @@ msgstr "Încărcați fișierele dvs."
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 "Utilizați HH timp de ore într-un sistem de 24 de ore, utilizați II în "
 "combinație cu „p” pentru un sistem de 12 ore. Puteți utiliza un format "
@@ -890,10 +912,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "Utilizați aaaa pentru a reprezenta anul, LL pentru lună și ZZ pentru zi. "
 "Include separatoare, cum ar fi un punct, o bară oblică înainte sau o bară "

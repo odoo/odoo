@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_viva_wallet
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-11-28 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -104,14 +105,6 @@ msgstr ""
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Only 'group_pos_user' are allowed to get latest transaction status"
-msgstr ""
-"Seul 'group_pos_user' est autorisé à obtenir le dernier statut des "
-"transactions"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid ""
 "Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
 msgstr ""
@@ -121,8 +114,7 @@ msgstr ""
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid ""
-"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgid "Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
 msgstr ""
 "Seuls les membres de 'group_pos_user' sont autorisés à envoyer une demande "
 "de paiement Viva Wallet"
@@ -160,8 +152,8 @@ msgstr ""
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
-"Il y a des problèmes entre nous et Viva Wallet. Veuillez réessayer plus "
-"tard.%s)"
+"Il y a des problèmes entre nous et Viva Wallet. Veuillez réessayer plus tard."
+"%s)"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -170,31 +162,30 @@ msgid ""
 "Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
 "ID and Client Secret are correct"
 msgstr ""
-"Impossible de récupérer le jeton d’accès Viva Wallet : veuillez vérifier que"
-" l'ID client et le secret client sont corrects."
+"Impossible de récupérer le jeton d’accès Viva Wallet : veuillez vérifier que "
+"l'ID client et le secret client sont corrects."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_merchant_id
 msgid ""
-"Used when connecting to Viva Wallet: "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/merchant-id-and-api-key/"
+"Used when connecting to Viva Wallet: https://developer.vivawallet.com/"
+"getting-started/find-your-account-credentials/merchant-id-and-api-key/"
 msgstr ""
-"Utilisé lors de la connexion à Viva Wallet : "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/merchant-id-and-api-key/"
+"Utilisé lors de la connexion à Viva Wallet : https://"
+"developer.vivawallet.com/getting-started/find-your-account-credentials/"
+"merchant-id-and-api-key/"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_client_id
 msgid ""
-"Used when connecting to Viva Wallet: "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
+"Used when connecting to Viva Wallet: https://developer.vivawallet.com/"
+"getting-started/find-your-account-credentials/pos-apis-credentials/#find-"
+"your-pos-apis-credentials"
 msgstr ""
-"Utilisé lors de la connexion à Viva Wallet : "
-"https://developer.vivawallet.com/getting-started/find-your-account-"
-"credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
+"Utilisé lors de la connexion à Viva Wallet : https://"
+"developer.vivawallet.com/getting-started/find-your-account-credentials/pos-"
+"apis-credentials/#find-your-pos-apis-credentials"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_bearer_token
@@ -245,3 +236,8 @@ msgstr "a reçu un message pour un fournisseur de paiement non enregistré."
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 msgid "received a message for a terminal not registered in Odoo: %s"
 msgstr "a reçu un message pour un terminal non enregistré dans Odoo : %s"
+
+#~ msgid "Only 'group_pos_user' are allowed to get latest transaction status"
+#~ msgstr ""
+#~ "Seul 'group_pos_user' est autorisé à obtenir le dernier statut des "
+#~ "transactions"
