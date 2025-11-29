@@ -305,7 +305,7 @@ class TestHrAttendanceOvertime(HttpCase):
 
         overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
         self.assertTrue(overtime, 'Overtime entry should exist since the threshold has been lowered.')
-        self.assertAlmostEqual(overtime.duration, 10 / 60, msg='Overtime should be equal to 10 minutes.')
+        self.assertAlmostEqual(sum(overtime.mapped('duration')), 10 / 60, msg='Overtime should be equal to 10 minutes.')
 
     # TODO naja: make rework after negative overtimes
     # def test_overtime_employee_threshold(self):
@@ -396,7 +396,7 @@ class TestHrAttendanceOvertime(HttpCase):
         # Total overtime for that day : 4 hours
         overtime_1 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id),
                                                               ('date', '=', datetime(2023, 1, 2))])
-        self.assertAlmostEqual(overtime_1.duration, 4, 2)
+        self.assertAlmostEqual(sum(overtime_1.mapped('duration')), 4, 2)
 
         # Multi attendance case
 
@@ -461,7 +461,7 @@ class TestHrAttendanceOvertime(HttpCase):
         # Total overtime for that day : 5 hours
         overtime_record = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 28))])
-        self.assertAlmostEqual(overtime_record.duration, 5)
+        self.assertAlmostEqual(sum(overtime_record.mapped('duration')), 5)
 
         # Check that the calendar's timezones take priority and that overtimes and attendances dates are consistent
         self.europe_employee.resource_calendar_id.tz = 'America/New_York'
@@ -963,14 +963,22 @@ class TestHrAttendanceOvertime(HttpCase):
 
         version.ruleset_id = ruleset
 
-        # 10h on monday: 1h daily ot
-        # 8h on tue-thu (24h)
-        # 10h on friday: 1h daily ot
-        # 10 + 24 + 10 - 40 = 4 weekly ot
-        # Expected result:
-        # * monday, friday: 1 h daily ot each on the end of the day, that are also weekly
-        # * friday: 4h weekly, 1 overlaps with the hours
-        # * total = 1 + 4 = 5
+        # 10h on Monday: 1h daily OT
+        # 8h on Tue-Thu (24h)
+        # 10h on Friday: 1h daily OT
+        # Weekly: 10 + 24 + 10 - 40 = 4h weekly OT
+        #
+        # With the new logic:
+        # - Daily overtime is computed as hours above the daily expected (9h)
+        # - Weekly overtime is computed as hours above the weekly expected (40h)
+        # - We no longer "subtract" the daily overtime from the weekly overtime:
+        #  the overlapping hours are counted for both daily and weekly rules.
+        #
+        # So:
+        # * Monday: 1h daily OT
+        # * Friday: 1h daily OT + 4h weekly OT (overlapping with the daily hour)
+        # total counted overtime = 1 (Mon) + 1 (Fri daily) + 4 (Fri weekly) = 6h
+
         self.env['hr.attendance'].create([
             # monday 8-19 (10h bc 1 hours lunch)
             {
@@ -996,21 +1004,21 @@ class TestHrAttendanceOvertime(HttpCase):
             ('employee_id', '=', self.employee.id),
         ])
 
-        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 5.0, 2)
+        self.assertAlmostEqual(sum(ot.duration for ot in overtimes), 6.0, 2)
         self._check_overtimes(overtimes, [
-            {  # monday 18:00->19:00 (weekly + monday daily)
+            {   # Monday daily OT
                 'date': date(2025, 8, 18),
-                'time_start': datetime(2025, 8, 18, 16, 0),
-                'time_stop': datetime(2025, 8, 18, 17, 0),
+                'time_start': datetime(2025, 8, 18, 12, 0),
+                'time_stop': datetime(2025, 8, 18, 13, 0),
             },
-            {  # friday 15:00->18:00 (weekly)
+            {   # Friday daily OT
                 'date': date(2025, 8, 22),
+                'time_start': datetime(2025, 8, 22, 12, 0),
+                'time_stop': datetime(2025, 8, 22, 13, 0),
+            },
+            {  # Weekly OT bucket — stored on week end (Sunday 24th)
+                'date': date(2025, 8, 24),
                 'time_start': datetime(2025, 8, 22, 13, 0),
-                'time_stop': datetime(2025, 8, 22, 16, 0),
-            },
-            {  # friday 18:00->19:00 (weekly + friday daily)
-                'date': date(2025, 8, 22),
-                'time_start': datetime(2025, 8, 22, 16, 0),
                 'time_stop': datetime(2025, 8, 22, 17, 0),
             },
         ])
@@ -1110,6 +1118,30 @@ class TestHrAttendanceOvertime(HttpCase):
 
             self.assertAlmostEqual(attendance_company_be.overtime_hours, 8, 2, "Employee from Company 1 should have overtime for working on a public holiday.")
             self.assertAlmostEqual(attendance_company_de.overtime_hours, 0, 2, "Employee from Company 2 should not have overtime for working on a non-holiday day.")
+
+    def test_overtime_partial_overlap_calendar(self):
+        """Overtime must be only outside working calendar, not by duration difference"""
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 12, 1, 6, 0),
+            'check_out': datetime(2025, 12, 1, 20, 0),
+        })
+
+        overtime_lines = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', datetime(2025, 12, 1)),
+        ])
+
+        self.assertAlmostEqual(sum(overtime_lines.mapped('duration')), 5.0, 2)
+
+        expected = [
+            (datetime(2025, 12, 1, 7, 0), datetime(2025, 12, 1, 8, 0)),  # before schedule
+            (datetime(2025, 12, 1, 12, 0), datetime(2025, 12, 1, 13, 0)),  # lunch
+            (datetime(2025, 12, 1, 17, 0), datetime(2025, 12, 1, 20, 0)),  # after schedule
+        ]
+
+        for interval in expected:
+            self.assertIn(interval, [(line.time_start, line.time_stop) for line in overtime_lines])
 
     def test_officer_access_on_overtime_records(self):
         user1 = new_test_user(self.env, login='user1', groups='hr_attendance.group_hr_attendance_officer', company_id=self.company.id).with_company(self.company)

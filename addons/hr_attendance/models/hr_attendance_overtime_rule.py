@@ -3,7 +3,8 @@
 from pytz import timezone, utc
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, time
+from pytz import UTC
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields
@@ -15,6 +16,8 @@ from odoo.tools.intervals import _boundaries
 def _naive_utc(dt):
     return dt.astimezone(utc).replace(tzinfo=None)
 
+def _aware(dt):
+    return dt.replace(tzinfo=UTC) if dt.tzinfo is None else dt.astimezone(UTC)
 
 def _midnight(date):
     return datetime.combine(date, datetime.min.time())
@@ -30,7 +33,7 @@ def _record_overlap_intervals(intervals):
     interval_vals = []
     ids = set()
     start = None
-    for (time, flag, records) in boundaries:
+    for (boundary_time, flag, records) in boundaries:
         for record in records:
             if (
                 new_count := counts.get(record.id, 0) + {'start': 1, 'stop': -1}[flag]
@@ -41,9 +44,9 @@ def _record_overlap_intervals(intervals):
         new_ids = set(counts.keys())
         if ids != new_ids:
             if ids and start is not None:
-                interval_vals.append((start, time, records.browse(ids)))
+                interval_vals.append((start, boundary_time, records.browse(ids)))
             if new_ids:
-                start = time
+                start = boundary_time
         ids = new_ids
     return Intervals(interval_vals, keep_distinct=True)
 
@@ -295,7 +298,7 @@ class HrAttendanceOvertimeRule(models.Model):
             new_intervals = rule._get1_timing_overtime_intervals(attendances, version_map)
             all_timing_overtime_intervals |= new_intervals
             for start, end, attendance in new_intervals:
-                timing_intervals_by_date[attendance.date].append((start, end, rule))
+                timing_intervals_by_date[attendance.date].append((_aware(start), _aware(end), rule))
             # timing_intervals_list.append(
             #     Intervals((start, end, (rule, attendance.date)) for (start, end, attendance) in intervals)
             # )
@@ -314,12 +317,12 @@ class HrAttendanceOvertimeRule(models.Model):
             for period, key_date in self._get_period_keys(attendance.date).items():
                 work_hours_by[period][key_date] += attendance.worked_hours
                 attendances_by[period][key_date].append(
-                    (attendance.check_in, attendance.check_out, attendance)
+                    (_aware(attendance.check_in), _aware(attendance.check_out), attendance)
                 )
         for start, end, attendance in all_timing_overtime_intervals:
             for period, key_date in self._get_period_keys(attendance.date).items():
                 overtime_hours_by[period][key_date] += _time_delta_hours(end - start)
-                overtimes_by[period][key_date].append((start, end, attendance))
+                overtimes_by[period][key_date].append((_aware(start), _aware(end), attendance))
 
         # list -> Intervals
         for period in periods:
@@ -338,7 +341,6 @@ class HrAttendanceOvertimeRule(models.Model):
                     for date, atts in attendances_by[period].items()
                 }
             )
-
         quantity_intervals_by_date = defaultdict(list)
         for rule in self.filtered(lambda r: r.base_off == 'quantity').sorted(
             lambda r: {p: i for i, p in enumerate(periods)}[r.quantity_period]
@@ -361,11 +363,6 @@ class HrAttendanceOvertimeRule(models.Model):
                     ):
                         quantity_intervals_by_date[attendance.date].append((start, end, rule))
                 else:
-                    new_intervals = _last_hours_as_intervals(
-                        starting_intervals=attendances_by[period][date],
-                        hours=overtime_quantity - overtime_hours_by[period][date],
-                    )
-
                     # Uncommenting this changes the logic of how rules for different periods will interact.
                     # Would make it so weekly overtimes try to overlap daily overtimes as much as possible
                     # for outer_period, key_date in self._get_period_keys(date).items():
@@ -376,10 +373,29 @@ class HrAttendanceOvertimeRule(models.Model):
                     #         for (start, end, _) in new_intervals
                     #     )
 
-                    for start, end, attendance in (
-                        new_intervals | overtimes_by[period][date]
-                    ):
-                        date = attendance[0].date
+                    # overtime = attendance outside working calendar
+                    version = version_map[employee][date]
+                    calendar = version.resource_calendar_id
+
+                    if calendar:
+                        # Get working schedule segments
+                        working = calendar._work_intervals_batch(
+                            datetime.combine(date, time.min).replace(tzinfo=UTC),
+                            datetime.combine(date, time.max).replace(tzinfo=UTC),
+                            resources=employee.resource_id,
+                        ).get(employee.resource_id.id, Intervals([]))
+                        # Overtime = Attendance - Working calendar
+                        extra = attendances_by[period][date] - working
+                    else:
+                        extra = attendances_by[period][date]
+
+                    # Only keep intervals up to the overtime_quantity left
+                    final_intervals = _last_hours_as_intervals(
+                        starting_intervals=extra,
+                        hours=overtime_quantity - overtime_hours_by[period][date],
+                    )
+
+                    for start, end, attendance in final_intervals:
                         quantity_intervals_by_date[date].append((start, end, rule))
         intervals_by_date = {}
         for date in quantity_intervals_by_date.keys() | timing_intervals_by_date.keys():
@@ -401,8 +417,8 @@ class HrAttendanceOvertimeRule(models.Model):
         for date, intervals in self._get_overtime_intervals_by_date(attendances, version_map).items():
             vals.extend([
                 {
-                    'time_start': start,
-                    'time_stop': stop,
+                    'time_start': _naive_utc(start),
+                    'time_stop': _naive_utc(stop),
                     'duration': _time_delta_hours(stop - start),
                     'employee_id': employee.id,
                     'date': date,
