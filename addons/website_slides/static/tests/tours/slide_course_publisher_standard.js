@@ -62,6 +62,11 @@ registerWebsitePreviewTour(
             {
                 trigger: "body:not(:has(.modal))",
             },
+            {
+                content: "wait for the page to be loaded",
+                trigger:
+                    ".o_website_preview :iframe [data-view-xmlid='website_slides.course_main']",
+            },
             ...clickOnEditAndWaitEditMode(),
             {
                 content: "eLearning: double click image to edit it",
