@@ -3,6 +3,7 @@ import { Thread } from "@mail/core/common/thread_model";
 import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
+import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 
 patch(Thread.prototype, {
     setup() {
@@ -47,10 +48,19 @@ patch(Thread.prototype, {
             this.channel.self_member_id &&
             !this.livechat_end_dt
         ) {
-            await this.askLeaveConfirmation(
-                _t("Leaving will end the live chat. Do you want to proceed?")
-            );
+            this.store.env.services.dialog.add(MessageConfirmDialog, {
+                message: this.newestPersistentOfAllMessage,
+                confirmText: _t("Leave Conversation"),
+                onConfirm: async () => await super.leaveChannel(...arguments),
+                prompt: _t("Here's the most recent message:"),
+                size: "xl",
+                title: _t(
+                    "Leaving will end the live chat with %(channel_name)s. Are you sure you want to continue?",
+                    { channel_name: this.displayName }
+                ),
+            });
+        } else {
+            await super.leaveChannel(...arguments);
         }
-        await super.leaveChannel(...arguments);
     },
 });

@@ -33,7 +33,7 @@ test("from the discuss app", async () => {
         name: "HR",
         user_ids: [serverState.userId],
     });
-    pyEnv["discuss.channel"].create([
+    const [channelId_1] = pyEnv["discuss.channel"].create([
         {
             channel_type: "livechat",
             channel_member_ids: [
@@ -63,6 +63,11 @@ test("from the discuss app", async () => {
             create_uid: serverState.publicUserId,
         },
     ]);
+    pyEnv["mail.message"].create({
+        body: "Last message from guest_1",
+        model: "discuss.channel",
+        res_id: channelId_1,
+    });
     await start();
     await openDiscuss();
     await contains(
@@ -85,6 +90,10 @@ test("from the discuss app", async () => {
         parent: [".o-mail-DiscussSidebarChannel", { text: "guest_1" }],
     });
     await click(".o-dropdown-item:contains('Leave Channel')");
+    await contains(
+        ".modal-header:has(:text('Leaving will end the live chat with guest_1. Are you sure you want to continue?'))"
+    );
+    await contains(".modal-body .o-mail-Message-body:has(:text('Last message from guest_1'))");
     await click("button:contains(Leave Conversation)");
     await contains(".o-mail-DiscussSidebarChannel", { text: "guest_1", count: 0 });
     await click("[title='Chat Actions']", {
