@@ -95,6 +95,19 @@ describe("search", () => {
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
     });
 
+    test("should filter heading commands with term 'title'", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/");
+        await animationFrame();
+        expect(commandNames(el).length).toBe(25);
+        await insertText(editor, "title");
+        await animationFrame();
+        const commands = commandNames(el);
+        expect(["Heading 1", "Heading 2", "Heading 3"].every((h) => commands.includes(h))).toBe(
+            true
+        );
+    });
+
     test("should hide categories when you have a search term", async () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");

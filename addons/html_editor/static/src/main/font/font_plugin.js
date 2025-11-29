@@ -224,14 +224,17 @@ export class FontPlugin extends Plugin {
             {
                 categoryId: "format",
                 commandId: "setTagHeading1",
+                keywords: [_t("title")],
             },
             {
                 categoryId: "format",
                 commandId: "setTagHeading2",
+                keywords: [_t("title")],
             },
             {
                 categoryId: "format",
                 commandId: "setTagHeading3",
+                keywords: [_t("title")],
             },
             {
                 categoryId: "format",
