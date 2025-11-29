@@ -116,7 +116,7 @@
                             t-out="propertyValue and propertyValue.display_name || ''" />
                     </t>
                     <t t-else="">
-                        <Many2One t-key="props.id + '_' + props.comodel + '_' + props.string" cssClass="'w-100'" id="this.props.id" value="this.propertyValue" relation="this.props.comodel" update.bind="this.onValueChange" string="this.props.string" context="this.props.context" domain="() => this.propertyDomain" canCreate="true" canCreateEdit="true" canWrite="true" canOpen="!this.props.readonly and this.hasAccess" openRecordAction.bind="this.onExternalLinkClick"/>
+                        <Many2One t-key="props.id + '_' + props.comodel + '_' + props.string" cssClass="'w-100'" id="this.props.id" value="this.propertyValue" relation="this.props.comodel" update.bind="(val) => this.onValueChange([val])" string="this.props.string" context="this.props.context" domain="() => this.propertyDomain" canCreate="true" canCreateEdit="true" canWrite="true" canOpen="!this.props.readonly and this.hasAccess" openRecordAction.bind="this.onExternalLinkClick"/>
                     </t>
                 </t>
             </div>
