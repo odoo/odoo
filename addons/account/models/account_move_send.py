@@ -1,8 +1,13 @@
 from collections import defaultdict
+from functools import wraps
 from markupsafe import Markup
+
+import logging
 
 from odoo import _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -764,6 +769,40 @@ class AccountMoveSend(models.AbstractModel):
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
             for sending_method in custom_settings.get('sending_methods', [])
         ) if 'sending_methods' in custom_settings else True
+
+    # As we are often sending invoices to the government, we want to make sure that
+    # the record is correctly stored in the db before sending it
+    def after_commit(func):
+        @wraps(func)
+        def wrapped(self, moves, *args, **kwargs):
+            if self.env['account.move']._can_commit():
+                @self.env.cr.postcommit.add
+                def called_after():
+                    try:
+                        with self.env.registry.cursor() as cr:
+                            self_env = self.env(cr=cr)
+                            moves_env = moves.env(cr=cr)
+                            func(self.with_env(self_env), moves.with_env(moves_env), *args, **kwargs)
+                            cr.commit()
+                    except Exception:
+                        _logger.warning("Could not sync record now: %s, moves: %s", self, moves)
+                        _logger.exception('Error in post_commit for invoice sending. ')
+            else:
+                func(self, moves, *args, **kwargs)
+        return wrapped
+
+    @api.model
+    @after_commit
+    def _generate_and_send_invoices_post_commit(
+        self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings
+    ):
+        self._generate_and_send_invoices(
+            moves,
+            from_cron=from_cron,
+            allow_raising=allow_raising,
+            allow_fallback_pdf=allow_fallback_pdf,
+            **custom_settings
+        )
 
     @api.model
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
