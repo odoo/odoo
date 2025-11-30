@@ -479,12 +479,13 @@ class MrpWorkorder(models.Model):
     def write(self, values):
         new_workcenter = False
         if 'qty_produced' in values:
-            if any(w.state in ['done', 'cancel'] for w in self):
-                raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
-            elif self.product_uom_id.compare(values['qty_produced'], 0) < 0:
-                raise UserError(_('The quantity produced must be positive.'))
-            elif values['qty_produced'] not in (0, 1) and any(wo.product_tracking == 'serial' for wo in self):
-                raise UserError(_('You cannot produce more than 1 unit of a serial product at a time.'))
+            for wo in self:
+                if wo.state in ['done', 'cancel']:
+                    raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
+                elif wo.product_uom_id.compare(values['qty_produced'], 0) < 0:
+                    raise UserError(_('The quantity produced must be positive.'))
+                elif values['qty_produced'] not in (0, 1) and wo.product_tracking == 'serial':
+                    raise UserError(_('You cannot produce more than 1 unit of a serial product at a time.'))
 
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
@@ -525,10 +526,13 @@ class MrpWorkorder(models.Model):
                         })
 
         res = super().write(values)
-        if 'qty_produced' in values and self.production_id.product_uom_id.compare(values.get('qty_produced', 0), 0) > 0:
-            for production in self.production_id:
+        productions = self.production_id.filtered(
+            lambda p: p.product_uom_id.compare(values.get('qty_produced', 0), 0) > 0
+        )
+        if 'qty_produced' in values and productions:
+            for production in productions:
                 min_wo_qty = min(production.workorder_ids.mapped('qty_produced'))
-                if self.production_id.product_uom_id.compare(min_wo_qty, 0) > 0:
+                if production.product_uom_id.compare(min_wo_qty, 0) > 0:
                     production.workorder_ids.filtered(lambda w: w.state != 'done').qty_producing = min_wo_qty
             self._set_qty_producing()
 
