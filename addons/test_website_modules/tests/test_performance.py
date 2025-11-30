@@ -299,7 +299,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         queries = {
             'orm_signaling_registry': 1,
             'website': 1,
-            'res_company': 2,
+            'res_company': 1,
             'product_pricelist': 4,
             'product_template': 5,
             'product_tag': 1,
