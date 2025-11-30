@@ -5422,6 +5422,37 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
+    def test_mark_done_multi_mo_with_different_uom(self):
+        """Test marking multiple productions as done with different product UoMs."""
+        mo1, mo2 = self.env['mrp.production'].create([
+            {'product_id': self.product_1.id},
+            {'product_id': self.product_3.id},
+        ])
+        wo1, wo2 = self.env['mrp.workorder'].create([
+            {
+                'name': 'Test order1',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_1.uom_id.id,
+                'production_id': mo1.id,
+            },
+            {
+                'name': 'Test order2',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_3.uom_id.id,
+                'production_id': mo2.id,
+            }
+        ])
+
+        mos = mo1 | mo2
+        mos.action_confirm()
+        mos.button_mark_done()
+
+        self.assertEqual(mo1.state, 'done')
+        self.assertEqual(mo2.state, 'done')
+        self.assertNotEqual(mo1.workorder_ids.product_uom_id, mo2.workorder_ids.product_uom_id)
+        self.assertEqual(mo1.product_qty, mo2.product_qty)
+        self.assertEqual(wo1.qty_produced, wo2.qty_produced)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
