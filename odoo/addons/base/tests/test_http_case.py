@@ -225,9 +225,10 @@ class TestRequestRemainingAfterFirstCheck(TestRequestRemainingCommon):
             s.get(self.base_url() + "/web/concurrent", timeout=10)
 
         type(self).thread_a = threading.Thread(target=late_request_thread)
+        main_lock = self.main_lock
         self.thread_a.start()
         # we need to ensure that the first check is made and that we are aquiring the lock
-        self.main_lock.acquire()
+        main_lock.acquire()
 
     def assertCanOpenTestCursor(self):
         super().assertCanOpenTestCursor()
