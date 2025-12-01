@@ -644,8 +644,13 @@ test("Other messages are grayed out when replying to another one", async () => {
     await click(".o-mail-Message [title='Reply']", {
         parent: [".o-mail-Message", { text: "Hello world" }],
     });
-    await contains(".o-mail-Message.opacity-50", { text: "Goodbye world" });
-    await contains(".o-mail-Message:not(.opacity_50)", { text: "Hello world" });
+    await contains(".o-mail-Message.o-selected:has(:text('Hello world'))");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message:has(:text('Goodbye world'))")).opacity
+    ).toBe("0.5");
+    expect(getComputedStyle(queryFirst(".o-mail-Message:has(:text('Hello world))")).opacity).toBe(
+        "1"
+    );
 });
 
 test("Parent message body is displayed on replies", async () => {
