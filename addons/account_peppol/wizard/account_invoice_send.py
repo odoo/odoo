@@ -127,7 +127,7 @@ class AccountInvoiceSend(models.TransientModel):
                 invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                 continue
 
-            attachment = invoice._get_peppol_document().attachment_id
+            attachment = invoice._get_peppol_document().sudo().attachment_id
             if not attachment:
                 invoice.peppol_move_state = 'error'
                 invoice_data['error'] = _('Please check that a Peppol document has been generated.')
