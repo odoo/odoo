@@ -12,6 +12,7 @@ import {
     click,
     fill,
     freezeTime,
+    press,
     queryFirst,
 } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
@@ -784,6 +785,147 @@ describe("unit & saveUnit", () => {
         await fill("7");
         expect.verifySteps(["customAction 57000ms"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("57000ms");
+    });
+    test("should hide unit when has placeholder and value is empty or not a number", async () => {
+        addBuilderAction({
+            customActionText: class extends BuilderAction {
+                static id = "customActionText";
+                getValue({ editingElement }) {
+                    return editingElement.textContent == "empty" ? "" : editingElement.textContent;
+                }
+                apply({ editingElement, value, isPreviewing }) {
+                    if (!value || value === "") {
+                        value = "empty";
+                    }
+                    if (!isPreviewing) {
+                        expect.step(`customAction ${value}`);
+                    }
+                    editingElement.textContent = value;
+                }
+            },
+            customActionButton: class extends BuilderAction {
+                static id = "customActionButton";
+                getValue({ editingElement }) {
+                    return editingElement.textContent == "empty";
+                }
+                apply({ editingElement }) {
+                    editingElement.textContent = "empty";
+                }
+            },
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderNumberInput action="'customActionText'" unit="'px'" placeholder="'placeholder'" default="null"/>`;
+            }
+        );
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderButton action="'customActionButton'">Empty</BuilderButton>`;
+            }
+        );
+        await setupHTMLBuilder(`
+                    <div class="test-options-target">5px</div>
+                `);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+        ).toBeDisplayed();
+
+        // Clear the input. Placeholder is appearing, units are hidden (already during preview)
+        await click(".options-container input");
+        await clear();
+        await animationFrame();
+        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+
+        // Press enter. Action apply is called, units remain hidden
+        await press("Enter");
+        await animationFrame();
+        expect.verifySteps(["customAction empty"]);
+        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+
+        // Enter "0". Since it is a number, units are displayed (already during preview)
+        await press("0");
+        await animationFrame();
+        expect(
+            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+        ).toBeDisplayed();
+
+        // Append "x". Since "0x" is not a number, units are hidden (already during preview)
+        await press("x");
+        await animationFrame();
+        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+
+        // Enter again a valid number, units are displayed (already during preview)
+        await clear();
+        await fill("3");
+        await animationFrame();
+        expect(
+            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+        ).toBeDisplayed();
+
+        // Press enter. Action apply is called, units remain visible
+        await press("Enter");
+        await animationFrame();
+        expect.verifySteps(["customAction 3px"]);
+        expect(
+            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+        ).toBeDisplayed();
+
+        // Click the button, which replaces the value with empty string. Units are hidden
+        await click(".options-container button[data-action-id='customActionButton']");
+        await animationFrame();
+        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+    });
+    test("should never hide unit when has no placeholder", async () => {
+        addBuilderAction({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.textContent;
+                }
+                apply({ editingElement, value, isPreviewing }) {
+                    if (!isPreviewing) {
+                        expect.step(`customAction ${value}`);
+                    }
+                    editingElement.textContent = value;
+                }
+            },
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderNumberInput action="'customAction'" unit="'px'"/>`;
+            }
+        );
+        await setupHTMLBuilder(`
+                    <div class="test-options-target">5px</div>
+                `);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+        ).toBeDisplayed();
+
+        await click(".options-container input");
+        await clear();
+        await press("Enter");
+        await animationFrame();
+        expect.verifySteps(["customAction 0px"]);
+        expect(
+            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+        ).toBeDisplayed();
+
+        await click(".options-container input");
+        await fill("3");
+        await press("Enter");
+        await animationFrame();
+        expect.verifySteps(["customAction 3px"]);
+        expect(
+            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+        ).toBeDisplayed();
     });
 });
 describe("sanitized values", () => {

@@ -12,8 +12,10 @@
             commit="commit"
             preview="preview"
             onKeydown.bind="onKeydown"
+            onInput.bind="onInput"
+            onChange.bind="onChange"
             >
-            <span class="o-hb-input-field-unit" t-out="props.unit"/>
+            <span class="o-hb-input-field-unit" t-out="props.unit" t-if="!props.placeholder or state.showUnit"/>
         </BuilderTextInputBase>
     </BuilderComponent>
 </t>

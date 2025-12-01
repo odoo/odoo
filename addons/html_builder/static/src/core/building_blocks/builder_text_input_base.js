@@ -25,6 +25,8 @@ export class BuilderTextInputBase extends Component {
         commit: { type: Function },
         preview: { type: Function },
         onFocus: { type: Function, optional: true },
+        onInput: { type: Function, optional: true },
+        onChange: { type: Function, optional: true },
         onKeydown: { type: Function, optional: true },
         value: { type: [String, { value: null }], optional: true },
     };
@@ -45,11 +47,13 @@ export class BuilderTextInputBase extends Component {
         this.isEditing = false;
         const normalizedDisplayValue = this.props.commit(ev.target.value);
         ev.target.value = normalizedDisplayValue;
+        this.props.onChange?.(ev);
     }
 
     onInput(ev) {
         this.isEditing = true;
         this.props.preview(ev.target.value);
+        this.props.onInput?.(ev);
     }
 
     onFocus(ev) {
