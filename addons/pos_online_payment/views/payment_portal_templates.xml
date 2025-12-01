@@ -3,13 +3,15 @@
 
     <!-- Display of /pos/pay (the order of the if conditions matters)-->
     <template id="pay">
-        <t t-call="portal.frontend_layout">
-            <t t-set="page_title">Payment</t>
-            <t t-set="additional_title">
-                <t t-out="page_title" />
-            </t>
-            <t t-set="no_footer" t-value="1"/>
-            <t t-set="no_header" t-value="1"/>
+        <t t-set="page_title">Payment</t>
+        <t t-set="additional_title">
+            <t t-out="page_title" />
+        </t>
+        <t t-call="portal.frontend_layout"
+            page_title="page_title"
+            additional_title="additional_title"
+            no_footer="1"
+            no_header="1">
 
             <div class="wrap">
                 <div class="d-flex flex-column vh-100">
@@ -53,13 +55,15 @@
 
     <!-- Display of /pos/pay/confirmation -->
     <template id="pay_confirmation">
-        <t t-call="portal.frontend_layout">
-            <t t-set="page_title">Payment Confirmation</t>
-            <t t-set="additional_title">
-                <t t-out="page_title" />
-            </t>
-            <t t-set="no_footer" t-value="1"/>
-            <t t-set="no_header" t-value="1"/>
+        <t t-set="page_title">Payment Confirmation</t>
+        <t t-set="additional_title">
+            <t t-out="page_title" />
+        </t>
+        <t t-call="portal.frontend_layout"
+            page_title="page_title"
+            additional_title="additional_title"
+            no_footer="1"
+            no_header="1">
 
             <div class="wrap">
                 <div class="container d-flex flex-column vh-100 pb-3">

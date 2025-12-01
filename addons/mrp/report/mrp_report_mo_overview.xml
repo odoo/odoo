@@ -32,14 +32,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-call="mrp.mo_overview_line">
-                        <t t-set="line" t-value="data['summary']"/>
-                    </t>
-                    <t t-call="mrp.mo_overview_components">
-                        <t t-set="components" t-value="data['components']"/>
-                        <t t-set="operations" t-value="data['operations']"/>
-                        <t t-set="byproducts" t-value="data['byproducts']"/>
-                    </t>
+                    <t t-call="mrp.mo_overview_line" line="data['summary']"/>
+                    <t t-call="mrp.mo_overview_components"
+                        components="data['components']"
+                        operations="data['operations']"
+                        byproducts="data['byproducts']"/>
                 </tbody>
                 <t t-if="data['show_mo_costs'] or data['show_real_costs']">
                     <tr name="unit_cost" class="border-top border-dark">
@@ -184,30 +181,23 @@
 
     <template id="mo_overview_components">
         <t t-foreach="components" t-as="component">
-            <t t-call="mrp.mo_overview_line">
-                <t t-set="line" t-value="component['summary']"/>
-            </t>
+            <t t-call="mrp.mo_overview_line" line="component['summary']"/>
             <t t-if="component['summary']['index'] in data['unfolded_ids'] and component.get('replenishments', [])" t-foreach="component['replenishments']" t-as="replenishment">
-                <t t-call="mrp.mo_overview_line">
-                    <t t-set="line" t-value="replenishment['summary']"/>
-                </t>
+                <t t-call="mrp.mo_overview_line" line="replenishment['summary']"/>
                 <t t-if="replenishment['summary']['index'] in data['unfolded_ids'] and (replenishment.get('components', []) or replenishment.get('operations', {}).get('details', []))">
-                    <t t-call="mrp.mo_overview_components">
-                        <t t-set="components" t-value="replenishment.get('components', [])"/>
-                        <t t-set="operations" t-value="replenishment.get('operations', {})"/>
-                        <t t-set="byproducts" t-value="replenishment.get('byproducts', {})"/>
-                    </t>
+                    <t t-call="mrp.mo_overview_components"
+                        components="replenishment.get('components', [])"
+                        operations="replenishment.get('operations', {})"
+                        byproducts="replenishment.get('byproducts', {})"/>
                 </t>
             </t>
         </t>
-        <t t-call="mrp.mo_overview_operations">
-            <t t-set="summary" t-value="operations.get('summary', {})"/>
-            <t t-set="operations" t-value="operations.get('details', [])"/>
-        </t>
-        <t t-call="mrp.mo_overview_byproducts">
-            <t t-set="summary" t-value="byproducts.get('summary', {})"/>
-            <t t-set="byproducts" t-value="byproducts.get('details', [])"/>
-        </t>
+        <t t-call="mrp.mo_overview_operations"
+            summary="operations.get('summary', {})"
+            operations="operations.get('details', [])"/>
+        <t t-call="mrp.mo_overview_byproducts"
+            summary="byproducts.get('summary', {})"
+            byproducts="byproducts.get('details', [])"/>
     </template>
 
     <template id="mo_overview_operations">
@@ -239,9 +229,7 @@
             </tr>
         </t>
         <t t-if="summary['index'] in data['unfolded_ids']" t-foreach="operations" t-as="operation">
-            <t t-call="mrp.mo_overview_line">
-                <t t-set="line" t-value="operation"/>
-            </t>
+            <t t-call="mrp.mo_overview_line" line="operation"/>
         </t>
     </template>
 
@@ -271,9 +259,7 @@
             </tr>
         </t>
         <t t-if="summary['index'] in data['unfolded_ids']" t-foreach="byproducts" t-as="byproduct">
-            <t t-call="mrp.mo_overview_line">
-                <t t-set="line" t-value="byproduct"/>
-            </t>
+            <t t-call="mrp.mo_overview_line" line="byproduct"/>
         </t>
     </template>
 </odoo>

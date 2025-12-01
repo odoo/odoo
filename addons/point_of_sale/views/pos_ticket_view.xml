@@ -3,8 +3,7 @@
 
     <!-- This is the "validation" screen. Recap the ticket info, warn the user to check/set his address and eventually set localization fields if needed. -->
     <template id="ticket_validation_screen">
-        <t t-call="portal.portal_layout">
-            <t t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.portal_layout" no_breadcrumbs="True">
             <div class="row justify-content-md-center o_customer_address_fill">
                 <form method="post" target="_self" t-att-action="'/pos/ticket/validate'" onsubmit="$('button:submit').attr('disabled', 'disabled')" class="address_autoformat">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -134,8 +133,7 @@
     </template>
 
     <template id="ticket_request_with_code" name="Invoice Request">
-        <t t-call="portal.portal_layout">
-            <t t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.portal_layout" no_breadcrumbs="True">
             <div class="row justify-content-md-center">
                 <form method="post" target="_self" t-att-action="'/pos/ticket'">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>

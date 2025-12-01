@@ -68,13 +68,9 @@
                             />
                         </div>
                         <div class="modal-body">
-                            <t t-call="payment_demo.express_inline_form">
-                                <t t-set="provider_id" t-value="provider_sudo.id"/>
-                            </t>
+                            <t t-call="payment_demo.express_inline_form" provider_id="provider_sudo.id"/>
                             <div class="float-end mt-2" t-att-data-provider-id="provider_sudo.id">
-                                <t t-call="payment.submit_button">
-                                    <t t-set="submit_button_label">Pay</t>
-                                </t>
+                                <t t-call="payment.submit_button" submit_button_label.translate="Pay"/>
                             </div>
                         </div>
                     </div>

@@ -4,9 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md o_mail_footer_social col" style="text-align: center;">
-                    <t t-call="mass_mailing.social_links">
-                        <t t-set="optionalTextStyle" t-value="'color: white;'"/>
-                    </t>
+                    <t t-call="mass_mailing.social_links" optionalTextStyle.f="color: white;"/>
                 </div>
             </div>
             <div class="row">

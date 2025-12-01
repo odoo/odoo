@@ -18,7 +18,7 @@
                 <!-- Temporary code: only used to maintain CSS for legacy HTML reports (full width...) -->
                 <!-- Should be removed once the reports are fully converted. -->
                 <script type="text/javascript">
-                    document.addEventListener('DOMContentLoaded', () => {
+                    document.addEventListener('DOMContentLoaded', () =&gt; {
                         if (window.self !== window.top) {
                             document.body.classList.add("o_in_iframe", "container-fluid");
                             document.body.classList.remove("container");
@@ -106,27 +106,29 @@
 
     <template id="report_invoice_wizard_preview">
         <t t-call="web.html_preview_container">
-           <t t-call="web.external_layout">
-                   <t t-set="address">
-                       <address class="mb-0" itemscope="itemscope"
-                                itemtype="http://schema.org/Organization">
-                           <div>
-                               <span itemprop="name">Deco Addict</span>
-                           </div>
-                           <div itemprop="address" itemscope="itemscope"
-                                itemtype="http://schema.org/PostalAddress">
-                               <div class="d-flex align-items-baseline">
-                                   <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
-                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
-                               </div>
-                           </div>
-                       </address>
-                   </t>
+           <t t-set="address">
+               <address class="mb-0" itemscope="itemscope"
+                        itemtype="http://schema.org/Organization">
+                   <div>
+                       <span itemprop="name">Deco Addict</span>
+                   </div>
+                   <div itemprop="address" itemscope="itemscope"
+                        itemtype="http://schema.org/PostalAddress">
+                       <div class="d-flex align-items-baseline">
+                           <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
+                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
+                       </div>
+                   </div>
+               </address>
+           </t>
+           <t t-set="layout_document_title">
+               <span>Invoice</span>
+               <span>INV/2023/00003</span>
+           </t>
+           <t t-call="web.external_layout"
+               address="address"
+               layout_document_title="layout_document_title">
                    <div class="page">
-                       <t t-set="layout_document_title">
-                           <span>Invoice</span>
-                           <span>INV/2023/00003</span>
-                       </t>
                        <div id="informations" class="row mb-4">
                            <div class="col" name="invoice_date">
                                <strong>Invoice Date</strong>
@@ -539,14 +541,14 @@
 
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
             <div class="o_folder_header_container position-absolute start-0 top-0 z-n1 w-100">
-                <svg width="100%" t-att-height="header_shape_height" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" t-att-height="header_shape_height" fill="none" preserveAspectRatio="none">
                     <rect width="100%" t-att-height="header_shape_height"/>
                 </svg>
                 <div class="o_folder_adaptative_shape d-flex flex-start position-relative">
-                    <svg class="d-block flex-grow-1" fill="none" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="d-block flex-grow-1" fill="none" height="100%">
                         <rect width="100%" height="100%"/>
                     </svg>
-                    <svg class="o_folder_angle_shape" width="80" height="100%" viewBox="0 0 80 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="o_folder_angle_shape" width="80" height="100%" viewBox="0 0 80 48" fill="none">
                         <path d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
                     </svg>
                     <h2 t-attf-class="{{layout_document_title and 'o_folder_title mt-2 text-nowrap' or 'w-25'}}">
@@ -619,7 +621,7 @@
         <!-- HEADER -->
         <t t-set="header_shape_height" t-value="'230'"/>
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} start-0 top-0 w-100 z-n1" preserveAspectRatio="none" t-att-height="header_shape_height" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} start-0 top-0 w-100 z-n1" preserveAspectRatio="none" t-att-height="header_shape_height" viewBox="0 0 1000 240" fill="none">
                 <path d="M1000 230.734C937.384 240.621 803.83 250.266 562.185 220.602C311.343 189.809 104.626 201.375 0 211.598V0.5H1000V230.734Z" t-att-fill="company.primary_color" fill-opacity=".1"/>
             </svg>
 
@@ -672,7 +674,7 @@
 
         <!-- Footer -->
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0' or 'position-absolute'}} w-100" preserveAspectRatio="none" t-attf-height="{{report_type == 'pdf' and '180' or '100%'}}" viewBox="0 0 1000 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0' or 'position-absolute'}} w-100" preserveAspectRatio="none" t-attf-height="{{report_type == 'pdf' and '180' or '100%'}}" viewBox="0 0 1000 180" fill="none">
                 <path d="M427.731 19.757C686.904 51.3469 898.971 38.039 1000 27.6922V180H0V8.20934C66.363 -0.991089 198.347 -8.20218 427.731 19.757Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
             </svg>
             <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'mx-5'}} pt-5 text-center">
@@ -686,7 +688,7 @@
     <template id="external_layout_bubble">
         <!-- HEADER -->
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
-            <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100">
                <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
             </svg>
             <table class="o_ignore_layout_styling table table-borderless mb-0">
@@ -761,7 +763,7 @@
 
         <!-- Footer -->
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0'}}" width="500" height="228" viewBox="0 0 500 228" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0'}}" width="500" height="228" viewBox="0 0 500 228" fill="none">
                 <path d="M500 228H0V6.52743C26.3323 2.23278 53.3561 0 80.9008 0C256.522 0 410.969 90.7656 500 228Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
             </svg>
             <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
@@ -846,8 +848,7 @@
     <!-- Demo reports definition -->
     <template id="preview_internalreport">
         <t t-set="company" t-value="env.company"/>
-        <t t-call="web.html_container">
-            <t t-set="o" t-value="res_company"/>
+        <t t-call="web.html_container" o="res_company">
             <t t-call="web.internal_layout">
                 <div class="page">
                     <p>This is a sample of an internal report.</p>
@@ -857,8 +858,7 @@
     </template>
     <template id="preview_externalreport">
         <t t-set="company" t-value="env.company"/>
-        <t t-call="web.html_container">
-            <t t-set="o" t-value="res_company"/>
+        <t t-call="web.html_container" o="res_company">
             <t t-call="web.external_layout">
                 <div class="page">
                     <p>This is a sample of an external report.</p>
@@ -869,8 +869,7 @@
 
     <template id="preview_layout_report">
         <t t-set="company" t-value="env.company"/>
-        <t t-call="web.html_container">
-            <t t-set="o" t-value="res_company"/>
+        <t t-call="web.html_container" o="res_company">
             <t t-call="web.report_invoice_wizard_preview"/>
         </t>
     </template>
@@ -884,7 +883,7 @@
             <t t-set="layout" t-value="company.external_report_layout_id.key or 'web.external_layout_standard'" />
                 // Simplified color-contrast function to replicate bootstrap in report preview.
                 @function preview-color-contrast($background) {
-                    @if (lightness($background) > 50) {
+                    @if (lightness($background) &gt; 50) {
                         @return black;
                     } @else {
                         @return white;

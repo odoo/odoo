@@ -113,52 +113,46 @@
                             <p style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
                         </div>
                         <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
-                            <h3>✽&#160;&#160;Pizzas</h3>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item">
-                                <t t-set="name">Margherita</t>
-                                <t t-set="mobileSize" t-value="4"/>
-                                <t t-set="size" t-value="3"></t>
-                                <t t-set="price">$12.00</t>
-                                <t t-set="description">Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, drizzled with extra virgin olive oil.</t>
-                            </t>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item">
-                                <t t-set="name">Quattro Stagioni</t>
-                                <t t-set="mobileSize" t-value="6"/>
-                                <t t-set="size" t-value="4"></t>
-                                <t t-set="price">$14.50</t>
-                                <t t-set="description">A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, all on a bed of mozzarella and tomato sauce.</t>
-                            </t>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item">
-                                <t t-set="name">Diavola</t>
-                                <t t-set="mobileSize" t-value="4"/>
-                                <t t-set="size" t-value="3"></t>
-                                <t t-set="price">$13.50</t>
-                                <t t-set="description">Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick.</t>
-                            </t>
+                            <h3>✽  Pizzas</h3>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item"
+                                name.translate="Margherita"
+                                mobileSize="4"
+                                size="3"
+                                price.translate="$12.00"
+                                description.translate="Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, drizzled with extra virgin olive oil."/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item"
+                                name.translate="Quattro Stagioni"
+                                mobileSize="6"
+                                size="4"
+                                price.translate="$14.50"
+                                description.translate="A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, all on a bed of mozzarella and tomato sauce."/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item"
+                                name.translate="Diavola"
+                                mobileSize="4"
+                                size="3"
+                                price.translate="$13.50"
+                                description.translate="Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick."/>
                         </div>
                         <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
-                            <h3>✽&#160;&#160;Pastas</h3>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item">
-                                <t t-set="name">Spaghetti Carbonara</t>
-                                <t t-set="mobileSize" t-value="7"/>
-                                <t t-set="size" t-value="5"></t>
-                                <t t-set="price">$15.00</t>
-                                <t t-set="description">Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino Romano, topped with black pepper.</t>
-                            </t>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item">
-                                <t t-set="name">Penne all'Arrabbiata</t>
-                                <t t-set="mobileSize" t-value="7"/>
-                                <t t-set="size" t-value="5"></t>
-                                <t t-set="price">$13.00</t>
-                                <t t-set="description">Penne pasta tossed in a spicy tomato and garlic sauce with a hint of chili peppers, finished with fresh parsley.</t>
-                            </t>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item">
-                                <t t-set="name">Lasagna al Forno</t>
-                                <t t-set="mobileSize" t-value="6"/>
-                                <t t-set="size" t-value="5"></t>
-                                <t t-set="price">$16.00</t>
-                                <t t-set="description">Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, baked to perfection.</t>
-                            </t>
+                            <h3>✽  Pastas</h3>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item"
+                                name.translate="Spaghetti Carbonara"
+                                mobileSize="7"
+                                size="5"
+                                price.translate="$15.00"
+                                description.translate="Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino Romano, topped with black pepper."/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item"
+                                name.translate="Penne all'Arrabbiata"
+                                mobileSize="7"
+                                size="5"
+                                price.translate="$13.00"
+                                description.translate="Penne pasta tossed in a spicy tomato and garlic sauce with a hint of chili peppers, finished with fresh parsley."/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item"
+                                name.translate="Lasagna al Forno"
+                                mobileSize="6"
+                                size="5"
+                                price.translate="$16.00"
+                                description.translate="Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, baked to perfection."/>
                         </div>
                     </div>
                 </div>

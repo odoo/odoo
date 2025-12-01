@@ -3,20 +3,20 @@
     <template id="onboarding_panel">
         <t t-call="onboarding.onboarding_container">
             <t t-foreach="steps" t-as="step">
-                <t t-call="onboarding.onboarding_step">
-                    <t t-set="title" t-value="step.title"/>
-                    <t t-set="description" t-value="step.description"/>
-                    <t t-set="done_icon" t-value="step.done_icon"/>
-                    <t t-set="btn_text" t-value="step.button_text"/>
-                    <t t-set="done_text" t-value="step.done_text"/>
-                    <t t-set="image" t-value="'/web/image/onboarding.onboarding.step/'+str(step.id)+'/step_image'"/>
-                    <t t-set="alt" t-value="step.step_image_alt"/>
+                <t t-call="onboarding.onboarding_step"
+                    title="step.title"
+                    description="step.description"
+                    done_icon="step.done_icon"
+                    btn_text="step.button_text"
+                    done_text="step.done_text"
+                    image="'/web/image/onboarding.onboarding.step/'+str(step.id)+'/step_image'"
+                    alt="step.step_image_alt"
+                    method="step.panel_step_open_action_name"
+                    model.translate="onboarding.onboarding.step"
+                    state="state.get(step.id)">
                     <!-- Model/method used by JS implementation of banners for each step-->
-                    <t t-set="method" t-value="step.panel_step_open_action_name"/>
-                    <t t-set="model">onboarding.onboarding.step</t>
                     <!-- to mimic first implementation of onboarding, the 'state' queried holds
                     a rendering state for all steps. See _get_and_update_onboarding_state -->
-                    <t t-set="state" t-value="state.get(step.id)"/>
                 </t>
             </t>
         </t>
