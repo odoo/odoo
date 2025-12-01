@@ -1,14 +1,23 @@
-.o_loading_indicator {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: $zindex-modal + 1;
-  background-color: $o-brand-odoo;
-  color: white;
-  padding: 4px;
+.o_loading_indicator_wrap {
+    left: auto;
+    z-index: $zindex-modal + 1;
 
-  transition: opacity 0.4s;
-  &.o-fade-leave, &.o-fade-enter {
-    opacity: 0;
-  }
+    .spinner-border {
+        --#{$prefix}spinner-height: 1em;
+        --#{$prefix}spinner-width: 1em;
+        --#{$prefix}spinner-border-width: #{$border-width * 2};
+        --#{$prefix}spinner-animation-speed: 1.25s;
+    }
+
+    .o_loading_indicator {
+        transition: all .2s ease;
+    }
+
+    &.o_translate-leave, &.o_translate-enter {
+        .o_loading_indicator {
+            transform: scale(.95);
+            opacity: 0;
+            transition-delay: .5s;
+        }
+    }
 }
