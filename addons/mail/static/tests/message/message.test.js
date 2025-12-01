@@ -38,7 +38,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import { patch } from "@web/core/utils/patch";
 import { getOrigin, url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
@@ -2211,7 +2210,7 @@ test("Prettify message links", async () => {
 });
 
 test("Clicking message link does not open a new tab", async () => {
-    patch(window, {
+    patchWithCleanup(window, {
         open() {
             expect.step("new_window");
             super.open();
