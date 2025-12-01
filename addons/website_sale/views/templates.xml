@@ -232,7 +232,7 @@
                 >
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'h-100 w-100 position-absolute'}"
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'h-100 w-100 position-absolute object-fit-contain'}"
                         class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
 
                     <t t-set="bg_color" t-value="td_product['ribbon'].bg_color"/>
