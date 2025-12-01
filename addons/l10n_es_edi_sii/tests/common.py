@@ -3,18 +3,17 @@ import base64
 from datetime import datetime, UTC
 
 from odoo.tools import misc
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-def mocked_l10n_es_edi_call_web_service_sign(edi_format, invoices, info_list):
+def mocked_l10n_es_edi_call_web_service_sign(invoices, info_list):
     return {inv: {"success": True} for inv in invoices}
 
 
-class TestEsEdiCommon(AccountEdiTestCommon):
+class TestEsEdiCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    @AccountEdiTestCommon.setup_edi_format('l10n_es_edi_sii.edi_es_sii')
-    @AccountEdiTestCommon.setup_country('es')
+    @AccountTestInvoicingCommon.setup_country('es')
     def setUpClass(cls):
         super().setUpClass()
 
@@ -42,10 +41,6 @@ class TestEsEdiCommon(AccountEdiTestCommon):
             'l10n_es_sii_tax_agency': 'bizkaia',
         })
 
-        # To be sure it is put by default on purchase journals as well (tbai module)
-        cls.company_data['default_journal_purchase'].write({
-            'edi_format_ids': [(6, 0, cls.edi_format.ids)],
-        })
         # ==== Business ====
 
         cls.partner_a.write({
@@ -72,7 +67,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
 
     @classmethod
     def _create_invoice_es(cls, **kwargs):
-        return cls.env['account.move'].with_context(edi_test_mode=True).create({
+        return cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
             'invoice_date': '2019-01-01',
