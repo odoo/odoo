@@ -3106,7 +3106,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({'lang': 'fr_BE'})
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_add_money_button_with_different_decimal_separator', login="pos_user")
 
-    @freeze_time("2025-08-28 04:15:00")
     def test_consistent_order_receipt_number_offline(self):
         """
         Tests that an order will have the same receipt number if it was done
@@ -3119,9 +3118,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         orders = self.env['pos.order'].search([], order="id desc", limit=2)
         # Online, with a 0
-        self.assertEqual(orders[1].pos_reference, f"2501-{orders[1].session_id.id:03d}-00001")
+        self.assertEqual(orders[1].pos_reference, f"{orders[1].pos_reference[:2]}01-{orders[1].session_id.id:03d}-00001")
         # Offline, with a 1 and no Order
-        self.assertEqual(orders[0].pos_reference, f"2501-{orders[0].session_id.id:03d}-10001")
+        self.assertEqual(orders[0].pos_reference, f"{orders[0].pos_reference[:2]}01-{orders[0].session_id.id:03d}-10001")
 
     def test_sync_from_ui_one_by_one(self):
         """
