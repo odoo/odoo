@@ -17,6 +17,7 @@ export class ModelSelector extends Component {
         // we will fetch all models we have access to
         models: { type: Array, optional: true },
         nbVisibleModels: { type: Number, optional: true },
+        autofocus: { type: Boolean, optional: true },
     };
 
     setup() {
