@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, keyDown, keyUp, press } from "@odoo/hoot-dom";
 
 async function insertSeparator(editor) {
     execCommand(editor, "insertSeparator");
@@ -103,6 +103,14 @@ describe("insert separator", () => {
         });
     });
 
+    test("should split text node when inserting a separator in the middle", async () => {
+        await testEditor({
+            contentBefore: "<div>abc[]def</div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<div>abc</div><hr><div>[]def</div>",
+        });
+    });
+
     test("should set the contenteditable attribute to false on the separator when inserted as a child after normalization", async () => {
         const { el, editor } = await setupEditor("<p>[]<br></p>");
         const div = editor.document.createElement("div");
@@ -115,18 +123,18 @@ describe("insert separator", () => {
         );
     });
 
-    test("should apply custom selection on separator when selected", async () => {
+    test("should split text node and apply custom selection on separator when selected", async () => {
         const { el, editor } = await setupEditor("<p>abc</p><p>x[]yz</p>");
         await insertSeparator(editor);
-        expect(getContent(el)).toBe(
-            `<p>abc</p><p>xyz</p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
-        );
+        expect(getContent(el)).toBe(`<p>abc</p><p>x</p><hr contenteditable="false"><p>[]yz</p>`);
 
-        simulateArrowKeyPress(editor, ["Shift", "ArrowUp"]);
+        await keyDown("Shift");
+        await press("ArrowUp");
+        await keyUp("Shift");
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p>abc</p><p>]xyz</p><hr contenteditable="false" class="o_selected_hr"><p>[<br></p>`
+            `<p>abc</p><p>x]</p><hr contenteditable="false" class="o_selected_hr"><p>[yz</p>`
         );
     });
 

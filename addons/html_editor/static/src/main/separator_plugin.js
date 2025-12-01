@@ -1,20 +1,28 @@
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { closestElement, firstLeaf, selectElements } from "../utils/dom_traversal";
+import { closestElement, firstLeaf, lastLeaf, selectElements } from "../utils/dom_traversal";
 import {
     isEmptyBlock,
     isListItemElement,
     paragraphRelatedElementsSelector,
 } from "../utils/dom_info";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { removeClass } from "@html_editor/utils/dom";
+import { fillEmpty, removeClass, splitTextNode } from "@html_editor/utils/dom";
+import { DIRECTIONS, nodeSize, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { fillEmpty } from "../utils/dom";
 
 export class SeparatorPlugin extends Plugin {
     static id = "separator";
-    static dependencies = ["selection", "history", "split", "delete", "lineBreak", "baseContainer"];
+    static dependencies = [
+        "baseContainer",
+        "delete",
+        "dom",
+        "history",
+        "lineBreak",
+        "selection",
+        "split",
+    ];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -59,6 +67,9 @@ export class SeparatorPlugin extends Plugin {
         if (element && element !== this.editable) {
             const sep = this.document.createElement("hr");
             const firstLeafNode = firstLeaf(block);
+            const isSelectionAtEnd =
+                lastLeaf(block) === selection.focusNode &&
+                selection.focusOffset === nodeSize(selection.focusNode);
             /**
              * Insert the separator before the element when it’s empty
              * or when the caret is at the very start of the block.
@@ -68,12 +79,27 @@ export class SeparatorPlugin extends Plugin {
                 (selection.anchorNode === firstLeafNode && selection.anchorOffset === 0)
             ) {
                 element.before(sep);
-            } else {
+            } else if (isSelectionAtEnd) {
                 element.after(sep);
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 fillEmpty(baseContainer);
                 sep.after(baseContainer);
                 this.dependencies.selection.setCursorStart(baseContainer);
+            } else {
+                const anchorNode = selection.anchorNode;
+                const isTextNode = anchorNode.nodeType === Node.TEXT_NODE;
+                const newAnchorNode = isTextNode
+                    ? splitTextNode(anchorNode, selection.anchorOffset, DIRECTIONS.LEFT) + 1 &&
+                      anchorNode
+                    : this.dependencies.split
+                          .splitElement(anchorNode, selection.anchorOffset)
+                          .shift();
+                const [newAnchor, newOffset] = rightPos(newAnchorNode);
+                this.dependencies.selection.setSelection(
+                    { anchorNode: newAnchor, anchorOffset: newOffset },
+                    { normalize: false }
+                );
+                this.dependencies.dom.insert(sep);
             }
         }
         this.dependencies.history.addStep();
