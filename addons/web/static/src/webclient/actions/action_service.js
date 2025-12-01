@@ -1295,6 +1295,12 @@ export function makeActionManager(env, router = _router) {
         for (const handler of handlers) {
             const result = await handler(action, options, env);
             if (result) {
+                const { onClose } = options;
+                if (action.close_on_report_download) {
+                    return doAction({ type: "ir.actions.act_window_close" }, { onClose });
+                } else if (onClose) {
+                    onClose();
+                }
                 return result;
             }
         }
