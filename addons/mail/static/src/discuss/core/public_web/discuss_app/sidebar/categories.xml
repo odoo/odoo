@@ -11,7 +11,7 @@
     <t t-name="mail.DiscussSidebarCategories.category">
         <DiscussSidebarCategory category="category"/>
         <t t-if="category.is_open">
-            <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
+            <DiscussSidebarChannel t-foreach="category.threads.filter((thread) => thread.channel.isDisplayInSidebar)" t-as="thread" t-key="thread.localId" thread="thread"/>
         </t>
         <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
         <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.in(category.threads)" thread="store.discuss.thread.parent_channel_id" />
