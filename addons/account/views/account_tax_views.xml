@@ -69,6 +69,22 @@
             </field>
         </record>
 
+        <record id="account_tax_fiscal_position_view_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.tax.list</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.account_tax_view_tree"/>
+            <field name="mode">primary</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <field name="display_name" position="before">
+                    <field name="type_tax_use"/>
+                </field>
+                <field name="display_name" position="after">
+                    <field name="original_tax_ids" widget="many2many_tax_tags"/>
+                </field>
+            </field>
+        </record>
+
         <record id="view_tax_kanban" model="ir.ui.view">
             <field name="name">account.tax.kanban</field>
             <field name="model">account.tax</field>
