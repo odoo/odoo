@@ -28,4 +28,19 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="email_compose_form_mass_mailing_client">
+            <field name="name">mail.compose.message.form.mass_mailing.client</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//*[@id='simplified_composer']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                </xpath>
+                <xpath expr="//notebook" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+            </field>
+        </record>
+
 </odoo>
