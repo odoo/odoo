@@ -10,6 +10,20 @@ const discussChannelPatch = {
         this.discuss_category_id = fields.One("discuss.category", {
             inverse: "channel_ids",
         });
+        this.isDisplayInSidebar = fields.Attr(false, {
+            compute() {
+                return (
+                    this.displayToSelf ||
+                    this.isLocallyPinned ||
+                    this.sub_channel_ids.some((thread) => thread.channel?.isDisplayInSidebar)
+                );
+            },
+        });
+        this.subChannelsInSidebar = fields.Many("mail.thread", {
+            compute() {
+                return this.sub_channel_ids?.filter((thread) => thread.channel?.isDisplayInSidebar);
+            },
+        });
     },
     delete() {
         this.store.env.services.bus_service.deleteChannel(this.busChannel);

@@ -18,7 +18,7 @@ const threadPatch = {
         });
         this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
             compute() {
-                return this.displayInSidebar && this.importantCounter > 0
+                return this.channel?.isDisplayInSidebar && this.importantCounter > 0
                     ? this.discussAppCategory
                     : null;
             },
@@ -49,15 +49,6 @@ const threadPatch = {
             sort: (a, b) =>
                 compareDatetime(b.channel?.lastInterestDt, a.channel?.lastInterestDt) ||
                 b.id - a.id,
-        });
-        this.displayInSidebar = fields.Attr(false, {
-            compute() {
-                return (
-                    this.displayToSelf ||
-                    this.isLocallyPinned ||
-                    this.sub_channel_ids.some((t) => t.displayInSidebar)
-                );
-            },
         });
         this.loadSubChannelsDone = false;
         /** @type {import("models").Thread|null} */

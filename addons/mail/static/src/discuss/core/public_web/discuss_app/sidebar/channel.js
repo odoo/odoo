@@ -83,7 +83,7 @@ export class DiscussSidebarChannel extends Component {
     get bordered() {
         return (
             this.store.discuss.isSidebarCompact &&
-            Boolean(this.env.filteredThreads?.(this.thread.sub_channel_ids)?.length)
+            Boolean(this.thread.channel?.subChannelsInSidebar?.length)
         );
     }
 
@@ -112,7 +112,7 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get subChannels() {
-        return this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? [];
+        return this.thread.channel.subChannelsInSidebar;
     }
 
     showThread(sub) {
