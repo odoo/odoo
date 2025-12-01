@@ -346,22 +346,6 @@ class Company(models.Model):
         return res
 
     def write(self, values):
-        invalidation_fields = self.cache_invalidation_fields()
-        asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
-
-        companies_needs_l10n = (
-            values.get('country_id')
-            and self.filtered(lambda company: not company.country_id)
-            or self.browse()
-        )
-        if not invalidation_fields.isdisjoint(values):
-            self.env.registry.clear_cache()
-
-        if not asset_invalidation_fields.isdisjoint(values):
-            # this is used in the content of an asset (see asset_styles_company_report)
-            # and thus needs to invalidate the assets cache when this is changed
-            self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
-
         if 'parent_id' in values:
             raise UserError(_("The company hierarchy cannot be changed."))
 
@@ -370,7 +354,23 @@ class Company(models.Model):
             if not currency.active:
                 currency.write({'active': True})
 
-        res = super(Company, self).write(values)
+        companies_needs_l10n = (
+            values.get('country_id')
+            and self.filtered(lambda company: not company.country_id)
+            or self.browse()
+        )
+
+        res = super().write(values)
+        invalidation_fields = self.cache_invalidation_fields()
+        asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
+
+        if not invalidation_fields.isdisjoint(values):
+            self.env.registry.clear_cache()
+
+        if not asset_invalidation_fields.isdisjoint(values):
+            # this is used in the content of an asset (see asset_styles_company_report)
+            # and thus needs to invalidate the assets cache when this is changed
+            self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
 
         # Archiving a company should also archive all of its branches
         if values.get('active') is False:
