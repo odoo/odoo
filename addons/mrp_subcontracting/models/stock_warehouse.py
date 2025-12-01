@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.fields import Command
 
 
 class StockWarehouse(models.Model):
@@ -60,6 +61,7 @@ class StockWarehouse(models.Model):
             route_id.active = False
         else:
             route_id.active = True
+            self.route_ids = [Command.link(route_id.id)]
 
     def _get_routes_values(self):
         routes = super(StockWarehouse, self)._get_routes_values()

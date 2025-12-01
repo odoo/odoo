@@ -34,7 +34,6 @@ class TestSubcontractingBasic(TransactionCase):
         wh_original.manufacture_to_resupply = False
         # Check if warehouse routes got RECREATED (instead of reused)
         route_types = [
-            "route_ids",
             "pbm_route_id",
             "subcontracting_route_id",
             "reception_route_id",
