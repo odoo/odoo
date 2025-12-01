@@ -27,6 +27,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     'auto_install': ['account'],
     'data': [
         'security/ir.model.access.csv',
+        'security/l10n_pl_security.xml',
         'data/l10n_pl.l10n_pl_tax_office.csv',
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',

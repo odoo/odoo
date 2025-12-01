@@ -16,6 +16,11 @@ class AccountMove(models.Model):
         string='B_MPV_Prowizja',
         help="Supply of agency and other services pertaining to the transfer of a single-purpose voucher",
     )
+    l10n_pl_sent_to_ksef = fields.Boolean(
+        string="Accepted by KSeF",
+        help="Whether the invoice has been sent and accepted by KSeF",
+        default=False,
+    )
 
     @api.depends('country_code')
     def _compute_show_taxable_supply_date(self):
