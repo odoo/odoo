@@ -1,12 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 from odoo.tests.common import TransactionCase
 
 
-@skip('Temporary to fast merge new valuation')
-class TestMrpAnalyticAccount(TransactionCase):
+class TestAnalyticAccount(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -32,9 +29,6 @@ class TestMrpAnalyticAccount(TransactionCase):
             'standard_price': 233.0,
         })
 
-
-@skip('Temporary to fast merge new valuation')
-class TestAnalyticAccount(TestMrpAnalyticAccount):
     def test_mandatory_analytic_plan_bom(self):
         """
         Tests that the distribution validation is correctly evaluated

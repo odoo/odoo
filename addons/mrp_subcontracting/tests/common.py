@@ -1,20 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form, TransactionCase
 
-class TestMrpSubcontractingCommon(TransactionCase):
 
+class TestMrpSubcontractingCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestMrpSubcontractingCommon, cls).setUpClass()
+        super().setUpClass()
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         # 1: Create a subcontracting partner
         main_partner = cls.env['res.partner'].create({'name': 'main_partner'})
         cls.subcontractor_partner1 = cls.env['res.partner'].create({
             'name': 'subcontractor_partner',
             'parent_id': main_partner.id,
-            'company_id': cls.env.ref('base.main_company').id,
         })
         # 2. Create a BOM of subcontracting type
         cls.product_category = cls.env.ref('product.product_category_goods')
@@ -58,7 +56,9 @@ class TestMrpSubcontractingCommon(TransactionCase):
             bom_line.product_qty = 1
         cls.comp2_bom = bom_form.save()
 
-        cls.warehouse = cls.env['stock.warehouse'].search([], limit=1)
+        cls.warehouse = cls.env['stock.warehouse'].search([
+            ('company_id', '=', cls.env.company.id),
+        ], limit=1)
 
     def _setup_category_stock_journals(self):
         """
