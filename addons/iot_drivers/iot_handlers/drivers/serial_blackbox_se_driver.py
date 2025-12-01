@@ -3,7 +3,6 @@
 import logging
 import serial
 
-from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.iot_handlers.drivers.serial_driver_base import SerialDriver, SerialProtocol, serial_connection
 
 _logger = logging.getLogger(__name__)
@@ -157,23 +156,20 @@ class SwedishBlackBoxDriver(SerialDriver):
         if len(response) <= 1:
             _logger.error("Error request: %s", request)
             _logger.error("Response received: %s", response)
-            self.data["status"] = ("Sent request: %s without receiving response.", request)
-            return False
+            return {"error": f"Sent request: {request} without receiving response."}
 
         if len(response) >= 4 and response[3] == "NAK":
             _logger.error("Received error: %s", ErrorCode.get(response[4]))
             _logger.error("Sent request: %s received NACK.", request)
-            self.data["status"] = ErrorCode.get(response[4])
-            return False
+            return {"error": ErrorCode.get(response[4])}
 
-        return True
+        return None
 
     def _register_receipt(self, data):
         if self.protocol_version >= 2:
-            self._register_receipt_v2(data)
+            return self._register_receipt_v2(data)
         else:
-            self._register_receipt_v1(data)
-        event_manager.device_changed(self)
+            return self._register_receipt_v1(data)
 
     def _register_receipt_v2(self, data):
         """The register receipt message registers a receipt (CCSP v2 only).
@@ -184,40 +180,39 @@ class SwedishBlackBoxDriver(SerialDriver):
         message.update(data.get("high_level_message"))
         request = "#".join(list(message.values()))
         response = self._request_action(request, self._connection)
-        if not self._check_error(request, response):
-            return
 
-        self.data["signature_control"] = response[4]
-        self.data["unit_id"] = response[5]
-        self.data["storage_status"] = StorageStatus.get(response[7])
-        self.data["status"] = "ok"
+        return self._check_error(request, response) or {
+            "signature_control": response[4],
+            "unit_id": response[5],
+            "storage_status": StorageStatus.get(response[7]),
+        }
 
     def _register_receipt_v1(self, data):
         """CCSP v1 requires three commands to register a receipt:
            ST (start receipt), RH (receipt header), SQ (signature request)"""
 
         response = self._request_action("ST", self._connection)
-        if not self._check_error("ST", response):
-            return
+        error = self._check_error("ST", response)
+        if error:
+            return error
 
         message_fields = list(data.get("high_level_message").values())
         request_fields = ["RH", *message_fields[0:2], " ", " ", *message_fields[2:]]
         request = "#".join(request_fields)
         response = self._request_action(request, self._connection)
-        if not self._check_error(request, response):
-            return
+        error = self._check_error(request, response)
+        if error:
+            return error
 
         response = self._request_action("SQ", self._connection)
-        if not self._check_error("SQ", response):
-            return
 
-        self.data["signature_control"] = response[4]
-        self.data["unit_id"] = self.unit_id
-        self.data["status"] = "ok"
+        return self._check_error("SQ", response) or {
+            "signature_control": response[4],
+            "unit_id": self.unit_id,
+        }
 
     @classmethod
     def _request_action(cls, data, connection):
-
         packet = cls._wrap_message(data)
         return cls._send_to_blackbox(packet, connection)
 
