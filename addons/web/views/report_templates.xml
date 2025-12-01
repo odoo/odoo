@@ -305,7 +305,7 @@
     <template id="external_layout_striped">
         <div t-attf-class="o_company_#{company.id}_layout header">
             <div class="d-flex">
-                <div>
+                <div class="mw-50">
                     <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                     <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold mt-2">Company tagline</div>
                 </div>
@@ -555,7 +555,7 @@
                 </div>
             </div>
             <div class="o_folder_company_info d-flex justify-content-between">
-                <div>
+                <div class="w-50">
                     <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                     <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
                 </div>
@@ -624,7 +624,7 @@
             </svg>
 
             <div class="d-flex justify-content-between">
-                <div>
+                <div class="w-50">
                     <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                     <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
                 </div>
@@ -690,7 +690,7 @@
                <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
             </svg>
             <div class="d-flex justify-content-between">
-                <div>
+                <div class="w-50">
                     <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                     <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
                 </div>
