@@ -2738,18 +2738,41 @@ export class PosStore extends WithLazyGetterTrap {
     get productToDisplayByCateg() {
         const sortedProducts = this.productsToDisplay;
         if (!this.config.iface_group_by_categ) {
-            return sortedProducts.length ? [[0, sortedProducts]] : [];
+            return sortedProducts.length ? [["0", sortedProducts]] : [];
         } else {
             const groupedByCategory = {};
             for (const product of sortedProducts) {
-                for (const categ of product.pos_categ_ids) {
-                    if (!groupedByCategory[categ.id]) {
-                        groupedByCategory[categ.id] = [];
+                if (product.pos_categ_ids.length === 0) {
+                    if (!groupedByCategory[0]) {
+                        groupedByCategory[0] = [];
                     }
-                    groupedByCategory[categ.id].push(product);
+                    groupedByCategory[0].push(product);
+                    continue;
+                }
+                const category_ids = this.selectedCategory
+                    ? [this.selectedCategory.id]
+                    : product.pos_categ_ids.map((c) => c.id);
+                for (const categ_id of category_ids) {
+                    if (!groupedByCategory[categ_id]) {
+                        groupedByCategory[categ_id] = [];
+                    }
+                    groupedByCategory[categ_id].push(product);
                 }
             }
             const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
+                // None category goes last
+                const aNoneCategory = a === "0";
+                const bNoneCategory = b === "0";
+                if (aNoneCategory && bNoneCategory) {
+                    return 0;
+                }
+                if (aNoneCategory) {
+                    return 1;
+                }
+                if (bNoneCategory) {
+                    return -1;
+                }
+
                 const catA = this.models["pos.category"].get(a);
                 const catB = this.models["pos.category"].get(b);
 
