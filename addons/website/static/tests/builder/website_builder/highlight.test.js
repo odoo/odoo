@@ -21,6 +21,13 @@ class FakeEditInteractionPlugin extends Plugin {
     stopInteraction() {}
 }
 
+function checkHighlightColor(highlightStyle) {
+    const color = document.documentElement
+        .querySelector(`span.${highlightStyle}`)
+        .style.getPropertyValue("--text-highlight-color");
+    expect(color).toBe("var(--hb-cp-o-color-1)");
+}
+
 test("Can highlight a selected text", async () => {
     await setupEditor("<p>This is [highlighted]</p>", {
         config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] },
@@ -32,15 +39,26 @@ test("Can highlight a selected text", async () => {
     await waitFor(".o_popover .o_text_highlight_underline");
 
     expect("p>.o_text_highlight_underline").toHaveCount(0);
-    const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-1");
-    expect(".o_popover .o_text_highlight_underline").toHaveStyle({
-        "--text-highlight-color": color,
-    });
+    checkHighlightColor("o_text_highlight_underline");
+
     await click(".o_popover .o_text_highlight_underline");
     expect("p>.o_text_highlight_underline").toHaveCount(1);
-    expect("span.o_text_highlight_freehand_2").toHaveStyle({
-        "--text-highlight-color": color,
-    });
+    checkHighlightColor("o_text_highlight_freehand_2");
+});
+
+test("Check no highlight color is displayed in colorpicker when text with multiple highlight color is selected", async () => {
+    await setupEditor(
+        `<p>
+            [This is <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-color: #FFFF00;">first</span> and <span class="o_text_highlight o_text_highlight_freehand_2">second</span>]
+        </p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+
+    // Open highlight toolbar
+    await expandToolbar();
+    expect(".o-select-highlight").toHaveCount(1);
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    expect("#colorButton").toHaveAttribute("style", "background-color:");
 });
 
 test("Can set a color to a highlight", async () => {
