@@ -63,6 +63,9 @@ class MrpProduction(models.Model):
         finished_move = self.move_finished_ids.filtered(
             lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity > 0)
         if finished_move:
+            if finished_move.product_id.cost_method not in ('fifo', 'average'):
+                finished_move.price_unit = finished_move.product_id.standard_price
+                return True
             finished_move.ensure_one()
             for work_order in self.workorder_ids:
                 work_center_cost += work_order._cal_cost()
@@ -79,8 +82,7 @@ class MrpProduction(models.Model):
                 byproduct_cost_share += byproduct.cost_share
                 if byproduct.product_id.cost_method in ('fifo', 'average'):
                     byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.uom_id._compute_quantity(byproduct.quantity, byproduct.product_id.uom_id)
-            if finished_move.product_id.cost_method in ('fifo', 'average'):
-                finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / quantity
+            finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / quantity
         return True
 
     def _get_backorder_mo_vals(self):

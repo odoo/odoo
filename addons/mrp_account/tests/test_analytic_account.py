@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
+from odoo.tests import tagged
+from odoo.tests.common import TransactionCase
 
-from odoo.tests.common import tagged, TransactionCase
 
-
-@skip('Temporary to fast merge new valuation')
-class TestMrpAnalyticAccount(TransactionCase):
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestAnalyticAccount(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -32,10 +31,6 @@ class TestMrpAnalyticAccount(TransactionCase):
             'standard_price': 233.0,
         })
 
-
-@skip('Temporary to fast merge new valuation')
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestAnalyticAccount(TestMrpAnalyticAccount):
     def test_mandatory_analytic_plan_bom(self):
         """
         Tests that the distribution validation is correctly evaluated
