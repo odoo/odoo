@@ -4,6 +4,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
+import { registry } from "@web/core/registry";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -48,27 +49,16 @@ export class TableUIPlugin extends Plugin {
             },
         });
 
+        this.columnMenuOverlayKey = "table-column-menu";
+        this.rowMenuOverlayKey = "table-row-menu";
         this.activeTd = null;
 
-        /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.colMenu = this.dependencies.overlay.createOverlay(TableMenu, {
-            positionOptions: {
-                position: "top-fit",
-                flip: false,
-            },
-        });
-        /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.rowMenu = this.dependencies.overlay.createOverlay(TableMenu, {
-            positionOptions: {
-                position: "left-fit",
-            },
-        });
         this.addDomListener(this.document, "pointermove", this.onMouseMove);
         const closeMenus = () => {
             if (this.isMenuOpened) {
                 this.isMenuOpened = false;
-                this.colMenu.close();
-                this.rowMenu.close();
+                this.closeColumnMenu();
+                this.closeRowMenu();
             }
         };
         this.addDomListener(this.document, "scroll", closeMenus, true);
@@ -98,32 +88,28 @@ export class TableUIPlugin extends Plugin {
         if (this.isMenuOpened) {
             return;
         }
-        if (
-            ["TD", "TH"].includes(target.tagName) &&
-            target !== this.activeTd &&
-            this.editable.contains(target)
-        ) {
+        const targetCell = closestElement(target, "td, th");
+        if (targetCell && targetCell !== this.activeTd && this.editable.contains(targetCell)) {
             if (ev.target.isContentEditable) {
-                this.setActiveTd(target);
+                this.setActiveTd(targetCell);
             }
         } else if (this.activeTd) {
-            const isOverlay = target.closest(".o-overlay-container");
+            const isOverlay = target.closest(".o-we-table-menu");
             if (isOverlay) {
                 return;
             }
-            const parentTd = closestElement(target, "td, th");
-            if (!parentTd) {
+            if (!targetCell) {
                 this.setActiveTd(null);
             }
         }
     }
 
-    createDropdownState(menuToClose) {
+    createDropdownState(closeMenu) {
         const dropdownState = reactive({
             isOpen: false,
             open: () => {
                 dropdownState.isOpen = true;
-                menuToClose.close();
+                closeMenu();
                 this.isMenuOpened = true;
             },
             close: () => {
@@ -134,10 +120,18 @@ export class TableUIPlugin extends Plugin {
         return dropdownState;
     }
 
+    closeColumnMenu() {
+        registry.category(this.config.localOverlayContainers.key).remove(this.columnMenuOverlayKey);
+    }
+
+    closeRowMenu() {
+        registry.category(this.config.localOverlayContainers.key).remove(this.rowMenuOverlayKey);
+    }
+
     setActiveTd(td) {
         this.activeTd = td;
-        this.colMenu.close();
-        this.rowMenu.close();
+        this.closeColumnMenu();
+        this.closeRowMenu();
         if (!td) {
             return;
         }
@@ -161,29 +155,32 @@ export class TableUIPlugin extends Plugin {
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
         };
         if (td.cellIndex === 0) {
-            this.rowMenu.open({
-                target: td,
+            registry.category(this.config.localOverlayContainers.key).add(this.rowMenuOverlayKey, {
+                Component: TableMenu,
                 props: {
                     type: "row",
-                    overlay: this.rowMenu,
                     target: td,
-                    dropdownState: this.createDropdownState(this.colMenu),
+                    dropdownState: this.createDropdownState(this.closeColumnMenu.bind(this)),
+                    direction: this.config.direction || "ltr",
+                    close: () => this.closeRowMenu(),
                     ...tableMethods,
                 },
             });
         }
         if (td.parentElement.rowIndex === 0) {
-            this.colMenu.open({
-                target: td,
-                props: {
-                    type: "column",
-                    overlay: this.colMenu,
-                    target: td,
-                    dropdownState: this.createDropdownState(this.rowMenu),
-                    direction: this.config.direction || "ltr",
-                    ...tableMethods,
-                },
-            });
+            registry
+                .category(this.config.localOverlayContainers.key)
+                .add(this.columnMenuOverlayKey, {
+                    Component: TableMenu,
+                    props: {
+                        type: "column",
+                        target: td,
+                        dropdownState: this.createDropdownState(this.closeRowMenu.bind(this)),
+                        direction: this.config.direction || "ltr",
+                        close: () => this.closeColumnMenu(),
+                        ...tableMethods,
+                    },
+                });
         }
     }
 }
