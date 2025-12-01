@@ -1803,17 +1803,44 @@ $-product-radius-map: (
         }
     }
 
-    .o_wsale_scrollable_table {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+    .o_wsale_scrollable_table_badge {
+        --badge-bg: #{rgba($body-color, 0.85)};
+        --badge-color: #{color-contrast($body-color)};
+        --badge-border-color: #{rgba($body-color, 0.9)};
 
-        &::-webkit-scrollbar {
-            display: none;
+        transition: $transition-base;
+        opacity: 1;
+
+        &.o_wsale_scrollable_table_badge_desktop {
+            bottom: 0;
+        }
+        &.o_wsale_scrollable_table_badge_mobile {
+            top: -1.5rem;
         }
 
-        @include media-breakpoint-up(lg) {
-            overflow-y: scroll;
-            height: 15rem;
+        &.o_scrollable_table_badge_hidden {
+            opacity: 0;
+
+            &.o_wsale_scrollable_table_badge_desktop {
+                bottom: -.75rem;
+            }
+            &.o_wsale_scrollable_table_badge_mobile {
+                top: 0;
+            }
+        }
+    }
+
+    .o_wsale_scrollable_table {
+        --o-wsale-checkout-cart-product-img-width: 48px;
+
+        &.o_wsale_scrollable_table_desktop {
+            @include media-breakpoint-up(lg) {
+                overflow-y: scroll;
+
+                // Calculate the height of 4.5 <tr> through the images height.
+                // (+ spacer 3 to compensate negative margin)
+                max-height: calc(calc(#{$border-width} * 4 + (#{$table-cell-padding-y} + #{map-get($spacers, 3)} + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + #{map-get($spacers, 3)});
+            }
         }
     }
 
@@ -1913,7 +1940,7 @@ $-product-radius-map: (
 }
 
 .o_cart_product_image img {
-    max-width: 64px;
+    max-width: var(--o-wsale-checkout-cart-product-img-width, 64px);
     @extend %o-wsale-shop-thumb;
 }
 

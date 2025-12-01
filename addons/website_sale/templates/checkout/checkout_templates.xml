@@ -225,7 +225,7 @@
                                         <t t-call="website_sale.total">
                                             <t
                                                 t-set="_cart_total_classes"
-                                                t-valuef="border-top pt-2"
+                                                t-valuef="pt-2"
                                             />
                                         </t>
                                     </div>
@@ -272,10 +272,16 @@
                             tabindex="-1"
                             aria-labelledby="o_cart_summary_offcanvas"
                         >
-                            <div class="offcanvas-body">
-                                <t t-call="website_sale.cart_summary_content"/>
+                            <div class="offcanvas-body o_wsale_scrollable_table">
+                                <t t-call="website_sale.cart_summary_content" is_offcanvas="True"/>
                             </div>
-                            <div class="offcanvas-footer p-3">
+                            <div class="offcanvas-footer p-3 position-relative">
+                                <span
+                                    class="o_wsale_scrollable_table_badge o_wsale_scrollable_table_badge_mobile d-none badge position-absolute start-50 z-1 translate-middle py-2 px-3 pe-none"
+                                >
+                                    <t t-out="str(website_sale_order.cart_quantity)"/> items - Scroll for more
+                                    <i class="oi oi-arrow-down ms-1" aria-hidden="true"/>
+                                </span>
                                 <a href="/shop/cart" class="btn btn-link w-100">
                                     Coupon, Gift card, Promo-code?
                                 </a>
@@ -326,6 +332,8 @@
 
     <!-- Called in `website_sale.checkout_layout` and `website_sale.confirmation`. -->
     <template id="website_sale.cart_summary_content">
+        <t t-set="is_scrollable" t-value="len(website_sale_order.website_order_line) &gt; 4"/>
+
         <div
             t-if="not website_sale_order or not website_sale_order.website_order_line"
             name="cart_summary_info"
@@ -333,12 +341,19 @@
         >
             Your cart is empty!
         </div>
-        <div>
-            <div t-att-class="len(website_sale_order.website_order_line) &gt; 3 and 'o_wsale_scrollable_table'">
+        <div class="position-relative">
+            <div t-attf-class="border-bottom {{(is_scrollable and not is_offcanvas) and 'o_wsale_scrollable_table o_wsale_scrollable_table_desktop mx-n4 mt-n3 px-4 pt-3'}}">
                 <table
                     t-if="website_sale_order and website_sale_order.website_order_line"
                     class="o_cart_products_table table mb-0"
                 >
+                    <span
+                        t-if="is_scrollable and not is_offcanvas"
+                        class="o_wsale_scrollable_table_badge o_wsale_scrollable_table_badge_desktop badge d-none d-lg-inline py-2 px-3 position-absolute start-50 z-1 translate-middle pe-none"
+                    >
+                        <t t-out="str(website_sale_order.cart_quantity)"/> items - Scroll for more
+                        <i class="oi oi-arrow-down ms-1" aria-hidden="true"/>
+                    </span>
                     <tbody>
                         <tr
                             t-foreach="website_sale_order.website_order_line"
