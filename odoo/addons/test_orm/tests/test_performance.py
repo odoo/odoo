@@ -166,6 +166,11 @@ class TestPerformance(SavepointCaseWithUserDemo):
             #  on 'value', and none of them are in cache
             records.fetch(['indirect_computed_value'])
 
+            # fetch() has forced the computation of 'indirect_computed_value'
+            for record in records:
+                self.assertIn('value', record._cache)
+                self.assertIn('indirect_computed_value', record._cache)
+
         # Test that new/false records are ignored. We generally make the assumption that
         # new records and real record shouldn't mix together but for the sake of robustness
         # we ignore new/false records in fetch.

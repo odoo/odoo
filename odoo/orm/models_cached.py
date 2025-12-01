@@ -39,10 +39,8 @@ class CachedModel(Model):
         # each field is mapped to a tuple
         result = {'id': records._ids}
         for fname in fnames:
-            field = self._fields[fname]
-            if field.compute and not field.store:
-                records.mapped(fname)  # fill the cache for computed field
-            result[fname] = tuple(map(field._get_cache(records.env).__getitem__, records.ids))
+            field_cache = self._fields[fname]._get_cache(records.env)
+            result[fname] = tuple(map(field_cache.__getitem__, records.ids))
         return frozendict(result)
 
     def _fetch_field(self, field):
