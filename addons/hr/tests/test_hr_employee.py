@@ -135,6 +135,18 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee.work_email, self.res_users_hr_officer.email)
         self.assertEqual(employee.tz, self.res_users_hr_officer.tz)
 
+    def test_employee_computed_from_user(self):
+        self.res_users_hr_officer.name = 'Raoul Grosbedon'
+        self.res_users_hr_officer.email = 'raoul@example.com'
+        Employee = self.env['hr.employee']
+        employee_form = Form(Employee)
+        employee_form.user_id = self.res_users_hr_officer
+        self.assertEqual(employee_form.name, 'Raoul Grosbedon')
+        self.assertEqual(employee_form.work_email, 'raoul@example.com')
+        employee = employee_form.save()
+        self.assertEqual(employee.name, 'Raoul Grosbedon')
+        self.assertEqual(employee.work_email, 'raoul@example.com')
+
     def test_employee_from_manager_tz_no_reset(self):
         _tz = 'Pacific/Apia'
         self.res_users_hr_manager.tz = False
