@@ -342,59 +342,57 @@ class IrAttachment(models.Model):
         if not mimetype and values.get('url'):
             mimetype = mimetypes.guess_type(values['url'].split('?')[0])[0]
         if not mimetype or mimetype == 'application/octet-stream':
-            raw = None
-            if values.get('raw'):
-                raw = values['raw']
-            elif values.get('datas'):
-                raw = base64.b64decode(values['datas'])
-            if raw:
+            if raw := values.get('raw'):
                 mimetype = guess_mimetype(raw)
-        return mimetype and mimetype.lower() or 'application/octet-stream'
+        return mimetype.lower() if mimetype else 'application/octet-stream'
 
     def _postprocess_contents(self, values):
         ICP = self.env['ir.config_parameter'].sudo()
         supported_subtype = (ICP.get_str('base.image_autoresize_extensions') or 'png,jpeg,bmp,tiff').split(',')
 
-        mimetype = values['mimetype'] = self._compute_mimetype(values)
-        _type, _match, _subtype = mimetype.partition('/')
-        is_image_resizable = _type == 'image' and _subtype in supported_subtype
-        if is_image_resizable and (values.get('datas') or values.get('raw')):
-            is_raw = values.get('raw')
+        type_, subtype = values['mimetype'].split('/', 1)
+        if type_ != 'image' or subtype not in supported_subtype:
+            return values
+        raw = values.get('raw')
+        if not raw:
+            return values
 
-            # Can be set to 0 to skip the resize
-            max_resolution = ICP.get_str('base.image_autoresize_max_px') or '1920x1920'
-            if str2bool(max_resolution, True):
-                try:
-                    if is_raw:
-                        img = image.ImageProcess(values['raw'], verify_resolution=False)
-                    else:  # datas
-                        img = image.ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
+        # Can be set to 0 to skip the resize
+        max_resolution = ICP.get_str('base.image_autoresize_max_px') or '1920x1920'
+        if str2bool(max_resolution, True):
+            try:
+                img = image.ImageProcess(raw, verify_resolution=False)
 
-                    if not img.image:
-                        _logger.info('Post processing ignored : Empty source, SVG, or WEBP')
-                        return values
+                if not img.image:
+                    _logger.info('Post processing ignored : Empty source, SVG, or WEBP')
+                    return values
 
-                    w, h = img.image.size
-                    nw, nh = map(int, max_resolution.split('x'))
-                    if w > nw or h > nh:
-                        img = img.resize(nw, nh)
-                        if _subtype == 'jpeg':  # Do not affect PNGs color palette
-                            quality = ICP.get_int('base.image_autoresize_quality', 80)
-                        else:
-                            quality = 0
-                        image_data = img.image_quality(quality=quality)
-                        if is_raw:
-                            values['raw'] = image_data
-                        else:
-                            values['datas'] = base64.b64encode(image_data)
-                except UserError as e:
-                    # Catch error during test where we provide fake image
-                    # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
-                    msg = str(e)  # the exception can be lazy-translated, resolve it here
-                    _logger.info('Post processing ignored : %s', msg)
+                w, h = img.image.size
+                nw, nh = map(int, max_resolution.split('x'))
+                if w > nw or h > nh:
+                    img = img.resize(nw, nh)
+                    if subtype == 'jpeg':  # Do not affect PNGs color palette
+                        quality = ICP.get_int('base.image_autoresize_quality', 80)
+                        values['raw'] = img.image_quality(quality)
+                    else:
+                        values['raw'] = img.image_quality()
+            except UserError as e:
+                # Catch error during test where we provide fake image
+                # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
+                msg = str(e)  # the exception can be lazy-translated, resolve it here
+                _logger.info('Post processing ignored : %s', msg)
         return values
 
     def _check_contents(self, values):
+        if d := values.pop('datas', None):
+            warnings.warn(
+                "Passing `datas` to `_check_contents` is deprecated, decode and move it to `raw`",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+            if not values.get('raw'):
+                values['raw'] = base64.b64decode(d)
+
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
                 'xml' in mimetype and    # other xml (svg, text/xml, etc)
@@ -693,6 +691,9 @@ class IrAttachment(models.Model):
         for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
+            if d := vals.pop('datas', None):
+                if not vals.get('raw'):
+                    vals['raw'] = base64.b64decode(d)
             vals = self._check_contents(vals)
         res = super().write(vals)
         if 'url' in vals or 'type' in vals:
