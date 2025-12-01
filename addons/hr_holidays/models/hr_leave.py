@@ -1065,6 +1065,8 @@ class HrLeave(models.Model):
 
     def _remove_resource_leave(self):
         """ This method will create entry in resource calendar time off object at the time of holidays cancel/removed """
+        if self.has_access('write'):
+            return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).sudo().unlink()
         return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
 
     def _validate_leave_request(self):

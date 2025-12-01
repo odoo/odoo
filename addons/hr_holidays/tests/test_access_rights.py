@@ -5,6 +5,7 @@ import unittest
 
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -386,6 +387,32 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
     # hr_holidays.group_hr_holidays_manager
 
     # TODO Can refuse
+
+    # hr_holidays.group_hr_holidays_responsible
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_holiday_responsible_refuse_leave(self):
+        """
+            The holiday responsible should be able to accept and refuse correct type leaves of users they are responsible for
+        """
+        respo_user = self.user_responsible
+        self.employee_emp.leave_manager_id = respo_user
+
+        for validatation_type in ['manager', 'both']:
+            self.leave_type.write({'leave_validation_type': validatation_type})
+            values = {
+                'name': 'Random Time Off',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'state': 'confirm',
+            }
+            leave = self.request_leave(self.user_employee, date.today(), 1, values)
+            leave.with_user(respo_user).action_refuse()
+            # Check that refusing after first approval also works
+            leave = self.request_leave(self.user_employee, date.today(), 1, values)
+            leave.with_user(respo_user).action_approve()
+            leave.with_user(respo_user).action_refuse()
 
     # ----------------------------------------
     # State = Cancel
