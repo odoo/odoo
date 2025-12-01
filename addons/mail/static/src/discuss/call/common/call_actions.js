@@ -75,7 +75,7 @@ registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
     condition: ({ owner, store, channel }) =>
         channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
-    name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
+    name: ({ store }) => store.rtc.selfSession?.muteSoundLabel,
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
     icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "fa fa-headphones"),
