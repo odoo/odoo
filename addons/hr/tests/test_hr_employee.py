@@ -669,6 +669,7 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(partner.email, second_employee.work_email)
         self.assertNotEqual(partner.email, first_employee.work_email)
 
+    @freeze_time('2025-12-01 09-00-00')
     def test_presence_state_groupby(self):
         present_user_a, present_user_b, absent_user = self.env['res.users'].create([
             {
