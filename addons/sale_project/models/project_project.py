@@ -258,6 +258,25 @@ class ProjectProject(models.Model):
             })
         return action_window
 
+    def action_view_upsells(self):
+        self.ensure_one()
+
+        action = self.env.ref('sale.action_upsells').read()[0]
+
+        action['domain'] = [
+            ('project_id', '=', self.id),
+            ('display_type', '=', False),
+            ('is_from_upsells', '=', True),
+        ]
+
+        action['context'] = {
+            **self.env.context,
+            'from_upsells': True,
+            'default_project_id': self.id,
+        }
+
+        return action
+
     def action_get_list_view(self):
         action = super().action_get_list_view()
         if self.allow_billable:

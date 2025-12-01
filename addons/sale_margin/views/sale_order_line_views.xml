@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_order_line_upsells_list_inherit" model="ir.ui.view">
+        <field name="name">sale.order.line.upsells.list.inherit</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_sale_order_line_upsells_list"/>
+        <field name="arch" type="xml">
+            <field name="create_date" position="after">
+                <field name="margin" string="Margin" optional="hide"/>
+                <field name="margin_percent" string="Margin %" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

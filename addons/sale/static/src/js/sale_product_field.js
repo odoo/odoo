@@ -53,6 +53,9 @@ async function applyProduct(record, product) {
         update_values.product_uom_id = product.uom;
     }
     await record._update(update_values);
+    if (!record._parentRecord) {
+        await record._save();
+    }
 }
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
@@ -232,9 +235,25 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     }
 
     async _openProductConfigurator(edit = false, selectedComboItems = []) {
-        const saleOrderRecord = this.props.record.model.root;
+        const parentRecord = this.props.record._parentRecord;
+        const hasParentRecord = !!parentRecord;
+        const listModel = this.props.record.model.root;
+
         const saleOrderLine = this.props.record.data;
         const ptavIds = this._getVariantPtavIds(saleOrderLine);
+
+        // prevent opening configurator if order is not set
+        if (!hasParentRecord && !saleOrderLine.order_id) {
+            this.notification.add(
+                _t("Please select a Sales Order before choosing a product."),
+                { type: "warning" }
+            );
+            await this.props.record.update({product_id: false});
+            return;
+        }
+
+        const dataSource = hasParentRecord ? parentRecord.data : saleOrderLine;
+
         let customPtavs = [];
 
         if (edit) {
@@ -252,10 +271,10 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
             productUOMId: saleOrderLine.product_uom_id.id,
-            companyId: saleOrderRecord.data.company_id.id,
-            pricelistId: saleOrderRecord.data.pricelist_id.id,
+            companyId: dataSource.company_id.id,
+            pricelistId: dataSource.pricelist_id.id,
             currencyId: saleOrderLine.currency_id.id,
-            soDate: serializeDateTime(saleOrderRecord.data.date_order),
+            soDate: serializeDateTime(dataSource.date_order),
             selectedComboItems: selectedComboItems,
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
@@ -267,21 +286,38 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                             [applyProduct(this.props.record, mainProduct)]: []
                     ),
                     ...optionalProducts.map(async product => {
-                        const line = await saleOrderRecord.data.order_line.addNewRecord({
-                            position: 'bottom', mode: 'readonly'
-                        });
+                        let line;
+                        if(hasParentRecord) {
+                            line = await dataSource.order_line.addNewRecord({
+                                position: 'bottom',
+                                mode: 'readonly',
+                            });
+                        } else {
+                            line = await listModel.addNewRecord();
+                            line.update({ order_id: saleOrderLine.order_id });
+                        }
                         const productData = this._prepareNewLineData(line, product);
                         await applyProduct(line, productData);
                     }),
                 ]);
                 this._onProductUpdate();
-                saleOrderRecord.data.order_line.leaveEditMode();
+                if (hasParentRecord) {
+                    dataSource.order_line.leaveEditMode();
+                } else {
+                    listModel.leaveEditMode();
+                }
             },
             discard: () => {
-                if (!selectedComboItems.length) {
-                    // Don't delete the main product if it's a combo product as it has been added
-                    // from combo configurator
-                    saleOrderRecord.data.order_line.delete(this.props.record);
+                // Don't delete the main product if it's a combo product as it has been added
+                // from combo configurator
+                if (selectedComboItems.length) {
+                    return;
+                }
+
+                if (hasParentRecord) {
+                    dataSource.order_line.delete(this.props.record);
+                } else {
+                    listModel.deleteRecords(this.props.record);
                 }
             },
             ...this._getAdditionalDialogProps(),

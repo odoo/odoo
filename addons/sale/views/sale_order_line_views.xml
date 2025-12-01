@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- VIEWS -->
+
     <record id="view_order_line_tree" model="ir.ui.view">
         <field name="name">sale.order.line.list</field>
         <field name="model">sale.order.line</field>
@@ -124,6 +126,141 @@
                 </templates>
             </kanban>
         </field>
+    </record>
+
+    <record id="view_sale_order_line_upsells_list" model="ir.ui.view">
+        <field name="name">sale.order.line.upsells.list</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <list string="Upsells" editable="top" js_class="upsale_order_line_list">
+                <field
+                    name="product_template_id"
+                    string="Product"
+                    widget="sol_product_many2one"
+                    domain="[('type', '!=', 'combo')]"
+                    width="800px"
+                />
+                <field
+                    name="product_id"
+                    string="Product Variant"
+                    optional="hide"
+                    widget="sol_product_many2one"
+                    domain="[('type', '!=', 'combo')]"
+                    width="800px"
+                />
+                <field name="name" widget="sol_text" optional="show"/>
+                <field
+                    name="order_id"
+                    widget="sale_order_custom"
+                    placeholder="New Order"
+                    context="{'sale_show_partner_name': True}"
+                    domain="[
+                        ('locked', '=', False),
+                        ('invoice_status', '!=', 'invoiced'),
+                    ]"
+                />
+                <field name="product_uom_qty" string="Quantity"/>
+                <field
+                    name="qty_delivered"
+                    string="Delivered"
+                    readonly="state != 'sale' or qty_delivered_method != 'manual' or is_downpayment"
+                    optional="hide"
+                />
+                <field name="product_uom_id" widget="many2one_uom"/>
+                <field
+                    name="tax_ids"
+                    widget="many2many_tax_tags"
+                    options="{'no_create': True}"
+                    context="{'active_test': True}"
+                    readonly="qty_invoiced &gt; 0 or is_downpayment"
+                    optional="hide"
+                />
+                <field name="qty_invoiced" optional="hide"/>
+                <field name="price_unit" optional="hide"/>
+                <field
+                    name="discount"
+                    groups="sale.group_discount_per_so_line"
+                    optional="hide"
+                />
+                <field name="currency_id" column_invisible="1"/> 
+                <field name="customer_lead" column_invisible="1"/>
+                <field name="date_order" column_invisible="1"/> 
+                <field name="linked_line_id" column_invisible="1"/>
+                <field name="pricelist_id" column_invisible="1"/>
+                <field name="product_custom_attribute_value_ids" column_invisible="1"/>
+                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
+                <field
+                    name="create_uid"
+                    string="Creator"
+                    widget="many2one_avatar_user"
+                    optional="hide"
+                />
+                <field name="create_date" optional="hide"/>
+                <button
+                    name="unlink"
+                    type="object"
+                    icon="fa-trash"
+                    title="Delete"
+                    class="text-danger"
+                    width="20px"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sale_order_line_upsells_search" model="ir.ui.view">
+        <field name="name">sale.order.line.upsells.search</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    name="my_orders"
+                    string="My"
+                    domain="[('salesman_id','=',uid)]"
+                />
+                <separator/>
+                <filter
+                    name="upsells_today"
+                    string="Today"
+                    domain="[('create_date', '&gt;=', 'today')]"
+                />
+                <group>
+                    <filter name="product" string="Product" context="{'group_by':'product_id'}"/>
+                    <filter name="order" string="Order" context="{'group_by':'order_id'}"/>
+                    <filter
+                        name="salesperson"
+                        string="Salesperson"
+                        context="{'group_by':'salesman_id'}"
+                    />
+                    <filter
+                        name="creation_group_by"
+                        string="Creation Date"
+                        context="{'group_by': 'create_date'}"
+                    />
+                    <filter
+                        name="customer"
+                        string="Customer"
+                        context="{'group_by': 'order_partner_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTIONS (WINDOW) -->
+
+    <record id="action_upsells" model="ir.actions.act_window">
+        <field name="name">Upsells</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_sale_order_line_upsells_list"/>
+        <field name="search_view_id" ref="view_sale_order_line_upsells_search"/>
+        <field name="context">{
+                'search_default_my_orders': 1,
+                'search_default_upsells_today': 1,
+                'from_upsells': 'upsells'
+            }
+        </field>
+        <field name="domain">[('display_type', '=', False), ('is_from_upsells', '=', True)]</field>
     </record>
 
 </odoo>

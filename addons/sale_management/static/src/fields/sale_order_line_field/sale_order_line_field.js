@@ -53,6 +53,16 @@ patch(SaleOrderLineListRenderer.prototype, {
         );
     },
 
+    get isCurrentSectionFromUpsells() {
+        if (this.props.list.records.length === 0) return false;
+
+        return this.shouldCollapse(
+            this.props.list.records[this.props.list.records.length - 1],
+            'is_from_upsells',
+            true
+        );
+    },
+
     /**
      * Override to set the default `product_uom_qty` to 0 for new lines created under an optional
      * section.
@@ -65,8 +75,12 @@ patch(SaleOrderLineListRenderer.prototype, {
     getCreateContext(params) {
         const evaluatedContext = makeContext([params.context]);
         // A falsy context indicates a product line (no `display_type` specified)
-        if(!evaluatedContext[`default_display_type`] && this.isCurrentSectionOptional) {
-            return { ...evaluatedContext, default_product_uom_qty: 0 };
+        if (!evaluatedContext[`default_display_type`]) {
+            return {
+                ...evaluatedContext,
+                ...(this.isCurrentSectionOptional && { default_product_uom_qty: 0 }),
+                ...(this.isCurrentSectionFromUpsells && { default_is_from_upsells: true }),
+            };
         }
         return params.context;
     },
@@ -76,10 +90,17 @@ patch(SaleOrderLineListRenderer.prototype, {
      * sections from dropdown.
      */
     getInsertLineContext(record, addSubSection) {
-        if (this.shouldCollapse(record, 'is_optional', true) && !addSubSection) {
+        const isOptionalCollapsed =
+            this.shouldCollapse(record, 'is_optional', true) && !addSubSection;
+
+        const isFromUpsells =
+            this.shouldCollapse(record, 'is_from_upsells', true) && !addSubSection;
+
+        if (isOptionalCollapsed || isFromUpsells) {
             return {
                 ...super.getInsertLineContext(record, addSubSection),
-                default_product_uom_qty: 0
+                ...(isOptionalCollapsed && { default_product_uom_qty: 0 }),
+                ...(isFromUpsells && { default_is_from_upsells: true }),
             };
         }
         return super.getInsertLineContext(record, addSubSection);
@@ -178,7 +199,7 @@ patch(SaleOrderLineListRenderer.prototype, {
 
         await super.sortDrop(dataRowId, dataGroupId, { element, previous });
 
-        await this._handleQuantityAdjustment(recordMap);
+        await this._handleAdjustments(recordMap);
     },
 
     /**
@@ -193,7 +214,7 @@ patch(SaleOrderLineListRenderer.prototype, {
      * @returns {Map<number|string, boolean>} A map of record IDs to their recomputed optional states.
      */
     _getRecordsToRecompute(record, targetId) {
-        const optionalStateMap = new Map();
+        const stateMap = new Map();
 
         if (this.isSection(record)) { // If a section or subsection is moved
             let currentIndex = this.props.list.records.indexOf(record);
@@ -204,15 +225,28 @@ patch(SaleOrderLineListRenderer.prototype, {
                 // 2. All records between the new and old positions.
                 for (let i = currentIndex; i > targetIndex; i--) {
                     if (!this.props.list.records[i].data.display_type) {
-                        optionalStateMap.set(
+                        stateMap.set(
                             this.props.list.records[i].id,
-                            this.shouldCollapse(this.props.list.records[i], 'is_optional')
+                            {
+                                wasOptional: this.shouldCollapse(
+                                    this.props.list.records[i], 'is_optional'
+                                ),
+                                wasFromUpsells: this.shouldCollapse(
+                                    this.props.list.records[i], 'is_from_upsells'
+                                ),
+                            }
                         );
                     }
                 }
                 for (const sectionRecord of getSectionRecords(this.props.list, record)) {
                     if (!sectionRecord.data.display_type) {
-                        optionalStateMap.set(sectionRecord.id, this.shouldCollapse(sectionRecord, 'is_optional'));
+                        stateMap.set(
+                            sectionRecord.id,
+                            {
+                                wasOptional: this.shouldCollapse(sectionRecord, 'is_optional'),
+                                wasFromUpsells: this.shouldCollapse(sectionRecord, 'is_from_upsells'),
+                            }
+                        );
                     }
                 }
             } else {
@@ -223,12 +257,15 @@ patch(SaleOrderLineListRenderer.prototype, {
                     if (this.isSection(this.props.list.records[i])) {
                         for (const sectionRecord of getSectionRecords(this.props.list, this.props.list.records[i])) {
                             if (
-                                !optionalStateMap.has(sectionRecord.id)
+                                !stateMap.has(sectionRecord.id)
                                 && !sectionRecord.data.display_type
                             ) {
-                                optionalStateMap.set(
+                                stateMap.set(
                                     sectionRecord.id,
-                                    this.shouldCollapse(sectionRecord, 'is_optional')
+                                    {
+                                        wasOptional: this.shouldCollapse(sectionRecord, 'is_optional'),
+                                        wasFromUpsells: this.shouldCollapse(sectionRecord, 'is_from_upsells'),
+                                    }
                                 );
                             }
                         }
@@ -236,37 +273,53 @@ patch(SaleOrderLineListRenderer.prototype, {
 
                     // we must skip overlapping records
                     if (
-                        !optionalStateMap.has(this.props.list.records[i].id)
+                        !stateMap.has(this.props.list.records[i].id)
                         && !this.props.list.records[i].data.display_type
                     ) {
-                        optionalStateMap.set(
+                        stateMap.set(
                             this.props.list.records[i].id,
-                            this.shouldCollapse(this.props.list.records[i], 'is_optional')
+                            {
+                                wasOptional: this.shouldCollapse(this.props.list.records[i], 'is_optional'),
+                                wasFromUpsells: this.shouldCollapse(this.props.list.records[i], 'is_from_upsells'),
+                            }
                         );
                     }
                 }
             }
         } else if (!record.data.display_type) { // If a regular record is moved compute its own optional state
-            optionalStateMap.set(record.id, this.shouldCollapse(record, 'is_optional'));
+            stateMap.set(
+                record.id,
+                {
+                    wasOptional: this.shouldCollapse(record, 'is_optional'),
+                    wasFromUpsells: this.shouldCollapse(record, 'is_from_upsells')
+                }
+            );
         }
 
-        return optionalStateMap;
+        return stateMap;
     },
 
-    async _handleQuantityAdjustment(recordMap) {
+    async _handleAdjustments(recordMap) {
         const commands = [];
 
-        for (const [recordId, wasOptional] of recordMap.entries()) {
+        for (const [recordId, oldState] of recordMap.entries()) {
             const record = this.props.list.records.find(r => r.id === recordId);
             const isOptional = this.shouldCollapse(record, 'is_optional');
+            const isFromUpsells = this.shouldCollapse(record, 'is_from_upsells');
 
-            if (wasOptional && !isOptional && !record.data.product_uom_qty) {
+            if (oldState.wasOptional && !isOptional && !record.data.product_uom_qty) {
                 commands.push(x2ManyCommands.update(
                     record.resId || record._virtualId, { product_uom_qty: 1 }
                 ));
-            } else if (!wasOptional && isOptional) {
+            } else if (!oldState.wasOptional && isOptional) {
                 commands.push(x2ManyCommands.update(
                     record.resId || record._virtualId, { product_uom_qty: 0 }
+                ));
+            }
+
+            if (oldState.wasFromUpsells !== isFromUpsells) {
+                commands.push(x2ManyCommands.update(
+                    record.resId || record._virtualId, { is_from_upsells: isFromUpsells }
                 ));
             }
         }

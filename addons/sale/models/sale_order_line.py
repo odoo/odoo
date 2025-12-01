@@ -45,10 +45,17 @@ class SaleOrderLine(models.Model):
         related='order_id.currency_id',
         depends=['order_id.currency_id'],
         store=True, precompute=True)
+    date_order = fields.Datetime(
+        related='order_id.date_order',
+    )
     order_partner_id = fields.Many2one(
         related='order_id.partner_id',
         string="Customer",
         store=True, index=True, precompute=True)
+    pricelist_id = fields.Many2one(
+        related='order_id.pricelist_id',
+        string="Pricelist",
+    )
     salesman_id = fields.Many2one(
         related='order_id.user_id',
         string="Salesperson",
@@ -338,6 +345,11 @@ class SaleOrderLine(models.Model):
         copy=True,
         default=False,
     )  # Whether this section's lines will be hidden in reports and in the portal.
+    is_from_upsells = fields.Boolean(
+        string="From Upsells",
+        default=False,
+        help="Indicates the line was created from Upsells view",
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -1338,7 +1350,13 @@ class SaleOrderLine(models.Model):
                 # because technical_price_unit is set.
                 vals.pop('technical_price_unit')
 
+        # Handle upsells-specific logic
+        if self.env.context.get('from_upsells'):
+            vals_list = self._prepare_upsells_section(vals_list)
         lines = super().create(vals_list)
+        upsell_lines = lines.filtered('is_from_upsells')
+        upsell_lines._set_upsell_quantity_from_delivered()
+        upsell_lines._sync_pricing_from_existing_lines()
         for line in lines:
             linked_line = line._get_linked_line()
             if linked_line:
@@ -1414,7 +1432,13 @@ class SaleOrderLine(models.Model):
                       '\n'.join(fields.mapped('field_description')))
                 )
 
-        return super().write(values)
+        res = super().write(values)
+
+        if 'product_id' in values:
+            self.filtered('is_from_upsells')._sync_pricing_from_existing_lines()
+        if any(field in values for field in ['qty_delivered', 'product_uom_qty']):
+            self.filtered('is_from_upsells')._set_upsell_quantity_from_delivered()
+        return res
 
     def _get_protected_fields(self):
         """ Give the fields that should not be modified on a locked SO.
@@ -1470,6 +1494,81 @@ class SaleOrderLine(models.Model):
         if self._check_line_unlink():
             raise UserError(_("Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n\
                 Set the quantity to 0 instead."))
+
+    def _prepare_upsells_section(self, vals_list):
+        """
+        Add section vals if needed for upsells line.
+        """
+        today = fields.Date.today()
+        section_name = f"Upsells {today.strftime('%d/%m/%Y')}"
+
+        order_id = vals_list[0].get('order_id')
+
+        # Mark all lines as from upsells
+        for vals in vals_list:
+            vals['is_from_upsells'] = True
+
+        # Check if section already exists for this order today
+        existing_section = self.search([
+            ('order_id', '=', order_id),
+            ('display_type', '=', 'line_section'),
+            ('is_from_upsells', '=', True),
+            ('create_date', '>=', today),
+        ], limit=1)
+
+        if existing_section:
+            # Section exists - find last upsells line
+            last_upsells_line = self.search([
+                ('order_id', '=', order_id),
+                ('is_from_upsells', '=', True),
+            ], order='sequence desc', limit=1)
+
+            # Find all lines after the last upsells line
+            lines_after = self.search([
+                ('order_id', '=', order_id),
+                ('sequence', '>', last_upsells_line.sequence),
+            ], order='sequence asc')
+
+            # Find the first available sequence gap or add after all lines
+            next_seq = last_upsells_line.sequence + 1
+
+            # If there are lines immediately after, we need to shift them
+            if lines_after and lines_after[0].sequence == next_seq:
+                # Shift all subsequent lines to make space
+                for line in lines_after:
+                    line.sequence += len(vals_list)
+
+            # Set sequence for each product line
+            for idx, vals in enumerate(vals_list):
+                vals['sequence'] = next_seq + idx
+
+            # Return ONLY the product lines (section already exists)
+            return vals_list
+
+        # Section does NOT exist - create it first
+        last_line = self.search([
+            ('order_id', '=', order_id),
+        ], order='sequence desc', limit=1)
+
+        max_seq = last_line.sequence if last_line else 0
+
+        # Create section vals
+        section_vals = {
+            'order_id': order_id,
+            'display_type': 'line_section',
+            'name': section_name,
+            'sequence': max_seq + 1,
+            'is_from_upsells': True,
+            'product_uom_qty': 0.0,
+
+        }
+
+        # Set sequence for product lines (after section)
+        for idx, vals in enumerate(vals_list):
+            vals['sequence'] = max_seq + 2 + idx
+
+        # Return section FIRST, then product lines
+        return vals_list + [section_vals]
 
     #=== ACTION METHODS ===#
 
@@ -1652,6 +1751,51 @@ class SaleOrderLine(models.Model):
             and line.parent_id.parent_id == self
         )
         return is_direct_child or is_indirect_child
+
+    def _sync_pricing_from_existing_lines(self):
+        """
+        Synchronize pricing details (unit price, discount, tax) from existing
+        sale order lines to upsell lines when there's an unambiguous match.
+
+        For each upsell line, if there are existing regular order lines with the
+        same product that all share identical pricing, copy that pricing to the
+        upsell line to maintain consistency.
+        """
+        for upsell_line in self:
+            # Find existing regular lines with matching product
+            matching_regular_lines = upsell_line.order_id.order_line.filtered(
+                lambda line: (
+                    not line.is_from_upsells
+                    and line.product_id == upsell_line.product_id
+                ),
+            )
+
+            if not matching_regular_lines:
+                continue
+
+            # Extract unique pricing configurations from matching lines
+            unique_pricing_configs = {
+                (line.price_unit, line.discount, tuple(line.tax_ids.ids))
+                for line in matching_regular_lines
+            }
+
+            # Only apply pricing if all matching lines have identical pricing
+            if len(unique_pricing_configs) == 1:
+                unit_price, discount_percent, taxes = unique_pricing_configs.pop()
+                upsell_line.write({
+                    'price_unit': unit_price,
+                    'discount': discount_percent,
+                    'tax_ids': [Command.set(taxes)],
+                })
+
+    def _set_upsell_quantity_from_delivered(self):
+        """
+        Set product_uom_qty same as qty_delivered for upsell lines
+        when quantity is not set.
+        """
+        for line in self:
+            if line.qty_delivered and line.product_uom_qty == 0:
+                line.product_uom_qty = line.qty_delivered
 
     #=== CORE METHODS OVERRIDES ===#
 
