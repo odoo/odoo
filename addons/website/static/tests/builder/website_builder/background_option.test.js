@@ -425,6 +425,7 @@ test("change background size", async () => {
     expect(heightInput).toHaveValue("");
 
     await contains(heightInput).edit("0");
+    await animationFrame();
     expect(heightInput).toHaveValue("1", { message: "minimum value is 1" });
     expect(section).toHaveStyle("background-size: 100px 1px");
 
@@ -438,6 +439,7 @@ test("change background size", async () => {
     expect(section).toHaveStyle("background-size: auto");
 
     await contains(widthInput).edit("0");
+    await animationFrame();
     expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
     expect(section).toHaveStyle("background-size: 1px");
 });

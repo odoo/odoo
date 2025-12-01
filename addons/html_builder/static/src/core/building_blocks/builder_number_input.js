@@ -1,5 +1,6 @@
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { effect } from "@web/core/utils/reactive";
 import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,
@@ -49,8 +50,14 @@ export class BuilderNumberInput extends Component {
         });
         this.commit = commit;
         this.preview = preview;
-        this.state = state;
-
+        this.domState = state;
+        this.state = useState({});
+        effect(
+            ({ value }) => {
+                this.state.showUnit = value?.length > 0;
+            },
+            [state]
+        );
         this.inputRef = useChildRef();
         this.debouncedCommitValue = useInputDebouncedCommit(this.inputRef);
     }
@@ -159,7 +166,24 @@ export class BuilderNumberInput extends Component {
     }
 
     get displayValue() {
-        return this.formatRawValue(this.state.value);
+        return this.formatRawValue(this.domState.value);
+    }
+
+    updateUnitVisibility(value) {
+        if (value === "") {
+            this.state.showUnit = false;
+        } else {
+            const numericValue = Number(value);
+            this.state.showUnit = !Number.isNaN(numericValue);
+        }
+    }
+
+    onChange(e) {
+        this.updateUnitVisibility(e.target.value);
+    }
+
+    onInput(e) {
+        this.updateUnitVisibility(e.target.value);
     }
 
     onKeydown(e) {
