@@ -945,3 +945,22 @@ class TestExpenses(TestExpenseCommon):
         expense.action_approve()
         # Should not raise trust validation error despite missing recipient partner bank
         expense.action_post()
+
+    def test_expense_analytic_vendor_bill_count(self):
+        """
+        Verify that purchase receipts appear when opening a vendor bill via the smart button,
+        and that the vendor bill count matches the records shown.
+        """
+        expense = self.create_expenses([
+            {
+                'name': 'Employee PA 2*800 + 15%',
+                'analytic_distribution': {self.analytic_account_1.id: 100},
+            }])
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
+        self.assertEqual('in_receipt', expense.account_move_id.move_type)
+
+        vendor_bill_view = self.analytic_account_1.action_view_vendor_bill()
+        self.assertTrue(expense.account_move_id.id in vendor_bill_view['domain'][0][2])
