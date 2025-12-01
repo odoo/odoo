@@ -128,8 +128,18 @@ class SaleOrder(models.Model):
         view_id = self.env.ref('delivery.choose_delivery_carrier_view_form').id
         if self.env.context.get('carrier_recompute'):
             name = _('Update shipping cost')
+            carrier_id = self.carrier_id.id
         else:
             name = _('Add a shipping method')
+            partner_shipping = self.with_company(self.company_id).partner_shipping_id
+            candidate_carrier = (
+                partner_shipping.property_delivery_carrier_id
+                or partner_shipping.commercial_partner_id.property_delivery_carrier_id
+            )
+            allowed_carriers = self.env['delivery.carrier'].search(
+                self.env['delivery.carrier']._check_company_domain(self.company_id)
+            ).available_carriers(self.partner_shipping_id, self)
+            carrier_id = candidate_carrier.id if candidate_carrier in allowed_carriers else False
         return {
             'name': name,
             'type': 'ir.actions.act_window',
@@ -140,7 +150,7 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': {
                 'default_order_id': self.id,
-                'default_carrier_id': self.carrier_id,
+                'default_carrier_id': carrier_id,
                 'default_total_weight': self._get_estimated_weight()
             }
         }
