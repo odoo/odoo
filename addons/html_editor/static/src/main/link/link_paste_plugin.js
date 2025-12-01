@@ -61,7 +61,11 @@ export class LinkPastePlugin extends Plugin {
         if (this.delegateTo("paste_url_overrides", text, url)) {
             return;
         }
-        this.dependencies.link.insertLink(url, text);
+        const label =
+            !selection.isCollapsed && cleanZWChars(selection.textContent()).length
+                ? selection.textContent()
+                : text;
+        this.dependencies.link.insertLink(url, label);
     }
     /**
      * @param {string} text

@@ -2758,8 +2758,7 @@ describe("link", () => {
 
         test("should replace link for new content when pasting in an empty link (collapsed)", async () => {
             await testEditor({
-                contentBefore:
-                    '<p><a href="http://test.test/" oe-zws-empty-inline="">[]\u200B</a></p>',
+                contentBefore: '<p><a href="http://test.test/">[]\u200B</a></p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc");
                 },
@@ -2768,8 +2767,7 @@ describe("link", () => {
         });
         test("should replace link for new content when pasting in an empty link (collapsed)(2)", async () => {
             await testEditor({
-                contentBefore:
-                    '<p>xy<a href="http://test.test/" oe-zws-empty-inline="">\u200B[]</a>z</p>',
+                contentBefore: '<p>xy<a href="http://test.test/">\u200B[]</a>z</p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc");
                 },
@@ -2779,7 +2777,7 @@ describe("link", () => {
 
         test("should replace link for new content (url) when pasting in an empty link (collapsed)", async () => {
             const { el, editor } = await setupEditor(
-                `<p>xy<a href="http://test.test/" oe-zws-empty-inline="">\u200B[]</a>z</p>`
+                `<p>xy<a href="http://test.test/">\u200B[]</a>z</p>`
             );
             pasteText(editor, "http://odoo.com");
             await animationFrame();
@@ -2807,7 +2805,7 @@ describe("link", () => {
 
         test("should replace link for new content (url) when pasting in an empty link (collapsed) (2)", async () => {
             const { el, editor } = await setupEditor(
-                `<p>xy<a href="http://test.test/" oe-zws-empty-inline="">\u200B[]</a>z</p>`
+                `<p>xy<a href="http://test.test/">\u200B[]</a>z</p>`
             );
             pasteText(editor, imgUrl);
             await animationFrame();
@@ -2964,17 +2962,17 @@ describe("link", () => {
     });
 
     describe("range not collapsed", () => {
-        test("should paste and transform an URL in a p (not collapsed)", async () => {
+        test("should paste and attach link on selected content in a p (not collapsed)", async () => {
             await testEditor({
                 contentBefore: "<p>ab[xxx]cd</p>",
                 stepFunction: async (editor) => {
                     pasteText(editor, "http://www.xyz.com");
                 },
-                contentAfter: '<p>ab<a href="http://www.xyz.com">http://www.xyz.com</a>[]cd</p>',
+                contentAfter: '<p>ab<a href="http://www.xyz.com">xxx</a>[]cd</p>',
             });
         });
 
-        test("should paste and transform an URL in a span (not collapsed)", async () => {
+        test("should paste and attach link on selected content in a span (not collapsed)", async () => {
             await testEditor({
                 contentBefore:
                     '<p>a<span class="a">b[x<a href="http://existing.com">546</a>x]c</span>d</p>',
@@ -2982,7 +2980,7 @@ describe("link", () => {
                     pasteText(editor, "http://www.xyz.com");
                 },
                 contentAfter:
-                    '<p>a<span class="a">b<a href="http://www.xyz.com">http://www.xyz.com</a>[]c</span>d</p>',
+                    '<p>a<span class="a">b<a href="http://www.xyz.com">x546x</a>[]c</span>d</p>',
             });
         });
 
@@ -3141,7 +3139,7 @@ describe("link", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "www.odoo.com");
                 },
-                contentAfter: '<p><a href="http://www.odoo.com">www.odoo.com</a>[]</p>',
+                contentAfter: '<p><a href="http://www.odoo.com">xyz</a>[]</p>',
             });
             await testEditor({
                 contentBefore: '<p><a href="#">[xyz]</a></p>',
