@@ -4,6 +4,7 @@ import {
     contains,
     defineModels,
     editSelectMenu,
+    getMockEnv,
     mountView,
     onRpc,
     serverState,
@@ -359,6 +360,34 @@ test("editing groups doesn't remove groups (debug)", async () => {
     );
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
+});
+
+test(`Click on "?" should not trigger a focus`, async () => {
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(`.o_form_label[for="field_222_0"] :contains("?")`).toHaveCount(1);
+    await contains(`.o_form_label[for="field_222_0"] :contains("?")`).click();
+    await runAllTimers();
+    expect(".o-overlay-container .o-dropdown-item").toHaveCount(0);
+    if (getMockEnv().isSmall) {
+        expect(".o-overlay-container .o-tooltip").toHaveCount(1);
+    } else {
+        expect(".o-overlay-container .o-tooltip").toHaveCount(0);
+    }
+    await contains(`.o_form_label[for="field_222_0"]`).click();
+    await runAllTimers();
+    expect(".o-overlay-container .o-dropdown-item").toHaveCount(4);
+    expect(".o-overlay-container .o-tooltip").toHaveCount(0);
 });
 
 test.tags("desktop");
