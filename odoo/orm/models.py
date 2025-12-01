@@ -262,10 +262,6 @@ class MetaModel(type):
 
         if not self._abstract and self._name not in self._inherit:
             # this class defines a model: add magic fields
-            def add(name, field):
-                setattr(self, name, field)
-                field.__set_name__(self, name)
-
             def add_default(name, field):
                 if name not in attrs:
                     setattr(self, name, field)
