@@ -224,7 +224,6 @@ registerWebsitePreviewTour(
         },
         // Edit the menu item from the "edit menu" popover button
         ...clickOnEditAndWaitEditMode(),
-        clickOnExtraMenuItem({}, true),
         {
             content: "Wait for the builder sidebar to fully open",
             trigger: ":iframe .editor_enable",
@@ -241,6 +240,7 @@ registerWebsitePreviewTour(
                 await delay(200);
             },
         },
+        clickOnExtraMenuItem({}, true),
         ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
         {
             content: "Click on the popover Edit Menu button",
@@ -503,13 +503,20 @@ registerWebsitePreviewTour(
         {
             content: "Nest 'new_nested_menu' under 'new_menu'",
             trigger: '.oe_menu_editor li:contains("new_nested_menu") .oi-draggable',
-            run: "drag_and_drop .oe_menu_editor li:contains('new_menu') .form-control",
+            run(helpers) {
+                return helpers.drag_and_drop(
+                    ".oe_menu_editor li:contains('new_menu') .form-control",
+                    {
+                        position: "bottom",
+                    }
+                );
+            },
         },
         {
             content: "Drag 'Modnar !!' below 'new_menu'",
             trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
-            async run(helpers) {
-                await helpers.drag_and_drop(
+            run(helpers) {
+                return helpers.drag_and_drop(
                     '.oe_menu_editor li:contains("new_menu") .oi-draggable',
                     {
                         position: "bottom",
@@ -520,19 +527,26 @@ registerWebsitePreviewTour(
         {
             content: "Nest 'Modnar !!' under 'new_menu'",
             trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
-            run: "drag_and_drop .oe_menu_editor li:contains('new_menu') .form-control",
+            run(helpers) {
+                return helpers.drag_and_drop(
+                    ".oe_menu_editor li:contains('new_menu') .form-control",
+                    {
+                        position: "bottom",
+                    }
+                );
+            },
         },
         {
-            content: "Check if 'nested_menu' and 'Modnar !!' is nested under 'new_menu'",
+            content: "Check if 'new_nested_menu' and 'Modnar !!' is nested under 'new_menu'",
             trigger:
-                '.oe_menu_editor li:contains("new_menu") > ul > li:contains("Modnar !!") + li:contains("nested_menu")',
+                '.oe_menu_editor li:contains("new_menu") > ul > li:contains("Modnar !!") + li:contains("new_nested_menu")',
         },
         {
             content: "Move 'Modnar !!' below 'new_nested_menu' inside the 'new_menu'",
             trigger:
                 '.oe_menu_editor  li:contains("new_menu") > ul > li:contains("Modnar !!") .oi-draggable',
-            async run(helpers) {
-                await helpers.drag_and_drop(
+            run(helpers) {
+                return helpers.drag_and_drop(
                     ".oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') .oi-draggable",
                     {
                         position: "bottom",
