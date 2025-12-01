@@ -1438,6 +1438,13 @@ class BaseModel(metaclass=MetaModel):
         fetched = self._fetch_query(query, fields_to_fetch)
         if not self.env.su:
             self.env._add_to_access_cache(fetched)
+
+        # force computation of fields
+        for field_name in (field_names or ()):
+            field = self._fields[field_name]
+            if not field.store and any(field._cache_missing_ids(fetched)):
+                fetched.mapped(field_name)
+
         return fetched
 
     #
@@ -2974,12 +2981,12 @@ class BaseModel(metaclass=MetaModel):
     @api.private
     def fetch(self, field_names: Collection[str] | None = None) -> None:
         """ Make sure the given fields are in memory for the records in ``self``,
-        by fetching what is necessary from the database.  Non-stored fields are
-        mostly ignored, except for their stored dependencies. This method should
-        be called to optimize code.
+        by fetching what is necessary from the database.  Non-stored computed
+        fields are computed, and their dependencies are fetched with stored
+        fields. This method should be called to optimize code.
 
-        :param field_names: a collection of field names to fetch, or ``None`` for
-            all accessible fields marked with ``prefetch=True``
+        :param field_names: a collection of field names to fetch or compute, or
+            ``None`` for all accessible fields marked with ``prefetch=True``
         :raise AccessError: if user is not allowed to access requested information
 
         This method is implemented thanks to methods :meth:`_search` and
@@ -3013,6 +3020,12 @@ class BaseModel(metaclass=MetaModel):
         env = self.env
         if not env.su:
             env._add_to_access_cache(fetched)
+
+        # force computation of fields
+        for field_name in (field_names or ()):
+            field = self._fields[field_name]
+            if not field.store and any(field._cache_missing_ids(fetched)):
+                fetched.mapped(field_name)
 
         # possibly raise exception for the records that could not be read
         if not env.su and fetched != self:
