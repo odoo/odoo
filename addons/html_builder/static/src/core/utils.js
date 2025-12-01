@@ -243,7 +243,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 
     function refreshCurrentItem() {
-        if (env.editor.isDestroyed) {
+        if (env.editor.isDestroyed || env.editor.shared.history.getIsPreviewing()) {
             return;
         }
         let currentItem;
