@@ -86,9 +86,7 @@
         </record>
         <record model="res.groups" id="group_everyone">
             <field name="name">Role / Everyone</field>
-            <field name="implied_by_ids" eval="[
-                Command.link(ref('base.group_portal')), Command.link(ref('base.group_public')), Command.link(ref('base.group_user')),
-            ]"/>
+            <field name="implied_by_ids" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public')), Command.link(ref('base.group_user'))]"/>
             <field name="comment">Includes all users. This makes group restrictions more convenient.</field>
         </record>
 
