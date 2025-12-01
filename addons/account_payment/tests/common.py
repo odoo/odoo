@@ -1,8 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
-from contextlib import contextmanager
-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -12,13 +9,10 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, *kw):
         super().setUpClass()
-        with cls.mocked_get_payment_method_information(cls):
-            cls.dummy_provider_method = cls.env['account.payment.method'].sudo().create({
-                'name': 'Dummy method',
-                'code': 'none',
-                'payment_type': 'inbound'
-            })
-            cls.dummy_provider.journal_id = cls.company_data['default_journal_bank']
+        cls.dummy_provider_method = cls._create_dummy_payment_method_for_provider(
+            provider=cls.dummy_provider,
+            journal=cls.company_data['default_journal_bank'],
+        )
 
         cls.account = cls.company.account_journal_payment_credit_account_id
         cls.invoice = cls.env['account.move'].create({
@@ -45,17 +39,3 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
     def setUp(self):
         self.enable_reconcile_after_done_patcher = False
         super().setUp()
-
-    #=== Utils ===#
-
-    @contextmanager
-    def mocked_get_payment_method_information(self):
-        Method_get_payment_method_information = self.env['account.payment.method']._get_payment_method_information
-
-        def _get_payment_method_information(*args, **kwargs):
-            res = Method_get_payment_method_information()
-            res['none'] = {'mode': 'electronic', 'domain': [('type', '=', 'bank')]}
-            return res
-
-        with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
-            yield

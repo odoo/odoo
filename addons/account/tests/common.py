@@ -3,11 +3,12 @@
 from odoo import fields, Command
 from odoo.tests.common import TransactionCase, HttpCase, tagged, Form
 
-import json
-import time
 import base64
+
+from contextlib import contextmanager
 from lxml import etree
 from unittest import SkipTest
+from unittest.mock import patch
 
 
 def instantiate_accountman(cls):
@@ -411,6 +412,11 @@ class AccountTestInvoicingCommon(TransactionCase):
         })
 
     @classmethod
+    def ensure_installed(cls, module_name: str):
+        if cls.env['ir.module.module']._get(module_name).state != 'installed':
+            raise SkipTest(f"Module required for the test is not installed ({module_name})")
+
+    @classmethod
     def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False, currency=None, journal=None):
         products = [] if products is None else products
         amounts = [] if amounts is None else amounts
@@ -504,6 +510,36 @@ class AccountTestInvoicingCommon(TransactionCase):
         }])
 
         return line
+
+    @contextmanager
+    def mocked_get_payment_method_information(self, code='none'):
+        self.ensure_installed('account_payment')
+
+        Method_get_payment_method_information = self.env['account.payment.method']._get_payment_method_information
+
+        def _get_payment_method_information(*args, **kwargs):
+            res = Method_get_payment_method_information()
+            res[code] = {'mode': 'electronic', 'type': ('bank',)}
+            return res
+
+        with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
+            yield
+
+    @classmethod
+    def _create_dummy_payment_method_for_provider(cls, provider, journal, **kwargs):
+        cls.ensure_installed('account_payment')
+
+        code = kwargs.get('code', 'none')
+
+        with cls.mocked_get_payment_method_information(cls, code):
+            payment_method = cls.env['account.payment.method'].sudo().create({
+                'name': 'Dummy method',
+                'code': code,
+                'payment_type': 'inbound',
+                **kwargs,
+            })
+            provider.journal_id = journal
+            return payment_method
 
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):
