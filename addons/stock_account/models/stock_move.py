@@ -205,19 +205,24 @@ class StockMove(models.Model):
         else:
             debit_acc = self.location_dest_id.valuation_account_id
             credit_acc = self.product_id._get_product_accounts()['stock_valuation']
+        value = self._get_aml_value()
         return [{
             'account_id': credit_acc.id,
-            'name': self.reference,
+            'name': self.reference + ' - ' + self.product_id.name,
             'debit': 0,
-            'credit': self.value,
+            'credit': value,
             'product_id': self.product_id.id,
         }, {
             'account_id': debit_acc.id,
-            'name': self.reference,
-            'debit': self.value,
+            'name': self.reference + ' - ' + self.product_id.name,
+            'debit': value,
             'credit': 0,
             'product_id': self.product_id.id,
         }]
+
+    def _get_aml_value(self):
+        self.ensure_one()
+        return self.value
 
     def _get_analytic_distribution(self):
         return {}
