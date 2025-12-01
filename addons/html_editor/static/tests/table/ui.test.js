@@ -126,6 +126,26 @@ test("should not display the resizeCursor if the table element isContentEditable
     expect(".o_col_resize").toHaveCount(0);
 });
 
+test("should show the table UI menus when hovering a list inside a table cell", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <ul><li>1</li><li>2</li><li>3</li></ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("ul"));
+    // Should display both the row and column menus
+    await expectElementCount(".o-we-table-menu", 2);
+});
+
 test("list of table commands in first column", async () => {
     const { el } = await setupEditor(`
         <p><br></p>
