@@ -3,42 +3,38 @@
 
 <!-- IMPORTANT: explictly include col/row otherwise studio won't load report correctly -->
 <template id="report_producttemplatelabel2x7">
-    <t t-call="web.basic_layout">
+    <t t-call="web.basic_layout" columns="2" rows="7">
         <div class="page">
-            <t t-set="columns" t-value="2"/>
-            <t t-set="rows" t-value="7"/>
             <t t-call="product.report_productlabel"/>
         </div>
     </t>
 </template>
 
 <template id="report_producttemplatelabel4x7">
-    <t t-call="web.basic_layout">
+    <t t-call="web.basic_layout" columns="4" rows="7">
         <div class="page">
-            <t t-set="columns" t-value="4"/>
-            <t t-set="rows" t-value="7"/>
             <t t-call="product.report_productlabel"/>
         </div>
     </t>
 </template>
 
 <template id="report_producttemplatelabel4x12">
-    <t t-call="web.basic_layout">
+    <t t-call="web.basic_layout"
+        columns="4"
+        rows="12"
+        price_included="True">
         <div class="page">
-            <t t-set="columns" t-value="4"/>
-            <t t-set="rows" t-value="12"/>
-            <t t-set="price_included" t-value="True"/>
             <t t-call="product.report_productlabel"/>
         </div>
     </t>
 </template>
 
 <template id="report_producttemplatelabel4x12noprice">
-    <t t-call="web.basic_layout">
+    <t t-call="web.basic_layout"
+        columns="4"
+        rows="12"
+        price_included="False">
         <div class="page">
-            <t t-set="columns" t-value="4"/>
-            <t t-set="rows" t-value="12"/>
-            <t t-set="price_included" t-value="False"/>
             <t t-call="product.report_productlabel"/>
         </div>
     </t>

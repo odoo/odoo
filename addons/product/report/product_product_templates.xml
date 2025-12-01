@@ -42,7 +42,7 @@
                         <strong class="o_label_price_medium" t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
                                 t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                     </div>
-                    <div class= "text-center o_label_small_barcode">
+                    <div class="text-center o_label_small_barcode">
                         <span class="text-nowrap" t-field="product.default_code"/>
                         <t t-if="barcode">
                             <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
@@ -68,7 +68,7 @@
                         <strong t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
                             t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                     </div>
-                    <div class= "text-center o_label_small_barcode">
+                    <div class="text-center o_label_small_barcode">
                         <t t-if="barcode">
                             <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
                             <span class="text-center" t-out="barcode"/>
@@ -89,7 +89,7 @@
                     <div class="o_label_left_column o_label_full_with">
                         <span class="text-nowrap" t-field="product.default_code"/>
                     </div>
-                    <div class= "text-center o_label_small_barcode">
+                    <div class="text-center o_label_small_barcode">
                         <t t-if="barcode">
                             <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
                             <span class="text-center" t-out="barcode"/>
@@ -102,7 +102,7 @@
         <template id="report_simple_label_dymo">
             <div class="o_label_sheet o_label_dymo" t-att-style="padding_page">
                 <div class="o_label_full" t-att-style="table_style">
-                    <div class= "text-start o_label_small_barcode">
+                    <div class="text-start o_label_small_barcode">
                         <t t-if="barcode">
                             <!-- `quiet=0` to remove the left and right margins on the barcode -->
                             <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
@@ -193,10 +193,10 @@
         </template>
 
         <template id="report_productlabel_dymo">
-            <t t-call="web.html_container">
-                <t t-set="barcode_size" t-value="'width:45.5mm;height:7.5mm'"/>
-                <t t-set="table_style" t-value="'width:100%;height:32mm;'"/>
-                <t t-set="padding_page" t-value="'padding: 2mm'"/>
+            <t t-call="web.html_container"
+                barcode_size.f="width:45.5mm;height:7.5mm"
+                table_style.f="width:100%;height:32mm;"
+                padding_page.f="padding: 2mm">
                 <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
                     <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
                     <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">

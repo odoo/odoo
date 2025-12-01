@@ -6,13 +6,12 @@
             <t t-set="portal_vendor_category_enable" t-value="True"/>
         </xpath>
         <div id="portal_vendor_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/mrp_subcontracting/static/src/img/manufacturing.svg'"/>
-                <t t-set="title">Manufacturing Orders</t>
-                <t t-set="text">Follow manufacturing orders you have to fulfill</t>
-                <t t-set="url" t-value="'/my/productions'"/>
-                <t t-set="placeholder_count" t-value="'production_count'"/>
-            </t>
+            <t t-call="portal.portal_docs_entry"
+                icon.f="/mrp_subcontracting/static/src/img/manufacturing.svg"
+                title.translate="Manufacturing Orders"
+                text.translate="Follow manufacturing orders you have to fulfill"
+                url.f="/my/productions"
+                placeholder_count.f="production_count"/>
         </div>
     </template>
 
@@ -21,7 +20,7 @@
             <t t-if="title">
                 <li t-if="page_name == 'production' or picking" t-attf-class="breadcrumb-item #{'active' if breadcrumbs_url else ''}">
                     <a t-if="breadcrumbs_url" t-attf-href="/my/productions{{ keep_query() }}">Productions</a>
-                    <t t-else="" t-out="title"></t>
+                    <t t-else="" t-out="title"/>
                 </li>
                 <li t-if="picking" class="breadcrumb-item active">
                     <t t-out="picking.name"/>
@@ -31,12 +30,9 @@
     </template>
 
     <template id="portal_my_productions" name="My Productions">
-        <t t-call="portal.portal_layout">
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Productions</t>
-            </t>
+            <t t-call="portal.portal_searchbar" title.translate="Productions"/>
 
             <t t-if="not pickings">
                 <p class="alert alert-warning">There are currently no productions for your account.</p>
@@ -66,16 +62,14 @@
     </template>
 
     <template id="subcontracting_portal" name="Subcontracting View in Portal">
-        <t t-call="portal.frontend_layout">
+        <t t-call="portal.frontend_layout" no_footer="true">
             <div class="o_portal container mt-3">
-                <t t-call="mrp_subcontracting.portal_my_home_menu_production">
-                    <t t-set="title" t-value="picking.name"/>
-                    <t t-set="breadcrumbs_url">/my/productions</t>
-                </t>
+                <t t-call="mrp_subcontracting.portal_my_home_menu_production"
+                    title="picking.name"
+                    breadcrumbs_url.translate="/my/productions"/>
             </div>
             <div class="o_portal container mt-3 o_subcontracting_portal">
                 <div class="o_subcontracting_portal">
-                    <t t-set="no_footer" t-value="true"/>
                     <t t-call="mrp_subcontracting.subcontracting"/>
                 </div>
             </div>

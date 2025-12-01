@@ -5,7 +5,7 @@
         <field name="subject">Test Template</field>
         <field name="partner_to">{{ object.customer_id.id }}</field>
         <field name="use_default_to" eval="False"/>
-        <field name="body_html" type="html"><p>Hello <t t-out="object.name or ''"></t></p></field>
+        <field name="body_html" type="html"><p>Hello <t t-out="object.name or ''"/></p></field>
         <field name="model_id" ref="test_mail.model_mail_test_ticket"/>
         <field name="auto_delete" eval="True"/>
     </record>
@@ -15,7 +15,7 @@
         <field name="subject">Post on {{ object.name }}</field>
         <field name="partner_to">{{ object.customer_id.id }}</field>
         <field name="use_default_to" eval="False"/>
-        <field name="body_html" type="html"><p>Adding stuff on <t t-out="object.name or ''"></t></p></field>
+        <field name="body_html" type="html"><p>Adding stuff on <t t-out="object.name or ''"/></p></field>
         <field name="model_id" ref="test_mail.model_mail_test_container"/>
         <field name="auto_delete" eval="True"/>
     </record>
@@ -25,8 +25,7 @@
     </template>
 
     <template id="mail_test_ticket_test_template">
-        <t t-call="web.html_container">
-            <t t-set="o" t-value="res_company"/>
+        <t t-call="web.html_container" o="res_company">
             <t t-call="web.external_layout">
                 <div class="page">
                     <p>This is a sample of an external report.</p>
@@ -36,8 +35,7 @@
     </template>
 
     <template id="mail_test_ticket_test_template_2">
-        <t t-call="web.html_container">
-            <t t-set="o" t-value="res_company"/>
+        <t t-call="web.html_container" o="res_company">
             <t t-call="web.external_layout">
                 <div class="page">
                     <p>This is another sample of an external report.</p>

@@ -13,9 +13,7 @@
                     <tr>
                         <th t-foreach="grid['header']" t-as="column_header" class="o_grid_title_header text-center">
                             <span t-out="column_header['name']">Column name</span>
-                            <t t-call="product_matrix.extra_price">
-                                <t t-set="price" t-value="column_header.get('price', False)"/>
-                            </t>
+                            <t t-call="product_matrix.extra_price" price="column_header.get('price', False)"/>
                         </th>
                     </tr>
                 </thead>
@@ -23,9 +21,7 @@
                     <tr t-foreach="grid['matrix']" t-as="row">
                         <td t-foreach="row" t-as="cell" t-if="cell.get('name', False)" class="text-start">
                             <strong t-out="cell['name']">Cell name</strong>
-                            <t t-call="product_matrix.extra_price">
-                                <t t-set="price" t-value="cell.get('price', False)"/>
-                            </t>
+                            <t t-call="product_matrix.extra_price" price="cell.get('price', False)"/>
                         </td>
                         <td t-else="" class="text-end">
                             <span t-out="cell.get('qty', 0)" class="o_grid_cell_container"/>
