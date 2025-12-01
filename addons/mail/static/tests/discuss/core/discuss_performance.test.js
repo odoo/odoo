@@ -1,4 +1,5 @@
 import {
+    click,
     contains,
     defineMailModels,
     insertText,
@@ -14,6 +15,7 @@ import { Message } from "@mail/core/common/message";
 import { describe, expect, test } from "@odoo/hoot";
 import { onMounted, onPatched } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -67,4 +69,43 @@ test("posting new message should only render relevant part", async () => {
     const result2 = stopObserve2();
     expect(result2.get(Composer)).toBeLessThan(3); // 2: temp disabling + clear content
     expect(result2.get(Message)).toBeLessThan(4); // 3: new temp msg + new genuine msg + prev msg
+});
+
+test("replying to message should only render relevant part", async () => {
+    // For example, it should not render all messages when selecting message to reply
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const messageIds = range(0, 10).map((i) =>
+        pyEnv["mail.message"].create({ body: `${i}`, model: "discuss.channel", res_id: channelId })
+    );
+    messageIds.pop(); // remove last as this is the one to be replied to
+    let replying = false;
+    prepareObserveRenders();
+    patchWithCleanup(Message.prototype, {
+        setup() {
+            const cb = () => {
+                if (replying) {
+                    if (messageIds.includes(this.message.id)) {
+                        throw new Error(
+                            "Should not re-render other messages on replying to a message"
+                        );
+                    }
+                }
+            };
+            onMounted(cb);
+            onPatched(cb);
+            return super.setup();
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 10 });
+    const stopObserve = observeRenders();
+    replying = true;
+    await click(".o-mail-Message:last [title='Reply']");
+    await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");
+    replying = false;
+    const result = stopObserve();
+    expect(result.get(Composer)).toBeLessThan(2);
+    expect(result.get(Message)).toBeLessThan(2);
 });
