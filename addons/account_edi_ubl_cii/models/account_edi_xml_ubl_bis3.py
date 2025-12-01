@@ -435,10 +435,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'peppol_en16931_ubl_seller_endpoint': self._check_required_fields(
                 vals['supplier'], 'vat'
             ),
-            # PEPPOL-EN16931-R010: Buyer electronic address MUST be provided
-            'peppol_en16931_ubl_buyer_endpoint': self._check_required_fields(
-                vals['customer'], 'vat'
-            ),
             # PEPPOL-EN16931-R003: A buyer reference or purchase order reference MUST be provided.
             'peppol_en16931_ubl_buyer_ref_po_ref':
                 "A buyer reference or purchase order reference must be provided." if self._check_required_fields(
