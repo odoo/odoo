@@ -72,7 +72,7 @@ export class HighlightConfigurator extends Component {
                 revertHighlight: this.props.revertHighlight,
                 style: `
                     --text-highlight-width: ${(this.state.thickness || 2) / fontRatio}px;
-                    --text-highlight-color: ${this.state.color || "var(--o-color-1)"};
+                    --text-highlight-color: ${this.state.color || "var(--hb-cp-o-color-1)"};
                 `,
             },
             _t("Select a highlight"),
