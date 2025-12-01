@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_picking_internal_search_inherit_stock_dropshipping" model="ir.ui.view">
-        <field name="name">stock.picking.search</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='internal']" position="after">
-                <filter name="dropships" invisible="1" string="Dropships" domain="[('picking_type_code', '=', 'dropship')]"/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="action_picking_tree_dropship" model="ir.actions.act_window">
         <field name="name">Dropships</field>
         <field name="res_model">stock.picking</field>
