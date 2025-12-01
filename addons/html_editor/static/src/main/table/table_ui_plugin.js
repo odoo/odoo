@@ -89,21 +89,17 @@ export class TableUIPlugin extends Plugin {
         if (this.isMenuOpened) {
             return;
         }
-        if (
-            ["TD", "TH"].includes(target.tagName) &&
-            target !== this.activeTd &&
-            this.editable.contains(target)
-        ) {
+        const targetCell = closestElement(target, "td, th");
+        if (targetCell && targetCell !== this.activeTd && this.editable.contains(targetCell)) {
             if (ev.target.isContentEditable) {
-                this.setActiveTd(target);
+                this.setActiveTd(targetCell);
             }
         } else if (this.activeTd) {
             const isOverlay = target.closest(".o-we-table-menu");
             if (isOverlay) {
                 return;
             }
-            const parentTd = closestElement(target, "td, th");
-            if (!parentTd) {
+            if (!targetCell) {
                 this.setActiveTd(null);
             }
         }
