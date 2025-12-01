@@ -380,6 +380,36 @@ describe("button edit", () => {
             '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">X[]</a></p>'
         );
     });
+
+    test("changing button type to secondary doesn't change button's size and shape", async () => {
+        await setupEditor(
+            `<p><a href="https://test.com/" class="btn btn-lg btn-outline-custom" style="border-width: 1px; border-color: black; border-style: dashed;">link[]Label</a></p>`,
+            allowCustomOpt
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        await click('select[name="link_type"]');
+        await select("secondary");
+        await animationFrame();
+
+        expect("a").toHaveClass("btn btn-lg btn-outline-secondary");
+    });
+
+    test("changing button type to primary doesn't change button's size and shape", async () => {
+        await setupEditor(
+            `<p><a href="https://test.com/" class="btn btn-sm btn-custom flat">link[]Label</a></p>`,
+            allowCustomOpt
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        await click('select[name="link_type"]');
+        await select("primary");
+        await animationFrame();
+
+        expect("a").toHaveClass("btn btn-primary btn-sm flat");
+    });
 });
 
 test("button should never contain selection placeholder", async () => {
