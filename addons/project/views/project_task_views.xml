@@ -213,6 +213,7 @@
                 'show_project_update': True,
                 'search_default_open_tasks': 1,
                 'display_milestone_deadline': True,
+                'compute_task_planned_dates': 1,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -1059,6 +1060,7 @@
                 'search_default_open_tasks': 1,
                 'my_tasks': 1,
                 'default_user_ids': [(4, uid)],
+                'compute_task_planned_dates': 1,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="domain">[('user_ids', 'in', uid), ('has_template_ancestor', '=', False), ('has_project_template', '=', False)]</field>
@@ -1112,7 +1114,7 @@
             <field name="path">all-tasks</field>
             <field name="view_mode">list,kanban,form,calendar,activity,pivot,graph</field>
             <field name="domain">[('has_template_ancestor', '=', False), ('has_project_template', '=', False)]</field>
-            <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
+            <field name="context">{'compute_task_planned_dates': 1, 'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
