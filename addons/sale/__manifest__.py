@@ -76,7 +76,6 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/js/sale_order_line_field/*",
             "sale/static/src/js/section_qty_field/*",
             "sale/static/src/js/section_uom_field/*",
-            "sale/static/src/js/sale_progressbar_field.js",
             "sale/static/src/js/tours/sale.js",
             "sale/static/src/js/upload_rfq_cog_menu/*",
             "sale/static/src/js/sale_product_mixin.js",
@@ -86,7 +85,6 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/js/date_filter_button/**/*",
             "sale/static/src/js/dashboard/**/*",
             ("remove", "sale/static/src/js/dashboard/**/*.dark.scss"),
-            "sale/static/src/xml/**/*",
             "sale/static/src/views/**/*",
         ],
         'web.assets_web_dark': [
