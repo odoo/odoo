@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.fields import Domain
 
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
@@ -18,7 +19,7 @@ class HrLeaveReportCalendar(models.Model):
     duration_display = fields.Char(related='leave_id.duration_display', readonly=True)
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
     duration = fields.Float(string='Duration', readonly=True)
-    employee_id = fields.Many2one('hr.employee', readonly=True)
+    employee_id = fields.Many2one('hr.employee', readonly=True, group_expand="_read_group_employee_id")
     user_id = fields.Many2one('res.users', readonly=True)
     department_id = fields.Many2one('hr.department', readonly=True)
     job_id = fields.Many2one('hr.job', readonly=True)
@@ -135,3 +136,38 @@ class HrLeaveReportCalendar(models.Model):
         else:
             # If the user is not a leave manager, raise an error
             raise ValidationError(self.env._("You are not allowed to refuse this leave request."))
+
+    def _read_group_employee_id(self, employees, domain):
+        field_map = {
+            'employee_id': '',
+            'department_id': 'current_version_id.department_id',
+            'job_id': 'current_version_id.job_id',
+            'company_id': 'company_id',
+        }
+        time_fields = ['start_datetime', 'stop_datetime']
+        new_domain = []
+        for item in domain:
+            if not isinstance(item, (list, tuple)):
+                new_domain.append(item)
+                continue
+            field, op, val = item
+            if field in time_fields:
+                new_domain.append(Domain.TRUE)
+                continue
+            if field == 'member_of_department':
+                new_domain.append(item)
+                continue
+
+            root = field.split('.')[0]
+            if root not in field_map:
+                return employees
+            target = field_map[root]
+            if field == root:
+                final_field = f"{target}.name" if target else "name"
+            else:
+                suffix = field.split('.', 1)[1]
+                final_field = f"{target}.{suffix}" if target else suffix
+            new_domain.append((final_field, op, val))
+        new_domain = Domain(new_domain) & Domain('company_id', 'in', self.env.context.get('allowed_company_ids', []))
+        result = employees | self.env['hr.employee'].search(new_domain)
+        return result.sorted('name')
