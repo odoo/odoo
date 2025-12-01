@@ -1,11 +1,9 @@
 id,name,model_id,group_id/id,operation,domain
 access_fetchmail_server,fetchmail.server,fetchmail.server,base.group_system,crud,
-mail_message_rule_access_read,read res_model,mail.message,base.group_public,r,"[('res_access_read', '=', True)]"
-mail_message_rule_access_read_1,read res_model,mail.message,base.group_portal,r,"[('res_access_read', '=', True)]"
+mail_message_rule_access_read,read res_model,mail.message,base.group_everyone,r,"[('res_access_read', '=', True)]"
 mail_message_rule_access_write,write res_model,mail.message,base.group_portal,u,"[('res_access_write', '=', True)]"
 mail_message_rule_access_create,create res_model,mail.message,base.group_portal,c,"[('res_access_create', '=', True)]"
 mail_message_rule_access_unlink,unlink res_model,mail.message,base.group_portal,d,"[('res_access_unlink', '=', True)]"
-mail_message_rule_access_read_2,read res_model,mail.message,base.group_user,r,"[('res_access_read', '=', True)]"
 mail_message_rule_access_write_1,write res_model,mail.message,base.group_user,u,"[('res_access_write', '=', True)]"
 mail_message_rule_access_create_1,create res_model,mail.message,base.group_user,c,"[('res_access_create', '=', True)]"
 mail_message_rule_access_unlink_1,unlink res_model,mail.message,base.group_user,d,"[('res_access_unlink', '=', True)]"
@@ -17,7 +15,7 @@ ir_rule_mail_notifications_group_portal,mail.notifications: group_portal: own en
 access_mail_notification_user,mail.notification.user,mail.notification,base.group_user,cr,
 ir_rule_mail_notifications_group_user,mail.notifications: group_user: write its own entries,mail.notification,base.group_user,u,"[('res_partner_id', '=', user.partner_id.id)]"
 access_mail_notification_system, mail.notification.system,mail.notification,base.group_system,crd,
-ir_rule_discuss_channel_all,discuss.channel: can access channels (as member or as group allowed),discuss.channel,base.group_public,r,"
+ir_rule_discuss_channel_all,discuss.channel: can access channels (as member or as group allowed),discuss.channel,base.group_everyone,r,"
                 [
                     ""|"",
                         ""&"",
@@ -32,22 +30,7 @@ ir_rule_discuss_channel_all,discuss.channel: can access channels (as member or a
                                 (""group_public_id"", ""in"", user.all_group_ids.ids),
                 ]
             "
-ir_rule_discuss_channel_all_1,discuss.channel: can access channels (as member or as group allowed),discuss.channel,base.group_portal,r,"
-                [
-                    ""|"",
-                        ""&"",
-                            (""channel_type"", ""!="", ""channel""),
-                            ""|"",
-                                (""is_member"", ""="", True),
-                                (""parent_channel_id.is_member"", ""="", True),
-                        ""&"",
-                            (""channel_type"", ""="", ""channel""),
-                            ""|"",
-                                (""group_public_id"", ""="", False),
-                                (""group_public_id"", ""in"", user.all_group_ids.ids),
-                ]
-            "
-ir_rule_discuss_channel_all_2,discuss.channel: can access channels (as member or as group allowed),discuss.channel,base.group_user,cru,"
+ir_rule_discuss_channel_all_user_write,discuss.channel: can update channels (as member or as group allowed),discuss.channel,base.group_user,cu,"
                 [
                     ""|"",
                         ""&"",
@@ -65,16 +48,16 @@ ir_rule_discuss_channel_all_2,discuss.channel: can access channels (as member or
 ir_rule_discuss_channel_group_system,discuss.channel: admin full access,discuss.channel,base.group_system,crud,
 access_discuss_category_user,discuss.category.user,discuss.category,base.group_user,r,
 access_discuss_category_erp_manager,discuss.category.erp_manager,discuss.category,base.group_erp_manager,crud,
-ir_rule_discuss_channel_member_is_self_all,discuss.channel.member: access their own entries,discuss.channel.member,base.group_public,ud,"
+ir_rule_discuss_channel_member_is_self_all,discuss.channel.member: access their own entries,discuss.channel.member,base.group_everyone,ud,"
                 [
                     ('is_self', '=', True),
                     ('channel_id', 'access', 'read'),
                 ]
             "
-ir_rule_discuss_channel_member_read_all,discuss.channel.member: read members of accessible channels,discuss.channel.member,base.group_public,r,"
+ir_rule_discuss_channel_member_read_all,discuss.channel.member: read members of accessible channels,discuss.channel.member,base.group_everyone,r,"
                 [('channel_id', 'access', 'read')]
             "
-ir_rule_discuss_channel_member_is_channel_owner_unlink,discuss.channel.member: channel owner can remove members except owners,discuss.channel.member,base.group_public,d,"
+ir_rule_discuss_channel_member_is_channel_owner_unlink,discuss.channel.member: channel owner can remove members except owners,discuss.channel.member,base.group_everyone,d,"
                 [
                     (""channel_id.self_member_id.channel_role"", ""="", ""owner""),
                     (""channel_role"", ""!="", ""owner""),
@@ -83,7 +66,7 @@ ir_rule_discuss_channel_member_is_channel_owner_unlink,discuss.channel.member: c
                         (""channel_id.channel_type"", ""="", ""group""),
                 ]
             "
-ir_rule_discuss_channel_member_is_channel_admin_unlink,discuss.channel.member: channel admin can remove members except admins and owners,discuss.channel.member,base.group_public,d,"
+ir_rule_discuss_channel_member_is_channel_admin_unlink,discuss.channel.member: channel admin can remove members except admins and owners,discuss.channel.member,base.group_everyone,d,"
                 [
                     (""channel_id.self_member_id.channel_role"", ""="", ""admin""),
                     (""channel_role"", ""="", False),
@@ -92,75 +75,7 @@ ir_rule_discuss_channel_member_is_channel_admin_unlink,discuss.channel.member: c
                         (""channel_id.channel_type"", ""="", ""group""),
                 ]
             "
-ir_rule_discuss_channel_member_create_is_group_matching_all,discuss.channel.member: can join accessible channels,discuss.channel.member,base.group_public,c,"
-                [
-                    ('is_self', '=', True),
-                    ('channel_id.channel_type', '=', 'channel'),
-                    ('channel_id', 'access', 'read'),
-                ]
-            "
-ir_rule_discuss_channel_member_is_self_all_1,discuss.channel.member: access their own entries,discuss.channel.member,base.group_portal,ud,"
-                [
-                    ('is_self', '=', True),
-                    ('channel_id', 'access', 'read'),
-                ]
-            "
-ir_rule_discuss_channel_member_read_all_1,discuss.channel.member: read members of accessible channels,discuss.channel.member,base.group_portal,r,"
-                [('channel_id', 'access', 'read')]
-            "
-ir_rule_discuss_channel_member_is_channel_owner_unlink_1,discuss.channel.member: channel owner can remove members except owners,discuss.channel.member,base.group_portal,d,"
-                [
-                    (""channel_id.self_member_id.channel_role"", ""="", ""owner""),
-                    (""channel_role"", ""!="", ""owner""),
-                    ""|"",
-                        (""channel_id.channel_type"", ""="", ""channel""),
-                        (""channel_id.channel_type"", ""="", ""group""),
-                ]
-            "
-ir_rule_discuss_channel_member_is_channel_admin_unlink_1,discuss.channel.member: channel admin can remove members except admins and owners,discuss.channel.member,base.group_portal,d,"
-                [
-                    (""channel_id.self_member_id.channel_role"", ""="", ""admin""),
-                    (""channel_role"", ""="", False),
-                    ""|"",
-                        (""channel_id.channel_type"", ""="", ""channel""),
-                        (""channel_id.channel_type"", ""="", ""group""),
-                ]
-            "
-ir_rule_discuss_channel_member_create_is_group_matching_all_1,discuss.channel.member: can join accessible channels,discuss.channel.member,base.group_portal,c,"
-                [
-                    ('is_self', '=', True),
-                    ('channel_id.channel_type', '=', 'channel'),
-                    ('channel_id', 'access', 'read'),
-                ]
-            "
-ir_rule_discuss_channel_member_is_self_all_2,discuss.channel.member: access their own entries,discuss.channel.member,base.group_user,ud,"
-                [
-                    ('is_self', '=', True),
-                    ('channel_id', 'access', 'read'),
-                ]
-            "
-ir_rule_discuss_channel_member_read_all_2,discuss.channel.member: read members of accessible channels,discuss.channel.member,base.group_user,r,"
-                [('channel_id', 'access', 'read')]
-            "
-ir_rule_discuss_channel_member_is_channel_owner_unlink_2,discuss.channel.member: channel owner can remove members except owners,discuss.channel.member,base.group_user,d,"
-                [
-                    (""channel_id.self_member_id.channel_role"", ""="", ""owner""),
-                    (""channel_role"", ""!="", ""owner""),
-                    ""|"",
-                        (""channel_id.channel_type"", ""="", ""channel""),
-                        (""channel_id.channel_type"", ""="", ""group""),
-                ]
-            "
-ir_rule_discuss_channel_member_is_channel_admin_unlink_2,discuss.channel.member: channel admin can remove members except admins and owners,discuss.channel.member,base.group_user,d,"
-                [
-                    (""channel_id.self_member_id.channel_role"", ""="", ""admin""),
-                    (""channel_role"", ""="", False),
-                    ""|"",
-                        (""channel_id.channel_type"", ""="", ""channel""),
-                        (""channel_id.channel_type"", ""="", ""group""),
-                ]
-            "
-ir_rule_discuss_channel_member_create_is_group_matching_all_2,discuss.channel.member: can join accessible channels,discuss.channel.member,base.group_user,c,"
+ir_rule_discuss_channel_member_create_is_group_matching_all,discuss.channel.member: can join accessible channels,discuss.channel.member,base.group_everyone,c,"
                 [
                     ('is_self', '=', True),
                     ('channel_id.channel_type', '=', 'channel'),
@@ -183,15 +98,7 @@ ir_rule_discuss_channel_member_create_is_member_group_user,discuss.channel.membe
             "
 ir_rule_discuss_channel_member_group_system,discuss.channel.member: admin can manipulate all entries,discuss.channel.member,base.group_system,crud,
 access_discuss_channel_rtc_session_system,discuss.channel.rtc.session.system,discuss.channel.rtc.session,base.group_system,crud,
-ir_rule_discuss_call_history_read_all,discuss.call.history: read call history of accessible channels,discuss.call.history,base.group_user,r,"
-                [('channel_id', 'access', 'read')]
-            "
-ir_rule_discuss_call_history_read_all_1,discuss.call.history: read call history of accessible channels,discuss.call.history,base.group_public,r,"
-                [('channel_id', 'access', 'read')]
-            "
-ir_rule_discuss_call_history_read_all_2,discuss.call.history: read call history of accessible channels,discuss.call.history,base.group_portal,r,"
-                [('channel_id', 'access', 'read')]
-            "
+ir_rule_discuss_call_history_read_all,discuss.call.history: read call history of accessible channels,discuss.call.history,base.group_everyone,r,"[('channel_id', 'access', 'read')]"
 access_res_role_user,res.role.user,res.role,base.group_user,r,
 access_res_role_admin,res.role.admin,res.role,base.group_erp_manager,crud,
 access_mail_alias_user,mail.alias.user,mail.alias,base.group_user,r,
@@ -200,8 +107,7 @@ access_mail_alias_domain_user,mail.alias.domain.user,mail.alias.domain,base.grou
 access_mail_alias_domain_system,mail.alias.domain.system,mail.alias.domain,base.group_erp_manager,crud,
 access_mail_gateway_allowed_system,mail.gateway.allowed.system,mail.gateway.allowed,base.group_system,crud,
 access_mail_message_reaction_system,mail.message.reaction.system,mail.message.reaction,base.group_system,crud,
-mail_message_subtype_rule_public,mail.message.subtype: portal/public: read public subtypes,mail.message.subtype,base.group_public,r,"[('internal', '=', False)]"
-mail_message_subtype_rule_public_1,mail.message.subtype: portal/public: read public subtypes,mail.message.subtype,base.group_portal,r,"[('internal', '=', False)]"
+mail_message_subtype_rule_public,mail.message.subtype: portal/public: read public subtypes,mail.message.subtype,base.group_everyone,r,"[('internal', '=', False)]"
 access_mail_message_subtype_user,mail.message.subtype.user,mail.message.subtype,base.group_user,r,
 access_mail_message_subtype_system,mail.message.subtype.system,mail.message.subtype,base.group_system,crud,
 access_mail_presence,mail.presence,mail.presence,base.group_system,crud,

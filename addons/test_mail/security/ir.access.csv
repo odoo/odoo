@@ -8,7 +8,7 @@ ir_rule_mail_test_access_portal,Portal: public/logged/logged readonly only,mail.
 ir_rule_mail_test_access_portal_update,Portal: update logged only,mail.test.access,base.group_portal,ru,"[
             '|', ('access', '=', 'logged'),
             '&', ('access', '=', 'followers'), ('message_partner_ids', 'in', [user.partner_id.id])]"
-ir_rule_mail_test_access_public,Public: public only,mail.test.access,base.group_public,r,"[('access', '=', 'public')]"
+ir_rule_mail_test_access_public,Public: public only,mail.test.access,base.group_everyone,r,"[('access', '=', 'public')]"
 ir_rule_mail_test_access_internal,Internal: read not admin,mail.test.access,base.group_user,r,"[('access', '!=', 'admin')]"
 ir_rule_mail_test_access_internal_update,Internal: update not admin and not readonly,mail.test.access,base.group_user,cud,"[('access', 'not in', ('internal_ro', 'admin'))]"
 ir_rule_mail_test_access_admin,Admin: all,mail.test.access,base.group_system,crud,
@@ -16,8 +16,7 @@ ir_rule_mail_test_access_custo_portal_read,Portal: read unlocked,mail.test.acces
 access_mail_test_access_custo_user,mail.access.portal.user,mail.test.access.custo,base.group_user,r,
 ir_rule_mail_test_access_custo_update,Internal: create/write/unlink unlocked and not readonly,mail.test.access.custo,base.group_user,cud,"[('is_readonly', '=', False), ('is_locked', '=', False)]"
 ir_rule_mail_test_access_custo_update_admin,Admin: all,mail.test.access.custo,base.group_system,crud,
-access_mail_test_access_public_public,mail.test.access.public.public,mail.test.access.public,base.group_public,ru,
-access_mail_test_access_public_portal,mail.test.access.public.portal,mail.test.access.public,base.group_portal,ru,
+access_mail_test_access_public_public,mail.test.access.public.public,mail.test.access.public,base.group_everyone,ru,
 access_mail_test_access_public_user,mail.test.access.public.user,mail.test.access.public,base.group_user,crud,
 access_mail_test_alias_optional_portal,mail.test.alias.optional.portal,mail.test.alias.optional,base.group_portal,r,
 access_mail_test_alias_optional_user,mail.test.alias.optional.user,mail.test.alias.optional,base.group_user,crud,
