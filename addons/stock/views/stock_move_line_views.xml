@@ -33,7 +33,7 @@
                        decoration-muted="state == 'draft'"
                        decoration-success="state == 'done'"
                        decoration-warning="state not in ('draft','cancel','done','assigned')"/>
-                <field name="create_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
+                <field name="write_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
             </list>
         </field>
     </record>
@@ -102,7 +102,7 @@
                             <field name="package_id" string="Source Package" groups="stock.group_tracking_lot"/>
                             <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
-                            <field name="create_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
+                            <field name="write_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
                         </group>
                     </group>
                 </sheet>
