@@ -32,7 +32,7 @@ if typing.TYPE_CHECKING:
 class BaseString(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
     translate: bool | Callable[[Callable[[str], str], str], str] = False  # whether the field is translated
-    autonomous_lang: bool = True
+    autonomous_lang: bool = False
     size = None                         # maximum size of values (deprecated)
     is_text = True
     falsy_value = ''
@@ -601,6 +601,8 @@ class Html(BaseString):
         # Otherwise, breaks `--test-tags .test_render_field`, for instance.
         elif attrs.get('translate') is True and attrs.get('sanitize', True):
             attrs['translate'] = html_translate
+        if attrs.get("translate") == html_translate and "render_engine" not in attrs and "autonomous_lang" not in attrs:
+            attrs["autonomous_lang"] = True
         return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))
