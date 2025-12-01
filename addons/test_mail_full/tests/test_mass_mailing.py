@@ -154,3 +154,25 @@ class TestMassMailing(TestMailFullCommon):
         # sent: 15, 2 bl, 3 opt-out, 3 invalid -> 7 remaining
         # ignored: 2 bl + 3 optout + 2 invalid + 1 duplicate; failed: 0
         self.assertMailingStatistics(mailing, expected=16, delivered=7, sent=7, canceled=9, failed=0)
+
+    # tests should be a little more fleshed out as the feature reaches maturity,
+    # for now these are mostly to underline what I think should be tested
+    # The client action should be tested as well
+    def test_send_mailing_action_presence(self):
+        """
+        Test that _mailing_enabled models have access to the Send Email toolbar action.
+        """
+        send_mail_action = self.env.ref('mass_mailing.action_toolbar_mass_mail')
+        contact_views = self.env['mailing.contact'].get_views([(False, 'form'), (False, 'list')], {'toolbar': True})['views']
+        portal_views = self.env['mail.test.portal'].get_views([(False, 'form'), (False, 'list')], {'toolbar': True})['views']
+
+        contact_list_actions = contact_views['list']['toolbar'].get('action', {})
+        contact_form_actions = contact_views['form']['toolbar'].get('action', {})
+        portal_list_actions = portal_views['list']['toolbar'].get('action', {})
+
+        self.assertTrue(any(a['id'] == send_mail_action.id for a in contact_list_actions),
+            'Action should be present in mailing-enabled models for list and kanban views')
+        self.assertFalse(any(a['id'] == send_mail_action.id for a in contact_form_actions),
+            'Action should not be present for other types of views')
+        self.assertFalse(any(a['id'] == send_mail_action.id for a in portal_list_actions),
+            'Action should not be present for non-mailing-enabled models')

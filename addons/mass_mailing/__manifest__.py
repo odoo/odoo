@@ -49,6 +49,7 @@
         'views/mailing_subscription_optout_views.xml',
         'views/mailing_subscription_views.xml',
         'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
         'views/utm_campaign_views.xml',
         'views/mailing_menus.xml',
         'views/mailing_templates_portal_layouts.xml',
@@ -161,6 +162,7 @@
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
             'mass_mailing/static/src/js/mailing_m2o_filter.js',
+            'mass_mailing/static/src/js/toolbar/**/*',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',
             'mass_mailing/static/src/js/tours/**/*',
         ],
@@ -182,6 +184,7 @@
             'mass_mailing/static/tests/mass_mailing_html_field.test.js',
         ],
     },
+    'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
