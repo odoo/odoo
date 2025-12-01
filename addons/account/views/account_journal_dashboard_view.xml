@@ -215,10 +215,12 @@
                     </t>
 
                     <t t-name="JournalMiscelaneous">
-                        <div id="dashboard_misc_left" class="col mb-3 mb-sm-0">
-                            <button id="new_misc_entry_button" type="object" name="action_create_new" class="btn btn-primary float-start me-1" groups="account.group_account_user">
-                                New
-                            </button>
+                        <div id="dashboard_misc_left" class="col mb-3 mb-sm-0 o_kanban_primary_left">
+                            <div name="dashboard_misc_buttons" class="d-flex gap-1">
+                                <button id="new_misc_entry_button" type="object" name="action_create_new" class="btn btn-primary float-start me-1" groups="account.group_account_user">
+                                    New
+                                </button>
+                            </div>
                         </div>
                         <div id="dashboard_general_right" class="col-auto">
                             <t t-if="dashboard.number_draft > 0">
