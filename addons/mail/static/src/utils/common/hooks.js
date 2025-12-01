@@ -402,7 +402,24 @@ export function useMessageScrolling(duration = 2000) {
 }
 
 export function useMessageSelection() {
-    return useState({ messageId: undefined });
+    let selectedMessageId;
+    const state = useState({
+        _data: new Set(),
+        clearSelected() {
+            this._data.delete(selectedMessageId);
+        },
+        /** @param {import("models").Message} message */
+        isSelected(message) {
+            return this._data.has(message.id);
+        },
+        /** @param {import("models").Message} message */
+        setSelected(message) {
+            this.clearSelected();
+            this._data.add(message.id);
+            selectedMessageId = message.id;
+        },
+    });
+    return state;
 }
 
 export function useMicrophoneVolume() {
