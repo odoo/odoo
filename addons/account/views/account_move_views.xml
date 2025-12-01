@@ -1120,8 +1120,7 @@
                                             <field name="currency_id"
                                                    readonly="state != 'draft'"
                                                    class="oe_inline"
-                                                   options="{'no_create': True}"
-                                                   context="{'search_default_active': 1, 'search_default_inactive': 1}"/>
+                                                   options="{'no_create': True}"/>
                                             <widget name="account_pick_currency_date" invisible="state != 'draft' or currency_id == company_currency_id"/>
                                         </div>
                                         <div name="currency_conversion_div"
