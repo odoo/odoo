@@ -28,6 +28,10 @@ export class PopupTable extends Component {
         this.props.selectTable(null);
     }
 
+    selectTable(table) {
+        this.state.selectedTable = table.id;
+    }
+
     get validSelection() {
         return Boolean(this.selectedTable);
     }

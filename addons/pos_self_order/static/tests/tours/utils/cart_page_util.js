@@ -17,21 +17,22 @@ export function selectTable(table) {
     return [
         {
             content: `Select table ${table}`,
-            trigger: `.self_order_popup_table select`,
+            trigger: `.self_order_popup_table .table-card`,
             run: (helpers) => {
                 // The default select (run: select 3) doesn't work here
-                const options = document.querySelectorAll(".self_order_popup_table option");
-                const targetOption = Array.from(options).find((option) =>
-                    option.textContent.includes(table)
+                const buttons = document.querySelectorAll(".self_order_popup_table .table-card");
+                const target = Array.from(buttons).find(
+                    (b) => b.textContent && b.textContent.trim().includes(String(table))
                 );
-                const optionValue = targetOption.value;
-                helpers.anchor.value = optionValue;
-                helpers.anchor.dispatchEvent(new Event("change"));
+                if (!target) {
+                    throw new Error(`Table button "${table}" not found`);
+                }
+                target.dispatchEvent(new Event("click"));
             },
         },
         {
             content: `Click on 'Confirm' button`,
-            trigger: `.self_order_popup_table .btn:contains('Continue with table ${table}')`,
+            trigger: `.self_order_popup_table .btn:contains('Confirm Table')`,
             run: "click",
         },
     ];

@@ -3,6 +3,29 @@
     animation: popupAnimation 0.2s ease-in-out forwards;
 }
 
+.self_order_popup_table {
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+
+  .popup-body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.table-card {
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  &.selected {
+    background: linear-gradient(180deg, rgba(47,118,247,0.08), rgba(47,118,247,0.03));
+    border-color: $primary;
+  }
+}
+
+.tables-grid {
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+}
+
 @keyframes popupAnimation {
     0% {
       bottom: -40vh;
