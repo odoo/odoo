@@ -28,14 +28,18 @@ class ResPartner(models.Model):
     available_peppol_edi_formats = fields.Json(compute='_compute_available_peppol_edi_formats')
     peppol_verification_state = fields.Selection(
         selection=[
-            ('not_verified', 'Not verified yet'),
-            ('not_valid', 'Not on Peppol'),  # does not exist on Peppol at all
-            ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
-            ('valid', 'Valid'),
+            ('not_verified', 'Unchecked'),
+            ('not_valid', 'Partner is not on Peppol'),  # does not exist on Peppol at all
+            ('not_valid_format', 'Partner cannot receive format'),  # registered on Peppol but cannot receive the selected document type
+            ('valid', 'Partner is on Peppol'),
         ],
-        string='Peppol endpoint verification',
+        string='Peppol status',
         company_dependent=True,
     )
+
+    @api.onchange('invoice_edi_format', 'peppol_endpoint', 'peppol_eas')
+    def _onchange_verify_peppol_status(self):
+        self.button_account_peppol_check_partner_endpoint()
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
