@@ -48,6 +48,7 @@ class KeyboardUSBDriver(Driver):
         super().__init__(identifier, device)
         self.device_connection = 'direct'
         self.device_name = self._set_name()
+        self.data["status"] = "success"  # allow listening on device
 
         self._actions.update({
             'update_layout': self._update_layout,
