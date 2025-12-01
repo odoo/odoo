@@ -1,0 +1,36 @@
+name: Deploy Odoo elgendy
+
+on:
+  push:
+    branches:
+      - "19.0"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Deploy Odoo 19 from Git
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          host: 167.71.6.96
+          username: root
+          port: 22
+          privateKey: ${{ secrets.DEPLOY_SSH_KEY }}
+          command: |
+
+            echo "📥 Pulling latest code..."
+            cd /opt/odoo-latest
+            git reset --hard
+            git pull origin 19.0
+
+            echo "🔧 Fixing permissions..."
+            chown -R odoo:odoo /opt/odoo-latest
+            find /opt/odoo-latest -type d -exec chmod 755 {} \;
+            find /opt/odoo-latest -type f -exec chmod 644 {} \;
+
+            echo "🔁 Restarting Odoo..."
+            systemctl restart odoo.service
+
+            echo "🚀 Deployment completed successfully!"
