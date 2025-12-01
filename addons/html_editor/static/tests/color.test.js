@@ -966,3 +966,11 @@ test("should be able to remove color applied by 'text-*' classes (2)", async () 
         contentAfter: '<p><a href="#">[a]</a></p>',
     });
 });
+
+test("should be able to remove color from block element", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#" class="nav-link text-muted">[a]</a></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><a href="#" class="nav-link">[a]</a></p>',
+    });
+});

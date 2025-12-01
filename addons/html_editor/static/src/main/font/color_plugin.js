@@ -270,6 +270,12 @@ export class ColorPlugin extends Plugin {
                                     font.style.removeProperty(style);
                                 }
                             }
+                            font.classList.forEach((className) => {
+                                if (TEXT_CLASSES_REGEX.test(className)) {
+                                    font.classList.remove(className);
+                                    newFont.classList.add(className);
+                                }
+                            });
                             newFont.append(...font.childNodes);
                             font.append(newFont);
                             font = newFont;
