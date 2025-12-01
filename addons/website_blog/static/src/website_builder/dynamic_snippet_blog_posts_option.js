@@ -66,4 +66,10 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
             "website_blog.dynamic_filter_template_blog_post_big_picture"
         );
     }
+    showCoverImage() {
+        return (
+            this.templateKeyState.templateKey ===
+            "website_blog.dynamic_filter_template_blog_post_single_aside"
+        );
+    }
 }
