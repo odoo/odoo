@@ -117,7 +117,7 @@ function _parseAndTransform(nodes, transformFunction) {
  * @param {string} text
  * @return {ReturnType<markup>} linkified text
  */
-function linkify(text) {
+export function linkify(text) {
     let curIndex = 0;
     let result = "";
     let match;

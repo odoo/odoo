@@ -7,7 +7,7 @@ import {
     startServer,
     openFormView,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, queryFirst, test } from "@odoo/hoot";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -184,4 +184,33 @@ test("Replying to a message containing line breaks should be correctly inlined",
     await contains(".o-mail-MessageInReply-message", {
         text: "Message first line. Message second line. Message third line.",
     });
+});
+
+test("Replying to a message containing links should preserve link in preview reply preview", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const messageId = pyEnv["mail.message"].create({
+        body: `<p>test <a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a></p>`,
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        body: "Howdy",
+        message_type: "comment",
+        model: "discuss.channel",
+        author_id: partnerId,
+        parent_id: messageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
+    expect(queryFirst(".o-mail-Message:eq(0) .o-mail-Message-body").innerHTML).toBe(
+        `<p>test <a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a></p>`
+    );
+    expect(queryFirst(".o-mail-Message:eq(1) .o-mail-MessageInReply-message").innerHTML).toBe(
+        `test <a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>`
+    );
 });

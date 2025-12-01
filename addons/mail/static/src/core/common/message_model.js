@@ -8,6 +8,7 @@ import {
     generateEmojisOnHtml,
     getNonEditableMentions,
     htmlToTextContentInline,
+    linkify,
 } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
@@ -403,6 +404,12 @@ export class Message extends Record {
                 return "";
             }
             return decorateEmojis(htmlToTextContentInline(this.body));
+        },
+    });
+
+    linkifiedInlineBody = fields.Html("", {
+        compute() {
+            return linkify(this.inlineBody);
         },
     });
 
