@@ -813,6 +813,7 @@ class lower_logging(logging.Handler):
             record.levelname = f'_{record.levelname}'
             record.levelno = self.to_level
             self.had_error_log = True
+            record.msg = record.msg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):')
             record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') if isinstance(arg, str) else arg for arg in record.args)
 
         if logging.getLogger(record.name).isEnabledFor(record.levelno):
