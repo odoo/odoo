@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
 
 export class DynamicSnippetEventsOption extends BaseOptionComponent {
@@ -10,5 +10,14 @@ export class DynamicSnippetEventsOption extends BaseOptionComponent {
         const { getModelNameFilter } = this.dependencies.dynamicSnippetEventsOption;
         this.modelNameFilter = getModelNameFilter();
         this.dynamicOptionParams = useDynamicSnippetOption(this.modelNameFilter);
+        this.templateKeyState = useDomState((el) => ({
+            templateKey: el.dataset.templateKey,
+        }));
+    }
+    showCoverImageOption() {
+        return (
+            this.templateKeyState.templateKey ===
+            "website_event.dynamic_filter_template_event_event_single_aside"
+        );
     }
 }
