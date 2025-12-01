@@ -113,7 +113,50 @@
                     </thead>
                     <tbody>
                         <t t-set="total_value" t-value="0"/>
-                        <t t-foreach="o.move_ids" t-as="move">
+                        <t t-set="moves" t-value="o.move_ids"/>
+                        <t t-if="o.env.context.get('mrp_installed')">
+                            <t t-set="kit_moves" t-value="o.move_ids.filtered(lambda m: m.bom_line_id.bom_id.type == 'phantom')"/>
+                            <t t-set="moves" t-value="moves - kit_moves"/>
+                            <t t-foreach="kit_moves.sale_line_id" t-as="kit_sale_line">
+                                <t t-if="kit_sale_line.product_uom_qty">
+                                    <tr>
+                                        <td>
+                                            <span t-field="kit_sale_line.product_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="kit_sale_line.product_uom_qty"/>
+                                            <span t-field="kit_sale_line.product_uom" groups="uom.group_uom"/>
+                                        </td>
+                                        <td t-if="display_discount">
+                                            <span t-field="kit_sale_line.discount"/>
+                                        </td>
+                                        <td>
+                                            <!-- t-if-else kept for stable policy, to be removed in master -->
+                                            <t t-set="lst_price" t-value="kit_sale_line.price_total"/>
+                                            <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            <t t-set="total_value" t-value="total_value + lst_price"/>
+                                        </td>
+                                    </tr>
+                                    <!-- components -->
+                                    <t t-foreach="kit_sale_line.move_ids" t-as="move">
+                                    <t t-if="move in o.move_ids">
+                                        <tr>
+                                            <td>
+                                                <span t-field="move.product_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="move.quantity"/>
+                                                <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                            </td>
+                                            <td t-if="display_discount"/>
+                                            <td/>
+                                        </tr>
+                                    </t>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-foreach="moves" t-as="move">
                             <t t-if="move.quantity">
                                 <tr>
                                     <td>
