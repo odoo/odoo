@@ -78,6 +78,7 @@ class IrModuleModule(models.Model):
                         module_template_data.pop('template_data', None)
                         if module_template_data:
                             ChartTemplate._pre_reload_data(company, {}, module_template_data, force_update=True)
+                            ChartTemplate._pre_load_data(company.chart_template, company, {}, module_template_data)
                             ChartTemplate._load_data(module_template_data)
             if (
                 not self.env.company.chart_template

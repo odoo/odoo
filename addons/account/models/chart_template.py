@@ -1381,6 +1381,7 @@ class AccountChartTemplate(models.AbstractModel):
                 for model, fnames in spec.items()
             }
             ChartTemplate._pre_reload_data(company, {}, pre_defined_data, force_update=True)
+            ChartTemplate._pre_load_data(company.chart_template, company, {}, pre_defined_data)
             ChartTemplate._load_data(pre_defined_data)
 
     # --------------------------------------------------------------------------------
