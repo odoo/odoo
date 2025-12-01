@@ -2308,7 +2308,7 @@ class AccountTax(models.Model):
                 tax_rep_data = {
                     'tax_rep': tax_rep,
                     'tax_amount_currency': currency.round(tax_amount_currency * tax_rep.factor * tax_rep_sign),
-                    'tax_amount': currency.round(tax_data['tax_amount'] * tax_rep.factor * tax_rep_sign),
+                    'tax_amount': company_currency.round(tax_data['tax_amount'] * tax_rep.factor * tax_rep_sign),
                     'account': tax_rep._get_aml_target_tax_account(force_caba_exigibility=include_caba_tags) or base_line['account_id'],
                 }
                 total_tax_rep_amounts['tax_amount_currency'] += tax_rep_data['tax_amount_currency']
