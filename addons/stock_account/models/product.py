@@ -282,8 +282,15 @@ class ProductProduct(models.Model):
             moves_domain &= Domain([
                 ('date', '<=', at_date),
             ])
-        moves_in = self.env['stock.move'].search(moves_domain & Domain(['|', ('is_in', '=', True), ('is_dropship', '=', True)]), order='date, id')
-        moves_out = self.env['stock.move'].search(moves_domain & Domain(['|', ('is_out', '=', True), ('is_dropship', '=', True)])) if method == "realtime" else self.env['stock.move']
+
+        # PERF avoid memoryerror
+        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value']
+        # load in before in case of quick return
+        moves_in = self.env['stock.move'].search_fetch(
+            moves_domain & Domain(['|', ('is_in', '=', True), ('is_dropship', '=', True)]),
+            field_names=move_fields,
+            order='date, id'
+        )
         # TODO convert to company UoM
         product_value_domain = Domain([('product_id', '=', self.id)])
         if lot:
@@ -294,10 +301,6 @@ class ProductProduct(models.Model):
             product_value_domain &= Domain([('date', '<=', at_date)])
 
         product_values = self.env['product.value'].sudo().search(product_value_domain, order="date, id")
-        avco_value = 0
-        avco_total_value = 0
-        moves = moves_in | moves_out
-        moves = moves.sorted('date, id')
 
         # If the last value was defined by the user just return it
         if product_values and not moves_in:
@@ -310,6 +313,24 @@ class ProductProduct(models.Model):
                 quantity = lot.product_qty
             avco_value = product_values[-1].value
             return avco_value, avco_value * quantity
+
+        avco_value = 0
+        avco_total_value = 0
+
+        if method == "realtime":
+            moves_full_domain = moves_domain & Domain([
+                '|',
+                '|', ('is_in', '=', True),
+                ('is_out', '=', True),
+                ('is_dropship', '=', True)
+            ])
+            moves = self.env['stock.move'].search_fetch(moves_full_domain, field_names=move_fields, order='date, id')
+        else:
+            # no needed to join + reorder
+            moves = moves_in
+
+        # PERF avoid memoryerror
+        moves.move_line_ids.fetch(['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom'])
 
         # TODO Only browse from last product_value
         for move in moves:
