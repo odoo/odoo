@@ -42,6 +42,7 @@ import { Model } from "@odoo/o-spreadsheet";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { Partner, Product } from "../../helpers/data";
+import { addColumns } from "../../helpers/commands";
 const { toZone } = spreadsheet.helpers;
 
 describe.current.tags("headless");
@@ -1804,6 +1805,48 @@ test("calculated measure is recomputed when dependency changes", async function 
     expect(getEvaluatedCell(model, "A1").value).toBe(0);
     setCellContent(model, "A10", "5");
     expect(getEvaluatedCell(model, "A1").value).toBe(10);
+});
+
+test("calculated measure is recomputed on sheet change", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>
+        `,
+        mockRPC: function (route, { model, method, kwargs }) {
+            if (model === "partner" && method === "read_group") {
+                expect.step("read_group");
+            }
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    // clean plate
+    model.dispatch("CLEAR_CELLS", { target: [toZone("A1:F100")], sheetId });
+    setCellContent(model, "F1", "5");
+    updatePivot(model, pivotId, {
+        measures: [
+            {
+                id: "computed",
+                fieldName: "computed",
+                computedBy: { sheetId, formula: "=F1" },
+                aggregator: "sum",
+            },
+        ],
+    });
+    setCellContent(model, "A1", '=PIVOT.VALUE(1,"computed")');
+    await waitForDataLoaded(model);
+    // 2 readgroup to reload the pivot
+    expect.verifySteps(["read_group", "read_group"]);
+    expect(getEvaluatedCell(model, "A1").value).toBe(5);
+
+    addColumns(model, "before", "F", 1);
+    await waitForDataLoaded(model);
+    // no additional RPC was made
+    expect.verifySteps([]);
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    expect(pivot.measures[0].computedBy.formula).toBe("=G1");
+    expect(getEvaluatedCell(model, "A1").value).toBe(5);
 });
 
 test("can import a pivot with a calculated field", async function () {

@@ -44,7 +44,6 @@ test("Pivot with a type different of ODOO is not converted", async function () {
     pivotRegistry.add("NEW_KIND_OF_PIVOT", {
         ui: OdooPivot,
         definition: OdooPivotRuntimeDefinition,
-        externalData: true,
         onIterationEndEvaluation: () => {},
         granularities: [],
         isMeasureCandidate: () => false,
