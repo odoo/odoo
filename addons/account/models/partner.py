@@ -293,7 +293,14 @@ class AccountFiscalPosition(models.Model):
         return all_auto_apply_fpos._get_first_matching_fpos(delivery)
 
     def action_open_related_taxes(self):
-        return self.tax_ids._get_records_action(name=_("%s taxes", self.display_name))
+        list_view = self.env.ref('account.account_tax_fiscal_position_view_tree', raise_if_not_found=False)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("%s taxes", self.display_name),
+            'res_model': 'account.tax',
+            'views': [(list_view.id if list_view else False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', self.tax_ids.ids)],
+        }
 
     def action_create_foreign_taxes(self):
         self.ensure_one()
