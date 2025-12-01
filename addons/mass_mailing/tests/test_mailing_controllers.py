@@ -6,6 +6,7 @@ from markupsafe import Markup
 from requests import Session, PreparedRequest, Response
 
 import datetime
+import re
 import werkzeug
 
 from odoo import tools
@@ -627,6 +628,67 @@ class TestMailingControllers(TestMailingControllersCommon):
             )
         )
         self.assertEqual(res.status_code, 200)
+
+
+    def test_mailing_test_placeholder_view_online_snippet(self):
+        mailing = self.test_mailing_on_lists.with_env(self.env)
+        mailing.write({
+            'body_html': '''
+                <p>
+                    <div class="o_snippet_view_in_browser o_mail_snippet_general">
+                        <a href="/view">
+                            View Online
+                        </a>
+                    </div>
+                    <p>Hello <t t-out="object.name"/></p>
+                </p>
+            ''',
+        })
+
+        mailing_test = self.env['mailing.mailing.test'].create({
+            'email_to': 'test@test.com',
+            'mass_mailing_id': mailing.id,
+        })
+
+        self.env['mailing.contact'].search([('id', '!=', self.test_contact.id)]).unlink()
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        body_html = self._mails.pop()['body']
+
+        self.assertIn(f'/mailing/{mailing.id}/view', body_html)
+        self.assertIn(f"Hello {self.test_contact.name}", body_html)
+
+        match = re.search(r'<a\s+href="([^"]+)"[^>]*>\s*View Online\s*</a>', body_html)
+        view_online_url = match.group(1) if match else None
+
+        if not view_online_url:
+            self.fail("View Online url not found")
+
+        res = self.url_open(view_online_url)
+
+        self.assertIn(f"Hello {self.test_contact.name}", res.text)
+
+        # test the case where the mailing model has no records
+        self.env['mailing.contact'].search([]).unlink()
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        body_html = self._mails.pop()['body']
+
+        self.assertIn(f'/mailing/{mailing.id}/view', body_html)
+        self.assertIn("Hello", body_html)
+
+        match = re.search(r'<a\s+href="([^"]+)"[^>]*>\s*View Online\s*</a>', body_html)
+        view_online_url = match.group(1) if match else None
+
+        if not view_online_url:
+            self.fail("View Online url not found")
+
+        res = self.url_open(view_online_url)
+
+        self.assertIn("Hello", res.text)
+
 
 
 @tagged('link_tracker', 'mailing_portal')
