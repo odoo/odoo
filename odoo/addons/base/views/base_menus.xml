@@ -1,53 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-      <!-- Top menu item -->
-      <menuitem name="Settings"
-          id="menu_administration"
-          web_icon="base,static/description/settings.png"
-          sequence="550"
-          groups="base.group_erp_manager">
-          <menuitem id="menu_administration_shortcut" name="Custom Shortcuts" sequence="50"/>
-          <!-- FYI The group no_one on 'User & Companies' and 'Translations' is a FP/APR request -->
-          <menuitem id="menu_users" name="Users &amp; Companies" sequence="1"/>
-          <menuitem id="menu_translation" name="Translations" sequence="2" groups="base.group_no_one">
-              <menuitem id="menu_translation_app" name="Application Terms" sequence="4" groups="base.group_no_one"/>
-              <menuitem id="menu_translation_export" name="Import / Export" sequence="3" groups="base.group_no_one"/>
-          </menuitem>
+    <menuitem
+        id="menu_management"
+        name="Apps"
+        sequence="500"
+        web_icon="base,static/description/modules.png"
+        groups="base.group_system"
+    >
+        <menuitem id="menu_apps" name="Apps" sequence="5">
+            <menuitem id="menu_module_tree" name="Main Apps" action="open_module_tree" sequence="5"/>
+            <menuitem id="menu_theme_store" action="action_theme_store" sequence="10"/>
+            <menuitem id="theme_store" name="Theme Store" sequence="15"/>
+            <menuitem id="menu_third_party" action="action_third_party" sequence="20"/>
+        </menuitem>
 
-          <menuitem id="menu_config" name="General Settings" sequence='3'/>
+        <menuitem
+            id="menu_view_base_module_update"
+            name="Update Apps List"
+            action="action_view_base_module_update"
+            groups="base.group_no_one"
+            sequence="40"/>
 
-          <menuitem id="menu_custom" name="Technical" sequence="110" groups="base.group_no_one">
-              <menuitem id="next_id_2" name="User Interface"/>
-              <menuitem id="menu_email" name="Email" sequence="1"/>
-              <menuitem id="next_id_9" name="Database Structure"/>
-              <menuitem id="menu_automation" name="Automation"/>
-              <menuitem id="menu_security" name="Security" sequence="25"/>
-              <menuitem id="menu_ir_property" name="Parameters" sequence="24"/>
-          </menuitem>
-      </menuitem>
+        <menuitem
+           id="menu_view_base_module_upgrade"
+           action="action_view_base_module_upgrade"
+           groups="base.group_no_one"
+           sequence="50"/>
 
-      <menuitem id="menu_management" name="Apps" sequence="500" web_icon="base,static/description/modules.png" groups="base.group_system"/>
-      <menuitem id="base.menu_tests" name="Tests" sequence="1000" web_icon="base,static/description/exception.png"/>
+    </menuitem>
 
-      <record model="ir.ui.menu" id="base.menu_administration">
-          <field name="group_ids" eval="[Command.set([ref('group_system'), ref('group_erp_manager')])]"/>
-      </record>
+    <menuitem
+        name="Settings"
+        id="menu_administration"
+        web_icon="base,static/description/settings.png"
+        sequence="550"
+        groups="base.group_erp_manager,base.group_system"
+    >
+        <menuitem id="menu_users" name="Users &amp; Companies" sequence="1">
+            <menuitem id="menu_action_res_users" action="action_res_users" sequence="0"/>
+            <menuitem id="menu_action_res_groups" action="action_res_groups" groups="base.group_no_one" sequence="3"/>
+            <menuitem id="menu_action_res_groups_privilege" action="action_res_groups_privilege" groups="base.group_no_one" sequence="5"/>
+            <menuitem id="menu_action_res_company_form" action="action_res_company_form"/>
+        </menuitem>
 
-      <record id="action_client_base_menu" model="ir.actions.client">
-          <field name="name">Open Settings Menu</field>
-          <field name="tag">reload</field>
-          <field name="params" eval="{'menu_id': ref('base.menu_administration')}"/>
-      </record>
-      <record id="open_menu" model="ir.actions.todo">
-          <field name="name">Open Menu</field>
-          <field name="action_id" ref="action_client_base_menu"/>
-          <field name="sequence">100</field>
-          <field name="state">done</field>
-      </record>
-      <record id="action_open_website" model="ir.actions.act_url">
-          <field name="name">Home Menu</field>
-          <field name="target">self</field>
-          <field name="url">/web</field>
-      </record>
+        <!-- FYI The group no_one on 'Translations' is a FP/APR request -->
+        <menuitem id="menu_translation" name="Translations" sequence="2" groups="base.group_no_one">
+            <menuitem id="menu_res_lang_act_window" action="res_lang_act_window" sequence="1"/>
+            <menuitem id="menu_translation_export" name="Import / Export" sequence="3">
+                <menuitem id="menu_view_base_import_language" action="action_view_base_import_language"/>
+                <menuitem id="menu_wizard_lang_export" action="action_wizard_lang_export"/>
+            </menuitem>
+            <menuitem id="menu_translation_app" name="Application Terms" sequence="4"/>
+        </menuitem>
+
+        <menuitem id="menu_config" name="General Settings" sequence="3"/>
+
+        <menuitem id="menu_administration_shortcut" name="Custom Shortcuts" sequence="50"/>
+
+        <menuitem id="menu_custom" name="Technical" sequence="110" groups="base.group_no_one">
+            <menuitem id="menu_email" name="Email" sequence="1">
+                <menuitem id="menu_mail_servers" action="action_ir_mail_server_list" sequence="5"/>
+            </menuitem>
+            <menuitem id="next_id_6" name="Actions" sequence="5">
+                <menuitem id="menu_ir_sequence_actions" action="ir_sequence_actions"/>
+                <menuitem id="menu_ir_action_report" action="ir_action_report"/>
+                <menuitem id="menu_ir_action_window" action="ir_action_window"/>
+                <menuitem id="menu_ir_client_actions_report" action="ir_client_actions_report"/>
+                <menuitem id="menu_server_action" action="action_server_action"/>
+                <menuitem id="menu_ir_embedded_action" action="ir_embedded_action"/>
+                <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form"/>
+                <menuitem id="ir_default_menu" action="ir_default_menu_action"/>
+            </menuitem>
+            <menuitem id="next_id_2" name="User Interface">
+                <menuitem id="menu_grant_menu_access" action="grant_menu_access" sequence="1"/>
+                <menuitem id="menu_action_ui_view" action="action_ui_view" sequence="2"/>
+                <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" sequence="3"/>
+                <menuitem id="menu_ir_filters" action="actions_ir_filters_view" sequence="5"/>
+                <menuitem id="next_id_5" name="Sequences &amp; Identifiers" sequence="21">
+                    <menuitem id="ir_model_data_menu" action="action_model_data"/>
+                    <menuitem id="menu_ir_sequence_form" action="ir_sequence_form"/>
+                </menuitem>
+            </menuitem>
+            <menuitem id="next_id_9" name="Database Structure">
+                <menuitem id="menu_decimal_precision_form" action="action_decimal_precision_form"/>
+                <menuitem id="menu_action_asset" action="action_asset"/>
+                <menuitem id="ir_model_model_menu" action="action_model_model"/>
+                <menuitem id="ir_model_model_fields" action="action_model_fields"/>
+                <menuitem id="ir_model_model_fields_selection" action="action_model_fields_selection"/>
+                <menuitem id="ir_model_constraint_menu" action="action_model_constraint"/>
+                <menuitem id="ir_model_relation_menu" action="action_model_relation"/>
+                <menuitem id="menu_action_attachment" action="action_attachment"/>
+                <menuitem id="ir_logging_all_menu" action="ir_logging_all_act"/>
+                <menuitem id="menu_ir_profile" name="Profiling" action="action_menu_ir_profile"/>
+            </menuitem>
+            <menuitem id="menu_automation" name="Automation">
+                <menuitem id="menu_ir_cron_act" action="ir_cron_act" sequence="2"/>
+                <menuitem id="ir_cron_trigger_menu" action="ir_cron_trigger_action" sequence="3"/>
+            </menuitem>
+            <menuitem id="reporting_menuitem" name="Reporting" sequence="15">
+                <menuitem id="paper_format_menuitem" name="Paper Format" action="paper_format_action" sequence="2"/>
+                <menuitem id="reports_menuitem" action="reports_action" sequence="3"/>
+            </menuitem>
+            <menuitem id="menu_ir_property" name="Parameters" sequence="24">
+                <menuitem id="ir_config_menu" action="ir_config_list_action"/>
+            </menuitem>
+            <menuitem id="menu_security" name="Security" sequence="25">
+                <menuitem id="menu_action_rule" action="action_rule" sequence="3"/>
+                <menuitem id="menu_ir_access_act" action="ir_access_act"/>
+                <menuitem id="menu_action_user_device" action="action_user_device" sequence="10"/>
+            </menuitem>
+        </menuitem>
+    </menuitem>
+
+    <menuitem id="base.menu_tests" name="Tests" sequence="1000" web_icon="base,static/description/exception.png"/>
+
+    <record id="action_client_base_menu" model="ir.actions.client">
+        <field name="name">Open Settings Menu</field>
+        <field name="tag">reload</field>
+        <field name="params" eval="{'menu_id': ref('base.menu_administration')}"/>
+    </record>
+    <record id="open_menu" model="ir.actions.todo">
+        <field name="name">Open Menu</field>
+        <field name="action_id" ref="action_client_base_menu"/>
+        <field name="sequence">100</field>
+        <field name="state">done</field>
+    </record>
+    <record id="action_open_website" model="ir.actions.act_url">
+        <field name="name">Home Menu</field>
+        <field name="target">self</field>
+        <field name="url">/web</field>
+    </record>
 </odoo>
