@@ -109,7 +109,7 @@ export class Message extends Component {
             emailHeaderOpen: false,
         });
         this.rightClickDropdownState = useDropdownState({
-            onClose: () => (this.props.messageSelection.messageId = undefined),
+            onClose: () => this.props.messageSelection.clearSelected(),
         });
         this.rightClickAnchor = useChildRef("rightClickAnchor");
         /** @type {ShadowRoot} */
@@ -266,9 +266,8 @@ export class Message extends Component {
             "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected":
-                this.props.thread?.composer?.replyToMessage?.eq(this.props.message) ||
-                (this.props.messageSelection?.messageId &&
-                    this.props.messageSelection?.messageId === this.props.message.id),
+                this.props.message.composerAsReplyToMessage?.thread.eq(this.props.thread) ||
+                this.props.messageSelection?.isSelected(this.props.message),
             "o-squashed": this.props.squashed,
             "mt-1":
                 !this.props.squashed &&
@@ -276,10 +275,6 @@ export class Message extends Component {
                 !this.env.messageCard &&
                 !this.props.asCard,
             "px-1": this.env.inChatWindow,
-            "opacity-50":
-                this.props.thread?.composer?.replyToMessage?.notEq(this.props.message) ||
-                (this.props.messageSelection?.messageId &&
-                    this.props.messageSelection.messageId !== this.props.message.id),
             "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
         };
@@ -453,9 +448,7 @@ export class Message extends Component {
         el.style.left = ev.clientX + "px";
         el.style.top = ev.clientY + "px";
         this.rightClickDropdownState.open();
-        if (this.props.messageSelection) {
-            this.props.messageSelection.messageId = this.props.message.id;
-        }
+        this.props.messageSelection?.setSelected(this.props.message);
         ev.preventDefault();
     }
 
