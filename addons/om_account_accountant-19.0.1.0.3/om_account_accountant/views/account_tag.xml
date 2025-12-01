@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="action_account_account_tag" model="ir.actions.act_window">
+        <field name="name">Account Tags</field>
+        <field name="res_model">account.account.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_account_tag"
+              action="action_account_account_tag"
+              sequence="40"
+              parent="account.account_account_menu"/>
+
+</odoo>
