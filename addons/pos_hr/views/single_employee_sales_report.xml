@@ -19,7 +19,6 @@
                 <t t-foreach="employee_ids" t-as="employee_id">
                     <t t-set="data" t-value="env['report.pos_hr.single_employee_sales_report'].get_sale_details(date_start, date_stop, config_ids, session_ids, employee_id)"/>
                     <t t-call="pos_hr.single_employee_sales_report"
-                        data="data"
                         opening_note="data['opening_note']"
                         closing_note="data['closing_note']"
                         state="data['state']"
