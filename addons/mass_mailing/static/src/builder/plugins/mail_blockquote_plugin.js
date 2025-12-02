@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class AlertOptionPlugin extends Plugin {
+export class AlertOptionPlugin extends Plugin {
     static id = "mass_mailing.MailBlockquotePlugin";
 
     resources = {

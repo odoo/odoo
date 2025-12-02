@@ -1,10 +1,6 @@
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE } from "@html_builder/utils/option_sequence";
-import { SocialMediaLinks } from "../options/social_media_links";
-import { SocialMediaOptions } from "../options/social_media_option";
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { uniqueId } from "@web/core/utils/functions";
@@ -24,7 +20,7 @@ const LINK_OPTIONS_CLASSLIST = [
 
 const LINKS_CONTAINER_SELECTOR = ".s_social_media_links";
 
-class MassMailingSocialMediaOptionPlugin extends Plugin {
+export class MassMailingSocialMediaOptionPlugin extends Plugin {
     static id = "massMailingSocialMediaOptionPlugin";
     static shared = [
         "addMedia",
@@ -39,10 +35,6 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
     static dependencies = ["builderActions", "history", "overlayButtons"];
 
     resources = {
-        builder_options: [
-            withSequence(TITLE_LAYOUT_SIZE, SocialMediaOptions),
-            withSequence(SNIPPET_SPECIFIC, SocialMediaLinks),
-        ],
         builder_actions: {
             AddSocialMediaLinkAction,
             ChangeCompanyAction,
@@ -262,7 +254,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
     }
 }
 
-class UpdateSocialMediaLinksAction extends BuilderAction {
+export class UpdateSocialMediaLinksAction extends BuilderAction {
     static id = "updateSocialMediaLinks";
     static dependencies = ["massMailingSocialMediaOptionPlugin"];
     apply({ editingElement, params: { mainParam: platform }, value }) {
@@ -281,7 +273,7 @@ class UpdateSocialMediaLinksAction extends BuilderAction {
     }
 }
 
-class UpdateTitlePositionAction extends BuilderAction {
+export class UpdateTitlePositionAction extends BuilderAction {
     static id = "updateTitlePosition";
     static dependencies = ["massMailingSocialMediaOptionPlugin"];
     apply({ editingElement, params: { position } }) {
@@ -312,7 +304,7 @@ class UpdateTitlePositionAction extends BuilderAction {
     }
 }
 
-class ChangeCompanyAction extends BuilderAction {
+export class ChangeCompanyAction extends BuilderAction {
     static id = "changeCompany";
     static dependencies = ["massMailingSocialMediaOptionPlugin"];
     async apply({ editingElement, params: company }) {
@@ -340,7 +332,7 @@ class ChangeCompanyAction extends BuilderAction {
     }
 }
 
-class ToggleSocialMediaLinkAction extends BuilderAction {
+export class ToggleSocialMediaLinkAction extends BuilderAction {
     static id = "toggleSocialMediaLink";
     static dependencies = ["builderActions", "massMailingSocialMediaOptionPlugin"];
     setup() {
@@ -409,7 +401,7 @@ class ToggleSocialMediaLinkAction extends BuilderAction {
     }
 }
 
-class RemoveCustomSocialMediaLinkAction extends BuilderAction {
+export class RemoveCustomSocialMediaLinkAction extends BuilderAction {
     static id = "removeCustomMediaLink";
     apply({ editingElement, params: { platform } }) {
         const link = editingElement.querySelector(`[data-platform="${platform}"]`);
@@ -417,7 +409,7 @@ class RemoveCustomSocialMediaLinkAction extends BuilderAction {
     }
 }
 
-class AddSocialMediaLinkAction extends BuilderAction {
+export class AddSocialMediaLinkAction extends BuilderAction {
     static id = "addSocialMediaLink";
     static dependencies = ["clone", "massMailingSocialMediaOptionPlugin"];
     async apply({ editingElement }) {

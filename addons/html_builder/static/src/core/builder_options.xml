@@ -4,6 +4,9 @@
         <t t-set="socialMediaElementsSelector" t-value="`.s_social_media i.fa, .s_share i.fa, .social_media_img`"/>
         <t t-set="replaceMediaOptionSelector" t-value="`img, .media_iframe_video, span.fa, i.fa`"/>
         <t t-set="replaceMediaOptionExclude" t-value="`[data-oe-xpath], ` + socialMediaElementsSelector"/>
+        <t t-set="widthOptionSelector" t-value="`.s_alert, .s_text_highlight`"/>
+        <t t-set="verticalAlignmentOptionSelector"
+            t-value="`.s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid`"/>
         <div>
             <!-- Obviously comments will be removed, it's only to check the current sequence -->
             <!-- 17 -->
@@ -27,7 +30,7 @@
                 template="html_builder.AlertOption"
                 selector=".s_alert"/>
             <!-- 27 -->
-            <width_option template="html_builder.WidthOption" selector=".s_alert, .s_text_highlight"/>
+            <width_option template="html_builder.WidthOption" t-att-selector="widthOptionSelector"/>
             <!-- 28 -->
             <block_alignment_option template="html_builder.BlockAlignmentOption" selector=".s_alert, .s_text_highlight"/>
             <!-- 36 -->
@@ -47,7 +50,7 @@
             <!-- 110 -->
             <vertical_alignment_option
                 template="html_builder.VerticalAlignmentOption"
-                selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid"
+                t-att-selector="verticalAlignmentOptionSelector"
                 applyTo=".row"
                 props='{ "level": 1, "justify": true }'/>
             <!-- 170 -->
