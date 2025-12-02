@@ -7,8 +7,13 @@ from odoo.tests import HttpCase, tagged
 @tagged('-at_install', 'post_install')
 class TestWishlistProcess(HttpCase):
 
-    def test_01_wishlist_tour(self):
-        self.env['product.template'].search([]).write({'website_published': False})
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['product.template'].search([]).write({'website_published': False})
+        cls.env['res.config.settings'].create({'group_product_variant': True}).execute()
+
+    def _test_01_wishlist_tour(self):
         # Setup attributes and attributes values
         attributes = self.env['product.attribute'].create([
             {
@@ -56,6 +61,8 @@ class TestWishlistProcess(HttpCase):
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
+        # This tour is unreliable on runbot, because we do not wait for wish to be
+        # effectively removed from the wishlist before updating the page (see _removeWish)
         self.start_tour("/", 'shop_wishlist', timeout=120)
 
     def test_02_wishlist_admin_tour(self):
