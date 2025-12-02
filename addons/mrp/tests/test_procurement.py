@@ -95,7 +95,7 @@ class TestProcurement(TestMrpCommon):
         mo_form.qty_producing = production_product_6.product_qty
         production_product_6 = mo_form.save()
         # Check procurement and Production state for product 6.
-        production_product_6.with_context(skip_consumption=True).button_mark_done()
+        production_product_6.button_mark_done()
         self.assertEqual(production_product_6.state, 'done', 'Production order should be in state done')
         self.assertEqual(self.product_6.qty_available, 24, 'Wrong quantity available of finished product.')
 
@@ -550,7 +550,11 @@ class TestProcurement(TestMrpCommon):
         mo.move_raw_ids.quantity = 15
         mo_form.qty_producing = 15
         mo = mo_form.save()
-        mo.with_context(skip_consumption=True).button_mark_done()
+        warning = Form.from_action(self.env, mo.button_mark_done()).save()
+        self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
+            {'product_consumed_qty_uom': 1, 'product_expected_qty_uom': 0},
+        ])
+        warning.action_confirm()
 
         self.assertEqual(pick_output.move_ids.quantity, 10, "Completed products should have been auto-reserved in picking")
 

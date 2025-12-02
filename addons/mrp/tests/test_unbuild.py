@@ -986,7 +986,12 @@ class TestUnbuild(TestMrpCommon):
 
         mo.qty_producing = 1.0
         mo.move_raw_ids.write({'quantity': 15, 'picked': True})
-        mo.with_context(skip_consumption=True).button_mark_done()
+
+        warning = Form.from_action(self.env, mo.button_mark_done()).save()
+        self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
+            {'product_consumed_qty_uom': 15, 'product_expected_qty_uom': 20},
+        ])
+        warning.action_confirm()
 
         Form.from_action(self.env, mo.button_unbuild()).save().action_validate()
         self.assertEqual(mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_3).product_uom_qty, 15)
@@ -1102,7 +1107,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.qty_producing = 4.0
         mo_form.save()
 
-        mo.with_context(skip_consumption=True).button_mark_done()
+        mo.button_mark_done()
 
         unbuild_wizard = Form(self.env['mrp.unbuild'])
         unbuild_wizard.mo_id = mo

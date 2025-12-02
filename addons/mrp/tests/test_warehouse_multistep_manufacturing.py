@@ -508,7 +508,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo_form.qty_producing = 20
         mo = mo_form.save()
 
-        action = mo.with_context(skip_consumption=True).button_mark_done()
+        action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
 
@@ -787,7 +787,13 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             byprod_move.product_id = bprod2
             byprod_move.quantity = 1.0
         mo = mo_form.save()
-        mo.with_context({'skip_consumption': True}).button_mark_done()
+        action = mo.button_mark_done()
+
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
+            {'product_consumed_qty_uom': 1.0, 'product_expected_qty_uom': 0.0},
+        ])
+        warning.action_confirm()
 
         self.assertEqual(len(mo.picking_ids), 2, "Should have 2 pickings: Components + (Final product and byproducts)")
         for picking in mo.picking_ids:

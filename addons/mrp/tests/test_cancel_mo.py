@@ -132,7 +132,7 @@ class TestMrpCancelMO(TestMrpCommon):
             'bom_id': self.bom_1.id,
         })
         mo.action_confirm()
-        mo.with_context(skip_consumption=True).button_mark_done()
+        mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         with self.assertRaises(UserError):
             mo.action_cancel()
