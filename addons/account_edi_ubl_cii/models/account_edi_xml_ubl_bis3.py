@@ -597,6 +597,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'cac:Address': self._get_address_node({'partner': shipping_partner})
             },
         }
+        # TODO master: clean that code a bit hacky, when the module account_add_gln is merged with account
+        if gln := 'global_location_number' in shipping_partner._fields and shipping_partner.global_location_number:
+            document_node['cac:Delivery']['cac:DeliveryLocation'].update({
+                'cbc:ID': {'schemeID': '0088', '_text': gln},
+            })
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         super()._add_invoice_payment_means_nodes(document_node, vals)
