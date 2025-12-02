@@ -2584,3 +2584,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.location_dest_id.usage in ('customer', 'supplier') or (
             self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
         )
+
+    def _get_batch_moves(self):
+        """ Overridden in stock_picking_batch to return the move of the batch
+        """
+        return self.env['stock.move']

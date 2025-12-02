@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 06:39+0000\n"
+"POT-Creation-Date: 2025-11-28 18:36+0000\n"
+"PO-Revision-Date: 2025-11-29 18:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/account/"
 "ja/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -3859,7 +3859,8 @@ msgstr ""
 msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
-msgstr ""
+msgstr "一括請求書送信は利用できません。請求書の一括送信を有効にするには、システム管"
+"理者に cron を有効化するよう依頼してください。"
 
 #. module: account
 #. odoo-javascript
@@ -14739,7 +14740,7 @@ msgstr "現金基準税仕訳帳"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr "税務決算仕訳"
+msgstr "税の締め仕訳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -14930,7 +14931,7 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
 msgstr ""
-"税務当局に有利な場合に、税務決算仕訳と対をなすものとして使用される現行の税金"
+"税務当局に有利な場合に、税の締め仕訳と対をなすものとして使用される現行の税金"
 "の勘定科目"
 
 #. module: account
@@ -14939,7 +14940,7 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
 msgstr ""
-"会社に有利な場合に、税務決算仕訳と対をなすものとして使用される現行の税金の勘"
+"会社に有利な場合に、税の締め仕訳と対をなすものとして使用される現行の税金の勘"
 "定科目"
 
 #. module: account
@@ -16728,8 +16729,8 @@ msgstr "この定期的な仕訳は当日を含めこの日付まで記帳され
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This setting cannot be changed after an invoice is created."
-msgstr "顧客請求書作成後は、この設定を変更することはできません。"
+msgid "This setting locks once a journal entry is created."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19381,6 +19382,9 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 支払受領書 (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "This setting cannot be changed after an invoice is created."
+#~ msgstr "顧客請求書作成後は、この設定を変更することはできません。"
 
 #~ msgid ""
 #~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"

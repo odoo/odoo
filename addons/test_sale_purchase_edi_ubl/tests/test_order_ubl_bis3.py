@@ -58,12 +58,14 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
                 'product_uom': self.uom_units.id,
                 'product_qty': 10.0,
                 'taxes_id': self.purchase_tax.ids,
+                'discount': 10.0,
             }, {
                 'product_id': self.displace_prdct.id,
                 'price_unit': 30.0,
                 'product_uom': self.uom_units.id,
                 'product_qty': 50.0,
                 'taxes_id': self.purchase_tax.ids,
+                'discount': 0.0,
             },
         ]
         xml_attachment = self.get_xml_attachment_of_po(line_vals)
@@ -83,6 +85,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
         for line in line_vals:
             line_product = self.env['product.product'].browse(line['product_id'])
             line['product_uom_qty'] = line['product_qty']
+            line['discount'] = 0.0
             # Set sales tax related to similer to purchase tax
             line['tax_id'] = related_sales_tax.ids
             line['price_unit'] = line_product.list_price
