@@ -24,15 +24,6 @@ class SaleOrder(models.Model):
         check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
-    delivery_status = fields.Selection([
-        ('pending', 'Not Delivered'),
-        ('started', 'Started'),
-        ('partial', 'Partially Delivered'),
-        ('full', 'Fully Delivered'),
-    ], string='Delivery Status', compute='_compute_delivery_status', store=True,
-       help="Blue: Not Delivered/Started\n\
-            Orange: Partially Delivered\n\
-            Green: Fully Delivered")
     late_availability = fields.Boolean(
         string="Late Availability",
         compute='_compute_late_availability',
@@ -209,6 +200,10 @@ class SaleOrder(models.Model):
                 ]
             })
             order.show_json_popover = bool(late_stock_picking)
+
+    @api.depends('order_line.qty_delivered')
+    def _compute_show_deliver_button(self):
+        self.show_deliver_button = False  # Revert to Delivery smart button for stock module
 
     def _action_confirm(self):
         self.order_line._action_launch_stock_rule()

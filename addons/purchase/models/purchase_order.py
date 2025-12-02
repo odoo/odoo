@@ -170,12 +170,17 @@ class PurchaseOrder(models.Model):
         precompute=True,
     )
     duplicated_order_ids = fields.Many2many(comodel_name='purchase.order', compute='_compute_duplicated_order_ids')
-
+    receipt_status = fields.Selection([
+        ('pending', 'Not Received'),
+        ('partial', 'Partially Received'),
+        ('full', 'Fully Received'),
+    ], string='Receipt Status', compute='_compute_receipt_status', store=True)
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
     is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
     show_comparison = fields.Boolean('Show Comparison', compute='_compute_show_comparison')
+    show_receive_button = fields.Boolean(compute='_compute_show_receive_button')
 
     purchase_warning_text = fields.Text(
         "Purchase Warning",
@@ -245,6 +250,18 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             po.display_name = name
 
+    @api.depends('order_line.qty_received', 'order_line.product_uom_qty', 'state')
+    def _compute_receipt_status(self):
+        for order in self:
+            if order.state != 'purchase' or not order.order_line:
+                order.receipt_status = False
+            elif all(line.qty_received >= line.product_uom_qty for line in order.order_line):
+                order.receipt_status = 'full'
+            elif any(line.qty_received for line in order.order_line):
+                order.receipt_status = 'partial'
+            else:
+                order.receipt_status = 'pending'
+
     @api.depends('company_id', 'partner_id', 'partner_id.reminder_date_before_receipt')
     def _compute_receipt_reminder_email(self):
         for order in self:
@@ -290,6 +307,15 @@ class PurchaseOrder(models.Model):
         order_by_product = {p: set(o_ids) for p, o_ids in line_groupby_product}
         for record in self:
             record.show_comparison = any(set(record.ids) != order_by_product[p] for p in record.order_line.product_id if p in order_by_product)
+
+    @api.depends('order_line.qty_received', 'order_line.product_uom_qty', 'state')
+    def _compute_show_receive_button(self):
+        for order in self:
+            order.show_receive_button = (
+                order.state == 'purchase'
+                and any(line.qty_received < line.product_uom_qty for line in order.order_line)
+                and all(line.qty_received_method == "manual" for line in order.order_line)
+            )
 
     @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'order_line.purchase_line_warn_msg')
     def _compute_purchase_warning_text(self):
@@ -597,6 +623,19 @@ class PurchaseOrder(models.Model):
         action['domain'] = [('product_id', 'in', self.order_line.product_id.ids)]
         action['display_name'] = _("Purchase Comparison for %s", self.display_name)
         return action
+
+    def action_receive(self):
+        invalid_targets = self.filtered(
+            lambda o: o.state != "purchase" or
+            any(line.qty_received_method != "manual" for line in o.order_line)
+        )
+        if invalid_targets:
+            raise UserError(
+                _("The following purchase orders %(invalid_orders) can't be received. Cancelled all receptions."),
+                invalid_orders=invalid_targets)
+        for order in self:
+            for line in order.order_line:
+                line.qty_received = line.product_uom_qty
 
     def print_quotation(self):
         self.filtered(lambda po: po.state == 'draft').write({'state': "sent"})
