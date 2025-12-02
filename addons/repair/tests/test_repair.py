@@ -908,6 +908,19 @@ class TestRepair(common.TransactionCase):
         self.assertTrue(self.product_product_11.filtered_domain(domain))
         self.assertFalse(self.product_order_repair.filtered_domain(domain))
 
+    def test_sale_order_line_discount_on_repair_order(self):
+        """
+        Test that the discount on the sale order line created from a repair order is correctly set.
+        """
+        repair_order = self.repair0
+        repair_order.action_create_sale_order()
+        sale_line = repair_order.move_ids.sale_line_id
+        sale_line.discount = 15
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(sale_line.discount, 15)
+
 
 @tagged('post_install', '-at_install')
 class TestRepairHttp(HttpCase):
