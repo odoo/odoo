@@ -60,6 +60,8 @@ class Blog(models.Model):
 
     def all_tags(self, join=False, min_limit=1):
         BlogTag = self.env['blog.tag']
+        if join:
+            return BlogTag.search([])
         req = """
             SELECT
                 p.blog_id, count(*), r.blog_tag_id
@@ -83,9 +85,6 @@ class Blog(models.Model):
                     all_tags.add(tag_id)
                 else:
                     tag_by_blog[blog_id].append(tag_id)
-
-        if join:
-            return BlogTag.browse(all_tags)
 
         for blog_id in tag_by_blog:
             tag_by_blog[blog_id] = BlogTag.browse(tag_by_blog[blog_id])
