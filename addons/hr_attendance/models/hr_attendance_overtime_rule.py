@@ -184,7 +184,7 @@ class HrAttendanceOvertimeRule(models.Model):
 
         if self.timing_type in ['work_days', 'non_work_days']:
             company = self.company_id or employee.company_id
-            unusual_days = company.resource_calendar_id._get_unusual_days(start_dt, end_dt)
+            unusual_days = company.resource_calendar_id._get_unusual_days(start_dt, end_dt, company_id=company)
 
             attendance_intervals = []
             for date, day_attendances in attendances.filtered(
