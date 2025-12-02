@@ -24,7 +24,10 @@ export class MailComposerAttachmentSelector extends Component {
         if (this.props.record.resModel === "mail.scheduled.message") {
             resIds = [this.props.record.data.res_id.resId];
         } else {
-            resIds = JSON.parse(this.props.record.data.res_ids);
+            // composer does not store res_ids past a certain limit, assume active_ids is used
+            resIds = this.props.record.data.res_ids
+                ? JSON.parse(this.props.record.data.res_ids)
+                : this.props.record.context.active_ids;
         }
         const thread = await this.mailStore["mail.thread"].insert({
             model: this.props.record.data.model,
