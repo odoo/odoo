@@ -2164,6 +2164,36 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_groupable_lot_total_amount', login="accountman")
 
+    def test_settle_changed_price_with_lots(self):
+        """
+        Tests that when we change the price of a line in the quotation, it will not be reverted when
+        settling it through the PoS
+        """
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        product_lot_tracked = self.env['product.product'].create({
+            'name': 'Settle Lots',
+            'available_in_pos': True,
+            'lst_price': 100.0,
+            'taxes_id': False,
+            'tracking': 'lot',
+        })
+        self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': product_lot_tracked.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 120.0,
+                }),
+                (0, 0, {
+                    'product_id': product_lot_tracked.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 60.0,
+                })
+            ]
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_changed_price_with_lots', login="accountman")
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosSaleAccount(TestPoSCommon):
