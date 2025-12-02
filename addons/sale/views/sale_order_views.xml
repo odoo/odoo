@@ -188,10 +188,22 @@
         <field name="mode">primary</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <!-- Dummy view content since empty views are not supported atm -->
-            <list position="attributes">
-                <attribute name="string">Sales Orders</attribute>
-            </list>
+            <xpath expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="before">
+                <button
+                    string="Deliver"
+                    name="deliver_sold_quantity"
+                    type="object"
+                    class="btn-secondary"/>
+            </xpath>
+            <field name="invoice_status" position="before">
+                <field
+                    name="delivery_status"
+                    decoration-success="delivery_status == 'full'"
+                    decoration-warning="delivery_status == 'partial'"
+                    decoration-info="delivery_status in ['pending', 'started']"
+                    widget="badge"
+                    optional="hide"/>
+            </field>
         </field>
     </record>
 
@@ -311,6 +323,13 @@
                     context="{'default_advance_payment_method': 'percentage'}"
                     data-hotkey="q"
                     invisible="invoice_status != 'no' or state != 'sale'"/>
+                <button
+                    string="Deliver"
+                    id="deliver_quantities"
+                    name="deliver_sold_quantity"
+                    type="object"
+                    invisible="not show_deliver_button"
+                    data-hotkey="d"/>
                 <button
                     string="Send"
                     id="quotation_send_primary"
@@ -939,6 +958,7 @@
                                 <div name="commitment_date_div" class="o_row">
                                     <field name="commitment_date" readonly="state == 'cancel' or locked"/>
                                 </div>
+                                <field name="delivery_status" invisible="state != 'sale'"/>
                             </group>
                             <group name="sale_reporting" string="Tracking">
                                 <field name="origin"/>

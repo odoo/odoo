@@ -318,6 +318,15 @@ class SaleOrder(models.Model):
         compute='_compute_amount_undiscounted', digits=0)
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     company_price_include = fields.Selection(related='company_id.account_price_include')
+    delivery_status = fields.Selection([
+        ('pending', 'Not Delivered'),
+        ('started', 'Started'),
+        ('partial', 'Partially Delivered'),
+        ('full', 'Fully Delivered'),
+    ], string='Delivery Status', compute='_compute_delivery_status', store=True,
+       help="Blue: Not Delivered/Started\n\
+            Orange: Partially Delivered\n\
+            Green: Fully Delivered")
     duplicated_order_ids = fields.Many2many(comodel_name='sale.order', compute='_compute_duplicated_order_ids')
     expected_date = fields.Datetime(
         string="Expected Date",
@@ -326,6 +335,7 @@ class SaleOrder(models.Model):
     is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
     partner_credit_warning = fields.Text(
         compute='_compute_partner_credit_warning')
+    show_deliver_button = fields.Boolean(compute='_compute_show_deliver_button')
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         depends=['company_id'])
@@ -725,6 +735,18 @@ class SaleOrder(models.Model):
                 total += (line.price_subtotal * 100)/(100-line.discount) if line.discount != 100 else (line.price_unit * line.product_uom_qty)
             order.amount_undiscounted = total
 
+    @api.depends('order_line.qty_delivered', 'order_line.product_uom_qty', 'state')
+    def _compute_delivery_status(self):
+        for order in self:
+            if order.state != 'sale' or not order.order_line:
+                order.delivery_status = False
+            elif all(line.qty_delivered >= line.product_uom_qty for line in order.order_line):
+                order.delivery_status = 'full'
+            elif any(line.qty_delivered for line in order.order_line):
+                order.delivery_status = 'partial'
+            else:
+                order.delivery_status = 'pending'
+
     @api.depends('client_order_ref', 'origin', 'partner_id')
     def _compute_duplicated_order_ids(self):
         draft_orders = self.filtered(lambda o: o.state == 'draft')
@@ -798,6 +820,15 @@ class SaleOrder(models.Model):
                 order.state in ('draft', 'sent')
                 and order.validity_date
                 and order.validity_date < today
+            )
+
+    @api.depends('order_line.qty_delivered')
+    def _compute_show_deliver_button(self):
+        for order in self:
+            order.show_deliver_button = (
+                order.state == 'sale'
+                and any(line.qty_delivered < line.product_uom_qty for line in order.order_line)
+                and all(line.qty_delivered_method == "manual" for line in order.order_line)
             )
 
     @api.depends('company_id', 'fiscal_position_id')
@@ -2215,6 +2246,19 @@ class SaleOrder(models.Model):
             generated_invoices |= downpayment_wizard._create_invoices(order)
 
         return generated_invoices
+
+    def deliver_sold_quantity(self):
+        invalid_targets = self.filtered(
+            lambda o: o.state != "sale" or
+            any(line.qty_delivered_method != "manual" for line in o.order_line)
+        )
+        if invalid_targets:
+            raise UserError(
+                _("The following sale orders %(invalid_orders) can't be delivered. Cancelled all deliveries."),
+                invalid_orders=invalid_targets)
+        for order in self:
+            for line in order.order_line:
+                line.qty_delivered = line.product_uom_qty
 
     # === CATALOG === #
 

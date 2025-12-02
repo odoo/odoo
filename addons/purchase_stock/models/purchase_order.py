@@ -32,11 +32,6 @@ class PurchaseOrder(models.Model):
     effective_date = fields.Datetime("Arrival", compute='_compute_effective_date', store=True, copy=False,
         help="Completion date of the last receipt order.")
     on_time_rate = fields.Float(related='partner_id.on_time_rate', compute_sudo=False)
-    receipt_status = fields.Selection([
-        ('pending', 'Not Received'),
-        ('partial', 'Partially Received'),
-        ('full', 'Fully Received'),
-    ], string='Receipt Status', compute='_compute_receipt_status', store=True)
     date_promised = fields.Datetime('Promised Date', index=True, copy=False, compute="_compute_date_promised", store=True, readonly=False,
         help="Date promised by the vendor for at least 1 or more products to be delivered by.")
 
@@ -75,6 +70,9 @@ class PurchaseOrder(models.Model):
                 order.receipt_status = 'partial'
             else:
                 order.receipt_status = 'pending'
+
+    def _compute_show_receive_button(self):
+        self.show_receive_button = False  # Revert to the stock Delivery smart button logic
 
     @api.depends('picking_type_id')
     def _compute_dest_address_id(self):
