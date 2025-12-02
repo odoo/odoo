@@ -309,6 +309,21 @@ class SaleProductConfiguratorController(Controller):
             combination_ids=combination.ids,
         )
         product_or_template = product or product_template
+<<<<<<< 585e8c85b2e2fe0ee7bba1611b296d9f3f18b601
+||||||| abc8417413faf598fb83106de4328571d71888aa
+        ptals = product_template.attribute_line_ids
+        attrs_map = dict(zip(ptals.ids, ptals.attribute_id.read(['id', 'name', 'display_type'])))
+        ptavs = ptals.product_template_value_ids.filtered(lambda p: p.ptav_active or combination and p.id in combination.ids)
+        ptavs_map = dict(zip(ptavs.ids, ptavs.read(['name', 'html_color', 'image', 'is_custom'])))
+=======
+        ptals = product_template.attribute_line_ids
+        attrs_map = {
+            attr_data['id']: attr_data
+            for attr_data in ptals.attribute_id.read(['id', 'name', 'display_type'])
+        }
+        ptavs = ptals.product_template_value_ids.filtered(lambda p: p.ptav_active or combination and p.id in combination.ids)
+        ptavs_map = dict(zip(ptavs.ids, ptavs.read(['name', 'html_color', 'image', 'is_custom'])))
+>>>>>>> 69744329f32ed0d1ccff7bbe4eee8d98a08dcbe3
 
         values = dict(
             product_tmpl_id=product_template.id,
@@ -323,11 +338,23 @@ class SaleProductConfiguratorController(Controller):
                 **kwargs,
             ),
             quantity=quantity,
+<<<<<<< 585e8c85b2e2fe0ee7bba1611b296d9f3f18b601
             uom=uom.read(['id', 'display_name'])[0],
             attribute_lines=[{
                 'id': ptal.id,
                 'attribute': ptal.attribute_id.read(['id', 'name', 'display_type'])[0],
                 'attribute_values': [
+||||||| abc8417413faf598fb83106de4328571d71888aa
+            attribute_lines=[dict(
+                id=ptal.id,
+                attribute=dict(**attrs_map[ptal.id]),
+                attribute_values=[
+=======
+            attribute_lines=[dict(
+                id=ptal.id,
+                attribute=dict(**attrs_map[ptal.attribute_id.id]),
+                attribute_values=[
+>>>>>>> 69744329f32ed0d1ccff7bbe4eee8d98a08dcbe3
                     dict(
                         **ptav.read(['name', 'html_color', 'image', 'is_custom'])[0],
                         price_extra=self._get_ptav_price_extra(
