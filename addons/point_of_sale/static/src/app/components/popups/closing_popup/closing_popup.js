@@ -38,21 +38,6 @@ export class ClosePosPopup extends Component {
         this.state = useState(this.getInitialState());
         this.confirm = useAsyncLockedMethod(this.confirm);
     }
-    autoFillCashCount() {
-        const count = this.props.default_cash_details.amount;
-        this.state.payments[this.props.default_cash_details.id].counted =
-            this.env.utils.formatCurrency(count, false);
-        this.setManualCashInput(count);
-    }
-    autoFillPMCount(paymentId) {
-        const pm = this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId);
-        if (pm) {
-            this.state.payments[paymentId].counted = this.env.utils.formatCurrency(
-                pm.amount,
-                false
-            );
-        }
-    }
     get cashMoveData() {
         const { total, moves } = this.props.default_cash_details.moves.reduce(
             (acc, move, i) => {
@@ -82,16 +67,15 @@ export class ClosePosPopup extends Component {
     getInitialState() {
         const initialState = { notes: "", payments: {} };
         if (this.pos.config.cash_control) {
-            initialState.payments[this.props.default_cash_details.id] = {
-                counted: "0",
+            const defaultCash = this.props.default_cash_details;
+            initialState.payments[defaultCash.id] = {
+                counted: this.env.utils.formatCurrency(defaultCash.amount, false),
             };
         }
         this.props.non_cash_payment_methods.forEach((pm) => {
-            if (pm.type === "bank") {
-                initialState.payments[pm.id] = {
-                    counted: this.env.utils.formatCurrency(pm.amount, false),
-                };
-            }
+            initialState.payments[pm.id] = {
+                counted: this.env.utils.formatCurrency(pm.amount || 0, false),
+            };
         });
         return initialState;
     }
