@@ -166,6 +166,7 @@ Delivery = {
     'cbc:ID': {},
     'cbc:ActualDeliveryDate': {},
     'cac:DeliveryLocation': {
+        'cbc:ID': {},
         'cac:Address': Address,
     },
     'cac:DeliveryParty': Party,
