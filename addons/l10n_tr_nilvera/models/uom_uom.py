@@ -21,7 +21,6 @@ UOM_TO_UNECE_CODE = {
     'l10n_tr_nilvera.product_uom_d62': 'D62',
     'l10n_tr_nilvera.product_uom_pa': 'PA',
     'l10n_tr_nilvera.product_uom_mwh': 'MWH',
-    'l10n_tr_nilvera.product_uom_kwh': 'KWH',
     'l10n_tr_nilvera.product_uom_kwt': 'KWT',
     'l10n_tr_nilvera.product_uom_set': 'SET',
 }
