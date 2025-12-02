@@ -377,7 +377,8 @@ class StockRule(models.Model):
             move_values['location_dest_id'] = self.location_dest_id.id
         for field in self._get_custom_move_fields():
             if field in values:
-                move_values[field] = values.get(field)
+                value = values[field]
+                move_values[field] = value.id if isinstance(value, models.BaseModel) else value
         return move_values
 
     def _serialize_procurement_values(self, values):
