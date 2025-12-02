@@ -1733,53 +1733,79 @@ class MrpProduction(models.Model):
         self.is_planned = False
 
     def _get_consumption_issues(self):
-        """Compare the quantity consumed of the components, the expected quantity
-        on the BoM and the consumption parameter on the order.
-
-        :return: list of tuples (order_id, product_id, consumed_qty, expected_qty) where the
-            consumption isn't honored. order_id and product_id are recordset of mrp.production
-            and product.product respectively
+        """Compare the quantity consumed of the components to and the expected quantity based on:
+           - the BoM if assigned
+           - the 'To Consume' amount if no BoM assigned.
+        :return: list of tuples (mo, product, uom, move [opt], consumed_qty, expected_qty) where the
+                 qtys are in the uom of the move and the consumption quantity do not match the original BoM
+                 or expected_qty amount (for MOs with no BoM)
         :rtype: list
         """
         issues = []
         if self.env.context.get('skip_consumption', False):
             return issues
         for order in self:
-            if not order.bom_id or not order.bom_id.bom_line_ids:
-                continue
-            expected_move_values = order._get_moves_raw_values()
-            expected_qty_by_product = defaultdict(float)
-            for move_values in expected_move_values:
-                move_product = self.env['product.product'].browse(move_values['product_id'])
-                move_uom = self.env['uom.uom'].browse(move_values['uom_id'])
-                move_product_qty = move_uom._compute_quantity(move_values['product_uom_qty'], move_product.uom_id)
-                expected_qty_by_product[move_product] += move_product_qty * order.qty_producing / order.product_qty
-
-            done_qty_by_product = defaultdict(float)
+            # Static recordset to be populated with the lines of the flattened BoM so we know which moves are expected
+            # and which ones are foreign.
+            all_lines = self.env['mrp.bom.line']
+            # Dynamic recordset of orphan lines to be processed as we remove matched lines.
+            missing_lines = self.env['mrp.bom.line']
+            bomless_factor = order.qty_producing / order.product_qty
+            if order.bom_id:
+                bom_factor = order.qty_producing / order.bom_id.uom_id._compute_quantity(
+                    order.bom_id.product_qty, order.uom_id, round=False)
+                bom_factors = defaultdict(lambda: bom_factor)
+                # Flatten the BoM lines into only the ones that are supposed to correspond to moves in the MO (ie those
+                # of the current MO's BoM and of the components that are kits), stash the BoMs' normalised factors (the
+                # values expected after layers of UoM conversions).
+                for bom, data in order.bom_id.explode(order.bom_id.product_id, order.product_qty)[0]:
+                    if bom.type == 'phantom' or bom == order.bom_id:
+                        bom_factors[bom.id] = bom_factor * data['qty'] / data['original_qty']
+                        all_lines |= bom.bom_line_ids.filtered(lambda line: line.child_bom_id.type != 'phantom')
+                missing_lines = all_lines - order.move_raw_ids.bom_line_id
             for move in order.move_raw_ids:
-                quantity = move.uom_id._compute_quantity(move._get_picked_quantity(), move.product_id.uom_id)
-                # extra lines with non-zero qty picked
-                if move.product_id not in expected_qty_by_product and move.picked and not move.product_id.uom_id.is_zero(quantity):
-                    issues.append((order, move.product_id, quantity, 0.0))
-                    continue
-                done_qty_by_product[move.product_id] += quantity if move.picked else 0.0
-
-            # origin lines from bom with different qty
-            for product, qty_to_consume in expected_qty_by_product.items():
-                quantity = done_qty_by_product.get(product, 0.0)
-                if product.uom_id.compare(qty_to_consume, quantity) != 0:
-                    issues.append((order, product, quantity, qty_to_consume))
-
+                # If there's no BoM, we simply rely on the quantity specified by the user.
+                if not order.bom_id:
+                    expected_qty = bomless_factor * move.product_uom_qty
+                # The extra moves could be originally added by the BoM (but later removed and readded) or completely
+                # foreign. If it's the former, we need to try some heuristics to match them with BoM lines with no
+                # corresponding moves. For now, we simply check whether the move has the same UoM and product id as
+                # the missing BoM line.
+                elif move.bom_line_id not in all_lines:
+                    for line in missing_lines:
+                        if line.product_id != move.product_id:
+                            continue
+                        if self.env.user.has_group('uom.group_uom') and line.uom_id != move.uom_id:
+                            continue
+                        expected_qty = line.uom_id._compute_quantity(
+                            line.product_qty * bom_factors[line.bom_id.id], move.uom_id)
+                        missing_lines -= line
+                        break
+                    # If we fail to match the move with a BoM line, it's most likely foreign.
+                    else:
+                        expected_qty = 0
+                elif line := move.bom_line_id:
+                    expected_qty = line.uom_id._compute_quantity(
+                        line.product_qty * bom_factors[line.bom_id.id], move.uom_id)
+                picked_qty = move._get_picked_quantity()
+                if move.uom_id.compare(picked_qty, expected_qty):
+                    issues.append((order, move.product_id, move.uom_id, move, picked_qty, expected_qty))
+            # Once we've matched every orphaned BoM line we could match with orphaned moves, we consider
+            # the leftover BoM lines missing.
+            for line in missing_lines:
+                expected_qty = line.product_qty * (bom_factors[line.bom_id.id] if order.bom_id else bomless_factor)
+                issues.append((order, line.product_id, line.uom_id, False, 0, expected_qty))
         return issues
 
     def _action_generate_consumption_wizard(self, consumption_issues):
         ctx = self.env.context.copy()
         lines = []
-        for order, product_id, consumed_qty, expected_qty in consumption_issues:
-            lines.append((0, 0, {
+        for order, product_id, uom_id, move_id, consumed_qty, expected_qty in consumption_issues:
+            lines.append(Command.create({
                 'mrp_production_id': order.id,
+                'move_id': move_id and move_id.id,
                 'product_id': product_id.id,
-                'uom_id': product_id.uom_id.id,
+                'uom_id': uom_id.id,
                 'product_consumed_qty_uom': consumed_qty,
                 'product_expected_qty_uom': expected_qty
             }))
