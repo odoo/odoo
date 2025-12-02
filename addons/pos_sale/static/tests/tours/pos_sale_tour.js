@@ -657,3 +657,18 @@ registry.category("web_tour.tours").add("test_ecommerce_unpaid_order_is_shown_in
             PosSale.checkOrdersListNotEmpty(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs("180.00"),
+            Order.doesNotHaveLine({
+                productName: "Settle Lots",
+                quantity: "1.0",
+                price: "100",
+            }),
+        ].flat(),
+});
