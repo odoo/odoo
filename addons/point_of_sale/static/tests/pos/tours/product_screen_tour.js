@@ -598,10 +598,6 @@ registry.category("web_tour.tours").add("AutofillCashCount", {
             FeedbackScreen.clickNextOrder(),
             ProductScreen.isShown(),
             Chrome.clickMenuOption("Close Register"),
-            {
-                trigger: ".fa-clone.btn-secondary",
-                run: "click",
-            },
             ProductScreen.cashDifferenceIs(0),
         ].flat(),
 });

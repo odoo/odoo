@@ -58,24 +58,41 @@
                     </div>
                 </div>
                 <hr/>
-                <div t-if="pos.config.cash_control" class="mb-3">
-                    <label class="form-label">Cash Count</label>
-                    <div class="d-flex w-100 gap-2 mt-1">
-                        <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
-                            callback.bind="(value) =>  this.setManualCashInput(value)"
-                            isValid.bind="env.utils.isValidFloat" class="'cash-input w-100'"/>
-                        <button class="icon fa fa-money btn btn-secondary" t-on-click="openDetailsPopup" />
-                        <button class="icon fa fa-clone btn btn-secondary" t-on-click="autoFillCashCount" />
-                    </div>
-                </div>
-                <div class="w-100 mb-3" t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
-                    <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
-                    <t t-if="_showDiff">
-                        <span><t t-esc="pm.name" /> Count</span>
+                <div class="row g-3">
+                    <div class="col-12 col-md-6" t-if="pos.config.cash_control">
+                        <label class="form-label">Cash Count</label>
                         <div class="d-flex w-100 gap-2 mt-1">
-                            <Input tModel="[state.payments[pm.id], 'counted']"
-                                isValid.bind="env.utils.isValidFloat" class="'w-100'" />
-                            <button class="icon fa fa-clone btn btn-secondary" t-on-click="() => this.autoFillPMCount(pm.id)" />
+                            <Input
+                                tModel="[state.payments[props.default_cash_details.id], 'counted']"
+                                callback.bind="(value) => this.setManualCashInput(value)"
+                                isValid.bind="env.utils.isValidFloat"
+                                class="'cash-input w-100'"
+                            />
+                            <button
+                                class="icon fa fa-money btn btn-secondary"
+                                t-on-click="openDetailsPopup"
+                            />
+                        </div>
+                    </div>
+                    <t t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
+                        <t t-set="_showDiff" t-value="['bank', 'cash'].includes(pm.type) and pm.number !== 0" />
+                        <div class="col-12 col-md-6" t-if="_showDiff">
+                            <label class="form-label">
+                                <t t-esc="pm.name" /> Count
+                            </label>
+                            <div class="d-flex w-100 gap-2 mt-1">
+                                <Input
+                                    tModel="[state.payments[pm.id], 'counted']"
+                                    isValid.bind="env.utils.isValidFloat"
+                                    class="'w-100'"
+                                />
+                                <t t-if="pm.type == 'cash'">
+                                    <button
+                                        class="icon fa fa-money btn btn-secondary"
+                                        t-on-click="openDetailsPopup"
+                                    />
+                                </t>
+                            </div>
                         </div>
                     </t>
                 </div>
