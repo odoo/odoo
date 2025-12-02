@@ -83,8 +83,17 @@ async function fetchInternalMetaData(url) {
 
     const result = await keepLastPromise
         .add(fetch(urlParsed))
-        .then((response) => response.text())
-        .then(async (content) => {
+        .then((response) => ({
+            contentPromise: response.text(),
+            type: response.headers.get("content-type"),
+        }))
+        .then(async ({ contentPromise, type }) => {
+            if (type.startsWith("image/")) {
+                return {
+                    imgSrc: urlParsed,
+                };
+            }
+            const content = await contentPromise;
             const html_parser = new window.DOMParser();
             const doc = html_parser.parseFromString(content, "text/html");
             const internalUrlMetaData = await rpc("/html_editor/link_preview_internal", {
