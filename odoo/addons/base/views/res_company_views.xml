@@ -80,35 +80,21 @@
             <field name="arch" type="xml">
                 <kanban>
                     <templates>
-                        <t t-name="card">
-                            <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
-                                <i class="fa fa-building" role="img" aria-label="Enterprise" title="Enterprise"></i> <field class="fw-bold fs-5" name="name"/>
-                            </div>
-                            <hr class="mt4 mb4"/>
-                            <div class="row" t-if="!selection_mode">
-                                <div t-if="record.email.value" class="col-6 text-center">
-                                    <strong>Email:</strong>
-                                </div>
-                                <div t-if="record.phone.value" class="col-6 text-center">
-                                    <strong>Phone</strong>
-                                </div>
-                                <div t-if="record.email.value" class="col-6 text-center">
+                        <t t-name="card" class="flex-row gap-2">
+                            <main>
+                                <field class="h5" name="name"/>
+                                <div t-if="record.email.value" class="text-truncate">
+                                    <i class="fa fa-fw me-1 fa-envelope" title="Email"/>
                                     <field name="email"/>
                                 </div>
-                                <div t-if="record.phone.value" class="col-6 text-center o_force_ltr">
+                                <div t-if="record.phone.value" class="text-truncate">
+                                    <i class="fa fa-fw me-1 fa-phone" title="Phone"/>
                                     <field name="phone"/>
                                 </div>
-                            </div>
-                            <div t-else="">
-                                <div t-if="record.email.value">
-                                    <strong>Email:</strong>
-                                    <field name="email"/>
-                                </div>
-                                <div t-if="record.phone.value" class="o_force_ltr">
-                                    <strong>Phone:</strong>
-                                    <field name="phone"/>
-                                </div>
-                            </div>
+                            </main>
+                            <aside class="flex-basis-auto">
+                                <field name="logo" invisible="not logo" widget="image" options="{'size': [36, 36], 'img_class': 'border rounded object-fit-contain'}"/>
+                            </aside>
                         </t>
                     </templates>
                 </kanban>
