@@ -59,7 +59,7 @@ class TestResUsers(TransactionCase):
         })
         with Form(self.env['change.password.wizard'].with_context(active_model='res.users', active_ids=user_internal.ids), view='base.change_password_wizard_view') as form:
             with form.user_ids.edit(0) as line:
-                line.new_passwd = 'bla'
+                line.new_passwd = 'blablabla'
         rec = form.save()
         rec.change_password_button()
 

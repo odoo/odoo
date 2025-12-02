@@ -20,7 +20,6 @@ class TestAvatarMixin(TransactionCase):
             'image_1920': False,
             'create_date': '2015-11-12 00:00:00',
             'login': 'demo_1',
-            'password': 'demo_1',
             'partner_id': partner_without_image.id,
         })
         self.user_without_name = self.env['res.users'].create({
@@ -28,7 +27,6 @@ class TestAvatarMixin(TransactionCase):
             'email': 'marc.grey25@example.com',
             'image_1920': False,
             'login': 'marc_1',
-            'password': 'marc_1',
         })
         self.external_partner = self.env['res.partner'].create({
             'name': 'Josh Demo',
