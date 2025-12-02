@@ -261,6 +261,18 @@ class TestPaymentTransaction(PaymentCommon):
             tx._validate_amount({})
         self.assertNotEqual(tx.state, 'error')
 
+    def test_processing_applies_updates_to_error_txs_with_valid_amount_data(self):
+        tx = self._create_transaction('redirect', state='error')
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._validate_amount'
+        ), patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._apply_updates'
+        ) as apply_updates_mock:
+            tx._process('test', {})
+        self.assertEqual(apply_updates_mock.call_count, 1)
+
     def test_processing_does_not_apply_updates_when_amount_data_is_invalid(self):
         tx = self._create_transaction('redirect', state='draft', amount=100)
         with patch(
