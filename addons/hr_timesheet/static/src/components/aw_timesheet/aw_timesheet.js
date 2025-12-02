@@ -21,6 +21,7 @@ export class ActivityWatchTimesheet extends Component {
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.fakeEventsService = useService("aw_fake_events_service");
         this.state = useState({
             ...this.defaultStateValues,
             groupBy: "project",
@@ -51,6 +52,7 @@ export class ActivityWatchTimesheet extends Component {
                 fields: { project: "project_id" /*, task: "task_id" */ },
             },
         ];
+        this.awServerResponded = false;
 
         onWillStart(async () => {
             await this.loadData();
@@ -310,6 +312,7 @@ export class ActivityWatchTimesheet extends Component {
     async loadAwEvents(baseUrl, start, end) {
         try {
             const watchers = await this.getWatchers(baseUrl);
+            this.awServerResponded = true;
             const requests = [];
             for (const watcher of watchers) {
                 requests.push(
@@ -411,7 +414,15 @@ export class ActivityWatchTimesheet extends Component {
                     sticky: true,
                 }
             );
-            return {};
+            this.awServerResponded = false;
+            const fakeEvents = this.fakeEventsService.get(
+                this.state.currentDate.toISO().split("T")[0]
+            );
+            for (const watcherType of ["aw-client-web", "aw-watcher-window"]) {
+                const events = fakeEvents[watcherType] || [];
+                events.forEach((event) => this.extractWatcherActivity(event));
+            }
+            return fakeEvents;
         }
     }
 
@@ -596,27 +607,25 @@ export class ActivityWatchTimesheet extends Component {
                 if (range.keyEvent) {
                     prevKeyyEvent = range.name;
                 }
-                if (!prevProjectId && !prevTaskId) {
-                    if (range.keyEvent && (range.project_id || range.task_id)) {
-                        prevProjectId = range.project_id;
-                        prevTaskId = range.task_id;
-                        projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
-                    } else if (this.localConfig[prevKeyyEvent]) {
-                        // to refactor with getRowStats(rowTitle) { later
-                        const stats = Object.entries(this.localConfig[prevKeyyEvent])
-                            .map(([jsonKey, count]) => {
-                                const parsed = JSON.parse(jsonKey);
-                                return { ...parsed, count };
-                            })
-                            .sort((a, b) => b.count - a.count);
+                if (range.keyEvent && (range.project_id || range.task_id)) {
+                    prevProjectId = range.project_id;
+                    prevTaskId = range.task_id;
+                    projectTask = this.projectTaskKey(prevProjectId, prevTaskId);
+                } else if (this.localConfig[prevKeyyEvent]) {
+                    // to refactor with getRowStats(rowTitle) { later
+                    const stats = Object.entries(this.localConfig[prevKeyyEvent])
+                        .map(([jsonKey, count]) => {
+                            const parsed = JSON.parse(jsonKey);
+                            return { ...parsed, count };
+                        })
+                        .sort((a, b) => b.count - a.count);
 
-                        const justForThisEventProjectId = stats[0].project_id?.id || false;
-                        const justForThisEventTaskId = stats[0].task_id?.id || false;
-                        projectTask = this.projectTaskKey(
-                            justForThisEventProjectId,
-                            justForThisEventTaskId
-                        );
-                    }
+                    const justForThisEventProjectId = stats[0].project_id?.id || false;
+                    const justForThisEventTaskId = stats[0].task_id?.id || false;
+                    projectTask = this.projectTaskKey(
+                        justForThisEventProjectId,
+                        justForThisEventTaskId
+                    );
                 }
             }
             const duration = (range.stop - range.start) / 1000;
@@ -951,6 +960,11 @@ export class ActivityWatchTimesheet extends Component {
 
     formatDuration(duration) {
         return formatFloatTime(duration);
+    }
+
+    async generateSampleData() {
+        await this.fakeEventsService.generate(this.state.currentDate.toISO().split("T")[0]);
+        await this.loadData();
     }
 }
 
