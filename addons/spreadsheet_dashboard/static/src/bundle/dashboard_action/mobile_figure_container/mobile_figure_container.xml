@@ -10,7 +10,7 @@
             t-on-click="() => this.onClick(figure.id)"
             t-attf-style="min-height: #{figure.height}px; direction: ltr;"
         >
-            <t t-component="getFigureComponent(figure)" figure="figure" onFigureDeleted="() => {}"/>
+            <t t-component="getFigureComponent(figure)" figure="figure"/>
         </div>
     </t>
 </templates>
