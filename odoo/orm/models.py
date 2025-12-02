@@ -439,6 +439,10 @@ class BaseModel(metaclass=MetaModel):
     _fold_name: str = 'fold'         #: field to determine folded groups in kanban views
 
     _clear_cache_name: str = ''      # cache to clear on create/write/update
+    _clear_cache_on_fields: Iterable[str] | None = None
+    """the fields that trigger invalidation of cache named ``_clear_cache_name``,
+    ``None`` meaning all fields
+    """
 
     _translate: bool = True           # False disables translations export for this model (Old API) TODO deprecate/remove
     _check_company_auto: bool = False
@@ -3735,8 +3739,8 @@ class BaseModel(metaclass=MetaModel):
 
             # invalidate the cache
             if real_recs and (cache_name := self._clear_cache_name) and (
-                not hasattr(self, '_clear_cache_on_fields')
-                or not self._clear_cache_on_fields.isdisjoint(vals)
+                self._clear_cache_on_fields is None
+                or not vals.keys().isdisjoint(self._clear_cache_on_fields)
             ):
                 self.env.registry.clear_cache(cache_name)
 
