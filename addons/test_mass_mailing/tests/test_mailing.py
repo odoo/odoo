@@ -289,6 +289,49 @@ class TestMassMailing(TestMassMailCommon):
                     check_mail=True,
                 )
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_recipients_custom_domain_with_multi_company(self):
+        """Test that mailing_domain is restricted to user company in cron job."""
+        (company_1, company_2) = self.env['res.company'].create([
+            {'name': 'Test Company 1'},
+            {'name': 'Test Company 2'},
+        ])
+        self.user_marketing.write({
+            'company_ids': [company_1.id],
+            'company_id': company_1.id,
+        })
+
+        (partner_comp1, partner_comp2) = self.env['res.partner'].create([
+            {
+                'email': 'partner.company.1@example.com',
+                'name': 'Test Company 1 partner',
+                'company_id': company_1.id,
+            }, {
+                'email': 'partner.company.2@example.com',
+                'name': 'Test Company 2 partner',
+                'company_id': company_2.id,
+            },
+        ])
+
+        mailing = self.env['mailing.mailing'].with_user(self.user_marketing).create({
+            'body_html': '<p>Hello World</p>',
+            'mailing_domain': [('id', 'in', [partner_comp1.id, partner_comp2.id])],
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'mailing_type': 'mail',
+            'name': 'Test Multi-Company',
+            'subject': 'Test Multi-Company',
+        })
+        with self.mock_mail_gateway():
+            mailing.action_launch()
+            self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').method_direct_trigger()
+
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertSentEmail(
+            self.user_marketing.partner_id,
+            [partner_comp1],
+        )
+        self.assertNotSentEmail([partner_comp2.email_formatted])
+
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_reply_to_mode_new(self):

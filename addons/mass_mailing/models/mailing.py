@@ -1009,11 +1009,11 @@ class MassMailing(models.Model):
 
     def _get_recipients(self):
         mailing_domain = self._get_recipients_domain()
-        res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
+        res_ids = self.env[self.mailing_model_real].with_user(self.user_id).search(mailing_domain).ids
 
         # randomly choose a fragment
         if self.ab_testing_enabled and not self.ab_testing_is_winner_mailing:
-            contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
+            contact_nbr = self.env[self.mailing_model_real].with_user(self.user_id).search_count(mailing_domain)
             topick = 0
             if contact_nbr:
                 topick = max(int(contact_nbr / 100.0 * self.ab_testing_pc), 1)
