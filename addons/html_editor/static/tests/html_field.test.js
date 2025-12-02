@@ -985,7 +985,7 @@ test("link preview in Link Popover", async () => {
     setSelectionInHtmlField(".test_target a");
     await animationFrame();
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
@@ -996,11 +996,11 @@ test("link preview in Link Popover", async () => {
     });
     // Click on Discard button to undo changes.
     await contains(".o-we-linkpopover .o_we_discard_link").click();
-    await waitFor("a.o_we_edit_link");
+    await waitFor("button.o_we_edit_link");
     expect(".test_target a").toHaveText("This website");
 
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
@@ -1015,7 +1015,7 @@ test("link preview in Link Popover", async () => {
     });
 
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("New label", {
         message: "The label input field should match the link's content",
     });
