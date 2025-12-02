@@ -119,7 +119,7 @@ const FULL_HTML_TEMPLATE = /* html */ `
                 <option value="employee">Employee</option>
             </select>
             <button type="submit">Submit</button>
-            <button type="submit" disabled="disabled">Cancel</button>
+            <button type="submit" disabled="disabled">Discard</button>
         </form>
         <iframe srcdoc="&lt;p&gt;Iframe text content&lt;/p&gt;"></iframe>
     </main>
