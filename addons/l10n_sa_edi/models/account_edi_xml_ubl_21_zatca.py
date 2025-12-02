@@ -292,7 +292,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                 'cac:TaxScheme': {
                     'cbc:ID': {'_text': 'VAT'}
                 }
-            } if role != 'customer' or partner.country_id.code == 'SA' else None,  # BR-KSA-46
+            } if (role != 'customer' or partner.country_id.code == 'SA') and commercial_partner.vat and commercial_partner.vat != '/' else None,  # BR-KSA-46
             'cac:PartyLegalEntity': {
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {'_text': commercial_partner.vat} if commercial_partner.country_code == 'SA' else None,
