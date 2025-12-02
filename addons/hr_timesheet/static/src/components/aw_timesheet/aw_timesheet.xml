@@ -29,7 +29,6 @@
                                 class="btn btn-secondary o_switch_view"
                                 t-att-class="state.groupBy === 'project' ? 'active' : ''"
                                 t-on-click.stop="() => state.groupBy = 'project'"
-                                data-tooltip="Project"
                             >
                                 Project
                             </button>
@@ -37,7 +36,6 @@
                                 class="btn btn-secondary o_switch_view"
                                 t-att-class="state.groupBy === 'timeline' ? 'active' : ''"
                                 t-on-click.stop="() => state.groupBy = 'timeline'"
-                                data-tooltip="Timeline"
                             >
                                 Timeline
                             </button>

@@ -811,7 +811,7 @@ export class ActivityWatchTimesheet extends Component {
 
     async onTake(groupKey, title) {
         // duplicated in loadData
-        const todayStart = this.currentDate.toISO();
+        const todayStart = this.state.currentDate.toISO();
         const date = todayStart.split("T")[0];
         const params = this.getSuggestionParams(groupKey, title);
         if (params === false) {
