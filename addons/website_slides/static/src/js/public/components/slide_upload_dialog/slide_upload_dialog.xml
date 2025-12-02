@@ -5,7 +5,7 @@
         <Dialog size="state.size" title="state.title" contentClass="'o_w_slide_upload_dialog_content'">
             <t t-set-slot="footer">
                 <button t-if="state.page ==='select'" type="button" class="btn" t-on-click="() => this.props.close()">
-                    <span>Cancel</span>
+                    <span>Discard</span>
                 </button>
                 <t t-elif="!['select', 'upload'].includes(state.page)">
                     <div id="o_w_slide_upload_btns"/>

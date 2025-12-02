@@ -516,7 +516,7 @@
             class="o-delete o-button-danger o-button">
             Delete
           </button>
-          <button t-on-click="onCancel" class="o-cancel o-button">Cancel</button>
+          <button t-on-click="onCancel" class="o-cancel o-button">Discard</button>
           <button t-on-click="onConfirm" class="o-confirm o-button primary">Confirm</button>
         </div>
       </Section>
@@ -1088,7 +1088,7 @@
 
     <Section>
       <div class="o-sidePanelButtons">
-        <button t-on-click="onCancel" class="o-pivot-measure-cancel o-button">Cancel</button>
+        <button t-on-click="onCancel" class="o-pivot-measure-cancel o-button">Discard</button>
         <button t-on-click="onSave" class="o-pivot-measure-save o-button primary">Save</button>
       </div>
     </Section>
@@ -1721,7 +1721,7 @@
 
       <Section>
         <div class="o-sidePanelButtons">
-          <button t-on-click="props.onExit" class="o-dv-cancel o-button">Cancel</button>
+          <button t-on-click="props.onExit" class="o-dv-cancel o-button">Discard</button>
           <button t-on-click="onSave" class="o-dv-save o-button primary">Save</button>
         </div>
       </Section>
@@ -2258,7 +2258,7 @@
       </Section>
       <Section class="'pt-1'">
         <div class="o-sidePanelButtons">
-          <button t-on-click="onCancel" class="o-button o-cf-cancel">Cancel</button>
+          <button t-on-click="onCancel" class="o-button o-cf-cancel">Discard</button>
           <button
             t-on-click="onSave"
             class="o-button primary o-cf-save"
@@ -4911,7 +4911,7 @@
         onClose="() => this.menu.isOpen=false"
       />
       <div class="o-buttons">
-        <button t-on-click="cancel" class="o-button o-cancel me-2">Cancel</button>
+        <button t-on-click="cancel" class="o-button o-cancel me-2">Discard</button>
         <button t-on-click="save" class="o-button primary o-save" t-att-disabled="!link.url">
           Confirm
         </button>
@@ -6722,7 +6722,7 @@
         </SidePanelCollapsible>
 
         <div class="o-filter-menu-buttons d-flex justify-content-end">
-          <button class="o-button o-filter-menu-cancel me-2" t-on-click="cancel">Cancel</button>
+          <button class="o-button o-filter-menu-cancel me-2" t-on-click="cancel">Discard</button>
           <button class="o-button primary o-filter-menu-confirm" t-on-click="confirm">
             Confirm
           </button>
