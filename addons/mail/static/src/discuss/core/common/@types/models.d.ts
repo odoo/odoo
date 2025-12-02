@@ -61,7 +61,6 @@ declare module "models" {
         name: string;
         notifyAvatarToServer: (data: string) => Promise<void>;
         notifyDescriptionToServer: (description: unknown) => Promise<unknown>;
-        rename: (name: string) => Promise<void>;
         scrollUnread: boolean;
         self_member_id: ChannelMember;
         showCorrespondentCountry: Readonly<boolean>;
