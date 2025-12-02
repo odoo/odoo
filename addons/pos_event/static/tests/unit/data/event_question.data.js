@@ -59,6 +59,16 @@ export class EventQuestion extends models.ServerModel {
             is_mandatory_answer: false,
             answer_ids: [1, 2],
         },
+        {
+            id: 5,
+            title: "Company Name",
+            question_type: "company_name",
+            event_ids: [1],
+            sequence: 5,
+            once_per_order: false,
+            is_mandatory_answer: false,
+            answer_ids: [],
+        },
     ];
 }
 
