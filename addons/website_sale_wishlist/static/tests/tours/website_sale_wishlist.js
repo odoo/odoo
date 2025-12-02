@@ -219,6 +219,16 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             expectUnloadPage: true,
         },
         {
+            content: "Check wishlist quantity",
+            trigger: `a sup.my_wish_quantity:text(1)`,
+        },
+        {
+            // wait for the button to be correctly disabled because the first
+            // variant was already added to the wishlist from the product page.
+            content: "Check that the button is disabled",
+            trigger: "#product_detail form .o_add_wishlist_dyn.disabled",
+        },
+        {
             content: "Select Bottle with second variant from /product",
             trigger: "input.js_variant_change[data-value_name=blue]:not(:visible)",
             run: "click",
