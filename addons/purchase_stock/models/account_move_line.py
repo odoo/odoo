@@ -15,6 +15,11 @@ class AccountMoveLine(models.Model):
         # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
         valuation_price_unit = self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_uom_id)
         valuation_price_unit = -valuation_price_unit if self.move_id.move_type == 'in_refund' else valuation_price_unit
+        valuation_date = self.date
+        valuation_price_unit = self.company_currency_id._convert(
+            valuation_price_unit,
+            self.currency_id, self.company_id, valuation_date, round=False
+        )
 
         price_unit = self._get_gross_unit_price()
 
