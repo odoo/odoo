@@ -97,6 +97,9 @@ class TestUi(AccountTestInvoicingHttpCommon):
         self.start_tour("/odoo/customer-invoices/new", 'test_use_product_catalog_on_invoice', login="admin")
 
     def test_section_saved_on_tab_keydown_tour(self):
+        self.env['res.partner'].create({
+            'name': 'Partner A',
+        })
         self.start_tour('/odoo/customer-invoices', 'section_saved_on_tab_keydown_tour', login='accountman')
         invoice = self.env['account.move'].search([('move_type', '=', 'out_invoice')])
         self.assertEqual(invoice.invoice_line_ids[0].name, 'Section content')
