@@ -20,7 +20,7 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
 
 export class DiscussSidebarChannel extends Component {
     static template = "mail.DiscussSidebarChannel";
-    static props = ["thread"];
+    static props = ["channel"];
     static components = {
         CountryFlag,
         DiscussSidebarChannelActions,
@@ -52,7 +52,7 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get actionsTitle() {
-        if (this.thread.channel?.channel_type === "channel") {
+        if (this.channel.channel_type === "channel") {
             return _t("Channel Actions");
         }
         return _t("Chat Actions");
@@ -60,13 +60,13 @@ export class DiscussSidebarChannel extends Component {
 
     get attClass() {
         return {
-            "bg-inherit": this.thread.notEq(this.store.discuss.thread),
-            "o-active": this.thread.eq(this.store.discuss.thread),
+            "bg-inherit": this.channel.notEq(this.store.discuss.thread?.channel),
+            "o-active": this.channel.eq(this.store.discuss.thread?.channel),
             "o-unread":
-                this.thread.self_member_id?.message_unread_counter > 0 &&
-                !this.thread.self_member_id?.mute_until_dt,
+                this.channel.self_member_id?.message_unread_counter > 0 &&
+                !this.channel.self_member_id?.mute_until_dt,
             "border-bottom-0 rounded-bottom-0": this.bordered,
-            "opacity-50": this.thread.self_member_id?.mute_until_dt,
+            "opacity-50": this.channel.self_member_id?.mute_until_dt,
             "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
             "px-0": !this.store.discuss.isSidebarCompact,
@@ -83,7 +83,7 @@ export class DiscussSidebarChannel extends Component {
     get bordered() {
         return (
             this.store.discuss.isSidebarCompact &&
-            Boolean(this.thread.channel?.subChannelsInSidebar?.length)
+            Boolean(this.channel.subChannelsInSidebar?.length)
         );
     }
 
@@ -94,17 +94,17 @@ export class DiscussSidebarChannel extends Component {
     get itemNameAttClass() {
         return {
             "o-unread fw-bolder":
-                this.thread.self_member_id?.message_unread_counter > 0 &&
-                !this.thread.self_member_id?.mute_until_dt,
+                this.channel.self_member_id?.message_unread_counter > 0 &&
+                !this.channel.self_member_id?.mute_until_dt,
             "opacity-75 opacity-100-hover":
-                this.thread.self_member_id?.message_unread_counter === 0 ||
-                this.thread.self_member_id?.mute_until_dt,
+                this.channel.self_member_id?.message_unread_counter === 0 ||
+                this.channel.self_member_id?.mute_until_dt,
         };
     }
 
-    /** @returns {import("models").Thread} */
-    get thread() {
-        return this.props.thread;
+    /** @returns {import("models").DiscussChannel} */
+    get channel() {
+        return this.props.channel;
     }
 
     get threadAvatarAttClass() {
@@ -112,38 +112,38 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get subChannels() {
-        return this.thread.channel.subChannelsInSidebar;
+        return this.channel.subChannelsInSidebar;
     }
 
-    showThread(sub) {
-        if (sub.eq(this.store.discuss.thread)) {
+    showChannel(sub) {
+        if (sub.eq(this.store.discuss.thread?.channel)) {
             return true;
         }
-        if (!this.thread.discussAppCategory.is_open) {
+        if (!this.channel.discussAppCategory.is_open) {
             return false;
         }
         if (
-            !this.thread.self_member_id?.mute_until_dt ||
+            !this.channel.self_member_id?.mute_until_dt ||
             sub.self_member_id?.message_unread_counter > 0
         ) {
             return true;
         }
         return (
             this.isSelfOrThreadActive &&
-            !(this.thread.self_member_id?.mute_until_dt && sub.self_member_id?.mute_until_dt)
+            !(this.channel.self_member_id?.mute_until_dt && sub.self_member_id?.mute_until_dt)
         );
     }
 
     get isSelfOrThreadActive() {
         return (
-            this.thread.eq(this.store.discuss.thread) ||
-            this.store.discuss.thread?.in(this.subChannels)
+            this.channel.eq(this.store.discuss.thread?.channel) ||
+            this.store.discuss.thread?.channel?.in(this.subChannels)
         );
     }
 
     /** @param {MouseEvent} ev */
-    openThread(ev, thread) {
-        markEventHandled(ev, "sidebar.openThread");
-        thread.open();
+    openChannel(ev, channel) {
+        markEventHandled(ev, "sidebar.openChannel");
+        channel.open();
     }
 }

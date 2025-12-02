@@ -9,7 +9,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export class DiscussSidebarSubchannel extends Component {
     static template = "mail.DiscussSidebarSubchannel";
-    static props = ["thread", "isFirst?"];
+    static props = ["channel", "isFirst?"];
     static components = { DiscussSidebarChannelActions, Dropdown, UseHoverOverlay };
 
     setup() {
@@ -36,13 +36,13 @@ export class DiscussSidebarSubchannel extends Component {
         return _t("Thread Actions");
     }
 
-    get thread() {
-        return this.props.thread;
+    get channel() {
+        return this.props.channel;
     }
 
     /** @param {MouseEvent} ev */
-    openThread(ev, thread) {
-        markEventHandled(ev, "sidebar.openThread");
-        thread.open();
+    openChannel(ev, channel) {
+        markEventHandled(ev, "sidebar.openChannel");
+        channel.open();
     }
 }

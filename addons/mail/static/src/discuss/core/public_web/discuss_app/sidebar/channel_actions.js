@@ -11,16 +11,16 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class DiscussSidebarChannelActions extends Component {
     static template = "mail.DiscussSidebarChannelActions";
-    static props = ["thread"];
+    static props = ["channel"];
     static components = { ActionList };
 
     setup() {
         this.store = useService("mail.store");
         this.isDiscussSidebarChannelActions = true;
-        this.threadActions = useThreadActions({ thread: () => this.thread });
+        this.threadActions = useThreadActions({ thread: () => this.channel.thread });
     }
 
-    get thread() {
-        return this.props.thread;
+    get channel() {
+        return this.props.channel;
     }
 }

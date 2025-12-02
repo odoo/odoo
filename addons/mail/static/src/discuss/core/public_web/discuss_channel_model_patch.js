@@ -28,9 +28,11 @@ const discussChannelPatch = {
                 return this._computeIsDisplayInSidebar();
             },
         });
-        this.subChannelsInSidebar = fields.Many("mail.thread", {
+        this.subChannelsInSidebar = fields.Many("discuss.channel", {
             compute() {
-                return this.sub_channel_ids?.filter((thread) => thread.channel?.isDisplayInSidebar);
+                return this.sub_channel_ids
+                    ?.filter((thread) => thread.channel?.isDisplayInSidebar)
+                    .map((thread) => thread.channel);
             },
         });
     },
