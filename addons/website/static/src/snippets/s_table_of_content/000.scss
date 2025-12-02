@@ -35,6 +35,20 @@
                 &:focus {
                     background: none;
                 }
+
+                &.table_of_content_link_depth_0 {
+                    padding-left: 3px;
+                    &.active {
+                        padding-left: 8px;
+                    }
+                }
+
+                @for $depth from 1 through 5 {
+                    &.table_of_content_link_depth_#{$depth} {
+                        padding-left: calc(3px + Min(15px, 5%) * #{$depth});
+                    }
+                }
+
                 &.active {
                     background: none;
                     padding-left: 8px;
@@ -54,7 +68,7 @@
 
             .s_table_of_content_navbar {
                 display: inline;
-    
+
                 > a {
                     &.list-group-item-action {
                         width: auto;
@@ -62,6 +76,12 @@
                     &.list-group-item {
                         display: inline-block;
                         margin-bottom: 2px;
+                    }
+                    @for $depth from 1 through 5 {
+                        /* display only top level headings */
+                        &.table_of_content_link_depth_#{$depth} {
+                            display: none;
+                        }
                     }
                 }
             }
