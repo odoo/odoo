@@ -338,12 +338,18 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_delivery_nodes(self, document_node, vals):
         invoice = vals['invoice']
+        partner_shipping = vals['partner_shipping']
         document_node['cac:Delivery'] = {
             'cbc:ActualDeliveryDate': {'_text': invoice.delivery_date},
             'cac:DeliveryLocation': {
-                'cac:Address': self._get_address_node({'partner': vals['partner_shipping']})
+                'cac:Address': self._get_address_node({'partner': partner_shipping}),
             },
         }
+
+        if gln := partner_shipping.global_location_number:
+            document_node['cac:Delivery']['cac:DeliveryLocation'].update({
+                'cbc:ID': {'schemeID': '0088', '_text': gln},
+            })
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         invoice = vals['invoice']

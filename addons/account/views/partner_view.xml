@@ -164,6 +164,12 @@
                     <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
                 </field>
 
+                <xpath expr=".//page[@name='sales_purchases']//group[@name='misc']" position="inside">
+                    <field name="global_location_number" invisible="type != 'delivery'"/>
+                </xpath>
+                <xpath expr=".//page[@name='contact_addresses']/field[@name='child_ids']/form//field[@name='phone']" position="after">
+                    <field name="global_location_number" invisible="type != 'delivery'"/>
+                </xpath>
             </field>
         </record>
 
