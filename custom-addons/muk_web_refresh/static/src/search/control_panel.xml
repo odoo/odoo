@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.ControlPanel" t-inherit-mode="extension">
+        <xpath expr="//Pager/.." position="before">
+            <div 
+                t-if="this.checkAutoLoadAvailability()"
+                class="d-inline-flex align-items-center gap-1 align-self-center"
+            >
+                <span
+                    t-if="this.autoLoadState.active and this.autoLoadState.counter &gt; 0"
+                    class="small text-muted"
+                >
+                    <t t-out="this.autoLoadState.counter"/>s
+                </span>
+                <button
+                    t-if="!env.isSmall"
+                    class="btn btn-link p-0 d-inline-flex align-items-center justify-content-center"
+                    type="button"
+                    t-on-click.stop="this.toggleAutoLoad"
+                >
+                    <i 
+                        class="fa fa-refresh fa-fw"
+                        t-att-class="this.autoLoadState.active ? 'text-info fa-spin' : 'text-muted'"
+                    />
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

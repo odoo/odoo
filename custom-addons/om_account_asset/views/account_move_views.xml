@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_asset_category" model="ir.ui.view">
+        <field name="name">account.move.supplier.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Add asset category field in Journal Items tab -->
+            <xpath expr="//page[@id='aml_tab']//field[@name='line_ids']//list//field[@name='account_id']" position="after">
+                <field name="asset_category_id" 
+                       domain="[('company_id', '=', parent.company_id)]"
+                       context="{'default_company_id': parent.company_id}"
+                       optional="show"/>
+            </xpath>
+            
+            <!-- Alternatively, if you want to add it in Invoice Lines tab -->
+            <xpath expr="//page[@id='invoice_tab']//field[@name='invoice_line_ids']//list//field[@name='account_id']" position="after">
+                <field name="asset_category_id" 
+                       domain="[('company_id', '=', parent.company_id)]"
+                       context="{'default_company_id': parent.company_id}"
+                       optional="show"
+                       groups="account.group_account_readonly"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

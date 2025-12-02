@@ -1,0 +1,38 @@
+// ------------------------------------------------------------------
+// Almarai
+// ------------------------------------------------------------------
+$almarai-font-path: '../fonts/Almarai';
+
+@mixin almarai-font($type, $weight, $style) {
+    @font-face {
+        font-family: 'Almarai';
+        src: url('#{$almarai-font-path}/Almarai-#{$type}.eot');
+        src: url('#{$almarai-font-path}/Almarai-#{$type}.eot?#iefix') format('embedded-opentype'),
+             url('#{$almarai-font-path}/Almarai-#{$type}.woff') format('woff'),
+             url('#{$almarai-font-path}/Almarai-#{$type}.ttf') format('truetype'),
+             url('#{$almarai-font-path}/Almarai-#{$type}.svg#Almarai') format('svg');
+        font-weight: $weight;
+        font-style: $style;
+    }
+
+    @font-face {
+        font-family: 'almarai-#{$type}';
+        src: url('#{$almarai-font-path}/Almarai-#{$type}.eot');
+        src: url('#{$almarai-font-path}/Almarai-#{$type}.eot?#iefix') format('embedded-opentype'),
+             url('#{$almarai-font-path}/Almarai-#{$type}.woff') format('woff'),
+             url('#{$almarai-font-path}/Almarai-#{$type}.ttf') format('truetype'),
+             url('#{$almarai-font-path}/Almarai-#{$type}.svg#Almarai') format('svg');
+    }
+}
+
+@mixin almarai-font-pair($type, $weight) {
+    @include almarai-font('#{$type}', $weight, normal);
+    @include almarai-font('#{$type}Italic', $weight, italic);
+}
+
+
+
+@include almarai-font-pair('Light', 300);
+@include almarai-font-pair('Regular', 400);
+@include almarai-font-pair('Bold', 700);
+@include almarai-font-pair('Extrabold', 800);
