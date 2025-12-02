@@ -9,12 +9,17 @@ from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
 PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
+PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS = {
+    '0208': re.compile(r'[^0-9]'),
+    '9925': re.compile(r'[^beBE0-9]'),
+}
 
 
-def sanitize_peppol_endpoint(peppol_endpoint):
+def sanitize_peppol_endpoint(peppol_endpoint, eas=None):
     if not peppol_endpoint:
         return peppol_endpoint
-    return PEPPOL_ENDPOINT_INVALIDCHARS_RE.sub('', peppol_endpoint)
+    sanitizer = PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS.get(eas, PEPPOL_ENDPOINT_INVALIDCHARS_RE)
+    return sanitizer.sub('', peppol_endpoint)
 
 
 class ResPartner(models.Model):
@@ -220,7 +225,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_peppol_edi_format = partner.invoice_edi_format in self._get_peppol_formats()
 
-    def _get_peppol_endpoint_value(self, country_code, field):
+    def _get_peppol_endpoint_value(self, country_code, field, eas):
         self.ensure_one()
         value = field in self._fields and self[field]
 
@@ -234,17 +239,17 @@ class ResPartner(models.Model):
             if value.isalnum():
                 value = value.removeprefix(country_code)
 
-        return sanitize_peppol_endpoint(value)
+        return sanitize_peppol_endpoint(value, eas)
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends() + ['peppol_eas'])
     def _compute_peppol_endpoint(self):
         """ If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
         for partner in self:
-            partner.peppol_endpoint = sanitize_peppol_endpoint(partner.peppol_endpoint)
+            partner.peppol_endpoint = sanitize_peppol_endpoint(partner.peppol_endpoint, partner.peppol_eas)
             country_code = partner._deduce_country_code()
             if country_code in EAS_MAPPING:
                 field = EAS_MAPPING[country_code].get(partner.peppol_eas)
-                value = partner._get_peppol_endpoint_value(country_code, field)
+                value = partner._get_peppol_endpoint_value(country_code, field, partner.peppol_eas)
                 if field and value and not partner._build_error_peppol_endpoint(partner.peppol_eas, value):
                     partner.peppol_endpoint = value
 
@@ -264,7 +269,7 @@ class ResPartner(models.Model):
                     # Iterate on the possible EAS until a valid one is found
                     for eas, field in eas_to_field.items():
                         if field and field in partner._fields:
-                            value = partner._get_peppol_endpoint_value(country_code, field)
+                            value = partner._get_peppol_endpoint_value(country_code, field, eas)
                             if value and not partner._build_error_peppol_endpoint(eas, value):
                                 new_eas = eas
                                 break
