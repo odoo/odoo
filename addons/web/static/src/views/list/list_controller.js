@@ -71,6 +71,7 @@ export class ListController extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
+        this.offlineService = useService("offline");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;

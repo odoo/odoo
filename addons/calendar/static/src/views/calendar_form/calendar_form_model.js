@@ -4,7 +4,6 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Record } from "@web/model/relational_model/record";
 
 class CalendarFormRecord extends Record {
-
     async setLocation() {
         const videoLocation = await this.model.discussVideocallLocation;
         this.update({
@@ -24,6 +23,7 @@ class CalendarFormRecord extends Record {
 
 export class CalendarFormModel extends RelationalModel {
     static Record = CalendarFormRecord;
+    static withCache = false;
 
     setup() {
         super.setup(...arguments);

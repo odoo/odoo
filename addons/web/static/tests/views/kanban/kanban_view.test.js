@@ -51,6 +51,7 @@ import {
     getService,
     makeServerError,
     mockService,
+    mockOffline,
     models,
     mountView,
     mountWithCleanup,
@@ -9811,4 +9812,39 @@ test("add o-navigable to buttons with dropdown-item class and view buttons", asy
 
     await press("arrowdown");
     expect(".o-dropdown--menu .dropdown-item.o-navigable:nth-child(3)").toHaveClass("focus");
+});
+
+test.tags("desktop");
+test(`[Offline] disable unavailable records when offline`, async () => {
+    const setOffline = mockOffline();
+    mockService("offline", {
+        isAvailableOffline(actionId, viewType, resId) {
+            if (actionId === 234 && viewType === "form") {
+                return [2, 3].includes(resId);
+            }
+            return actionId === 123;
+        },
+    });
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        config: { actionId: 234 },
+    });
+
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    await setOffline(true);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+    expect(".o_kanban_record:not(.o_kanban_ghost):eq(0)").toHaveClass("o_disabled_offline");
+    expect(".o_kanban_record:not(.o_kanban_ghost):eq(1)").not.toHaveClass("o_disabled_offline");
+    expect(".o_kanban_record:not(.o_kanban_ghost):eq(2)").not.toHaveClass("o_disabled_offline");
+    expect(".o_kanban_record:not(.o_kanban_ghost):eq(3)").toHaveClass("o_disabled_offline");
 });

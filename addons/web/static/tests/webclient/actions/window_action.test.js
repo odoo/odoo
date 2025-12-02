@@ -19,6 +19,7 @@ import {
     getService,
     makeMockEnv,
     makeServerError,
+    mockOffline,
     models,
     mountWithCleanup,
     onRpc,
@@ -2783,4 +2784,96 @@ test("execute a window action with mobile_view_mode", async () => {
         ],
     });
     expect(".o_list_view").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("[Offline] navigate through window actions", async () => {
+    expect.errors(6); // 6x ConnectionLostError
+    const setOffline = mockOffline();
+
+    await mountWithCleanup(WebClient);
+
+    // visit some actions and records to populate the caches
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+    await getService("action").doAction(4);
+    expect(".o_kanban_view").toHaveCount(1);
+    await contains(".o_cp_switch_buttons .o_list").click();
+    expect(".o_list_view").toHaveCount(1);
+    await contains(".o_data_row:eq(0) .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(".o_list_view").toHaveCount(1);
+    await contains(".o_data_row:eq(2) .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_field_widget[name=foo] input").toHaveValue("gnap");
+    await contains(".o_pager_next").click();
+    expect(".o_field_widget[name=foo] input").toHaveValue("plop");
+
+    // switch offline and start over
+    await setOffline(true);
+    await getService("action").doAction(3, { clearBreadcrumbs: true });
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+    expect(".o_data_row.o_disabled_offline").toHaveCount(5);
+    expect(".o_cp_switch_buttons .o_kanban").toHaveClass("o_disabled_offline");
+    await getService("action").doAction(4);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+    expect(".o_cp_switch_buttons .o_list").not.toHaveClass("o_disabled_offline");
+    await contains(".o_cp_switch_buttons .o_list").click();
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+    expect(".o_data_row.o_disabled_offline").toHaveCount(2);
+    await contains(".o_data_row:eq(0) .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_pager").toHaveText("1 / 3"); // only 3 records are available offline
+    expect(".o_field_widget[name=foo]").toHaveText("yop");
+    await contains(".o_pager_next").click();
+    expect(".o_field_widget[name=foo]").toHaveText("gnap");
+    await contains(".o_pager_next").click();
+    expect(".o_field_widget[name=foo]").toHaveText("plop");
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established`,
+    ]);
+});
+
+test.tags("desktop");
+test("[Offline] execute unavailable action", async () => {
+    expect.errors(2); // 2x ConnectionLostError
+    const setOffline = mockOffline();
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+
+    // switch offline
+    await setOffline(true);
+
+    // execute an action which won't be able to be executed
+    getService("action").doAction({
+        name: "My Partners Action",
+        res_model: "partner",
+        views: [
+            [1, "kanban"],
+            [false, "list"],
+            [false, "form"],
+        ],
+        type: "ir.actions.act_window",
+    });
+    await animationFrame();
+    expect(".o_list_view").toHaveCount(1);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/get_views" couldn't be established`,
+        // restore of previous action as action 4 threw an error
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
 });

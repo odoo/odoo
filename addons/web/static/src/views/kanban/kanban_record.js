@@ -186,6 +186,7 @@ export class KanbanRecord extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
+        this.offlineService = useService("offline");
 
         const { Compiler, archInfo } = this.props;
         const ViewCompiler = Compiler || KanbanCompiler;
@@ -266,6 +267,12 @@ export class KanbanRecord extends Component {
         }
         if (this.props.record.selected) {
             classes.push("o_record_selected");
+        }
+        if (
+            this.offlineService.offline &&
+            !this.offlineService.isAvailableOffline(this.env.config.actionId, "form", record.resId)
+        ) {
+            classes.push("o_disabled_offline");
         }
         classes.push(archInfo.cardClassName);
         return classes.join(" ");

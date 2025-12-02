@@ -142,7 +142,7 @@ export class Record extends DataPoint {
     }
 
     get isInEdition() {
-        if (this.model.offline.status.offline) {
+        if (this.model.offline.offline) {
             return false;
         }
         if (this.config.mode === "readonly") {

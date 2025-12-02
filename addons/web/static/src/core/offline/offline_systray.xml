@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.OfflineSystray">
-        <div t-if="status.offline" t-on-click="() => this.offlineService.checkConnection()">
+        <div t-if="this.offlineService.offline" t-on-click="() => this.offlineService.checkConnection()">
             <i t-if="env.isSmall"
                 class="fa fa-chain-broken o_nav_entry text-danger"
                 role="img"

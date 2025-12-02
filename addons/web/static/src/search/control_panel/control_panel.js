@@ -110,6 +110,7 @@ export class ControlPanel extends Component {
 
     setup() {
         this.actionService = useService("action");
+        this.offlineService = useService("offline");
         this.pagerProps = this.env.config.pagerProps
             ? useState(this.env.config.pagerProps)
             : undefined;
@@ -404,6 +405,13 @@ export class ControlPanel extends Component {
         }
 
         this.oldScrollTop = scrollTop;
+    }
+
+    isViewAvailable(view) {
+        return (
+            !this.offlineService.offline ||
+            this.offlineService.isAvailableOffline(this.env.config.actionId, view.type)
+        );
     }
 
     /**

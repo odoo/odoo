@@ -290,7 +290,7 @@ export class RelationalModel extends Model {
         }
         if (
             !this.isReady || // first load of the model
-            this.offline.status.offline || // use the cache if we are offline
+            this.offline.offline || // use the cache if we are offline
             // monorecord, loading a different id, or creating a new record (onchange)
             (config.isMonoRecord && (this.root.config.resId !== config.resId || !config.resId))
         ) {
@@ -298,6 +298,16 @@ export class RelationalModel extends Model {
                 type: "disk",
                 update: "always",
                 callback: async (result, hasChanged) => {
+                    const { actionId, viewType } = this.env.config;
+                    // TODO?: maybe mark available whatever result.length is, but store the length
+                    // in the value, and when considering filters to display (other PR), filter out
+                    // queries where result.length is 0
+                    const markAsAvailableOffline =
+                        actionId && (config.isMonoRecord ? config.resId : result.length);
+                    if (markAsAvailableOffline) {
+                        const params = config.isMonoRecord ? { resId: config.resId } : {};
+                        this.offline.setAvailableOffline(actionId, viewType, params);
+                    }
                     if (!hasChanged) {
                         return;
                     }

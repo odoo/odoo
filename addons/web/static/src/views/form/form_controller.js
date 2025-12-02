@@ -165,6 +165,7 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
+        this.offlineService = useService("offline");
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -295,7 +296,15 @@ export class FormController extends Component {
 
         usePager(() => {
             if (!this.model.root.isNew) {
-                const resIds = this.model.root.resIds;
+                let resIds = this.model.root.resIds;
+                if (this.offlineService.offline) {
+                    const actionId = this.env.config.actionId;
+                    resIds = resIds.filter(
+                        (resId) =>
+                            resId === this.model.root.resId ||
+                            this.offlineService.isAvailableOffline(actionId, "form", resId)
+                    );
+                }
                 return {
                     offset: resIds.indexOf(this.model.root.resId),
                     limit: 1,

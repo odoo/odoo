@@ -44,6 +44,7 @@ import {
     getService,
     installLanguages,
     makeServerError,
+    mockOffline,
     MockServer,
     mockService,
     models,
@@ -256,6 +257,7 @@ test(`simple form rendering`, async () => {
 });
 
 test(`[Offline] form switches to readonly in offline mode`, async () => {
+    const setOffline = mockOffline();
     await mountView({
         resModel: "partner",
         type: "form",
@@ -281,16 +283,14 @@ test(`[Offline] form switches to readonly in offline mode`, async () => {
     expect(`.o_field_float[name="float_field"] input`).toHaveCount(1);
     expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
 
-    getService("offline").status.offline = true;
-    await animationFrame();
+    await setOffline(true);
     expect(`.o_field_char[name="foo"] input`).toHaveCount(0);
     expect(`.o_field_boolean[name="bar"] .o-checkbox input`).toHaveAttribute("disabled");
     expect(`.o_field_integer[name="int_field"] input`).toHaveCount(0);
     expect(`.o_field_float[name="float_field"] input`).toHaveCount(0);
     expect(`.o_field_x2many_list_row_add`).toHaveCount(0);
 
-    getService("offline").status.offline = false;
-    await animationFrame();
+    await setOffline(false);
     expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
     expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled");
     expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1);
@@ -300,16 +300,15 @@ test(`[Offline] form switches to readonly in offline mode`, async () => {
 
 test(`[Offline] save a form view offline (click save icon)`, async () => {
     let offline = false;
-    onRpc(
-        "/web/dataset/call_kw/partner/web_save",
-        () => {
+    onRpc("/*", (request) => {
+        const route = new URL(request.url).pathname;
+        if (route === "/web/dataset/call_kw/partner/web_save") {
             expect.step("web_save");
-            if (offline) {
-                return new Response("", { status: 502 });
-            }
-        },
-        { pure: true }
-    );
+        }
+        if (offline) {
+            return new Response("", { status: 502 });
+        }
+    });
 
     Partner._views = {
         form: `<form><field name="foo"/></form>`,
@@ -340,11 +339,11 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
     await contains(".o_form_button_save").click();
     expect(".o_form_renderer").toHaveClass("o_form_readonly");
     expect(".o_field_widget[name=foo]").toHaveText("new foo");
-    expect(getService("offline").status.offline).toBe(true);
+    expect(getService("offline").offline).toBe(true);
     expect.verifySteps(["web_save"]);
 
     offline = false;
-    getService("offline").status.offline = false;
+    await runAllTimers(); // execute checkConnection
     await animationFrame();
     expect(".o_form_renderer").toHaveClass("o_form_editable");
     await contains(".o_form_button_save").click();
@@ -358,16 +357,15 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     // this test is the same as above, but in this one we don't manually save
     // the record before leaving
     let offline = false;
-    onRpc(
-        "/web/dataset/call_kw/partner/web_save",
-        () => {
+    onRpc("/*", (request) => {
+        const route = new URL(request.url).pathname;
+        if (route === "/web/dataset/call_kw/partner/web_save") {
             expect.step("web_save");
-            if (offline) {
-                return new Response("", { status: 502 });
-            }
-        },
-        { pure: true }
-    );
+        }
+        if (offline) {
+            return new Response("", { status: 502 });
+        }
+    });
 
     Partner._views = {
         form: `<form><field name="foo"/></form>`,
@@ -398,11 +396,11 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     await contains(".o_breadcrumb .o_back_button").click();
     expect(".o_form_renderer").toHaveClass("o_form_readonly");
     expect(".o_field_widget[name=foo]").toHaveText("new foo");
-    expect(getService("offline").status.offline).toBe(true);
+    expect(getService("offline").offline).toBe(true);
     expect.verifySteps(["web_save"]);
 
     offline = false;
-    getService("offline").status.offline = false;
+    await runAllTimers(); // execute checkConnection
     await animationFrame();
     expect(".o_form_renderer").toHaveClass("o_form_editable");
 

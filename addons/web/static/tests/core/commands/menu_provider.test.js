@@ -8,6 +8,8 @@ import {
     defineMenus,
     getService,
     mountWithCleanup,
+    mockOffline,
+    mockService,
     useTestClientAction,
 } from "@web/../tests/web_test_helpers";
 
@@ -58,6 +60,29 @@ test("displays only apps if the search value is '/'", async () => {
     expect(".o_command_category").toHaveCount(1);
     expect(".o_command").toHaveCount(2);
     expect(queryAllTexts(".o_command_name")).toEqual(["Contact", "Sales"]);
+});
+
+test.tags("desktop");
+test(`[Offline] disable unavailable menus when offline`, async () => {
+    const setOffline = mockOffline();
+    mockService("offline", {
+        isAvailableOffline(actionId) {
+            return actionId === 1001;
+        },
+    });
+    await mountWithCleanup(WebClient);
+    await setOffline(true);
+
+    expect(".o_menu_brand").toHaveCount(0);
+
+    await press(["control", "k"]);
+    await animationFrame();
+    await contains(".o_command_palette_search input").edit("/", { confirm: false });
+    await animationFrame();
+    expect(".o_command").toHaveCount(2);
+    expect(queryAllTexts(".o_command_name")).toEqual(["Contact", "Sales"]);
+    expect(".o_command a.o_disabled_offline").toHaveCount(1);
+    expect(queryAllTexts(".o_command a.o_disabled_offline")).toEqual(["Sales"]);
 });
 
 test.tags("desktop");

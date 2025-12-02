@@ -52,6 +52,7 @@ import {
     makeServerError,
     MockServer,
     mockService,
+    mockOffline,
     models,
     mountView,
     mountViewInDialog,
@@ -554,6 +555,7 @@ test(`editable list with edit="0"`, async () => {
 
 test.tags("desktop");
 test(`[Offline] editable list`, async () => {
+    const setOffline = mockOffline();
     await mountView({
         resModel: "foo",
         type: "list",
@@ -565,8 +567,7 @@ test(`[Offline] editable list`, async () => {
     await contains(`.o_data_cell`).click();
     expect(`tbody tr.o_selected_row`).toHaveCount(1, { message: "should have editable row" });
 
-    getService("offline").status.offline = true;
-    await animationFrame();
+    await setOffline(true);
     expect(`.o_searchview`).toHaveCount(0);
     await contains(`.o_data_cell`).click();
     expect(`tbody tr.o_selected_row`).toHaveCount(0, { message: "should not have editable row" });
@@ -574,6 +575,7 @@ test(`[Offline] editable list`, async () => {
 
 test.tags("desktop");
 test(`[Offline] list with priority widget`, async () => {
+    const setOffline = mockOffline();
     Foo._fields.priority = fields.Selection({
         selection: [
             [0, "Not Prioritary"],
@@ -594,13 +596,39 @@ test(`[Offline] list with priority widget`, async () => {
 
     expect(".o_field_widget[name=priority] .o_priority_star").not.toHaveClass("o_disabled");
 
-    getService("offline").status.offline = true;
-    await animationFrame();
+    await setOffline(true);
     expect(".o_field_widget[name=priority] .o_priority_star").toHaveClass("o_disabled");
 
-    getService("offline").status.offline = false;
-    await animationFrame();
+    await setOffline(false);
     expect(".o_field_widget[name=priority] .o_priority_star").not.toHaveClass("o_disabled");
+});
+
+test.tags("desktop");
+test(`[Offline] disable unavailable records when offline`, async () => {
+    const setOffline = mockOffline();
+    mockService("offline", {
+        isAvailableOffline(actionId, viewType, resId) {
+            if (actionId === 234 && viewType === "form") {
+                return [2, 3].includes(resId);
+            }
+            return actionId === 123;
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+        config: { actionId: 234 },
+    });
+
+    expect(".o_data_row").toHaveCount(4);
+
+    await setOffline(true);
+    expect(".o_data_row").toHaveCount(4);
+    expect(".o_data_row:eq(0)").toHaveClass("o_disabled_offline");
+    expect(".o_data_row:eq(1)").not.toHaveClass("o_disabled_offline");
+    expect(".o_data_row:eq(2)").not.toHaveClass("o_disabled_offline");
+    expect(".o_data_row:eq(3)").toHaveClass("o_disabled_offline");
 });
 
 test(`non-editable list with open_form_view`, async () => {

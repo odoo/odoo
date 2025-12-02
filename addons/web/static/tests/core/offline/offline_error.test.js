@@ -7,11 +7,11 @@ test("ConnectionLostError handler", async () => {
     expect.errors(1);
 
     const env = await makeMockEnv();
-    expect(env.services.offline.status.offline).toBe(false);
+    expect(env.services.offline.offline).toBe(false);
     const error = new ConnectionLostError("/fake_url");
     Promise.reject(error);
     await animationFrame();
-    expect(env.services.offline.status.offline).toBe(true);
+    expect(env.services.offline.offline).toBe(true);
     expect.verifyErrors([
         `Error: Connection to "/fake_url" couldn't be established or was interrupted`,
     ]);

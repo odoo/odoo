@@ -33,6 +33,12 @@ commandProviderRegistry.add("menu", {
         const result = [];
         const menuService = env.services.menu;
         let { apps, menuItems } = computeAppsAndMenuItems(menuService.getMenuAsTree("root"));
+        function isAvailable(menu) {
+            return (
+                env.services.offline.offline &&
+                !env.services.offline.isAvailableOffline(menu.actionID)
+            );
+        }
         if (options.searchValue !== "") {
             apps = fuzzyLookup(options.searchValue, apps, (menu) => menu.label);
 
@@ -44,6 +50,7 @@ commandProviderRegistry.add("menu", {
                         menuService.selectMenu(menu);
                     },
                     category: "menu_items",
+                    className: isAvailable(menu) ? "o_disabled_offline" : "",
                     name: menu.parents + " / " + menu.label,
                     href: menu.href || `#menu_id=${menu.id}&amp;action_id=${menu.actionID}`,
                 });
@@ -68,6 +75,7 @@ commandProviderRegistry.add("menu", {
                     menuService.selectMenu(menu);
                 },
                 category: "apps",
+                className: isAvailable(menu) ? "o_disabled_offline" : "",
                 name: menu.label,
                 href: menu.href || `#menu_id=${menu.id}&amp;action_id=${menu.actionID}`,
                 props,

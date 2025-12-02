@@ -17,11 +17,11 @@ test("RPC:RESPONSE: rpc returning a status 502", async () => {
     onRpc("/rpc/offline", () => new Response("", { status: 502 }), { pure: true });
 
     const env = await makeMockEnv();
-    expect(env.services.offline.status.offline).toBe(false);
+    expect(env.services.offline.offline).toBe(false);
 
     rpc("/rpc/offline");
     await animationFrame();
-    expect(env.services.offline.status.offline).toBe(true);
+    expect(env.services.offline.offline).toBe(true);
 
     expect.verifyErrors([
         `Error: Connection to "/rpc/offline" couldn't be established or was interrupted`,
@@ -32,11 +32,12 @@ test("RPC:RESPONSE: any succesfull rpc turns offline off", async () => {
     onRpc("/rpc/thatworks", () => true);
 
     const env = await makeMockEnv();
-    env.services.offline.status.offline = true;
-    expect(env.services.offline.status.offline).toBe(true);
+    env.services.offline.offline = true;
+    await tick();
+    expect(env.services.offline.offline).toBe(true);
 
     await rpc("/rpc/thatworks");
-    expect(env.services.offline.status.offline).toBe(false);
+    expect(env.services.offline.offline).toBe(false);
 });
 
 test("'offline' and 'online' events fired on window", async () => {
@@ -59,13 +60,13 @@ test("'offline' and 'online' events fired on window", async () => {
     browser.dispatchEvent(new Event("offline"));
     await tick();
     expect.verifySteps(["version_info"]);
-    expect(env.services.offline.status.offline).toBe(true);
+    expect(env.services.offline.offline).toBe(true);
 
     offline = false;
     browser.dispatchEvent(new Event("online"));
     await tick();
     expect.verifySteps(["version_info"]);
-    expect(env.services.offline.status.offline).toBe(false);
+    expect(env.services.offline.offline).toBe(false);
 });
 
 test("'offline' and 'online' events fired on window (false positive)", async () => {
@@ -77,14 +78,16 @@ test("'offline' and 'online' events fired on window (false positive)", async () 
     browser.dispatchEvent(new Event("online"));
     await tick();
     expect.verifySteps([]);
-    expect(env.services.offline.status.offline).toBe(false);
+    expect(env.services.offline.offline).toBe(false);
 
     // "offline" event triggered when we're already offline
-    env.services.offline.status.offline = true;
+    env.services.offline.offline = true;
+    await tick();
+    expect(env.services.offline.offline).toBe(true);
     browser.dispatchEvent(new Event("offline"));
     await tick();
     expect.waitForSteps([]);
-    expect(env.services.offline.status.offline).toBe(true);
+    expect(env.services.offline.offline).toBe(true);
 });
 
 test("offlineUI: disable interactive elements except [data-available-offline]", async () => {
@@ -104,7 +107,7 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
     expect(`.checkbox_to_disable`).not.toHaveAttribute("disabled");
 
-    getService("offline").status.offline = true;
+    getService("offline").offline = true;
     expect(`.button_to_disable`).toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
     expect(`.checkbox_to_disable`).toHaveAttribute("disabled");
@@ -112,7 +115,7 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
     expect(`.button_available_offline`).not.toHaveClass("o_disabled_offline");
     expect(`.checkbox_to_disable`).toHaveClass("o_disabled_offline");
 
-    getService("offline").status.offline = false;
+    getService("offline").offline = false;
     expect(`.button_to_disable`).not.toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
     expect(`.checkbox_to_disable`).not.toHaveAttribute("disabled");
@@ -133,13 +136,13 @@ test("offlineUI: don't disable already disabled elements", async () => {
     expect(`.button`).toHaveAttribute("disabled");
     expect(`.checkbox`).toHaveAttribute("disabled");
 
-    getService("offline").status.offline = true;
+    getService("offline").offline = true;
     expect(`.button`).toHaveAttribute("disabled");
     expect(`.checkbox`).toHaveAttribute("disabled");
     expect(`.button`).not.toHaveClass("o_disabled_offline");
     expect(`.checkbox`).not.toHaveClass("o_disabled_offline");
 
-    getService("offline").status.offline = false;
+    getService("offline").offline = false;
     expect(`.button`).toHaveAttribute("disabled");
     expect(`.checkbox`).toHaveAttribute("disabled");
 });
@@ -162,15 +165,16 @@ test("Repeatedly check connection when going offline", async () => {
     onRpc("/web/webclient/version_info", mockVersionInfoRpc, { pure: true });
 
     const env = await makeMockEnv();
-    expect(env.services.offline.status.offline).toBe(false);
+    expect(env.services.offline.offline).toBe(false);
 
     // go offline
-    env.services.offline.status.offline = true;
+    env.services.offline.offline = true;
+    await tick();
 
-    expect(env.services.offline.status.offline).toBe(true);
+    expect(env.services.offline.offline).toBe(true);
     await advanceTime(2000); // first version_info check
-    expect(env.services.offline.status.offline).toBe(true);
+    expect(env.services.offline.offline).toBe(true);
     await advanceTime(3500); // second version_info check
-    expect(env.services.offline.status.offline).toBe(false);
+    expect(env.services.offline.offline).toBe(false);
     expect.verifySteps(["version_info", "version_info"]);
 });
