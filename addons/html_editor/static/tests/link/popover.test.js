@@ -13,7 +13,7 @@ import {
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setContent, setSelection } from "../_helpers/selection";
@@ -1188,6 +1188,31 @@ describe("link preview", () => {
         expect(".o_we_description_link_preview").toHaveText(
             "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business."
         );
+    });
+    test("test internal image link preview", async () => {
+        const base64Image =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        const url = "/web/image/hoot.png";
+        onRpc(
+            url,
+            () =>
+                new Response(dataURItoBlob(base64Image), {
+                    headers: {
+                        "Content-Type": "image/png",
+                    },
+                })
+        );
+        const { editor } = await setupEditor(`<p>[]<br></p>`);
+        await insertText(editor, "/link");
+        await animationFrame();
+        await click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill(url);
+        await animationFrame();
+
+        expect(".o_we_preview_favicon .fa-picture-o").toHaveCount(1);
+        expect(`a.o_we_url_link[href='${url}']`).toHaveText(url);
+        expect(".o_we_replace_title_btn").toHaveCount(1);
+        expect(`.o_extra_info_card a[href='${url}'] img[src^='data:']`).toHaveCount(1);
     });
     test("test internal metadata cached correctly", async () => {
         onRpc("/html_editor/link_preview_internal", () => {

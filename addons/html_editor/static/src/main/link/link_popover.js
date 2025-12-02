@@ -584,6 +584,14 @@ export class LinkPopover extends Component {
                     ? internalMetadata.ogTitle.getAttribute("content")
                     : internalMetadata.title.text.trim();
             }
+
+            if (internalMetadata.imgSrc) {
+                this.state.imgSrc = internalMetadata.imgSrc;
+                this.state.previewIcon = {
+                    type: "fa",
+                    value: "fa-picture-o",
+                };
+            }
         }
     }
 
