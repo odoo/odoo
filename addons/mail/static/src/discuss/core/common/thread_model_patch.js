@@ -349,36 +349,5 @@ const threadPatch = {
     leaveChannelRpc() {
         this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [this.id]);
     },
-    /** @param {string} name */
-    async rename(name) {
-        const newName = name.trim();
-        if (
-            newName !== this.displayName &&
-            ((newName && this.channel?.channel_type === "channel") || this.channel?.isChatChannel)
-        ) {
-            if (
-                this.channel?.channel_type === "channel" ||
-                this.channel?.channel_type === "group"
-            ) {
-                this.name = newName;
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_rename",
-                    [[this.id]],
-                    { name: newName }
-                );
-            } else if (this.supportsCustomChannelName) {
-                if (this.self_member_id) {
-                    this.self_member_id.custom_channel_name = newName;
-                }
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_set_custom_name",
-                    [[this.id]],
-                    { name: newName }
-                );
-            }
-        }
-    },
 };
 patch(Thread.prototype, threadPatch);

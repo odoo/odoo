@@ -89,7 +89,7 @@ export class DiscussContent extends Component {
     }
 
     async renameThread(name) {
-        await this.thread.rename(name);
+        await this.thread.channel.rename(name);
     }
 
     async updateThreadDescription(description) {
