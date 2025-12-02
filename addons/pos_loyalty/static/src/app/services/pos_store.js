@@ -183,14 +183,14 @@ patch(PosStore.prototype, {
             } else if (pointsAdded.length > oldChanges.length) {
                 const pointsCount = pointsAdded.reduce((acc, pointObj) => {
                     const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const key = barcode ? `${points}_${barcode}` : `${points}`;
                     acc[key] = (acc[key] || 0) + 1;
                     return acc;
                 }, {});
 
                 oldChanges.forEach((pointObj) => {
                     const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const key = barcode ? `${points}_${barcode}` : `${points}`;
                     if (pointsCount[key] && pointsCount[key] > 0) {
                         pointsCount[key]--;
                     }
@@ -199,7 +199,7 @@ patch(PosStore.prototype, {
                 // Get new points added which are not in oldChanges
                 const newPointsAdded = [];
                 Object.keys(pointsCount).forEach((key) => {
-                    const [points, barcode = ""] = key.split("-");
+                    const [points, barcode = ""] = key.split("_");
                     while (pointsCount[key] > 0) {
                         newPointsAdded.push({ points: Number(points), barcode });
                         pointsCount[key]--;
