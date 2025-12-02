@@ -1347,6 +1347,10 @@ class SaleOrder(models.Model):
 
     def _recompute_taxes(self):
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+
+        # We do not provide 'force_price_recomputation' here on purpose as we don't want
+        # manual prices to be reset on 'Update Taxes' button trigger
+        lines_to_recompute._compute_price_unit()
         lines_to_recompute._compute_tax_ids()
         self.show_update_fpos = False
 
