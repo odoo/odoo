@@ -53,7 +53,6 @@ declare module "models" {
         group_ids: ResGroups[];
         leaveChannel: () => Promise<void>;
         leaveChannelRpc: () => void;
-        markAsFetched: () => Promise<void>;
         markedAsUnread: boolean;
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;
