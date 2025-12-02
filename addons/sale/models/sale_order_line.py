@@ -564,6 +564,13 @@ class SaleOrderLine(models.Model):
                 else:
                     result = fiscal_position.map_tax(taxes)
                     cached_taxes[cache_key] = result
+
+                if (
+                    line.env.context.get('recompute_unit_price_on_tax_change', False)
+                    and result != line.tax_ids
+                ):
+                    line.env.add_to_compute(self._fields['price_unit'], line)
+
                 # If company_id is set, always filter taxes by the company
                 line.tax_ids = result
 
