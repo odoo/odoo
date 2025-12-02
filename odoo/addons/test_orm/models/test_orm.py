@@ -1696,7 +1696,7 @@ class TestOrmModelSome_Access(models.Model):
     b = fields.Integer()
     c = fields.Integer()
     d = fields.Integer(default=1, groups="base.group_erp_manager")
-    e = fields.Integer(default=1, groups="base.group_erp_manager,base.group_multi_company")
+    e = fields.Integer(default=1, groups="base.group_erp_manager,base.group_multi_company,base.group_portal")
     f = fields.Integer(groups="base.group_erp_manager,base.group_portal")
     g = fields.Integer(default=1, groups="base.group_erp_manager,base.group_multi_company,!base.group_portal")
     h = fields.Integer(default=1, groups="base.group_erp_manager,!base.group_portal")
