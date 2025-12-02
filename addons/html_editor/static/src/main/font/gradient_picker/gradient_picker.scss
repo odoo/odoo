@@ -1,5 +1,5 @@
 .gradient-angle-knob {
-    --radius: 15px;
+    --radius: 10px;
     --thumb-size: calc(var(--radius) * 0.5);
 
     width: calc(var(--radius) * 2);
@@ -11,6 +11,14 @@
     &:active {
       cursor: grabbing;
     }
+}
+
+.color-percentage {
+    color: white !important;
+    text-shadow: 0 0 3px black;
+    width: 30px;
+    top: -20px;
+    margin: 0 4px;
 }
 
 .gradient-angle-thumb {
@@ -25,15 +33,24 @@
 
 .o_color_gradient_input {
     font-size: 11px;
+    display: flex;
+    align-items: center;
 
-    input {
+    * {
         font-family: monospace !important;
         font-size: 12px;
-        width: 5ch !important;
         padding: 0 2px !important;
         background-color: transparent;
         border: 1px solid !important;
         text-align: center;
         opacity: 0.7;
+    }
+    input {
+        width: 5ch !important;
+        border-right: none !important;
+    }
+    span {
+        width: 30px !important;
+        border-left: none !important;
     }
 }
