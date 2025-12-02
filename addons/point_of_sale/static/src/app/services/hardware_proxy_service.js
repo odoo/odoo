@@ -48,9 +48,6 @@ export class HardwareProxy extends EventBus {
     }
 
     async connect() {
-        if (this.pos.config.iface_print_via_proxy) {
-            this.connectToPrinter();
-        }
         try {
             if (await this.message("handshake")) {
                 this.setConnectionInfo({ status: "connected" });
@@ -64,10 +61,6 @@ export class HardwareProxy extends EventBus {
             this.setConnectionInfo({ status: "disconnected" });
             logPosMessage("HardwareProxy", "printHtml", "Could not connect to the Proxy");
         }
-    }
-
-    connectToPrinter() {
-        throw new Error("Deprecated: Use 'iot_http' service instead of 'hardware_proxy'.");
     }
 
     /**
@@ -156,18 +149,6 @@ export class HardwareProxy extends EventBus {
         }
         this.setConnectionInfo({ status: "disconnected" });
         return false;
-    }
-
-    async openCashbox(action = false) {
-        const isPrinterConnected =
-            ["connected", "init"].includes(this.connectionInfo.status) ||
-            this.pos.config.epson_printer_ip;
-        if (this.pos.config.iface_cashdrawer && this.printer && isPrinterConnected) {
-            this.printer.openCashbox();
-            if (action) {
-                this.pos.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
-            }
-        }
     }
 }
 
