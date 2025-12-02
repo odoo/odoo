@@ -79,6 +79,10 @@
             box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px var(--o-color-picker-active-color, $o-enterprise-action-color);
         }
     }
+
+    input[type=checkbox] {
+        border: 1px solid #999;
+    }
 }
 
 .custom-gradient-configurator + .o_colorpicker_widget {
@@ -86,13 +90,11 @@
 }
 
 .gradient-color-bin {
-    position: relative;
-    margin: 0 12px;
+    margin: 0 4px 8px 4px;
     height: 22px;
     > a.btn {
-        padding: 0 2px 2px;
-        margin-top: 0;
-        margin-left: -12px;
-        position: absolute;
+        padding: 0;
+        width: 20px;
+        transform: translateX(-50%);
     }
 }

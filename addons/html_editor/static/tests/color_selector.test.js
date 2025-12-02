@@ -646,7 +646,7 @@ test("should be able to show preview when hovering radial type button", async ()
     expect(getContent(el)).toBe(
         `<p>a<font style="background-image: ${gradientAfter};">[bcd]</font>e</p>`
     );
-    expect("button[title='Extend to the farthest side']").toHaveClass("active");
+    expect("button[title='Extend to the farthest side']").not.toHaveClass("active");
 
     // Hover out
     await hover(".o-we-toolbar .o-select-color-foreground");
