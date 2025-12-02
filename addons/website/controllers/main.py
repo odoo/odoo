@@ -1024,6 +1024,27 @@ class Website(Home):
                 })
         return json.loads(metadata.raw)
 
+    @http.route(['/website/revert_changes'], type='jsonrpc', auth='user', website=True)
+    def revert_changes(self, theme_data=None, footer_data=None, scss_data=None):
+        """
+        In the website editor, editing some options cause changes to happen directly
+        in the backend; this function allows those changes to be reverted.
+
+        Every time an option that causes a backend change is modified the client
+        generates the required steps to revert that change and saves them in
+        localStorage. When the discard button is pressed, those steps are sent to the
+        backend and handled with this function.
+        """
+        if theme_data:
+            self.theme_customize_data(theme_data['is_view_data'], theme_data['enable'], theme_data['disable'])
+
+        if footer_data:
+            self.update_footer_template(footer_data['template_key'], footer_data['possible_values'])
+
+        if scss_data:
+            for value in scss_data:
+                self.env['website.assets'].make_scss_customization(value['url'], value['data'])
+
     def _get_customize_data(self, keys, is_view_data):
         model = 'ir.ui.view' if is_view_data else 'ir.asset'
         Model = request.env[model].with_context(active_test=False)

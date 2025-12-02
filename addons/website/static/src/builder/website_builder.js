@@ -44,7 +44,16 @@ export class WebsiteBuilder extends Component {
         });
     }
 
-    discard() {
+    async discard() {
+        const dispatchDiscardAndCloseEditor = async () => {
+            if (this.editor) {
+                for (const handler of this.editor.getResource("discard_handlers") || []) {
+                    await handler();
+                }
+            }
+            this.props.builderProps.closeEditor();
+        };
+
         if (this.editor.shared.history.canUndo()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
@@ -53,11 +62,11 @@ export class WebsiteBuilder extends Component {
                 ),
                 confirmLabel: _t("Discard changes"),
                 cancelLabel: _t("Keep editing"),
-                confirm: () => this.props.builderProps.closeEditor(),
+                confirm: async () => await dispatchDiscardAndCloseEditor(),
                 cancel: () => {},
             });
         } else {
-            this.props.builderProps.closeEditor();
+            await dispatchDiscardAndCloseEditor();
         }
     }
 

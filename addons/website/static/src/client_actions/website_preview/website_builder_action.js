@@ -295,6 +295,9 @@ export class WebsiteBuilderClientAction extends Component {
                 },
             })
         );
+        localStorage.removeItem("website-theme-data-rollback");
+        localStorage.removeItem("website-footer-data-rollback");
+        localStorage.removeItem("website-customization-rollback");
         this.unblockIframe();
         this.state.isEditing = true;
     }

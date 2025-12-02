@@ -78,6 +78,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         save_handlers: this.onSave.bind(this),
+        discard_handlers: this.onDiscard.bind(this),
     };
 
     async onSave() {
@@ -90,6 +91,26 @@ export class CustomizeWebsitePlugin extends Plugin {
             });
         }
     }
+
+    async onDiscard() {
+        const originalThemeData =
+            JSON.parse(localStorage.getItem("website-theme-data-rollback")) || null;
+        const originalFooterData = JSON.parse(
+            localStorage.getItem("website-footer-data-rollback") || "[]"
+        );
+        const originalScssData = JSON.parse(
+            localStorage.getItem("website-customization-rollback") || "[]"
+        );
+
+        if (originalThemeData || originalFooterData?.template_key || originalScssData.length) {
+            await rpc("/website/revert_changes", {
+                theme_data: originalThemeData,
+                footer_data: originalFooterData,
+                scss_data: originalScssData,
+            });
+        }
+    }
+
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
@@ -212,9 +233,34 @@ export class CustomizeWebsitePlugin extends Plugin {
         await this.makeSCSSCusto(url, colors, nullValue);
     }, 0);
     async makeSCSSCusto(url, values, defaultValue = "null") {
-        Object.keys(values).forEach((key) => {
+        const oldValues = {};
+        const style = getComputedStyle(this.document.documentElement);
+
+        for (const key of Object.keys(values)) {
             values[key] = values[key] || defaultValue;
-        });
+            oldValues[key] = getCSSVariableValue(key, style) || defaultValue;
+        }
+
+        // Each first overwritten value is stored to be reverted in case of a discard.
+        // Values are grouped by scss urls to minimize the amount of backend operations
+        // necessary.
+        const storageValue = localStorage.getItem("website-customization-rollback");
+        const websiteCustomizationRollback = storageValue ? JSON.parse(storageValue) : [];
+        for (const [key, value] of Object.entries(oldValues)) {
+            let entry = websiteCustomizationRollback.find((item) => item.url === url);
+            if (!entry) {
+                entry = { url: url, data: {} };
+                websiteCustomizationRollback.push(entry);
+            }
+            if (!(key in entry.data)) {
+                entry.data[key] = value;
+            }
+        }
+        localStorage.setItem(
+            "website-customization-rollback",
+            JSON.stringify(websiteCustomizationRollback)
+        );
+
         await this.services.orm.call("website.assets", "make_scss_customization", [url, values]);
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
@@ -718,6 +764,24 @@ export class WebsiteConfigAction extends BuilderAction {
                 defs.map((def) => def.resolve());
                 return;
             } else {
+                // Compose an object that contains the necessary information for a rollback
+                // Views that were enabled and are being disabled should be reenabled in rollback
+                // The opposite is true for disabled views
+                const enable = [...aggregatedToDisable].filter((view) =>
+                    this.dependencies.customizeWebsite.getConfigKey(view)
+                );
+                const disable = [...aggregatedToDisable.union(aggregatedToEnable)].filter(
+                    (view) => !enable.includes(view)
+                );
+                handleThemeDataRollback(
+                    {
+                        is_view_data: isViewData,
+                        enable: enable,
+                        disable: disable,
+                    },
+                    "website-theme-data-rollback"
+                );
+
                 rpc("/website/theme_customize_data", {
                     is_view_data: isViewData,
                     enable: [...aggregatedToEnable],
@@ -730,6 +794,33 @@ export class WebsiteConfigAction extends BuilderAction {
         }, 0);
         return def;
     }
+}
+
+function handleThemeDataRollback(data, localStorageItem) {
+    let originalThemeData = JSON.parse(localStorage.getItem(localStorageItem)) || null;
+    // Collapses all the rollback steps into a single one
+    // Example:
+    // I have A enabled
+    // To enable B I have to disable A and enable B
+    // To then enable C I have to disable B and enable C
+    // And to enable D I have to disable C and enable D
+    // If I wanto to roll back to the original status, I just need to disable D and
+    // enable A, I can skip all the intermediate steps
+    // If A -> B and B -> C, then A -> C
+    if (originalThemeData) {
+        const valsToDisable = originalThemeData.disable;
+        valsToDisable.forEach((val) => {
+            if (data.enable.includes(val)) {
+                originalThemeData.disable = originalThemeData.disable.filter((data) => data != val);
+                data.enable = data.enable.filter((data) => data != val);
+            }
+        });
+        originalThemeData.enable = [...new Set(originalThemeData.enable.concat(data.enable))];
+        originalThemeData.disable = [...new Set(originalThemeData.disable.concat(data.disable))];
+    } else {
+        originalThemeData = data;
+    }
+    localStorage.setItem(localStorageItem, JSON.stringify(originalThemeData));
 }
 
 export class PreviewableWebsiteConfigAction extends BuilderAction {
