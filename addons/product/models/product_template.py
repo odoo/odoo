@@ -105,12 +105,21 @@ class ProductTemplate(models.Model):
         Used to compute margins on sale orders.""")
 
     is_storable = fields.Boolean(
-        'Track Inventory', store=True, compute='compute_is_storable', readonly=False,
+        'Track Inventory', store=True, compute='_compute_is_storable', readonly=False,
         default=False, precompute=True, tracking=True,
         help='A storable product is a product for which you manage stock.')
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
         inverse='_set_qty_available', compute_sudo=False, digits='Product Unit')
+    virtual_available = fields.Float(
+        'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
+        compute_sudo=False, digits='Product Unit')
+    incoming_qty = fields.Float(
+        'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
+        compute_sudo=False, digits='Product Unit')
+    outgoing_qty = fields.Float(
+        'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
+        compute_sudo=False, digits='Product Unit')
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
     volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
@@ -327,18 +336,18 @@ class ProductTemplate(models.Model):
         return [('product_variant_ids.standard_price', operator, value)]
 
     @api.depends('type')
-    def compute_is_storable(self):
+    def _compute_is_storable(self):
         self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
 
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
-        fields = self._compute_quantities_fields()
+        fields = ['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty']
         for template in self:
             for field in fields:
                 template[field] = res[template.id][field]
 
     def _compute_quantities_dict(self):
-        quantities_fields = self._compute_quantities_fields()
+        quantities_fields = ['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty']
         variants_available = {
             p['id']: p for p in self.product_variant_ids._origin.read(quantities_fields)
         }
@@ -350,9 +359,6 @@ class ProductTemplate(models.Model):
                     prod_available[template.id][field] += variants_available[p.id][field]
         return prod_available
 
-    def _compute_quantities_fields(self):
-        return ['qty_available']
-
     def _search_qty_available(self, operator, value):
         return [('product_variant_ids.qty_available', operator, value)]
 
@@ -361,6 +367,17 @@ class ProductTemplate(models.Model):
             if len(template.product_variant_ids) != 1:
                 continue
             template.product_variant_ids.qty_available = template.qty_available
+
+    def _search_incoming_qty(self, operator, value):
+        return self._search_product_quantity(operator, value, 'incoming_qty')
+
+    def _search_outgoing_qty(self, operator, value):
+        return self._search_product_quantity(operator, value, 'outgoing_qty')
+
+    def _search_virtual_available(self, operator, value):
+        domain = [('virtual_available', operator, value)]
+        product_variant_query = self.env['product.product']._search(domain)
+        return [('product_variant_ids', 'in', product_variant_query)]
 
     @api.depends('product_variant_ids.volume')
     def _compute_volume(self):
