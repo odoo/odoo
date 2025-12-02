@@ -76,6 +76,9 @@ class PurchaseOrder(models.Model):
             else:
                 order.receipt_status = 'pending'
 
+    def _compute_show_receive_button(self):
+        self.show_receive_button = False  # Revert to the stock Delivery smart button logic
+
     @api.depends('picking_type_id')
     def _compute_dest_address_id(self):
         self.filtered(lambda po: po.picking_type_id.default_location_dest_id.usage != 'customer').dest_address_id = False

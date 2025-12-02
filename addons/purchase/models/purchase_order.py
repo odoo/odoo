@@ -176,6 +176,7 @@ class PurchaseOrder(models.Model):
 
     is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
     show_comparison = fields.Boolean('Show Comparison', compute='_compute_show_comparison')
+    show_receive_button = fields.Boolean(compute='_compute_show_receive_button')
 
     purchase_warning_text = fields.Text(
         "Purchase Warning",
@@ -290,6 +291,14 @@ class PurchaseOrder(models.Model):
         order_by_product = {p: set(o_ids) for p, o_ids in line_groupby_product}
         for record in self:
             record.show_comparison = any(set(record.ids) != order_by_product[p] for p in record.order_line.product_id if p in order_by_product)
+
+    @api.depends('order_line.qty_received')
+    def _compute_show_receive_button(self):
+        for order in self:
+            order.show_receive_button = (
+                order.state == 'purchase'
+                and any(line.qty_received < line.product_uom_qty for line in order.order_line)
+            )
 
     @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'order_line.purchase_line_warn_msg')
     def _compute_purchase_warning_text(self):
@@ -637,6 +646,13 @@ class PurchaseOrder(models.Model):
         if purchase_orders_with_invoices:
             raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", purchase_orders_with_invoices.mapped('display_name')))
         self.write({'state': 'cancel'})
+
+    def button_receive(self):
+        if any(order.state != 'purchase' for order in self):
+            raise UserError(_("Some sale orders you tried to deliver are not in the 'Confirmed' state, cancelled all deliveries."))
+        for order in self:
+            for line in order.order_line:
+                line.qty_received = line.product_uom_qty
 
     def button_lock(self):
         self.locked = True

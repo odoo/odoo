@@ -6,6 +6,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='deliver_sold_quantity']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <button name="action_view_invoice" position="before">
                 <button
                     name="action_view_delivery"
@@ -34,7 +37,6 @@
                     <field name="commitment_date" options="{'placeholder_field': 'expected_date'}"/>
                 </div>
                 <field name="effective_date" invisible="not effective_date"/>
-                <field name="delivery_status" invisible="state != 'sale'"/>
             </div>
             <xpath expr="//page[@name='other_information']//field[@name='commitment_date']" position="after">
                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" invisible="not show_json_popover"/>
@@ -82,6 +84,9 @@
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <field name="commitment_date" position="attributes">
+                <xpath expr="//list/header/button[@name='deliver_sold_quantity']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 <attribute name="decoration-danger">
                     (
                         (
@@ -96,15 +101,6 @@
                         or delivery_status == 'partial'
                     )
                 </attribute>
-            </field>
-            <field name="invoice_status" position="before">
-                <field
-                    name="delivery_status"
-                    decoration-success="delivery_status == 'full'"
-                    decoration-warning="delivery_status == 'partial'"
-                    decoration-info="delivery_status in ['pending', 'started']"
-                    widget="badge"
-                    optional="hide"/>
             </field>
         </field>
     </record>

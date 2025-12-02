@@ -136,6 +136,7 @@
                     <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
                     <button name="action_rfq_send" invisible="state != 'sent'" string="Send RFQ" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'draft'" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm" data-hotkey="q"/>
+                    <button name="button_receive" class="btn-primary" type="object" string="Receive" data-hotkey="e" invisible="not show_receive_button"/>
                     <widget name="purchase_file_uploader" invisible="state != 'purchase'"/>
                     <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
                     <button name="action_acknowledge" string="Acknowledge" type="object" invisible="acknowledged or state != 'purchase'"/>
@@ -592,7 +593,8 @@
                 multi_edit="1"
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
-                        <button name="button_cancel" type="object" string="Cancel"
+                        <button name="button_receive" type="object" string="Receive" data-hotkey="e"/>
+                        <button name="button_cancel" type="object" string="Cancel" data-hotkey="x"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
@@ -635,7 +637,8 @@
                     sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
-                        <button name="button_cancel" type="object" string="Cancel"
+                        <button name="button_receive" type="object" string="Receive" data-hotkey="e"/>
+                        <button name="button_cancel" type="object" string="Cancel" data-hotkey="x"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
