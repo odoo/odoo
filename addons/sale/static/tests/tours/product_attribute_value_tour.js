@@ -1,5 +1,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import productConfiguratorTourUtils from '@sale/js/tours/product_configurator_tour_utils';
+import tourUtils from "@sale/js/tours/tour_utils";
 
 const openProductAttribute = (product_attribute) => [
     ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
@@ -54,3 +56,13 @@ registry.category("web_tour.tours").add('delete_product_attribute_value_tour', {
         }
     ]
 });
+
+registry.category('web_tour.tours').add('duplicate_attribute_lines_no_traceback', {
+    url: '/odoo/orders/new',
+    steps: () => [
+        ...tourUtils.addProduct("Duplicated Attribute Product"),
+        ...productConfiguratorTourUtils.saveConfigurator(),
+        ...stepUtils.discardForm(),
+    ]
+});
+

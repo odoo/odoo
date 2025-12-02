@@ -67,3 +67,26 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
         )
         self.assertFalse(self.order_line.product_no_variant_attribute_value_ids.ptav_active)
         self.start_tour("/odoo", 'delete_product_attribute_value_tour', login="admin")
+
+    def test_duplicate_attribute_lines_no_traceback(self):
+        """
+        Ensure that products with duplicated attribute lines do not cause a traceback when the sale
+        product configurator is invoked.
+        """
+        # Create a product with 2 lines referring to the same attribute
+        self.env['product.template'].create({
+            'name': 'Duplicated Attribute Product',
+            'type': 'consu',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.product_attribute.id,
+                    'value_ids': [Command.set([self.a1.id])],
+                }),
+                Command.create({
+                    'attribute_id': self.product_attribute.id,
+                    'value_ids': [Command.set([self.a2.id, self.a3.id])],
+                }),
+            ],
+        })
+
+        self.start_tour('/odoo/orders/new', 'duplicate_attribute_lines_no_traceback', login='admin')
