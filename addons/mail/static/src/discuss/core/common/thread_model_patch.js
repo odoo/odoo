@@ -310,15 +310,6 @@ const threadPatch = {
             data,
         });
     },
-    async notifyDescriptionToServer(description) {
-        this.description = description;
-        return this.store.env.services.orm.call(
-            "discuss.channel",
-            "channel_change_description",
-            [[this.id]],
-            { description }
-        );
-    },
     async leaveChannel() {
         if (this.channel?.channel_type !== "group" && this.create_uid?.eq(this.store.self_user)) {
             await this.askLeaveConfirmation(
