@@ -36,7 +36,7 @@ declare module "models" {
         focusAvailableVideo: () => void;
         focusStack: RtcSession[];
         hadSelfSession: boolean;
-        isCallDisplayedInChatWindow: boolean;
+        isCallDisplayedInChatWindow: Readonly<boolean>;
         lastSessionIds: Set<number>;
         promoteFullscreen: typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN];
         rtc_session_ids: RtcSession[];

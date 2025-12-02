@@ -159,6 +159,12 @@ export class DiscussChannel extends Record {
             }
         },
     });
+    get invitationLink() {
+        if (!this.uuid || this.channel_type === "chat") {
+            return undefined;
+        }
+        return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
+    }
     invited_member_ids = fields.Many("discuss.channel.member");
     lastMessageSeenByAllId = fields.Attr(undefined, {
         /** @this {import("models").DiscussChannel} */
