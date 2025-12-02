@@ -129,7 +129,7 @@ class TestKarmaGain(common.SlidesCase):
         self.assertEqual(len(channel_partners), 4)
 
         # Set courses as completed and update karma
-        with self.assertQueryCount(66):  # com 55
+        with self.assertQueryCount(51):  # com 55
             channel_partners._post_completion_update_hook()
 
         computed_karma = self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
@@ -148,7 +148,7 @@ class TestKarmaGain(common.SlidesCase):
             self.assertEqual(user_trackings[1].origin_ref, self.channel)
 
         # now, remove the membership in batch, on multiple users - karma should not move as we only archive membership
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(8):
             (self.channel | self.channel_2)._remove_membership(users.partner_id.ids)
 
         for user in users:
