@@ -121,11 +121,13 @@ class CalendarEvent(models.Model):
         the day of the following occurrence.
         For example: E1 E2 E3 E4 cannot becomes E1 E3 E2 E4
         """
+        if isinstance(new_start, str):
+            new_start = parse(new_start)
         before_count = len(self.recurrence_id.calendar_event_ids.filtered(
             lambda e: e.start.date() < self.start.date() and e != self
         ))
         after_count = len(self.recurrence_id.calendar_event_ids.filtered(
-            lambda e: e.start.date() < parse(new_start).date() and e != self
+            lambda e: e.start.date() < new_start.date() and e != self
         ))
         if before_count != after_count:
             raise UserError(_(
