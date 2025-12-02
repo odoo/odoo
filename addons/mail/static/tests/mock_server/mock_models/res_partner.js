@@ -51,6 +51,8 @@ export class ResPartner extends webModels.ResPartner {
 
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
+        /** @type {import("mock_models").ResRole} */
+        const ResRole = this.env["res.role"];
 
         search = search.toLowerCase();
         /**
@@ -102,11 +104,11 @@ export class ResPartner extends webModels.ResPartner {
         const store = new mailDataHelpers.Store(
             this.browse(mainMatchingPartnerIds.concat(extraMatchingPartnerIds))
         );
-        const roleIds = this.env["res.role"].search(
+        const roleIds = ResRole.search(
             [["name", "ilike", search || ""]],
             makeKwArgs({ limit: limit || 8 })
         );
-        store.add("res.role", this.env["res.role"]._read_format(roleIds, ["name"], false));
+        store.add(ResRole.browse(roleIds), makeKwArgs({ fields: ["name", "user_ids_count"] }));
 
         return store.get_result();
     }
@@ -126,6 +128,8 @@ export class ResPartner extends webModels.ResPartner {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
+        /** @type {import("mock_models").ResRole} */
+        const ResRole = this.env["res.role"];
         /** @type {import("mock_models").DiscussChannel} */
         const channel = this.env["discuss.channel"].browse(channel_id)[0];
         const searchLower = search.toLowerCase();
@@ -176,11 +180,11 @@ export class ResPartner extends webModels.ResPartner {
             };
             store.add(this.browse(partnerId), data);
         }
-        const roleIds = this.env["res.role"].search(
+        const roleIds = ResRole.search(
             [["name", "ilike", searchLower || ""]],
             makeKwArgs({ limit: limit || 8 })
         );
-        store.add("res.role", this.env["res.role"]._read_format(roleIds, ["name"], false));
+        store.add(ResRole.browse(roleIds), makeKwArgs({ fields: ["name", "user_ids_count"] }));
         return store.get_result();
     }
 
