@@ -295,12 +295,6 @@ const threadPatch = {
             this.allowedToUnpinChannelTypes.includes(this.channel?.channel_type)
         );
     },
-    get invitationLink() {
-        if (!this.uuid || this.channel?.channel_type === "chat") {
-            return undefined;
-        }
-        return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
-    },
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",

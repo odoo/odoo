@@ -51,7 +51,6 @@ declare module "models" {
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
-        invitationLink: Readonly<unknown|string>;
         leaveChannel: () => Promise<void>;
         leaveChannelRpc: () => void;
         markAsFetched: () => Promise<void>;
