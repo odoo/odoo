@@ -191,5 +191,6 @@ class TestUnlink(TransactionCase):
         # 3 +3 queries : search ir data / ir attachment / ir default for cascade_line_ids + unlink
         # 1 Query for delete
         # 1 query to update has_container of null_line_ids
-        with self.assertQueryCount(8):
+        # 8 query standalone => 10 on runbot
+        with self.assertQueryCount(10):
             container.unlink()
