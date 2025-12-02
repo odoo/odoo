@@ -72,6 +72,7 @@ export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
+        this.offlineService = useService("offline");
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {

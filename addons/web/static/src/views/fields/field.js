@@ -1,5 +1,4 @@
 import { Domain } from "@web/core/domain";
-import { useOfflineStatus } from "@web/core/offline/offline_service";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
@@ -9,6 +8,7 @@ import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 const isSmall = utils.isSmall;
 
@@ -356,7 +356,7 @@ export class Field extends Component {
     };
 
     setup() {
-        this.offlineStatus = useOfflineStatus();
+        this.offlineService = useService("offline");
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {
@@ -412,7 +412,7 @@ export class Field extends Component {
     get fieldComponentProps() {
         const record = this.props.record;
         // disable edition in offline mode
-        let readonly = this.props.readonly || this.offlineStatus.offline || false;
+        let readonly = this.props.readonly || this.offlineService.offline || false;
 
         let propsFromNode = {};
         if (this.props.fieldInfo) {

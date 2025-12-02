@@ -13,7 +13,6 @@ class IrUiView(models.Model):
                 'display_name': display_name,
                 'icon': _view_info[type_]['icon'],
                 'multi_record': _view_info[type_].get('multi_record', True),
-                'available_offline': _view_info[type_].get('available_offline', False),
             }
             for (type_, display_name)
             in self.fields_get(['type'], ['selection'])['type']['selection']
@@ -22,11 +21,11 @@ class IrUiView(models.Model):
 
     def _get_view_info(self):
         return {
-            'list': {'icon': 'oi oi-view-list', 'available_offline': True},
-            'form': {'icon': 'fa fa-address-card', 'multi_record': False, 'available_offline': True},
+            'list': {'icon': 'oi oi-view-list'},
+            'form': {'icon': 'fa fa-address-card', 'multi_record': False},
             'graph': {'icon': 'fa fa-area-chart'},
             'pivot': {'icon': 'oi oi-view-pivot'},
-            'kanban': {'icon': 'oi oi-view-kanban', 'available_offline': True},
+            'kanban': {'icon': 'oi oi-view-kanban'},
             'calendar': {'icon': 'fa fa-calendar'},
             'search': {'icon': 'oi oi-search'},
         }

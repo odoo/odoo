@@ -138,6 +138,7 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
+        this.offlineService = useService("offline");
         this.notificationService = useService("notification");
         this.orm = useService("orm");
         const key = this.createViewKey();
@@ -902,6 +903,13 @@ export class ListRenderer extends Component {
         return ["float", "integer", "monetary"].includes(type);
     }
 
+    isRecordAvailable(record) {
+        return (
+            !this.offlineService.offline ||
+            this.offlineService.isAvailableOffline(this.env.config.actionId, "form", record.resId)
+        );
+    }
+
     isSortable(column) {
         const { hasLabel, name, options } = column;
         const { sortable } = this.fields[name];
@@ -946,6 +954,9 @@ export class ListRenderer extends Component {
         }
         if (this.canResequenceRows) {
             classNames.push("o_row_draggable");
+        }
+        if (!this.isRecordAvailable(record)) {
+            classNames.push("o_disabled_offline");
         }
         return classNames.join(" ");
     }
@@ -1008,7 +1019,7 @@ export class ListRenderer extends Component {
                 this.isCellReadonly(column, this.editedRecord)
             ) {
                 classNames.push("text-muted");
-            } else {
+            } else if (this.isRecordAvailable(record)) {
                 classNames.push("cursor-pointer");
             }
         }

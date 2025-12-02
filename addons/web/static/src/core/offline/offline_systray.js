@@ -1,7 +1,6 @@
 import { Component, useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useOfflineStatus } from "./offline_service";
 
 class OfflineSystray extends Component {
     static template = "web.OfflineSystray";
@@ -9,8 +8,7 @@ class OfflineSystray extends Component {
 
     setup() {
         this.offlineService = useService("offline");
-        this.status = useOfflineStatus();
-        useEffect(this.env.redrawNavbar, () => [this.status.offline]);
+        useEffect(this.env.redrawNavbar, () => [this.offlineService.offline]);
     }
 }
 

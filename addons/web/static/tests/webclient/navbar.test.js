@@ -7,6 +7,7 @@ import {
     defineMenus,
     getService,
     makeMockEnv,
+    mockService,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -14,6 +15,7 @@ import {
 import { Component, onRendered, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
+import { mockOffline } from "../web_test_helpers";
 
 const systrayRegistry = registry.category("systray");
 
@@ -497,4 +499,56 @@ test("Do not execute adapt when navbar is destroyed", async () => {
     destroy(navbar);
     await runAllTimers();
     expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test("[Offline] unavailable menus are disabled", async () => {
+    const setOffline = mockOffline();
+    mockService("offline", {
+        isAvailableOffline(actionId) {
+            return [2, 10, 121].includes(actionId);
+        },
+    });
+    defineMenus([
+        {
+            id: 1,
+            children: [
+                { id: 10, actionID: 10 },
+                { id: 11, actionID: 11 },
+                {
+                    id: 12,
+                    children: [
+                        { id: 120, actionID: 120 },
+                        { id: 121, actionID: 121 },
+                        { id: 122, actionID: 122 },
+                    ],
+                },
+            ],
+        },
+        { id: 2, actionID: 2 },
+        { id: 3, actionID: 3 },
+    ]);
+    await mountWithCleanup(NavBar);
+    getService("menu").setCurrentMenu(1);
+    await setOffline(true);
+
+    // check menus of current app
+    expect(".o_menu_sections .o_nav_entry").toHaveCount(2);
+    expect(".o_menu_sections .o_nav_entry.o_disabled_offline").toHaveCount(1);
+    expect(".o_menu_sections .o_nav_entry:eq(1)").toHaveClass("o_disabled_offline");
+    expect(".o_menu_sections .o-dropdown").toHaveCount(1);
+    expect(".o_menu_sections .o-dropdown[data-available-offline]").toHaveCount(1);
+    expect(".o_menu_sections .o-dropdown").not.toHaveClass(".o_disabled_offline");
+
+    // check sub-menus
+    await contains(".o_menu_sections .o-dropdown").click();
+    expect(".o-overlay-item .o-dropdown-item").toHaveCount(3);
+    expect(".o-overlay-item .o-dropdown-item.o_disabled_offline").toHaveCount(2);
+    expect(".o-overlay-item .o-dropdown-item:eq(1)").not.toHaveClass("o_disabled_offline");
+
+    // check apps
+    await contains(".o_navbar_apps_menu button").click();
+    expect(".o-overlay-item .o_app").toHaveCount(3);
+    expect(".o-overlay-item .o_app.o_disabled_offline").toHaveCount(1);
+    expect(".o-overlay-item .o_app:eq(2)").toHaveClass("o_disabled_offline");
 });

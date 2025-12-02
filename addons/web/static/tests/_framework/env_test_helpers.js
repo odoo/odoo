@@ -1,4 +1,5 @@
 import { after, afterEach, beforeEach, registerDebugInfo } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import {
@@ -10,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { makeEnv, startServices } from "@web/env";
-import { MockServer, makeMockServer } from "./mock_server/mock_server";
+import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -109,7 +110,7 @@ export async function makeMockEnv(partialEnv, options) {
             // Ideally: this should be done in a stop of the service !!!
             // This is done to remove the observer that disables the buttons.
             if (currentEnv.services.offline) {
-                currentEnv.services.offline.status.offline = false;
+                currentEnv.services.offline.offline = false;
             }
 
             currentEnv = null;
@@ -206,4 +207,23 @@ export function restoreRegistry(registry) {
     for (const subRegistry of Object.values(registry.subRegistries)) {
         restoreRegistry(subRegistry);
     }
+}
+
+/**
+ * Makes a function to set Offline all RPCs and set Offline the service.
+ *
+ * @returns {Function} setOffline
+ */
+export function mockOffline() {
+    let _offline = false;
+    onRpc("/*", () => {
+        if (_offline) {
+            return new Response("", { status: 502 });
+        }
+    });
+    return (offline) => {
+        _offline = offline;
+        getService("offline").offline = _offline;
+        return animationFrame();
+    };
 }

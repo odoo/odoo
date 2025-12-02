@@ -19,7 +19,7 @@ export function lostConnectionHandler(env, error, originalError) {
         return false;
     }
     if (originalError instanceof ConnectionLostError) {
-        env.services.offline.status.offline = true;
+        env.services.offline.offline = true;
         return true;
     }
 }
