@@ -585,15 +585,7 @@ export class BuilderOptionsPlugin extends Plugin {
             this.config.builderOptionsTemplate,
             this.getBuilderOptionsConstants()
         );
-        const options = [];
-        for (const node of template.childNodes) {
-            if (node.nodeType !== Node.ELEMENT_NODE) {
-                continue;
-            }
-            const OptionClass = this.createOptionClassFromNode(node);
-            options.push(OptionClass);
-        }
-        return options;
+        return Array.from(template.children, (node) => this.createOptionClassFromNode(node));
     }
 
     // TODO DUAU: for title, in the template, should it be title.translate? How are translations managed?
@@ -613,6 +605,7 @@ export class BuilderOptionsPlugin extends Plugin {
         if (!selector) {
             throw new Error(`Missing selector name in builder option ${optionId}`);
         }
+        // TODO DUAU: we need specific for website and mass_mailing, also registry or ressource?
         const builderOptionsRegistry = registry.category("builder-options");
         if (!builderOptionsRegistry.contains(optionId)) {
             if (!template) {
@@ -653,9 +646,6 @@ export class BuilderOptionsPlugin extends Plugin {
                 `Can't have selector, exclude, applyTo, title, editableOnly, groups in BaseOptionComponent: ${optionId}`
             );
         }
-        if (Object.keys(ComplexOptionClass.props).length !== 0) {
-            console.log(`props ${optionId}:`, Object.keys(ComplexOptionClass.props).length);
-        }
         const OptionClass = { [optionId]: class extends ComplexOptionClass {} }[optionId];
         return Object.assign(OptionClass, {
             selector,
@@ -665,7 +655,7 @@ export class BuilderOptionsPlugin extends Plugin {
             editableOnly,
             reloadTarget,
             groups,
-            props: { ...(OptionClass.props || {}), ...props },
+            propsValue: props,
         });
     }
 
@@ -683,7 +673,7 @@ export class BuilderOptionsPlugin extends Plugin {
             editableOnly,
             reloadTarget,
             groups,
-            props,
+            propsValue: props,
         });
     }
 

@@ -4,8 +4,6 @@ import { registry } from "@web/core/registry";
 import { CarouselItemHeaderMiddleButtons } from "./carousel_item_header_buttons";
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { between } from "@html_builder/utils/option_sequence";
-import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /**
@@ -14,8 +12,6 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  * @property { CarouselOptionPlugin['removeSlide'] } removeSlide
  * @property { CarouselOptionPlugin['slideCarousel'] } slideCarousel
  */
-
-export const CAROUSEL_CARDS_SEQUENCE = between(WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW);
 
 const carouselWrapperSelector =
     ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper";

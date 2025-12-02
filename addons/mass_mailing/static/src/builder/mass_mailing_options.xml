@@ -4,15 +4,13 @@
         <!-- To add t-set if needed -->
         <xpath expr="//t[@t-set][last()]" position="after">
         </xpath>
-        <!-- before 17 -->
+
         <xpath expr="//replace_media_option" position="before">
-            <mass_mailing_add_product_option
-                template="html_builder.AddProductOption"
+            <add_product_option
                 selector=".s_pricelist_boxed_section:has(> .container)"
                 props='{ "productSelector": ".container" }'/>
         </xpath>
 
-        <!-- after 20 -->
         <xpath expr="//image_tool_option" position="after">
             <font_awesome_option
                 template="mass_mailing.FontAwesomeOption"
@@ -51,14 +49,6 @@
                 applyTo=":scope > *:has(> .row:not(.s_nb_column_fixed)), * > .s_allow_columns"/>
         </xpath>
 
-        <!-- after 22 -->
-        <xpath expr="//image_and_fa_option" position="after">
-        </xpath>
-
-        <!-- after 24 -->
-        <xpath expr="//text_alignment_option" position="after">
-        </xpath>
-
         <xpath expr="//width_option" position="attributes">
             <attribute name="t-att-selector">
                 widthOptionSelector + ', .s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight'
@@ -74,26 +64,18 @@
             <social_media_links selector=".s_social_media"/>
         </xpath>
 
-        <!-- after 28 -->
-        <xpath expr="//block_alignment_option" position="after">
+        <xpath expr="//vertical_alignment_option" position="attributes">
+            <attribute name="t-att-selector">
+                verticalAlignmentOptionSelector + ', .s_mail_block_event'
+            </attribute>
         </xpath>
 
-        <!-- after 39 -->
         <xpath expr="//cta_badge_option" position="after">
             <mailing_background_option selector=".s_masonry_block > .container > .row > div:not(:has(.row)), .s_cover > .container > .row > div, .s_reviews_wall"/>
             <color_picker_option
                 template="mass_mailing.ColorPickerOption"
                 selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
                 applyTo=".card-body"/>
-        </xpath>
-
-        <!-- after 106 -->
-        <xpath expr="//layout_column_option" position="after">
-            <!-- This selector targets all direct children of .oe_structure except nested structures -->
-            <color_picker_option
-                template="mass_mailing.ColorPickerOption"
-                selector=".note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)), .note-editable .oe_structure > .o_mail_snippet_general, .note-editable .oe_structure > .o_mail_snippet_general .o_cc, .s_mail_color_blocks_2 .row > div"
-                exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2"/>
             <masonry_block_template_option
                 template="mass_mailing.MasonryBlockTemplateOption"
                 selector=".s_masonry_block"/>
@@ -103,15 +85,14 @@
             <layout_column_option
                 selector=".s_reviews_wall .container"
                 applyTo=":scope > .row:has(> .s_mail_blockquote), :scope > .row > .s_allow_columns"/>
+            <!-- This selector targets all direct children of .oe_structure except nested structures -->
+            <color_picker_option
+                template="mass_mailing.ColorPickerOption"
+                selector=".note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)), .note-editable .oe_structure > .o_mail_snippet_general, .note-editable .oe_structure > .o_mail_snippet_general .o_cc, .s_mail_color_blocks_2 .row > div"
+                exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2"/>
         </xpath>
 
-
-        <xpath expr="//vertical_alignment_option" position="attributes">
-            <attribute name="t-att-selector">
-                verticalAlignmentOptionSelector + ', .s_mail_block_event'
-            </attribute>
-        </xpath>
-        <xpath expr="//vertical_alignment_option" position="after">
+        <xpath expr="//badge_option" position="after">
             <border_option
                 template="mass_mailing.BorderOption"
                 selector=".row > div"
@@ -124,10 +105,6 @@
                 template="mass_mailing.VerticalPaddingOption"
                 selector=".o_mail_block_footer_social, .s_header_logo, .s_header_social"
                 exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
-        </xpath>
-
-        <!-- after 177 -->
-        <xpath expr="//vertical_justify_option" position="after">
             <snippet_visibility_option selector="section"/>
         </xpath>
 

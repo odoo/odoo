@@ -5,7 +5,7 @@
                 <div class="we-bg-options-container pb-3" t-ref="content">
                     <t t-foreach="props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
                         <BuilderContext applyTo="OptionClass.applyTo" t-if="hasAccess(OptionClass.groups)">
-                            <t t-component="OptionClass"></t>
+                            <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
                         </BuilderContext>
                     </t>
                 </div>

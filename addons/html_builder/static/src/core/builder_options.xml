@@ -8,58 +8,40 @@
         <t t-set="verticalAlignmentOptionSelector"
             t-value="`.s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid`"/>
         <div>
-            <!-- Obviously comments will be removed, it's only to check the current sequence -->
-            <!-- 17 -->
             <replace_media_option
                 t-att-selector="replaceMediaOptionSelector"
                 t-attf-exclude="{{replaceMediaOptionExclude}}"/>
             <video_size_option selector=".media_iframe_video"/>
-            <!-- 20 -->
             <image_tool_option selector="img" exclude="[data-oe-type='image'] > img"/>
-            <!-- 22 -->
             <image_and_fa_option
                 template="html_builder.ImageAndFaOption"
                 selector="span.fa, i.fa, img"
                 t-attf-exclude="[data-oe-type='image'] > img, [data-oe-xpath], {{socialMediaElementsSelector}}"/>
-            <!-- 24 -->
             <text_alignment_option
                 template="html_builder.TextAlignmentOption"
                 selector=".s_share, .s_text_highlight, .s_social_media"/>
-            <!-- 26 -->
             <alert_option
                 template="html_builder.AlertOption"
                 selector=".s_alert"/>
-            <!-- 27 -->
             <width_option template="html_builder.WidthOption" t-att-selector="widthOptionSelector"/>
-            <!-- 28 -->
             <block_alignment_option template="html_builder.BlockAlignmentOption" selector=".s_alert, .s_text_highlight"/>
-            <!-- 36 -->
             <many2one_option
                 selector="[data-oe-many2one-model]:not([data-oe-readonly])"
                 editableOnly="false"/>
-            <!-- 37  -->
-            <rating_option template="html_builder.RatingOption" selector=".s_rating"/>
-            <!-- 38 -->
-            <separator_option template="html_builder.SeparatorOption" selector=".s_hr" applyTo="hr"/>
-            <!-- 39 -->
-            <cta_badge_option template="html_builder.CTABadgeOption" selector=".s_cta_badge"/>
-            <!-- 106 -->
             <layout_column_option
                 selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"
                 applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
-            <!-- 110 -->
             <vertical_alignment_option
-                template="html_builder.VerticalAlignmentOption"
                 t-att-selector="verticalAlignmentOptionSelector"
-                applyTo=".row"
-                props='{ "level": 1, "justify": true }'/>
-            <!-- 170 -->
-            <badge_option template="html_builder.BadgeOption" selector=".s_badge"/>
-            <!-- 177 -->
+                applyTo=".row"/>
             <vertical_justify_option
                 template="html_builder.VerticalJustifyOption"
                 selector=".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item, .s_banner_categories .o_grid_item"
                 exclude=".o_grid_item_image"/>
+            <rating_option template="html_builder.RatingOption" selector=".s_rating"/>
+            <separator_option template="html_builder.SeparatorOption" selector=".s_hr" applyTo="hr"/>
+            <cta_badge_option template="html_builder.CTABadgeOption" selector=".s_cta_badge"/>
+            <badge_option template="html_builder.BadgeOption" selector=".s_badge"/>
         </div>
     </t>
 </templates>

@@ -2,8 +2,8 @@ import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { hashCode } from "@web/core/utils/strings";
 import { useOperation } from "../core/operation_plugin";
+import { uniqueId } from "@web/core/utils/functions";
 import {
     BaseOptionComponent,
     useApplyVisibility,
@@ -74,9 +74,7 @@ export class OptionsContainer extends BaseOptionComponent {
     }
 
     getOptionKey(OptionClass) {
-        return `${OptionClass.name}-${OptionClass.template}-${hashCode(
-            OptionClass.selector || ""
-        )}`;
+        return uniqueId(`${OptionClass.name}-${OptionClass.template}`);
     }
 
     get title() {

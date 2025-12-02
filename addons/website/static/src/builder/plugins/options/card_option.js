@@ -1,14 +1,14 @@
 import { BaseOptionComponent, useGetItemValue } from "@html_builder/core/utils";
-import { BaseWebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
+import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 import { CardImageOption } from "./card_image_option";
 import { registry } from "@web/core/registry";
 
-export class BaseCardOption extends BaseOptionComponent {
-    static id = "base_card_option";
+export class CardOption extends BaseOptionComponent {
+    static id = "card_option";
     static template = "website.CardOption";
     static components = {
         CardImageOption,
-        WebsiteBackgroundOption: BaseWebsiteBackgroundOption,
+        WebsiteBackgroundOption,
     };
     static props = {
         disableWidth: { type: Boolean, optional: true },
@@ -22,4 +22,4 @@ export class BaseCardOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(BaseCardOption.id, BaseCardOption);
+registry.category("builder-options").add(CardOption.id, CardOption);
