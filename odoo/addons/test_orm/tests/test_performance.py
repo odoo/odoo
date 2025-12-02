@@ -298,12 +298,12 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
         self.assertEqual(rec1.line_ids, lines)
 
         # delete N lines: O(1) queries
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(7):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
@@ -313,12 +313,12 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
         lines = rec1.line_ids
 
         # unlink N lines: O(1) queries
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(7):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
@@ -352,7 +352,7 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
         self.assertEqual(rec2.line_ids, lines)
 
         # empty N lines in rec2: O(1) queries
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             self.env.invalidate_all()
             rec2.write({'line_ids': [Command.clear()]})
         self.assertFalse(rec2.line_ids)
@@ -644,7 +644,7 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
         new_records_ids.append(new_record.id)
         new_records = model.browse(new_records_ids)
 
-        # fetch 'line_ids' on all records (1 query), fetch 'value' on all lines (1 query)
+        # fetch 'line_ids' on all records (2 queries), fetch 'value' on all lines (1 query)
         with self.assertQueryCount(2):
             for record in new_records:
                 for line in record.line_ids:
