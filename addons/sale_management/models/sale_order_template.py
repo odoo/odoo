@@ -156,7 +156,7 @@ class SaleOrderTemplate(models.Model):
                 'product_uom_qty': 8,
             }),
             Command.create({
-                'name': "Optional Products Section",
+                'name': self.env._("Optional Products Section"),
                 'display_type': 'line_section',
                 'is_optional': True,
                 'product_uom_qty': 0,
