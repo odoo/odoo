@@ -36,8 +36,8 @@ class ProductProduct(models.Model):
         different_currency = config.currency_id != self.env.company.currency_id
         if different_currency:
             for product in read_records:
-                product['lst_price'] = config.currency_id._convert(
-                    product['lst_price'], self.env.company.currency_id, self.env.company, fields.Date.today()
+                product['lst_price'] = self.env.company.currency_id._convert(
+                    product['lst_price'], config.currency_id, self.env.company, fields.Date.today()
                 )
         return read_records
 
