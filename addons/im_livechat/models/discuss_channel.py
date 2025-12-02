@@ -1005,3 +1005,6 @@ class DiscussChannel(models.Model):
                     "operatorFound": True,
                 },
             ).bus_send()
+
+    def _allow_invite_by_email(self):
+        return self.channel_type == "livechat" or super()._allow_invite_by_email()
