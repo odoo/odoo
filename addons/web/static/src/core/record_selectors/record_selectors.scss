@@ -10,11 +10,14 @@
     .o_record_autocomplete_with_caret {
         display: flex;
         min-width: 100%;
+        position: relative;
 
         &:hover, &:focus-within {
             &::after {
                 @include o-caret-down;
                 align-self: center;
+                position: absolute;
+                right: .5rem;
             }
         }
     }
