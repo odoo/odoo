@@ -50,7 +50,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
-        if not partner.vat:
+        if not partner.vat or partner.vat == '/':
             return [{
                 'company_id': partner.peppol_endpoint,
                 'tax_scheme_vals': {'id': partner.peppol_eas},
