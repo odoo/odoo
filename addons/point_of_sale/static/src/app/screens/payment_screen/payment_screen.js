@@ -219,7 +219,7 @@ export class PaymentScreen extends Component {
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
     }
     openCashbox() {
-        this.hardwareProxy.openCashbox();
+        this.pos.openCashbox();
     }
     async addTip() {
         const tip = this.currentOrder.getTip();

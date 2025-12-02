@@ -4,7 +4,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
-export async function handleSaleDetails(pos, hardwareProxy, dialog) {
+export async function handleSaleDetails(pos, dialog) {
     const saleDetails = await pos.data.call(
         "report.point_of_sale.report_saledetails",
         "get_sale_details",
@@ -18,7 +18,7 @@ export async function handleSaleDetails(pos, hardwareProxy, dialog) {
             formatCurrency: pos.env.utils.formatCurrency,
         })
     );
-    const { successful, message } = await hardwareProxy.printer.printReceipt(report);
+    const { successful, message } = await pos.receiptPrinter.printReceipt(report);
     if (!successful) {
         dialog.add(AlertDialog, {
             title: message.title,
@@ -35,10 +35,9 @@ export class SaleDetailsButton extends Component {
         super.setup(...arguments);
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.hardwareProxy = useService("hardware_proxy");
     }
 
     async onClick() {
-        await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
+        await handleSaleDetails(this.pos, this.dialog);
     }
 }
