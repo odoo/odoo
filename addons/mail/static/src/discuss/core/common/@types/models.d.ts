@@ -55,7 +55,6 @@ declare module "models" {
         invitationLink: Readonly<unknown|string>;
         leaveChannel: () => Promise<void>;
         leaveChannelRpc: () => void;
-        markAsFetched: () => Promise<void>;
         markedAsUnread: boolean;
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;

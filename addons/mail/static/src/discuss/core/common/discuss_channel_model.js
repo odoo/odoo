@@ -283,6 +283,12 @@ export class DiscussChannel extends Record {
         this.store.insert(data);
     }
 
+    async markAsFetched() {
+        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
+            [this.id],
+        ]);
+    }
+
     /**
      * @returns {boolean} true if the channel was opened, false otherwise
      */

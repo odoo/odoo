@@ -322,11 +322,6 @@ const threadPatch = {
             { body }
         );
     },
-    async markAsFetched() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
-            [this.id],
-        ]);
-    },
     /** @param {string} data base64 representation of the binary */
     async notifyAvatarToServer(data) {
         await rpc("/discuss/channel/update_avatar", {
