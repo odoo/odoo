@@ -257,3 +257,39 @@ class SaleOrder(models.Model):
         if self:
             self.onchange_order_line()
         return price_unit
+
+    def _get_line_global_discount(self):
+        """ This method calculates the global discount for each invoicable sale order line.
+        It distributes the global discount among invoicable lines proportionally based
+        on their taxable price and quantity.
+
+        Returns:
+            dict: A dictionary with sale order lines as keys and their respective global
+            discount amount as values.
+        """
+        if not self:
+            return {}
+
+        invoicable_lines = self.order_line.filtered(lambda line: line._can_be_invoiced_alone())
+        sale_line_discount_dict = {line.id: 0 for line in invoicable_lines}
+
+        for so in self:
+            global_discount_lines = so.order_line.filtered(
+                lambda line: line.product_id == so.company_id.sale_discount_product_id
+                and not line._can_be_invoiced_alone()
+            )
+            if not global_discount_lines:
+                continue
+
+            total_global_discount_value = sum(
+                line.price_reduce_taxinc * line.product_uom_qty for line in global_discount_lines
+            )
+            total_invoicable_price = sum(invoicable_lines.mapped("price_reduce_taxinc"))
+
+            if not total_global_discount_value or not total_invoicable_price:
+                continue
+
+            for line in invoicable_lines:
+                line_price_share = (line.price_reduce_taxinc / total_invoicable_price) * total_global_discount_value
+                sale_line_discount_dict[line.id] -= line_price_share / line.product_uom_qty
+        return sale_line_discount_dict
