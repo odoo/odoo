@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="res_partner_view_form_inherit_l10n_cz" model="ir.ui.view">
-        <field name="name">res.partner.view.form.inherit.l10n.cz</field>
+    <data>
+        <record id="cz_partner_address_form" model="ir.ui.view">
+        <field name="name">l10n_cz.res.partner.address.form</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="priority" eval="900"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="before">
-                <field name="company_registry" invisible="country_code != 'CZ'"/>
-            </xpath>
+            <form>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Street..." class="o_address_street oe_read_only"/>
+                    <div class="oe_edit_only o_row">
+                        <field name="street_name" placeholder="Street" style="flex: 3 1 auto"
+                               readonly="type == 'contact' and parent_id"/>
+                        <span> </span>
+                        <field name="street_number" placeholder="Street #" style="flex: 1 1 auto"
+                               readonly="type == 'contact' and parent_id"/>
+                        <span> - </span>
+                        <field name="street_number2" placeholder="Complement" style="flex: 1 1 auto"
+                               readonly="type == 'contact' and parent_id"/>
+                    </div>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="country_id"
+                           placeholder="Country"
+                           class="o_address_country"
+                           readonly="type == 'contact' and parent_id"
+                           options='{"no_open": True, "no_create": True}'/>
+                </div>
+            </form>
         </field>
     </record>
+
+        <record id="res_partner_view_form_inherit_l10n_cz" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit.l10n.cz</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="before">
+                    <field name="company_registry" invisible="country_code != 'CZ'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
 </odoo>
