@@ -84,6 +84,15 @@ export class ActivityMenu extends Component {
         }
         const views = this.availableViews(group);
 
+        this.executeActivityAction(group, domain, views, context, newWindow);
+    }
+
+    /**
+     * This logic is extracted into a separate method to allow other modules (e.g., documents)
+     * to override *how* the action is executed (e.g., loading a specific XML ID)
+     * without needing to duplicate the domain and filter preparation logic in `openActivityGroup`.
+     */
+    executeActivityAction(group, domain, views, context, newWindow) {
         this.action.doAction(
             {
                 context,
