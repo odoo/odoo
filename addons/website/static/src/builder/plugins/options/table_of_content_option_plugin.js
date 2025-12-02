@@ -72,25 +72,42 @@ class TableOfContentOptionPlugin extends Plugin {
         const currentNavbarItems = [...tableOfContentNavbar.children].map((el) => ({
             title: el.textContent,
             href: el.getAttribute("href"),
+            depthClass: [...el.classList].find((className) =>
+                className.startsWith("table_of_content_link_depth_")
+            ),
         }));
-
         if (tableOfContentMain.children.length === 0) {
             // Remove the table of content if empty content.
             this.dependencies.remove.removeElement(tableOfContent);
             return;
         }
-
-        const targetedElements = "h1, h2";
+        const targetedElements = "h1, h2, h3, h4, h5, h6";
+        // Depth for each heading based on hierarchy
+        const depthStack = [];
         const currentHeadingItems = [...tableOfContentMain.querySelectorAll(targetedElements)]
             .filter((el) => !el.closest(".o_snippet_desktop_invisible"))
-            .map((el) => ({ title: el.textContent, id: `#${el.id}`, el }));
+            .map((el) => {
+                const currentHeadingLevel = parseFloat(el.tagName[1]);
+                while (depthStack.length && depthStack.at(-1) >= currentHeadingLevel) {
+                    depthStack.pop();
+                }
+                depthStack.push(currentHeadingLevel);
+                return {
+                    title: el.textContent,
+                    id: `#${el.id}`,
+                    depthLevel: depthStack.length - 1,
+                    el,
+                };
+            });
 
         const headingHasChanged =
             currentNavbarItems.length !== currentHeadingItems.length ||
             currentNavbarItems.some(
                 (item, i) =>
                     item.title !== currentHeadingItems[i].title ||
-                    item.href !== currentHeadingItems[i].id
+                    item.href !== currentHeadingItems[i].id ||
+                    parseInt(item.depthClass.replace("table_of_content_link_depth_", "")) !==
+                        currentHeadingItems[i].depthLevel
             );
 
         const areVisibilityIdsEqual = currentHeadingItems.every(({ el }) => {
@@ -130,7 +147,8 @@ class TableOfContentOptionPlugin extends Plugin {
 
         tableOfContentNavbar.textContent = "";
         const uniqueHeadingIds = new Set();
-        for (const { title, el } of currentHeadingItems) {
+
+        for (const { title, el, depthLevel } of currentHeadingItems) {
             let { headingId } = getTocAndHeadingId(el);
             if (headingId) {
                 // Reset headingId on duplicate.
@@ -149,10 +167,12 @@ class TableOfContentOptionPlugin extends Plugin {
             const itemEl = this.document.createElement("a");
             itemEl.textContent = title;
             itemEl.setAttribute("href", `#${tocHeadingId}`);
-            itemEl.className =
-                "table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0";
-            tableOfContentNavbar.appendChild(itemEl);
 
+            itemEl.className = `table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0 table_of_content_link_depth_${depthLevel}`;
+            tableOfContentNavbar.appendChild(itemEl);
+            if (el.dataset.anchor === undefined) {
+                el.dataset.anchor = true;
+            }
             el.setAttribute("id", tocHeadingId);
         }
     }
