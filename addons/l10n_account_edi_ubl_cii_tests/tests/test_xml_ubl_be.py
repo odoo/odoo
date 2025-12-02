@@ -547,6 +547,26 @@ class TestUBLBE(TestUBLCommon):
         )
         self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_out_invoice_tax_exempt.xml')
 
+    def test_export_gln(self):
+        """ GLN was added in a fixup module account_add_gln. """
+        # TODO master: clean that skiptest, when the module account_add_gln is merged with account
+        if 'global_location_number' not in self.partner_2._fields:
+            self.skipTest("Fixup module with GLN not installed.")
+        self.partner_2.global_location_number = "222222222222"
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 990.0,
+                    'tax_ids': [(6, 0, self.tax_0.ids)],
+                },
+            ],
+        )
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_out_invoice_gln.xml')
+
     ####################################################
     # Test import
     ####################################################
