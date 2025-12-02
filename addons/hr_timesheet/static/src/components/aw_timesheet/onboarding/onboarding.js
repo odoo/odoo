@@ -49,6 +49,18 @@ export class ActivityWatchOnboarding extends Component {
         }
     }
 
+    getVsCodeBasedExtensionScript(ide) {
+        return [
+            `# Install ${ide} extension`,
+            `if command -v ${ide} > /dev/null 2>&1; then`,
+            `  sudo -u "$USER" ${ide} --install-extension activitywatch.aw-watcher-vscode`,
+            "else",
+            `  echo \"${ide} not found\"`,
+            "fi",
+            "",
+        ].join("\n");
+    }
+
     toggleWebWatcher(ev) {
         this.state.installWeb = ev.target.checked;
     }
@@ -61,12 +73,11 @@ export class ActivityWatchOnboarding extends Component {
             "",
             'echo "Installing ActivityWatch - Raouf"',
             "",
-            'INSTALL_DIR="$HOME/Documents/RaoufTesting"',
+            'INSTALL_DIR="$HOME/Downloads"',
             'WATCHERS_DIR="$INSTALL_DIR/activitywatch"',
             'WRAPPER_SCRIPT="$INSTALL_DIR/start_watchers.sh"',
             'LOG_FILE="$INSTALL_DIR/startup.log"',
             "",
-            "mkdir -p \"$INSTALL_DIR\"",
             "cd \"$INSTALL_DIR\"",
             "",
             "# Download AW",
@@ -81,16 +92,10 @@ export class ActivityWatchOnboarding extends Component {
         ];
 
         // for this poc, i'm just focusing on chrome and vsCode on Linux, we will make it generic
-        if (this.state.ideSelections.includes("vscode")) {
-            lines.push(
-                "# Install VSCode extension",
-                'if command -v code > /dev/null 2>&1; then',
-                '  sudo -u "$USER" code --install-extension activitywatch.aw-watcher-vscode',
-                "else",
-                '  echo "VSCode not found"',
-                "fi",
-                ""
-            );
+        for (const vsCodeBasedIde of ["code", "codium", "antigravity"]) { // can be extended later
+            if (this.state.ideSelections.includes(vsCodeBasedIde)) {
+                lines.push(this.getVsCodeBasedExtensionScript(vsCodeBasedIde));
+            }
         }
 
         // important info to know, if the user uninstall the extension manually from the ui, it will move to the blocklist, and can't be installed again with this script
@@ -101,7 +106,7 @@ export class ActivityWatchOnboarding extends Component {
             lines.push(
                 "# Install Chrome extension",
                 'declare -A EXTlist=( ["activitywatch-web-watcher"]="nglaklhklhcoonedhgnpgddginnjdadi" )',
-                "mkdir -p /opt/google/chrome/extensions",
+                "sudo mkdir -p /opt/google/chrome/extensions",
                 'for i in "${!EXTlist[@]}"; do',
                 '  echo \'{"external_update_url": "https://clients2.google.com/service/update2/crx"}\' | sudo tee /opt/google/chrome/extensions/${EXTlist[$i]}.json > /dev/null',
                 "done",
@@ -117,7 +122,7 @@ export class ActivityWatchOnboarding extends Component {
             "#!/bin/bash",
             "set -e",
             "",
-            'INSTALL_DIR="$HOME/Documents/RaoufTesting"',
+            'INSTALL_DIR="$HOME/Downloads"',
             'WATCHERS_DIR="$INSTALL_DIR/activitywatch"',
             'LOG_FILE="$INSTALL_DIR/startup.log"',
             "",

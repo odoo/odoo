@@ -22,12 +22,26 @@
 
         <div t-if="state.isDev" id="ide-section" class="mb-3 ms-4">
           <div class="fw-bold">Which IDE do you use?</div>
+          <!-- should be in loop -->
+          <div class="form-check">
+            <input class="form-check-input ide-checkbox" type="checkbox" value="code"
+                  t-on-change="toggleIDE"
+                  t-att-checked="state.ideSelections.includes('code')"/>
+            <label class="form-check-label">VS Code</label>
+          </div>
 
           <div class="form-check">
-            <input class="form-check-input ide-checkbox" type="checkbox" value="vscode"
+            <input class="form-check-input ide-checkbox" type="checkbox" value="codium"
                   t-on-change="toggleIDE"
-                  t-att-checked="state.ideSelections.includes('vscode')"/>
-            <label class="form-check-label">VSCode</label>
+                  t-att-checked="state.ideSelections.includes('codium')"/>
+            <label class="form-check-label">VSCodium</label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input ide-checkbox" type="checkbox" value="antigravity"
+                  t-on-change="toggleIDE"
+                  t-att-checked="state.ideSelections.includes('antigravity')"/>
+            <label class="form-check-label">Antigravity</label>
           </div>
 
           <div class="form-check">
