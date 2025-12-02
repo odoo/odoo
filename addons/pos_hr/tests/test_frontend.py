@@ -52,7 +52,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         emp1_user = new_test_user(
             cls.env,
             login="emp1_user",
-            groups="base.group_user",
+            groups="base.group_user, point_of_sale.group_pos_user, account.group_account_invoice",
             name="Pos Employee1",
             email="emp1_user@pos.com",
         )
@@ -238,3 +238,4 @@ class TestUi(TestPosHrHttpCommon):
 
         self.start_pos_tour("pos_hr_go_backend_closed_registered", login="manager_user")
         self.start_pos_tour("pos_hr_go_backend_opened_registered", login="manager_user")
+        self.start_pos_tour("pos_hr_go_backend_opened_registered_different_user_logged", login="emp1_user")
