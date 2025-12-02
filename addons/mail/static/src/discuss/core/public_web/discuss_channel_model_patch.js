@@ -32,6 +32,16 @@ const discussChannelPatch = {
     get allowCalls() {
         return super.allowCalls && !this.parent_channel_id;
     },
+    /** @param {string} description */
+    async notifyDescriptionToServer(description) {
+        this.description = description;
+        return this.store.env.services.orm.call(
+            "discuss.channel",
+            "channel_change_description",
+            [[this.id]],
+            { description }
+        );
+    },
     /**
      * Handle the notification of a new message based on the notification setting of the user.
      * Thread on mute:

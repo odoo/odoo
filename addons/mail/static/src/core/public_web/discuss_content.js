@@ -94,11 +94,11 @@ export class DiscussContent extends Component {
 
     async updateThreadDescription(description) {
         const newDescription = description.trim();
-        if (!newDescription && !this.thread.description) {
+        if (!newDescription && !this.thread.channel.description) {
             return;
         }
-        if (newDescription !== this.thread.description) {
-            await this.thread.notifyDescriptionToServer(newDescription);
+        if (newDescription !== this.thread.channel.description) {
+            await this.thread.channel.notifyDescriptionToServer(newDescription);
         }
     }
 }

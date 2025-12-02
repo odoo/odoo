@@ -5,6 +5,7 @@ declare module "models" {
 
     export interface DiscussChannel {
         discuss_category_id: DiscussCategory;
+        notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
     }
     export interface Message {
