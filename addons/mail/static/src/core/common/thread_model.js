@@ -240,8 +240,11 @@ export class Thread extends Record {
     }
 
     get accessRestrictedToGroupText() {
-        if (!this.group_public_id?.full_name) {
+        if (this.channel?.channel_type === "chat") {
             return false;
+        }
+        if (!this.group_public_id?.full_name) {
+            return _t("Accessible to anyone with the link");
         }
         return _t('Access restricted to group "%(groupFullName)s"', {
             groupFullName: this.group_public_id.full_name,

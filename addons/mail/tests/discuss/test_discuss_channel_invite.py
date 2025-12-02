@@ -82,7 +82,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                 "group_public_id": self.env.ref("base.group_user").id,
             }
         )
-        for channel in [chat, private_channel]:
+        for channel in private_channel:
             with self.assertRaises(UserError) as exc:
                 channel.invite_by_email(["some@email.com"])
             self.assertEqual(
@@ -90,7 +90,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                 f"Inviting by email is not allowed for this channel type ({channel.channel_type}).",
             )
         with self.mock_mail_gateway():
-            for channel in [group_chat, public_channel]:
+            for channel in [chat, group_chat, public_channel]:
                 channel.invite_by_email(["some@email.com"])
                 self.assertMailMail(
                     self.env["res.partner"],
@@ -166,13 +166,13 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             ),
             # Channel types that do not allow inviting by email, not selectable.
             *product(
-                [chat, private_channel],
+                private_channel,
                 ["bob@odoo.com", "alfred@odoo.com", "jane@odoo.com"],
                 [False],
             ),
             # Channel types that allow inviting by email, valid email, selectable.
             *product(
-                [group_chat, public_channel],
+                [chat, group_chat, public_channel],
                 ["bob@odoo.com", "alfred@odoo.com", "jane@odoo.com"],
                 [True],
             ),

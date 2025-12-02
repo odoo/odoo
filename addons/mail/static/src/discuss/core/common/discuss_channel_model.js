@@ -88,6 +88,7 @@ export class DiscussChannel extends Record {
     get allow_invite_by_email() {
         return (
             this.channel_type === "group" ||
+            this.channel_type == "chat" ||
             (this.channel_type === "channel" && !this.group_public_id)
         );
     }

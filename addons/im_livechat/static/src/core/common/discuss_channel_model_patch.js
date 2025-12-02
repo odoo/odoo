@@ -111,5 +111,8 @@ const discussChannelPatch = {
         }
         return super.showImStatus;
     },
+    get allow_invite_by_email() {
+        return this.channel_type === "livechat" || super.allow_invite_by_email;
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

@@ -1341,7 +1341,7 @@ class DiscussChannel(models.Model):
         return channel
 
     def _allow_invite_by_email(self):
-        return self.channel_type == "group" or (
+        return self.channel_type in ("group", "chat") or (
             self.channel_type == "channel" and not self.group_public_id
         )
 

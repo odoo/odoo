@@ -98,7 +98,7 @@ export class ChannelInvitation extends Component {
 
     get searchPlaceholder() {
         if (this.props.channel?.allow_invite_by_email) {
-            return _t("Invite people or email");
+            return _t("Enter name or email");
         }
         return _t("Search people to invite");
     }
@@ -190,19 +190,22 @@ export class ChannelInvitation extends Component {
     }
 
     async onClickInvite() {
+        let channelId = this.props.channel.id;
+        const invitePromises = [];
         if (this.props.channel?.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.channel.correspondent?.partner_id) {
                 partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
             }
-            await this.store.startChat(partnerIds);
-            this.props.close?.();
-            return;
-        }
-        const invitePromises = [];
-        if (this.selectedPartners.length) {
+            if (this.state.selectedEmails.length) {
+                const group = await this.store.createGroupChat({ partners_to: partnerIds });
+                channelId = group.id;
+            } else {
+                await this.store.startChat(partnerIds);
+            }
+        } else if (this.selectedPartners.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "add_members", [[this.props.channel.id]], {
+                this.orm.call("discuss.channel", "add_members", [[channelId]], {
                     partner_ids: this.selectedPartners.map((partner) => partner.id),
                     invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
                 })
@@ -210,7 +213,7 @@ export class ChannelInvitation extends Component {
         }
         if (this.state.selectedEmails.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "invite_by_email", [this.props.channel.id], {
+                this.orm.call("discuss.channel", "invite_by_email", [channelId], {
                     emails: this.state.selectedEmails,
                 })
             );
