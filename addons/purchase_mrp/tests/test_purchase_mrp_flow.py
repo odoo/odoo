@@ -33,13 +33,13 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
 
         # Creating all components
-        cls.component_a = cls._create_product_with_form('Comp A', cls.uom_unit)
-        cls.component_b = cls._create_product_with_form('Comp B', cls.uom_unit)
-        cls.component_c = cls._create_product_with_form('Comp C', cls.uom_unit)
-        cls.component_d = cls._create_product_with_form('Comp D', cls.uom_unit)
-        cls.component_e = cls._create_product_with_form('Comp E', cls.uom_unit)
-        cls.component_f = cls._create_product_with_form('Comp F', cls.uom_unit)
-        cls.component_g = cls._create_product_with_form('Comp G', cls.uom_unit)
+        cls.component_a = cls._create_storable_product('Comp A', cls.uom_unit)
+        cls.component_b = cls._create_storable_product('Comp B', cls.uom_unit)
+        cls.component_c = cls._create_storable_product('Comp C', cls.uom_unit)
+        cls.component_d = cls._create_storable_product('Comp D', cls.uom_unit)
+        cls.component_e = cls._create_storable_product('Comp E', cls.uom_unit)
+        cls.component_f = cls._create_storable_product('Comp F', cls.uom_unit)
+        cls.component_g = cls._create_storable_product('Comp G', cls.uom_unit)
 
         # Create a kit 'kit_1' :
         # -----------------------
@@ -48,7 +48,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         #         |- component_b   x1
         #         |- component_c   x3
 
-        cls.kit_1 = cls._create_product_with_form('Kit 1', cls.uom_unit)
+        cls.kit_1 = cls._create_storable_product('Kit 1', cls.uom_unit)
 
         cls.bom_kit_1 = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_1.product_tmpl_id.id,
@@ -83,9 +83,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         #              |- component_e x1
 
         # Creating all kits
-        cls.kit_2 = cls._create_product_with_form('Kit 2', cls.uom_unit)
-        cls.kit_3 = cls._create_product_with_form('kit 3', cls.uom_unit)
-        cls.kit_parent = cls._create_product_with_form('Kit Parent', cls.uom_unit)
+        cls.kit_2 = cls._create_storable_product('Kit 2', cls.uom_unit)
+        cls.kit_3 = cls._create_storable_product('kit 3', cls.uom_unit)
+        cls.kit_parent = cls._create_storable_product('Kit Parent', cls.uom_unit)
 
         # Linking the kits and the components via some 'phantom' BoMs
         bom_kit_2 = cls.env['mrp.bom'].create({
@@ -136,16 +136,14 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'bom_id': bom_kit_parent.id})
 
     @classmethod
-    def _create_product_with_form(cls, name, uom_id, routes=()):
-        p = Form(cls.env['product.product'])
-        p.name = name
-        p.is_storable = True
-        p.categ_id = cls.env.ref('product.product_category_goods')
-        p.uom_id = uom_id
-        p.route_ids.clear()
-        for r in routes:
-            p.route_ids.add(r)
-        return p.save()
+    def _create_storable_product(cls, name, uom_id, routes=False):
+        return cls.env['product.product'].create({
+            'name': name,
+            'is_storable': True,
+            'categ_id': cls.env.ref('product.product_category_goods').id,
+            'uom_id': uom_id.id,
+            'route_ids': [Command.set(routes.ids if routes else [])],
+        })
 
         # Helper to process quantities based on a dict following this structure :
         #
@@ -229,8 +227,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     def test_kit_component_cost_multi_currency(self):
         # Set kit and component product to automated FIFO
-        kit = self._create_product_with_form('Kit', self.uom_unit)
-        cmp = self._create_product_with_form('CMP', self.uom_unit)
+        kit = self._create_storable_product('Kit', self.uom_unit)
+        cmp = self._create_storable_product('CMP', self.uom_unit)
 
         bom_kit = self.env['mrp.bom'].create({
             'product_tmpl_id': kit.product_tmpl_id.id,
@@ -484,7 +482,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         component = self.env['product.product'].create({
             'name': 'component',
             'is_storable': True,
-            'route_ids': [(4, buy_route.id)],
         })
         self.env['product.supplierinfo'].create({
             'product_id': component.id,
@@ -494,7 +491,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         finished = self.env['product.product'].create({
             'name': 'finished',
             'is_storable': True,
-            'route_ids': [(4, manufacture_route.id)],
         })
         self.env['stock.warehouse.orderpoint'].create({
             'name': 'A RR',
@@ -893,9 +889,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.warehouse.write({"reception_steps": "two_steps"})
         self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
-        kit_prod = self._create_product_with_form('kit_prod', self.uom_unit)
-        sub_kit = self._create_product_with_form('sub_kit', self.uom_unit)
-        component = self._create_product_with_form('component', self.uom_unit)
+        kit_prod = self._create_storable_product('kit_prod', self.uom_unit)
+        sub_kit = self._create_storable_product('sub_kit', self.uom_unit)
+        component = self._create_storable_product('component', self.uom_unit)
 
         # 6 kit_prod == 5 component
         self.env['mrp.bom'].create([{  # 2 kit_prod == 5 sub_kit
