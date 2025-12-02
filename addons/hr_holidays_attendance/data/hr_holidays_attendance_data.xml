@@ -4,5 +4,11 @@
         <record id="hr_holidays.holiday_status_extra_hours" model="hr.leave.type">
             <field name="overtime_deductible" eval="True"/>
         </record>
+        <record id="hr_attendance.hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule">
+            <field name="compensable_as_leave" eval="True"/>
+        </record>
+        <record id="hr_attendance.hr_attendance_overtime_non_working_days_rule" model="hr.attendance.overtime.rule">
+            <field name="compensable_as_leave" eval="True"/>
+        </record>
     </data>
 </odoo>
