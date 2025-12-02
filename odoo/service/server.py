@@ -1397,11 +1397,7 @@ def preload_registries(dbnames):
     for dbname in dbnames:
         try:
             threading.current_thread().dbname = dbname
-            update_from_config = update_module = config['init'] or config['update']
-            if not update_from_config:
-                with sql_db.db_connect(dbname).cursor() as cr:
-                    cr.execute("SELECT 1 FROM ir_module_module WHERE state IN ('to remove', 'to upgrade', 'to install') FETCH FIRST 1 ROW ONLY")
-                    update_module = bool(cr.rowcount)
+            update_module = config['init'] or config['update']
             registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'])
 
             # run post-install tests
@@ -1409,7 +1405,7 @@ def preload_registries(dbnames):
                 from odoo.tests import loader  # noqa: PLC0415
                 t0 = time.time()
                 t0_sql = sql_db.sql_counter
-                module_names = (registry.updated_modules if update_from_config else
+                module_names = (registry.updated_modules if update_module else
                                 sorted(registry._init_modules))
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
