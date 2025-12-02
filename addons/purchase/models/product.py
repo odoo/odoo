@@ -81,6 +81,19 @@ class ProductProduct(models.Model):
                 continue
             product.purchased_product_qty = product.uom_id.round(purchased_data.get(product.id, 0))
 
+    def _compute_forecasted_without_stock(self):
+        """ Adds orders not receives to forecasted stock tally, """
+        res = super()._compute_forecasted_without_stock()
+        domain = [
+            ('order_id.state', '=', 'purchase'),
+            ('product_id', 'in', self.ids),
+        ]
+        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id'], ['product_uom_qty:sum', 'qty_received:sum'])
+        for product, qty_ordered, qty_received in order_lines:
+            res[product.id]['incoming_qty'] = (qty_ordered - qty_received)
+            res[product.id]['virtual_available'] = res[product.id]['virtual_available'] + (qty_ordered - qty_received)
+        return res
+
     @api.depends_context('order_id')
     def _compute_is_in_purchase_order(self):
         order_id = self.env.context.get('order_id')

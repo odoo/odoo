@@ -41,6 +41,19 @@ class ProductProduct(models.Model):
             product.sales_count = product.uom_id.round(r.get(product.id, 0))
         return r
 
+    def _compute_forecasted_without_stock(self):
+        """ Substract sales lines not delivered from forecasted tally """
+        res = super()._compute_forecasted_without_stock()
+        domain = [
+            ('order_id.state', '=', 'sale'),
+            ('product_id', 'in', self.ids),
+        ]
+        order_lines = self.env['sale.order.line']._read_group(domain, ['product_id'], ['product_uom_qty:sum', 'qty_delivered:sum'])
+        for product, qty_sold, qty_delivered in order_lines:
+            res[product.id]['outgoing_qty'] = (qty_sold - qty_delivered)
+            res[product.id]['virtual_available'] = res[product.id]['virtual_available'] - (qty_sold - qty_delivered)
+        return res
+
     @api.onchange('type')
     def _onchange_type(self):
         if self._origin and self.sales_count > 0:
@@ -113,7 +126,7 @@ class ProductProduct(models.Model):
             so_lines.product_uom_id = to_uom_id
         return super()._update_uom(to_uom_id)
 
-    def _trigger_uom_warning(self):        
+    def _trigger_uom_warning(self):
         res = super()._trigger_uom_warning()
         if res:
             return res
