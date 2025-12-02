@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='other_tab_group']" position="inside">
-                <group string="Electronic Tax" invisible="country_code != 'ID'">
+                <group string="Electronic Tax" invisible="country_code != 'ID' or move_type not in ('out_invoice', 'out_refund', 'out_receipt')">
                     <field name="l10n_id_kode_transaksi" invisible="not l10n_id_coretax_efaktur_available" required="l10n_id_coretax_efaktur_available" readonly="state == 'posted'"/>
                     <field name="l10n_id_coretax_document"/>
                     <field name="l10n_id_coretax_efaktur_available" invisible="1"/>
