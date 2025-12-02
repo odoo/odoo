@@ -73,7 +73,8 @@
                                         invisible="not product_tooltip"
                                     />
                                     <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
-                                    <div class="o_row w-100 o_is_storable" invisible="type != 'consu'">
+                                    <field name="show_qty_update_button" invisible="1"/>
+                                    <div name="tracking_and_qty_no_stock" class="o_row w-100" invisible="type != 'consu'">
                                         <field name="is_storable"/>
                                         <field name="qty_available" style="max-width: fit-content;" invisible="not is_storable"/>
                                         <span invisible="not is_storable">

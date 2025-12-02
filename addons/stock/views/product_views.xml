@@ -177,18 +177,14 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('o_is_storable')]" position="replace">
-                     <div class="o_row w-100 o_is_storable" invisible="type != 'consu'">
+                <xpath expr="//div[@name='tracking_and_qty_no_stock']" position="replace">
+                    <div name="tracking_with_stock" class="o_row w-100" invisible="type != 'consu'">
                         <field name="is_storable"/>
-                     </div>
-                </xpath>
-                <field name="is_storable" position="after">
+                    </div>
                     <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
-                </field>
-                <xpath expr="//div[hasclass('o_is_storable')]" position="after">
-                    <field name="show_qty_update_button" invisible="1"/>
+                    <!-- Qty line if storable -->
                     <label for="qty_available" class="oe_inline" invisible="not is_storable" groups="stock.group_stock_user"/>
-                    <div class="o_row" invisible="not is_storable" groups="stock.group_stock_user">
+                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable" groups="stock.group_stock_user">
                         <a type="object" name="action_open_quants"
                            invisible="not show_qty_update_button" groups="stock.group_stock_manager">
                             <field name="qty_available" readonly="True"/>
@@ -258,7 +254,7 @@
                 <xpath expr="//kanban" position="inside">
                     <field name="show_on_hand_qty_status_button" groups="stock.group_stock_user"/>
                 </xpath>
-                <xpath expr="//field[@name='product_properties']" position="before">
+                <xpath expr="//span[@name='on_hand_qty_kanban']" position="replace">
                     <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value">
                         On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
                     </div>
