@@ -50,7 +50,7 @@ class FleetVehicle(models.Model):
     country_id = fields.Many2one('res.country', related='company_id.country_id')
     country_code = fields.Char(related='country_id.code', depends=['country_id'])
     license_plate = fields.Char(tracking=True,
-        help='License plate number of the vehicle (i = plate number for a car)')
+        help='License plate number of the vehicle (i = plate number for a car)', copy=False)
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', tracking=True, copy=False)
     trailer_hook = fields.Boolean(default=False, string='Trailer Hitch',
         compute='_compute_trailer_hook', store=True, readonly=False,

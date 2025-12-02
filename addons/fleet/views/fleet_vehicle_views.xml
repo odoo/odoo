@@ -233,10 +233,11 @@
                 <field string="Properties" name="vehicle_properties"/>
                 <filter string="Available" name="available"
                     domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), '|', ('plan_to_change_vehicle', '=', True)]"/>
+                <filter name="planned" string="Planned for Change" domain="[('plan_to_change_vehicle', '=', True)]"/>
+                <separator/>
                 <filter string="Bikes" name="bikes" domain="[('vehicle_type', '=', 'bike')]"/>
                 <filter string="Cars" name="cars" domain="[('vehicle_type', '=', 'car')]"/>
                 <filter string="Trailer Hook" name="trailer_hook" domain="[('trailer_hook', '=', True)]"/>
-                <filter name="planned" string="Planned for Change" domain="[('plan_to_change_vehicle', '=', True)]"/>
                 <separator/>
                 <filter string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]"/>
                 <separator/>
