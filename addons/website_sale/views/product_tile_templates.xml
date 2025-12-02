@@ -59,9 +59,9 @@
                 t-value="product_variant or product_variants[product]"
             />
             <t
-                t-if="variant and variant.with_context(bin_size=True).image_128"
+                t-if="product_variant and product_variant.with_context(bin_size=True).image_128"
                 t-set="all_images_list"
-                t-value="variant._get_images()"
+                t-value="product_variant._get_images()"
             />
             <t
                 t-else=""
