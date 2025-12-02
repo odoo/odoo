@@ -40,7 +40,7 @@ export class Mailbox extends Component {
 
     /** @param {MouseEvent} ev */
     openThread(ev) {
-        markEventHandled(ev, "sidebar.openThread");
+        markEventHandled(ev, "sidebar.openChannel");
         this.mailbox.setAsDiscussThread();
     }
 }

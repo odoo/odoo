@@ -36,19 +36,19 @@ const DiscussSidebarChannelPatch = {
     get attClassContainer() {
         return {
             ...super.attClassContainer,
-            "bg-100": this.thread.livechat_end_dt,
+            "bg-100": this.channel.livechat_end_dt,
         };
     },
     get itemNameAttClass() {
         return {
             ...super.itemNameAttClass,
-            "fst-italic text-muted fw-normal": this.thread.livechat_end_dt,
+            "fst-italic text-muted fw-normal": this.channel.livechat_end_dt,
         };
     },
     get threadAvatarAttClass() {
         return {
             ...super.threadAvatarAttClass,
-            "o-opacity-65": this.thread.livechat_end_dt,
+            "o-opacity-65": this.channel.livechat_end_dt,
         };
     },
 };

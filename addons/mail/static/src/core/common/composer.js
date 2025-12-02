@@ -143,7 +143,7 @@ export class Composer extends Component {
                 await new Promise(setTimeout);
                 return (
                     !this.isEventTrusted(ev) ||
-                    isEventHandled(ev, "sidebar.openThread") ||
+                    isEventHandled(ev, "sidebar.openChannel") ||
                     isEventHandled(ev, "emoji.selectEmoji") ||
                     isEventHandled(ev, "Composer.onClickAddEmoji") ||
                     isEventHandled(ev, "composer.clickOnAddAttachment") ||

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//span[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
-            <div t-if="thread.correspondent?.partner_id?.outOfOfficeDateEndText" class="text-warning smaller" t-out="thread.correspondent.persona.outOfOfficeDateEndText"/>
+            <div t-if="channel.correspondent?.partner_id?.outOfOfficeDateEndText" class="text-warning smaller" t-out="channel.correspondent.persona.outOfOfficeDateEndText"/>
         </xpath>
     </t>
 </templates>
