@@ -546,10 +546,6 @@ class Repair(models.Model):
         all_moves = self.move_ids + product_moves
         all_moves._action_done(cancel_backorder=True)
 
-        for sale_line in self.move_ids.sale_line_id:
-            price_unit = sale_line.price_unit
-            sale_line.write({'product_uom_qty': sale_line.qty_delivered, 'price_unit': price_unit})
-
         self.state = 'done'
         return True
 
