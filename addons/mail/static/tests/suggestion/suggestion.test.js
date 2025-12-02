@@ -22,8 +22,9 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { Composer } from "@mail/core/common/composer";
+import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { press } from "@odoo/hoot-dom";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1339,4 +1340,52 @@ test("Mention with @-role trigger one RPC only", async () => {
     await expect.waitForSteps([
         "/web/dataset/call_kw/res.partner/get_mention_suggestions_from_channel",
     ]);
+});
+
+test("Mentioning @everyone with more than 50 members shows warning dialog", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create(
+        range(0, MENTION_AMOUNT_WARNING + 1).map(() => ({ name: "" }))
+    );
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: partnerIds.map((id) => Command.create({ partner_id: id })),
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@everyone");
+    await click(".o-mail-Composer-suggestion:contains(Everyone)");
+    await contains(".o-mail-Composer-input", { value: "@everyone " });
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".modal-body", {
+        text: "You're about to notify 51 people with @everyone. Do you want to continue?",
+    });
+    await click(".modal-footer button", { text: "Discard" });
+    await contains(".modal", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "@everyone " });
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await click(".modal-footer button", { text: "Send Message" });
+    await contains(".o-mail-Message a.o-discuss-mention", { text: "@everyone" });
+});
+
+test("Mentioning @-role with more than 50 users shows warning dialog", async () => {
+    const pyEnv = await startServer();
+    const roleId = pyEnv["res.role"].create({ name: "VIPs" });
+    pyEnv["res.users"].create(
+        range(0, MENTION_AMOUNT_WARNING + 1).map(() => ({ role_ids: [roleId] }))
+    );
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
+    pyEnv["res.role"]._applyComputesAndValidate();
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@VIPs");
+    await click(".o-mail-Composer-suggestion:contains(VIPs)");
+    await contains(".o-mail-Composer-input", { value: "@VIPs " });
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".modal-body", {
+        text: "You're about to notify 51 people with @VIPs. Do you want to continue?",
+    });
+    await click(".modal-footer button", { text: "Send Message" });
+    await contains(".o-mail-Message a.o-discuss-mention", { text: "@VIPs" });
 });

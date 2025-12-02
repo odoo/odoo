@@ -34,6 +34,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import {
     createElementWithContent,
+    htmlFormatList,
     htmlJoin,
     isHtmlEmpty,
     isMarkup,
@@ -47,11 +48,13 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { lastLeaf } from "@html_editor/utils/dom_traversal";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
     SAVE: "save",
 };
+export const MENTION_AMOUNT_WARNING = 50;
 
 /**
  * @typedef {Object} Props
@@ -743,6 +746,41 @@ export class Composer extends Component {
             ];
             if (allRecipients.some((recipient) => !recipient.email || !isEmail(recipient.email))) {
                 return;
+            }
+        }
+        const { specialMentions, roles } = this.store.getMentionsFromText(composer.composerHtml, {
+            mentionedRoles: composer.mentionedRoles,
+        });
+        const hasEveryoneBigMention =
+            specialMentions.includes("everyone") &&
+            composer.thread.channel?.member_count > MENTION_AMOUNT_WARNING;
+        const rolesMentionAmount = roles.reduce((sum, role) => sum + (role.user_ids_count || 0), 0);
+        if (hasEveryoneBigMention || rolesMentionAmount > MENTION_AMOUNT_WARNING) {
+            const confirmDef = Promise.withResolvers();
+            this.store.env.services.dialog.add(ConfirmationDialog, {
+                body: _t(
+                    "You're about to notify %(amount)s people with %(mention)s. Do you want to continue?",
+                    {
+                        amount: hasEveryoneBigMention
+                            ? composer.thread.channel.member_count
+                            : rolesMentionAmount,
+                        mention: hasEveryoneBigMention
+                            ? markup`<a class="o-discuss-mention pe-none">@everyone</a>`
+                            : htmlFormatList(
+                                  roles.map(
+                                      (r) =>
+                                          markup`<a class="o-discuss-mention pe-none">@${r.name}</a>`
+                                  )
+                              ),
+                    }
+                ),
+                confirmLabel: _t("Send Message"),
+                cancelLabel: _t("Discard"),
+                confirm: () => confirmDef.resolve(true),
+                cancel: () => confirmDef.resolve(false),
+            });
+            if (!(await confirmDef.promise)) {
+                return false;
             }
         }
         await this.processMessage(async (value) => {
