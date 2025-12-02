@@ -47,6 +47,7 @@ import { ActionHelper } from "@web/views/action_helper";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
 import { odoomark } from "@web/core/utils/html";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
@@ -138,6 +139,8 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
+        this.offlineUI = useService("offline_ui");
+        this.offlineStatus = useOfflineStatus();
         this.notificationService = useService("notification");
         this.orm = useService("orm");
         const key = this.createViewKey();
@@ -942,6 +945,12 @@ export class ListRenderer extends Component {
         if (this.canResequenceRows) {
             classNames.push("o_row_draggable");
         }
+        if (
+            this.offlineStatus.offline &&
+            !this.offlineUI.visited[this.env.config.actionId]?.views.form?.[record.resId]
+        ) {
+            classNames.push("o_disabled_offline");
+        }
         return classNames.join(" ");
     }
 
@@ -1004,7 +1013,12 @@ export class ListRenderer extends Component {
             ) {
                 classNames.push("text-muted");
             } else {
-                classNames.push("cursor-pointer");
+                if (
+                    !this.offlineStatus.offline ||
+                    this.offlineUI.visited[this.env.config.actionId]?.views.form?.[record.resId]
+                ) {
+                    classNames.push("cursor-pointer");
+                }
             }
         }
         return classNames.join(" ");

@@ -17,6 +17,7 @@ import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
 import { Component, useState, onMounted, useRef, useEffect } from "@odoo/owl";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -110,6 +111,8 @@ export class ControlPanel extends Component {
 
     setup() {
         this.actionService = useService("action");
+        this.offlineUI = useService("offline_ui");
+        this.offlineStatus = useOfflineStatus();
         this.pagerProps = this.env.config.pagerProps
             ? useState(this.env.config.pagerProps)
             : undefined;
@@ -404,6 +407,13 @@ export class ControlPanel extends Component {
         }
 
         this.oldScrollTop = scrollTop;
+    }
+
+    isViewAvailable(view) {
+        return (
+            !this.offlineStatus.offline ||
+            this.offlineUI.visited[this.env.config.actionId]?.views[view.type]
+        );
     }
 
     /**

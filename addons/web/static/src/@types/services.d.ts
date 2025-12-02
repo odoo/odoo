@@ -27,6 +27,7 @@ declare module "services" {
     import { actionService } from "@web/webclient/actions/action_service";
     import { profilingService } from "@web/webclient/debug/profiling/profiling_service";
     import { menuService } from "@web/webclient/menus/menu_service";
+    import { offlineUIService } from "@web/webclient/menus/menu_service";
     import { lazySession } from "@web/webclient/session_service";
     import { demoDataService } from "@web/webclient/settings_form_view/widgets/demo_data_service";
     import { userInviteService } from "@web/webclient/settings_form_view/widgets/user_invite_service";
@@ -56,6 +57,7 @@ declare module "services" {
         name: typeof nameService;
         notification: typeof notificationService;
         offline: typeof offlineService;
+        offlineUI: typeof offlineUIService;
         orm: typeof ormService;
         overlay: typeof overlayService;
         popover: typeof popoverService;

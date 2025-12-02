@@ -17,6 +17,7 @@ import {
     onWillUnmount,
     useChildSubEnv,
 } from "@odoo/owl";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
@@ -41,6 +42,7 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
+        this.offlineStatus = useOfflineStatus();
         this.pwa = useService("pwa");
         this.root = useRef("root");
         this.appSubMenus = useRef("appSubMenus");
@@ -232,6 +234,11 @@ export class NavBar extends Component {
     _openAppMenuSidebar() {
         this.state.isAppMenuSidebarOpened = !this.state.isAppMenuSidebarOpened;
     }
+
+    _isAvailable(menu) {
+        return !this.offlineStatus.offline || this.menuService.isAvailableOffline(menu.id);
+    }
+
     onAllAppsBtnClick() {
         this.state.isAllAppsMenuOpened = !this.state.isAllAppsMenuOpened;
     }

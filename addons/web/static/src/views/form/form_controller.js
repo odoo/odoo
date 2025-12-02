@@ -46,6 +46,7 @@ import {
 import { FetchRecordError } from "@web/model/relational_model/errors";
 import { effect } from "@web/core/utils/reactive";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 
 const viewRegistry = registry.category("views");
 
@@ -164,6 +165,8 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
+        this.offlineStatus = useOfflineStatus();
+        this.offlineUI = useService("offline_ui");
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -294,7 +297,14 @@ export class FormController extends Component {
 
         usePager(() => {
             if (!this.model.root.isNew) {
-                const resIds = this.model.root.resIds;
+                let resIds = this.model.root.resIds;
+                if (this.offlineStatus.offline) {
+                    const actionId = this.env.config.actionId;
+                    const visitedResIds = this.offlineUI.visited[actionId]?.views.form || {};
+                    resIds = resIds.filter(
+                        (resId) => resId in visitedResIds || resId === this.model.root.resId
+                    );
+                }
                 return {
                     offset: resIds.indexOf(this.model.root.resId),
                     limit: 1,
@@ -377,6 +387,7 @@ export class FormController extends Component {
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onRecordChanged: this.onRecordChanged.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
+                onRootLoaded: this.onRootLoaded.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
@@ -390,6 +401,14 @@ export class FormController extends Component {
      */
     onWillLoadRoot() {
         this.duplicateId = undefined;
+    }
+
+    onRootLoaded() {
+        const resId = this.model.root.resId;
+        if (resId) {
+            const actionId = this.env.config.actionId;
+            this.env.bus.trigger("FORM:RECORD-LOADED", { resId, actionId });
+        }
     }
 
     onRecordChanged() {

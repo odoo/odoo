@@ -863,13 +863,8 @@ export function makeActionManager(env, router = _router) {
      * @returns {Promise<Number>}
      */
     async function _updateUI(controller, options = {}) {
-        let resolve;
-        let reject;
         let removeDialogFn;
-        const currentActionProm = new Promise((_res, _rej) => {
-            resolve = _res;
-            reject = _rej;
-        });
+        const { promise: currentActionProm, resolve, reject } = Promise.withResolvers();
         const action = controller.action;
         if (action.target !== "new" && "newStack" in options) {
             controllerStack = options.newStack;
@@ -1707,7 +1702,8 @@ export function makeActionManager(env, router = _router) {
             );
             index = index > -1 ? index : controllerStack.length;
         }
-        return _updateUI(newController, { newWindow, index });
+        await _updateUI(newController, { newWindow, index });
+        env.bus.trigger("ACTION_MANAGER:SWITCHED-VIEW");
     }
 
     /**

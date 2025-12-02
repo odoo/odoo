@@ -20,6 +20,7 @@ import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
 import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 
 const { COLORS } = ColorList;
 
@@ -186,6 +187,8 @@ export class KanbanRecord extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
+        this.offlineStatus = useOfflineStatus();
+        this.offlineUI = useService("offline_ui");
 
         const { Compiler, archInfo } = this.props;
         const ViewCompiler = Compiler || KanbanCompiler;
@@ -266,6 +269,12 @@ export class KanbanRecord extends Component {
         }
         if (this.props.record.selected) {
             classes.push("o_record_selected");
+        }
+        if (
+            this.offlineStatus.offline &&
+            !this.offlineUI.visited[this.env.config.actionId]?.views.form?.[record.resId]
+        ) {
+            classes.push("o_disabled_offline");
         }
         classes.push(archInfo.cardClassName);
         return classes.join(" ");

@@ -23,6 +23,7 @@ function onlineUI() {
     });
 }
 
+// FIXME: move to /webclient (the whole offline folder)
 export const offlineService = {
     async start() {
         let timeout;
@@ -44,6 +45,7 @@ export const offlineService = {
             },
             () => {
                 if (status.offline) {
+                    // TODO: move this into offlineUIService? Or move everything in wbeclient?
                     // Disable everything in the UI that isn't marked as available offline
                     offlineUI();
                     // Create an observer instance linked to the callback function to keep disabling

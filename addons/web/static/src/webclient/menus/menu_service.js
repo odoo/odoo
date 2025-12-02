@@ -4,8 +4,8 @@ import { registry } from "../../core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 
 export const menuService = {
-    dependencies: ["action"],
-    async start(env) {
+    dependencies: ["action", "offline_ui"],
+    async start(env, { offline_ui: offlineUI }) {
         let currentAppId;
         let menusData;
         const menuDB = new IndexedDB("webclient_menu", session.registry_hash);
@@ -88,6 +88,7 @@ export const menuService = {
                         setCurrentMenu(menu);
                     },
                 });
+                env.bus.trigger("MENUS:MENU-SELECTED", { menu });
             },
             setCurrentMenu,
             async reload() {
@@ -95,6 +96,10 @@ export const menuService = {
                     menusData = await fetchMenus(true);
                     env.bus.trigger("MENUS:APP-CHANGED");
                 }
+            },
+            isAvailableOffline(menuId) {
+                const menu = _getMenu(menuId);
+                return !menu.actionID || !!offlineUI.visited[menu.actionID];
             },
         };
     },
