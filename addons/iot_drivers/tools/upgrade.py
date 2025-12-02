@@ -81,9 +81,13 @@ def check_git_branch(server_url=None):
         _logger.warning("Could not get the database branch, skipping git checkout")
         return
 
+    # Avoid checking out above 19.0 to avoid python version incompatibility
+    if float(db_branch.replace("saas-", "")) > 19.0:
+        db_branch = '19.0'
+
     try:
         if not git('ls-remote', 'origin', db_branch):
-            db_branch = 'master'
+            db_branch = '19.0'
 
         local_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
         _logger.info("IoT Box git branch: %s / Associated Odoo db's git branch: %s", local_branch, db_branch)

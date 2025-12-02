@@ -62,12 +62,16 @@ class WebsocketClient(Thread):
             payload = message['message']['payload']
             _logger.info("Received message of type %s", message['message']['type'])
 
-            if not helpers.get_identifier() in payload.get('iot_identifiers', []):
+            if (
+                not helpers.get_identifier() in payload.get('iot_identifiers', [])
+                or helpers.get_identifier() != payload.get('iot_identifier')  # compat db v19.1 (no checkout to avoid py version issues)
+            ):
                 continue
 
             match message['message']['type']:
                 case 'iot_action':
-                    for device_identifier in payload['device_identifiers']:
+                    # compat db v19.1 (no checkout to avoid py version issues): device_identifier/device_identifierS
+                    for device_identifier in [*payload['device_identifiers'], payload.get('device_identifier')]:
                         if device_identifier in main.iot_devices:
                             start_operation_time = time.perf_counter()
                             _logger.info("device '%s' action started", device_identifier)
