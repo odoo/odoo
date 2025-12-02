@@ -63,7 +63,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
-        if not partner.vat:
+        if not partner.vat or partner.vat == '/':
             return [{
                 'company_id': partner.peppol_endpoint,
                 'tax_scheme_vals': {'id': partner.peppol_eas},
@@ -668,7 +668,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         party_node['cac:PartyTaxScheme'] = party_tax_scheme = [
             {
-                'cbc:CompanyID': {'_text': commercial_partner.vat or commercial_partner.peppol_endpoint},
+                'cbc:CompanyID': {'_text': commercial_partner.vat if commercial_partner.vat and commercial_partner.vat != '/' else commercial_partner.peppol_endpoint},
                 'cac:TaxScheme': {
                     # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
                     # In some countries however, the CompanyID can be with or without country code prefix and still be perfectly
@@ -676,8 +676,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     # We have to handle their cases by changing the TaxScheme/ID to 'something other than VAT',
                     # preventing the trigger of the rule.
                     'cbc:ID': {'_text': (
-                        'NOT_EU_VAT' if commercial_partner.country_id and commercial_partner.vat and not commercial_partner.vat[:2].isalpha()
-                        else 'VAT' if commercial_partner.vat
+                        'NOT_EU_VAT' if commercial_partner.country_id and commercial_partner.vat and not commercial_partner.vat[:2].isalpha() and commercial_partner.vat != '/'
+                        else 'VAT' if commercial_partner.vat and commercial_partner.vat != '/'
                         else commercial_partner.peppol_eas
                     )},
                 },
