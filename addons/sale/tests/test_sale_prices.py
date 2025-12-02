@@ -1247,3 +1247,52 @@ class TestSalePrices(SaleCommon):
             order.amount_undiscounted * (100 - self.discount) / 100,
             msg="Pricelist discount should be applied to quotation",
         )
+
+    def test_so_included_tax_mapping(self):
+        country_belgium = self.env['res.country'].search([
+            ('name', '=', 'Belgium'),
+        ], limit=1)
+
+        fiscal_pos = self.env['account.fiscal.position'].create({
+            'name': 'Test tax mapping 21% to 6%',
+            'auto_apply': True,
+            'country_id': country_belgium.id,
+        })
+        tax_a, tax_b = self.env['account.tax'].create([{
+            'name': 'Test tax 21% inc',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
+            'amount': 21.0,
+        }, {
+            'name': 'Test tax 6% inc',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
+            'amount': 6.0,
+            'fiscal_position_ids': fiscal_pos,
+        }])
+        tax_b.original_tax_ids = tax_a
+
+        self.partner.country_id = country_belgium
+
+        self.product.write({
+            'lst_price': 121,
+            'taxes_id': [Command.set(tax_a.ids)]
+        })
+
+        self.empty_order.write({
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+            })],
+        })
+
+        self.empty_order.write({'fiscal_position_id': fiscal_pos.id})
+        self.empty_order._recompute_taxes()
+
+        self.assertEqual(
+            self.empty_order.order_line.price_unit, 106.0,
+            "Wrong unit price computed after tax mapping applied"
+        )
+        self.assertEqual(
+            self.empty_order.order_line.price_subtotal, 100.0,
+            "Wrong subtotal price computed after tax mapping applied"
+        )
