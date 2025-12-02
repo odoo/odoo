@@ -11,9 +11,6 @@ patch(Navbar.prototype, {
     },
     get showBackend() {
         const cashier = this.pos.getCashierUserId();
-        return (
-            !this.pos.config.module_pos_hr ||
-            (cashier && cashier.id === this.pos.session.user_id?.id)
-        );
+        return !this.pos.config.module_pos_hr || (cashier && cashier.id === this.pos.user?.id);
     },
 });
