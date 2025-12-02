@@ -17,12 +17,12 @@ patch(PosStore.prototype, {
     async detectIminPrinter() {
         try {
             const iminPrinterAdapter = new IminPrinterAdapter({
-                fallbackPrinter: this.hardwareProxy.printer,
+                fallbackPrinter: this.receiptPrinter,
             });
             const isAvailable = await iminPrinterAdapter.isAvailable();
             if (isAvailable) {
                 this.iminPrinterAdapter = iminPrinterAdapter; // Store the adapter for later use
-                this.hardwareProxy.printer = this.iminPrinterAdapter;
+                this.receiptPrinter = this.iminPrinterAdapter;
                 await this.iminPrinterAdapter.connect();
             }
         } catch (error) {

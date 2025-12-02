@@ -6,9 +6,9 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 export const posPrinterService = {
-    dependencies: ["hardware_proxy", "dialog", "renderer"],
-    start(env, { hardware_proxy, dialog, renderer }) {
-        return new PosPrinterService(env, { hardware_proxy, dialog, renderer });
+    dependencies: ["dialog", "renderer"],
+    start(env, { dialog, renderer }) {
+        return new PosPrinterService(env, { dialog, renderer });
     },
 };
 export class PosPrinterService extends PrinterService {
@@ -16,15 +16,12 @@ export class PosPrinterService extends PrinterService {
         super(...args);
         this.setup(...args);
     }
-    setup(env, { hardware_proxy, dialog, renderer }) {
+    setup(env, { dialog, renderer }) {
         super.setup(...arguments);
         this.renderer = renderer;
-        this.hardware_proxy = hardware_proxy;
         this.dialog = dialog;
-        this.device = hardware_proxy.printer;
     }
     async print() {
-        this.setPrinter(this.hardware_proxy.printer);
         return super.print(...arguments);
     }
     printWeb() {
@@ -39,7 +36,6 @@ export class PosPrinterService extends PrinterService {
         }
     }
     async printHtml() {
-        this.setPrinter(this.hardware_proxy.printer);
         try {
             return await super.printHtml(...arguments);
         } catch (error) {

@@ -40,7 +40,6 @@ export class Navbar extends Component {
         this.state = useState({ searchBarOpen: false });
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.hardwareProxy = useService("hardware_proxy");
         this.dialog = useService("dialog");
         this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
@@ -168,7 +167,7 @@ export class Navbar extends Component {
     }
 
     async showSaleDetails() {
-        await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
+        await handleSaleDetails(this.pos, this.dialog);
     }
 
     async openPresetTiming() {

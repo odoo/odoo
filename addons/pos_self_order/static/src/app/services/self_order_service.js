@@ -155,7 +155,8 @@ export class SelfOrder extends Reactive {
             this.router.navigate("cart");
         });
         if (this.config.epson_printer_ip && this.config.other_devices) {
-            this.printer.setPrinter(new EpsonPrinter({ ip: this.config.epson_printer_ip }));
+            this.receiptPrinter = new EpsonPrinter(this.config);
+            this.printer.setPrinter(this.receiptPrinter);
         }
     }
 

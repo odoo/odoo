@@ -432,8 +432,16 @@ export class PosStore extends WithLazyGetterTrap {
         await this.config.cacheReceiptLogo();
     }
     cashMove() {
-        this.hardwareProxy.openCashbox(_t("Cash in / out"));
+        this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
+    }
+    async openCashbox(action = undefined) {
+        if (this.config.iface_cashdrawer && this.receiptPrinter) {
+            this.receiptPrinter.openCashbox();
+            if (action) {
+                await this.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
+            }
+        }
     }
     async closeSession() {
         const info = await this.getClosePosInfo();
@@ -688,7 +696,8 @@ export class PosStore extends WithLazyGetterTrap {
         await this.deviceSync.readDataFromServer();
 
         if (this.config.other_devices && this.config.epson_printer_ip) {
-            this.hardwareProxy.printer = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+            this.receiptPrinter = new EpsonPrinter(this.config);
+            this.printer.setPrinter(this.receiptPrinter);
         }
     }
 
@@ -1168,7 +1177,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     createPrinter(config) {
         if (config.printer_type === "epson_epos") {
-            return new EpsonPrinter({ ip: config.epson_printer_ip });
+            return new EpsonPrinter(config);
         }
     }
     async _loadFonts() {
