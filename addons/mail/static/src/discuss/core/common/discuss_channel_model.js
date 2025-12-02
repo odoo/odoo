@@ -218,7 +218,7 @@ export class DiscussChannel extends Record {
         );
     }
     get isChatChannel() {
-        return this.chatChannelTypes.includes(this.channel?.channel_type);
+        return this.chatChannelTypes.includes(this.channel_type);
     }
     otherTypingMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").DiscussChannel} */
@@ -288,6 +288,35 @@ export class DiscussChannel extends Record {
      */
     openChannel() {
         return false;
+    }
+
+    /** @param {string} name */
+    async rename(name) {
+        const newName = name.trim();
+        if (
+            newName !== this.displayName &&
+            ((newName && this.channel?.channel_type === "channel") || this.channel?.isChatChannel)
+        ) {
+            if (["channel", "group"].includes(this.channel_type)) {
+                this.name = newName;
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_rename",
+                    [[this.id]],
+                    { name: newName }
+                );
+            } else if (this.supportsCustomChannelName) {
+                if (this.self_member_id) {
+                    this.self_member_id.custom_channel_name = newName;
+                }
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_set_custom_name",
+                    [[this.id]],
+                    { name: newName }
+                );
+            }
+        }
     }
 
     /** @returns {import("models").ChannelMember[]} */
