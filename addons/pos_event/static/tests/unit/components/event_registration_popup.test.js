@@ -44,3 +44,36 @@ test("confirm payload", async () => {
         "1", // Received value is the ID of the answer `Male`, not the name.
     ]);
 });
+
+test("autofill first ticket with customer data", async () => {
+    const store = await setupPosEnv();
+    const partner = store.models["res.partner"].get(18);
+    partner.email = "john@example.com";
+    partner.phone = "+1234567890";
+    partner.parent_name = "Don";
+
+    const order = store.addNewOrder();
+    order.partner_id = partner;
+
+    const event = store.models["event.event"].get(1);
+    const ticket = store.models["event.event.ticket"].get(1);
+    const data = [{ qty: 2, ticket_id: ticket, product_id: ticket.product_id }];
+
+    const comp = await mountPosDialog(EventRegistrationPopup, {
+        event,
+        data,
+        getPayload: () => {},
+        close: () => {},
+    });
+
+    const [first, second] = comp.state.byRegistration.map((r) => r.questions);
+
+    expect(Object.values(first)).toEqual([
+        "Public user",
+        "john@example.com",
+        "+1234567890",
+        "",
+        "Don",
+    ]);
+    expect(Object.values(second)).toEqual(["", "", "", "", ""]);
+});

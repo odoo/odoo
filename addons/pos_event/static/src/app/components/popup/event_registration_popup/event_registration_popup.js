@@ -45,6 +45,24 @@ export class EventRegistrationPopup extends Component {
             this.state.byOrder[question.id] = "";
         }
 
+        // Autofill first ticket with customer data if customer is selected
+        const customer = this.pos.getOrder()?.partner_id;
+        if (customer && this.state.byRegistration.length) {
+            const firstTicketQuestions = this.state.byRegistration[0].questions;
+            const fieldMap = {
+                name: customer.name,
+                email: customer.email,
+                phone: customer.phone,
+                company_name: customer.parent_name,
+            };
+
+            this.questionsByRegistration.forEach(
+                (q) =>
+                    fieldMap[q.question_type] &&
+                    (firstTicketQuestions[q.id] = fieldMap[q.question_type])
+            );
+        }
+
         if (this.props.event.question_ids.length === 0) {
             this.confirm();
         }
