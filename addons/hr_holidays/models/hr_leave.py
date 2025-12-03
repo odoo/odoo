@@ -436,7 +436,13 @@ class HrLeave(models.Model):
                 holiday.date_from = False
                 continue
 
+<<<<<<< 1567ed2c47746b2c9b297e9e5612cf5403059d0c
             if holiday.leave_type_request_unit != 'hour' and holiday.leave_type_request_unit != 'half_day' and not holiday.request_date_to:
+||||||| 9fa18a4e652e63190f8145d9bc2ed8c26c9aedd8
+            if not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
+=======
+            if not holiday.request_date_to:
+>>>>>>> 1f61587dc20556f203066777c48cb1d6dbf841c1
                 holiday.date_to = False
                 continue
 
