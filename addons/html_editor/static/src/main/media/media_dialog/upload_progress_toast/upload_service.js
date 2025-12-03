@@ -29,6 +29,9 @@ export const uploadService = {
         const addFile = (file) => {
             progressToast.files[file.id] = file;
             progressToast.isVisible = true;
+            file.cancelUpload = () => {
+                deleteFile(file.id);
+            };
             return progressToast.files[file.id];
         };
 
@@ -96,6 +99,11 @@ export const uploadService = {
                 // limited by bandwidth.
                 for (const sortedFile of sortedFiles) {
                     const file = progressToast.files[sortedFile.progressToastId];
+                    if (!file) {
+                        // A file could be deleted before uploading started,
+                        // in such case, we wouldn't proceed further.
+                        continue;
+                    }
                     let dataURL;
                     try {
                         dataURL = await getDataURLFromFile(sortedFile);
@@ -117,7 +125,11 @@ export const uploadService = {
                             // Don't show yet success as backend code only starts now
                             file.progress = 100;
                         });
-                        const attachment = await rpc(
+                        xhr.addEventListener("abort", () => {
+                            deleteFile(file.id);
+                            file.aborted = true;
+                        });
+                        const rpcProm = rpc(
                             "/html_editor/attachment/add_data",
                             {
                                 name: file.name,
@@ -130,6 +142,10 @@ export const uploadService = {
                             },
                             { xhr }
                         );
+                        file.cancelUpload = () => {
+                            rpcProm.abort();
+                        };
+                        const attachment = await rpcProm;
                         if (attachment.error) {
                             file.hasError = true;
                             file.errorMessage = attachment.error;
@@ -172,6 +188,9 @@ export const uploadService = {
                             : AUTOCLOSE_DELAY;
                         setTimeout(() => deleteFile(file.id), message_autoclose_delay);
                     } catch (error) {
+                        if (file.aborted) {
+                            continue;
+                        }
                         file.hasError = true;
                         setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY_LONG);
                         throw error;
