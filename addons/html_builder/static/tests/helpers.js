@@ -1,6 +1,7 @@
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Image } from "@html_builder/core/img";
+import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { revertPreview } from "@html_builder/core/utils";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
@@ -160,6 +161,9 @@ class BuilderContainer extends Component {
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
             Plugins: this.props.Plugins,
+            config: {
+                builderOptionsTemplate: "html_builder.BuilderOptions",
+            },
         };
     }
 }
@@ -345,19 +349,26 @@ export function addBuilderPlugin(Plugin) {
     });
 }
 
-export function addBuilderOption(Option) {
-    const pluginId = uniqueId("test-option");
+const testBuilderOptions = [];
+let isBuilderOptionPatched = false;
 
-    const P = {
-        [pluginId]: class extends Plugin {
-            static id = pluginId;
-            resources = {
-                builder_options: Option,
-            };
-        },
-    }[pluginId];
-
-    addBuilderPlugin(P);
+export function addBuilderOption(option) {
+    if (!isBuilderOptionPatched) {
+        const getBuilderOptionsFromTemplate =
+            BuilderOptionsPlugin.prototype.getBuilderOptionsFromTemplate;
+        patchWithCleanup(BuilderOptionsPlugin.prototype, {
+            getBuilderOptionsFromTemplate() {
+                const options = getBuilderOptionsFromTemplate.call(this);
+                return [...options, ...testBuilderOptions];
+            },
+        });
+        after(() => {
+            testBuilderOptions.length = 0;
+            isBuilderOptionPatched = false;
+        });
+        isBuilderOptionPatched = true;
+    }
+    testBuilderOptions.push(option);
 }
 
 export function addBuilderAction(actions = {}) {

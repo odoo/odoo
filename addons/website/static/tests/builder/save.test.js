@@ -13,12 +13,12 @@ import {
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
     addActionOption,
-    addOption,
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import {
+    addBuilderOption,
     exampleContent,
     getDragHelper,
     getDragMoveHelper,
@@ -28,6 +28,7 @@ import {
 } from "@html_builder/../tests/helpers";
 import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { WebsiteBuilder } from "@website/builder/website_builder";
@@ -191,11 +192,13 @@ test("reload save with target, then discard and edit again should not reselect t
             }
         },
     });
-    addOption({
-        selector: ".test-option",
-        template: xml`<BuilderButton action="'testAction'"/>`,
-        reloadTarget: true,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-option";
+            static template = xml`<BuilderButton action="'testAction'"/>`;
+            static reloadTarget = true;
+        }
+    );
     const deferred = Promise.withResolvers();
     await setupWebsiteBuilder(`<div class="test-option">b</div>`, {
         delayReload: async () => await deferred.promise,
@@ -241,11 +244,13 @@ test("preview shouldn't let o_dirty", async () => {
         };
     }
     addPlugin(TestPlugin);
-    addOption({
-        selector: ".test-option",
-        template: xml`<BuilderButton action="'testAction'"/>`,
-        reloadTarget: true,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-option";
+            static template = xml`<BuilderButton action="'testAction'"/>`;
+            static reloadTarget = true;
+        }
+    );
     await setupWebsiteBuilder(`<div class="test-option">b</div>`);
     editorIsStart = true;
     await contains(":iframe .test-option").click();
@@ -584,11 +589,13 @@ test("attempt to prevent closing window with unsaved changes", async () => {
 test("Modifying an element inside '.o_not_editable' should not mark this element as 'dirty'", async () => {
     // An example of such a situation is a change of the blog author that makes
     // a change of the author avatar accordingly.
-    addOption({
-        selector: ".test",
-        template: xml`<BuilderButton classAction="'x'"/>`,
-        editableOnly: false,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test";
+            static template = xml`<BuilderButton classAction="'x'"/>`;
+            static editableOnly = false;
+        }
+    );
     await setupWebsiteBuilder(`
         <div class="o_not_editable" data-oe-model="model" data-oe-id="1" data-oe-field="field">
             <p class="test">Test</p>

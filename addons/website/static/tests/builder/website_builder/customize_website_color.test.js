@@ -1,9 +1,10 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import {
-    addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
@@ -25,9 +26,10 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         def.resolve();
         return "";
     });
-    addOption({
-        selector: ".test-options-target",
-        template: xml`
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
         <BuilderColorPicker
             enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
@@ -40,8 +42,9 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
                 nullValue: 'NULL',
             }"
         />
-        `,
-    });
+        `;
+        }
+    );
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
         loadIframeBundles: true,
     });

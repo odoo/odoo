@@ -8,7 +8,6 @@ import {
 import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
@@ -34,8 +33,7 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { BaseOptionComponent, revertPreview } from "@html_builder/core/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { revertPreview } from "@html_builder/core/utils";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
@@ -368,29 +366,6 @@ export function addPlugin(...Plugin) {
             return { ...props, Plugins: [...props.Plugins, ...Plugin] };
         },
     });
-}
-
-export function addOption(option) {
-    const pluginId = uniqueId("test-option");
-    const BaseComponent = option.Component || BaseOptionComponent;
-    class Option extends BaseComponent {
-        static components = { ...BaseComponent.components, BorderConfigurator };
-    }
-    const staticProps = { ...option };
-    const sequence = staticProps.sequence;
-    delete staticProps.Component;
-    delete staticProps.sequence;
-    Object.assign(Option, staticProps);
-
-    const P = {
-        [pluginId]: class extends Plugin {
-            static id = pluginId;
-            resources = {
-                builder_options: sequence ? withSequence(sequence, Option) : Option,
-            };
-        },
-    }[pluginId];
-    addPlugin(P);
 }
 
 export function addActionOption(actions = {}) {
