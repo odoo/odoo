@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class PosCourse(models.Model):
@@ -18,6 +18,14 @@ class PosCourse(models.Model):
         'unique (name)',
         'A course with this name already exists',
     )
+
+    def copy_data(self, default=None):
+        default = dict(default or {}, category_ids=[(5, 0, 0)])
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for course, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", course.name)
+        return vals_list
 
     @api.model
     def _load_pos_data_domain(self, data, config):

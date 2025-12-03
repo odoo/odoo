@@ -69,6 +69,14 @@ class RestaurantFloor(models.Model):
 
         return super().write(vals)
 
+    def copy_data(self, default=None):
+        default = dict(default or {}, pos_config_ids=[(5, 0, 0)])
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for floor, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", floor.name)
+        return vals_list
+
     def deactivate_floor(self, session_id):
         draft_orders = self.env['pos.order'].search([('session_id', '=', session_id), ('state', '=', 'draft'), ('table_id.floor_id', '=', self.id)])
         if draft_orders:

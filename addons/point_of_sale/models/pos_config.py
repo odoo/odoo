@@ -659,6 +659,14 @@ class PosConfig(models.Model):
             self._update_preparation_printers_menuitem_visibility()
         return result
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for config, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", config.name)
+        return vals_list
+
     def _preprocess_x2many_vals_from_settings_view(self, vals):
         """ From the res.config.settings view, changes in the x2many fields always result to an array of link commands or a single set command.
             - As a result, the items that should be unlinked are not properly unlinked.
