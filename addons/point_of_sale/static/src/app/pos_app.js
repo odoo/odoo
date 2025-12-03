@@ -51,23 +51,17 @@ export class Chrome extends Component {
         onWillStart(this.pos._loadFonts);
         onMounted(this.props.disableLoader);
         effect(
-            batched(({ selectedOrder, scale }) => {
-                if (selectedOrder) {
-                    const scaleData = scale.product
-                        ? {
-                              product: { ...scale.product },
-                              unitPrice: scale.unitPriceString,
-                              totalPrice: scale.totalPriceString,
-                              netWeight: scale.netWeightString,
-                              grossWeight: scale.grossWeightString,
-                              tare: scale.tareWeightString,
-                          }
-                        : null;
-                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
-                }
+            batched(() => {
+                this.onPosChanges(arguments);
             }),
             [this.pos]
         );
+    }
+
+    onPosChanges({ selectedOrder }) {
+        if (selectedOrder) {
+            this.sendOrderToCustomerDisplay(selectedOrder);
+        }
     }
 
     sendOrderToCustomerDisplay(selectedOrder, scaleData) {
