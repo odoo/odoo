@@ -5,7 +5,7 @@ localbranch=$(git symbolic-ref -q --short HEAD)
 localremote=$(git config branch.$localbranch.remote)
 
 if [[ "$(git remote get-url "$localremote")" != *odoo/odoo* ]]; then
-    git remote set-url "${localremote}" "https://github.com/odoo/odoo.git"
+  git remote set-url "${localremote}" "https://github.com/odoo/odoo.git"
 fi
 
 echo "addons/iot_base" >> .git/info/sparse-checkout
@@ -20,7 +20,7 @@ sudo git clean -dfx
 # Update requirements
 REQUIREMENTS_FILE="/home/pi/odoo/addons/iot_box_image/configuration/requirements.txt"
 if [ -f "$REQUIREMENTS_FILE" ]; then
-    sudo pip3 install -r "$REQUIREMENTS_FILE" --user --break-system-package
+  pip3 install --upgrade -r "$REQUIREMENTS_FILE" --user --break-system-package
 fi
 
 PACKAGES_FILE="/home/pi/odoo/addons/iot_box_image/configuration/packages.txt"
@@ -41,13 +41,15 @@ if [ -d /home/pi/odoo/addons/point_of_sale ]; then
   # TODO: Remove this code when v16 is deprecated
   odoo_conf="addons/point_of_sale/tools/posbox/configuration/odoo.conf"
   if ! grep -q "server_wide_modules" $odoo_conf; then
-      echo "server_wide_modules=hw_drivers,hw_posbox_homepage,web" >> $odoo_conf
+    echo "server_wide_modules=hw_drivers,hw_posbox_homepage,web" >> $odoo_conf
   fi
 fi
 
 if [ -d /home/pi/odoo/addons/iot_drivers ]; then
   # TODO: remove this when v18.0 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
-  sed -i 's|hw_drivers.*hw_posbox_homepage|iot_drivers|g' /home/pi/odoo.conf
+  sudo sed -i 's|hw_drivers.*hw_posbox_homepage|iot_drivers|g' /home/pi/odoo.conf
+  # ensure ownership remains correct
+  sudo chown odoo:odoo /home/pi/odoo.conf
 fi
 
 # we create a symlinks in case the image uses hardcoded paths (ramdisks.service for example)
