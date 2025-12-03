@@ -249,6 +249,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             run: "click",
         },
         {
+            content: "Confirm sending the message",
+            trigger: ".o-mail-Scheduled-Message-buttons .btn:contains('Send')",
+            run: "click",
+        },
+        {
             content: "Check message is shown",
             trigger: '.o-mail-Message-body:contains("keep the content")',
         },
@@ -267,6 +272,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Send message from chatter",
             trigger: ".o-mail-Composer-send:enabled",
+            run: "click",
+        },
+        {
+            content: "Confirm sending the message",
+            trigger: ".o-mail-Scheduled-Message-buttons .btn:contains('Send')",
             run: "click",
         },
         {

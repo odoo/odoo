@@ -43,6 +43,17 @@ export class MailCoreCommon {
         this.busService.subscribe("mail.record/insert", (payload) => {
             this.store.insert(payload);
         });
+        this.busService.subscribe("mail.scheduled_message/posted", async (payload) => {
+            const { res_model, res_id } = payload;
+            if (res_model === "discuss.channel") {
+                return;
+            }
+            const thread = await this.store["mail.thread"].getOrFetch({
+                model: res_model,
+                id: res_id,
+            });
+            thread?.fetchThreadData(["scheduledMessages", "messages"]);
+        });
     }
 
     _handleNotificationToggleStar(payload, metadata) {

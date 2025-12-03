@@ -548,6 +548,7 @@ export class Store extends BaseStore {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
+            createPending,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
@@ -602,6 +603,7 @@ export class Store extends BaseStore {
             post_data: postData,
             thread_id: thread.id,
             thread_model: thread.model,
+            ...(createPending && { create_pending: createPending }),
         };
         if (cannedResponseIds?.length) {
             params.canned_response_ids = cannedResponseIds;

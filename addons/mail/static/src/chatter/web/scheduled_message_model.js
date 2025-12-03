@@ -49,6 +49,15 @@ export class ScheduledMessage extends Record {
         );
     }
 
+    async resetAttachmentsInComposer() {
+        if (this.thread.isPendingScheduledMessage(this)) {
+            await this.store.env.services.orm.call(
+                "mail.scheduled.message",
+                "reset_attachments_in_composer",
+                [this.id]
+            );
+        }
+    }
     /**
      * Cancel the scheduled message.
      */
@@ -91,6 +100,7 @@ export class ScheduledMessage extends Record {
         try {
             await this.store.env.services.orm.call("mail.scheduled.message", "post_message", [
                 this.id,
+                false,
             ]);
         } catch {
             // already sent (by someone else or by cron)

@@ -98,6 +98,7 @@ export class Composer extends Component {
         "showFullComposer?",
         "allowUpload?",
         "disabled?",
+        "createPending?",
     ];
     static template = "mail.Composer";
 
@@ -761,6 +762,7 @@ export class Composer extends Component {
             mentionedRoles: composer.mentionedRoles || [],
             cannedResponseIds: composer.cannedResponses.map((c) => c.id),
             parentId: this.props.composer.replyToMessage?.id,
+            createPending: this.props.createPending,
         };
     }
 
@@ -782,22 +784,29 @@ export class Composer extends Component {
         const thread = toRaw(this.props.composer.thread);
         const postThread = toRaw(this.thread);
         const post = postThread.post.bind(postThread, value, postData, extraData);
-        let message;
+        let message, scheduledMessage;
         if (postThread.model === "discuss.channel") {
             // feature of (optimistic) temp message
             post();
         } else {
-            message = await post();
+            const messageData = await post();
+
+            if (!messageData) {
+                return;
+            }
+            ({ message, scheduledMessage } = messageData);
         }
         if (thread.model === "mail.box") {
             this.notifySendFromMailbox();
         }
-        this.suggestion?.clearRawMentions();
-        this.suggestion?.clearCannedResponses();
-        this.props.composer.replyToMessage = undefined;
-        this.props.composer.emailAddSignature = true;
-        this.props.composer.thread.additionalRecipients = [];
-        return message;
+        if (!scheduledMessage) {
+            this.suggestion?.clearRawMentions();
+            this.suggestion?.clearCannedResponses();
+            this.props.composer.replyToMessage = undefined;
+            this.props.composer.emailAddSignature = true;
+            this.props.composer.thread.additionalRecipients = [];
+        }
+        return message || scheduledMessage ? { message, scheduledMessage } : undefined;
     }
 
     async editMessage() {

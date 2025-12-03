@@ -523,6 +523,7 @@ test("pending mentions are kept when toggling composer", async () => {
     await contains(".o-mail-Composer-input", { count: 0 });
     await click("button", { text: "Send message" });
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message-body a.o_mail_redirect", { text: "@Mitchell Admin" });
 });
 
@@ -1583,6 +1584,7 @@ test("html composer: send a message in a chatter", async () => {
     };
     await htmlInsertText(editor, "Hello");
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await click(".o-mail-Message[data-persistent]:contains(Hello)");
 });
 
@@ -1603,6 +1605,7 @@ test("html composer: send a message with styling", async () => {
     await tripleClick(editor.editable.querySelector("div.o-paragraph"));
     await press("Control+b");
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await click(".o-mail-Message[data-persistent] strong:contains(Hello)");
 });
 

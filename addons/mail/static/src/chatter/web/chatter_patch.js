@@ -384,6 +384,15 @@ patch(Chatter.prototype, {
         super.onPostCallback();
     },
 
+    async beforeScheduledMessageCancel(thread, scheduledMessage) {
+        const wasPending = await thread.cancelPendingScheduledMessage(scheduledMessage);
+        if (wasPending) {
+            this.toggleComposer(scheduledMessage.is_note ? "note" : "message", {
+                force: true,
+            });
+        }
+    },
+
     onScheduledMessageChanged(thread) {
         // reload messages as well as a scheduled message could have been sent
         this.load(thread, ["scheduledMessages", "messages"]);

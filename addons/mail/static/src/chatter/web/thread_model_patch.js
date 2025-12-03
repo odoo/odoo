@@ -17,6 +17,7 @@ const threadPatch = {
             },
             inverse: "thread",
         });
+        this.pendingPostScheduledMessages = [];
     },
 
     /** @param {string[]} requestList */
@@ -26,6 +27,29 @@ const threadPatch = {
         await super.fetchThreadData(requestList);
         if (!this.message_main_attachment_id && this.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(0);
+        }
+    },
+    handleNewScheduleMessageData(data) {
+        this.pendingPostScheduledMessages.push(data.message_id);
+        super.handleNewScheduleMessageData(data);
+    },
+    isPendingScheduledMessage(scheduledMessage) {
+        return this.pendingPostScheduledMessages.includes(scheduledMessage.id);
+    },
+    async cancelPendingScheduledMessage(scheduledMessage) {
+        if (this.isPendingScheduledMessage(scheduledMessage)) {
+            if (!this.composer.composerText) {
+                await scheduledMessage.resetAttachmentsInComposer();
+                // TODO: might have more than just attachments, to check
+                this.composer.attachments = scheduledMessage.attachment_ids;
+                this.composer.insertText(scheduledMessage.textContent, 0, {
+                    moveCursorToEnd: true,
+                });
+            }
+            this.pendingPostScheduledMessages = this.pendingPostScheduledMessages.filter(
+                (id) => id !== scheduledMessage.id
+            );
+            return true;
         }
     },
 };

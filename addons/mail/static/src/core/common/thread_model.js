@@ -727,11 +727,28 @@ export class Thread extends Record {
             this.messages.push(tmpMsg);
             this.onNewSelfMessage(tmpMsg);
         }
-        const data = await this.store.doMessagePost(params, tmpMsg);
-        if (!data) {
+        const messageData = await this.store.doMessagePost(params, tmpMsg);
+        if (!messageData) {
             return;
         }
-        this.store.insert(data.store_data);
+        this.store.insert(messageData.store_data);
+        if (messageData.scheduled_message_id) {
+            return {
+                id: messageData.scheduled_message_id,
+                scheduledMessage: this.handleNewScheduleMessageData(messageData),
+            };
+        }
+        return {
+            id: messageData.message_id,
+            message: this.handleNewMessageData(messageData, tmpMsg),
+        };
+    }
+
+    handleNewScheduleMessageData(data) {
+        return this.store["mail.scheduled.message"].get(data.scheduled_message_id);
+    }
+
+    handleNewMessageData(data, tmpMsg) {
         /** @type {import("models").Message} */
         const message = this.store["mail.message"].get(data.message_id);
         this.addOrReplaceMessage(message, tmpMsg);

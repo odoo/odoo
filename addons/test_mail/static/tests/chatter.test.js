@@ -173,10 +173,12 @@ test("opened attachment box should remain open after adding a new attachment", a
         new File(["image"], "testing.jpeg", { type: "image/jpeg" }),
     ]);
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o_move_next");
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "test");
     triggerHotkey("control+Enter");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message-body", { text: "test" });
     await contains(".o-mail-AttachmentBox .o-mail-AttachmentImage", { count: 2 });
 });

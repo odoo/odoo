@@ -1647,6 +1647,7 @@ test("Partner's avatar card should be opened after clicking on their mention", a
     await click(".o-mail-Composer-suggestion strong", { text: "Test Partner" });
     await contains(".o-mail-Composer-input", { value: "@Test Partner " });
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await click(".o_mail_redirect");
     await contains(".o_avatar_card:contains('Test Partner')");
 });
@@ -1661,6 +1662,7 @@ test("Channel should be opened after clicking on its mention", async () => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion strong", { text: "my-channel" });
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await click(".o_channel_redirect");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
     await contains(".o-mail-ChatWindow", { text: "my-channel" });
@@ -2063,10 +2065,12 @@ test("chatter - font size unchanged when there is only emoji", async () => {
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "🥳");
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message-body", { text: "🥳" });
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "not only emoji!! 😅");
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message-body", { text: "not only emoji!! 😅" });
     const [emojiMessage, textMessage] = document.querySelectorAll(".o-mail-Message-body");
     expect(parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size"))).toBe(

@@ -122,9 +122,9 @@ patch(Thread.prototype, {
             await channel.isLoadedDeferred;
             return channel.post(...arguments).then(() => channel.readyToSwapDeferred.resolve());
         }
-        const message = await super.post(...arguments);
-        await this.chatbot?.processAnswer(message);
-        return message;
+        const data = await super.post(...arguments);
+        await this.chatbot?.processAnswer(data.message);
+        return data;
     },
 
     get composerHidden() {
