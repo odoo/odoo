@@ -148,25 +148,24 @@ class ProductProduct(models.Model):
                 at_date = at_date.replace(hour=23, minute=59, second=59)
                 product = product.with_context(at_date=at_date)
             valuated_product = product.sudo(False)._with_valuation_context()
-            qty_available = valuated_product.qty_available
-            total_qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_available
+            qty_valued = valuated_product.qty_available
+            qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
-            elif product.uom_id.is_zero(qty_available):
+            elif product.uom_id.is_zero(qty_valued):
                 product.total_value = 0
-            elif product.uom_id.is_zero(total_qty_available):
-                product.total_value = product._get_standard_price_at_date() * qty_available
+            elif product.uom_id.is_zero(qty_available):
+                product.total_value = product.standard_price * qty_valued
             elif product.cost_method == 'standard':
                 standard_price = product.standard_price
                 if at_date:
                     standard_price = product._get_standard_price_at_date(at_date)
-                product.total_value = standard_price * qty_available
+                product.total_value = standard_price * qty_valued
             elif product.cost_method == 'average':
-                product.total_value = product._run_avco(at_date=at_date)[1] * qty_available / total_qty_available
+                product.total_value = product._run_avco(at_date=at_date)[1] * qty_valued / qty_available
             else:
-                product.total_value = product.with_context(warehouse_id=False)._run_fifo(total_qty_available, at_date=at_date) * qty_available / total_qty_available
-
-            product.avg_cost = product.total_value / qty_available if not product.uom_id.is_zero(qty_available) else 0
+                product.total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
+            product.avg_cost = product.total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -205,36 +204,29 @@ class ProductProduct(models.Model):
         return
 
     def _get_standard_price_at_date(self, date=None):
+        """ Get Last Price History """
         self.ensure_one()
+        if not date or date == fields.Date.today():
+            return self.standard_price
+        if self.cost_method != 'standard':
+            raise ValidationError(_("You can only get the standard price at a given date for products with 'Standard Price' as cost method."))
         product_value_domain = Domain([
             ('product_id', '=', self.id),
             ('move_id', '=', False),
             ('lot_id', '=', False),
         ])
-        if date:
-            product_value_domain &= Domain([('date', '<=', date)])
-        product_value = self.env['product.value'].search(product_value_domain, limit=1, order="date DESC, id DESC")
+        product_value = self.env['product.value'].search(product_value_domain & Domain([('date', '<=', date)]), limit=1, order="date DESC, id DESC")
         if not product_value:
-            # If there is no history then get the first value
-            product_value = self.env['product.value'].search([
-                ('product_id', '=', self.id),
-                ('move_id', '=', False),
-                ('lot_id', '=', False),
-            ], limit=1, order="date, id")
-        if self.cost_method != 'fifo':
-            return product_value.value if product_value else self.standard_price
+            # If there is no history then get the value at creation
+            product_value = self.env['product.value'].search(product_value_domain, limit=1, order="date, id")
+        return product_value.value if product_value else self.standard_price
+
+    def _get_last_in(self, date=None):
         last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id)])
         if date:
             last_in_domain &= Domain([('date', '<=', date)])
         last_in = self.env['stock.move'].search(last_in_domain, order='date desc, id desc', limit=1)
-        if not product_value and not last_in:
-            return self.standard_price
-        if (product_value and last_in and product_value.date > last_in.date) or not last_in:
-            return product_value.value
-        valued_qty = last_in._get_valued_qty()
-        if not valued_qty:
-            return self.standard_price
-        return last_in._get_value(at_date=date) / valued_qty
+        return last_in
 
     def _get_value_from_lots(self):
         lots = self.env['stock.lot'].search([
@@ -377,7 +369,8 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if self.uom_id.compare(quantity, 0) <= 0:
             if at_date:
-                return quantity * self._get_standard_price_at_date(at_date)
+                last_in = self._get_last_in(at_date)
+                return quantity * (last_in._get_price_unit() if last_in else self.standard_price)
             return quantity * self.standard_price
         external_location = location and location.is_valued_external
 
@@ -470,9 +463,9 @@ class ProductProduct(models.Model):
             if product.cost_method == 'fifo':
                 qty_available = product._with_valuation_context().qty_available
                 if product.uom_id.compare(qty_available, 0) > 0:
-                    product.with_context(disable_auto_revaluation=True).standard_price = product.total_value / qty_available
-                else:
-                    product.with_context(disable_auto_revaluation=True).standard_price = product._get_standard_price_at_date()
+                    product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.total_value / qty_available
+                elif last_in := product._get_last_in():
+                    product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in._get_price_unit()
                 continue
             new_standard_price = product._run_avco()[0]
             if new_standard_price:
