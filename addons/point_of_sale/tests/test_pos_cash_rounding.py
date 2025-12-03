@@ -450,7 +450,11 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
         })
         self.start_pos_tour('test_cash_rounding_up_with_change')
 
-    def test_remove_archived_product_from_cache(self):
+    def test_archived_product_removed_and_order_is_refunded(self):
+        """
+        Tests that once product is archived after order is created
+        product is not shown but the order can still be refunded.
+        """
         self.pos_admin.write({
             'group_ids': [
                 (4, self.env.ref('product.group_product_manager').id),
@@ -465,6 +469,6 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
-            "test_remove_archived_product_from_cache",
+            "test_archived_product_removed_and_order_is_refunded",
             login="pos_admin"
         )
