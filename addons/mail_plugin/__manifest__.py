@@ -10,13 +10,10 @@
         'digest',
         'web',
         'contacts',
-        'iap'
     ],
     'data': [
         'data/digest_tips.xml',
         'views/mail_plugin_login.xml',
-        'views/res_partner_iap_views.xml',
-        'security/ir.model.access.csv',
     ],
     'iap_paid_service': True,
     'author': 'Odoo S.A.',
