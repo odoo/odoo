@@ -959,7 +959,7 @@ registry.category("web_tour.tours").add("test_barcode_search_attributes_preset",
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_remove_archived_product_from_cache", {
+registry.category("web_tour.tours").add("test_archived_product_removed_and_order_is_refunded", {
     steps: () =>
         [
             Chrome.startPoS(),
@@ -998,6 +998,14 @@ registry.category("web_tour.tours").add("test_remove_archived_product_from_cache
             BackendUtils.openShopSession("Shop"),
             Dialog.confirm("Open Register"),
             ProductScreen.productIsDisplayed("A Test Product").map(negateStep),
+            // Refund.
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("0001"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 
