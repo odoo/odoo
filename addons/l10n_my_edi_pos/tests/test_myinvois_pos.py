@@ -249,12 +249,12 @@ class TestMyInvoisPoS(TestPoSCommon):
             with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 consolidated_invoice.action_submit_to_myinvois()
                 self.assertRecordValues(consolidated_invoice, [{
-                    'name': 'CINV/2025/00001',
+                    'name': 'CINV/2025/00002',
                     'myinvois_submission_uid': '123456789',
                     'myinvois_external_uuid': '123458974513518',
                     'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),
                 }, {
-                    'name': 'CINV/2025/00002',
+                    'name': 'CINV/2025/00001',
                     'myinvois_submission_uid': '123456789',
                     'myinvois_external_uuid': '123458974513519',
                     'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),

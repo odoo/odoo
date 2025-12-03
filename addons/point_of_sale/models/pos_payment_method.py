@@ -190,6 +190,8 @@ class PosPaymentMethod(models.Model):
         vals_list = super().copy_data(default=default)
 
         for pm, vals in zip(self, vals_list):
+            if 'name' not in default:
+                vals['name'] = _("%s (copy)", pm.name)
             if pm.journal_id and pm.journal_id.type == 'cash':
                 if ('journal_id' in default and default['journal_id'] == pm.journal_id.id) or ('journal_id' not in default):
                     vals['journal_id'] = False

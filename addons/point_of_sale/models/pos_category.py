@@ -84,3 +84,11 @@ class PosCategory(models.Model):
                 raise ValidationError(_('The Availability After must be set between 00:00 and 24:00'))
             if category.hour_until and category.hour_after and category.hour_until < category.hour_after:
                 raise ValidationError(_('The Availability Until must be greater than Availability After.'))
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for pos_category, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", pos_category.name)
+        return vals_list

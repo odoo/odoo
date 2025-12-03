@@ -90,6 +90,14 @@ class PosPreset(models.Model):
 
         return usage
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for preset, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", preset.name)
+        return vals_list
+
     def action_open_linked_orders(self):
         self.ensure_one()
         return {

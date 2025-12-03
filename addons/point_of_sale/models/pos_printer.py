@@ -54,6 +54,14 @@ class PosPrinter(models.Model):
     )
     use_lna = fields.Boolean(string="Use Local Network Access")
 
+    def copy_data(self, default=None):
+        default = dict(default or {}, pos_config_ids=[(5, 0, 0)], epson_printer_ip="0.0.0.0")
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for printer, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", printer.name)
+        return vals_list
+
     @api.model
     def _load_pos_data_domain(self, data, config):
         return [('id', 'in', config.preparation_printer_ids.ids + config.receipt_printer_ids.ids)]
