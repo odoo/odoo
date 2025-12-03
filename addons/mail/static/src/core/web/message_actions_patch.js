@@ -39,7 +39,7 @@ registerMessageAction("reply-all", {
         });
         const recipientIds = recipients.map((r) => r.id);
         const emailFrom = message.author_id?.email || message.email_from;
-        const [name, email] = parseEmail(emailFrom);
+        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
@@ -69,7 +69,7 @@ registerMessageAction("forward", {
     name: _t("Forward"),
     onSelected: async ({ message, owner, store, thread }) => {
         const emailFrom = message.author_id?.email || message.email_from;
-        const [name, email] = parseEmail(emailFrom);
+        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
