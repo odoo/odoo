@@ -34,7 +34,7 @@ export class CallActionList extends Component {
                     (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
                 );
                 const sequenceGroup = filtered[0].sequenceGroup;
-                const maxQuickActions = sequenceGroup === 200 ? 1 : 4;
+                const maxQuickActions = sequenceGroup === 200 ? 2 : 4;
                 const quickActions = filtered.slice(0, maxQuickActions);
                 const moreActions = filtered.slice(maxQuickActions);
                 const newGroup = moreActions?.length

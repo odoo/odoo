@@ -167,17 +167,6 @@ registerCallAction("share-screen", {
     sequenceGroup: 200,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
 });
-registerCallAction("auto-focus", {
-    condition: ({ owner, channel, store }) =>
-        !owner.env.inCallMenu && channel?.eq(store.rtc?.channel),
-    name: ({ store }) =>
-        store.settings.useCallAutoFocus ? _t("Disable speaker autofocus") : _t("Autofocus speaker"),
-    isActive: ({ store }) => store.settings?.useCallAutoFocus,
-    icon: ({ action }) => (action.isActive ? "fa fa-eye" : "fa fa-eye-slash"),
-    onSelected: ({ store }) => (store.settings.useCallAutoFocus = !store.settings.useCallAutoFocus),
-    sequence: 50,
-    sequenceGroup: 200,
-});
 registerCallAction("fullscreen", {
     btnClass: ({ owner, channel }) =>
         attClassObjectToString({

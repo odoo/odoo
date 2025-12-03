@@ -61,12 +61,8 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
     await contains("button[aria-label='Video Settings']");
     await contains(".o-discuss-CallActionList button[aria-label='Share Screen']");
-    await contains("[title='More']");
+    await contains("button[aria-label='Raise Hand']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await click("[title='More']");
-    await contains(".o-dropdown-item", { count: 2 });
-    await contains(".o-dropdown-item:contains('Raise Hand')");
-    await contains(".o-dropdown-item:contains('Disable speaker autofocus')");
     await contains(".o-discuss-Call-layoutActions button", { count: 2 });
     await contains(".o-discuss-Call-layoutActions button[title='Picture in Picture']");
     await contains(".o-discuss-Call-layoutActions button[title='Fullscreen']");
@@ -217,11 +213,9 @@ test("can share screen", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click("[title='More']");
     await click("[title='Share Screen']");
     await contains("video");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='More']");
     await click("[title='Stop Sharing Screen']");
     await contains("video", { count: 0 });
 });
@@ -299,7 +293,6 @@ test("Can share user camera and screen together", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click("[title='More']");
     await click("[title='Share Screen']");
     await click("[title='Turn camera on']");
     await contains("video", { count: 2 });
@@ -311,7 +304,6 @@ test("Click on inset card should replace the inset and active stream together", 
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click("[title='More']");
     await click("[title='Share Screen']");
     await click("[title='Turn camera on']");
     await contains("video[type='screen']:not(.o-inset)");
@@ -472,12 +464,10 @@ test("Systray icon shows latest action", async () => {
     await contains(".o-discuss-CallMenu-buttonContent .fa-deaf");
     await click("[title='Turn camera on']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
-    await click("[title='More']");
     await click("[title='Share Screen']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='More']");
-    await click(".o-dropdown-item:contains('Raise Hand')");
+    await click("[title='Raise Hand']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-hand-paper-o");
 });
 
@@ -488,7 +478,6 @@ test("Systray icon keeps track of earlier actions", async () => {
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
-    await click("[title='More']");
     await click("[title='Share Screen']");
     // stack: ["share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
@@ -800,7 +789,6 @@ test("shows warning on infinite mirror effect (screen-sharing then fullscreen)",
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click("[title='More']");
     await click("[title='Share Screen']");
     await contains("video");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
@@ -905,11 +893,9 @@ test("dynamic focus switches to talking participant", async () => {
     await contains(".o-discuss-CallParticipantCard[title='Alice']");
     rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: false } });
     await contains(".o-discuss-CallParticipantCard[title='Bob']");
-    await click("[title='More']");
-    await click(".o-dropdown-item:contains('Disable speaker autofocus')");
-    await contains(".o-dropdown-item", { count: 0 });
-    await click("[title='More']");
-    await contains(".o-dropdown-item:contains('Autofocus speaker')");
+    await click("button[aria-label='Video Settings']");
+    await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
+    await click("input[title='Auto-focus speaker']:checked");
 });
 
 test("should not show context menu on participant card when not in a call", async () => {

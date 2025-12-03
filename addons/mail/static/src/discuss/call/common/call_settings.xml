@@ -99,6 +99,13 @@
                     <t t-set="onchange" t-value="onChangeShowOnlyVideo"/>
                 </t>
             </div>
+            <div class="d-flex flex-column my-1">
+                <t t-call="discuss.CallSettings.textToggler">
+                    <t t-set="text">Auto-focus speaker</t>
+                    <t t-set="value" t-value="store.settings.useCallAutoFocus"/>
+                    <t t-set="onchange" t-value="onChangeCallAutoFocus"/>
+                </t>
+            </div>
             <div t-if="store.settings.hasCanvasFilterSupport" class="d-flex flex-column my-1 o-discuss-CallSettings-item">
                 <t t-call="discuss.CallSettings.textToggler">
                     <t t-set="text">Blur video background</t>
