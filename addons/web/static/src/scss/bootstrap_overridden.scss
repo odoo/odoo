@@ -105,6 +105,12 @@ $component-active-bg: $o-component-active-bg !default;
 
 $caret-width: 4px !default;
 
+$focus-ring-width: .25rem !default;
+$focus-ring-opacity: .5 !default;
+$focus-ring-color: rgba($o-component-active-border, $focus-ring-opacity) !default;
+$focus-ring-blur: 0 !default;
+$focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width * .5 $o-component-active-border, 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color !default;
+
 // Typography
 //
 // Font, line-height, and color for body text, headings, and more.
