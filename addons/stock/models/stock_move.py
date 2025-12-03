@@ -493,6 +493,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         already_propagate_ids = self.env.context.get('date_deadline_propagate_ids', set())
         already_propagate_ids.update(self.ids)
         self = self.with_context(date_deadline_propagate_ids=already_propagate_ids)
+        moves_by_date = defaultdict(lambda: self.env['stock.move'])
         for move in self:
             moves_to_update = move._get_moves_to_propagate_date_deadline()
             if move.date_deadline:
@@ -505,9 +506,11 @@ Please change the quantity done or the rounding precision of your unit of measur
                 if move_update.id in already_propagate_ids:
                     continue
                 if move_update.date_deadline and delta:
-                    move_update.date_deadline -= delta
+                    moves_by_date[move_update.date_deadline - delta] |= move_update
                 else:
-                    move_update.date_deadline = new_deadline
+                    moves_by_date[new_deadline] |= move_update
+        for date_deadline, moves in moves_by_date.items():
+            moves.write({'date_deadline': date_deadline})
 
     @api.depends('move_line_ids.lot_id', 'move_line_ids.quantity')
     def _compute_lot_ids(self):
