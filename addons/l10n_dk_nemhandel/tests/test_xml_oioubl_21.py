@@ -185,6 +185,38 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
 
     @freeze_time('2017-01-01')
+    def test_oioubl_export_import_with_discount(self):
+        """ Tests that the discount on a line is well exported, then taken into account when imported """
+        line_vals = {
+            'product_id': self.product_a.id,
+            'quantity': 10.0,
+            'price_unit': 500.0,
+            'discount': 10,
+            'tax_ids': [self.dk_local_sale_tax_1.id],
+        }
+        invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'narration': 'test narration',
+            'ref': 'ref_move',
+            'invoice_line_ids': [Command.create(line_vals)],
+        })
+        invoice.action_post()
+        with patch('odoo.addons.l10n_dk_nemhandel.models.res_partner.ResPartner._get_nemhandel_verification_state',
+                   return_value='not_valid'):
+            wizard = self.env['account.move.send.wizard'] \
+                .with_context(active_model=invoice._name, active_ids=invoice.ids) \
+                .create({})
+            wizard.action_send_and_print()
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_discount.xml")
+        new_invoice = invoice.journal_id._create_document_from_attachment(invoice.ubl_cii_xml_id.ids)
+        self.assertRecordValues(new_invoice.invoice_line_ids, [line_vals])
+
+    @freeze_time('2017-01-01')
     def test_oioubl_export_should_raise_an_error_when_partner_building_number_is_missing(self):
         self.partner_a.street = 'Paradisæblevej'  # remove the street number from the address
         with self.assertRaisesRegex(UserError, "The following partner's street number is missing"):
