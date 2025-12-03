@@ -115,7 +115,6 @@ class ProductProduct(models.Model):
     storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'product_id', 'Storage Category Capacity')
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
-    show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
     valid_ean = fields.Boolean('Barcode is valid EAN', compute='_compute_valid_ean')
     lot_properties_definition = fields.PropertiesDefinition('Lot Properties')
 
@@ -124,11 +123,6 @@ class ProductProduct(models.Model):
         for product in self:
             product.show_on_hand_qty_status_button = product.product_tmpl_id.show_on_hand_qty_status_button
             product.show_forecasted_qty_status_button = product.product_tmpl_id.show_forecasted_qty_status_button
-
-    @api.depends('product_tmpl_id')
-    def _compute_show_qty_update_button(self):
-        for product in self:
-            product.show_qty_update_button = product.product_tmpl_id._should_open_product_quants()
 
     @api.depends('barcode')
     def _compute_valid_ean(self):
