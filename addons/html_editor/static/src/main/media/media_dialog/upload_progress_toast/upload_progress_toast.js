@@ -12,6 +12,7 @@ export class ProgressBar extends Component {
         size: { type: String, optional: true },
         errorMessage: { type: String, optional: true },
         mimetype: { type: String, optional: true },
+        cancelUpload: { type: Function, optional: true },
     };
     static defaultProps = {
         progress: 0,
@@ -20,6 +21,7 @@ export class ProgressBar extends Component {
         size: "",
         errorMessage: "",
         mimetype: "",
+        cancelUpload: () => {},
     };
 
     get errorMessage() {

@@ -16,7 +16,10 @@
         <small t-if="props.hasError" class="text-danger fw-bold" t-esc="errorMessage"/>
     </div>
     <div class="o_notification_indicator d-flex align-items-center justify-content-center pt-2">
-        <i t-if="!props.hasError and !props.uploaded" class="fa fa-circle-o-notch fa-spin fs-4"/>
+        <t t-if="!props.hasError and !props.uploaded">
+            <i class="fa fa-circle-o-notch fa-spin fs-4"/>
+            <span class="fa fa-trash cursor-pointer fs-4 p-1 mx-1" t-on-click="props.cancelUpload" title="Cancel Upload"/>
+        </t>
         <span t-if="props.uploaded" class="o_notification_indicator_success d-flex align-items-center justify-content-center p-1 rounded-5 text-bg-success smaller">
             <i class="fa fa-check"/>
         </span>
@@ -35,6 +38,7 @@
                             hasError="file_value.hasError"
                             name="file_value.name"
                             uploaded="file_value.uploaded"
+                            cancelUpload="file_value.cancelUpload"
                             size="file_value.size"
                             mimetype="file_value.mimetype"/>
                     </div>
