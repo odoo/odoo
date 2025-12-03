@@ -150,6 +150,7 @@ class AccountEdiProxyClientUser(models.Model):
             ),
             attachment_ids=attachment.ids,
         )
+        move._autopost_bill()
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return True
 
