@@ -237,6 +237,14 @@ class HrWorkEntry(models.Model):
         work_entries._check_if_error()
         return work_entries
 
+    def check_modification_allowed(self):
+        """
+        Check that the work entries can be modified.
+        A work entry can't be modified if it's validated and linked to a payslip.
+        :return: True if modification is allowed
+        """
+        return True
+
     def write(self, vals):
         skip_check = not bool({'date_start', 'date_stop', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
         if 'state' in vals:
