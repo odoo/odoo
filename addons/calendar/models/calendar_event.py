@@ -161,7 +161,7 @@ class Meeting(models.Model):
         help="Start date of an event, without time for full days events")
     stop = fields.Datetime(
         'Stop', required=True, tracking=True, default=_default_stop,
-        compute='_compute_stop', readonly=False, store=True,
+        compute='_compute_stop', inverse='_inverse_stop', readonly=False, store=True,
         help="Stop date of an event, without time for full days events")
     display_time = fields.Char('Event Time', compute='_compute_display_time')
     allday = fields.Boolean('All Day', default=False)
@@ -377,6 +377,11 @@ class Meeting(models.Model):
             event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
+
+    def _inverse_stop(self):
+        for event in self:
+            if event.start and event.stop:
+                event.duration = event._get_duration(event.start, event.stop)
 
     @api.onchange('start_date', 'stop_date')
     def _onchange_date(self):
