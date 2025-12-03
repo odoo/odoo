@@ -5,7 +5,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 const mainObjectRe = /website\.controller\.page\(((\d+,?)*)\)/;
 
-// TODO DUAU: I deleted title for ControllerPageListingLayoutOption, NavbarLogoOption, InfoPageOption, need to add them back
 export class ControllerPageListingLayoutOptionPlugin extends Plugin {
     static id = "controllerPageListingLayoutOption";
     static dependencies = ["builderActions"];

@@ -9,7 +9,6 @@ export class DynamicSnippetOption extends BaseOptionComponent {
     static props = {
         slots: { type: Object, optional: true },
     };
-    // TODO DUAU: where the fuck is that props coming from??
 
     setup() {
         super.setup();

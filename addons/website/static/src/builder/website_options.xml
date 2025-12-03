@@ -124,9 +124,10 @@
             <accordion_option template="website.AccordionOption" selector=".s_accordion"/>
             <accordion_item_option template="website.AccordionItemOption" selector=".s_accordion .accordion-item"/>
             <chart_option selector=".s_chart"/>
-            <controllers_page_listing_layout_option
+            <controller_page_listing_layout_option
                 template="website.ControllerPageListingLayoutOption"
                 selector=".listing_layout_switcher"
+                title="Layout"
                 editableOnly="false"
                 groups='["website.group_website_designer"]'/>
             <cookies_bar_option template="website.CookiesBarOption" selector="#website_cookies_bar" applyTo=".modal"/>
@@ -164,6 +165,7 @@
             <info_page_option
                 template="website.InfoPageOption"
                 selector="main:has(.o_website_info)"
+                title="Info Page"
                 editableOnly="false"
                 groups='["website.group_website_designer"]'/>
             <avatars_option
@@ -215,6 +217,7 @@
             <navbar_logo_option
                 template="website.NavbarLogoOption"
                 selector="#wrapwrap > header nav.navbar .navbar-brand"
+                title="Navbar Logo"
                 groups='["website.group_website_designer"]'
                 editableOnly="false"/>
             <header_template_option
