@@ -60,6 +60,7 @@ test("Renders the call settings", async () => {
     await contains("span", { text: "Voice detection sensitivity" });
     await contains("button", { text: "Test" });
     await contains("label", { text: "Show video participants only" });
+    await contains("label", { text: "Auto-focus speaker" });
     await contains("label", { text: "Blur video background" });
 });
 

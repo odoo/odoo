@@ -188,8 +188,9 @@ test("call auto focus is 'off", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList [title='More']");
-    await contains(".o-dropdown-item:contains('Autofocus speaker')");
+    await click("button[aria-label='Video Settings']");
+    await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
+    await contains("input[title='Auto-focus speaker']:not(:checked)");
     // correct local storage values
     const useCallAutoFocusKey = makeRecordFieldLocalId(Settings.localId(), "useCallAutoFocus");
     expect(localStorage.getItem(useCallAutoFocusKey)).toBe(toRawValue(false));
