@@ -1918,25 +1918,33 @@ export class PosStore extends WithLazyGetterTrap {
                     opts.cancelled
                 );
 
-                if (
-                    !orderChange.new.length &&
-                    !orderChange.cancelled.length &&
-                    !orderChange.noteUpdate.length &&
-                    !orderChange.internal_note &&
-                    !orderChange.general_customer_note &&
-                    order.uiState.lastPrints
-                ) {
-                    orderChange = [order.uiState.lastPrints.at(-1)];
-                    reprint = true;
+                const hasChanges =
+                    orderChange.new.length ||
+                    orderChange.cancelled.length ||
+                    orderChange.noteUpdate.length ||
+                    orderChange.internal_note ||
+                    orderChange.general_customer_note;
+
+                let shouldPrint = true;
+                if (!hasChanges) {
+                    if (opts.explicitReprint && order.uiState.lastPrints) {
+                        orderChange = [order.uiState.lastPrints.at(-1)];
+                        reprint = true;
+                    } else {
+                        shouldPrint = false;
+                    }
                 } else {
                     order.uiState.lastPrints.push(orderChange);
                     orderChange = [orderChange];
                 }
 
                 if (reprint && opts.orderDone) {
-                    return;
+                    shouldPrint = false;
                 }
-                isPrinted = await this.printChanges(order, orderChange, reprint);
+
+                if (shouldPrint) {
+                    isPrinted = await this.printChanges(order, orderChange, reprint);
+                }
             } catch (e) {
                 logPosMessage(
                     "Store",

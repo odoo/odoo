@@ -9,6 +9,7 @@ import {
     filterChangeByCategories,
 } from "@point_of_sale/app/models/utils/order_change";
 import { prepareRoundingVals } from "../accounting/utils";
+const { DateTime } = luxon;
 
 definePosModels();
 
@@ -56,6 +57,36 @@ describe("pos_store.js", () => {
         expect(updatedOrder.state).toBe("cancel");
         expect(isListenerCalled).toBe(true);
         listenerCleanup();
+    });
+
+    test("sendOrderInPreparation clears change state when no prep changes", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const productOutsidePrep = store.models["product.template"].get(14);
+        const date = DateTime.now();
+
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: productOutsidePrep,
+                qty: 1,
+                write_date: date,
+                create_date: date,
+            },
+            order
+        );
+
+        expect(order.hasChange).toBe(true);
+
+        let printCalled = false;
+        store.printChanges = async () => {
+            printCalled = true;
+            return true;
+        };
+
+        await store.sendOrderInPreparation(order);
+
+        expect(printCalled).toBe(false);
+        expect(order.hasChange).toBe(false);
     });
 
     describe("syncAllOrders", () => {
