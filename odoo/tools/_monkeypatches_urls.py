@@ -64,7 +64,6 @@ _always_safe_chars = (
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "0123456789"
     "-._~"
-    "$!'()*+,;"  # RFC3986 sub-delims set, not including query string delimiters &=
 )
 _always_safe = frozenset(_always_safe_chars.encode("ascii"))
 
