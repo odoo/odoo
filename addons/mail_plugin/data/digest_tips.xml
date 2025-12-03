@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="digest_tip_mail_plugin" model="digest.tip">
+            <field name="name">Tip: Connect Odoo to your inbox </field>
+            <field name="sequence">50</field>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Connect Odoo to your inbox </p>
+    <div class="tip_content">Connect Odoo to your inbox to access your data from any email.</div>
+    <div style="display: flex; width: fit-content; margin: auto;">
+        <a
+            href="https://www.odoo.com/documentation/master/applications/general/integrations/mail_plugins/gmail.html"
+            style="color: #374151; display: flex; flex-direction: row; padding: 0.25rem 0.5rem; border: 1px solid #374151; border-radius: 0.25rem; margin-left: 1rem; margin-right: 1rem;">
+            <img src="https://download.odoocdn.com/digests/mail_plugin/static/src/img/gmail.png" style="width: 40px; margin-right: 5px;"/>
+            <div>
+                <span>connect to <br/> <h3 style="margin: 0px;">Gmail</h3></span>
+            </div>
+        </a>
+        <a
+            href="https://www.odoo.com/documentation/master/applications/general/integrations/mail_plugins/outlook.html"
+            style="color: #374151; display: flex; flex-direction: row; padding: 0.25rem 0.5rem; border: 1px solid #374151; border-radius: 0.25rem; margin-left: 1rem; margin-right: 1rem;">
+            <img src="https://download.odoocdn.com/digests/mail_plugin/static/src/img/outlook.png" style="width: 40px; margin-right: 5px;"/>
+            <div>
+                <span>connect to <br/> <h3 style="margin: 0px;">Outlook</h3></span>
+            </div>
+        </a>
+    </div>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>
