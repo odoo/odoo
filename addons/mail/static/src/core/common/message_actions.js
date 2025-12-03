@@ -142,7 +142,7 @@ registerMessageAction("edit", {
         message.enterEditMode(thread);
         owner.optionsDropdown?.close();
     },
-    sequence: ({ message }) => (message.isSelfAuthored ? 20 : 55),
+    sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
 });
 registerMessageAction("delete", {
     condition: ({ message }) => message.editable,
