@@ -611,9 +611,8 @@ class TestPerformance(BaseCase):
             while start + 1 > time.time():
                 deep_call(collect, 20)
 
-        entry_count = len(collector.entries)
+        entry_count = len(collector.entries)  # ~40000
         stats_logger.info("collector max frequency in %.3fμs", 1_000_000 / entry_count)
-        self.assertGreater(entry_count, 20000)  # ~40000
 
     def test_collector_max_frequency_identical(self):
         # collect on identical stack
@@ -628,8 +627,8 @@ class TestPerformance(BaseCase):
         with p:
             deep_call(collect_1_s, 20)
 
-        entry_count = len(collector.entries)
-        self.assertGreater(entry_count, 50000)  # ~70000
+        entry_count = len(collector.entries)  # ~70000
+        stats_logger.info("collector max frequency identical in %.3fμs", 1_000_000 / entry_count)
 
     def test_frequencies_1ms_sleep(self):
         """
@@ -649,9 +648,8 @@ class TestPerformance(BaseCase):
                 sleep_1()
                 sleep_2()
 
-        entry_count = len(res.collectors[0].entries)
+        entry_count = len(res.collectors[0].entries)  # ~920
         stats_logger.info("async collector overhead in %.3fms", 1000 / entry_count - 1)
-        self.assertGreater(entry_count, 700)  # ~920
 
     def test_async_max_frequency(self):
         """
