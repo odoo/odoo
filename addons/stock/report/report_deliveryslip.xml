@@ -277,7 +277,7 @@
             </td>
             <td class="text-end" name="move_line_aggregated_qty_ordered">
                 <span t-out="format_number(aggregated_lines[line]['qty_ordered'])"/>
-                <span t-out="aggregated_lines[line]['uom_id'].name"/>
+                <span t-out="aggregated_lines[line]['uom_id'].name" groups="uom.group_uom"/>
                 <t t-if="aggregated_lines[line]['packaging_uom_id'] != aggregated_lines[line]['uom_id']" groups="uom.group_uom">
                     <br/>
                     <span class="text-muted" t-out="aggregated_lines[line]['packaging_qty_ordered']">1.00</span>
@@ -286,7 +286,7 @@
             </td>
             <td class="text-end" name="move_line_aggregated_quantity">
                 <span t-out="format_number(aggregated_lines[line]['quantity'])"/>
-                <span t-out="aggregated_lines[line]['uom_id'].name"/>
+                <span t-out="aggregated_lines[line]['uom_id'].name" groups="uom.group_uom"/>
                 <t t-if="aggregated_lines[line]['packaging_uom_id'] != aggregated_lines[line]['uom_id']" groups="uom.group_uom">
                     <br/>
                     <span class="text-muted" t-out="aggregated_lines[line]['packaging_quantity']">1.00</span>
