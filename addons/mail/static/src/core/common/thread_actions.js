@@ -80,7 +80,6 @@ registerThreadAction("search-messages", {
 });
 registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
-    actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "bg-100 border border-secondary",
     badge: ({ thread }) => thread.isUnread,
     badgeIcon: ({ thread }) => !thread.importantCounter && "fa fa-circle text-700",
