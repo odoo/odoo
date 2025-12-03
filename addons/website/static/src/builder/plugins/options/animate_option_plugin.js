@@ -170,6 +170,21 @@ export class AnimateOptionPlugin extends Plugin {
      * (null if splits are prevented by an unsplittable node)
      */
     splitForAnimatedText({ anchorNode, focusNode, commonAncestorContainer }) {
+        const startContainer = closestElement(anchorNode);
+        const endContainer = closestElement(focusNode);
+
+        const startAnimated = startContainer?.classList.contains("o_animated_text");
+        const endAnimated = endContainer?.classList.contains("o_animated_text");
+
+        if (
+            startContainer !== endContainer &&
+            !startAnimated &&
+            !endAnimated &&
+            !startContainer &&
+            !endContainer
+        ) {
+            return;
+        }
         let commonAncestor = commonAncestorContainer;
         for (let [node, forward] of [
             [anchorNode, true],
