@@ -64,6 +64,7 @@ class SpreadsheetDashboard(models.Model):
             return
 
     def _dashboard_is_empty(self):
+        return True
         return any(self.env[model].search_count([], limit=1) == 0 for model in self.sudo().main_data_model_ids.mapped("model"))
 
     def _get_dashboard_translation_namespace(self):
