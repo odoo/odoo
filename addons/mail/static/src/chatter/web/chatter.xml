@@ -4,19 +4,19 @@
 <t t-name="mail.Chatter">
     <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': props.isChatterAside, 'o-chatter-disabled': props.threadId === false }" t-on-scroll="onScrollDebounced" t-ref="root">
         <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': state.isTopStickyPinned }" t-ref="top">
-            <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto">
+            <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
                 <div t-if="state.isSearchOpen" class="flex-grow-1">
                     <SearchMessageInput closeSearch.bind="closeSearch" messageSearch="messageSearch" thread="state.thread"/>
                 </div>
-                <t t-else="" name="chatter-topbar-left-buttons">
-                    <button class="o-mail-Chatter-sendMessage btn text-nowrap me-1 my-2" t-att-class="{
+                <div t-else="" class="d-flex gap-1">
+                    <button class="o-mail-Chatter-sendMessage btn text-nowrap my-2" t-att-class="{
                         'btn-primary': state.composerType !== 'note',
                         'btn-secondary': state.composerType === 'note',
                         'active': state.composerType === 'message',
                     }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                         Send message
                     </button>
-                    <button class="o-mail-Chatter-logNote btn text-nowrap me-1 my-2" t-att-class="{
+                    <button class="o-mail-Chatter-logNote btn text-nowrap my-2" t-att-class="{
                         'btn-primary active': state.composerType === 'note',
                         'btn-secondary': state.composerType !== 'note',
                     }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
@@ -25,13 +25,13 @@
                     <button t-if="props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2" data-hotkey="shift+a" t-on-click="scheduleActivity">
                         <span>Activity</span>
                     </button>
-                    <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
-                    <button class="btn btn-link text-action" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
-                        <i class="oi oi-search" role="img"/>
-                    </button>
-                </t>
-                <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
-                    <i class="fa fa-window-restore" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
+                </div>
+                <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
+                <button class="btn btn-link text-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
+                    <i class="oi oi-search fa-fw" role="img"/>
+                </button>
+                <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="popoutAttachment">
+                    <i class="fa fa-window-restore fa-fw" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
                 <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                     <t t-set-slot="toggler">
@@ -39,7 +39,7 @@
                     </t>
                 </FileUploader>
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
-                <div class="o-mail-Followers d-flex me-1">
+                <div class="o-mail-Followers d-flex">
                     <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + store.discussDropdownMenuClass(this)" state="followerListDropdown">
                         <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (state.thread.selfFollower ? 'active' : '')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
                             <i class="fa fa-fw" role="img" t-attf-class="{{ state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
@@ -85,7 +85,7 @@
                         />
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                             <t t-set-slot="toggler">
-                                <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
+                                <button class="btn btn-link px-1" type="button" t-att-disabled="!state.thread.hasWriteAccess">
                                     <i class="fa fa-plus-square"/>
                                     Attach files
                                 </button>
@@ -140,7 +140,7 @@
 
 <t t-name="mail.Chatter.attachFiles">
     <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
-        <i class="fa fa-paperclip fa-lg me-1"/>
+        <i class="fa fa-paperclip fa-lg fa-fw"/>
         <sup t-if="attachments.length > 0" t-esc="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
