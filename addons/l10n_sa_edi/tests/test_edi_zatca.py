@@ -392,3 +392,39 @@ class TestEdiZatca(TestSaEdiCommon):
         invoice = self._create_test_invoice(**move_data)
         with self.assertRaises(UserError):
             invoice.action_post()
+
+    def test_zatca_xml_price_amount_precision(self):
+        """
+        Test that PriceAmount has 10 decimal precision to satisfy ZATCA validation BR-KSA-EN16931-11
+        """
+
+        self.tax_15.write({
+            'price_include_override': 'tax_included',
+        })
+        move_data = {
+            'name': 'INV/2025/00013',
+            'invoice_date': '2025-01-15',
+            'invoice_date_due': '2025-01-15',
+            'partner_id': self.partner_sa,
+            'invoice_line_ids': [{
+                'product_id': self.product_a.id,
+                'price_unit': 200.0,
+                'quantity': 7,
+                'tax_ids': self.tax_15.ids,
+            }]
+        }
+        invoice = self._create_test_invoice(**move_data)
+        invoice.action_post()
+
+        # Generate XML
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice)
+        xml_root = etree.fromstring(xml_content)
+
+        # Get PriceAmount from XML
+        price_amount_nodes = xml_root.xpath(
+            "//cac:InvoiceLine/cac:Price/cbc:PriceAmount",
+            namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+        )
+        self.assertTrue(price_amount_nodes, "PriceAmount node not found in XML")
+        price_amount_str = price_amount_nodes[0].text
+        self.assertEqual(price_amount_str, '173.9128571429')
