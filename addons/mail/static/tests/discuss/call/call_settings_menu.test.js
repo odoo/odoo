@@ -37,7 +37,8 @@ test("Renders the call settings", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
@@ -47,7 +48,10 @@ test("Renders the call settings", async () => {
     await contains("label[aria-label='Camera']");
     await contains("label[aria-label='Microphone']");
     await contains("label[aria-label='Audio Output']");
+    await contains("option", { textContent: "Permission Needed", count: 3 });
+    rtc.microphonePermission = "granted";
     await contains("option[value=mockAudioDeviceId]");
+    rtc.cameraPermission = "granted";
     await contains("option[value=mockVideoDeviceId]");
     await contains("button", { text: "Voice Detection" });
     await contains("button", { text: "Push to Talk" });
