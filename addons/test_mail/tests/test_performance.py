@@ -1417,8 +1417,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
-    def test_message_to_store_multi(self):
-        """Test performance of `_to_store` with multiple messages with multiple attachments,
+    def test_store_add_message_multi(self):
+        """Test performance of `store.add` with multiple messages with multiple attachments,
         different authors, various notifications, and different tracking values.
 
         Those messages might not make sense functionally but they are crafted to
@@ -1435,7 +1435,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         messages_all = self.messages_all.with_env(self.env)
 
         with self.assertQueryCount(employee=26):  # tm 25
-            res = Store().add(messages_all).get_result()
+            res = Store().add(messages_all, "_store_message_fields").get_result()
 
         self.assertEqual(len(res["mail.message"]), 2 * 2)
         for message in res["mail.message"]:
@@ -1444,11 +1444,11 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
-    def test_message_to_store_single(self):
+    def test_store_add_message_single(self):
         message = self.messages_all[0].with_env(self.env)
 
         with self.assertQueryCount(employee=26):  # tm 25
-            res = Store().add(message).get_result()
+            res = Store().add(message, "_store_message_fields").get_result()
 
         self.assertEqual(len(res["mail.message"]), 1)
         self.assertEqual(len(res["mail.message"][0]["attachment_ids"]), 2)
@@ -1456,7 +1456,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
-    def test_message_to_store_group_thread_name_by_model(self):
+    def test_store_add_message_group_thread_name_by_model(self):
         """Ensures the fetch of multiple thread names is grouped by model."""
         records = []
         for _i in range(5):
@@ -1469,18 +1469,18 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         } for record in records])
 
         with self.assertQueryCount(employee=3):
-            res = Store().add(messages).get_result()
+            res = Store().add(messages, "_store_message_fields").get_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
         with self.assertQueryCount(employee=15):  # tm: 14
-            res = Store().add(messages).get_result()
+            res = Store().add(messages, "_store_message_fields").get_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
     @warmup
-    def test_message_to_store_multi_followers_inbox(self):
+    def test_store_add_message_multi_followers_inbox(self):
         """Test query count as well as bus notifcations from sending a message to multiple followers
         with inbox."""
         record = self.env["mail.test.simple"].create({"name": "Test"})

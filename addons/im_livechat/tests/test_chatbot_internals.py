@@ -172,7 +172,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         def get_forward_op_bus_params():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
             # only data relevant to the test are asserted for simplicity
-            transfer_message_data = Store(bus_channel=discuss_channel).add(messages[1]).get_result()
+            store = Store(bus_channel=discuss_channel).add(messages[1], "_store_message_fields")
+            transfer_message_data = store.get_result()
             transfer_message_data["mail.message"][0].update(
                 {
                     "author_id": self.chatbot_script.operator_partner_id.id,
@@ -183,7 +184,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 }
             )
             transfer_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
-            joined_message_data = Store(bus_channel=discuss_channel).add(messages[0]).get_result()
+            store = Store(bus_channel=discuss_channel).add(messages[0], "_store_message_fields")
+            joined_message_data = store.get_result()
             joined_message_data["mail.message"][0].update(
                 {
                     "author_id": self.chatbot_script.operator_partner_id.id,
@@ -204,9 +206,9 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 lambda m: m.partner_id == self.partner_employee
             )
             # data in-between join and leave
-            channel_data_join = (
-                Store(bus_channel=member_emp._bus_channel()).add(discuss_channel).get_result()
-            )
+            store = Store(bus_channel=member_emp._bus_channel())
+            store.add(discuss_channel, "_store_channel_fields")
+            channel_data_join = store.get_result()
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
@@ -237,13 +239,14 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     ),
                 },
             )
-            channel_data = Store().add(discuss_channel).get_result()
+            store_1 = Store().add(discuss_channel, "_store_channel_fields")
+            channel_data = store_1.get_result()
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
-            channel_data_emp = Store().add(discuss_channel.with_user(self.user_employee)).get_result()
+            channel_w_employee = discuss_channel.with_user(self.user_employee)
+            store_2 = Store().add(channel_w_employee, "_store_channel_fields")
+            channel_data_emp = store_2.get_result()
             channel_data_emp["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             channel_data_emp["discuss.channel.member"][1]["message_unread_counter_bus_id"] = 0
-            channel_data = Store().add(discuss_channel).get_result()
-            channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             agent_history_id = discuss_channel.livechat_channel_member_history_ids.filtered(
                 lambda h: h.livechat_member_type == "agent"
             ).id
@@ -263,10 +266,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 [
                     {
                         "type": "discuss.channel/new_message",
-                        "payload": {
-                            "data": transfer_message_data,
-                            "id": discuss_channel.id,
-                        },
+                        "payload": {"data": transfer_message_data, "id": discuss_channel.id},
                     },
                     {
                         "type": "discuss.channel/joined",
@@ -279,10 +279,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     },
                     {
                         "type": "discuss.channel/new_message",
-                        "payload": {
-                            "data": joined_message_data,
-                            "id": discuss_channel.id,
-                        },
+                        "payload": {"data": joined_message_data, "id": discuss_channel.id},
                     },
                     {
                         "type": "mail.record/insert",
@@ -359,18 +356,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {
                         "type": "mail.record/insert",
                         "payload": {
-                            "discuss.channel": [
-                                {
-                                    "id": discuss_channel.id,
-                                    "member_count": 2,
-                                }
-                            ],
-                            "discuss.channel.member": [
-                                {
-                                    "_DELETE": True,
-                                    "id": member_bot.id,
-                                }
-                            ],
+                            "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
+                            "discuss.channel.member": [{"_DELETE": True, "id": member_bot.id}],
                         },
                     },
                     {

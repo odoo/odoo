@@ -232,7 +232,7 @@ class ResUsers(models.Model):
                 )
         if "notification_type" in vals:
             for user in user_notification_type_modified:
-                Store(bus_channel=user).add(user, "notification_type").bus_send()
+                Store(bus_channel=user).add(user, ["notification_type"]).bus_send()
 
         return write_res
 
@@ -369,71 +369,40 @@ class ResUsers(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
-    @api.model
-    def _init_store_data(self, store: Store):
-        """Initialize the store of the user."""
+    def _store_init_global_fields(self, res: Store.FieldList):
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         # sudo: res.partner - exposing OdooBot data is considered acceptable
         odoobot = self.env.ref("base.partner_root").sudo()
-        if not self.env.user._is_public():
-            odoobot = odoobot.with_prefetch((odoobot + self.env.user.partner_id).ids)
-        store.add_global_values(
-            action_discuss_id=xmlid_to_res_id("mail.action_discuss"),
-            hasLinkPreviewFeature=self.env["mail.link.preview"]._is_link_preview_enabled(),
-            internalUserGroupId=self.env.ref("base.group_user").id,
-            mt_comment=xmlid_to_res_id("mail.mt_comment"),
-            mt_note=xmlid_to_res_id("mail.mt_note"),
-            odoobot=Store.One(odoobot),
-        )
-        if not self.env.user._is_public():
-            settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
-            store.add_global_values(
-                self_user=Store.One(
-                    self.env.user,
-                    [
-                        Store.One(
-                            "partner_id",
-                            [
-                                "active",
-                                Store.One("main_user_id", []),
-                                "name",
-                                *self.env["res.partner"]._get_store_avatar_fields(),
-                                *self.env["res.partner"]._get_store_im_status_fields(),
-                            ],
-                        ),
-                        Store.Attr("is_admin", lambda u: u._is_admin()),
-                        "notification_type",
-                        "share",
-                        "signature",
-                    ],
-                ),
-                settings=settings._res_users_settings_format(),
-            )
+        if not self._is_public():
+            odoobot = odoobot.with_prefetch((odoobot + self.partner_id).ids)
+        res.attr("action_discuss_id", xmlid_to_res_id("mail.action_discuss"))
+        res.attr("hasLinkPreviewFeature", self.env["mail.link.preview"]._is_link_preview_enabled())
+        res.attr("internalUserGroupId", self.env.ref("base.group_user").id)
+        res.attr("mt_comment", xmlid_to_res_id("mail.mt_comment"))
+        res.attr("mt_note", xmlid_to_res_id("mail.mt_note"))
+        res.one("odoobot", "_store_partner_fields", value=odoobot)
+        if not self._is_public():
+            settings = self.env["res.users.settings"]._find_or_create_for_user(self)
+            res.one("self_user", "_store_init_fields", value=self)
+            res.attr("settings", settings._res_users_settings_format())
         if guest := self.env["mail.guest"]._get_guest_from_context():
-            # sudo() => adding current guest data is acceptable
-            store.add_global_values(self_guest=Store.One(guest.sudo(), [*guest._get_store_avatar_fields(), "name"]))
+            # sudo: mail.guest - guest can read its own init fields
+            res.one("self_guest", "_store_avatar_fields", value=guest.sudo())
 
-    def _init_messaging(self, store: Store):
-        self.ensure_one()
-        self = self.with_user(self)
-        # sudo: bus.bus: reading non-sensitive last id
-        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        store.add_global_values(
-            inbox={
-                "counter": self.partner_id._get_needaction_count(),
-                "counter_bus_id": bus_last_id,
-                "id": "inbox",
-                "model": "mail.box",
-            },
-            starred={
-                "counter": self.env["mail.message"].search_count(
-                    [("starred_partner_ids", "in", self.partner_id.ids)]
-                ),
-                "counter_bus_id": bus_last_id,
-                "id": "starred",
-                "model": "mail.box",
-            },
+    def _store_init_fields(self, res: Store.FieldList):
+        res.one(
+            "partner_id",
+            lambda res: (
+                res.extend(["active", "main_user_id", "name"]),
+                res.from_method("_store_avatar_fields"),
+                res.from_method("_store_im_status_fields"),
+            ),
         )
+        res.attr("is_admin", lambda u: u._is_admin())
+        res.extend(["notification_type", "share", "signature"])
+
+    def _store_main_user_fields(self, res: Store.FieldList):
+        res.attr("share")
 
     @api.model
     def _get_activity_groups(self):
@@ -521,8 +490,9 @@ class ResUsers(models.Model):
                 user_activities[model_name]['activity_ids'] = activities.ids
         return list(user_activities.values())
 
-    def _get_store_avatar_card_fields(self, target):
-        return ["share", Store.One("partner_id", self.partner_id._get_store_avatar_card_fields(target))]
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        res.attr("share")
+        res.one("partner_id", "_store_avatar_card_fields")
 
     # ------------------------------------------------------------
     # Mail Servers

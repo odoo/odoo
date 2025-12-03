@@ -122,21 +122,25 @@ class LivechatController(http.Controller):
                     "script": chatbot_script.id,
                     "steps": welcome_steps.mapped(lambda s: {"scriptStep": s.id}),
                 }
-                store.add(chatbot_script)
-                store.add(welcome_steps)
-            channel_info = {
-                "fetchChannelInfoState": "fetched",
-                "id": channel_id,
-                "isLoaded": True,
-                "livechat_operator_id": Store.One(
-                    operator_info["operator_partner"], self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+                store.add(chatbot_script, "_store_script_fields")
+                store.add(welcome_steps, "_store_script_step_fields")
+            store.add_model_values(
+                "discuss.channel",
+                lambda res: (
+                    res.attr("fetchChannelInfoState", "fetched"),
+                    res.attr("id", channel_id),
+                    res.attr("isLoaded", True),
+                    res.one(
+                        "livechat_operator_id",
+                        "_store_livechat_agent_fields",
+                        value=operator_info["operator_partner"],
+                    ),
+                    res.attr("scrollUnread", False),
+                    res.attr("channel_type", "livechat"),
+                    res.attr("chatbot", chatbot_data),
+                    res.append(non_persisted_channel_params),
                 ),
-                "scrollUnread": False,
-                "channel_type": "livechat",
-                "chatbot": chatbot_data,
-                **non_persisted_channel_params,
-            }
-            store.add_model_values("discuss.channel", channel_info)
+            )
         else:
             if request.env.user._is_public():
                 guest = guest.sudo()._get_or_create_guest(
@@ -162,26 +166,21 @@ class LivechatController(http.Controller):
                 channel._broadcast([channel.livechat_operator_id.id])
             if guest:
                 store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
-        request.env["res.users"]._init_store_data(store)
+        store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)
         # Make sure not to send "isLoaded" value on the guest bus, otherwise it
         # could be overwritten.
         if channel:
-             store.add(
-                 channel,
-                 extra_fields={
-                     "isLoaded": not is_chatbot_script,
-                     "scrollUnread": False,
-                 },
-             )
-        if not request.env.user._is_public():
             store.add(
-                request.env.user.partner_id,
-                {"email": request.env.user.partner_id.email},
+                channel,
+                lambda res: (
+                    res.from_method("_store_channel_fields"),
+                    res.attr("isLoaded", not is_chatbot_script),
+                    res.attr("scrollUnread", False),
+                ),
             )
-        return {
-            "store_data": store.get_result(),
-            "channel_id": channel_id,
-        }
+        if not request.env.user._is_public():
+            store.add(request.env.user.partner_id, ["email"])
+        return {"store_data": store.get_result(), "channel_id": channel_id}
 
     @http.route("/im_livechat/feedback", type="jsonrpc", auth="public")
     @add_guest_to_context

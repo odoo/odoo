@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -42,31 +43,22 @@ class ResUsers(models.Model):
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
         ).unlink()
 
-    def _init_messaging(self, store: Store):
-        self = self.with_user(self)
-        channels = self.env["discuss.channel"]._get_channels_as_member()
-        domain = [("channel_id", "in", channels.ids), ("is_self", "=", True)]
-        members = self.env["discuss.channel.member"].search(domain)
-        members_with_unread = members.filtered(lambda member: member.message_unread_counter)
-        # fetch channels data before calling super to benefit from prefetching (channel info might
-        # prefetch a lot of data that super could use, about the current user in particular)
-        super()._init_messaging(store)
-        store.add_global_values(initChannelsUnreadCounter=len(members_with_unread))
-
-    def _init_store_data(self, store: Store):
-        super()._init_store_data(store)
+    def _store_init_global_fields(self, res: Store.FieldList):
+        super()._store_init_global_fields(res)
         # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
         # return whether the features are enabled
         get_str = self.env["ir.config_parameter"].sudo().get_str
-        store.add_global_values(
-            hasGifPickerFeature=bool(get_str("discuss.tenor_api_key")),
-            hasMessageTranslationFeature=bool(get_str("mail.google_translate_api_key")),
-            hasCannedResponses=bool(self.env["mail.canned.response"].sudo().search([
-                "|",
-                ("create_uid", "=", self.env.user.id),
-                ("group_ids", "in", self.env.user.all_group_ids.ids),
-            ], limit=1)) if self.env.user else False,
-            channel_types_with_seen_infos=sorted(
-                self.env["discuss.channel"]._types_allowing_seen_infos()
-            ),
+        res.attr("hasGifPickerFeature", bool(get_str("discuss.tenor_api_key")))
+        res.attr("hasMessageTranslationFeature", bool(get_str("mail.google_translate_api_key")))
+        res.attr(
+            "hasCannedResponses",
+            self.env["mail.canned.response"].sudo().search_count(
+                Domain("create_uid", "=", self.id)
+                | Domain("group_ids", "in", self.all_group_ids.ids),
+                limit=1,
+            ) > 0,
+        )
+        res.attr(
+            "channel_types_with_seen_infos",
+            sorted(self.env["discuss.channel"]._types_allowing_seen_infos()),
         )

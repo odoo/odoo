@@ -22,10 +22,9 @@ class DiscussCategory(models.Model):
     # constraints
     _name_unique = models.Constraint("UNIQUE(name)", "The category name must be unique")
 
-    def _sync_field_names(self):
-        res = super()._sync_field_names()
-        res[None] += ["name", "sequence"]
-        return res
+    def _sync_field_names(self, res):
+        super()._sync_field_names(res)
+        res[None].extend(["name", "sequence"])
 
     def _bus_channel(self):
         return self.channel_ids

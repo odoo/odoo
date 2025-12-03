@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import api, models, fields, _
@@ -16,43 +17,48 @@ class ResPartner(models.Model):
     chatbot_script_ids = fields.One2many("chatbot.script", "operator_partner_id")
     livechat_channel_count = fields.Integer(compute='_compute_livechat_channel_count')
 
-    def _search_for_channel_invite_to_store(self, store: Store, channel):
-        super()._search_for_channel_invite_to_store(store, channel)
+    def _store_channel_invite_fields(self, res: Store.FieldList, *, channel):
+        super()._store_channel_invite_fields(res, channel=channel)
         if channel.channel_type != "livechat" or not self:
             return
         lang_name_by_code = dict(self.env["res.lang"].get_installed())
-        invite_by_self_count_by_partner = dict(
+        invite_by_self_count_by_partner = defaultdict(
+            int,
             self.env["discuss.channel.member"]._read_group(
                 [["create_uid", "=", self.env.user.id], ["partner_id", "in", self.ids]],
                 groupby=["partner_id"],
                 aggregates=["__count"],
-            )
+            ),
         )
         active_livechat_partners = (
             self.env["im_livechat.channel"].search([]).available_operator_ids.partner_id
         )
-        for partner in self:
-            languages = list(OrderedSet([
-                lang_name_by_code[partner.lang],
-                # sudo: res.users.settings - operator can access other operators languages
-                *partner.user_ids.sudo().livechat_lang_ids.mapped("name")
-            ]))
-            store.add(
-                partner,
-                {
-                    "invite_by_self_count": invite_by_self_count_by_partner.get(partner, 0),
-                    "is_available": partner in active_livechat_partners,
-                    "lang_name": languages[0],
-                    # sudo: res.users.settings - operator can access other operators expertises
-                    "livechat_expertise": partner.user_ids.sudo().livechat_expertise_ids.mapped("name"),
-                    "livechat_languages": languages[1:],
-                    # sudo: res.users.settings - operator can access other operators livechat usernames
-                    "user_livechat_username": partner.sudo().user_livechat_username,
-                },
-                # sudo - res.partner: checking if operator is in call for live
-                # chat invitation is acceptable.
-                extra_fields=[Store.Attr("is_in_call", sudo=True)]
+        languages_by_partner = {
+            partner: list(
+                OrderedSet(
+                    [
+                        lang_name_by_code[partner.lang],
+                        # sudo: res.users.settings - operator can access other operators languages
+                        *partner.user_ids.sudo().livechat_lang_ids.mapped("name"),
+                    ],
+                ),
             )
+            for partner in self
+        }
+        res.attr("invite_by_self_count", lambda p: invite_by_self_count_by_partner[p])
+        res.attr("is_available", lambda p: p in active_livechat_partners)
+        res.attr("lang_name", lambda p: languages_by_partner[p][0])
+        # sudo: res.users.settings - operator can access other operators expertises
+        res.attr(
+            "livechat_expertise",
+            lambda p: p.user_ids.sudo().livechat_expertise_ids.mapped("name"),
+        )
+        res.attr("livechat_languages", lambda p: languages_by_partner[p][1:])
+        # sudo: res.users.settings - operator can access other operators livechat usernames
+        res.attr("user_livechat_username", sudo=True)
+        # sudo - res.partner: checking if operator is in call for live
+        # chat invitation is acceptable.
+        res.attr("is_in_call", sudo=True)
 
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):
@@ -70,12 +76,15 @@ class ResPartner(models.Model):
         for partner in self:
             partner.livechat_channel_count = livechat_count_by_partner.get(partner, 0)
 
-    def _get_store_livechat_username_fields(self):
+    def _store_livechat_agent_fields(self, res: Store.FieldList):
+        """Return the standard fields to include for live chat agent."""
+        self._store_avatar_fields(res)
+        self._store_livechat_username_fields(res)
+
+    def _store_livechat_username_fields(self, res: Store.FieldList):
         """Return the fields to be stored for live chat username."""
-        return [
-            Store.Attr("name", predicate=lambda p: not p.user_livechat_username),
-            "user_livechat_username",
-        ]
+        res.attr("name", predicate=lambda p: not p.user_livechat_username)
+        res.attr("user_livechat_username")
 
     def _bus_send_history_message(self, channel, page_history):
         message_body = _("No history found")

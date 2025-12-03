@@ -38,7 +38,7 @@ class TestDiscussTools(TransactionCase):
     def test_040_store_invalid(self):
         """Test adding invalid value."""
         store = Store()
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(TypeError):
             store.add_model_values("key1", True)
 
     def test_042_store_invalid_missing_id(self):
@@ -63,13 +63,15 @@ class TestDiscussTools(TransactionCase):
     def test_075_store_same_related_field_twice(self):
         """Test adding the same related field twice combines their data"""
         user = mail_new_test_user(self.env, login="test_user", name="Test User")
+        store = Store().add(
+            user,
+            lambda res: (
+                res.one("partner_id", ["name"]),
+                res.one("partner_id", ["country_id"]),
+            ),
+        )
         self.assertEqual(
-            Store()
-            .add(
-                user,
-                [Store.One("partner_id", "name"), Store.One("partner_id", "country_id")],
-            )
-            .get_result(),
+            store.get_result(),
             {
                 "res.partner": [
                     {
@@ -101,13 +103,13 @@ class TestDiscussTools(TransactionCase):
     def test_140_store_store_invalid_bool(self):
         """Test Store adding invalid value."""
         store = Store()
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(TypeError):
             store.add_model_values("key1", True)
 
     def test_141_store_store_invalid_list(self):
         """Test adding invalid value."""
         store = Store()
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(AssertionError):
             store.add_model_values("key1", [{"test": True}])
 
     def test_160_store_store_data_empty_val(self):
@@ -181,7 +183,7 @@ class TestDiscussTools(TransactionCase):
     def test_240_store_thread_invalid_bool(self):
         """Test Thread adding invalid bool value."""
         store = Store()
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(TypeError):
             store.add_model_values("mail.thread", True)
 
     def test_241_store_thread_invalid_list(self):
@@ -218,25 +220,33 @@ class TestDiscussTools(TransactionCase):
     # 3xx Tests with real models
 
     def test_350_non_list_extra_fields_copy_when_following_relations(self):
-        """Test that non-list extra_fields are properly copied when following relations."""
+        """Test that non-list extra fields are properly copied when following relations."""
         user = new_test_user(self.env, "test_user_350@example.com")
-        store = Store()
-        store.add(user, Store.One("partner_id", extra_fields="email"))
+        store = Store().add(
+            user,
+            lambda res: res.one(
+                "partner_id",
+                lambda res: (
+                    res.from_method("_store_partner_fields"),
+                    res.attr("email"),
+                ),
+            ),
+        )
         self.assertEqual(store.get_result()["res.partner"][0]["email"], "test_user_350@example.com")
 
     def test_355_single_extra_fields_copy_with_records(self):
-        """Test that dynamic_fields apply individually to each record even when list extra_fields are present."""
+        """Test that dynamic_fields apply individually to each record even when list extra fields are present."""
         user_a = new_test_user(self.env, "test_user_355_a@example.com")
         user_b = new_test_user(self.env, "test_user_355_b@example.com")
-        store = Store()
-        store.add(
+
+        def fields(user_res: Store.FieldList, user):
+            if user == user_a:
+                user_res.attr("email")
+
+        store = Store().add(
             user_a + user_b,
-            Store.One(
-                "partner_id",
-                [],
-                dynamic_fields=lambda user: ["email"] if user == user_a else [],
-                extra_fields=["name"],
-            ),
+            lambda res: res.one("partner_id", lambda res: res.attr("name"), dynamic_fields=fields),
         )
-        self.assertEqual(store.get_result()["res.partner"][0]["email"], "test_user_355_a@example.com")
-        self.assertNotIn("email", store.get_result()["res.partner"][1])
+        data = store.get_result()
+        self.assertEqual(data["res.partner"][0]["email"], "test_user_355_a@example.com")
+        self.assertNotIn("email", data["res.partner"][1])

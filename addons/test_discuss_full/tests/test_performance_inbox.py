@@ -27,11 +27,11 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - search ir_rule (_get_rules for mail.notification)
         #       - search ir_rule (_get_rules)
         #       - search mail_message
-        #   30 message _to_store:
+        #   30 store add message:
         #       - search mail_message_schedule
         #       - fetch mail_message
         #       - search mail_followers
-        #       2 thread _to_store:
+        #       2 thread:
         #           - fetch slide_channel
         #           - fetch product_template
         #       - search mail_message_res_partner_starred_rel (_compute_starred)
@@ -54,7 +54,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - search rating_rating
         #           - fetch rating_rating
         #       - search mail_tracking_value
-        #       3 _author_to_store:
+        #       3 author:
         #           - fetch res_partner
         #           - search res_users
         #           - fetch res_users

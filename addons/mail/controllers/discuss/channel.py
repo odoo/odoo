@@ -24,12 +24,12 @@ class DiscussChannelWebclientController(WebclientController):
         super()._process_request_loop(store, fetch_params)
         channels = request.env.context["channels"]
         if channels:
-            store.add(channels)
+            store.add(channels, "_store_channel_fields")
             store.add(channels.self_member_id, ["is_favorite"])
         if request.env.context["add_channels_last_message"]:
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
-            store.add(channels._get_last_messages())
+            store.add(channels._get_last_messages(), "_store_message_fields")
 
     @classmethod
     def _process_request_for_all(self, store: Store, name, params):
@@ -38,7 +38,7 @@ class DiscussChannelWebclientController(WebclientController):
         if name == "init_messaging":
             member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
             channel_domain = [("channel_member_ids", "any", member_domain)]
-            channels = request.env["discuss.channel"].search(channel_domain)
+            channels = request.env["discuss.channel"].search_fetch(channel_domain)
             request.update_context(channels=request.env.context["channels"] | channels)
         if name == "channels_as_member":
             channels = request.env["discuss.channel"]._get_channels_as_member()
@@ -53,21 +53,38 @@ class DiscussChannelWebclientController(WebclientController):
                 [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
             ):
                 member.is_favorite = params["is_favorite"]
+        resolve_channel = request.env["discuss.channel"]
         if name == "/discuss/get_or_create_chat":
-            channel = request.env["discuss.channel"]._get_or_create_chat(
-                params["partners_to"], params.get("pin", True)
+            resolve_channel = request.env["discuss.channel"]._get_or_create_chat(
+                params["partners_to"],
+                params.get("pin", True),
             )
-            store.add(channel).resolve_data_request(channel=Store.One(channel, []))
         if name == "/discuss/create_channel":
-            channel = request.env["discuss.channel"]._create_channel(params["name"], params["group_id"])
-            store.add(channel).resolve_data_request(channel=Store.One(channel, []))
+            resolve_channel = request.env["discuss.channel"]._create_channel(
+                params["name"],
+                params["group_id"],
+            )
         if name == "/discuss/create_group":
-            channel = request.env["discuss.channel"]._create_group(
+            resolve_channel = request.env["discuss.channel"]._create_group(
                 params["partners_to"],
                 params.get("default_display_mode", False),
                 params.get("name", ""),
             )
-            store.add(channel).resolve_data_request(channel=Store.One(channel, []))
+        store.resolve_data_request(
+            lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
+        )
+
+    @classmethod
+    def _store_init_messaging_global_fields(cls, res: Store.FieldList, bus_last_id):
+        channels = request.env["discuss.channel"]._get_channels_as_member()
+        members = request.env["discuss.channel.member"].search_fetch(
+            [("channel_id", "in", channels.ids), ("is_self", "=", True)],
+        )
+        members_with_unread = members.filtered(lambda member: member.message_unread_counter)
+        res.attr("initChannelsUnreadCounter", len(members_with_unread))
+        # fetch channels data before calling super to benefit from prefetching (channel info might
+        # prefetch a lot of data that super could use, about the current user in particular)
+        super()._store_init_messaging_global_fields(res, bus_last_id)
 
 
 class ChannelController(http.Controller):
@@ -81,7 +98,9 @@ class ChannelController(http.Controller):
             domain=[("id", "not in", known_member_ids), ("channel_id", "=", channel.id)],
             limit=100,
         )
-        store = Store().add(channel, "member_count").add(unknown_members)
+        store = Store()
+        store.add(channel, ["member_count"])
+        store.add(unknown_members, "_store_member_fields")
         return store.get_result()
 
     @http.route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
@@ -101,11 +120,8 @@ class ChannelController(http.Controller):
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()
-        return {
-            **res,
-            "data": Store().add(messages).get_result(),
-            "messages": messages.ids,
-        }
+        store = Store().add(messages, "_store_message_fields")
+        return {**res, "data": store.get_result(), "messages": messages.ids}
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
@@ -114,7 +130,7 @@ class ChannelController(http.Controller):
         if not channel:
             raise NotFound()
         messages = channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)
-        return Store().add(messages).get_result()
+        return Store().add(messages, "_store_message_fields").get_result()
 
     @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -178,11 +194,8 @@ class ChannelController(http.Controller):
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
-        return {
-
-            "store_data": Store().add(attachments).get_result(),
-            "count": len(attachments),
-        }
+        store = Store().add(attachments, "_store_attachment_fields")
+        return {"store_data": store.get_result(), "count": len(attachments)}
 
     @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -191,7 +204,7 @@ class ChannelController(http.Controller):
         if not channel:
             raise NotFound()
         channel._find_or_create_member_for_self()
-        return Store().add(channel).get_result()
+        return Store().add(channel, "_store_channel_fields").get_result()
 
     @http.route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
@@ -199,7 +212,8 @@ class ChannelController(http.Controller):
         if not channel:
             raise NotFound()
         sub_channel = channel._create_sub_channel(from_message_id, name)
-        return {"store_data": Store().add(sub_channel).get_result(), "sub_channel": sub_channel.id}
+        store = Store().add(sub_channel, "_store_channel_fields")
+        return {"store_data": store.get_result(), "sub_channel": sub_channel.id}
 
     @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -213,7 +227,9 @@ class ChannelController(http.Controller):
         if search_term:
             domain.append(("name", "ilike", search_term))
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
-        store = Store().add(sub_channels).add(sub_channels._get_last_messages())
+        store = Store()
+        store.add(sub_channels, "_store_channel_fields")
+        store.add(sub_channels._get_last_messages(), "_store_message_fields")
         if sub_channels:
             self.env.cr.execute(
                 """
@@ -229,7 +245,8 @@ class ChannelController(http.Controller):
                 (tuple(sub_channels.ids),),
             )
             store.add(
-                self.env["discuss.channel.member"].browse([r[0] for r in self.env.cr.fetchall()])
+                self.env["discuss.channel.member"].browse([r[0] for r in self.env.cr.fetchall()]),
+                "_store_member_fields",
             )
         return {
             "store_data": store.get_result(),

@@ -93,8 +93,8 @@ class MailGuest(models.Model):
             raise UserError(_("Guest's name is too long."))
         self.name = name
         for channel in self.channel_ids:
-            Store(bus_channel=channel).add(self, [*self._get_store_avatar_fields(), "name"]).bus_send()
-        Store(bus_channel=self).add(self, [*self._get_store_avatar_fields(), "name"]).bus_send()
+            Store(bus_channel=channel).add(self, "_store_avatar_fields").bus_send()
+        Store(bus_channel=self).add(self, "_store_avatar_fields").bus_send()
 
     def _update_timezone(self, timezone):
         query = """
@@ -116,20 +116,15 @@ class MailGuest(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "im_status", scope="mail.presence")
 
-    def _get_store_avatar_fields(self):
-        return [
-            Store.Attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token()),
-            "write_date",
-        ]
+    def _store_avatar_fields(self, res: Store.FieldList):
+        """Same as _store_guest_fields but without im_status fields to reduce queries when im_status is not needed."""
+        res.attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token())
+        res.extend(["name", "write_date"])
 
-    def _get_store_im_status_fields(self):
-        return [
-            "im_status",
-            Store.Attr("im_status_access_token", lambda g: g._get_im_status_access_token()),
-        ]
-
-    def _to_store_defaults(self, target):
-        return [*self._get_store_avatar_fields(), *self._get_store_im_status_fields(), "name"]
+    def _store_guest_fields(self, res: Store.FieldList):
+        self._store_avatar_fields(res)
+        res.attr("im_status")
+        res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

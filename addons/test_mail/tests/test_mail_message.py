@@ -97,10 +97,10 @@ class TestMessageValues(MailCommon):
             record._message_update_content(tracking_message, body="", attachment_ids=[])
 
     @mute_logger('odoo.models.unlink')
-    def test_mail_message_to_store_access(self):
+    def test_mail_message_store_access(self):
         """
         User that doesn't have access to a record should still be able to fetch
-        the record_name inside message _to_store.
+        the record_name inside message.
         """
         company_2 = self.env['res.company'].create({'name': 'Second Test Company'})
         record1 = self.env['mail.test.multi.company'].create({
@@ -109,18 +109,17 @@ class TestMessageValues(MailCommon):
         })
         message = record1.message_post(body='', partner_ids=[self.user_employee.partner_id.id])
         # We need to flush and invalidate the ORM cache since the record_name
-        # is already cached from the creation. Otherwise it will leak inside
-        # message _to_store.
+        # is already cached from the creation.
         self.env.flush_all()
         self.env.invalidate_all()
-        res = Store().add(message.with_user(self.user_employee)).get_result()
-        self.assertEqual(res["mail.message"][0].get("record_name"), "Test1")
+        store_1 = Store().add(message.with_user(self.user_employee), "_store_message_fields")
+        self.assertEqual(store_1.get_result()["mail.message"][0].get("record_name"), "Test1")
 
         record1.write({"name": "Test2"})
         self.env.flush_all()
         self.env.invalidate_all()
-        res = Store().add(message.with_user(self.user_employee)).get_result()
-        self.assertEqual(res["mail.message"][0].get('record_name'), 'Test2')
+        store_2 = Store().add(message.with_user(self.user_employee), "_store_message_fields")
+        self.assertEqual(store_2.get_result()["mail.message"][0].get('record_name'), 'Test2')
 
         # check model not inheriting from mail.thread -> should not crash
         record_nothread = self.env['mail.test.nothread'].create({'name': 'NoThread'})
@@ -128,7 +127,7 @@ class TestMessageValues(MailCommon):
             'model': record_nothread._name,
             'res_id': record_nothread.id,
         })
-        formatted = Store().add(message).get_result()["mail.message"][0]
+        formatted = Store().add(message, "_store_message_fields").get_result()["mail.message"][0]
         self.assertEqual(formatted['record_name'], record_nothread.name)
 
     def test_records_by_message(self):

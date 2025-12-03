@@ -1283,11 +1283,10 @@ class ProjectProject(models.Model):
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
 
-    def _get_store_thread_fields(self, target: Store.Target, request_list):
-        res = super()._get_store_thread_fields(target, request_list)
+    def _store_thread_fields(self, res: Store.FieldList, *, request_list):
+        super()._store_thread_fields(res, request_list=request_list)
         if "followers" in request_list:
-            res.append(Store.Many("collaborator_ids", [], value=lambda p: p.collaborator_ids.partner_id))
-        return res
+            res.many("collaborator_ids", [], value=lambda p: p.collaborator_ids.partner_id)
 
     @api.depends('task_count', 'open_task_count')
     def _compute_task_completion_percentage(self):

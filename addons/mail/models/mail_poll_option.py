@@ -4,6 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import format_list
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailPollOption(models.Model):
@@ -94,13 +95,7 @@ class MailPollOption(models.Model):
         for option in self:
             option.vote_percentage = percentage_by_option[option]
 
-    def _to_store_defaults(self, target):
-        fields = [
-            "number_of_votes",
-            "poll_id",
-            "option_label",
-            "vote_percentage",
-        ]
-        if target.is_current_user(self.env):
-            fields.append("selected_by_self")
-        return fields
+    def _store_poll_option_fields(self, res: Store.FieldList):
+        res.extend(["number_of_votes", "poll_id", "option_label", "vote_percentage"])
+        if res.is_for_current_user():
+            res.attr("selected_by_self")

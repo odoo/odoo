@@ -355,10 +355,7 @@ class ChatbotScriptStep(models.Model):
             return discuss_channel._forward_human_operator(chatbot_script_step=self)
         return discuss_channel._chatbot_post_message(self.chatbot_script_id, self.message)
 
-    def _to_store_defaults(self, target):
-        return [
-            Store.Many("answer_ids"),
-            Store.Attr("is_last", lambda step: step._is_last_step()),
-            "message",
-            "step_type",
-        ]
+    def _store_script_step_fields(self, res: Store.FieldList):
+        res.many("answer_ids", "_store_script_answer_fields")
+        res.attr("is_last", lambda step: step._is_last_step())
+        res.extend(["message", "step_type"])

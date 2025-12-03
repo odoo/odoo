@@ -97,9 +97,7 @@ class MailLinkPreview(models.Model):
             ]
         )
         (message.sudo().message_link_preview_ids - message_link_previews_ok)._unlink_and_notify()
-        Store(
-            bus_channel=message._bus_channel(),
-        ).add(message, message._get_store_message_link_previews_fields()).bus_send()
+        Store(bus_channel=message._bus_channel()).add(message, "_store_message_link_previews_fields").bus_send()
 
     @api.model
     def _is_link_preview_enabled(self):
@@ -128,14 +126,6 @@ class MailLinkPreview(models.Model):
             preview = self.env['mail.link.preview'].create(preview_values)
         return preview
 
-    def _to_store_defaults(self, target):
-        return [
-            "image_mimetype",
-            "og_description",
-            "og_image",
-            "og_mimetype",
-            "og_site_name",
-            "og_title",
-            "og_type",
-            "source_url",
-        ]
+    def _store_link_preview_fields(self, res: Store.FieldList):
+        res.extend(["image_mimetype", "og_description", "og_image", "og_mimetype", "og_site_name"])
+        res.extend(["og_title", "og_type", "source_url"])

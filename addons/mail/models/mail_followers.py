@@ -515,14 +515,9 @@ GROUP BY fol.id%s%s""" % (
     # Misc discuss
     # --------------------------------------------------
 
-    def _to_store_defaults(self, target):
-        return [
-            "display_name",
-            "email",
-            "is_active",
-            "name",
-            # sudo: res.partner - can read partners of found followers, in particular allows
-            # by-passing multi-company ACL for portal partners
-            Store.One("partner_id", sudo=True),
-            Store.One("thread", [], as_thread=True),
-        ]
+    def _store_follower_fields(self, res: Store.FieldList):
+        res.extend(["display_name", "email", "is_active", "name"])
+        # sudo: res.partner - can read partners of found followers, in particular allows
+        # by-passing multi-company ACL for portal partners
+        res.one("partner_id", "_store_partner_fields", sudo=True)
+        res.one("thread", [], as_thread=True)

@@ -163,7 +163,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         operator_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
         self.assertEqual(
-            Store().add(channel).get_result(),
+            Store().add(channel, "_store_channel_fields").get_result(),
             {
                 "discuss.channel": self._filter_channels_fields(
                     {
@@ -310,7 +310,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             },
         )
 
-    def test_channel_to_store_after_operator_left(self):
+    def test_store_add_channel_after_operator_left(self):
         channel = self._common_basic_flow()
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
@@ -321,9 +321,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertFalse(
             channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         )
-        data = Store().add(
-                channel.with_user(self.user_public).with_context(guest=guest),
-            ).get_result()
+        channel_w_user = channel.with_user(self.user_public).with_context(guest=guest)
+        data = Store().add(channel_w_user, "_store_channel_fields").get_result()
         self.assertEqual(
             data["discuss.channel"],
             self._filter_channels_fields(
@@ -402,7 +401,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         )
         self.assertEqual(result["Store"]["livechat_available"], False)
 
-    def test_livechat_visitor_to_store(self):
+    def test_store_add_livechat_visitor(self):
         """Test livechat_visitor_id is sent with livechat channels data even when there is no
         visitor."""
         self.target_visitor = None

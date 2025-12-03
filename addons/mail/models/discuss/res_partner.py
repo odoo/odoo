@@ -99,14 +99,18 @@ class ResPartner(models.Model):
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
         selectable_partners = self.env["res.partner"].browse(query)
-        selectable_partners._search_for_channel_invite_to_store(store, channel)
+        store.add(
+            selectable_partners,
+            "_store_channel_invite_fields",
+            fields_params={"channel": channel},
+        )
         return {
             "count": self.env["res.partner"].search_count(domain),
             "partner_ids": selectable_partners.ids,
         }
 
-    def _search_for_channel_invite_to_store(self, store: Store, channel):
-        store.add(self)
+    def _store_channel_invite_fields(self, res: Store.FieldList, *, channel):
+        self._store_partner_fields(res)
 
     @api.readonly
     @api.model
@@ -114,7 +118,6 @@ class ResPartner(models.Model):
         """Return 'limit'-first partners' such that the name or email matches a 'search' string.
         Prioritize partners that are also (internal) users, and then extend the research to all partners.
         Only members of the given channel are returned.
-        The return format is a list of partner data (as per returned by `_to_store()`).
         """
         channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
@@ -138,19 +141,21 @@ class ResPartner(models.Model):
         ]
         members = self.env["discuss.channel.member"].search(members_domain)
         store = Store()
-        member_fields = [
-            Store.One("channel_id", [], as_thread=True),
-            *self.env["discuss.channel.member"]._to_store_persona(store.target, []),
-        ]
-        store.add(members, member_fields)
-        store.add(partners, extra_fields=partners._get_store_mention_fields())
-        store.add(channel, "group_public_id")
+        store.add(members, "_store_identifying_fields")
+        store.add(
+            partners,
+            lambda res: (
+                res.from_method("_store_partner_fields"),
+                res.from_method("_store_mention_fields"),
+            ),
+        )
+        store.add(channel, ["group_public_id"])
         if allowed_group:
             for p in partners:
                 store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
         try:
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
-            store.add(roles, "name")
+            store.add(roles, ["name"])
         except AccessError:
             pass
         return store.get_result()

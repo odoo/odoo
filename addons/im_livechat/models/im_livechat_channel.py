@@ -679,9 +679,6 @@ class Im_LivechatChannelRule(models.Model):
     def _is_bot_configured(self):
         return bool(self.chatbot_script_id)
 
-    def _to_store_defaults(self, target):
-        return [
-            "action",
-            "auto_popup_timer",
-            Store.One("chatbot_script_id"),
-        ]
+    def _store_channel_rule_fields(self, res: Store.FieldList):
+        res.extend(["action", "auto_popup_timer"])
+        res.one("chatbot_script_id", "_store_script_fields")

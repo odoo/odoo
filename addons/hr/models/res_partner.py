@@ -102,10 +102,8 @@ class ResPartner(models.Model):
             })
         return action
 
-    def _get_store_avatar_card_fields(self, target):
-        avatar_card_fields = super()._get_store_avatar_card_fields(target)
-        if target.is_internal(self.env):
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        super()._store_avatar_card_fields(res)
+        if res.is_for_internal_users():
             # sudo: res.partner - internal users can access employee information of partner
-            employee_fields = self.sudo().employee_ids._get_store_avatar_card_fields(target)
-            avatar_card_fields.append(Store.Many("employee_ids", employee_fields, mode="ADD", sudo=True))
-        return avatar_card_fields
+            res.many("employee_ids", "_store_avatar_card_fields", mode="ADD", sudo=True)

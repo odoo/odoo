@@ -37,8 +37,6 @@ class MessageMailLinkPreview(models.Model):
             Store(bus_channel=self._bus_channel()).delete(message_link_preview).bus_send()
         self.unlink()
 
-    def _to_store_defaults(self, target):
-        return [
-            Store.One("link_preview_id", sudo=True),
-            Store.One("message_id", [], sudo=True),
-        ]
+    def _store_message_link_preview_fields(self, res: Store.FieldList):
+        res.one("link_preview_id", "_store_link_preview_fields", sudo=True)
+        res.one("message_id", [], sudo=True)

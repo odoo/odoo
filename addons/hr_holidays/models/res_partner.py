@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
-from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
@@ -33,11 +32,3 @@ class ResPartner(models.Model):
     @api.model
     def _get_on_leave_ids(self):
         return self.env['res.users']._get_on_leave_ids(partner=True)
-
-    def _to_store_defaults(self, target):
-        defaults = super()._to_store_defaults(target)
-        if target.is_internal(self.env):
-            defaults.append(
-                Store.One("main_user_id", Store.Many("employee_ids", "leave_date_to"))
-            )
-        return defaults

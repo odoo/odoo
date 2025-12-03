@@ -18,22 +18,24 @@ class MailMessage(models.Model):
             else:
                 message.channel_id = False
 
-    def _to_store_defaults(self, target):
-        return super()._to_store_defaults(target) + [
-            Store.Many(
-                "call_history_ids",
-                ["duration_hour", "end_dt"],
-                predicate=lambda m: m.body and 'data-oe-type="call"' in m.body,
-            ),
-        ]
+    def _store_message_fields(self, res: Store.FieldList, **kwargs):
+        super()._store_message_fields(res, **kwargs)
+        res.many(
+            "call_history_ids",
+            ["duration_hour", "end_dt"],
+            predicate=lambda m: m.body and 'data-oe-type="call"' in m.body,
+        )
 
-    def _extras_to_store(self, store: Store, format_reply):
-        super()._extras_to_store(store, format_reply=format_reply)
+    def _store_extra_fields(self, res: Store.FieldList, *, format_reply):
+        super()._store_extra_fields(res, format_reply=format_reply)
         if format_reply:
             # sudo: mail.message: access to parent is allowed
-            store.add(
-                self.sudo().filtered(lambda message: message.channel_id),
-                Store.One("parent_id", format_reply=False),
+            res.one(
+                "parent_id",
+                "_store_message_fields",
+                fields_params={"format_reply": False},
+                predicate=lambda m: m.channel_id,
+                sudo=True,
             )
 
     def _bus_channel(self):

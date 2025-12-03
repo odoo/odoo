@@ -24,23 +24,26 @@ class MailMessageReaction(models.Model):
         'A message reaction must be from a partner or from a guest.',
     )
 
-    def _to_store(self, store: Store, fields):
-        if fields:
+    def _to_store(self, store: Store, res: Store.FieldList):
+        if res:
             raise NotImplementedError("Fields are not supported for reactions.")
         for (message, content), reactions in groupby(self, lambda r: (r.message_id, r.content)):
             reactions = self.env["mail.message.reaction"].union(*reactions)
-            data = {
-                "content": content,
-                "count": len(reactions),
-                "guests": Store.Many(reactions.guest_id, [*self.env["mail.guest"]._get_store_avatar_fields(), "name"]),
-                "message": message.id,
-                "partners": Store.Many(
-                    reactions.partner_id,
-                    [
-                        *self.env["res.partner"]._get_store_avatar_fields(),
-                        *message._get_store_partner_name_fields()
-                    ],
+            store.add_model_values(
+                "MessageReactions",
+                lambda res, content=content, message=message, reactions=reactions: (
+                    res.attr("content", content),
+                    res.attr("count", len(reactions)),
+                    res.many("guests", "_store_avatar_fields", value=reactions.guest_id),
+                    res.attr("message", message.id),
+                    res.many(
+                        "partners",
+                        lambda res: (
+                            res.from_method("_store_avatar_fields"),
+                            message._store_author_dynamic_fields(res),
+                        ),
+                        value=reactions.partner_id,
+                    ),
+                    res.attr("sequence", min(reactions.ids)),
                 ),
-                "sequence": min(reactions.ids),
-            }
-            store.add_model_values("MessageReactions", data)
+            )

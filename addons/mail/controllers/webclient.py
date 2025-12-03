@@ -53,8 +53,11 @@ class WebclientController(ThreadController):
     def _process_request_for_all(self, store: Store, name, params):
         if name == "init_messaging":
             if not request.env.user._is_public():
-                user = request.env.user.sudo(False)
-                user._init_messaging(store)
+                # sudo: bus.bus: reading non-sensitive last id
+                bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
+                store.add_global_values(
+                    lambda res: self._store_init_messaging_global_fields(res, bus_last_id),
+                )
         if name == "mail.thread":
             thread = self._get_thread_with_access(
                 params["thread_model"],
@@ -64,10 +67,14 @@ class WebclientController(ThreadController):
             )
             if not thread:
                 thread = request.env[params["thread_model"]].browse(params["thread_id"])
-                fields = {"hasReadAccess": False, "hasWriteAccess": False}
+                store.add(thread, {"hasReadAccess": False, "hasWriteAccess": False}, as_thread=True)
             else:
-                fields = thread._get_store_thread_fields(store.target, params["request_list"])
-            store.add(thread, fields, as_thread=True)
+                store.add(
+                    thread,
+                    "_store_thread_fields",
+                    fields_params={"request_list": params["request_list"]},
+                    as_thread=True,
+                )
 
     @classmethod
     def _process_request_for_logged_in_user(self, store: Store, name, params):
@@ -82,7 +89,7 @@ class WebclientController(ThreadController):
             # sudo as to not check ACL, which is far too costly
             # sudo: mail.notification - return only failures of current user as author
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
-            notifications.mail_message_id._message_notifications_to_store(store)
+            store.add(notifications.mail_message_id, "_store_notification_fields")
 
     @classmethod
     def _process_request_for_internal_user(self, store: Store, name, params):
@@ -101,7 +108,10 @@ class WebclientController(ThreadController):
                 ("create_uid", "=", request.env.user.id),
                 ("group_ids", "in", request.env.user.all_group_ids.ids),
             ]
-            store.add(request.env["mail.canned.response"].search(domain))
+            store.add(
+                request.env["mail.canned.response"].search_fetch(domain),
+                "_store_canned_response_fields",
+            )
         if name == "avatar_card":
             record_id, model = params.get("id"), params.get("model")
             if not record_id or model not in ("res.users", "res.partner"):
@@ -111,4 +121,28 @@ class WebclientController(ThreadController):
                 "allowed_company_ids": request.env.user._get_company_ids(),
             }
             record = request.env[model].with_context(**context).search([("id", "=", record_id)])
-            store.add(record, record._get_store_avatar_card_fields(store.target))
+            store.add(record, "_store_avatar_card_fields")
+
+    @classmethod
+    def _store_init_messaging_global_fields(cls, res: Store.FieldList, bus_last_id):
+        user = request.env.user.sudo(False)
+        res.attr(
+            "inbox",
+            {
+                "counter": user.partner_id._get_needaction_count(),
+                "counter_bus_id": bus_last_id,
+                "id": "inbox",
+                "model": "mail.box",
+            },
+        )
+        res.attr(
+            "starred",
+            {
+                "counter": user.env["mail.message"].search_count(
+                    [("starred_partner_ids", "in", user.partner_id.ids)],
+                ),
+                "counter_bus_id": bus_last_id,
+                "id": "starred",
+                "model": "mail.box",
+            },
+        )
