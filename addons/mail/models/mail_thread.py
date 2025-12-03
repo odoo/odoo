@@ -3362,20 +3362,15 @@ class MailThread(models.AbstractModel):
                     ("partner_id", "in", users.partner_id.ids),
                 ]
             )
+            batch_vals = {"msg_vals": msg_vals, "add_followers": True, "followers": followers}
             for user in users:
                 store = Store(bus_channel=user).add(
                     message.with_user(user).with_context(allowed_company_ids=[]),
-                    msg_vals=msg_vals,
-                    add_followers=True,
-                    followers=followers,
+                    "_store_message_fields",
+                    fields_params=batch_vals,
                 )
-                user._bus_send(
-                    "mail.message/inbox",
-                    {
-                        "message_id": message.id,
-                        "store_data": store.get_result(),
-                    }
-                )
+                data = store.get_result()
+                user._bus_send("mail.message/inbox", {"message_id": message.id, "store_data": data})
 
     def _notify_thread_by_email(self, message, recipients_data, *, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
@@ -4825,30 +4820,41 @@ class MailThread(models.AbstractModel):
 
     @api.readonly
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
-        self.ensure_one()
-        store = Store()
-        followers_fields = self._get_store_message_followers_fields(after, limit, filter_recipients)
-        store.add(self, followers_fields, as_thread=True)
+        store = Store().add(
+            self,
+            "_store_message_followers_fields",
+            fields_params={"after": after, "limit": limit, "filter_recipients": filter_recipients},
+            as_thread=True,
+        )
         return store.get_result()
 
-    def _get_store_message_followers_fields(self, after=None, limit=100, filter_recipients=False, reset=False):
-        domain = Domain("res_id", "in", self.id)
-        domain &= Domain("res_model", "=", self._name)
-        domain &= Domain("partner_id", "!=", self.env.user.partner_id.id)
-        if filter_recipients:
-            mt_comment_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
-            domain &= Domain("subtype_ids", "=", mt_comment_id)
-            domain &= Domain("partner_id.active", "=", True)
-        if after:
-            domain &= Domain("id", ">", after)
-        followers = self.env["mail.followers"].search_fetch(domain, limit=limit, order="id ASC")
-        followers_by_tid = defaultdict(
-            self.env["mail.followers"].browse,
-            followers.grouped("res_id"),
+    def _store_message_followers_fields(
+        self,
+        res: Store.FieldList,
+        after=None,
+        limit=100,
+        filter_recipients=False,
+        reset=False,
+    ):
+        def followers_by_thread(thread):
+            # Not batched by simplicity as it is always called on a single thread.
+            domain = Domain("res_id", "in", thread.id)
+            domain &= Domain("res_model", "=", thread._name)
+            domain &= Domain("partner_id", "!=", thread.env.user.partner_id.id)
+            if filter_recipients:
+                mt_comment_id = thread.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
+                domain &= Domain("subtype_ids", "=", mt_comment_id)
+                domain &= Domain("partner_id.active", "=", True)
+            if after:
+                domain &= Domain("id", ">", after)
+            return thread.env["mail.followers"].search_fetch(domain, limit=limit, order="id ASC")
+
+        res.many(
+            "recipients" if filter_recipients else "followers",
+            "_store_follower_fields",
+            value=followers_by_thread,
+            mode="REPLACE" if reset else "ADD",
         )
-        field_name = "recipients" if filter_recipients else "followers"
-        mode = "ADD" if not reset else "REPLACE"
-        return [Store.Many(field_name, value=lambda t: followers_by_tid[t.id], mode=mode)]
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
@@ -4971,53 +4977,62 @@ class MailThread(models.AbstractModel):
             # (re)send notifications
             else:
                 self.env['mail.message.schedule'].sudo()._send_message_notifications(message)
-
-        res = [
-            Store.Many("attachment_ids", sort="id"),
-            "body",
-            Store.Many("partner_ids", [*self.env["res.partner"]._get_store_avatar_fields(), "name"]),
-            "pinned_at",
-            "write_date",
-            *message._get_store_linked_messages_fields(),
-            *self._get_store_message_update_extra_fields(),
-        ]
         if body is not None:
             # sudo: mail.message.translation - discarding translations of message after editing it
-            self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
-            res.append({"translationValue": False})
-        Store(bus_channel=message._bus_channel()).add(message, res).bus_send()
+            self.env["mail.message.translation"].sudo().search(
+                [("message_id", "=", message.id)],
+            ).unlink()
+        Store(bus_channel=message._bus_channel()).add(
+            message,
+            lambda res: (
+                res.many("attachment_ids", "_store_attachment_fields", sort="id"),
+                res.attr("body"),
+                res.many("partner_ids", "_store_recipients_fields", sort="id"),
+                res.attr("pinned_at"),
+                res.attr("write_date"),
+                res.from_method("_store_linked_messages_fields"),
+                self._store_message_update_extra_fields(res),
+                res.attr("translationValue", False, predicate=lambda m: m.body is not None),
+            ),
+        ).bus_send()
 
     def _clean_empty_message(self, message):
         message.message_link_preview_ids._unlink_and_notify()
 
-    def _get_store_message_update_extra_fields(self):
-        return []
-
+    def _store_message_update_extra_fields(self, res: Store.FieldList):
+        pass
     # ------------------------------------------------------
     # STORE
     # ------------------------------------------------------
 
-    def _get_store_thread_fields(self, target: Store.Target, request_list):
-        res = []
-        if target.is_current_user(self.env):
-            res.append(Store.Attr("hasReadAccess", lambda t: t.sudo(False).has_access("read")))
-            res.append(Store.Attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write")))
-            res.append({"canPostOnReadonly": self._mail_post_access == "read"})
+    def _store_thread_fields(self, res: Store.FieldList, *, request_list):
+        if res.is_for_current_user():
+            res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
+            res.attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write"))
+            res.attr("canPostOnReadonly", self._mail_post_access == "read")
         if "activities" in request_list and isinstance(self, self.env.registry["mail.activity.mixin"]):
-            res.append(Store.Many("activities", value=lambda t: t.with_context(active_test=True).activity_ids))
+            res.many(
+                "activities",
+                "_store_activity_fields",
+                value=lambda t: t.with_context(active_test=True).activity_ids,
+            )
         if "attachments" in request_list:
-            res.append(Store.Many("attachments", value=lambda t: t._get_mail_thread_data_attachments()))
+            res.many(
+                "attachments",
+                "_store_attachment_fields",
+                value=lambda t: t._get_mail_thread_data_attachments(),
+            )
             res.append({"areAttachmentsLoaded": True, "isLoadingAttachments": False})
         if "contact_fields" in request_list:
-            res.append(Store.Attr("primary_email_field", lambda t: t._mail_get_primary_email_field()))
-            res.append(Store.Attr("partner_fields", lambda t: t._mail_get_partner_fields()))
+            res.attr("primary_email_field", lambda t: t._mail_get_primary_email_field())
+            res.attr("partner_fields", lambda t: t._mail_get_partner_fields())
         if "followers" in request_list:
             count_by_tid = {"groupby": ["res_id"], "aggregates": ["__count"]}
             domain = Domain("res_id", "in", self.ids) & Domain("res_model", "=", self._name)
             # follower count
             follower_count = self.env["mail.followers"]._read_group(domain, **count_by_tid)
             follower_count_by_tid = defaultdict(int, follower_count)
-            res.append(Store.Attr("followersCount", lambda t: follower_count_by_tid[t.id]))
+            res.attr("followersCount", lambda t: follower_count_by_tid[t.id])
             # follower of current user
             self_partner_domain = Domain("partner_id", "=", self.env.user.partner_id.id)
             self_followers = self.env["mail.followers"].search_fetch(domain & self_partner_domain)
@@ -5025,9 +5040,13 @@ class MailThread(models.AbstractModel):
                 self.env["mail.followers"].browse,
                 self_followers.grouped("res_id"),
             )
-            res.append(Store.One("selfFollower", value=lambda t: self_follower_by_tid[t.id]))
+            res.one(
+                "selfFollower",
+                "_store_follower_fields",
+                value=lambda t: self_follower_by_tid[t.id],
+            )
             # follower list with limit
-            res.extend(self._get_store_message_followers_fields(reset=True))
+            self._store_message_followers_fields(res, reset=True)
             # recipient count
             mt_comment_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
             recipient_count = self.env["mail.followers"]._read_group(
@@ -5038,11 +5057,11 @@ class MailThread(models.AbstractModel):
                 **count_by_tid,
             )
             recipient_count_by_tid = defaultdict(int, recipient_count)
-            res.append(Store.Attr("recipientsCount", lambda t: recipient_count_by_tid[t.id]))
+            res.attr("recipientsCount", lambda t: recipient_count_by_tid[t.id])
             # recipient list with limit
-            res.extend(self._get_store_message_followers_fields(filter_recipients=True, reset=True))
+            self._store_message_followers_fields(res, filter_recipients=True, reset=True)
         if "display_name" in request_list:
-            res.append("display_name")
+            res.attr("display_name")
         if "scheduledMessages" in request_list:
             domain = Domain("model", "=", self._name) & Domain("res_id", "in", self.ids)
             scheduled_messages = self.env["mail.scheduled.message"].search_fetch(domain)
@@ -5050,18 +5069,19 @@ class MailThread(models.AbstractModel):
                 self.env["mail.scheduled.message"].browse,
                 scheduled_messages.grouped("res_id"),
             )
-            res.append(Store.Many("scheduledMessages", value=lambda t: messages_by_tid[t.id]))
+            res.many(
+                "scheduledMessages",
+                "_store_scheduled_message_fields",
+                value=lambda t: messages_by_tid[t.id],
+            )
         if "suggestedRecipients" in request_list:
-            res.append(
-                Store.Attr(
-                    "suggestedRecipients",
-                    lambda t: t._message_get_suggested_recipients(
-                        reply_discussion=True,
-                        no_create=True,
-                    ),
+            res.attr(
+                "suggestedRecipients",
+                lambda t: t._message_get_suggested_recipients(
+                    reply_discussion=True,
+                    no_create=True,
                 ),
             )
-        return res
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
@@ -5075,7 +5095,7 @@ class MailThread(models.AbstractModel):
             res = res.filtered(lambda attachment: (attachment in svg_ids and attachment not in original_ids) or (attachment in non_svg_ids and attachment.original_id not in non_svg_ids))
         return res
 
-    def _get_store_target(self):
+    def _store_target(self):
         return {"bus_channel": self, "bus_subchannel": "thread"}
 
     # ------------------------------------------------------

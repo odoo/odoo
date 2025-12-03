@@ -10,6 +10,7 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.addons.mail.tools import discuss, jwt
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.web.models.models import lazymapping
 
 _logger = logging.getLogger(__name__)
 
@@ -39,15 +40,14 @@ class DiscussChannelRtcSession(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
         rtc_sessions = super().create(vals_list)
-        rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
         for rtc_session in rtc_sessions:
-            rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
-        for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            Store(bus_channel=channel).add(
-                channel,
-                {"rtc_session_ids": Store.Many(rtc_sessions, mode="ADD")},
-            ).bus_send()
+            stores[rtc_session.channel_id].add(
+                rtc_session.channel_id,
+                "_store_rtc_update_fields",
+                fields_params={"added": rtc_session},
+            )
         for channel in rtc_sessions.channel_id.filtered(lambda c: len(c.rtc_session_ids) == 1):
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
             message = channel.message_post(body=body, message_type="notification")
@@ -59,10 +59,13 @@ class DiscussChannelRtcSession(models.Model):
                     "start_call_message_id": message.id,
                 },
             )
-            Store(bus_channel=channel).add(message, [Store.Many("call_history_ids", [])]).bus_send()
+            stores[channel].add(message, ["call_history_ids"])
+        for store in stores.values():
+            store.bus_send()
         return rtc_sessions
 
     def unlink(self):
+        stores = lazymapping(lambda channel: Store(bus_channel=channel))
         call_ended_channels = self.channel_id.filtered(lambda c: not (c.rtc_session_ids - self))
         for channel in call_ended_channels:
             # If there is no member left in the RTC call, all invitations are cancelled.
@@ -74,30 +77,24 @@ class DiscussChannelRtcSession(models.Model):
             # than to attempt recycling a possibly stale channel uuid.
             channel.sfu_channel_uuid = False
             channel.sfu_server_url = False
-        rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
         for rtc_session in self:
-            rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
-        for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            Store(bus_channel=channel).add(
-                channel,
-                {"rtc_session_ids": Store.Many(rtc_sessions, [], mode="DELETE")},
-            ).bus_send()
+            stores[rtc_session.channel_id].add(
+                rtc_session.channel_id,
+                "_store_rtc_update_fields",
+                fields_params={"removed": rtc_session},
+            )
         for rtc_session in self:
             rtc_session._bus_send(
                 "discuss.channel.rtc.session/ended", {"sessionId": rtc_session.id}
             )
         # sudo - dicuss.rtc.call.history: setting the end date of the call
         # after it ends is allowed.
-        for history in (
-            self.env["discuss.call.history"]
-            .sudo()
-            .search([("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)])
-        ):
+        domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
+        for history in self.env["discuss.call.history"].sudo().search(domain):
             history.end_dt = fields.Datetime.now()
-            Store(bus_channel=history.channel_id).add(
-                history,
-                ["duration_hour", "end_dt"],
-            ).bus_send()
+            stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
+        for store in stores.values():
+            store.bus_send()
         return super().unlink()
 
     def _bus_channel(self):
@@ -109,8 +106,7 @@ class DiscussChannelRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        store = Store(bus_channel=self.channel_id)
-        store.add(self, extra_fields=self._get_store_extra_fields())
+        store = Store(bus_channel=self.channel_id).add(self, "_store_extra_fields")
         self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
             {"data": store.get_result(), "channelId": self.channel_id.id},
@@ -165,17 +161,12 @@ class DiscussChannelRtcSession(models.Model):
         for target, payload in payload_by_target.items():
             target._bus_send("discuss.channel.rtc.session/peer_notification", payload)
 
-    def _to_store_defaults(self, target):
-        return Store.One(
-            "channel_member_id",
-            [
-                Store.One("channel_id", [], as_thread=True),
-                *self.env["discuss.channel.member"]._to_store_persona(target, "avatar_card"),
-            ],
-        )
+    def _store_rtc_session_fields(self, res: Store.FieldList):
+        res.one("channel_member_id", "_store_avatar_card_fields")
 
-    def _get_store_extra_fields(self):
-        return ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
+    def _store_extra_fields(self, res: Store.FieldList):
+        self._store_rtc_session_fields(res)
+        res.extend(["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"])
 
     @api.model
     def _inactive_rtc_session_domain(self):

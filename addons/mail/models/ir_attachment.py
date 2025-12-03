@@ -86,24 +86,16 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
-    def _get_store_ownership_fields(self):
-        return [Store.Attr("ownership_token", lambda a: a._get_ownership_token())]
+    def _store_ownership_fields(self, res: Store.FieldList):
+        res.attr("ownership_token", lambda a: a._get_ownership_token())
 
-    def _to_store_defaults(self, target):
-        return [
-            "checksum",
-            "create_date",
-            "file_size",
-            "has_thumbnail",
-            "mimetype",
-            "name",
-            Store.Attr("raw_access_token", lambda a: a._get_raw_access_token()),
-            "res_name",
-            Store.One("thread", [], as_thread=True),
-            Store.Attr("thumbnail_access_token", lambda a: a._get_thumbnail_token()),
-            "type",
-            "url",
-        ]
+    def _store_attachment_fields(self, res: Store.FieldList):
+        res.extend(["checksum", "create_date", "file_size", "has_thumbnail", "mimetype", "name"])
+        res.attr("raw_access_token", lambda a: a._get_raw_access_token())
+        res.attr("res_name")
+        res.one("thread", [], as_thread=True)
+        res.attr("thumbnail_access_token", lambda a: a._get_thumbnail_token())
+        res.extend(["type", "url"])
 
     def _get_ownership_token(self):
         """ Returns a scoped limited access token that indicates ownership of the attachment when

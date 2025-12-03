@@ -1988,25 +1988,17 @@ class HrEmployee(models.Model):
             'search_view_id': self.env.ref('hr.hr_version_search_view').id
         }
 
-    def _get_store_avatar_card_fields(self, target):
-        employee_fields = [
-            "company_id",
-            Store.One("department_id", ["name"]),
-            "work_email",
-            Store.One("work_location_id", ["location_type", "name"]),
-            "work_phone",
-        ]
-        user = target.get_user(self.env)
-        if user.has_group("hr.group_hr_user"):
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        res.attr("company_id")
+        res.one("department_id", ["name"])
+        res.attr("work_email")
+        res.one("work_location_id", ["location_type", "name"])
+        res.attr("work_phone")
+        if res.target_user().has_group("hr.group_hr_user"):
             # job_title is not a field of hr.employee.public, but it is a field of hr.employee
-            employee_fields.append("job_title")
+            res.attr("job_title")
         # HACK: fetch the employee fields from employees to retrieve hr.employee.public fields if no access to hr.employee
-        if len(self) > 0:
-            self.fetch([
-                field.field_name if isinstance(field, Store.Attr) else field
-                for field in employee_fields
-            ])
-        return employee_fields
+        self.fetch(map(Store.get_field_name, res))
 
     @api.depends('bank_account_ids')
     def _compute_primary_bank_account_id(self):

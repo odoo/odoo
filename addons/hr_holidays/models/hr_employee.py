@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.tools.float_utils import float_round
+from odoo.addons.mail.tools.discuss import Store
 
 
 class HrEmployee(models.Model):
@@ -627,5 +628,6 @@ class HrEmployee(models.Model):
         calendars = self._get_calendars(date_from)
         return calendars[self.id].hours_per_day if calendars[self.id] else 24
 
-    def _get_store_avatar_card_fields(self, target):
-        return [*super()._get_store_avatar_card_fields(target), "leave_date_to"]
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        super()._store_avatar_card_fields(res)
+        res.attr("leave_date_to")

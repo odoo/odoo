@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
@@ -101,10 +103,9 @@ class WebsiteVisitor(models.Model):
             })
         discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
         # Open empty channel to allow the operator to start chatting with the visitor
-        Store(bus_channel=self.env.user).add(
-            discuss_channels,
-            extra_fields={"open_chat_window": True},
-        ).bus_send()
+        store = Store(bus_channel=self.env.user)
+        store.add(discuss_channels, "_store_open_chat_window_fields")
+        store.bus_send()
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """
@@ -126,9 +127,9 @@ class WebsiteVisitor(models.Model):
                 guest_livechats.country_id = visitor_sudo.country_id
         return visitor_id, upsert
 
-    def _get_store_visitor_history_fields(self):
+    def _store_visitor_history_fields(self, res: Store.FieldList):
         if not self:
-            return []
+            return
         self.env.cr.execute(
             """
                 SELECT website_visitor.id AS visitor_id,
@@ -151,14 +152,17 @@ class WebsiteVisitor(models.Model):
         )
         results = dict(self.env.cr.fetchall())
         all_track_ids = [track_id for track_list in results.values() for track_id in track_list]
-        return [
-            # sudo: website.track - reading the history of accessible visitor is acceptable
-            Store.Many(
-                "last_track_ids",
-                [Store.One("page_id", ["name"]), "visit_datetime"],
-                value=lambda visitor: self.env["website.track"]
-                .sudo()
-                .browse(results.get(visitor.id))
-                .with_prefetch(all_track_ids),
+        tracks_by_visitor = defaultdict(self.env["website.track"].browse)
+        for visitor_id, track_ids in results.items():
+            tracks_by_visitor[self.browse(visitor_id)] = (
+                self.env["website.track"].browse(track_ids).with_prefetch(all_track_ids)
+            )
+        # sudo: website.track - reading the history of accessible visitor is acceptable
+        res.many(
+            "last_track_ids",
+            lambda res: (
+                res.one("page_id", ["name"]),
+                res.attr("visit_datetime"),
             ),
-        ]
+            value=lambda v: tracks_by_visitor[v].sudo(),
+        )

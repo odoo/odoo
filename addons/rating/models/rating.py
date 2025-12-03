@@ -208,5 +208,5 @@ class RatingRating(models.Model):
             data_by_model[rating.res_model]['record_ids'].append(rating.res_id)
         return data_by_model
 
-    def _to_store_defaults(self, target):
-        return ["rating", "rating_image_url", "rating_text"]
+    def _store_rating_fields(self, res: Store.FieldList):
+        res.extend(["rating", "rating_image_url", "rating_text"])

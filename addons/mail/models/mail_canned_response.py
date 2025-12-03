@@ -77,9 +77,9 @@ class MailCannedResponse(models.Model):
                 if delete:
                     store.delete(canned_response)
                 else:
-                    store.add(canned_response)
+                    store.add(canned_response, "_store_canned_response_fields")
             for store in stores:
                 store.bus_send()
 
-    def _to_store_defaults(self, target):
-        return ["source", "substitution"]
+    def _store_canned_response_fields(self, res: Store.FieldList):
+        res.extend(["source", "substitution"])

@@ -284,12 +284,7 @@ class MailScheduledMessage(models.Model):
         if self.search_count(domain, limit=1):
             self.env.ref('mail.ir_cron_post_scheduled_message')._trigger()
 
-    def _to_store_defaults(self, target):
-        return [
-            Store.Many("attachment_ids"),
-            Store.One("author_id"),
-            "body",
-            "is_note",
-            "scheduled_date",
-            "subject",
-        ]
+    def _store_scheduled_message_fields(self, res: Store.FieldList):
+        res.many("attachment_ids", "_store_attachment_fields")
+        res.one("author_id", "_store_partner_fields")
+        res.extend(["body", "is_note", "scheduled_date", "subject"])

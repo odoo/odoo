@@ -129,12 +129,7 @@ class MailNotification(models.Model):
 
         return self.filtered(_filter_unimportant_notifications)
 
-    def _to_store_defaults(self, target):
-        return [
-            "mail_email_address",
-            "failure_type",
-            "mail_message_id",
-            "notification_status",
-            "notification_type",
-            Store.One("res_partner_id", ["name", "email"]),
-        ]
+    def _store_notification_fields(self, res: Store.FieldList):
+        res.extend(["mail_email_address", "failure_type", "mail_message_id"])
+        res.extend(["notification_status", "notification_type"])
+        res.one("res_partner_id", ["name", "email"])

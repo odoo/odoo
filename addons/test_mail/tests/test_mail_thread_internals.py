@@ -1393,7 +1393,7 @@ class TestNoThread(MailCommon, TestRecipients):
         )
 
     @users('employee')
-    def test_message_to_store(self):
+    def test_store_add_message(self):
         """ Test formatting of messages when linked to non-thread models.
         Format could be asked notably if an inbox notification due to a
         'message_notify' happens. """
@@ -1403,13 +1403,13 @@ class TestNoThread(MailCommon, TestRecipients):
             'model': test_record._name,
             'res_id': test_record.id,
         })
-        formatted = Store().add(message).get_result()["mail.message"][0]
+        formatted = Store().add(message, "_store_message_fields").get_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], test_record.name)
         self.assertEqual(formatted['record_name'], test_record.name)
 
         test_record.write({'name': 'Just Test'})
         message.invalidate_recordset(['record_name'])
-        formatted = Store().add(message).get_result()["mail.message"][0]
+        formatted = Store().add(message, "_store_message_fields").get_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 

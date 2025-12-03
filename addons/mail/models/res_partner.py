@@ -254,54 +254,50 @@ class ResPartner(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "id", scope="mail.message_mention")
 
-    def _get_store_avatar_fields(self):
-        return [
-            Store.Attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token()),
-            "write_date",
-        ]
+    def _store_avatar_fields(self, res: Store.FieldList):
+        res.attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token())
+        res.attr("write_date")
 
-    def _get_store_im_status_fields(self):
-        return [
-            "im_status",
-            Store.Attr("im_status_access_token", lambda p: p._get_im_status_access_token()),
-        ]
+    def _store_im_status_fields(self, res: Store.FieldList):
+        res.attr("im_status")
+        res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
 
-    def _get_store_mention_fields(self):
-        return [Store.Attr("mention_token", lambda p: p._get_mention_token())]
+    def _store_mention_fields(self, res: Store.FieldList):
+        res.attr("mention_token", lambda p: p._get_mention_token())
 
-    def _get_store_avatar_card_fields(self, target):
-        fields = [
-            "name",
-            "partner_share",
-            *self._get_store_im_status_fields(),
-        ]
-        if target.is_internal(self.env):
-            fields.extend(["email", "phone"])
-        return fields
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        res.extend(["name", "partner_share"])
+        self._store_avatar_fields(res)
+        self._store_im_status_fields(res)
+        if res.is_for_internal_users():
+            res.extend(["email", "phone"])
 
-    def _to_store_defaults(self, target: Store.Target):
-        res = [
-            "active",
-            *self._get_store_avatar_fields(),
-            *self._get_store_im_status_fields(),
-            "is_company",
-            Store.One("main_user_id", ["share"], sudo=True),  # sudo: to access portal user of another company in chatter
-            "name",
-        ]
-        if target.is_internal(self.env):
-            res.append("email")
-        return res
+    def _store_partner_fields(self, res: Store.FieldList):
+        res.extend(["active", "is_company", "name"])
+        self._store_avatar_fields(res)
+        self._store_im_status_fields(res)
+        # sudo: to access portal user of another company in chatter
+        res.one("main_user_id", "_store_main_user_fields", sudo=True)
+        if res.is_for_internal_users():
+            res.attr("email")
+
+    def _store_recipients_fields(self, res: Store.FieldList):
+        res.attr("name")
+        self._store_avatar_fields(res)
 
     @api.readonly
     @api.model
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also (internal) users, and then extend the research to all partners.
-            The return format is a list of partner data (as per returned by `_to_store()`).
         """
-        domain = self._get_mention_suggestions_domain(search)
-        partners = self._search_mention_suggestions(domain, limit)
-        store = Store().add(partners, extra_fields=partners._get_store_mention_fields())
+        store = Store().add(
+            self._search_mention_suggestions(self._get_mention_suggestions_domain(search), limit),
+            lambda res: (
+                res.from_method("_store_partner_fields"),
+                res.from_method("_store_mention_fields"),
+            ),
+        )
         try:
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
             store.add(roles, "name")

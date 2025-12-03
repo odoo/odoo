@@ -15,10 +15,8 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         chatbot_language = chatbot._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
-        return {
-            "message_id": message.id,
-            "store_data": Store().add(message).get_result(),
-        }
+        store = Store().add(message, "_store_message_fields")
+        return {"message_id": message.id, "store_data": store.get_result()}
 
     @http.route("/chatbot/answer/save", type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -78,38 +76,30 @@ class LivechatChatbotScriptController(http.Controller):
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
         posted_message = next_step._process_step(discuss_channel)
-        store.add(posted_message).add(next_step)
-        store.resolve_data_request(
-            chatbot_step={"scriptStep": next_step.id, "message": posted_message.id}
-        )
-        chatbot_next_step_id = (next_step.id, posted_message.id)
+        store.add(posted_message, "_store_message_fields")
+        store.add(next_step, "_store_script_step_fields")
+        chatbot_next_step = {"scriptStep": next_step.id, "message": posted_message.id}
+        store.resolve_data_request(lambda res: res.attr("chatbot_step", chatbot_next_step))
         store.add_model_values(
             "ChatbotStep",
             {
-                "id": chatbot_next_step_id,
+                **chatbot_next_step,
+                "id": (next_step.id, posted_message.id),
                 "isLast": next_step._is_last_step(discuss_channel),
-                "message": posted_message.id,
                 "operatorFound": next_step.is_forward_operator
                 and discuss_channel.livechat_operator_id != chatbot.operator_partner_id,
-                "scriptStep": next_step.id,
             },
         )
+
         store.add_model_values(
             "Chatbot",
-            {
-                "currentStep": {
-                    "id": chatbot_next_step_id,
-                    "scriptStep": next_step.id,
-                    "message": posted_message.id,
-                },
-                "id": (chatbot.id, discuss_channel.id),
-                "script": chatbot.id,
-                "thread": Store.One(discuss_channel, [], as_thread=True),
-                "steps": [("ADD", [{
-                    "scriptStep": chatbot_next_step_id[0],
-                    "message": chatbot_next_step_id[1]
-                }])],
-            },
+            lambda res: (
+                res.attr("currentStep", chatbot_next_step),
+                res.attr("id", (chatbot.id, discuss_channel.id)),
+                res.attr("script", chatbot.id),
+                res.one("thread", [], as_thread=True, value=discuss_channel),
+                res.attr("steps", [("ADD", [chatbot_next_step])]),
+            ),
         )
         store.bus_send()
 
@@ -137,9 +127,14 @@ class LivechatChatbotScriptController(http.Controller):
         if last_user_message:
             result = chatbot._validate_email(last_user_message.body, discuss_channel)
             if posted_message := result.pop("posted_message"):
-                store = Store().add(posted_message)
-                store.add(discuss_channel, {
-                    "messages": Store.Many(posted_message, mode="ADD")
-                })
+                store = Store().add(
+                    discuss_channel,
+                    lambda res: res.many(
+                        "messages",
+                        "_store_message_fields",
+                        mode="ADD",
+                        value=posted_message,
+                    ),
+                )
                 result["data"] = store.get_result()
         return result

@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import textwrap
+
 from odoo import api, models, fields
 from odoo.fields import Domain
-
-import textwrap
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ChatbotScriptAnswer(models.Model):
@@ -53,5 +54,5 @@ class ChatbotScriptAnswer(models.Model):
 
         return domain
 
-    def _to_store_defaults(self, target):
-        return ["name", "redirect_link"]
+    def _store_script_answer_fields(self, res: Store.FieldList):
+        res.extend(["name", "redirect_link"])

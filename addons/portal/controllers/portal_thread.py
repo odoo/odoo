@@ -30,43 +30,44 @@ class PortalChatter(ThreadController):
 
     @http.route("/portal/chatter_init", type="jsonrpc", auth="public", website=True)
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
-        store = Store()
-        request.env["res.users"]._init_store_data(store)
+        store = Store().add_global_values(request.env.user.sudo(False)._store_init_global_fields)
         if request.env.user.has_group("website.group_website_restricted_editor"):
             store.add(request.env.user.partner_id, {"is_user_publisher": True})
-        thread = self._get_thread_with_access(thread_model, thread_id, **kwargs)
-        if thread:
-            has_react_access = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
-            can_react = has_react_access
-            if request.env.user._is_public():
-                if portal_partner := get_portal_partner(
-                    thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
-                ):
-                    store.add(
-                        thread,
-                        {
-                            "portal_partner": Store.One(
-                                portal_partner,
-                                fields=[
-                                    "active",
-                                    Store.One("main_user_id", "share"),
-                                    "name",
-                                    *portal_partner._get_store_avatar_fields(),
-                                ],
-                            )
-                        },
-                        as_thread=True,
-                    )
-                can_react = has_react_access and portal_partner
+        if thread := self._get_thread_with_access(thread_model, thread_id, **kwargs):
             store.add(
                 thread,
-                {
-                    "can_react": bool(can_react),
-                    "hasReadAccess": thread.sudo(False).has_access("read"),
-                },
+                lambda res: self._store_portal_thread_fields(res, **kwargs),
                 as_thread=True,
             )
         return store.get_result()
+
+    @classmethod
+    def _store_portal_thread_fields(cls, res: Store.FieldList, **kwargs):
+        portal_partner_by_thread = {
+            thread: get_portal_partner(
+                thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token"),
+            ) for thread in res.records
+        }
+
+        def can_react(thread):
+            has_access = cls._get_thread_with_access_for_post(thread._name, thread.id, **kwargs)
+            if request.env.user._is_public():
+                return bool(has_access and portal_partner_by_thread.get(thread))
+            return bool(has_access)
+
+        res.attr("can_react", can_react)
+        res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
+        res.one(
+            "portal_partner",
+            lambda res: (
+                res.attr("active"),
+                res.one("main_user_id", ["share"]),
+                res.attr("name"),
+                res.from_method("_store_avatar_fields"),
+            ),
+            predicate=lambda t: t in portal_partner_by_thread,
+            value=portal_partner_by_thread.get,
+        )
 
     @http.route('/mail/chatter_fetch', type='jsonrpc', auth='public', website=True)
     def portal_message_fetch(self, thread_model, thread_id, fetch_params=None, **kw):

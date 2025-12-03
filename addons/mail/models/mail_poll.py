@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.web.models.models import lazymapping
 
 
 class MailPoll(models.Model):
@@ -38,29 +39,26 @@ class MailPoll(models.Model):
             ]
             poll.winning_option_id = winners[0] if len(winners) == 1 else None
 
-    def _to_store_defaults(self, target, *, with_start_message_id=True):
-        fields = [
-            "allow_multiple_options",
-            "create_date",
-            "create_uid",
-            "end_message_id",
-            Store.Many("option_ids"),
-            "poll_end_dt",
-            "poll_question",
-            "winning_option_id",
-        ]
+    def _store_poll_fields(self, res: Store.FieldList, *, with_start_message_id=True):
+        res.extend(["allow_multiple_options", "create_date", "create_uid", "end_message_id"])
+        res.many("option_ids", "_store_poll_option_fields")
+        res.extend(["poll_end_dt", "poll_question", "winning_option_id"])
         if with_start_message_id:
-            fields.append(Store.One("start_message_id"))
-        return fields
+            res.one("start_message_id", "_store_message_fields")
 
     def _end_and_notify(self):
         thread_by_message = self.start_message_id._record_by_message()
+        thread_by_poll = {poll: thread_by_message[poll.start_message_id] for poll in self}
+        stores = lazymapping(lambda p: Store(**thread_by_poll[p]._store_target()))
         for poll in self:
-            thread = thread_by_message[poll.start_message_id]
-            poll.end_message_id = thread.message_post(
-                body="", message_type="comment", subtype_xmlid="mail.mt_comment",
+            poll.end_message_id = thread_by_poll[poll].message_post(
+                body="",
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
             )
-            Store(**thread._get_store_target()).add(poll).bus_send()
+            stores[poll].add(poll, "_store_poll_fields")
+        for store in stores.values():
+            store.bus_send()
 
     @api.model
     def _end_expired_polls(self):
@@ -71,11 +69,14 @@ class MailPoll(models.Model):
     @api.ondelete(at_uninstall=False)
     def _poll_on_delete(self):
         thread_by_message = (self.start_message_id | self.end_message_id)._record_by_message()
+        stores = lazymapping(lambda m: Store(**thread_by_message[m]._store_target()))
         for message in self.start_message_id | self.end_message_id:
-            Store(**thread_by_message[message]._get_store_target()).add(
+            stores[message].add(
                 message,
-                [
-                    Store.Many("started_poll_ids", [], mode="DELETE"),
-                    Store.Many("ended_poll_ids", [], mode="DELETE"),
-                ],
-            ).bus_send()
+                lambda res: (
+                    res.many("started_poll_ids", [], mode="DELETE"),
+                    res.many("ended_poll_ids", [], mode="DELETE"),
+                ),
+            )
+        for store in stores.values():
+            store.bus_send()
