@@ -33,13 +33,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import {
-    createElementWithContent,
-    htmlJoin,
-    isHtmlEmpty,
-    isMarkup,
-    setElementContent,
-} from "@web/core/utils/html";
+import { htmlJoin, isHtmlEmpty, isMarkup, setElementContent } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
@@ -615,18 +609,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
-        let signature = this.thread.effectiveSelf.main_user_id?.signature;
-        if (signature) {
-            const divElement = document.createElement("div");
-            divElement.setAttribute("data-o-mail-quote", "1");
-            divElement.append(
-                document.createElement("br"),
-                document.createTextNode("-- "),
-                document.createElement("br"),
-                ...createElementWithContent("div", signature).childNodes
-            );
-            signature = markup(divElement.outerHTML);
-        }
+        const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
             this.props.composer.emailAddSignature ? signature : ""
