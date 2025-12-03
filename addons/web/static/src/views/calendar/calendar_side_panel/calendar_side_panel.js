@@ -1,14 +1,16 @@
 import { Component } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
+import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";
 
 export class CalendarSidePanel extends Component {
     static components = {
         DatePicker: DateTimePicker,
         FilterSection: CalendarFilterSection,
+        ScheduleSection: CalendarScheduleSection,
     };
     static template = "web.CalendarSidePanel";
-    static props = ["model"];
+    static props = ["model", "editRecord"];
 
     get datePickerProps() {
         return {

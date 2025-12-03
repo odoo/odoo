@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarScheduleSection">
+        <h5>To Schedule</h5>
+        <div t-if="!props.model.data.eventsToSchedule.records.length" class="text-muted">Good job, everything is scheduled!</div>
+        <div t-ref="eventsToSchedule" class="d-flex flex-column">
+            <div 
+                class="align-items-center cursor-pointer o_event_to_schedule_draggable py-1"
+                t-foreach="props.model.data.eventsToSchedule.records"
+                t-as="event"
+                t-key="event.id"
+                t-att-data-res-id="event.id" 
+                t-on-click="() => this.openRecord(event)"
+            >
+                <i class="text-muted oi oi-draggable"/>
+                <span class="ps-1 text-truncate" t-out="event.display_name" t-att-title="event.display_name"/>
+            </div>
+        </div>
+        <button t-if="displayLoadMoreButton" class="btn btn-link" t-on-click="() => this.props.model.loadMoreEventsToSchedule()">
+            Load More
+        </button>
+    </t>
+
+</templates>

@@ -3,13 +3,7 @@ import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 
-const FIELD_ATTRIBUTE_NAMES = [
-    "date_start",
-    "date_stop",
-    "all_day",
-    "create_name_field",
-    "color",
-];
+const FIELD_ATTRIBUTE_NAMES = ["date_start", "date_stop", "all_day", "create_name_field", "color"];
 const SCALES = ["day", "week", "month", "year"];
 
 export class CalendarParseArchError extends Error {}
@@ -44,6 +38,7 @@ export class CalendarArchParser {
         const canCreate = exprToBoolean(xmlDoc.getAttribute("create"), true);
         const canDelete = exprToBoolean(xmlDoc.getAttribute("delete"), true);
         const canEdit = exprToBoolean(xmlDoc.getAttribute("edit"), true);
+        const canSchedule = exprToBoolean(xmlDoc.getAttribute("schedule"), false);
 
         const eventLimit = xmlDoc.hasAttribute("event_limit")
             ? evaluateExpr(xmlDoc.getAttribute("event_limit"))
@@ -132,6 +127,7 @@ export class CalendarArchParser {
             canCreate,
             canDelete,
             canEdit,
+            canSchedule,
             eventLimit,
             fieldMapping,
             fieldNames: [...fieldNames],
