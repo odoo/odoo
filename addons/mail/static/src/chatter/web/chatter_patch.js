@@ -42,7 +42,6 @@ Object.assign(Chatter.components, {
 
 Chatter.props.push(
     "close?",
-    "compactHeight?",
     "has_activities?",
     "hasAttachmentPreview?",
     "hasParentReloadOnActivityChanged?",
@@ -58,7 +57,6 @@ Chatter.props.push(
 );
 
 Object.assign(Chatter.defaultProps, {
-    compactHeight: false,
     has_activities: true,
     hasAttachmentPreview: false,
     hasParentReloadOnActivityChanged: false,
