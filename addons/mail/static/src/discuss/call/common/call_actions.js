@@ -31,7 +31,8 @@ export function registerCallAction(id, definition) {
 }
 
 export const muteAction = {
-    badge: ({ store }) => store.rtc.microphonePermission !== "granted",
+    badge: ({ owner, store }) =>
+        !owner.env.inCallMenu && store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
@@ -62,7 +63,8 @@ export const muteAction = {
 };
 registerCallAction("mute", muteAction);
 export const quickActionSettings = {
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
+    condition: ({ owner, channel, store }) =>
+        !owner.env.inCallMenu && channel?.eq(store.rtc?.channel),
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: "p-2",
@@ -74,7 +76,7 @@ export const quickActionSettings = {
 };
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
-    condition: false,
+    condition: ({ owner }) => owner.env.inCallMenu,
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
@@ -86,7 +88,7 @@ registerCallAction("deafen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 export const cameraOnAction = {
-    badge: ({ store }) => store.rtc.cameraPermission !== "granted",
+    badge: ({ owner, store }) => !owner.env.inCallMenu && store.rtc.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
@@ -115,7 +117,8 @@ export const cameraOnAction = {
 };
 registerCallAction("camera-on", cameraOnAction);
 export const quickVideoSettings = {
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
+    condition: ({ owner, channel, store }) =>
+        !owner.env.inCallMenu && channel?.eq(store.rtc?.channel),
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: "p-2",
@@ -165,7 +168,8 @@ registerCallAction("share-screen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
 });
 registerCallAction("auto-focus", {
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
+    condition: ({ owner, channel, store }) =>
+        !owner.env.inCallMenu && channel?.eq(store.rtc?.channel),
     name: ({ store }) =>
         store.settings.useCallAutoFocus ? _t("Disable speaker autofocus") : _t("Autofocus speaker"),
     isActive: ({ store }) => store.settings?.useCallAutoFocus,
@@ -197,7 +201,8 @@ registerCallAction("fullscreen", {
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("picture-in-picture", {
-    condition: ({ channel, store }) =>
+    condition: ({ owner, channel, store }) =>
+        !owner.env.inCallMenu &&
         channel?.eq(store.rtc?.channel) &&
         store.env.services["discuss.pip_service"] &&
         !store.env?.isSmall,
