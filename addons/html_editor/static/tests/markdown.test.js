@@ -298,3 +298,14 @@ describe("inline code", () => {
         });
     });
 });
+
+describe("pre", () => {
+    test("should create pre block on triple-backtick", async () => {
+        await testEditor({
+            contentBefore: "<p>```[]</p>",
+            stepFunction: async (editor) => await insertText(editor, " "),
+            contentAfterEdit: '<pre o-we-hint-text="Code" class="o-we-hint">[]<br></pre>',
+            contentAfter: "<pre>[]<br></pre>",
+        });
+    });
+});
