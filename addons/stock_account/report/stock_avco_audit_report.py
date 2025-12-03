@@ -30,6 +30,8 @@ class StockAverageCostReport(models.AbstractModel):
     total_value = fields.Float(string='Total Value', compute='_compute_cumulative_fields')
     avco_value = fields.Float(string='AVCO Value', compute='_compute_cumulative_fields')
 
+    justification = fields.Text(string='Justification', compute='_compute_justification')
+
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'stock_avco_report')
         query = """
@@ -94,15 +96,26 @@ WHERE
             avco = 0.0
             for record in records:
                 if record.res_model_name == 'stock.move':
-                    added_value = record.value
-                    total_value += record.value
+                    if record.quantity > 0:
+                        added_value = record.value
+                    elif record.quantity < 0:
+                        added_value = avco * record.quantity
+                    total_value += added_value
                     total_quantity += record.quantity
+
                 elif record.res_model_name == 'product.value':
                     added_value = (record.value * total_quantity) - total_value
                     total_value = record.value * total_quantity
 
-                avco = total_value / total_quantity if total_quantity else 0.0
+                if total_quantity:
+                    avco = total_value / total_quantity
                 record.added_value = added_value
                 record.total_value = total_value
                 record.total_quantity = total_quantity
                 record.avco_value = avco
+
+    def _compute_justification(self):
+        self.justification = False
+        for record in self:
+            if record.res_model_name == 'stock.move':
+                record.justification = self.env['stock.move'].browse(record.id).value_justification
