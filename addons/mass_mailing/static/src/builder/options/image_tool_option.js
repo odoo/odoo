@@ -13,4 +13,4 @@ export class MassMailingImageToolOption extends ImageToolOption {
     }
 }
 
-registry.category("builder-options").add(MassMailingImageToolOption.id, MassMailingImageToolOption);
+registry.category("mass_mailing-options").add(MassMailingImageToolOption.id, MassMailingImageToolOption);

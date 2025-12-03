@@ -295,4 +295,4 @@ export class ChartOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(ChartOption.id, ChartOption);
+registry.category("website-options").add(ChartOption.id, ChartOption);

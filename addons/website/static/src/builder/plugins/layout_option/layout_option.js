@@ -23,5 +23,5 @@ export class LayoutGridOption extends BaseOptionComponent {
     };
 }
 
-registry.category("builder-options").add(LayoutOption.id, LayoutOption);
-registry.category("builder-options").add(LayoutGridOption.id, LayoutGridOption);
+registry.category("website-options").add(LayoutOption.id, LayoutOption);
+registry.category("website-options").add(LayoutGridOption.id, LayoutGridOption);

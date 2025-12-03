@@ -103,4 +103,4 @@ export class ProgressBarValueAction extends BuilderAction {
 }
 
 registry.category("website-plugins").add(ProgressBarOptionPlugin.id, ProgressBarOptionPlugin);
-registry.category("builder-options").add(ProgressBarOption.id, ProgressBarOption);
+registry.category("website-options").add(ProgressBarOption.id, ProgressBarOption);

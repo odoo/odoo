@@ -39,4 +39,4 @@ export class FontAwesomeOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(FontAwesomeOption.id, FontAwesomeOption);
+registry.category("website-options").add(FontAwesomeOption.id, FontAwesomeOption);

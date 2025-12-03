@@ -16,4 +16,4 @@ export class CustomerFilterOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(CustomerFilterOption.id, CustomerFilterOption);
+registry.category("website-options").add(CustomerFilterOption.id, CustomerFilterOption);

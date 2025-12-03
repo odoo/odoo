@@ -10,4 +10,4 @@ export class CarouselCardsItemOption extends BaseOptionComponent {
     };
 }
 
-registry.category("builder-options").add(CarouselCardsItemOption.id, CarouselCardsItemOption);
+registry.category("website-options").add(CarouselCardsItemOption.id, CarouselCardsItemOption);

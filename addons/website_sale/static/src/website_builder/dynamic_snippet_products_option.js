@@ -33,7 +33,7 @@ export class DynamicSnippetProductsOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(DynamicSnippetProductsOption.id, DynamicSnippetProductsOption);
+registry.category("website-options").add(DynamicSnippetProductsOption.id, DynamicSnippetProductsOption);
 
 export function getContextualFilterDomain(editable) {
     const productTemplateId = parseInt(editable.querySelector(

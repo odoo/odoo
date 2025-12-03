@@ -206,6 +206,7 @@ export class WebsiteBuilder extends Component {
         builderProps.installSnippetModule = (snippet) =>
             installSnippetModule(snippet, this.save.bind(this));
         builderProps.config.builderOptionsTemplate = "website.BuilderOptions";
+        builderProps.config.builderOptionsRegistry = "website-options";
         return builderProps;
     }
 }

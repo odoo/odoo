@@ -22,4 +22,4 @@ export class DynamicSnippetOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(DynamicSnippetOption.id, DynamicSnippetOption);
+registry.category("website-options").add(DynamicSnippetOption.id, DynamicSnippetOption);

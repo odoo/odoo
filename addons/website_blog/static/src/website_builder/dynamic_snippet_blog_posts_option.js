@@ -78,5 +78,5 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
 }
 
 registry
-    .category("builder-options")
+    .category("website-options")
     .add(DynamicSnippetBlogPostsOption.id, DynamicSnippetBlogPostsOption);

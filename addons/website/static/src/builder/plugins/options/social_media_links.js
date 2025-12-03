@@ -169,4 +169,4 @@ export class SocialMediaLinks extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(SocialMediaLinks.id, SocialMediaLinks);
+registry.category("website-options").add(SocialMediaLinks.id, SocialMediaLinks);

@@ -15,4 +15,4 @@ export class SwitchableViews extends BaseOptionComponent {
         });
     }
 }
-registry.category("builder-options").add(SwitchableViews.id, SwitchableViews);
+registry.category("website-options").add(SwitchableViews.id, SwitchableViews);

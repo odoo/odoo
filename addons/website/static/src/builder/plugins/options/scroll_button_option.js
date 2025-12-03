@@ -22,4 +22,4 @@ export class ScrollButtonOption extends BaseOptionComponent {
         return this.state.heightFieldEnabled && this.isActiveItem("minheight_auto_opt");
     }
 }
-registry.category("builder-options").add(ScrollButtonOption.id, ScrollButtonOption);
+registry.category("website-options").add(ScrollButtonOption.id, ScrollButtonOption);

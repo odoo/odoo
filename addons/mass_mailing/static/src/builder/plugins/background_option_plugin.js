@@ -16,4 +16,4 @@ export class MailingBackgroundOption extends BackgroundOption {
     };
 }
 
-registry.category("builder-options").add(MailingBackgroundOption.id, MailingBackgroundOption);
+registry.category("mass_mailing-options").add(MailingBackgroundOption.id, MailingBackgroundOption);

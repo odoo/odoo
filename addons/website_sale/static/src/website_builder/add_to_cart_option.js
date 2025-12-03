@@ -28,4 +28,4 @@ export class AddToCartOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(AddToCartOption.id, AddToCartOption);
+registry.category("website-options").add(AddToCartOption.id, AddToCartOption);

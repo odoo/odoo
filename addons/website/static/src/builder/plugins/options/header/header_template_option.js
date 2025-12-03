@@ -9,4 +9,4 @@ export class HeaderTemplateOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(HeaderTemplateOption.id, HeaderTemplateOption);
+registry.category("website-options").add(HeaderTemplateOption.id, HeaderTemplateOption);

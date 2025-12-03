@@ -12,4 +12,4 @@ export class VisibilityOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(VisibilityOption.id, VisibilityOption);
+registry.category("website-options").add(VisibilityOption.id, VisibilityOption);

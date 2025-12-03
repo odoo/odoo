@@ -20,4 +20,4 @@ export class BlockquoteOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(BlockquoteOption.id, BlockquoteOption);
+registry.category("website-options").add(BlockquoteOption.id, BlockquoteOption);

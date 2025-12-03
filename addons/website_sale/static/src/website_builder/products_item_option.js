@@ -98,4 +98,4 @@ export class ProductsItemOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(ProductsItemOption.id, ProductsItemOption);
+registry.category("website-options").add(ProductsItemOption.id, ProductsItemOption);

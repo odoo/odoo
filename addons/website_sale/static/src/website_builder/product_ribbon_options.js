@@ -24,4 +24,4 @@ export class ProductsRibbonOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(ProductsRibbonOption.id, ProductsRibbonOption);
+registry.category("website-options").add(ProductsRibbonOption.id, ProductsRibbonOption);

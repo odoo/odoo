@@ -80,4 +80,4 @@ export class FormOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(FormOption.id, FormOption);
+registry.category("website-options").add(FormOption.id, FormOption);

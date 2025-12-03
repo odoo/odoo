@@ -10,4 +10,4 @@ export class MediaListItemOption extends BaseOptionComponent {
     };
 }
 
-registry.category("builder-options").add(MediaListItemOption.id, MediaListItemOption);
+registry.category("website-options").add(MediaListItemOption.id, MediaListItemOption);

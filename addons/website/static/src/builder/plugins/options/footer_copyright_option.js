@@ -17,4 +17,4 @@ export class FooterCopyrightOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(FooterCopyrightOption.id, FooterCopyrightOption);
+registry.category("website-options").add(FooterCopyrightOption.id, FooterCopyrightOption);

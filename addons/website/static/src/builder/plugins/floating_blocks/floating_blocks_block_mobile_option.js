@@ -13,5 +13,5 @@ export class FloatingBlocksBlockMobileOption extends BaseOptionComponent {
 }
 
 registry
-    .category("builder-options")
+    .category("website-options")
     .add(FloatingBlocksBlockMobileOption.id, FloatingBlocksBlockMobileOption);

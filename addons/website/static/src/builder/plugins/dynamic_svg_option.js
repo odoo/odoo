@@ -31,4 +31,4 @@ export class DynamicSvgOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(DynamicSvgOption.id, DynamicSvgOption);
+registry.category("website-options").add(DynamicSvgOption.id, DynamicSvgOption);

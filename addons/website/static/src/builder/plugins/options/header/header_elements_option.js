@@ -24,4 +24,4 @@ export class HeaderElementsOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(HeaderElementsOption.id, HeaderElementsOption);
+registry.category("website-options").add(HeaderElementsOption.id, HeaderElementsOption);

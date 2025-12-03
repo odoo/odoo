@@ -16,5 +16,5 @@ export class DynamicSnippetCarouselOption extends BaseOptionComponent {
 }
 
 registry
-    .category("builder-options")
+    .category("website-options")
     .add(DynamicSnippetCarouselOption.id, DynamicSnippetCarouselOption);

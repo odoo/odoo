@@ -14,4 +14,4 @@ export class SearchbarOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(SearchbarOption.id, SearchbarOption);
+registry.category("website-options").add(SearchbarOption.id, SearchbarOption);

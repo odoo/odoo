@@ -49,4 +49,4 @@ export class HeaderNavigationOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(HeaderNavigationOption.id, HeaderNavigationOption);
+registry.category("website-options").add(HeaderNavigationOption.id, HeaderNavigationOption);

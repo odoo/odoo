@@ -22,4 +22,4 @@ export class ProcessStepsOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(ProcessStepsOption.id, ProcessStepsOption);
+registry.category("website-options").add(ProcessStepsOption.id, ProcessStepsOption);

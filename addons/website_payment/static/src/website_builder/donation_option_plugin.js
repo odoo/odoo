@@ -15,7 +15,7 @@ export class DonationOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(DonationOption.id, DonationOption);
+registry.category("website-options").add(DonationOption.id, DonationOption);
 
 export class DonationOptionPlugin extends Plugin {
     static id = "donationOption";

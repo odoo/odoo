@@ -8,4 +8,4 @@ export class FloatingBlocksBlockOption extends BaseOptionComponent {
     static components = { AddElementOption };
 }
 
-registry.category("builder-options").add(FloatingBlocksBlockOption.id, FloatingBlocksBlockOption);
+registry.category("website-options").add(FloatingBlocksBlockOption.id, FloatingBlocksBlockOption);

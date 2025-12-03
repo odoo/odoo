@@ -12,4 +12,4 @@ export class ProductsListPageOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(ProductsListPageOption.id, ProductsListPageOption);
+registry.category("website-options").add(ProductsListPageOption.id, ProductsListPageOption);

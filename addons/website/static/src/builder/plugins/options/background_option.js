@@ -39,4 +39,4 @@ export class WebsiteBackgroundOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(WebsiteBackgroundOption.id, WebsiteBackgroundOption);
+registry.category("website-options").add(WebsiteBackgroundOption.id, WebsiteBackgroundOption);

@@ -84,4 +84,4 @@ export class AnimateOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(AnimateOption.id, AnimateOption);
+registry.category("website-options").add(AnimateOption.id, AnimateOption);

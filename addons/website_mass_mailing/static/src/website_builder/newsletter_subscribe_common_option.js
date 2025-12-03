@@ -14,5 +14,5 @@ export class NewsletterSubscribeCommonOption extends BaseOptionComponent {
 }
 
 registry
-    .category("builder-options")
+    .category("website-options")
     .add(NewsletterSubscribeCommonOption.id, NewsletterSubscribeCommonOption);

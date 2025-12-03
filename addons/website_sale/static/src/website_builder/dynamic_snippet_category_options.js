@@ -27,4 +27,4 @@ export class DynamicSnippetCategoryOption extends DynamicSnippetOption {
     }
 }
 
-registry.category("builder-options").add(DynamicSnippetCategoryOption.id, DynamicSnippetCategoryOption);
+registry.category("website-options").add(DynamicSnippetCategoryOption.id, DynamicSnippetCategoryOption);

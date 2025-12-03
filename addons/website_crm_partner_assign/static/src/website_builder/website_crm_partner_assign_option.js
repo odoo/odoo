@@ -20,5 +20,5 @@ export class WebsiteCRMPartnersPageOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(WebsiteCRMPartnersPageOption.id, WebsiteCRMPartnersPageOption);
+registry.category("website-options").add(WebsiteCRMPartnersPageOption.id, WebsiteCRMPartnersPageOption);
 

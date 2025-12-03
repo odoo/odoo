@@ -13,7 +13,7 @@ export class CountdownOption extends BaseOptionComponent {
     };
 }
 
-registry.category("builder-options").add(CountdownOption.id, CountdownOption);
+registry.category("website-options").add(CountdownOption.id, CountdownOption);
 
 export class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";

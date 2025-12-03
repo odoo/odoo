@@ -86,4 +86,4 @@ export class GoogleMapsOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(GoogleMapsOption.id, GoogleMapsOption);
+registry.category("website-options").add(GoogleMapsOption.id, GoogleMapsOption);

@@ -79,4 +79,4 @@ export class SnippetVisibilityOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(SnippetVisibilityOption.id, SnippetVisibilityOption);
+registry.category("mass_mailing-options").add(SnippetVisibilityOption.id, SnippetVisibilityOption);

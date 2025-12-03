@@ -23,4 +23,4 @@ export class MegaMenuOption extends BaseOptionComponent {
         return headerTemplates.includes(currentHeaderTemplate.slice(1, -1));
     }
 }
-registry.category("builder-options").add(MegaMenuOption.id, MegaMenuOption);
+registry.category("website-options").add(MegaMenuOption.id, MegaMenuOption);

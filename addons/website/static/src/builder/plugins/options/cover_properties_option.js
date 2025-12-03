@@ -26,4 +26,4 @@ export const coverSizeClassLabels = {
     cover_auto: _t("Fit text"),
 };
 
-registry.category("builder-options").add(CoverPropertiesOption.id, CoverPropertiesOption);
+registry.category("website-options").add(CoverPropertiesOption.id, CoverPropertiesOption);

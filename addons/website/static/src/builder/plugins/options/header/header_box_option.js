@@ -12,4 +12,4 @@ export class HeaderBoxOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(HeaderBoxOption.id, HeaderBoxOption);
+registry.category("website-options").add(HeaderBoxOption.id, HeaderBoxOption);

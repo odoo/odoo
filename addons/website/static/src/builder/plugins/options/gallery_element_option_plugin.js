@@ -98,4 +98,4 @@ export class SetGalleryElementPositionAction extends BuilderAction {
 }
 
 registry.category("website-plugins").add(GalleryElementOptionPlugin.id, GalleryElementOptionPlugin);
-registry.category("builder-options").add(GalleryElementOption.id, GalleryElementOption);
+registry.category("website-options").add(GalleryElementOption.id, GalleryElementOption);

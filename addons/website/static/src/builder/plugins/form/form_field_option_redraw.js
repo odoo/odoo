@@ -21,4 +21,4 @@ export class FormFieldOptionRedraw extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(FormFieldOptionRedraw.id, FormFieldOptionRedraw);
+registry.category("website-options").add(FormFieldOptionRedraw.id, FormFieldOptionRedraw);

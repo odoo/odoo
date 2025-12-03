@@ -40,4 +40,4 @@ export class ProductPageOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(ProductPageOption.id, ProductPageOption);
+registry.category("website-options").add(ProductPageOption.id, ProductPageOption);

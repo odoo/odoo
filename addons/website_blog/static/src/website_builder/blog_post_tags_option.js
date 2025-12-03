@@ -13,4 +13,4 @@ export class BlogPostTagsOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(BlogPostTagsOption.id, BlogPostTagsOption);
+registry.category("website-options").add(BlogPostTagsOption.id, BlogPostTagsOption);

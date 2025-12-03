@@ -22,4 +22,4 @@ export class CardOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(CardOption.id, CardOption);
+registry.category("website-options").add(CardOption.id, CardOption);

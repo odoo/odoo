@@ -12,7 +12,7 @@ export class FooterTemplateOption extends BaseOptionComponent {
         this.footerTemplates = useState(this.dependencies.footerOption.getFooterTemplates());
     }
 }
-registry.category("builder-options").add(FooterTemplateOption.id, FooterTemplateOption);
+registry.category("website-options").add(FooterTemplateOption.id, FooterTemplateOption);
 
 export class FooterTemplateChoice extends BaseOptionComponent {
     static template = "website.FooterTemplateChoice";

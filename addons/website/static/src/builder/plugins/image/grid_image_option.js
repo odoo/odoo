@@ -27,4 +27,4 @@ export class GridImageOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(GridImageOption.id, GridImageOption);
+registry.category("website-options").add(GridImageOption.id, GridImageOption);

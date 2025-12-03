@@ -13,4 +13,4 @@ export class ImageGalleryOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(ImageGalleryOption.id, ImageGalleryOption);
+registry.category("website-options").add(ImageGalleryOption.id, ImageGalleryOption);

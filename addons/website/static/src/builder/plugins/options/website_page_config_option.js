@@ -10,4 +10,4 @@ export class TopMenuVisibilityOption extends BaseOptionComponent {
     };
 }
 
-registry.category("builder-options").add(TopMenuVisibilityOption.id, TopMenuVisibilityOption);
+registry.category("website-options").add(TopMenuVisibilityOption.id, TopMenuVisibilityOption);

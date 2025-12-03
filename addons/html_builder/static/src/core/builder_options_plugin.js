@@ -164,7 +164,6 @@ export class BuilderOptionsPlugin extends Plugin {
 
     setup() {
         this.builderOptions = this.getBuilderOptionsFromTemplate();
-        console.log("builderOptions", this.builderOptions);
         this.builderOptionsContext = new Map();
         this.builderOptionsDependencies = new Map();
         const options = this.builderOptions.concat([OptionsContainer]);
@@ -583,7 +582,7 @@ export class BuilderOptionsPlugin extends Plugin {
     getBuilderOptionsFromTemplate() {
         const template = renderToElement(
             this.config.builderOptionsTemplate,
-            this.getBuilderOptionsConstants()
+            this.getBuilderOptionsContext()
         );
         return Array.from(template.children, (node) => this.createOptionClassFromNode(node));
     }
@@ -606,8 +605,8 @@ export class BuilderOptionsPlugin extends Plugin {
             throw new Error(`Missing selector name in builder option ${optionId}`);
         }
         // TODO DUAU: we need specific for website and mass_mailing, also registry or ressource?
-        const builderOptionsRegistry = registry.category("builder-options");
-        if (!builderOptionsRegistry.contains(optionId)) {
+        const optionRegistry = this.getOptionRegistry(optionId);
+        if (!optionRegistry) {
             if (!template) {
                 throw new Error(`Missing template name in builder option ${optionId}`);
             }
@@ -628,7 +627,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 `If a BaseOptionComponent class exists, template should be in the class: ${optionId}`
             );
         }
-        const ComplexOptionClass = builderOptionsRegistry.get(optionId);
+        const ComplexOptionClass = optionRegistry.get(optionId);
         if (!ComplexOptionClass.template) {
             throw new Error(`Missing template name in builder option ${optionId}`);
         }
@@ -693,6 +692,22 @@ export class BuilderOptionsPlugin extends Plugin {
         };
     }
 
+    getOptionRegistry(optionId) {
+        if (!this.baseOptionRegistry) {
+            this.baseOptionRegistry = registry.category("builder-options");
+            this.specificOptionRegistry = this.config.builderOptionsRegistry
+                ? registry.category(this.config.builderOptionsRegistry)
+                : null;
+        }
+        if (this.specificOptionRegistry?.contains(optionId)) {
+            return this.specificOptionRegistry;
+        }
+        if (this.baseOptionRegistry.contains(optionId)) {
+            return this.baseOptionRegistry;
+        }
+        return null;
+    }
+
     /**
      * Get all dependencies of an OptionComponent and all its descendants.
      */
@@ -723,13 +738,13 @@ export class BuilderOptionsPlugin extends Plugin {
         return context;
     }
 
-    getBuilderOptionsConstants() {
-        if (!this.builderOptionsConstants) {
+    getBuilderOptionsContext() {
+        if (!this.builderOptionsContext) {
             const resourceResult = this.getResource("builder_options_context");
-            const constants = Object.assign({}, ...resourceResult);
-            this.builderOptionsConstants = Object.freeze(constants);
+            const context = Object.assign({}, ...resourceResult);
+            this.builderOptionsContext = Object.freeze(context);
         }
-        return this.builderOptionsConstants;
+        return this.builderOptionsContext;
     }
 }
 

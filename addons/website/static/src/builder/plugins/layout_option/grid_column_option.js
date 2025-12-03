@@ -13,4 +13,4 @@ export class GridColumnsOption extends BaseOptionComponent {
     }
 }
 
-registry.category("builder-options").add(GridColumnsOption.id, GridColumnsOption);
+registry.category("website-options").add(GridColumnsOption.id, GridColumnsOption);
