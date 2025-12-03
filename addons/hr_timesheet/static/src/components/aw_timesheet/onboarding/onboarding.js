@@ -16,18 +16,32 @@ export class ActivityWatchOnboarding extends Component {
     // Browser & OS detection
     detectBrowser() {
         const ua = navigator.userAgent;
-        if (ua.includes("Firefox")) return "Firefox";
-        if (ua.includes("Edg/") || ua.includes("Edge/")) return "Edge";
-        if (ua.includes("Chrome")) return "Chrome";
-        if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+        if (ua.includes("Firefox")) {
+            return "Firefox";
+        }
+        if (ua.includes("Edg/") || ua.includes("Edge/")) {
+            return "Edge";
+        }
+        if (ua.includes("Chrome")) {
+            return "Chrome";
+        }
+        if (ua.includes("Safari") && !ua.includes("Chrome")) {
+            return "Safari";
+        }
         return "Unknown";
     }
 
     detectOS() {
         const p = navigator.platform || navigator.userAgent;
-        if (/Linux/.test(p)) return "Linux";
-        if (/Mac|iPhone|iPad/.test(p)) return "macOS";
-        if (/Win/.test(p)) return "Windows";
+        if (/Linux/.test(p)) {
+            return "Linux";
+        }
+        if (/Mac|iPhone|iPad/.test(p)) {
+            return "macOS";
+        }
+        if (/Win/.test(p)) {
+            return "Windows";
+        }
         return "Unknown";
     }
 
@@ -45,7 +59,7 @@ export class ActivityWatchOnboarding extends Component {
                 this.state.ideSelections.push(ide);
             }
         } else {
-            this.state.ideSelections = this.state.ideSelections.filter(i => i !== ide);
+            this.state.ideSelections = this.state.ideSelections.filter((i) => i !== ide);
         }
     }
 
@@ -72,13 +86,15 @@ export class ActivityWatchOnboarding extends Component {
             "set -e",
             "",
             'echo "Installing ActivityWatch - Raouf"',
+            "pkill aw-",
             "",
-            'INSTALL_DIR="$HOME/Downloads"',
+            'INSTALL_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/activitywatch"',
             'WATCHERS_DIR="$INSTALL_DIR/activitywatch"',
             'WRAPPER_SCRIPT="$INSTALL_DIR/start_watchers.sh"',
             'LOG_FILE="$INSTALL_DIR/startup.log"',
             "",
-            "cd \"$INSTALL_DIR\"",
+            'mkdir -p "$INSTALL_DIR"',
+            'cd "$INSTALL_DIR"',
             "",
             "# Download AW",
             'AW_URL="https://github.com/ActivityWatch/activitywatch/releases/download/v0.13.2/activitywatch-v0.13.2-linux-x86_64.zip"',
@@ -88,11 +104,12 @@ export class ActivityWatchOnboarding extends Component {
             "unzip -o aw.zip",
             "rm aw.zip",
             'echo "ActivityWatch Unzipped"',
-            ""
+            "",
         ];
 
         // for this poc, i'm just focusing on chrome and vsCode on Linux, we will make it generic
-        for (const vsCodeBasedIde of ["code", "codium", "antigravity"]) { // can be extended later
+        for (const vsCodeBasedIde of ["code", "codium", "antigravity"]) {
+            // can be extended later
             if (this.state.ideSelections.includes(vsCodeBasedIde)) {
                 lines.push(this.getVsCodeBasedExtensionScript(vsCodeBasedIde));
             }
@@ -124,7 +141,7 @@ export class ActivityWatchOnboarding extends Component {
             "#!/bin/bash",
             "set -e",
             "",
-            'INSTALL_DIR="$HOME/Downloads"',
+            'INSTALL_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/activitywatch"',
             'WATCHERS_DIR="$INSTALL_DIR/activitywatch"',
             'LOG_FILE="$INSTALL_DIR/startup.log"',
             "",
@@ -132,7 +149,7 @@ export class ActivityWatchOnboarding extends Component {
             'AW_WINDOW="$WATCHERS_DIR/aw-watcher-window/aw-watcher-window"',
             'AW_SERVER="$WATCHERS_DIR/aw-server/aw-server"',
             "",
-            "cd \"$WATCHERS_DIR\"",
+            'cd "$WATCHERS_DIR"',
             "",
             "# Start watchers in background, log output",
             '$AW_AFK >> "$LOG_FILE" 2>&1 &',
@@ -140,13 +157,13 @@ export class ActivityWatchOnboarding extends Component {
             `$AW_SERVER --cors-origins ${odooUrl} >> "$LOG_FILE" 2>&1 &`,
             "EOF",
             "",
-            "chmod +x \"$WRAPPER_SCRIPT\"",
+            'chmod +x "$WRAPPER_SCRIPT"',
             '(crontab -l 2>/dev/null | grep -F "$WRAPPER_SCRIPT") || \\',
             '    (crontab -l 2>/dev/null; echo "@reboot /bin/bash $WRAPPER_SCRIPT") | crontab -',
             "",
             'echo "Watchers will now run on every reboot."',
             '/bin/bash "$WRAPPER_SCRIPT"',
-            'echo "Starting watchers now..."'
+            'echo "Starting watchers now..."',
         ];
 
         const scriptText = [...lines, ...wrapperLines].join("\n");
