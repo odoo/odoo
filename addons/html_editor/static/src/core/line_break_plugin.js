@@ -36,6 +36,8 @@ export class LineBreakPlugin extends Plugin {
             // this.shared.collapseIfZWS();
             this.dependencies.delete.deleteSelection();
             selection = this.dependencies.selection.getEditableSelection();
+        } else if (!closestElement(selection.anchorNode).isContentEditable) {
+            selection = this.dependencies.selection.getEditableSelection();
         }
 
         const targetNode = selection.anchorNode;
