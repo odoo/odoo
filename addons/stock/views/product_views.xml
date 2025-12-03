@@ -87,29 +87,37 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field
-                        name="qty_available"
-                        invisible="not is_storable"
-                        string="On Hand"
-                        optional="show"
-                        decoration-danger="virtual_available &lt; 0"
-                        decoration-warning="virtual_available == 0"
-                        decoration-bf="1"
-                        groups="stock.group_stock_user"
-                        sum="Total On Hand"
-                    />
-                    <field
-                        name="virtual_available"
-                        invisible="not is_storable"
-                        string="Forecasted"
-                        optional="show"
-                        decoration-danger="virtual_available &lt; 0"
-                        decoration-warning="virtual_available == 0"
-                        groups="stock.group_stock_user"
-                        sum="Total Forecasted"
-                    />
-                </field>
+                <xpath expr="//field[@name='qty_available']" position='attributes'>
+                    <attribute name="groups">stock.group_stock_user</attribute>
+                </xpath>
+                <xpath expr="//field[@name='virtual_available']" position='attributes'>
+                    <attribute name="groups">stock.group_stock_user</attribute>
+                </xpath>
+            </field>
+        </record>
+
+                <!-- Disable variant qty editing not using quants -->
+        <record id="product.product_view_list_qty" model="ir.ui.view">
+            <field name="active" eval="False"/>
+        </record>
+        <!-- Even though we disable the view also hide field (eg. in case bookmarked) -->
+        <record id="product_view_list_qty_inherit_hide_qty" model="ir.ui.view">
+            <field name="name">product.view.list.qty.inherit.hide.qty</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_view_list_qty"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='qty_available']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_variant_easy_edit_view" model="ir.ui.view">
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='qty_available']" position="replace"/>
+                <xpath expr="//div[@name='no_stock_variant_qty_edit']" position="replace"/>
             </field>
         </record>
 
