@@ -272,13 +272,21 @@ describe("inline code", () => {
         });
     });
 
-    test("should create an empty inline code when their is no text in between two backtics", async () => {
+    test("should not create an empty inline code when there is no text between two backticks", async () => {
         await testEditor({
             contentBefore: "<p>a`[]b</p>",
             stepFunction: async (editor) => insertText(editor, "`"),
-            contentAfterEdit:
-                '<p>a\ufeff<code class="o_inline_code">\ufeff[]\ufeff</code>\ufeffb</p>',
-            contentAfter: '<p>a<code class="o_inline_code">[]</code>b</p>',
+            contentAfterEdit: "<p>a``[]b</p>",
+            contentAfter: "<p>a``[]b</p>",
+        });
+    });
+
+    test("should not create an empty inline code when there is a backtick between two backticks", async () => {
+        await testEditor({
+            contentBefore: "<p>a``[]b</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfterEdit: "<p>a```[]b</p>",
+            contentAfter: "<p>a```[]b</p>",
         });
     });
 
