@@ -102,12 +102,17 @@ export class CalendarController extends Component {
     get modelParams() {
         return {
             ...this.props.archInfo,
+            canScheduleEvents: this.canScheduleEvents,
             resModel: this.props.resModel,
             domain: this.props.domain,
             fields: this.props.fields,
             date: this.props.state?.date,
-            loadSurroundings: hasTouch()
+            loadSurroundings: hasTouch(),
         };
+    }
+
+    get canScheduleEvents() {
+        return !this.env.isSmall && this.props.archInfo.canSchedule && this.props.archInfo.canEdit;
     }
 
     get currentDate() {
@@ -152,13 +157,9 @@ export class CalendarController extends Component {
     get weekHeader() {
         const { start, end } = this.model.visibleRange;
         if (start.year != end.year) {
-            return `${start.toFormat("MMMM")} ${start.year} - ${end.toFormat(
-                "MMMM"
-            )} ${end.year}`;
+            return `${start.toFormat("MMMM")} ${start.year} - ${end.toFormat("MMMM")} ${end.year}`;
         } else if (start.month != end.month) {
-            return `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${
-                start.year
-            }`;
+            return `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${start.year}`;
         }
         return `${start.toFormat("MMMM")} ${start.year}`;
     }
@@ -190,7 +191,10 @@ export class CalendarController extends Component {
     }
 
     get sidePanelProps() {
-        return { model: this.model };
+        return {
+            model: this.model,
+            editRecord: this.editRecord.bind(this),
+        };
     }
 
     toggleSideBar() {

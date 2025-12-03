@@ -12,6 +12,7 @@ const DEFAULT_ARCH_RESULTS = {
     canCreate: true,
     canDelete: true,
     canEdit: true,
+    canSchedule: false,
     eventLimit: 5,
     fieldMapping: {
         date_start: "start_date",

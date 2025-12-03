@@ -68,7 +68,10 @@ export class CalendarCommonRenderer extends Component {
     };
 
     setup() {
-        this.fc = useFullCalendar("fullCalendar", this.props.isDisabled ? this.disabledOptions : this.interactiveOptions);
+        this.fc = useFullCalendar(
+            "fullCalendar",
+            this.props.isDisabled ? this.disabledOptions : this.interactiveOptions
+        );
         this.clickTimeoutId = null;
         this.popover = useCalendarPopover(this.constructor.components.Popover);
         this.timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
@@ -103,10 +106,10 @@ export class CalendarCommonRenderer extends Component {
             eventStartEditable: false,
             eventDurationEditable: false,
             droppable: false,
-        }
+        };
     }
 
-     get interactiveOptions() {
+    get interactiveOptions() {
         return {
             ...this.options,
             dayMaxEventRows: this.props.model.eventLimit,
@@ -120,6 +123,7 @@ export class CalendarCommonRenderer extends Component {
             eventClassNames: this.eventClassNames,
             eventDidMount: this.onEventDidMount,
             eventContent: this.onEventContent,
+            eventReceive: this.onEventScheduled,
             eventResizableFromStart: true,
             eventResize: this.onEventResize,
             eventResizeStart: this.onEventResizeStart,
@@ -131,8 +135,8 @@ export class CalendarCommonRenderer extends Component {
             selectMirror: true,
             selectable: !this.props.model.hasMultiCreate && this.props.model.canCreate,
             unselectAuto: false,
-        }
-     }
+        };
+    }
 
     get options() {
         return {
@@ -209,8 +213,8 @@ export class CalendarCommonRenderer extends Component {
             return;
         }
         if (!this.props.model.hasMultiCreate) {
-            this.onDateClick(info)
-        };
+            this.onDateClick(info);
+        }
     }
     highlightEvent(event, className) {
         for (const el of this.fc.el.querySelectorAll(this.computeEventSelector(event))) {
@@ -224,7 +228,7 @@ export class CalendarCommonRenderer extends Component {
     }
     mapRecordsToEvents() {
         const { records } = this.props.model.data;
-        return Object.values(records).map((r) => this.convertRecordToEvent(r))
+        return Object.values(records).map((r) => this.convertRecordToEvent(r));
     }
     convertRecordToEvent(record) {
         return convertRecordToEvent(record);
@@ -279,8 +283,7 @@ export class CalendarCommonRenderer extends Component {
     onEventContent(arg) {
         const { event } = arg;
         if (event.start && event.end) {
-            const dateFmt = (date) =>
-                luxon.DateTime.fromJSDate(date).toFormat(this.timeFormat);
+            const dateFmt = (date) => luxon.DateTime.fromJSDate(date).toFormat(this.timeFormat);
             arg.timeText = `${dateFmt(event.start)} - ${dateFmt(event.end)}`;
         }
         const record = this.props.model.records[event.id];
@@ -376,6 +379,13 @@ export class CalendarCommonRenderer extends Component {
             info.revert();
             throw e;
         });
+    }
+    async onEventScheduled(info) {
+        const original = info.event;
+        const date = DateTime.fromJSDate(original.start);
+        const resId = Number(original.id);
+        await this.props.model.scheduleEvent(resId, date);
+        original.remove();
     }
     fcEventToRecord(event) {
         const { id, allDay, date, start, end } = event;

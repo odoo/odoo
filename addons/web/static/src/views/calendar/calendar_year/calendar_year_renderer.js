@@ -9,6 +9,8 @@ import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
 import { Component, useEffect, useRef } from "@odoo/owl";
 
+const { DateTime } = luxon;
+
 export class CalendarYearRenderer extends Component {
     static components = {
         Popover: CalendarYearPopover,
@@ -49,7 +51,7 @@ export class CalendarYearRenderer extends Component {
             eventStartEditable: false,
             eventDurationEditable: false,
             droppable: false,
-        }
+        };
     }
 
     get interactiveOptions() {
@@ -61,6 +63,7 @@ export class CalendarYearRenderer extends Component {
             editable: this.props.model.canEdit,
             eventClassNames: this.eventClassNames,
             eventDidMount: this.onEventDidMount,
+            eventReceive: this.onEventScheduled,
             eventResizableFromStart: true,
             longPressDelay: TOUCH_SELECTION_THRESHOLD,
             select: this.onSelect,
@@ -71,7 +74,7 @@ export class CalendarYearRenderer extends Component {
             windowResize: this.onWindowResize,
             eventContent: this.onEventContent,
             weekends: this.props.isWeekendVisible,
-        }
+        };
     }
 
     get options() {
@@ -115,7 +118,7 @@ export class CalendarYearRenderer extends Component {
     }
     mapRecordsToEvents() {
         const { records } = this.props.model.data;
-        return Object.values(records).map((r) => this.convertRecordToEvent(r))
+        return Object.values(records).map((r) => this.convertRecordToEvent(r));
     }
     convertRecordToEvent(record) {
         return {
@@ -148,7 +151,7 @@ export class CalendarYearRenderer extends Component {
             // The event might be fired after a touch pointerup without any jsEvent
             return;
         }
-        this.onDateClick(info)
+        this.onDateClick(info);
     }
     openPopover(target, date, records) {
         this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover");
@@ -228,6 +231,13 @@ export class CalendarYearRenderer extends Component {
                 el.style.backgroundColor = color;
             }
         }
+    }
+    async onEventScheduled(info) {
+        const original = info.event;
+        const date = DateTime.fromJSDate(original.start);
+        const resId = Number(original.id);
+        await this.props.model.scheduleEvent(resId, date);
+        original.remove();
     }
     async onSelect(info) {
         this.popover.close();

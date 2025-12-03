@@ -7,6 +7,11 @@
                 <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
                     <FilterSection model="props.model" section="section"/>
                 </t>
+                <ScheduleSection
+                    t-if="props.model.meta.canScheduleEvents"
+                    model="props.model"
+                    editRecord="props.editRecord"
+                />
             </div>
         </div>
     </t>

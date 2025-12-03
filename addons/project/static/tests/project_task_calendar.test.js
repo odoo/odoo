@@ -62,8 +62,7 @@ const calendarMountParams = {
     resModel: "project.task",
     type: "calendar",
     arch: `
-        <calendar date_start="date_deadline" mode="month"
-                    js_class="project_task_calendar">
+        <calendar date_start="date_deadline" mode="month" js_class="project_task_calendar" schedule="1">
             <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
             <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection"/>
         </calendar>
@@ -173,8 +172,8 @@ test("Display closed tasks as past event", async () => {
 });
 
 test("tasks to schedule should not be visible in the sidebar if no default project set in the context", async () => {
-    onRpc("project.task", "search_read", ({ method }) => {
-        expect.step(method);
+    onRpc("project.task", "search_read", () => {
+        expect.step("search_read");
     });
     onRpc("project.task", "web_search_read", () => {
         expect.step("fetch tasks to schedule");
@@ -182,13 +181,13 @@ test("tasks to schedule should not be visible in the sidebar if no default proje
 
     await mountView(calendarMountParams);
     expect(".o_calendar_view").toHaveCount(1);
-    expect(".o_task_to_plan_draggable").toHaveCount(0);
+    expect(".o_event_to_schedule_draggable").toHaveCount(0);
     expect.verifySteps(["search_read"]);
 });
 
 test("tasks to plan should be visible in the sidebar when `default_project_id` is set in the context", async () => {
-    onRpc("project.task", "search_read", ({ method }) => {
-        expect.step(method);
+    onRpc("project.task", "search_read", () => {
+        expect.step("search_read");
     });
     onRpc("project.task", "web_search_read", () => {
         expect.step("fetch tasks to schedule");
@@ -199,65 +198,68 @@ test("tasks to plan should be visible in the sidebar when `default_project_id` i
         context: { default_project_id: 1 },
     });
     expect(".o_calendar_view").toHaveCount(1);
-    expect(".o_task_to_plan_draggable").toHaveCount(2);
-    expect(queryAllTexts(".o_task_to_plan_draggable")).toEqual(['Task-10', 'Task-11']);
-    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("Drag Tasks to Schedule");
+    expect(".o_event_to_schedule_draggable").toHaveCount(2);
+    expect(queryAllTexts(".o_event_to_schedule_draggable")).toEqual(["Task-10", "Task-11"]);
+    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("To Schedule");
     expect.verifySteps(["search_read", "fetch tasks to schedule"]);
 });
 
 test("search domain should be taken into account in Tasks to Schedule", async () => {
-    onRpc("project.task", "search_read", ({ method }) => {
-        expect.step(method);
+    onRpc("project.task", "search_read", () => {
+        expect.step("search_read");
     });
-    onRpc("project.task", "web_search_read", ({ method }) => {
+    onRpc("project.task", "web_search_read", () => {
         expect.step("fetch tasks to schedule");
     });
 
     await mountView({
         ...calendarMountParams,
         context: { default_project_id: 1 },
-        domain: [['is_closed', '=', false]],
+        domain: [["is_closed", "=", false]],
     });
     expect(".o_calendar_view").toHaveCount(1);
-    expect(".o_task_to_plan_draggable").toHaveCount(1);
-    expect(".o_task_to_plan_draggable").toHaveText('Task-10');
-    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("Drag Tasks to Schedule");
+    expect(".o_event_to_schedule_draggable").toHaveCount(1);
+    expect(".o_event_to_schedule_draggable").toHaveText("Task-10");
+    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("To Schedule");
     expect.verifySteps(["search_read", "fetch tasks to schedule"]);
 });
 
 test("planned dates used in search domain should not be taken into account in Tasks to Schedule", async () => {
-    onRpc("project.task", "search_read", ({ method }) => {
-        expect.step(method);
+    onRpc("project.task", "search_read", () => {
+        expect.step("search_read");
     });
-    onRpc("project.task", "web_search_read", ({ method }) => {
+    onRpc("project.task", "web_search_read", () => {
         expect.step("fetch tasks to schedule");
     });
 
     await mountView({
         ...calendarMountParams,
         context: { default_project_id: 1 },
-        domain: [['is_closed', '=', false], ['date_deadline', '!=', false], ['planned_date_begin', '!=', false]],
+        domain: [
+            ["is_closed", "=", false],
+            ["date_deadline", "!=", false],
+        ],
     });
     expect(".o_calendar_view").toHaveCount(1);
-    expect(".o_task_to_plan_draggable").toHaveCount(1);
-    expect(".o_task_to_plan_draggable").toHaveText('Task-10');
-    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("Drag Tasks to Schedule");
+    expect(".o_event_to_schedule_draggable").toHaveCount(1);
+    expect(".o_event_to_schedule_draggable").toHaveText("Task-10");
+    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("To Schedule");
     expect.verifySteps(["search_read", "fetch tasks to schedule"]);
 });
 
 test("test drag and drop a task to schedule in calendar view in month scale", async () => {
     let expectedDate = null;
 
-    onRpc("project.task", "search_read", ({ method }) => {
-        expect.step(method);
+    onRpc("project.task", "search_read", () => {
+        expect.step("search_read");
     });
-    onRpc("project.task", "web_search_read", ({ method }) => {
+    onRpc("project.task", "web_search_read", () => {
         expect.step("fetch tasks to schedule");
     });
     onRpc("project.task", "plan_task_in_calendar", ({ args }) => {
         const [taskIds, vals] = args;
         expect(taskIds).toEqual([10]);
-        const expectedDateDeadline = serializeDateTime(expectedDate.set({ hours: 19 }));
+        const expectedDateDeadline = serializeDateTime(expectedDate.set({ hours: 7 }));
         expect(vals).toEqual({
             date_deadline: expectedDateDeadline,
         });
@@ -268,16 +270,22 @@ test("test drag and drop a task to schedule in calendar view in month scale", as
         ...calendarMountParams,
         context: { default_project_id: 1 },
     });
-    expect(".o_task_to_plan_draggable").toHaveCount(2);
-    const { drop, moveTo } = await contains(".o_task_to_plan_draggable:first").drag();
+    expect(".o_event_to_schedule_draggable").toHaveCount(2);
+    const { drop, moveTo } = await contains(".o_event_to_schedule_draggable:first").drag();
     const dateCell = queryFirst(".fc-day.fc-day-today.fc-daygrid-day");
     expectedDate = luxon.DateTime.fromISO(dateCell.dataset.date);
     await moveTo(dateCell);
-    expect(dateCell).toHaveClass("o-highlight");
+    expect(queryFirst(".fc-highlight", { root: dateCell })).toHaveCount(1);
     await drop();
-    expect.verifySteps(["search_read", "fetch tasks to schedule", "plan task", "search_read"]);
-    expect(".o_task_to_plan_draggable").toHaveCount(1);
-    expect(".o_task_to_plan_draggable").toHaveText("Task-11");
+    expect.verifySteps([
+        "search_read",
+        "fetch tasks to schedule",
+        "plan task",
+        "search_read",
+        "fetch tasks to schedule",
+    ]);
+    expect(".o_event_to_schedule_draggable").toHaveCount(1);
+    expect(".o_event_to_schedule_draggable").toHaveText("Task-11");
 });
 
 test("project.task (calendar): toggle sub-tasks", async () => {
@@ -286,7 +294,7 @@ test("project.task (calendar): toggle sub-tasks", async () => {
             id: 1,
             project_id: 1,
             name: "Task 1",
-            stage_id:  1,
+            stage_id: 1,
             display_in_project: true,
             date_deadline: "2024-01-09 07:00:00",
             create_date: "2024-01-03 12:00:00",
@@ -295,11 +303,11 @@ test("project.task (calendar): toggle sub-tasks", async () => {
             id: 2,
             project_id: 1,
             name: "Task 2",
-            stage_id:  1,
+            stage_id: 1,
             display_in_project: false,
             date_deadline: "2024-01-09 07:00:00",
             create_date: "2024-01-03 12:00:00",
-        }
+        },
     ];
     await mountView(calendarMountParams);
     expect(".o_event").toHaveCount(1);
