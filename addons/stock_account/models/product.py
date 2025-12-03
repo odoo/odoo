@@ -170,6 +170,12 @@ class ProductProduct(models.Model):
             else:
                 product.avg_cost = product.total_value / qty_available if not product.uom_id.is_zero(qty_available) else product._get_standard_price_at_date()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        products = super().create(vals_list)
+        products._change_standard_price({product: 0 for product in products if product.standard_price})
+        return products
+
     def write(self, vals):
         old_price = False
         if 'standard_price' in vals and not self.env.context.get('disable_auto_revaluation'):
