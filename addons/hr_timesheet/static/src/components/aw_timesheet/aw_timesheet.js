@@ -300,9 +300,10 @@ export class ActivityWatchTimesheet extends Component {
         return Object.keys(buckets)
             .filter((key) =>
                 [
+                    "aw-watcher-pycharm", // hardcoded for now
                     "aw-watcher-vscode",
                     "aw-watcher-window",
-                    "aw-client-web",
+                    "aw-client-web", // can be more than a browser
                     "aw-watcher-afk",
                 ].includes(buckets[key].client)
             )
@@ -334,13 +335,20 @@ export class ActivityWatchTimesheet extends Component {
                     const events = await Promise.resolve(responses[index].json());
                     for (const event of events) {
                         let eventType = watchers[index].client;
-                        if (watchers[index].client === "aw-watcher-vscode") {
+                        if (watchers[index].client === "aw-watcher-vscode") { // includes vscode, vscodium, antigravity ...
                             event.name =
                                 event.data.project === "unknown"
                                     ? _t("Development")
                                     : _t("VS Code - %(folder)s", { folder: event.data.project });
                             event.keyEvent = true;
                             event.type = "vs_code";
+                        } else if (watchers[index].client === "aw-watcher-pycharm") { // can be refactored with the previous
+                            event.name =
+                                event.data.project === "unknown"
+                                    ? _t("Development")
+                                    : _t("Pycharm - %(folder)s - %(branch)s", { folder: event.data.project, branch: event.data.branch });
+                            event.keyEvent = true;
+                            event.type = "pycharm";
                         } else if (
                             ["aw-watcher-window", "aw-client-web"].includes(watchers[index].client)
                         ) {
@@ -493,6 +501,7 @@ export class ActivityWatchTimesheet extends Component {
         // in a loop
         this.merge(ranges, events["always_active"]);
         this.merge(ranges, events["aw-watcher-vscode"]);
+        this.merge(ranges, events["aw-watcher-pycharm"]); // hardcoded
         this.merge(ranges, events["aw-watcher-afk"]); // will work in the inverse way later
         this.merge(ranges, events["aw-client-web"]); // assumin one browser => if 2 two, the 2 pointers algo will fail (no sorted non overlapping ranges)
         this.merge(ranges, events["aw-watcher-window"]);

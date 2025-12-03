@@ -114,6 +114,8 @@ export class ActivityWatchOnboarding extends Component {
                 ""
             );
         }
+        // https://www.jetbrains.com/help/pycharm/install-plugins-from-the-command-line.html#linux
+        // https://www.jetbrains.com/help/pycharm/working-with-the-ide-features-from-command-line.html#toolbox
 
         // Wrapper script
         const wrapperLines = [
