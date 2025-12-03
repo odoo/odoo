@@ -14,7 +14,8 @@
                 <field name="value" string="Unit Cost" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') != 'standard'"/>
                 <field name="total_value" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') == 'standard'"/>
                 <field name="total_quantity" column_invisible="context.get('cost_method') == 'standard'"/>
-                <field name="avco_value" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="avco_value" string="Unit Cost" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="justification" column_invisible="context.get('cost_method') != 'average'" optional="hide"/>
             </list>
         </field>
     </record>
