@@ -284,7 +284,7 @@ class HrLeaveType(models.Model):
         leave_types = self.env['hr.leave.type'].search([])
         return [('id', 'in', leave_types.filtered(is_valid).ids)]
 
-    @api.depends_context('employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
+    @api.depends_context('uid', 'employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
     def _compute_leaves(self):
         employee = self.env['hr.employee']._get_contextual_employee()
         # This is a workaround to save the date value in context for next triggers
@@ -378,7 +378,8 @@ class HrLeaveType(models.Model):
         if not self.requested_display_name():
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super()._compute_display_name()
-        for record in self:
+        # use sudo() to get the correct remaining leaves
+        for record in self.sudo():
             name = record.name
             if record.requires_allocation:
                 remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
