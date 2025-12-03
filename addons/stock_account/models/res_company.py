@@ -184,7 +184,7 @@ class ResCompany(models.Model):
         ]) & moves_base_domain
         moves_in_by_location = self.env['stock.move']._read_group(
             moves_in_domain,
-            ['location_dest_id'],
+            ['location_dest_id', 'product_category_id'],
             ['value:sum'],
         )
         moves_out_domain = Domain([
@@ -193,26 +193,26 @@ class ResCompany(models.Model):
         ]) & moves_base_domain
         moves_out_by_location = self.env['stock.move']._read_group(
             moves_out_domain,
-            ['location_id'],
+            ['location_id', 'product_category_id'],
             ['value:sum'],
         )
         account_balance = defaultdict(float)
-        incoming_value_by_location = dict(moves_in_by_location)
-        outgoing_value_by_location = dict(moves_out_by_location)
-        locations = incoming_value_by_location.keys() | outgoing_value_by_location.keys()
-        for location in locations:
-            # TODO: It would be better to replay the period to get the exact correct value.
-            inventory_value = incoming_value_by_location.get(location, 0.0) - outgoing_value_by_location.get(location, 0.0)
-            account_balance[location.valuation_account_id] += inventory_value
+        for location, category, value in moves_in_by_location:
+            stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
+            account_balance[location.valuation_account_id, stock_valuation_acc] += value
 
-        for account, balance in account_balance.items():
+        for location, category, value in moves_out_by_location:
+            stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
+            account_balance[location.valuation_account_id, stock_valuation_acc] -= value
+
+        for (location_account, stock_account), balance in account_balance.items():
             if balance == 0:
                 continue
             amls_vals = self._prepare_inventory_aml_vals(
-                account,
-                self.account_stock_valuation_id,
+                location_account,
+                stock_account,
                 balance,
-                _('Closing: Location Reclassification - [%(account)s]', account=account.display_name),
+                _('Closing: Location Reclassification - [%(account)s]', account=location_account.display_name),
             )
             amls_vals_list += amls_vals
         return amls_vals_list
