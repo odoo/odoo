@@ -280,6 +280,10 @@ export class FontPlugin extends Plugin {
                 pattern: /^>$/,
                 commandId: "setTagQuote",
             },
+            {
+                pattern: /^```$/,
+                commandId: "setTagPre",
+            },
         ],
         hints: [
             { selector: "H1", text: _t("Heading 1") },
