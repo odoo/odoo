@@ -117,11 +117,9 @@
                                 <field name="partner_is_blacklisted" invisible="1"/>
                                 <field name="date_conversion" invisible="1"/>
                                 <field name="user_company_ids" invisible="1"/>
-                                <!-- lead -->
-                                <field name="is_partner_visible" invisible='1'/>
 
                                 <field name="partner_id" widget="res_partner_many2one"
-                                    invisible="not is_partner_visible or type == 'opportunity'"
+                                    invisible="type == 'opportunity'"
                                     placeholder="Select or create a contact..."
                                     context="{
                                         'default_parent_id': commercial_partner_id,
@@ -211,7 +209,7 @@
                             </page>
                             <page name="extra" string="Extra Info">
                                 <group>
-                                    <group string="Company Information">
+                                    <group string="Company Information" groups="base.group_no_one">
                                         <field name="partner_name"/>
                                         <label for="street" string="Address"/>
                                         <div class="o_address_format">
@@ -226,7 +224,7 @@
                                         <field name="lang_id" invisible="lang_active_count &lt;= 1"
                                             options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                     </group>
-                                    <group string="Contact Information">
+                                    <group string="Contact Information" groups="base.group_no_one">
                                         <label for="contact_name"/>
                                         <div class="o_row">
                                             <field name="contact_name" id="contact_name"/>
