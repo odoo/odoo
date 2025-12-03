@@ -570,6 +570,11 @@ patch(PosStore.prototype, {
         this.addPendingOrder([order.id]);
         this.showDefault();
     },
+    async reprintOrder() {
+        const order = this.getOrder();
+        await this.sendOrderInPreparation(order, { explicitReprint: true });
+        this.showDefault();
+    },
     async getServerOrders() {
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
