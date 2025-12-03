@@ -40,6 +40,9 @@ class StockMove(models.Model):
         'product.product', 'Product',
         check_company=True,
         domain="[('type', '=', 'consu')]", index=True, required=True)
+    product_category_id = fields.Many2one(
+        'product.category', 'Product Category',
+        related='product_id.categ_id')
     never_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value',
         'template_attribute_value_stock_move_rel',
