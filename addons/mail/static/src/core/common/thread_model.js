@@ -68,7 +68,6 @@ export class Thread extends Record {
     allMessages = fields.Many("mail.message", {
         inverse: "thread",
     });
-    /** @type {boolean} */
     areAttachmentsLoaded = false;
     group_public_id = fields.One("res.groups");
     attachments = fields.Many("ir.attachment", {
@@ -300,10 +299,6 @@ export class Thread extends Record {
      */
     getPersonaName(persona) {
         return persona?.displayName || persona?.name;
-    }
-
-    get hasAttachmentPanel() {
-        return Boolean(this.channel);
     }
 
     get supportsCustomChannelName() {

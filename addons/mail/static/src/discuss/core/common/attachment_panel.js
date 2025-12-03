@@ -13,7 +13,7 @@ import { useSequential, useVisible } from "@mail/utils/common/hooks";
  */
 export class AttachmentPanel extends Component {
     static components = { ActionPanel, AttachmentList, DateSection };
-    static props = ["thread"];
+    static props = ["channel"];
     static template = "mail.AttachmentPanel";
 
     setup() {
@@ -23,16 +23,16 @@ export class AttachmentPanel extends Component {
         this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");
         onWillStart(() => {
-            this.props.thread.fetchMoreAttachments();
+            this.props.channel.fetchMoreAttachments();
         });
         onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.notEq(this.props.thread)) {
-                nextProps.thread.fetchMoreAttachments();
+            if (nextProps.channel.notEq(this.props.channel)) {
+                nextProps.channel.fetchMoreAttachments();
             }
         });
         useVisible("load-older", (isVisible) => {
             if (isVisible) {
-                this.props.thread.fetchMoreAttachments();
+                this.props.channel.fetchMoreAttachments();
             }
         });
     }
@@ -42,7 +42,7 @@ export class AttachmentPanel extends Component {
      */
     get attachmentsByDate() {
         const attachmentsByDate = {};
-        for (const attachment of this.props.thread.attachments) {
+        for (const attachment of this.props.channel.attachments) {
             const attachments = attachmentsByDate[attachment.monthYear] ?? [];
             attachments.push(attachment);
             attachmentsByDate[attachment.monthYear] = attachments;
