@@ -23,5 +23,9 @@ class EventTypeBooth(models.Model):
         default=_get_default_booth_category, ondelete='restrict', required=True)
 
     @api.model
-    def _get_event_booth_fields_whitelist(self):
-        return ['name', 'booth_category_id']
+    def _prepare_event_booth_values(self):
+        """Prepare values to copy from template to booth."""
+        return {
+            'name': self.name,
+            'booth_category_id': self.booth_category_id.id,
+        }
