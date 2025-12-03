@@ -1211,6 +1211,71 @@ X[]
                         contentAfter: unformat(`<div>a[]d</div>`),
                     });
                 });
+                it('should delete the inline code style when removing its last character', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">ab</code>[]xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">a[]</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">a[]b</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">[]b</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">ab[]</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">a[]</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">a</code>[]xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">a[]</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><em>123</em><code class="o_inline_code">a[]</code><em>xyz</em></div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><em>123[]xyz</em></div>`),
+                    });
+                });
+                it('should delete the inline code style when removing its last multi-char character', async () => {
+                    const multi = "\uD800\uDC83";
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">${multi}${multi}</code>[]xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">${multi}[]</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">${multi}[]${multi}</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">[]${multi}</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">${multi}${multi}[]</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">${multi}[]</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">${multi}</code>[]xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">${multi}[]</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><em>123</em><code class="o_inline_code">${multi}[]</code><em>xyz</em></div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteBackward'),
+                        contentAfter: unformat(`<div><em>123[]xyz</em></div>`),
+                    });
+                });
             });
         });
         describe('Selection not collapsed', () => {
@@ -3009,6 +3074,71 @@ X[]
                             </tbody></table>
                             <p>kl</p>`,
                         ),
+                    });
+                });
+                it('should delete the inline code style when removing its last character', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div>[]<code class="o_inline_code">ab</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">[]b</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">a[]b</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">a[]</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">[]ab</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">[]b</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div>[]<code class="o_inline_code">b</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">[]b</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><em>123</em><code class="o_inline_code">[]a</code><em>xyz</em></div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><em>123[]xyz</em></div>`),
+                    });
+                });
+                it('should delete the inline code style when removing its last multi-char character', async () => {
+                    const multi = "\uD800\uDC83";
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div>[]<code class="o_inline_code">${multi}${multi}</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">[]${multi}</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">${multi}[]${multi}</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">${multi}[]</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">[]${multi}${multi}</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><code class="o_inline_code">[]${multi}</code>xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div>[]<code class="o_inline_code">${multi}</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><code class="o_inline_code">[]${multi}</code>xyz</div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div>[]xyz</div>`),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`<div><em>123</em><code class="o_inline_code">[]${multi}</code><em>xyz</em></div>`),
+                        stepFunction: editor => editor._applyCommand('oDeleteForward'),
+                        contentAfter: unformat(`<div><em>123[]xyz</em></div>`),
                     });
                 });
             });
