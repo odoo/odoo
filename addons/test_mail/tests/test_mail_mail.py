@@ -444,7 +444,7 @@ class TestMailMail(MailCommon):
             self._reset_data()
             with self.mock_mail_gateway(), mute_logger('odoo.addons.mail.models.mail_mail'):
                 mail.send(raise_exception=False)
-            self.assertFalse(self._mails[0]['email_from'])
+            self.assertEqual(len(self._mails), 0)  # email not send at all
             self.assertEqual(
                 mail.failure_reason,
                 'You must either provide a sender address explicitly or configure using the combination of `mail.catchall.domain` and `mail.default.from` ICPs, in the server configuration file or with the --email-from startup parameter.')
