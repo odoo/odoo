@@ -10,6 +10,9 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 from odoo.tools.mimetypes import get_extension
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 def is_livechat_channel(channel):
@@ -550,26 +553,37 @@ class DiscussChannel(models.Model):
 
     def _email_livechat_transcript(self, email):
         company = self.env.user.company_id
-        tz = "UTC"
         # sudo: discuss.channel - access partner's/guest's timezone
-        for customer in self.sudo().livechat_customer_history_ids:
-            customer_tz = customer.partner_id.tz or customer.guest_id.timezone
-            if customer_tz:
-                tz = customer_tz
-                break
+        tz = next((tz
+                   for customer in self.sudo().livechat_customer_history_ids
+                   if (tz := customer.partner_id.tz or customer.guest_id.timezone)), "UTC")
+        lang = next((lang
+                     for customer in self.sudo().livechat_customer_history_ids
+                     if (lang := customer.partner_id.lang or customer.guest_id.lang)), self.env.lang)
         render_context = {
             "company": company,
             "channel": self,
             "tz": ZoneInfo(tz),
         }
-        mail_body = self.env['ir.qweb']._render('im_livechat.livechat_email_template', render_context, minimal_qcontext=True)
+        mail_body = self.env['ir.qweb'].with_context(lang=lang)._render(
+            'im_livechat.livechat_email_template', render_context, minimal_qcontext=True)
         mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
+        mail_body_html = self.env['mail.render.mixin'].with_context(lang=lang)._render_encapsulate(
+            'mail.mail_notification_layout', mail_body, context_record=self,
+            add_context={
+                'email_notification_force_header': True,
+                'email_notification_force_footer': True,
+                'subtitles': [_lt('Live Chat Conversation'), company.name],
+                'subtitles_highlight_index': 1,
+            })
         mail = self.env['mail.mail'].sudo().create({
-            'subject': _('Conversation with %s', self.livechat_operator_id.user_livechat_username or self.livechat_operator_id.name),
-            'email_from': company.catchall_formatted or company.email_formatted,
             'author_id': self.env.user.partner_id.id,
+            'body': mail_body,
+            'body_html': mail_body_html,
+            'email_from': company.catchall_formatted or company.email_formatted,
             'email_to': email_split(email)[0],
-            'body_html': mail_body,
+            'subject': _('Conversation with %(agent)s',
+                         agent=self.livechat_operator_id.user_livechat_username or self.livechat_operator_id.name),
         })
         mail.send()
 

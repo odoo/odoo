@@ -615,12 +615,10 @@ class LazyGettext:
         return self._translate()
 
     def __eq__(self, other):
-        """ Prevent using equal operators
-
-        Prevent direct comparisons with ``self``.
-        One should compare the translation of ``self._source`` as ``str(self) == X``.
-        """
-        raise NotImplementedError()
+        if not isinstance(other, LazyGettext):
+            return False
+        return (self._source == other._source and self._args == other._args and
+                self._module == other._module and self._default_lang == other._default_lang)
 
     def __hash__(self):
         raise NotImplementedError()

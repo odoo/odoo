@@ -414,3 +414,51 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(mails_sudo[1].body_html,
                          f'<body><p>EnglishBody for {test_records[1].name}</p> English Layout for Lang Chatter Model</body>')
         self.assertEqual(mails_sudo[1].subject, f'EnglishSubject for {test_records[1].name}')
+
+
+class TestMailRenderLayoutTemplateLang(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_records = cls.env['mail.test.lang'].with_context(cls._test_context).create([{
+            'email_from': f'ignasse{idx}@example.com',
+            'name': f'Test{idx}',
+            'lang': '{{ object.customer_id.lang or object.lang }}',
+        } for idx in range(2)])
+        cls.test_template = cls._create_template('mail.test.lang', {
+            'body_html': '<p>EnglishBody for <t t-out="object.name"/></p>',
+            'lang': '{{ object.customer_id.lang or object.lang }}',
+            'subject': 'EnglishSubject for {{ object.name }}',
+            'use_default_to': False,
+        })
+        cls.partner_es, cls.partner_en = cls.env['res.partner'].create([
+            {'email': 'roberto.carlos@test.example.com', 'lang': 'es_ES', 'name': 'Roberto Carlos'},
+            {'email': 'rob.charly@test.example.com', 'lang': 'en_US', 'name': 'Rob Charly'}])
+        cls._activate_multi_lang()
+        cls.test_context_subtitles = {
+            'email_notification_force_header': True,
+            'email_notification_subtitles': cls.subtitles,
+            'email_notification_subtitles_highlight_index': 1,
+        }
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_translation_partner_lang_subtitles(self):
+        """Test that subtitles are rendered in the correct language using template.send_mail_batch."""
+        test_records = self.test_records.with_env(self.env)
+        test_template = self.test_template.with_env(self.env)
+        test_records[0].customer_id = self.partner_en
+        test_records[1].customer_id = self.partner_es
+
+        mail_ids = test_template.with_context(self.test_context_subtitles).send_mail_batch(
+            test_records.ids, email_layout_xmlid='mail.test_layout')
+        body_en = mail_ids[0].body_html
+        self.assertIn('<span>Subtitle test_model</span>', body_en, 'Subtitles translation failed')
+        self.assertIn('<b>Subtitle2 test_model2</b>', body_en, 'Subtitles translation failed')
+        self.assertNotIn('<span>Subtitular test_model</span>', body_en, 'Subtitles translation failed')
+        self.assertNotIn('<b>Subtitular2 test_model2</b>', body_en, 'Subtitles translation failed')
+        body_es = mail_ids[1].body_html
+        self.assertIn('<span>Subtitular test_model</span>', body_es, 'Subtitles translation failed')
+        self.assertIn('<b>Subtitular2 test_model2</b>', body_es, 'Subtitles translation failed')
+        self.assertNotIn('<span>Subtitle test_model</span>', body_es, 'Subtitles translation failed')
+        self.assertNotIn('<b>Subtitle2 test_model2</b>', body_es, 'Subtitles translation failed')

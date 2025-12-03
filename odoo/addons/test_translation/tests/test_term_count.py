@@ -159,9 +159,9 @@ class TestImport(common.TransactionCase):
         )
         context = None  # noqa: F841
 
-        # Comparison of lazy strings must be explicitely casted to string
-        with self.assertRaises(NotImplementedError):
-            _ = TRANSLATED_TERM == "Code, English"
+        self.assertNotEqual(TRANSLATED_TERM, "Code, English")
+        self.assertNotEqual("Code, English", TRANSLATED_TERM)
+        self.assertEqual(TRANSLATED_TERM, TRANSLATED_TERM)
         self.assertEqual(str(TRANSLATED_TERM), "Code Lazy, English", "The translation should not be applied yet")
 
         context = {'lang': "tlh"}  # noqa: F841

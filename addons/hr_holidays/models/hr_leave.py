@@ -1266,7 +1266,10 @@ class HrLeave(models.Model):
         for holiday in leaves:
             responsible = holiday.employee_id.leave_manager_id.partner_id.ids
             if responsible:
-                holiday.sudo().message_notify(
+                holiday.sudo().with_context(
+                    email_notification_force_header=True,
+                    email_notification_force_footer=True,
+                ).message_notify(
                     partner_ids=responsible,
                     model_description=model_description,
                     subject=_('Refused Time Off'),
@@ -1320,7 +1323,10 @@ class HrLeave(models.Model):
                         leave_name=leave.display_name,
                         reason=Markup("<blockquote>{reason}</blockquote>").format(reason=reason),
                     )
-                    leave.message_notify(
+                    leave.with_context(
+                        email_notification_force_header=True,
+                        email_notification_force_footer=True,
+                    ).message_notify(
                         partner_ids=responsibles.ids,
                         model_description=model_description,
                         subject=self.env._('Cancelled Time Off'),
