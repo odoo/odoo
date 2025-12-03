@@ -59,7 +59,7 @@ class Authenticate(http.Controller):
                 methods=['POST', 'OPTIONS'])
     def auth_check_version(self):
         """Allow to know if the module is installed and which addin version is supported."""
-        return 1
+        return 2
 
     # In this case, an exception will be thrown in case of preflight request if only POST is allowed.
     @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='jsonrpc', auth="none", cors="*",

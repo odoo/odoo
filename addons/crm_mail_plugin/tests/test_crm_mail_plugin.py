@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo.tests import tagged
-
 from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon, mock_auth_method_outlook
 
 
@@ -38,9 +34,9 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
             msg="The user has access to crm.lead, the leads section should be visible",
         )
 
-        self.assertTrue([lead for lead in result["leads"] if lead["lead_id"] == lead_1.id],
+        self.assertTrue([lead for lead in result["leads"] if lead["id"] == lead_1.id],
             msg="The first lead belongs to the first partner, it should be returned")
-        self.assertFalse([lead for lead in result["leads"] if lead["lead_id"] == lead_2.id],
+        self.assertFalse([lead for lead in result["leads"] if lead["id"] == lead_2.id],
             msg="The second lead does not belong to the first partner, it should not be returned")
 
     @mock_auth_method_outlook('employee')
@@ -70,6 +66,8 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
 
         params = {
             'partner_id': contact.id,
+            'partner_email': contact.email,
+            'partner_name': contact.name,
             'email_body': 'test body',
             'email_subject': 'test subject',
         }
@@ -78,12 +76,12 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
 
         # Check that the created lead record has the correct company and return the lead_id
         self.assertIn(
-            'lead_id',
+            'id',
             result,
             msg='The lead_id should be returned in the response',
         )
 
-        created_lead = self.env['crm.lead'].browse(result['lead_id'])
+        created_lead = self.env['crm.lead'].browse(result['id'])
 
         self.assertEqual(
             created_lead.company_id,
