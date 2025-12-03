@@ -877,6 +877,40 @@ class AccountEdiCommon(models.AbstractModel):
             **deferred_values,
         }
 
+    @api.model
+    def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
+        # Discount. /!\ as no percent discount can be set on a line, need to infer the percentage
+        # from the amount of the actual amount of the discount (the allowance charge)
+        rebate = 0
+        rebate_node = tree.find(xpath_dict['rebate'])
+        net_price_unit_node = tree.find(xpath_dict['net_price_unit'])
+        gross_price_unit_node = tree.find(xpath_dict['gross_price_unit'])
+        if rebate_node is not None:
+            rebate = float(rebate_node.text)
+        elif net_price_unit_node is not None and gross_price_unit_node is not None:
+            rebate = float(gross_price_unit_node.text) - float(net_price_unit_node.text)
+        return rebate
+
+    @api.model
+    def _retrieve_charge_allowance_vals(self, tree, xpath_dict, quantity):
+        charges = []
+        discount_amount = 0
+        for allowance_charge_node in tree.iterfind(xpath_dict['allowance_charge']):
+            charge_indicator = allowance_charge_node.findtext(xpath_dict['allowance_charge_indicator'])
+            amount = float(allowance_charge_node.findtext(xpath_dict['allowance_charge_amount'], default='0'))
+            reason_code = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason_code'], default='')
+            reason = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason'], default='')
+            if charge_indicator.lower() == 'true':
+                charges.append({
+                    'amount': amount,
+                    'line_quantity': quantity,
+                    'reason': reason,
+                    'reason_code': reason_code,
+                })
+            else:
+                discount_amount += amount
+        return discount_amount, charges
+
     def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
         """
         Read the xml invoice, extract the invoice line values, compute the odoo values
@@ -927,19 +961,9 @@ class AccountEdiCommon(models.AbstractModel):
         if gross_price_unit_node is not None:
             gross_price_unit = float(gross_price_unit_node.text)
 
-        # rebate (optional)
-        # Discount. /!\ as no percent discount can be set on a line, need to infer the percentage
-        # from the amount of the actual amount of the discount (the allowance charge)
-        rebate = 0
-        rebate_node = tree.find(xpath_dict['rebate'])
-        net_price_unit_node = tree.find(xpath_dict['net_price_unit'])
-        if rebate_node is not None:
-            rebate = float(rebate_node.text)
-        elif net_price_unit_node is not None and gross_price_unit_node is not None:
-            rebate = float(gross_price_unit_node.text) - float(net_price_unit_node.text)
-
         # net_price_unit (mandatory)
         net_price_unit = None
+        net_price_unit_node = tree.find(xpath_dict['net_price_unit'])
         if net_price_unit_node is not None:
             net_price_unit = float(net_price_unit_node.text)
 
@@ -971,23 +995,11 @@ class AccountEdiCommon(models.AbstractModel):
         # quantity
         quantity = delivered_qty * qty_factor
 
+        # rebate (optional)
+        rebate = self._retrieve_rebate_val(tree, xpath_dict, quantity)
+
         # Charges are collected (they are used to create new lines), Allowances are transformed into discounts
-        charges = []
-        discount_amount = 0
-        for allowance_charge_node in tree.iterfind(xpath_dict['allowance_charge']):
-            charge_indicator = allowance_charge_node.findtext(xpath_dict['allowance_charge_indicator'])
-            amount = float(allowance_charge_node.findtext(xpath_dict['allowance_charge_amount'], default='0'))
-            reason_code = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason_code'], default='')
-            reason = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason'], default='')
-            if charge_indicator.lower() == 'true':
-                charges.append({
-                    'amount': amount,
-                    'line_quantity': quantity,
-                    'reason': reason,
-                    'reason_code': reason_code,
-                })
-            else:
-                discount_amount += amount
+        discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
 
         # price_unit
         charge_amount = sum(d['amount'] for d in charges)
