@@ -29,7 +29,11 @@
         }
 
         .o_dashboard_graph {
-            margin-bottom: -$o-horizontal-padding/2;
+            margin-bottom: -#{map-get($spacers, 2)};
+        }
+
+        .o_graph_barchart {
+            margin-bottom: -#{map-get($spacers, 1)};
         }
 
         .o_field_widget.o_field_kanban_vat_activity {
@@ -68,7 +72,7 @@
 // Style for the widget "dashboard_graph"
 .o_dashboard_graph {
     position: relative;
-    margin: 16px -16px;
+    margin: $spacer (-$spacer);
 
     canvas {
         height: 150px;
