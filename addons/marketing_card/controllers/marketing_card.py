@@ -110,7 +110,7 @@ class MarketingCardController(Controller):
         if _is_crawler(request):
             return request.render('marketing_card.card_campaign_crawler', {
                 'image_url': card._get_card_url(),
-                'post_text': campaign_sudo.post_suggestion,
+                'post_suggestion': campaign_sudo.post_suggestion,
                 'target_name': card.display_name or '',
             })
 
