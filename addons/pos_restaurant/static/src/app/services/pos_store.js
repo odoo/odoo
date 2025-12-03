@@ -535,6 +535,11 @@ patch(PosStore.prototype, {
         this.addPendingOrder([order.id]);
         this.showDefault();
     },
+    async reprintOrder() {
+        const order = this.getOrder();
+        await this.sendOrderInPreparation(order, { explicitReprint: true });
+        this.showDefault();
+    },
     async _askForPreparation() {
         const order = this.getOrder();
         if (
