@@ -32,5 +32,8 @@ const discussChannelPatch = {
             inverse: "activeLivechats",
         });
     },
+    get hasAttachmentPanel() {
+        return this.channel_type !== "livechat" && super.hasAttachmentPanel;
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

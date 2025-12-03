@@ -142,6 +142,9 @@ export class DiscussChannel extends Record {
                 .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
         },
     });
+    get hasAttachmentPanel() {
+        return true;
+    }
     hasOtherMembersTyping = fields.Attr(false, {
         /** @this {import("models").DiscussChannel} */
         compute() {
@@ -307,6 +310,26 @@ export class DiscussChannel extends Record {
             throw e;
         }
         this.pinnedMessagesState = "loaded";
+    }
+
+    async fetchMoreAttachments(limit = 30) {
+        if (this.isLoadingAttachments || this.areAttachmentsLoaded) {
+            return;
+        }
+        this.isLoadingAttachments = true;
+        try {
+            const data = await rpc("/discuss/channel/attachments", {
+                before: Math.min(...this.attachments.map(({ id }) => id)),
+                channel_id: this.id,
+                limit,
+            });
+            this.store.insert(data.store_data);
+            if (data.count < limit) {
+                this.areAttachmentsLoaded = true;
+            }
+        } finally {
+            this.isLoadingAttachments = false;
+        }
     }
 
     async markAsFetched() {

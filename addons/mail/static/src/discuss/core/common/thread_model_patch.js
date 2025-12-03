@@ -144,25 +144,6 @@ const threadPatch = {
         }
         return super.displayName;
     },
-    async fetchMoreAttachments(limit = 30) {
-        if (this.isLoadingAttachments || this.areAttachmentsLoaded) {
-            return;
-        }
-        this.isLoadingAttachments = true;
-        try {
-            const data = await rpc("/discuss/channel/attachments", {
-                before: Math.min(...this.attachments.map(({ id }) => id)),
-                channel_id: this.id,
-                limit,
-            });
-            this.store.insert(data.store_data);
-            if (data.count < limit) {
-                this.areAttachmentsLoaded = true;
-            }
-        } finally {
-            this.isLoadingAttachments = false;
-        }
-    },
     /** @override */
     get importantCounter() {
         if (this.channel?.isChatChannel && this.self_member_id?.message_unread_counter_ui) {

@@ -44,7 +44,6 @@ declare module "models" {
         correspondentCountry: Country;
         correspondents: Readonly<ChannelMember[]>;
         executeCommand: (command: unknown, body: string) => unknown;
-        fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
         leaveChannel: () => Promise<void>;

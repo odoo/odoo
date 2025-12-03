@@ -140,9 +140,9 @@ registerThreadAction("notification-settings", {
 });
 registerThreadAction("attachments", {
     actionPanelComponent: AttachmentPanel,
-    actionPanelComponentProps: ({ thread }) => ({ thread }),
-    condition: ({ owner, thread }) =>
-        thread?.hasAttachmentPanel &&
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
+    condition: ({ owner, channel }) =>
+        channel?.hasAttachmentPanel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-paperclip",
