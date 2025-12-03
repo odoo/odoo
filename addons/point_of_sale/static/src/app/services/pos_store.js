@@ -19,7 +19,6 @@ import {
     makeActionAwaitable,
 } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PartnerList } from "../screens/partner_list/partner_list";
-import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import {
     changesToOrder,
@@ -61,7 +60,6 @@ export class PosStore extends WithLazyGetterTrap {
         "hardware_proxy",
         "ui",
         "pos_data",
-        "pos_scale",
         "dialog",
         "notification",
         "printer",
@@ -89,7 +87,6 @@ export class PosStore extends WithLazyGetterTrap {
             printer,
             bus_service,
             pos_data,
-            pos_scale,
             action,
             pos_router,
             alert,
@@ -145,7 +142,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
-        this.scale = pos_scale;
 
         this.orderCounter = new Counter(0);
 
@@ -882,66 +878,14 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
-        // It will return an instance of pos.pack.operation.lot
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        const code = opts.code;
-        let pack_lot_ids = {};
-        if (values.product_tmpl_id.isTracked() && (configure || code)) {
-            const packLotLinesToEdit =
-                (!values.product_tmpl_id.isAllowOnlyOneLot() &&
-                    this.getOrder()
-                        .getOrderlines()
-                        .filter((line) => !line.getDiscount())
-                        .find((line) => line.product_id.id === values.product_id.id)
-                        ?.getPackLotLinesToEdit()) ||
-                [];
-
-            // if the lot information exists in the barcode, we don't need to ask it from the user.
-            if (code && code.type === "lot") {
-                // consider the old and new packlot lines
-                const modifiedPackLotLines = Object.fromEntries(
-                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
-                );
-                const newPackLotLines = [{ lot_name: code.code }];
-                pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
-            } else {
-                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
-            }
-
-            if (!pack_lot_ids) {
-                return;
-            } else {
-                const packLotLine = pack_lot_ids.newPackLotLines;
-                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
-            }
-        }
-
-        // In case of clicking a product with tracking weight enabled a popup will be shown to the user
-        // It will return the weight of the product as quantity
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
-            if (values.product_tmpl_id.isScaleAvailable) {
-                const decimalAccuracy = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit"
-                ).digits;
-                this.scale.setProduct(
-                    values.product_id,
-                    decimalAccuracy,
-                    values.product_id.getTaxDetails().total_included
-                );
-                const weight = await this.weighProduct();
-                if (weight) {
-                    values.qty = weight;
-                } else if (weight !== null) {
-                    return;
-                }
-            } else {
-                await values.product_tmpl_id._onScaleNotAvailable();
-            }
-        }
+        const pack_lot_ids = await this.configureNewOrderLine(
+            productTemplate,
+            vals,
+            values,
+            order,
+            options,
+            configure
+        );
 
         // Handle price unit
         this.handlePriceUnit(values, order, vals.price_unit);
@@ -1001,6 +945,45 @@ export class PosStore extends WithLazyGetterTrap {
         }, 3000);
 
         return order.getSelectedOrderline();
+    }
+
+    async configureNewOrderLine(productTemplate, vals, values, order, opts = {}, configure = true) {
+        // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
+        // It will return an instance of pos.pack.operation.lot
+        // ---
+        // This actions cannot be handled inside pos_order.js or pos_order_line.js
+        const code = opts.code;
+        let pack_lot_ids = {};
+        if (values.product_tmpl_id.isTracked() && (configure || code)) {
+            const packLotLinesToEdit =
+                (!values.product_tmpl_id.isAllowOnlyOneLot() &&
+                    this.getOrder()
+                        .getOrderlines()
+                        .filter((line) => !line.getDiscount())
+                        .find((line) => line.product_id.id === values.product_id.id)
+                        ?.getPackLotLinesToEdit()) ||
+                [];
+
+            // if the lot information exists in the barcode, we don't need to ask it from the user.
+            if (code && code.type === "lot") {
+                // consider the old and new packlot lines
+                const modifiedPackLotLines = Object.fromEntries(
+                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
+                );
+                const newPackLotLines = [{ lot_name: code.code }];
+                pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
+            } else {
+                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
+            }
+
+            if (!pack_lot_ids) {
+                return;
+            } else {
+                const packLotLine = pack_lot_ids.newPackLotLines;
+                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
+            }
+        }
+        return pack_lot_ids;
     }
 
     /**
@@ -2759,10 +2742,6 @@ export class PosStore extends WithLazyGetterTrap {
         return (
             (await this.data.orm.searchCount("pos.session", [["id", "=", this.session.id]])) === 0
         );
-    }
-
-    weighProduct() {
-        return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 
     async validateOrderFast(paymentMethod) {
