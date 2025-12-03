@@ -57,7 +57,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_generic_coa_account_account(self):
         return {
             'stock_valuation': {
-                'account_stock_expense_id': 'expense',
                 'account_stock_variation_id': 'stock_variation',
             },
         }
