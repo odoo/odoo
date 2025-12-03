@@ -1,0 +1,13 @@
+FROM odoo:19.0
+
+# PEP 668 対応で --break-system-packages を付けて debugpy をインストール
+RUN pip install --break-system-packages debugpy
+
+# debugpy 経由で odoo を起動
+# ※ python → python3 に変更
+CMD python3 -m debugpy \
+    --listen 0.0.0.0:5678 \
+    --wait-for-client \
+    -m odoo \
+    -c /etc/odoo/odoo.conf \
+    --dev=all

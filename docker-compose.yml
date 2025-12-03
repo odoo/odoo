@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16
+    container_name: odoo19-db
+    environment:
+      POSTGRES_DB: odoo
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    # 外から直接つなぐ必要があればポートを開ける（任意）
+    # VSCode デバッグには不要なので、なくても構いません
+    # ports:
+    #   - "5432:5432"
+    restart: unless-stopped
+
+  odoo:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    container_name: odoo19-web
+    depends_on:
+      - db
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo
+    ports:
+      - "8069:8069"   # ブラウザ用
+      - "5678:5678"   # VSCode debugpy 用
+    volumes:
+      - odoo-data:/var/lib/odoo             # filestore
+      - ./config:/etc/odoo                  # odoo.conf をここに置く
+      - ./custom_addons:/mnt/extra-addons   # 自作モジュール
+    restart: unless-stopped
+
+volumes:
+  db-data:
+  odoo-data:
