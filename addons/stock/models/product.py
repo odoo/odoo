@@ -810,7 +810,6 @@ class ProductTemplate(models.Model):
         string="Category Routes", related='categ_id.total_route_ids', related_sudo=False)
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
-    show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
 
     @api.depends('lot_sequence_id', 'lot_sequence_id.prefix')
     def _compute_serial_prefix_format(self):

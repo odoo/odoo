@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="product_view_list_qty" model="ir.ui.view">
+        <field name="name">product.product.view.list.qty</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <list string="Update Quantities" editable="bottom" create="false">
+                <field name="display_name" readonly="1"/>
+                <field name="product_template_variant_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
+                <field name="qty_available" string="On Hand" decoration-danger="qty_available &lt; 0" sum="Total On Hand"/>
+                <field name="virtual_available" string="Forecasted" decoration-danger="virtual_available &lt; 0" decoration-bf="1" sum="Total Forecasted"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_variant_edit_qty_action" model="ir.actions.act_window">
+        <field name="name">Update Variant Quantities</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('product_tmpl_id', '=', active_id)]</field>
+        <field name="context">{'default_product_tmpl_id': active_id, 'create': False}</field>
+        <field name="view_ids"
+                eval="[(5, 0, 0),
+                       (0, 0, {'view_mode': 'list', 'view_id': ref('product_view_list_qty')})]"/>
+    </record>
+
     <!-- base structure of product.template, common with product.product -->
     <record id="product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.common.form</field>
@@ -73,12 +97,20 @@
                                         invisible="not product_tooltip"
                                     />
                                     <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
-                                    <div class="o_row w-100 o_is_storable" invisible="type != 'consu'">
+                                    <field name="show_qty_update_button" invisible="1"/>
+                                    <div name="tracking_and_qty_no_stock" class="o_row w-100" invisible="type != 'consu'">
                                         <field name="is_storable"/>
-                                        <field name="qty_available" style="max-width: fit-content;" invisible="not is_storable"/>
-                                        <span invisible="not is_storable">
-                                            <field name="uom_name" class="oe_inline"/>
-                                        </span>
+                                        <div name="product_template_qty_field" class="d-flex" invisible="is_product_variant or not is_storable">
+                                            <a type="action" name="%(product_variant_edit_qty_action)d" invisible="not show_qty_update_button">
+                                                <field name="qty_available" readonly="True"/>
+                                            </a>
+                                            <field name="qty_available" invisible="show_qty_update_button" style="max-width: fit-content;"/>
+                                            <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
+                                        </div>
+                                        <div name="product_product_qty_field" class="d-flex" invisible="not is_product_variant or not is_storable">
+                                            <field name="qty_available" style="max-width: fit-content;"/>
+                                            <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
+                                        </div>
                                     </div>
                                 </group>
                                 <group name="group_standard_price">
@@ -379,6 +411,13 @@
                         </group>
                         <group>
                             <group name="weight" string="Logistics" invisible="type != 'consu'">
+                                <label for="qty_available"  invisible="not is_storable"/>
+                                <div class="d-flex" name="no_stock_variant_qty_edit" invisible="not is_storable">
+                                    <div class="d-flex">
+                                        <field name="qty_available" class="oe_inline"/>
+                                        <field name="uom_name" groups="uom.group_uom"/>
+                                    </div>
+                                </div>
                                 <label for="volume"/>
                                 <div class="d-flex">
                                     <field name="volume" class="oe_inline"/>
@@ -447,6 +486,13 @@
                     <field name="product_tag_ids" widget="many2many_tags" readonly="1" optional="hide"/>
                     <field name="additional_product_tag_ids" widget="many2many_tags" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
+                    <field name="qty_available" invisible="not is_storable" string="On Hand" readonly="1" optional="show"
+                           decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"
+                           sum="Total On Hand"
+                    />
+                    <field name="virtual_available" invisible="not is_storable" string="Forecasted" readonly="1" optional="show"
+                           decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" sum="Total Forecasted"
+                    />
                     <field name="uom_id" groups="uom.group_uom" optional="show" readonly="1"/>
                     <field name="product_tmpl_id" readonly="1" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>

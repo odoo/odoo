@@ -163,6 +163,8 @@ class ProductTemplate(models.Model):
     product_variant_count = fields.Integer(
         '# Product Variants', compute='_compute_product_variant_count')
 
+    show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
+
     # related to display product product information if is_product_variant
     barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     default_code = fields.Char(
@@ -338,6 +340,11 @@ class ProductTemplate(models.Model):
     @api.depends('type')
     def _compute_is_storable(self):
         self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
+
+    @api.depends('product_variant_count', 'is_storable')
+    def _compute_show_qty_update_button(self):
+        for product in self:
+            product.show_qty_update_button = product.product_variant_count > 1
 
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
