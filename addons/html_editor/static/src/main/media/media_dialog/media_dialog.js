@@ -257,10 +257,8 @@ export class MediaDialog extends Component {
                                 }
                             } else {
                                 // Regex
-                                for (const className of element.classList) {
-                                    if (className.match(candidateName)) {
-                                        return false;
-                                    }
+                                if (candidateName.match(name)) {
+                                    return false;
                                 }
                             }
                         }
