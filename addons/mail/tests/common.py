@@ -102,14 +102,17 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         self._init_mail_mock()
 
         def _ir_mail_server_build_email(model, email_from, email_to, subject, body, **kwargs):
-            self._mails.append({
+            data = {
                 'email_from': email_from,
                 'email_to': email_to,
                 'subject': subject,
                 'body': body,
                 **kwargs,
-            })
-            return build_email_origin(model, email_from, email_to, subject, body, **kwargs)
+            }
+            res = build_email_origin(model, email_from, email_to, subject, body, **kwargs)
+            data['EmailMessage'] = res
+            self._mails.append(data)
+            return res
 
         def _mail_mail_create(model, *args, **kwargs):
             res = mail_create_origin(model, *args, **kwargs)
