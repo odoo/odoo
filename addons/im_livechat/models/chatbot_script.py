@@ -197,8 +197,9 @@ class ChatbotScript(models.Model):
     # Tooling / Misc
     # --------------------------
 
-    def _to_store_defaults(self, target):
-        return [Store.One("operator_partner_id", ["name"]), "title"]
+    def _store_script_fields(self, res: Store.FieldList):
+        res.one("operator_partner_id", ["name"])
+        res.attr("title")
 
     def _validate_email(self, email_address, discuss_channel):
         email_address = html2plaintext(email_address)

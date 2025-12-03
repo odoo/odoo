@@ -49,8 +49,7 @@ class MailThreadMainAttachment(models.AbstractModel):
                     key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
                 ).id
 
-    def _get_store_thread_fields(self, target: Store.Target, request_list):
-        res = super()._get_store_thread_fields(target, request_list)
+    def _store_thread_fields(self, res: Store.FieldList, *, request_list):
+        super()._store_thread_fields(res, request_list=request_list)
         if "attachments" in request_list:
-            res.append("message_main_attachment_id")
-        return res
+            res.attr("message_main_attachment_id")

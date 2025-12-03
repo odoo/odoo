@@ -50,9 +50,9 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         }
         discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
         chatbot_script._post_welcome_steps(discuss_channel)
-        store.add(discuss_channel, {"open_chat_window": True})
-        request.env["res.users"]._init_store_data(store)
-        store.add(chatbot_script)
+        store.add(discuss_channel, "_store_open_chat_window_fields")
+        store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)
+        store.add(chatbot_script, "_store_script_fields")
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
             'chatbot_script': chatbot_script,

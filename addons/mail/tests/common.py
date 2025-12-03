@@ -1670,11 +1670,9 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
     def assertMessageBusNotifications(self, message, count=1):
         """Asserts that the expected notification updates have been sent on the
         bus for the given message."""
-        store = Store()
-        message._message_notifications_to_store(store)
         self.assertBusNotifications([(self.cr.dbname, 'res.partner', message.author_id.id)] * count, [{
             "type": "mail.record/insert",
-            "payload": store.get_result()
+            "payload": Store().add(message, "_store_notification_fields").get_result(),
         }], check_unique=False)
 
     def assertBusNotifications(self, channels, message_items=None, check_unique=True):

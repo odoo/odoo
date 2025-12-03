@@ -2159,7 +2159,7 @@ class ProjectTask(models.Model):
 
     def get_mention_suggestions(self, search, limit=8):
         """Return the 'limit'-first followers of the given task or followers of its project matching
-        a 'search' string as a list of partner data (returned by `_to_store()`).
+        a 'search' string.
         See similar method for all partners `get_mention_suggestions()`.
         """
         self.ensure_one()
@@ -2176,17 +2176,15 @@ class ProjectTask(models.Model):
             Domain(self.env["res.partner"]._get_mention_suggestions_domain(search))
             & Domain("id", "in", followers.partner_id.ids)
         )
-        partners = self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
-        return (
-            Store()
-            .add(partners, [
-                "email",
-                "name",
-                *partners._get_store_im_status_fields(),
-                *partners._get_store_mention_fields()
-            ])
-            .get_result()
+        store = Store().add(
+            self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit),
+            lambda res: (
+                res.extend(["email", "name"]),
+                res.from_method("_store_im_status_fields"),
+                res.from_method("_store_mention_fields"),
+            ),
         )
+        return store.get_result()
 
     @api.model
     def get_import_templates(self):

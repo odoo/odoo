@@ -75,7 +75,6 @@ class TestTracking(MailCommon):
         """Check that tracked fields filtered for display are not present
         in the front-end and email formatting methods. See `_track_filter_for_display`"""
         field_dname = 'Responsible'
-        field_name = 'user_id'
         field_type = 'many2one'
         original_user = self.user_admin
         new_user = self.user_employee
@@ -102,14 +101,14 @@ class TestTracking(MailCommon):
             )
         # first record: tracking value should be hidden
         message_0 = records[0].message_ids[0]
-        formatted = Store().add(message_0).get_result()["mail.message"][0]
+        formatted = Store().add(message_0, "_store_message_fields").get_result()["mail.message"][0]
         self.assertEqual(formatted['trackingValues'], [], 'Hidden values should not be formatted')
         mail_render = records[0]._notify_by_email_prepare_rendering_context(message_0, {})
         self.assertEqual(mail_render['tracking_values'], [])
 
         # second record: all values displayed
         message_1 = records[1].message_ids[0]
-        formatted = Store().add(message_1).get_result()["mail.message"][0]
+        formatted = Store().add(message_1, "_store_message_fields").get_result()["mail.message"][0]
         self.assertEqual(len(formatted['trackingValues']), 1)
         self.assertDictEqual(
             formatted['trackingValues'][0],
@@ -772,9 +771,10 @@ class TestTrackingInternals(MailCommon):
         self.record.sudo().write({'email_from': 'X'})
         self.flush_tracking()
 
-        msg_emp = Store().add(self.record.message_ids).get_result()
-        msg_admin = Store().add(self.record.with_user(self.user_admin).message_ids).get_result()
-        msg_sudo = Store().add(self.record.sudo().message_ids).get_result()
+        msg_emp = Store().add(self.record.message_ids, "_store_message_fields").get_result()
+        record_w_admin = self.record.with_user(self.user_admin)
+        msg_admin = Store().add(record_w_admin.message_ids, "_store_message_fields").get_result()
+        msg_sudo = Store().add(self.record.sudo().message_ids, "_store_message_fields").get_result()
 
         tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids[0].id)])
         formatted_tracking_values = [{
@@ -806,7 +806,7 @@ class TestTrackingInternals(MailCommon):
         )
 
         values_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
-        values_admin = self.record.with_user(self.user_admin)._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
+        values_admin = record_w_admin._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
         values_sudo = self.record.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
         self.assertFalse(values_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(values_admin.get('tracking_values'), "should have protected tracking values")

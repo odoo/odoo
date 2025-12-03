@@ -16,7 +16,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
-    #   8: odoobot format:
+    #   8: store add odoobot:
     #       - fetch res_partner (_read_format)
     #       - search res_users (_compute_im_status)
     #       - search presence (_compute_im_status)
@@ -25,7 +25,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search employee (_compute_im_status hr_homeworking override)
     #       - fetch employee (_compute_im_status hr_homeworking override)
     #       - fetch res_users (_read_format)
-    #       - fetch hr_employee (res.users _to_store)
+    #       - fetch hr_employee (user)
     #   5: settings:
     #       - search res_users_settings (_find_or_create_for_user)
     #       - fetch res_users_settings (_format_settings)
@@ -43,43 +43,43 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - fetch discuss_channel
+    #   1: search bus_bus (_bus_last_id)
     #   1. search discuss_channel (chathub given channel ids)
     #   2: _get_channels_as_member
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
-    #   2: _init_messaging (discuss)
+    #   2: _init_messaging_global_fields (discuss)
     #       - fetch discuss_channel_member (is_self)
     #       - _compute_message_unread
-    #   3: _init_messaging (mail)
-    #       - search bus_bus (_bus_last_id)
+    #   2: _init_messaging_global_fields (mail)
     #       - _get_needaction_count (inbox counter)
     #       - search mail_message (starred counter)
     #   23: _process_request_for_all (discuss):
     #       - search discuss_channel (channels_domain)
-    #       22: channel add:
+    #       22: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
     #           - fetch discuss_channel_rtc_session
     #           - search member (channel_member_ids)
     #           - fetch discuss_channel_member (manual prefetch)
-    #           10: member _to_store:
-    #               10: partner _to_store:
-    #                   - fetch res_partner (partner _to_store)
+    #           10: member:
+    #               10: partner:
+    #                   - fetch res_partner (partner)
     #                   - fetch res_users (_compute_im_status)
     #                   - search mail_presence (_compute_im_status)
     #                   - fetch mail_presence (_compute_im_status)
     #                   - _get_on_leave_ids (_compute_im_status override)
     #                   - search hr_employee (_compute_im_status override)
     #                   - fetch hr_employee (_compute_im_status override)
-    #                   - search hr_employee (res.users._to_store override)
+    #                   - search hr_employee (user override)
     #                   - search hr_leave (leave_date_to)
     #                   - fetch res_users (_compute_main_user_id)
     #           - search bus_bus (_bus_last_id)
-    #           - search ir_attachment (_compute_avatar_128)
     #           - count discuss_channel_member (member_count)
     #           - _compute_message_needaction
     #           - search discuss_channel_res_groups_rel (group_ids)
+    #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
     #           - fetch res_groups (group_public_id)
     _query_count_init_messaging = 35
     # Queries for _query_count_discuss_channels (in order):
@@ -89,9 +89,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel_member
     #       - fetch discuss_channel
     #   2: _get_channels_as_member
-    #       - search discuss_channel (member_domain)
-    #       - search discuss_channel (pinned_member_domain)
-    #   34: channel _to_store_defaults:
+    #       - search_fetch discuss_channel (member_domain)
+    #       - search_fetch discuss_channel (pinned_member_domain)
+    #   34: store add channel:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -99,60 +99,60 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search member (channel_member_ids)
     #       - search member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       18: member _to_store:
+    #       17: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner _to_store:
-    #               - fetch res_partner (partner _to_store)
+    #           13: partner:
+    #               - fetch res_partner (partner)
     #               - fetch res_users (_compute_im_status)
     #               - search mail_presence (_compute_im_status)
     #               - fetch mail_presence (_compute_im_status)
     #               - _get_on_leave_ids (_compute_im_status override)
     #               - search hr_employee (_compute_im_status override)
     #               - fetch hr_employee (_compute_im_status override)
-    #               - search hr_employee (res.users._to_store override)
+    #               - search hr_employee (user override)
     #               - search hr_leave (leave_date_to)
     #               - search res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_compute_main_user_id)
     #               - fetch res_country (livechat override)
-    #           3: guest _to_store:
-    #               - fetch mail_guest
+    #           2: guest:
     #               - fetch mail_presence (_compute_im_status)
-    #               - fetch res_country
-    #       - search bus_bus (_bus_last_id from _to_store_defaults)
-    #       - search ir_attachment (_compute_avatar_128)
+    #               - fetch mail_guest
+    #       - search bus_bus (_bus_last_id)
     #       - count discuss_channel_member (member_count)
     #       - _compute_message_needaction
+    #       - search ir_attachment (_compute_avatar_128)
     #       - search discuss_channel_res_groups_rel (group_ids)
     #       - fetch im_livechat_channel_member_history (requested_by_operator)
+    #       - fetch livechat_expertise_ids
     #       - fetch res_groups (group_ids)
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
-    #       2: fetch livechat_expertise_ids
     #   1: _get_last_messages
-    #   20: message _to_store:
-    #       - search mail_message_schedule
+    #   22: store add message:
     #       - fetch mail_message
+    #       - search mail_message_schedule
     #       - search mail_message_res_partner_starred_rel
     #       - search message_attachment_rel
-    #       - search mail_link_preview
     #       - search mail_message_res_partner_rel
     #       - search mail_message_reaction
+    #       - search mail_poll (_compute_has_poll start_message_id)
+    #       - search mail_poll (_compute_has_poll end_message_id)
+    #       - search mail_message_link_preview
     #       - search mail_notification
+    #       - search mail_tracking_value
     #       - search rating_rating
     #       - fetch mail_notification
     #       - search mail_message_subtype
     #       - search discuss_call_history
     #       - fetch mail_message_reaction
+    #       - read_group (_compute_rating_stats)
     #       - fetch mail_message_subtype
-    #       - 'has_poll' computation: check if has mail_poll linked through o2m
-    #       - fetch partner (_author_to_store)
-    #       - search user (_author_to_store)
-    #       - fetch user (_author_to_store)
+    #       - fetch partner (author)
+    #       - search user (author)
+    #       - fetch user (author)
     #       - fetch discuss_call_history
-    #       - search mail_tracking_value
-    #       - _compute_rating_stats
     _query_count_discuss_channels = 63
 
     def setUp(self):
@@ -341,12 +341,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     @users('emp')
     @warmup
     def test_10_init_store_data(self):
-        """Test performance of `_init_store_data`."""
+        """Test performance of `_store_init_global_fields`."""
 
         def test_fn():
-            store = Store()
-            self.env["res.users"].with_user(self.users[0])._init_store_data(store)
-            return store.get_result()
+            field_list = self.users[0].with_user(self.users[0])._store_init_global_fields
+            return Store().add_global_values(field_list).get_result()
 
         self._run_test(
             fn=test_fn,

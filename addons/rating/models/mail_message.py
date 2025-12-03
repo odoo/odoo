@@ -39,34 +39,34 @@ class MailMessage(models.Model):
             return domain | Domain("rating_ids", "=", False)
         return domain
 
-    def _to_store_defaults(self, target):
+    def _store_message_fields(self, res: Store.FieldList, **kwargs):
+        super()._store_message_fields(res, **kwargs)
         # sudo: mail.message - guest and portal user can receive rating of accessible message
-        return super()._to_store_defaults(target) + [
-            Store.One("rating_id", sudo=True),
-            "record_rating",
-        ]
+        res.one("rating_id", "_store_rating_fields", sudo=True)
+        records_by_model = self._records_by_model_name()
+        r_stats = {}
 
-    def _to_store(self, store: Store, fields, **kwargs):
-        super()._to_store(store, [f for f in fields if f != "record_rating"], **kwargs)
-        if "record_rating" in fields:
-            for records in self._records_by_model_name().values():
-                if (
-                    issubclass(self.pool[records._name], self.pool["rating.mixin"])
-                    and records._has_field_access(records._fields["rating_avg"], 'read')
-                ):
-                    all_stats = {}
-                    if records._allow_publish_rating_stats():
-                        all_stats = records._rating_get_stats_per_record()
-                    record_fields = [
-                        "rating_avg",
-                        "rating_count",
-                        Store.Attr(
-                            "rating_stats",
-                            lambda record, all_stats=all_stats: all_stats.get(record.id),
-                            predicate=lambda record: record._allow_publish_rating_stats(),
-                        ),
-                    ]
-                    store.add(records, record_fields, as_thread=True)
+        def has_rating_access(records):
+            return (
+                records
+                and issubclass(self.pool[records._name], self.pool["rating.mixin"])
+                and records._has_field_access(records._fields["rating_avg"], "read")
+            )
+
+        for records in records_by_model.values():
+            if has_rating_access(records) and records._allow_publish_rating_stats():
+                r_stats.update(records._rating_get_stats_per_record())
+        res.many(
+            "records",
+            lambda res: (
+                res.extend(["rating_avg", "rating_count"]),
+                res.attr("rating_stats", lambda t: r_stats[t], predicate=lambda t: t in r_stats),
+            ),
+            as_thread=True,
+            only_data=True,
+            value=lambda m: records_by_model.get(m.model),
+            predicate=lambda m: has_rating_access(records_by_model.get(m.model)),
+        )
 
     def _is_empty(self):
         return super()._is_empty() and not self.rating_id

@@ -72,8 +72,9 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             chatbot_script_answer=self.step_dispatch_buy_software
         )
         chatbot_message = discuss_channel.chatbot_message_ids.mail_message_id[:1]
+        store = Store().add(chatbot_message, "_store_message_fields")
         self.assertEqual(
-            Store().add(chatbot_message).get_result()["mail.message"],
+            store.get_result()["mail.message"],
             [
                 {
                     "attachment_ids": [],
@@ -118,7 +119,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         )
 
     @users('emp')
-    def test_message_to_store(self):
+    def test_store_add_message(self):
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env["mail.presence"]._update_presence(self.users[0])
         self.authenticate(self.users[1].login, self.password)
@@ -148,7 +149,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             rating_id=record_rating.id,
         )
         self.assertEqual(
-            Store().add(message).get_result(),
+            Store().add(message, "_store_message_fields").get_result(),
             {
                 "mail.message": self._filter_messages_fields(
                     {

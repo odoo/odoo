@@ -149,14 +149,14 @@ class ResUsers(models.Model):
                 return result
         return super().write(vals)
 
-    def _init_store_data(self, store: Store):
-        super()._init_store_data(store)
-        store.add_global_values(has_access_livechat=self.env.user.has_access_livechat)
-        if not self.env.user._is_public():
-            store.add(
-                self.env.user,
-                Store.Attr(
-                    "is_livechat_manager",
-                    lambda u: u.has_group("im_livechat.im_livechat_group_manager"),
-                ),
+    def _store_init_global_fields(self, res: Store.FieldList):
+        super()._store_init_global_fields(res)
+        res.attr("has_access_livechat", self.has_access_livechat)
+
+    def _store_init_fields(self, res: Store.FieldList):
+        super()._store_init_fields(res)
+        if res.is_for_internal_users():
+            res.attr(
+                "is_livechat_manager",
+                lambda u: u.has_group("im_livechat.im_livechat_group_manager"),
             )

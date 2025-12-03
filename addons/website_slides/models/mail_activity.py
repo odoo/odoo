@@ -9,5 +9,6 @@ class MailActivity(models.Model):
 
     request_partner_id = fields.Many2one("res.partner", string="Requesting Partner", ondelete="cascade")
 
-    def _to_store_defaults(self, target):
-        return super()._to_store_defaults(target) + [Store.One("request_partner_id", [])]
+    def _store_rating_fields(self, res: Store.FieldList):
+        super()._store_rating_fields(res)
+        res.attr("request_partner_id")

@@ -37,7 +37,6 @@ class CrmLead(models.Model):
         return super().write(vals)
 
     def action_open_livechat(self):
-        Store(bus_channel=self.env.user).add(
-            self.origin_channel_id,
-            extra_fields={"open_chat_window": True},
-        ).bus_send()
+        store = Store(bus_channel=self.env.user)
+        store.add(self.origin_channel_id, "_store_open_chat_window_fields")
+        store.bus_send()

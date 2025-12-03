@@ -37,7 +37,7 @@ class PollController(ThreadController):
         # sudo - mail.poll: internal user can create poll on an accessible thread.
         poll = self.env["mail.poll"].sudo().create(poll_values)
         self.env.ref("mail.ir_cron_mail_end_polls")._trigger(end_dt)
-        Store(**thread._get_store_target()).add(poll).bus_send()
+        Store(**thread._store_target()).add(poll, "_store_poll_fields").bus_send()
         return poll.id
 
     @route("/mail/poll/end", type="jsonrpc", auth="user", methods=["POST"])
@@ -81,9 +81,9 @@ class PollController(ThreadController):
         )
         self_bus_channel = guest if self.env.user._is_public() else self.env.user
         Store(bus_channel=self_bus_channel).add(options_sudo, ["selected_by_self"]).bus_send()
-        Store(**thread._get_store_target()).add(
-            options_sudo.poll_id.option_ids, ["number_of_votes", "vote_percentage"]
-        ).bus_send()
+        store = Store(**thread._store_target())
+        store.add(options_sudo.poll_id.option_ids, ["number_of_votes", "vote_percentage"])
+        store.bus_send()
 
     @route("/mail/poll/remove_vote", type="jsonrpc", auth="public", methods=["POST"])
     @add_guest_to_context
@@ -96,9 +96,9 @@ class PollController(ThreadController):
             # sudo - mail.poll: accessing poll to re-send "selected_by_self" to the current
             # user is allowed.
             poll_sudo = self.env["mail.poll"].sudo().search_fetch([("id", "=", poll_id)])
-            Store(bus_channel=user or guest).add(
-                poll_sudo.option_ids, ["selected_by_self"]
-            ).bus_send()
+            store = Store(bus_channel=user or guest)
+            store.add(poll_sudo.option_ids, ["selected_by_self"])
+            store.bus_send()
             return
         options_sudo = votes_sudo.option_id
         poll_sudo = votes_sudo.option_id.poll_id
@@ -107,6 +107,6 @@ class PollController(ThreadController):
         thread = self.env[options_sudo.poll_id.start_message_id.model].browse(
             options_sudo.poll_id.start_message_id.res_id
         )
-        Store(**thread._get_store_target()).add(
-            poll_sudo.option_ids, ["number_of_votes", "vote_percentage"]
-        ).bus_send()
+        store = Store(**thread._store_target())
+        store.add(poll_sudo.option_ids, ["number_of_votes", "vote_percentage"])
+        store.bus_send()

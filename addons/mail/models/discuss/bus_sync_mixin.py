@@ -10,27 +10,19 @@ class BusSyncMixin(models.AbstractModel):
     _name = "bus.sync.mixin"
     _description = "Mixin for Bus Sync"
 
-    def _sync_field_names(self):
+    def _sync_field_names(self, res):
         """
-        Return the field names to sync. Override in specific models.
-        Keys are bus subchannel or (main channel_id, subchannel) names, values are lists of field names to sync.
+        Fill the field names to sync in res. Override in specific models.
+        Keys are bus subchannel or (main channel_id, subchannel) names, values are Store.FieldList to sync.
         """
-        return defaultdict(list)
 
-    def _sync_extra_field_names(self, target: Store.Target, fields):
+    def _store_sync_extra_fields(self, res: Store.FieldList):
         """
-        Return the extra field names to sync. Override in specific models.
-        :param target: the target to sync to (Store.Target)
-        :param fields: list of field names that have changed
+        Fill extra field names to sync in res. Override in specific models.
+        :param res: list of field names that will be sync
         """
-        return []
 
     def write(self, vals):
-        def get_field_name(field_description):
-            if isinstance(field_description, Store.Attr):
-                return field_description.field_name
-            return field_description
-
         def get_field_value(record, field_description):
             """Get the value of a field based on its description."""
             if isinstance(field_description, Store.Attr):
@@ -52,7 +44,7 @@ class BusSyncMixin(models.AbstractModel):
                     else (record._bus_channel(), bus_target)
                 )
                 result[target] = {
-                    get_field_name(field_description): (
+                    Store.get_field_name(field_description): (
                         get_field_value(record, field_description),
                         field_description,
                     )
@@ -60,22 +52,26 @@ class BusSyncMixin(models.AbstractModel):
                 }
             return result
 
-        fields_to_sync = self._sync_field_names()
+        self._sync_field_names(fields_to_sync := defaultdict(Store.FieldList))
         old_vals = {record: get_vals(record) for record in self}
         result = super().write(vals)
         stores = lazymapping(lambda param: Store(bus_channel=param[0], bus_subchannel=param[1]))
         for record in self:
             for (channels, subchannel), values in get_vals(record).items():
-                diff = defaultdict(list)
+                diff = defaultdict(Store.FieldList)
                 for field_name, (value, field_description) in values.items():
                     if value != old_vals[record][channels, subchannel][field_name][0]:
                         diff[channels, subchannel].append(field_description)
                 if diff:
                     for (channels, subchannel), diff_fields in diff.items():
                         for channel in channels:
-                            stores[channel, subchannel].add(record, diff_fields)
-                            if extra_fields := record._sync_extra_field_names(stores[channel, subchannel].target, diff_fields):
-                                stores[channel, subchannel].add(record, extra_fields)
+                            stores[channel, subchannel].add(
+                                record,
+                                lambda res, diff_fields=diff_fields: (
+                                    res.extend(diff_fields),
+                                    res.from_method("_store_sync_extra_fields"),
+                                ),
+                            )
         for store in stores.values():
             store.bus_send()
         return result

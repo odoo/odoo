@@ -67,5 +67,6 @@ class MailActivity(models.Model):
         events.unlink()
         return res
 
-    def _to_store_defaults(self, target):
-        return super()._to_store_defaults(target) + [Store.One("calendar_event_id", [])]
+    def _store_activity_fields(self, res: Store.FieldList):
+        super()._store_activity_fields(res)
+        res.attr("calendar_event_id")

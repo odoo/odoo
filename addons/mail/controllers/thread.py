@@ -65,11 +65,8 @@ class ThreadController(http.Controller):
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()
-        return {
-            **res,
-            "data": Store().add(messages).get_result(),
-            "messages": messages.ids,
-        }
+        store = Store().add(messages, "_store_message_fields")
+        return {**res, "data": store.get_result(), "messages": messages.ids}
 
     @http.route("/mail/thread/recipients", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_recipients(self, thread_model, thread_id, message_id=None):
@@ -219,10 +216,8 @@ class ThreadController(http.Controller):
         message = thread.sudo().message_post(
             **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
         )
-        return {
-            "store_data": store.add(message).get_result(),
-            "message_id": message.id,
-        }
+        store.add(message, "_store_message_fields")
+        return {"store_data": store.get_result(), "message_id": message.id}
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -237,7 +232,7 @@ class ThreadController(http.Controller):
             message,
             **self._prepare_message_data(update_data, thread=thread, from_create=False, **kwargs),
         )
-        return Store().add(message).get_result()
+        return Store().add(message, "_store_message_fields").get_result()
 
     # side check for access
     # ------------------------------------------------------------
@@ -250,14 +245,14 @@ class ThreadController(http.Controller):
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_unsubscribe(partner_ids)
-        store = Store()
-        fields = thread._get_store_thread_fields(store.target, ["followers", "suggestedRecipients"])
-        return store.add(thread, fields, as_thread=True).get_result()
+        return Store().add(thread, self._store_thread_follow_fields, as_thread=True).get_result()
 
     @http.route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_subscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_subscribe(partner_ids)
-        store = Store()
-        fields = thread._get_store_thread_fields(store.target, ["followers", "suggestedRecipients"])
-        return store.add(thread, fields, as_thread=True).get_result()
+        return Store().add(thread, self._store_thread_follow_fields, as_thread=True).get_result()
+
+    @classmethod
+    def _store_thread_follow_fields(cls, res: Store.FieldList):
+        res.from_method("_store_thread_fields", request_list=["followers", "suggestedRecipients"])

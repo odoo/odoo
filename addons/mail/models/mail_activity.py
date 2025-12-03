@@ -645,28 +645,18 @@ class MailActivity(models.Model):
 
     @api.readonly
     def activity_format(self):
-        return Store().add(self).get_result()
+        return Store().add(self, "_store_activity_fields").get_result()
 
-    def _to_store_defaults(self, target):
-        return [
-            "activity_category",
-            Store.One("activity_type_id", "name"),
-            "can_write",
-            "chaining_type",
-            "create_date",
-            Store.One("create_uid", Store.One("partner_id", "name")),
-            "date_deadline",
-            "date_done",
-            "icon",
-            "note",
-            "res_id",
-            "res_model",
-            "state",
-            "summary",
-            Store.One("user_id", Store.One("partner_id")),
-            Store.Many("attachment_ids", ["name"]),
-            Store.Many("mail_template_ids", ["name"]),
-        ]
+    def _store_activity_fields(self, res: Store.FieldList):
+        res.attr("activity_category")
+        res.one("activity_type_id", ["name"])
+        res.extend(["can_write", "chaining_type", "create_date"])
+        res.one("create_uid", lambda res: res.one("partner_id", ["name"]))
+        res.extend(["date_deadline", "date_done", "icon", "note"])
+        res.extend(["res_id", "res_model", "state", "summary"])
+        res.one("user_id", lambda res: res.one("partner_id", "_store_partner_fields"))
+        res.many("attachment_ids", ["name"])
+        res.many("mail_template_ids", ["name"])
 
     @api.readonly
     @api.model
