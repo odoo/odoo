@@ -194,7 +194,10 @@ class ResPartner(models.Model):
 
         return edi_identification == participant_identifier and service_href.startswith(smp_nemhandel_url)
 
-    def _check_document_type_support(self, participant_info, ubl_cii_format):
+    def _check_document_type_support(self, participant_info, ubl_cii_format, process_type='billing'):
+        if self._deduce_country_code() != 'DK':
+            return super()._check_document_type_support(participant_info, ubl_cii_format, process_type=process_type)
+
         service_references = participant_info.findall(
             '{*}ServiceMetadataReferenceCollection/{*}ServiceMetadataReference'
         )
