@@ -86,7 +86,6 @@ export class ActivityWatchOnboarding extends Component {
             "set -e",
             "",
             'echo "Installing ActivityWatch - Raouf"',
-            "pkill aw-",
             "",
             'INSTALL_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/activitywatch"',
             'WATCHERS_DIR="$INSTALL_DIR/activitywatch"',
@@ -156,15 +155,48 @@ export class ActivityWatchOnboarding extends Component {
             '$AW_WINDOW >> "$LOG_FILE" 2>&1 &',
             `$AW_SERVER --cors-origins ${odooUrl} >> "$LOG_FILE" 2>&1 &`,
             "EOF",
-            "",
             'chmod +x "$WRAPPER_SCRIPT"',
-            '(crontab -l 2>/dev/null | grep -F "$WRAPPER_SCRIPT") || \\',
-            '    (crontab -l 2>/dev/null; echo "@reboot /bin/bash $WRAPPER_SCRIPT") | crontab -',
-            "",
-            'echo "Watchers will now run on every reboot."',
-            '/bin/bash "$WRAPPER_SCRIPT"',
-            'echo "Starting watchers now..."',
         ];
+
+        const services = [
+            {
+                name: "aw-server",
+                exec: '"$WATCHERS_DIR/aw-server/aw-server" --cors-origins ' + odooUrl,
+            },
+            { name: "aw-watcher-afk", exec: '"$WATCHERS_DIR/aw-watcher-afk/aw-watcher-afk"' },
+            {
+                name: "aw-watcher-window",
+                exec: '"$WATCHERS_DIR/aw-watcher-window/aw-watcher-window"',
+            },
+        ];
+
+        for (const svc of services) {
+            lines.push(
+                `SERVICE_FILE="$HOME/.config/systemd/user/${svc.name}.service"`,
+                'mkdir -p "$(dirname "$SERVICE_FILE")"',
+                `cat > "$SERVICE_FILE" << EOL`,
+                `[Unit]`,
+                `Description=ActivityWatch ${svc.name}`,
+                `After=graphical.target`,
+                "",
+                `[Service]`,
+                "Type=simple",
+                `ExecStart=${svc.exec}`,
+                "Restart=on-failure",
+                "Environment=DISPLAY=:0",
+                "Environment=XAUTHORITY=$HOME/.Xauthority",
+                "",
+                "[Install]",
+                "WantedBy=default.target",
+                "EOL",
+                "",
+                "systemctl --user daemon-reload",
+                `systemctl --user enable ${svc.name}`,
+                `systemctl --user start ${svc.name}`,
+                `echo "Service ${svc.name} created and started."`,
+                ""
+            );
+        }
 
         const scriptText = [...lines, ...wrapperLines].join("\n");
         const blob = new Blob([scriptText], { type: "text/plain" });
