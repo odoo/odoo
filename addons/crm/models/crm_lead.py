@@ -179,7 +179,7 @@ class CrmLead(models.Model):
         'Company Name', index='trigram', tracking=20,
         compute='_compute_partner_name', readonly=False, store=True,
         help='The name of the future partner company that will be created while converting the lead into opportunity')
-    function = fields.Char('Job Position', compute='_compute_function', readonly=False, store=True)
+    function = fields.Char('Job Position', compute='_compute_function', readonly=False, store=True, tracking=55)
     email_from = fields.Char(
         'Email', tracking=40, index='trigram',
         compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
@@ -200,24 +200,24 @@ class CrmLead(models.Model):
     email_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
-    website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True)
+    website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True, tracking=35)
     lang_id = fields.Many2one(
         'res.lang', string='Language',
         compute='_compute_lang_id', readonly=False, store=True)
     lang_code = fields.Char(related='lang_id.code')
     lang_active_count = fields.Integer(compute='_compute_lang_active_count')
     # Address fields
-    street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
-    street2 = fields.Char('Street2', compute='_compute_partner_address_values', readonly=False, store=True)
-    zip = fields.Char('Zip', change_default=True, compute='_compute_partner_address_values', readonly=False, store=True)
-    city = fields.Char('City', compute='_compute_partner_address_values', readonly=False, store=True)
+    street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True, tracking=60)
+    street2 = fields.Char('Street2', compute='_compute_partner_address_values', readonly=False, store=True, tracking=61)
+    zip = fields.Char('Zip', change_default=True, compute='_compute_partner_address_values', readonly=False, store=True, tracking=62)
+    city = fields.Char('City', compute='_compute_partner_address_values', readonly=False, store=True, tracking=63)
     state_id = fields.Many2one(
         "res.country.state", string='State',
         compute='_compute_partner_address_values', readonly=False, store=True,
-        domain="[('country_id', '=?', country_id)]")
+        domain="[('country_id', '=?', country_id)]", tracking=64)
     country_id = fields.Many2one(
         'res.country', string='Country',
-        compute='_compute_partner_address_values', readonly=False, store=True)
+        compute='_compute_partner_address_values', readonly=False, store=True, tracking=65)
     # Probability (Opportunity only)
     probability = fields.Float(
         'Probability', aggregator="avg", copy=False,
@@ -245,7 +245,6 @@ class CrmLead(models.Model):
     # UX
     partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_partner_email_update')
     partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_partner_phone_update')
-    is_partner_visible = fields.Boolean('Is Partner Visible', compute='_compute_is_partner_visible')
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
@@ -673,24 +672,6 @@ class CrmLead(models.Model):
         for lead in self:
             lead.partner_phone_update = lead._get_partner_phone_update(force_void=False)
 
-    @api.depends_context('uid')
-    @api.depends('partner_id', 'type')
-    def _compute_is_partner_visible(self):
-        """ When the crm.lead is of type 'lead', we don't want to display the "Customer" field on the form view
-        unless it's set (or debug mode).
-
-        Indeed, most of the times leads will not have this information set, since when we assign a Customer we
-        usually convert the lead to an opportunity as well.
-
-        This means that on the lead form, we don't want to display this field since it may be misleading for the
-        end user.
-        When it's set however, we want to display it, mainly because there are a few automatic synchronizations between
-        the lead and its partner (phone and email for examples), and this needs to be clear that modifying
-        one of those fields will in turn modify the linked partner."""
-        is_debug_mode = self.env.user.has_group('base.group_no_one')
-        for lead in self:
-            lead.is_partner_visible = bool(lead.type == 'opportunity' or lead.partner_id or is_debug_mode)
-
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
@@ -810,6 +791,18 @@ class CrmLead(models.Model):
                 'is_won': lead.won_status == 'won',
             } for lead in leads
         })
+
+        # As some fields are hidden in debug mode, we manually log the creation message on import
+        # Otherwise, we have no chatter access to contact / company information as usual.
+        if self.env.context.get('import_file') and (
+            leads_with_message := leads.filtered(lambda l: not l.partner_id and l._has_custom_creation_message())
+        ):
+            bodies = {
+                lead.id: self.env['ir.qweb']._render(
+                    "crm.crm_lead_creation_message", {"lead": lead}
+                ) for lead in leads_with_message
+            }
+            leads_with_message._message_log_batch(bodies=bodies)
 
         return leads
 
@@ -2094,9 +2087,19 @@ class CrmLead(models.Model):
 
     def _creation_message(self):
         self.ensure_one()
-        if self.team_id:
-            return _('A new lead has been created for the team "%(team_name)s".', team_name=self.team_id.display_name)
-        return _('A new lead has been created and is not assigned to any team.')
+        if not self.partner_id and self._has_custom_creation_message():
+            return self.env['ir.qweb']._render("crm.crm_lead_creation_message", {"lead": self})
+        elif self._creation_subtype():
+            return ''
+        else:
+            return super()._creation_message()
+
+    def _has_custom_creation_message(self):
+        self.ensure_one()
+        return any(self[creation_msg_field] for creation_msg_field in [
+            "partner_name", "contact_name", "function", "website",
+            "street", "street2", "city", "zip", "state_id", "country_id"
+        ])
 
     def _track_subtype(self, init_values):
         self.ensure_one()
