@@ -42,13 +42,25 @@ class StockMove(models.Model):
     is_valued = fields.Boolean(string='Is Valued', compute='_compute_is_valued')
 
     remaining_qty = fields.Float(
-        string='Remaining Quantity', compute='_compute_remaining_qty')
+        string='Remaining Quantity', compute='_compute_remaining_qty', search='search_remaining_qty')
     remaining_value = fields.Monetary(
         currency_field='company_currency_id',
         string='Remaining Value', compute='_compute_remaining_value')
 
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
     account_move_id = fields.Many2one('account.move', 'stock_move_id', copy=False, index="btree_not_null")
+
+    def search_remaining_qty(self, operator, value):
+        if operator != '=' or not isinstance(value, bool) or value is not True:
+            raise UserError(_("Only is set (= True) is supported in search for remaining_qty."))
+        products = 'default_product_id' in self.env.context and self.env['product.product'].browse(self.env.context['default_product_id']) or self.env['product.product']
+        if not products:
+            products = self.env['product.product'].search([('is_storable', '=', True), ('qty_available', '>', 0)])
+        move_ids = []
+        for qty_by_move in products._get_remaining_moves().values():
+            for move in qty_by_move:
+                move_ids.append(move.id)
+        return [('id', 'in', move_ids)]
 
     @api.depends('state', 'move_line_ids')
     def _compute_is_in(self):
@@ -423,15 +435,14 @@ class StockMove(models.Model):
 
     def _get_value_from_std_price(self, quantity, std_price=False, at_date=None):
         std_price = std_price if std_price else self.product_id.standard_price
-        if at_date:
+        if at_date and self.product_id.cost_method == 'standard':
             std_price = std_price or self.product_id._get_standard_price_at_date(at_date)
         return {
             'value': std_price * quantity,
             'quantity': quantity,
-            'description': _("%(quantity)s %(uom)s at product's standard price %(price)s",
+            'description': self.env._("%(quantity)s %(uom)s at product's cost",
                 quantity=quantity,
                 uom=self.product_id.uom_id.name,
-                price=self.company_currency_id.format(std_price),
             ),
         }
 
