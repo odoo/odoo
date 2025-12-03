@@ -20,8 +20,8 @@
             </ControlPanel>
              <div class="o_content">
                 <div id="warnings" class="warnings d-print-none"/>
-                <div class="mx-auto fit-content w-print-100">
-                    <table class="table table-borderless table-hover w-print-100">
+                <div class="fit-content w-print-100">
+                    <table class="table table-borderless table-hover w-print-100 mx-auto">
                         <tbody>
                             <t t-call="stock_account.StockValuationReport.InitialBalance"/>
                             <t t-if="data.inventory_loss" t-call="stock_account.StockValuationReport.InventoryLoss"/>
