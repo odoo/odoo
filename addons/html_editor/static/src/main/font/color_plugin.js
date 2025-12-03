@@ -278,6 +278,11 @@ export class ColorPlugin extends Plugin {
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
+                // Invisible nodes like `feff`s can be removed during `splitAroundUntil`
+                // so we filter them out.
+                if (!node.isConnected) {
+                    return [];
+                }
                 let font =
                     closestElement(node, "font") ||
                     closestElement(
@@ -339,10 +344,13 @@ export class ColorPlugin extends Plugin {
                         );
                         const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
                         const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
+                        const cursors = this.dependencies.selection.preserveSelection();
                         font = this.dependencies.split.splitAroundUntil(
                             selectedChildren,
-                            splitnode
+                            splitnode,
+                            cursors
                         );
+                        cursors.restore();
                         if (isGradientBeingUpdated) {
                             const classRegex =
                                 mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
