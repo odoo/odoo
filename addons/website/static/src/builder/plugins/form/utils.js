@@ -273,7 +273,7 @@ export function setActiveProperties(fieldEl, field) {
     );
     const fileInputEl = fieldEl.querySelector("input[type=file]");
     const description = fieldEl.querySelector(".s_website_form_field_description");
-    field.placeholder = input && input.placeholder;
+    field.placeholder = input?.placeholder || "";
     if (input) {
         // textarea value has no attribute,  date/datetime timestamp property is formated
         field.value = input.getAttribute("value") || input.value;
