@@ -273,6 +273,7 @@ let mockWorkerConnection = [];
 //-----------------------------------------------------------------------------
 
 export function cleanupNetwork() {
+    // console.log("cleaned");
     // Mocked functions
     mockFetchFn = null;
     mockWebSocketConnection = null;
@@ -311,8 +312,26 @@ export function cleanupNetwork() {
 
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
+    // console.log(input, init);
+    // console.log(
+    //     `Can't make a request when fetch is not mocked:\n${input}\n${
+    //         !init
+    //             ? ""
+    //             : Object.entries(init)
+    //                   .map((p, v) => `${p} - ${v}`)
+    //                   .join("\n")
+    //     }-------------\n`
+    // );
     if (!mockFetchFn) {
-        throw new Error("Can't make a request when fetch is not mocked");
+        throw new Error(
+            `Can't make a request when fetch is not mocked:\n${input}\n${
+                !init
+                    ? ""
+                    : Object.entries(init)
+                          .map((p, v) => `${p} - ${v}`)
+                          .join("\n")
+            }-------------\n`
+        );
     }
     const strInput = String(input);
     const controller = markOpen(new AbortController());

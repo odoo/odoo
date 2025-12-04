@@ -299,6 +299,9 @@ describe("field HTML", () => {
         await waitFor(overlayOptionsSelect + ":not(:has(button[title='Move up']))");
     });
     test("preprocess some domain", async () => {
+        // onRpc("web_save", ({ args }) => {
+        //     expect.step("web_save mail body");
+        // });
         await mountView({
             type: "form",
             resModel: "mailing.mailing",
@@ -318,6 +321,7 @@ describe("field HTML", () => {
         await waitFor(".hb-row .hb-row-label span:contains(Domain)");
         expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe("id = 1");
         await clickSave();
+        // await expect.waitForSteps(["web_save mail body"]);
         await waitFor("table[t-if]");
         expect(queryOne("table[t-if]")).toHaveAttribute(
             "t-if",
