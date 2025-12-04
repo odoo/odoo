@@ -25,13 +25,20 @@ class IrDefault(models.Model):
     condition = fields.Char('Condition', help="If set, applies the default upon condition.")
     json_value = fields.Char('Default Value (JSON format)', required=True)
 
-    @api.constrains('json_value')
+    @api.constrains('json_value', 'field_id')
     def _check_json_format(self):
         for record in self:
+            model_name = record.sudo().field_id.model_id.model
+            model = self.env[model_name]
+            field = model._fields[record.field_id.name]
             try:
-                json.loads(record.json_value)
+                value = json.loads(record.json_value)
+                field.convert_to_cache(value, model)
             except json.JSONDecodeError:
                 raise ValidationError(_('Invalid JSON format in Default Value field.'))
+            except Exception:  # noqa: BLE001
+                raise ValidationError(_("Invalid value in Default Value field. Expected type '%(field_type)s' for '%(model_name)s.%(field_name)s'.",
+                                        field_type=record.field_id.ttype, model_name=model_name, field_name=record.field_id.name))
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -1,7 +1,8 @@
-import { test } from "@odoo/hoot";
-import { testEditor } from "./_helpers/editor";
+import { click, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
+import { animationFrame } from "@odoo/hoot-mock";
 
 test("should apply a color to a slice of text in a span in a font", async () => {
     await testEditor({
@@ -633,6 +634,51 @@ test("should remove remove color from `td`", async () => {
             </table>
         `),
     });
+});
+
+test("Should properly apply color when selection on feff", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+            <font style="color: #6e4a8b;">
+                \ufeff
+                <a href="#">\ufeffa\ufeff</a>
+                \ufeff
+                <font style="color: #008f8c;">b</font>
+            </font>
+        `)
+    );
+    const font = el.querySelector("font");
+    const [feff1, , feff2] = font.childNodes;
+    editor.shared.selection.setSelection({
+        anchorNode: feff2,
+        anchorOffset: 1,
+        focusNode: feff1,
+        focusOffset: 0,
+    });
+    await animationFrame();
+    await click(".o-select-color-foreground");
+    await animationFrame();
+    await click('[data-color="#FF0000"]');
+    await animationFrame();
+    expect(el).toHaveInnerHTML(
+        unformat(`
+            <div class="o-paragraph">
+                <font style="color: rgb(255, 0, 0);">
+                    <a href="#">
+                        a
+                    </a>
+                </font>
+                <font style="color: #6e4a8b;">
+                    <font style="color: #008f8c;">
+                        b
+                    </font>
+                </font>
+            </div>
+        `)
+    );
+    // Ensure the link inherited the font color.
+    const a = el.querySelector("a");
+    expect(getComputedStyle(a).color).toBe("rgb(255, 0, 0)");
 });
 
 test("should be able to remove color applied by 'text-*' classes (1)", async () => {

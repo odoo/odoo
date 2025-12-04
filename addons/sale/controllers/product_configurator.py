@@ -299,7 +299,10 @@ class SaleProductConfiguratorController(Controller):
         )
         product_or_template = product or product_template
         ptals = product_template.attribute_line_ids
-        attrs_map = dict(zip(ptals.ids, ptals.attribute_id.read(['id', 'name', 'display_type'])))
+        attrs_map = {
+            attr_data['id']: attr_data
+            for attr_data in ptals.attribute_id.read(['id', 'name', 'display_type'])
+        }
         ptavs = ptals.product_template_value_ids.filtered(lambda p: p.ptav_active or combination and p.id in combination.ids)
         ptavs_map = dict(zip(ptavs.ids, ptavs.read(['name', 'html_color', 'image', 'is_custom'])))
 
@@ -318,7 +321,7 @@ class SaleProductConfiguratorController(Controller):
             quantity=quantity,
             attribute_lines=[dict(
                 id=ptal.id,
-                attribute=dict(**attrs_map[ptal.id]),
+                attribute=dict(**attrs_map[ptal.attribute_id.id]),
                 attribute_values=[
                     dict(
                         **ptavs_map[ptav.id],
