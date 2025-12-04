@@ -262,11 +262,7 @@ export class ImagePostProcessPlugin extends Plugin {
     }
     async getProcessedImageSize(img) {
         const processed = await this._processImage({ img });
-        // return undefined if the image is a gif
-        if (!shouldPreventGifTransformation(processed.newDataset)) {
-            return getDataURLBinarySize(processed.url);
-        }
-        return undefined;
+        return getDataURLBinarySize(processed.url);
     }
     async postProcessImage(url, newDataset, processContext) {
         for (const cb of this.getResource("process_image_post_handlers")) {
