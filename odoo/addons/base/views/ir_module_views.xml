@@ -165,18 +165,20 @@
                         <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Upgrade</a>
                         <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Uninstall…</a>
                     </t>
-                    <t t-name="card" class="flex-row align-items-center">
+                    <t t-name="card" class="flex-row">
                         <aside>
                             <field name="icon" widget="image_url" options="{'size': [50, 50]}" alt="Icon"/>
                             <field t-if="record.icon_flag" name="icon_flag" class="oe_module_flag"/>
                         </aside>
                         <main class="me-4" t-att-title="record.shortdesc.value">
-                            <field class="fw-bold fs-5" name="shortdesc"/>
-                            <p class="text-muted small my-0 lh-sm">
+                            <h2 class="h5 mb-0">
+                                <field name="shortdesc"/>
+                            </h2>
+                            <small class="text-muted lh-sm">
                                 <field groups="!base.group_no_one" name="summary"/>
                                 <code groups="base.group_no_one"><field name="name"/></code>
-                            </p>
-                            <footer class="w-100 justify-content-between">
+                            </small>
+                            <footer>
                                 <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" invisible="state != 'uninstalled'" t-if="! record.to_buy.raw_value" groups="base.group_system">Activate</button>
                                 <button t-if="installed" class="d-flex align-items-center text-muted float-start">Installed</button>
                                 <a t-att-href="record.website.raw_value" target="_blank" invisible="website in (False, '')" class="btn btn-sm btn-secondary float-end o-hidden-ios" role="button">Learn More</a>
