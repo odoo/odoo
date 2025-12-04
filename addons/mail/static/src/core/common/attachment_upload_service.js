@@ -177,6 +177,7 @@ export class AttachmentUploadService {
             id: tmpId,
             mimetype: upload.type,
             name: upload.title,
+            resModel: upload.res_model,
             thread,
             extension: upload.title.split(".").pop(),
             uploading: true,
