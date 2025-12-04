@@ -79,6 +79,11 @@ export class DiscussCoreCommon {
             return;
         }
         if (message.notIn(channel.messages)) {
+            if (channel.thread.scrollTop === "bottom") {
+                channel.thread.checkMessagesToUnload("newer", this.store.FETCH_LIMIT * 3 - 1);
+            } else if (channel.messages.length > this.store.FETCH_LIMIT * 3 - 1) {
+                channel.loadNewer = true;
+            }
             if (!channel.loadNewer) {
                 channel.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
             } else if (channel.status === "loading") {
