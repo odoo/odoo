@@ -1101,13 +1101,10 @@ export class SelectionPlugin extends Plugin {
     }
 
     isNodeEditable(node) {
-        const results = this.getResource("is_node_editable_predicates")
-            .map((p) => p(node))
-            .filter((r) => r !== undefined);
-        if (!results.length) {
-            return node.parentElement?.isContentEditable;
-        }
-        return results.every((r) => r);
+        return (
+            this.checkPredicates("is_node_editable_predicates", node) ??
+            !!node.parentElement?.isContentEditable
+        );
     }
 
     focusEditable() {
