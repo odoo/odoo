@@ -146,6 +146,12 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             const newEnd = collapsed ? newStart : selectionEnd + insertedChars;
             this.textarea.setSelectionRange(newStart, newEnd, this.textarea.selectionDirection);
             this.embeddedState.value = this.textarea.value;
+        } else if (ev.key === "Backspace") {
+            // Transform empty code block into base container on backspace.
+            if (this.textarea.value === "") {
+                ev.preventDefault();
+                this.props.convertToParagraph({ target: this.pre });
+            }
         }
     }
 
