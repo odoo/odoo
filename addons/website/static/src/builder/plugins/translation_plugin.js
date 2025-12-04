@@ -8,6 +8,7 @@ import {
     TranslatorInfoDialog,
 } from "../translation_components/translatorInfoDialog";
 import { withSequence } from "@html_editor/utils/resource";
+import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 
 /**
  * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes
@@ -83,12 +84,21 @@ export class TranslationPlugin extends Plugin {
             this.prepareTranslation();
         }),
         system_classes: ["o_editable_attribute"],
+        before_insert_processors: withSequence(20, (container) => {
+            makeContentsInline(container);
+            for (const el of container.querySelectorAll(this.nonTranslatedSelector)) {
+                unwrapContents(el);
+            }
+            return container;
+        }),
     };
 
     setup() {
         this.websiteService = this.services.website;
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
+        this.nonTranslatedSelector =
+            `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
     }
 
     prepareTranslation() {
