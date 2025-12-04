@@ -41,7 +41,7 @@
                     </a>
                 </div>
                 <div class="d-flex ms-auto">
-                    <a class="o_wslides_fs_share d-flex align-items-center px-3" href="#" title="Share">
+                    <a class="o_wslides_share d-flex align-items-center px-3" href="#" title="Share">
                         <i class="fa fa-share-alt"/>
                         <span class="d-none d-md-inline-block ms-2">Share</span>
                     </a>
@@ -125,8 +125,7 @@
                     t-att-data-category="slide.slide_category"
                     t-att-data-video-source-type="slide.video_source_type"
                     t-att-data-slug="slug(slide)"
-                    t-att-data-has-question="1 if slide.question_ids else 0"
-                    t-att-data-is-quiz="0"
+                    t-att-data-has-question="True if slide.question_ids else None"
                     t-att-data-completed="slide_completed"
                     t-att-data-embed-code="slide.embed_code if slide.slide_category in ['video', 'document', 'infographic'] else False"
                     t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
@@ -178,8 +177,8 @@
                                 t-att-data-name="slide.name"
                                 t-att-data-category="slide.slide_category"
                                 t-att-data-slug="slug(slide)"
-                                t-att-data-has-question="1 if slide.question_ids else 0"
-                                t-att-data-is-quiz="1"
+                                t-att-data-has-question="True if slide.question_ids else None"
+                                t-att-data-is-quiz="True"
                                 t-att-data-completed="slide_completed"
                                 t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
                                 t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
