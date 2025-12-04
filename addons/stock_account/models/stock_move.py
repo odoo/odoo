@@ -256,6 +256,7 @@ class StockMove(models.Model):
         """
         products_to_recompute = set()
         lots_to_recompute = set()
+        fifo_qty_processed = defaultdict(float)
 
         for move in self:
             # Incoming moves
@@ -285,7 +286,9 @@ class StockMove(models.Model):
                 continue
 
             if move.product_id.cost_method == 'fifo':
-                move.value = move.product_id._run_fifo(move._get_valued_qty())
+                valued_qty = move._get_valued_qty()
+                move.value = move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
+                fifo_qty_processed[move.product_id] += valued_qty
             else:
                 move.value = move.product_id.standard_price * move._get_valued_qty()
 
