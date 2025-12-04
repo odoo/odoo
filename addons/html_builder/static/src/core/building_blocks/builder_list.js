@@ -1,4 +1,5 @@
 import { BuilderComponent } from "@html_builder/core/building_blocks/builder_component";
+import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import {
     basicContainerBuilderComponentProps,
     useBuilderComponent,
@@ -6,10 +7,10 @@ import {
 } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
@@ -49,11 +50,11 @@ export class BuilderList extends Component {
         columnWidth: {},
         forbidLastItemRemoval: false,
     };
-    static components = { BuilderComponent, Dropdown };
+    static components = { BuilderComponent, SelectMenu };
 
     setup() {
         this.validateProps();
-        this.dropdown = useDropdownState();
+        this.dialog = useService("dialog");
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
@@ -96,9 +97,21 @@ export class BuilderList extends Component {
         }
     }
 
-    getAvailableRecords() {
-        const itemIds = new Set(this.formatRawValue(this.state.value).map((i) => i.id));
-        return this.allRecords.filter((record) => !itemIds.has(record.id));
+    getIncludedRecords() {
+        return this.formatRawValue(this.state.value);
+    }
+
+    getExcludedRecords() {
+        const itemIds = new Set(this.getIncludedRecords().map((r) => r.id));
+        return this.allRecords.filter((record) => record.id && !itemIds.has(record.id));
+    }
+
+    openRecordsDialog() {
+        this.dialog.add(BuilderListDialog, {
+            excludedRecords: this.getExcludedRecords(),
+            includedRecords: this.getIncludedRecords(),
+            save: this.commit,
+        });
     }
 
     parseDisplayValue(displayValue) {
@@ -117,28 +130,35 @@ export class BuilderList extends Component {
         return items;
     }
 
-    addItem(ev) {
-        const items = this.formatRawValue(this.state.value);
-        if (!ev.currentTarget.dataset.id) {
-            items.push(this.makeDefaultItem());
-        } else {
-            const matchId = (el) => el.id.toString() === ev.currentTarget.dataset.id.toString();
-            const elementToAdd = this.allRecords.find(matchId);
-            if (!items.some(matchId)) {
-                items.push(elementToAdd);
-            }
-            this.dropdown.close();
-        }
+    addItem(record) {
+        const items = this.getIncludedRecords();
+        items.push(record ?? this.makeDefaultItem());
         this.commit(items);
     }
 
+    updateRecords() {
+        const selectedRecordsMap = new Map(
+            this.getIncludedRecords()
+                .filter((r) => r.id)
+                .map((r) => [r.id, r])
+        );
+        const newRecords = this.allRecords
+            .map((record) => selectedRecordsMap.get(record.id) || record)
+            .sort((a, b) => (a.display_name || "").localeCompare(b.display_name || ""));
+        this.commit(newRecords);
+    }
+
+    removeAllItems() {
+        this.commit([]);
+    }
+
     deleteItem(itemId) {
-        const items = this.formatRawValue(this.state.value);
+        const items = this.getIncludedRecords();
         this.commit(items.filter((item) => item._id !== itemId));
     }
 
     reorderItem(itemId, previousId) {
-        let items = this.formatRawValue(this.state.value);
+        let items = this.getIncludedRecords();
         const itemToReorder = items.find((item) => item._id === itemId);
         items = items.filter((item) => item._id !== itemId);
 

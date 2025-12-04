@@ -1,7 +1,15 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
-import { expect, test } from "@odoo/hoot";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
+import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { contains, defineModels, models, onRpc, webModels } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    MockServer,
+    models,
+    onRpc,
+    webModels,
+} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import {
@@ -110,8 +118,8 @@ test("'Author' field's type stays selected when you modify the option list", asy
     await contains(":iframe section span:contains(Author)").click();
     await contains(".hb-row[data-label='Type'] button.o-dropdown-caret:contains('Author')").click();
     expect(".o_popover [data-action-value='author_id']").toHaveClass("active");
-    await contains(".hb-row button.o-dropdown-caret:contains('Add')").click();
-    await contains(".o_popover .o-hb-select-dropdown-item").click();
+    await contains(".o_select_menu button.o-hb-selectMany2X-toggle:contains('Add')").click();
+    await contains(".o_select_menu_menu .o-dropdown-item").click();
     // check that the author is still marked as selected
     await contains(".hb-row[data-label='Type'] button.o-dropdown-caret:contains('Author')").click();
     expect(".o_popover [data-action-value='author_id']").toHaveClass("active");
@@ -508,4 +516,215 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
     );
     await contains(":iframe select[name='state_id']").click();
     expect(".options-container .hb-row[data-action-id='linkStateToCountry']").toHaveCount(0);
+});
+
+describe("Many2one Field", () => {
+    const addRecordButtonSelector =
+        ".we-bg-options-container .o_select_menu button.o-hb-selectMany2X-toggle";
+    let records;
+
+    beforeEach(async () => {
+        onRpc("get_authorized_fields", () => ({
+            country_id: {
+                name: "country_id",
+                relation: "res.country",
+                string: "Country",
+                type: "many2one",
+            },
+        }));
+        await setupWebsiteBuilder(`
+            <section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+                <div class="container-fluid">
+                    <form action="/website/form/" method="post" class="o_mark_required" data-model_name="res.partner">
+                        <div class="s_website_form_rows">
+                            <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
+                                <div class="row">
+                                    <label class="s_website_form_label" for="oyeqnysxh10b">
+                                        <span class="s_website_form_label_content">Country</span>
+                                    </label>
+                                    <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="country_id" >
+                                        <option selected="selected" id="oyeqnysxh10b0" value="1">Belgium</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        `);
+        const env = MockServer.env;
+        records = [
+            env["res.country"].create({ name: "Belgium" }),
+            env["res.country"].create({ name: "Spain" }),
+            env["res.country"].create({ name: "India" }),
+            env["res.country"].create({ name: "Mexico" }),
+            env["res.country"].create({ name: "Kenya" }),
+            env["res.country"].create({ name: "US" }),
+            env["res.country"].create({ name: "UAE" }),
+            env["res.country"].create({ name: "Brazil" }),
+        ];
+
+        await contains(":iframe section span:contains(Country)").click();
+    });
+
+    test("At beginning", () => {
+        // There should be only one option, and it should be selected
+        expect(".o_we_table_wrapper table tr").toHaveCount(1);
+        expect(".o_we_table_wrapper table tr input[type=checkbox]").toHaveProperty("checked");
+        expect(":iframe select option").toHaveCount(1);
+        expect(":iframe select option[selected]").toHaveText("Belgium");
+    });
+
+    test("No record record selected by default", async () => {
+        // Disable selected
+        await contains(".o_we_table_wrapper table tr input[type=checkbox]").click();
+        expect(":iframe select option").toHaveCount(2, {
+            message: "Disabling Belgium as selected item should add an empty item selected",
+        });
+        expect(":iframe select option[selected]").toHaveText("");
+
+        // Select it back
+        await contains(".o_we_table_wrapper table tr input[type=checkbox]").click();
+        expect(":iframe select option[selected]").toHaveText("Belgium");
+        expect(":iframe select option").toHaveCount(1, {
+            message: "Select Belgium back should remove the empty item",
+        });
+    });
+
+    test("SelectMenu to add records", async () => {
+        await contains(addRecordButtonSelector).click();
+        await expectElementCount(".o_select_menu_menu .o_select_menu_item", records.length - 1);
+        expect(queryOne(".o_select_menu_menu").getBoundingClientRect().top).toBeLessThan(
+            queryOne(addRecordButtonSelector).getBoundingClientRect().top,
+            {
+                message:
+                    "The menu should be rendered above the Add button because it's too tall to be below.",
+            }
+        );
+        expect(".o_select_menu_menu .o-dropdown-item:first").toHaveText("Brazil", {
+            message:
+                "Since we already added 'Belgium' the first alphabetical suggestion should be 'Brazil'",
+        });
+        expect(".o_select_menu_menu .o-dropdown-item:nth-of-type(2)").toHaveText("India");
+        await contains(".o_select_menu_menu .o-dropdown-item:nth-of-type(2)").click();
+        await contains(addRecordButtonSelector).click();
+        await contains(".o_select_menu_menu .o-dropdown-item:first").click();
+
+        expect(".o_we_table_wrapper table tr:first input[name=display_name]").toHaveValue(
+            "Belgium"
+        );
+        expect(".o_we_table_wrapper table tr:first input[type=checkbox]").toBeChecked();
+        expect(".o_we_table_wrapper table tr:nth-of-type(2) input[name=display_name]").toHaveValue(
+            "India"
+        );
+        expect(".o_we_table_wrapper table tr:nth-of-type(3) input[name=display_name]").toHaveValue(
+            "Brazil"
+        );
+
+        expect(":iframe select option").toHaveCount(3);
+        expect(":iframe select option:first[selected]").toHaveText("Belgium");
+        expect(":iframe select option:nth-of-type(2)").toHaveText("India");
+        expect(":iframe select option:nth-of-type(3)").toHaveText("Brazil");
+    });
+
+    test("Update button", async () => {
+        await contains(".we-bg-options-container .fa-refresh").click();
+        expect(addRecordButtonSelector).toHaveProperty("disabled", true, {
+            message: "Add button should be disabled when all records are included",
+        });
+        expect(".o_we_table_wrapper table tr").toHaveCount(records.length);
+        expect(".o_we_table_wrapper table tr:first input[type=checkbox]").toBeChecked();
+        expect(".o_we_table_wrapper table tr:nth-of-type(2) input[name=display_name]").toHaveValue(
+            "Brazil",
+            {
+                message:
+                    "Brazil should be the second element as the list should be ordered alphabetically after update",
+            }
+        );
+
+        expect(":iframe select option").toHaveCount(records.length);
+        expect(":iframe select option[selected]").toHaveText("Belgium");
+    });
+
+    describe("Dialog", () => {
+        const dialogButtonSelector = ".we-bg-options-container .fa-gear";
+
+        test("Add all and remove all", async () => {
+            await contains(dialogButtonSelector).click();
+            // Add all
+            await contains(".modal-dialog .o_left_panel .fa-plus").click();
+            await expectElementCount(".modal-dialog .o_left_panel .o_list_item", 0);
+            await expectElementCount(".modal-dialog .o_right_panel .o_list_item", records.length);
+            // Remove all
+            await contains(".modal-dialog .o_right_panel .fa-minus").click();
+            await expectElementCount(".modal-dialog .o_right_panel .o_list_item", 0);
+            await expectElementCount(".modal-dialog .o_left_panel .o_list_item", records.length);
+
+            expect(".modal-dialog .btn-primary").toHaveProperty("disabled");
+
+            // Add Belgium back
+            await contains(".modal-dialog .o_left_panel .o_list_item").click();
+            await contains(".modal-dialog .btn-primary").click();
+            expect(".o_we_table_wrapper table tr").toHaveCount(1);
+            expect(".o_we_table_wrapper table tr input[name=display_name]").toHaveValue("Belgium", {
+                message: "Belgium should be the first record of the dialog and the only one added",
+            });
+
+            // Belgium should still be selected
+            expect(":iframe select option").toHaveCount(1);
+            expect(":iframe select option[selected]").toHaveText("Belgium");
+        });
+
+        test("List order", async () => {
+            await contains(addRecordButtonSelector).click();
+            await contains(".o_select_menu_menu .o-dropdown-item:contains(India)").click();
+            await contains(addRecordButtonSelector).click();
+            await contains(".o_select_menu_menu .o-dropdown-item:contains(Brazil)").click();
+            await contains(dialogButtonSelector).click();
+
+            expect(".modal-dialog .o_left_panel .o_list_item").toHaveCount(records.length - 3);
+            expect(".modal-dialog .o_right_panel .o_list_item").toHaveCount(3);
+
+            expect(".modal-dialog .o_right_panel .o_list_item:last-child").toHaveText("Brazil", {
+                message: "The right list should be ordered like it is in the sidebar",
+            });
+            await contains(".modal-dialog .o_left_panel .o_list_item").click();
+            expect(".modal-dialog .o_right_panel .o_list_item:last-child").toHaveText("Kenya", {
+                message:
+                    "Kenya should have been the first of the left list and the last of the right list after being added",
+            });
+            await contains(".modal-dialog .btn-primary").click();
+            expect(".o_we_table_wrapper table tr").toHaveCount(4);
+            expect(".o_we_table_wrapper table tr:last-child input[name=display_name]").toHaveValue(
+                "Kenya"
+            );
+
+            expect(":iframe select option").toHaveCount(4);
+        });
+
+        test("Search", async () => {
+            await contains(dialogButtonSelector).click();
+
+            // The search bar should focus automatically
+            await waitFor("input[type=search]:focus");
+            await press("m");
+            await press("e");
+            await animationFrame();
+
+            expect(".modal-dialog .o_left_panel .o_list_item").toHaveText("Mexico");
+            expect(".modal-dialog .o_right_panel .o_list_item").toHaveCount(0);
+
+            await contains(".modal-dialog .o_left_panel .o_list_item").click();
+            expect(".modal-dialog .o_left_panel .o_list_item").toHaveCount(0);
+            expect(".modal-dialog .o_right_panel .o_list_item").toHaveText("Mexico");
+
+            await contains("input[type=search]").click();
+            await press("Backspace");
+            await press("Backspace");
+            await animationFrame();
+
+            expect(".modal-dialog .o_left_panel .o_list_item").toHaveCount(records.length - 2);
+            expect(".modal-dialog .o_right_panel .o_list_item").toHaveCount(2);
+        });
+    });
 });

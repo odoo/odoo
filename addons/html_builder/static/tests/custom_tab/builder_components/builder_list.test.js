@@ -287,10 +287,10 @@ test("do not lose id when adjusting 'selected'", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container .bl-dropdown-toggle").click();
-    await contains(".o_popover .o-hb-select-dropdown-item").click();
-    await contains(".we-bg-options-container .bl-dropdown-toggle").click();
-    await contains(".o_popover .o-hb-select-dropdown-item").click();
+    await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+    await contains(".o_select_menu_menu .o-dropdown-item").click();
+    await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+    await contains(".o_select_menu_menu .o-dropdown-item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify([
@@ -377,8 +377,8 @@ test("can add item with string and integer ids", async () => {
     await contains(":iframe .test-options-target").click();
 
     for (let i = 0; i < 2; i++) {
-        await contains(".we-bg-options-container .bl-dropdown-toggle").click();
-        await contains(".o_popover .o-hb-select-dropdown-item").click();
+        await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+        await contains(".o_select_menu_menu .o-dropdown-item").click();
     }
-    expect(".we-bg-options-container .bl-dropdown-toggle").toHaveProperty("disabled");
+    expect(".we-bg-options-container .o-hb-selectMany2X-toggle").toHaveProperty("disabled");
 });
