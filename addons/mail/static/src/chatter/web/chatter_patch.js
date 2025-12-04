@@ -9,11 +9,10 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useHover } from "@mail/utils/common/hooks";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
-import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { status, useEffect } from "@odoo/owl";
+import { status, useEffect, useRef } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -36,7 +35,6 @@ Object.assign(Chatter.components, {
     FileUploader,
     FollowerList,
     MessageCardList,
-    RecipientsInput,
     ScheduledMessage,
     SearchMessageInput,
     SearchMessageResult,
@@ -101,6 +99,7 @@ const chatterPatch = {
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
+        this.subjectInputRef = useRef("subjectInput");
         useCustomDropzone(
             this.rootRef,
             MailAttachmentDropzone,
@@ -235,6 +234,7 @@ const chatterPatch = {
             "followers",
             "scheduledMessages",
             "suggestedRecipients",
+            "suggestedSubject",
         ];
     },
 
@@ -278,10 +278,13 @@ const chatterPatch = {
             "activities",
             "attachments",
             "contact_fields",
+            "defaultSubject",
             "followers",
             "has_pinned_messages",
             "scheduledMessages",
+            "showSubjectInSmallComposer",
             "suggestedRecipients",
+            "suggestedSubject",
         ];
     },
 

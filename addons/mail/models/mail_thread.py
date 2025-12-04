@@ -5079,6 +5079,8 @@ class MailThread(models.AbstractModel):
         if "contact_fields" in request_list:
             res.attr("primary_email_field", lambda t: t._mail_get_primary_email_field())
             res.attr("partner_fields", lambda t: t._mail_get_partner_fields())
+        if "defaultSubject" in request_list:
+            res.attr("defaultSubject", lambda t: t._message_compute_subject())
         if "followers" in request_list:
             count_by_tid = {"groupby": ["res_id"], "aggregates": ["__count"]}
             domain = Domain("res_id", "in", self.ids) & Domain("res_model", "=", self._name)
@@ -5182,7 +5184,7 @@ class MailThread(models.AbstractModel):
         sudo()._message_update_content(), which means these parameters should be either inoffensive
         or safely handled by these methods. Parameters requiring special processing need to be
         manually handled in _prepare_message_data."""
-        return {"email_add_signature", "message_type", "subtype_xmlid"}
+        return {"email_add_signature", "message_type", "subject", "subtype_xmlid"}
 
     @api.model
     def _get_allowed_access_params(self):

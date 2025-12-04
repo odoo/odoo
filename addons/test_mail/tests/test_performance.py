@@ -1011,6 +1011,13 @@ class TestMailAPIPerformance(BaseMailPerformance):
         with self.assertQueryCount(employee=28):  # tm: 21
             _recipients = records._message_get_suggested_recipients_batch(no_create=False)
 
+    @users('employee')
+    @warmup
+    def test_message_get_suggested_subject_batch(self):
+        records = self.test_records_recipients.with_env(self.env)
+        with self.assertQueryCount(employee=4):  # tm: 4
+            _recipients = records._message_get_suggested_subject_batch()
+
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'employee')
     @warmup

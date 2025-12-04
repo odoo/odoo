@@ -229,10 +229,15 @@ class MailComposeMessage(models.TransientModel):
                     composer.composition_mode == 'comment' and
                     not composer.composition_batch):
                     res_ids = composer._evaluate_res_ids()
-                    if composer.model_is_thread:
-                        subject = self.env[composer.model].browse(res_ids)._message_compute_subject()
+                    if record := res_ids and self.env[composer.model].browse(res_ids[0]):
+                        if isinstance(record, self.env.registry['mail.thread.subject.suggested']):
+                            subject = record._message_get_suggested_subject()
+                        elif composer.model_is_thread:
+                            subject = record._message_compute_subject()
+                        else:
+                            subject = record.display_name
                     else:
-                        subject = self.env[composer.model].browse(res_ids).display_name
+                        subject = ''
                 composer.subject = subject
 
     @api.depends('composition_mode', 'model', 'res_domain', 'res_ids',

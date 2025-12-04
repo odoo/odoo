@@ -350,7 +350,11 @@ export class Message extends Record {
         const name = this.thread?.display_name;
         const threadName = name ? name.trim().toLowerCase() : "";
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
-        const candidates = new Set([defaultSubject, threadName]);
+        // suggested is expected to not change much so it's best to consider it the default for display purposes
+        const suggestedSubject = this.thread?.suggestedSubject
+            ? this.thread.suggestedSubject.toLowerCase()
+            : "";
+        const candidates = new Set([defaultSubject, threadName, suggestedSubject]);
         return candidates.has(this.subject?.toLowerCase());
     }
 

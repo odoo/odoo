@@ -32,7 +32,14 @@ SALE_ORDER_STATE = [
 
 class SaleOrder(models.Model):
     _name = 'sale.order'
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin', 'account.document.import.mixin']
+    _inherit = [
+        'account.document.import.mixin',
+        'mail.activity.mixin',
+        'mail.thread.subject.suggested',
+        'portal.mixin',
+        'product.catalog.mixin',
+        'utm.mixin',
+    ]
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True

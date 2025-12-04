@@ -86,6 +86,7 @@ class CrmLead(models.Model):
     _description = "Lead"
     _order = "priority desc, id desc"
     _inherit = [
+                'mail.thread.subject.suggested',
                 'mail.thread.blacklist',
                 'mail.thread.phone',
                 'mail.activity.mixin',

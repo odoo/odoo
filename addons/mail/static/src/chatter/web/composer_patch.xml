@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.ChatterComposer" t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//div[@t-ref='root']" position="before">
+            <div t-if="props.withMessageFields and props.type === 'message'" class="py-1">
+                <div class="d-flex">
+                    <span class="flex-shrink-0 text-end fw-bold" style="width:55px">To: </span>
+                    <RecipientsInput thread="props.thread"/>
+                </div>
+                <div class="d-flex" t-if="props.thread.showSubjectInSmallComposer">
+                    <span class="flex-shrink-0 text-end fw-bold me-1" style="width:55px">Subject: </span>
+                    <input t-ref="subjectInput"
+                           type="text" name="subject" class="o_input border-0"
+                           t-att-placeholder="props.thread.defaultSubject"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
+

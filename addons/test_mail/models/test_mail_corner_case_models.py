@@ -24,7 +24,7 @@ class MailPerformanceThread(models.Model):
 class MailPerformanceThreadRecipients(models.Model):
     _name = 'mail.performance.thread.recipients'
     _description = 'Performance: mail.thread, for recipients'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread.subject.suggested']
     _primary_email = 'email_from'
 
     name = fields.Char()

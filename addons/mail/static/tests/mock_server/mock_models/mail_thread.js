@@ -674,6 +674,9 @@ export class MailThread extends models.ServerModel {
             res.primary_email_field = this.env[this._name]._primary_email;
             res.partner_fields = this.env[this._name]._mail_get_partner_fields?.();
         }
+        if (request_list.includes("defaultSubject")) {
+            res.display_name = MailThread._message_compute_subject([thread.id])[thread.id];
+        }
         if (request_list.includes("display_name")) {
             res.display_name = thread.display_name;
         }

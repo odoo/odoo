@@ -569,7 +569,7 @@ export class Composer extends Component {
         return {};
     }
 
-    async onClickFullComposer(ev) {
+    async onClickFullComposerGetAction() {
         const allRecipients = [...this.thread.suggestedRecipients];
         if (this.props.type !== "note") {
             allRecipients.push(...this.thread.additionalRecipients);
@@ -663,6 +663,11 @@ export class Composer extends Component {
                 fullComposerBus: this.fullComposerBus,
             },
         };
+        return { action, options };
+    }
+
+    async onClickFullComposer(ev) {
+        const { action, options } = await this.onClickFullComposerGetAction();
         await this.env.services.action.doAction(action, options);
         this.state.isFullComposerOpen = true;
     }
