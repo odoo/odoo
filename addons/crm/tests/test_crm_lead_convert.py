@@ -56,7 +56,6 @@ class TestLeadConvertForm(crm_common.TestLeadConvertCommon):
 
 
 @tagged('lead_manage')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
     """
     TODO: created partner (handle assignment) has team of lead

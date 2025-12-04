@@ -12,7 +12,6 @@ from odoo.tools import mute_logger
 
 
 @tagged('mail_track')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTracking(MailCommon):
 
     @classmethod

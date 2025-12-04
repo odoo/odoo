@@ -1,8 +1,7 @@
 from odoo import Command, fields
-from odoo.tests import common, new_test_user, tagged
+from odoo.tests import common, new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPrivateReadGroup(common.TransactionCase):
 
     @classmethod

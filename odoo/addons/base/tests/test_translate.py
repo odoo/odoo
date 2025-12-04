@@ -5,7 +5,6 @@ from unittest.mock import patch
 import logging
 import time
 
-from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 import io
 
@@ -20,7 +19,6 @@ _stats_logger = logging.getLogger('odoo.tests.stats')
 SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TranslationToolsTestCase(BaseCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)
@@ -966,7 +964,57 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(info['models'][model._name]["fields"]['name']['string'], LABEL)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestXMLTranslationAtInstall(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('nl_NL')
+
+    def create_view(self, archf, terms, **kwargs):
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'model': 'res.partner',
+            'arch': archf % terms,
+        })
+        view.invalidate_recordset()
+
+        val = {'en_US': archf % terms}
+        for lang, trans_terms in kwargs.items():
+            val[lang] = archf % trans_terms
+        query = """UPDATE ir_ui_view
+                      SET arch_db = %s
+                    WHERE id = %s"""
+        self.env.cr.execute(query, (Json(val), view.id))
+        return view
+
+    def test_sync_xml_no_en(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+
+        archf = '<form string="X">%s<div>%s</div></form>'
+        terms_en = ('Bread and cheese', 'Fork')
+        terms_fr = ('Pain et fromage', 'Fourchetta')
+        terms_nl = ('Brood and kaas', 'Vork')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env.ref('base.lang_en').active = False
+
+        env_nolang = self.env(context={})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+        env_nl = self.env(context={'lang': 'nl_NL'})
+
+        # style change and typo change
+        terms_fr = ('Pain <span style="font-weight:bold">et</span> fromage', 'Fourchette')
+        view.with_env(env_fr).write({'arch_db': archf % terms_fr})
+
+        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+
+
 class TestXMLTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1103,31 +1151,6 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % (terms_en[0], terms_fr[1]))
         self.assertEqual(view.with_env(env_nl).arch_db, archf % (terms_en[0], terms_nl[1]))
-
-    def test_sync_xml_no_en(self):
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.lang']._activate_lang('nl_NL')
-
-        archf = '<form string="X">%s<div>%s</div></form>'
-        terms_en = ('Bread and cheese', 'Fork')
-        terms_fr = ('Pain et fromage', 'Fourchetta')
-        terms_nl = ('Brood and kaas', 'Vork')
-        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
-
-        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
-        self.env.ref('base.lang_en').active = False
-
-        env_nolang = self.env(context={})
-        env_fr = self.env(context={'lang': 'fr_FR'})
-        env_nl = self.env(context={'lang': 'nl_NL'})
-
-        # style change and typo change
-        terms_fr = ('Pain <span style="font-weight:bold">et</span> fromage', 'Fourchette')
-        view.with_env(env_fr).write({'arch_db': archf % terms_fr})
-
-        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_fr)
-        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
-        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
     def test_sync_xml_attribute(self):
         """ check translations with attribute can be cleaned up after write """

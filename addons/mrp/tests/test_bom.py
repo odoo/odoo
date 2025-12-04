@@ -10,7 +10,41 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
 @freeze_time(fields.Date.today())
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestBoMAtInstall(TestMrpCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.group_user.write({'implied_ids': [
+            Command.link(cls.group_product_variant.id),
+            Command.link(cls.group_mrp_routings.id),
+        ]})
+
+    def test_archive_operations(self):
+        """Archive the operation in BoM and update the BoM in MO
+        Unarchive the operation which will reflect in BoM and MO"""
+
+        mo_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
+
+        mo_form.product_id = self.product_7_1
+        mo_form.product_qty = 1.0
+        mo_form.bom_id = self.bom_2
+        mo_order = mo_form.save()
+        mo_order.action_confirm()
+
+        operation_ids = self.bom_2.operation_ids.ids
+        self.bom_2.operation_ids.action_archive()
+        self.assertTrue(mo_order.is_outdated_bom)
+
+        mo_order.action_update_bom()
+        self.assertEqual(len(mo_order.workorder_ids), 0)
+
+        self.env['mrp.routing.workcenter'].browse(operation_ids).action_unarchive()
+        self.assertTrue(mo_order.is_outdated_bom)
+        mo_order.action_update_bom()
+        self.assertEqual(len(mo_order.workorder_ids), 1)
+
+
 class TestBoM(TestMrpCommon):
 
     @classmethod
@@ -2257,30 +2291,6 @@ class TestBoM(TestMrpCommon):
         mo.action_update_bom()
         self.assertEqual(self.bom_2.operation_ids.name, mo.workorder_ids.name)
         self.assertEqual(self.bom_2.operation_ids.workcenter_id, mo.workorder_ids.workcenter_id)
-
-    def test_archive_operations(self):
-        """Archive the operation in BoM and update the BoM in MO
-        Unarchive the operation which will reflect in BoM and MO"""
-
-        mo_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
-
-        mo_form.product_id = self.product_7_1
-        mo_form.product_qty = 1.0
-        mo_form.bom_id = self.bom_2
-        mo_order = mo_form.save()
-        mo_order.action_confirm()
-
-        operation_ids = self.bom_2.operation_ids.ids
-        self.bom_2.operation_ids.action_archive()
-        self.assertTrue(mo_order.is_outdated_bom)
-
-        mo_order.action_update_bom()
-        self.assertEqual(len(mo_order.workorder_ids), 0)
-
-        self.env['mrp.routing.workcenter'].browse(operation_ids).action_unarchive()
-        self.assertTrue(mo_order.is_outdated_bom)
-        mo_order.action_update_bom()
-        self.assertEqual(len(mo_order.workorder_ids), 1)
 
     def test_update_bom_in_routing_workcenter(self):
         """

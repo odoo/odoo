@@ -9,7 +9,6 @@ from odoo.tests.common import users
 
 
 @tagged('event_flow')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventSale(TestEventSaleCommon):
 
     @classmethod

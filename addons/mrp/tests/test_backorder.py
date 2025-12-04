@@ -8,7 +8,6 @@ from odoo.tests import tagged, Form
 from odoo.tests.common import TransactionCase, freeze_time
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpProductionBackorder(TestMrpCommon):
 
     @classmethod

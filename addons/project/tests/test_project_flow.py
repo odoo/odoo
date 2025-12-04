@@ -6,13 +6,8 @@ from odoo.tests import tagged
 from odoo.exceptions import AccessError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestProjectFlow(TestProjectCommon, MailCase):
-
-    def test_project_process_project_manager_duplicate(self):
-        pigs = self.project_pigs.with_user(self.user_projectmanager)
-        dogs = pigs.copy()
-        self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
+@tagged('at_install', '-post_install')
+class TestProjectFlowAtInstall(TestProjectCommon, MailCase):
 
     def test_subtask_process(self):
         """
@@ -122,6 +117,83 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.assertEqual(
             child_task_2.partner_id, parent_task.partner_id,
             "When the project changes, the subtask should keep the same partner id even it has a new project.")
+
+    def test_send_rating_review(self):
+        won_stage = self.project_goats.type_ids[-1]
+        won_stage.write({
+            'rating_active': True,
+            'rating_status': 'stage',
+        })
+        rating_request_mail_template = self.env.ref('project.rating_project_request_email_template')
+        won_stage.write({'rating_template_id': rating_request_mail_template.id})
+        tasks = self.env['project.task'].with_context(mail_create_nolog=True, default_project_id=self.project_goats.id).create([
+            {'name': 'Goat Task 1', 'user_ids': [Command.set([])]},
+            {'name': 'Goat Task 2', 'user_ids': [Command.link(self.user_projectuser.id)]},
+            {
+                'name': 'Goat Task 3',
+                'user_ids': [
+                    Command.link(self.user_projectmanager.id),
+                    Command.link(self.user_projectuser.id),
+                ],
+            },
+        ])
+
+        with self.mock_mail_gateway():
+            tasks.with_user(self.user_projectmanager).write({'stage_id': won_stage.id})
+
+        tasks.invalidate_model(['rating_ids'])
+        for task in tasks:
+            self.assertEqual(len(task.rating_ids), 1, 'This task should have a generated rating when it arrives in the Won stage.')
+            rating_request_message = task.message_ids[:1]
+            if not task.user_ids or len(task.user_ids) > 1:
+                self.assertFalse(task.rating_ids.rated_partner_id, 'This rating should have no assigned user if the task related have no assignees or more than one assignee.')
+                self.assertEqual(rating_request_message.email_from, self.user_projectmanager.partner_id.email_formatted, 'The message should have the email of the Project Manager as email from.')
+            else:
+                self.assertEqual(task.rating_ids.rated_partner_id, task.user_ids.partner_id, 'The rating should have an assigned user if the task has only one assignee.')
+                self.assertEqual(rating_request_message.email_from, task.user_ids.partner_id.email_formatted, 'The message should have the email of the assigned user in the task as email from.')
+            self.assertTrue(self.partner_1 in rating_request_message.partner_ids, 'The customer of the task should be in the partner_ids of the rating request message.')
+
+    def test_email_track_template(self):
+        """ Update some tracked fields linked to some template -> message with onchange """
+        project_settings = self.env["res.config.settings"].create({'group_project_stages': True})
+        project_settings.execute()
+
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test template',
+            'subject': 'Test',
+            'body_html': '<p>Test</p>',
+            'auto_delete': True,
+            'model_id': self.env.ref('project.model_project_project_stage').id,
+        })
+        project_A = self.env['project.project'].create({
+            'name': 'project_A',
+            'privacy_visibility': 'followers',
+            'alias_name': 'project A',
+            'partner_id': self.partner_1.id,
+        })
+        init_stage = project_A.stage_id.name
+
+        project_stage = self.env.ref('project.project_project_stage_1')
+        self.assertNotEqual(project_A.stage_id, project_stage)
+
+        # Assign email template
+        project_stage.mail_template_id = mail_template.id
+        self.flush_tracking()
+        init_nb_log = len(project_A.message_ids)
+        project_A.stage_id = project_stage.id
+        self.flush_tracking()
+        self.assertNotEqual(init_stage, project_A.stage_id.name)
+
+        self.assertEqual(len(project_A.message_ids), init_nb_log + 2,
+            "should have 2 new messages: one for tracking, one for template")
+
+
+class TestProjectFlow(TestProjectCommon, MailCase):
+
+    def test_project_process_project_manager_duplicate(self):
+        pigs = self.project_pigs.with_user(self.user_projectmanager)
+        dogs = pigs.copy()
+        self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
     def test_rating(self):
         """Check if rating works correctly even when task is changed from project A to project B"""
@@ -237,75 +309,6 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         })
         stages = task._get_default_personal_stage_create_vals(self.env.user.id)
         self.assertEqual(task.personal_stage_id.stage_id.name, stages[0].get('name'), "tasks assigned to the current user should be in the right default stage")
-
-    def test_send_rating_review(self):
-        won_stage = self.project_goats.type_ids[-1]
-        won_stage.write({
-            'rating_active': True,
-            'rating_status': 'stage',
-        })
-        rating_request_mail_template = self.env.ref('project.rating_project_request_email_template')
-        won_stage.write({'rating_template_id': rating_request_mail_template.id})
-        tasks = self.env['project.task'].with_context(mail_create_nolog=True, default_project_id=self.project_goats.id).create([
-            {'name': 'Goat Task 1', 'user_ids': [Command.set([])]},
-            {'name': 'Goat Task 2', 'user_ids': [Command.link(self.user_projectuser.id)]},
-            {
-                'name': 'Goat Task 3',
-                'user_ids': [
-                    Command.link(self.user_projectmanager.id),
-                    Command.link(self.user_projectuser.id),
-                ],
-            },
-        ])
-
-        with self.mock_mail_gateway():
-            tasks.with_user(self.user_projectmanager).write({'stage_id': won_stage.id})
-
-        tasks.invalidate_model(['rating_ids'])
-        for task in tasks:
-            self.assertEqual(len(task.rating_ids), 1, 'This task should have a generated rating when it arrives in the Won stage.')
-            rating_request_message = task.message_ids[:1]
-            if not task.user_ids or len(task.user_ids) > 1:
-                self.assertFalse(task.rating_ids.rated_partner_id, 'This rating should have no assigned user if the task related have no assignees or more than one assignee.')
-                self.assertEqual(rating_request_message.email_from, self.user_projectmanager.partner_id.email_formatted, 'The message should have the email of the Project Manager as email from.')
-            else:
-                self.assertEqual(task.rating_ids.rated_partner_id, task.user_ids.partner_id, 'The rating should have an assigned user if the task has only one assignee.')
-                self.assertEqual(rating_request_message.email_from, task.user_ids.partner_id.email_formatted, 'The message should have the email of the assigned user in the task as email from.')
-            self.assertTrue(self.partner_1 in rating_request_message.partner_ids, 'The customer of the task should be in the partner_ids of the rating request message.')
-
-    def test_email_track_template(self):
-        """ Update some tracked fields linked to some template -> message with onchange """
-        project_settings = self.env["res.config.settings"].create({'group_project_stages': True})
-        project_settings.execute()
-
-        mail_template = self.env['mail.template'].create({
-            'name': 'Test template',
-            'subject': 'Test',
-            'body_html': '<p>Test</p>',
-            'auto_delete': True,
-            'model_id': self.env.ref('project.model_project_project_stage').id,
-        })
-        project_A = self.env['project.project'].create({
-            'name': 'project_A',
-            'privacy_visibility': 'followers',
-            'alias_name': 'project A',
-            'partner_id': self.partner_1.id,
-        })
-        init_stage = project_A.stage_id.name
-
-        project_stage = self.env.ref('project.project_project_stage_1')
-        self.assertNotEqual(project_A.stage_id, project_stage)
-
-        # Assign email template
-        project_stage.mail_template_id = mail_template.id
-        self.flush_tracking()
-        init_nb_log = len(project_A.message_ids)
-        project_A.stage_id = project_stage.id
-        self.flush_tracking()
-        self.assertNotEqual(init_stage, project_A.stage_id.name)
-
-        self.assertEqual(len(project_A.message_ids), init_nb_log + 2,
-            "should have 2 new messages: one for tracking, one for template")
 
     def test_private_task_search_tag(self):
         task = self.env['project.task'].create({

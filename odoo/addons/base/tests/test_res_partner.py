@@ -24,7 +24,6 @@ SAMPLES = [
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPartner(TransactionCaseWithUserDemo):
 
     @contextmanager
@@ -418,6 +417,205 @@ class TestPartner(TransactionCaseWithUserDemo):
 
 @tagged('res_partner', 'res_partner_address')
 @tagged('at_install', '-post_install')  # LEGACY at_install
+class TestPartnerAddressCompanyAtInstall(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # test user
+        cls.test_user = new_test_user(
+            cls.env,
+            email='emp@test.mycompany.com',
+            groups='base.group_user,base.group_partner_manager',
+            login='employee',
+            name='Employee',
+            password='employee',
+        )
+
+        # test addresses
+        cls.base_address_fields = {'street', 'street2', 'zip', 'city', 'state_id', 'country_id'}
+        cls.test_country_state = cls.env['res.country.state'].create([
+            {
+                'code': 'OD',
+                'country_id': cls.env.ref('base.be').id,
+                'name': 'Odoo Province',
+            },
+        ])
+        cls.test_industries = cls.env['res.partner.industry'].create([
+            {'name': 'Balto Impersonators'},
+            {'name': 'Floppy Advisors'},
+            {'name': 'Both of the above'},
+        ])
+        cls.test_address_values_cmp, cls.test_address_values_2_cmp, cls.test_address_values_3_cmp = [
+            {
+                'city': 'Ramillies',
+                'country_id': cls.env.ref('base.be'),
+                'state_id': cls.test_country_state,
+                'street': 'Test Street',
+                'street2': '10 F',
+                'zip': '1367',
+            }, {
+                'city': 'Ramillies 2',
+                'country_id': cls.env.ref('base.us'),
+                'state_id': cls.env['res.country.state'],
+                'street': 'Another Street',
+                'street2': False,
+                'zip': '013670',
+            }, {
+                'city': 'Totally Not Ramillies',
+                'country_id': cls.env.ref('base.be'),
+                'state_id': cls.test_country_state,
+                'street': 'Third Street',
+                'street2': 'Without number',
+                'zip': '1367#Corgi',
+            },
+        ]
+        cls.test_address_values, cls.test_address_values_2, cls.test_address_values_3 = [
+            {fname: value.id if isinstance(value, models.Model) else value for fname, value in values.items()}
+            for values in (cls.test_address_values_cmp, cls.test_address_values_2_cmp, cls.test_address_values_3_cmp)
+        ]
+
+        # pre-existing data
+        cls.test_parent = cls.env['res.partner'].create({
+            'company_registry': '0477472701',
+            'email': 'info@ghoststep.com',
+            'industry_id': cls.test_industries[0].id,
+            'is_company': True,
+            'name': 'GhostStep',
+            'phone': '+32455001122',
+            'vat': 'BE0477472701',
+            'type': 'contact',
+            **cls.test_address_values,
+        })
+        cls.existing = cls.env['res.partner'].create({
+            'name': 'Existing Contact',
+            'parent_id': cls.test_parent.id,
+        })
+
+    def test_commercial_field_sync_reset(self):
+        """ Test voiding fields propagation. We would like to allow forcing void
+        values from parent, but limiting upstream reset from children. """
+        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
+
+        # create your contact
+        individual = self.env['res.partner'].create({
+            'is_company': False,
+            'name': 'Individual',
+            'ref': 'REFINDIV',
+            'vat': 'BEINDIVIDUAL',
+            **self.test_address_values,
+        })
+        self.assertFalse(individual.is_company)
+        self.assertEqual(individual.type, 'contact')
+        self.assertEqual(individual.ref, 'REFINDIV')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(individual[fname], fvalue)
+
+        # create a company with values
+        company = self.env['res.partner'].create({
+            'industry_id': self.test_industries[1].id,
+            'is_company': True,
+            'name': 'Company',
+            'ref': 'REFCOMPANY',
+            'vat': 'BECOMPANY',
+            **self.test_address_values_2,
+        })
+        # set it as parent of individual
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            individual.write({'parent_id': company})
+        for fname, fvalue in self.test_address_values_2_cmp.items():
+            self.assertEqual(company[fname], fvalue, 'Parent address should have been kept')
+        self.assertEqual(company.industry_id, self.test_industries[1], 'Parent commercial field industry should have been kept')
+        self.assertEqual(company.ref, 'REFCOMPANY', 'Parent commercial field VAT should have been kept')
+        self.assertEqual(company.vat, 'BECOMPANY', 'Parent commercial field VAT should have been kept')
+        for fname, fvalue in self.test_address_values_2_cmp.items():
+            self.assertEqual(individual[fname], fvalue, 'Setting parent with an address should force contact address, even if set previously')
+        self.assertEqual(individual.industry_id, self.test_industries[1], 'Commercial fields should be synced from parent')
+        self.assertEqual(individual.ref, 'REFCOMPANY', 'Commercial fields should be synced from parent')
+        self.assertEqual(individual.vat, 'BECOMPANY', 'Commercial fields should be synced from parent')
+
+        # void from parent: DOWNSTREAM reset
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            company.write({
+                'industry_id': False,
+                'ref': False,
+                'vat': False,
+            })
+        self.assertFalse(individual.industry_id)
+        self.assertFalse(individual.ref)
+        self.assertFalse(individual.vat)
+
+        # reset values, and void from child: UPSTREAM RESET
+        company.write({
+            'industry_id': self.test_industries[1].id,
+            'vat': 'BECOMPANY'
+        })
+        self.assertEqual(individual.industry_id, self.test_industries[1])
+        self.assertEqual(individual.vat, 'BECOMPANY')
+        individual.write({
+            'industry_id': False,
+            'vat': False,
+        })
+        self.assertEqual(company.industry_id, self.test_industries[1], 'No upstream support of reset')
+        self.assertEqual(company.vat, 'BECOMPANY', 'No upstream support of reset')
+        self.assertFalse(individual.industry_id)
+        self.assertFalse(individual.vat)
+
+    @users('employee')
+    def test_address_parent_company_creation(self):
+        """ When creating parent company, it should be populated with information
+        coming from children when possible, and not erase child with void values
+        from parent. """
+        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
+
+        # create your contact
+        individual = self.env['res.partner'].create({
+            'industry_id': self.test_industries[0].id,
+            'is_company': False,
+            'name': 'Individual',
+            'ref': 'REFINDIVIDUAL',
+            'vat': 'BEINDIVIDUAL',
+            **self.test_address_values,
+        })
+        self.assertFalse(individual.is_company)
+        self.assertEqual(individual.type, 'contact')
+        self.assertEqual(individual.ref, 'REFINDIVIDUAL')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(individual[fname], fvalue)
+
+        # create a company through "quick create", which would have partial default
+        # values for some company values
+        company = self.env['res.partner'].create({
+            'is_company': True,
+            'name': 'Company',
+            'ref': 'COMPANYREF',
+        })
+        # set it as parent of individual
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            individual.write({'parent_id': company})
+        self.assertFalse(company.industry_id, 'Industry is not considered for upstream')
+        self.assertEqual(company.ref, 'COMPANYREF', 'not updated from contact child')
+        self.assertEqual(company.vat, 'BEINDIVIDUAL')
+        for fname, fvalue in self.test_address_values_cmp.items():
+            self.assertEqual(company[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
+            self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
+        self.assertEqual(individual.industry_id, self.test_industries[0], 'No upstream sync, but no reset either')
+        self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+
+
+@tagged('res_partner', 'res_partner_address')
 class TestPartnerAddressCompany(TransactionCase):
 
     @classmethod
@@ -764,52 +962,6 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(leaf111.address_get([]),
                         {'contact': branch11.id}, 'Invalid address resolution, branch11 should now be contact')
 
-    @users('employee')
-    def test_address_parent_company_creation(self):
-        """ When creating parent company, it should be populated with information
-        coming from children when possible, and not erase child with void values
-        from parent. """
-        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
-
-        # create your contact
-        individual = self.env['res.partner'].create({
-            'industry_id': self.test_industries[0].id,
-            'is_company': False,
-            'name': 'Individual',
-            'ref': 'REFINDIVIDUAL',
-            'vat': 'BEINDIVIDUAL',
-            **self.test_address_values,
-        })
-        self.assertFalse(individual.is_company)
-        self.assertEqual(individual.type, 'contact')
-        self.assertEqual(individual.ref, 'REFINDIVIDUAL')
-        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
-        for fname, fvalue in self.test_address_values_cmp.items():
-            self.assertEqual(individual[fname], fvalue)
-
-        # create a company through "quick create", which would have partial default
-        # values for some company values
-        company = self.env['res.partner'].create({
-            'is_company': True,
-            'name': 'Company',
-            'ref': 'COMPANYREF',
-        })
-        # set it as parent of individual
-        with patch.object(
-            self.env['res.partner'].__class__, '_synced_commercial_fields',
-            lambda self: sync_commercial_fields + ['ref'],
-        ):
-            individual.write({'parent_id': company})
-        self.assertFalse(company.industry_id, 'Industry is not considered for upstream')
-        self.assertEqual(company.ref, 'COMPANYREF', 'not updated from contact child')
-        self.assertEqual(company.vat, 'BEINDIVIDUAL')
-        for fname, fvalue in self.test_address_values_cmp.items():
-            self.assertEqual(company[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
-            self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
-        self.assertEqual(individual.industry_id, self.test_industries[0], 'No upstream sync, but no reset either')
-        self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
-        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
-
     def test_commercial_partner_nullcompany(self):
         """ The commercial partner is the first/nearest ancestor-or-self which
         is a company or doesn't have a parent
@@ -939,82 +1091,6 @@ class TestPartnerAddressCompany(TransactionCase):
             self.assertEqual(contact.vat, newcontactvat, 'Setting is_company should stop auto-sync of commercial fields')
         for partner in contact2:
             self.assertEqual(partner.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
-
-    def test_commercial_field_sync_reset(self):
-        """ Test voiding fields propagation. We would like to allow forcing void
-        values from parent, but limiting upstream reset from children. """
-        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
-
-        # create your contact
-        individual = self.env['res.partner'].create({
-            'is_company': False,
-            'name': 'Individual',
-            'ref': 'REFINDIV',
-            'vat': 'BEINDIVIDUAL',
-            **self.test_address_values,
-        })
-        self.assertFalse(individual.is_company)
-        self.assertEqual(individual.type, 'contact')
-        self.assertEqual(individual.ref, 'REFINDIV')
-        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
-        for fname, fvalue in self.test_address_values_cmp.items():
-            self.assertEqual(individual[fname], fvalue)
-
-        # create a company with values
-        company = self.env['res.partner'].create({
-            'industry_id': self.test_industries[1].id,
-            'is_company': True,
-            'name': 'Company',
-            'ref': 'REFCOMPANY',
-            'vat': 'BECOMPANY',
-            **self.test_address_values_2,
-        })
-        # set it as parent of individual
-        with patch.object(
-            self.env['res.partner'].__class__, '_synced_commercial_fields',
-            lambda self: sync_commercial_fields + ['ref'],
-        ):
-            individual.write({'parent_id': company})
-        for fname, fvalue in self.test_address_values_2_cmp.items():
-            self.assertEqual(company[fname], fvalue, 'Parent address should have been kept')
-        self.assertEqual(company.industry_id, self.test_industries[1], 'Parent commercial field industry should have been kept')
-        self.assertEqual(company.ref, 'REFCOMPANY', 'Parent commercial field VAT should have been kept')
-        self.assertEqual(company.vat, 'BECOMPANY', 'Parent commercial field VAT should have been kept')
-        for fname, fvalue in self.test_address_values_2_cmp.items():
-            self.assertEqual(individual[fname], fvalue, 'Setting parent with an address should force contact address, even if set previously')
-        self.assertEqual(individual.industry_id, self.test_industries[1], 'Commercial fields should be synced from parent')
-        self.assertEqual(individual.ref, 'REFCOMPANY', 'Commercial fields should be synced from parent')
-        self.assertEqual(individual.vat, 'BECOMPANY', 'Commercial fields should be synced from parent')
-
-        # void from parent: DOWNSTREAM reset
-        with patch.object(
-            self.env['res.partner'].__class__, '_synced_commercial_fields',
-            lambda self: sync_commercial_fields + ['ref'],
-        ):
-            company.write({
-                'industry_id': False,
-                'ref': False,
-                'vat': False,
-            })
-        self.assertFalse(individual.industry_id)
-        self.assertFalse(individual.ref)
-        self.assertFalse(individual.vat)
-
-        # reset values, and void from child: UPSTREAM RESET
-        company.write({
-            'industry_id': self.test_industries[1].id,
-            'vat': 'BECOMPANY'
-        })
-        self.assertEqual(individual.industry_id, self.test_industries[1])
-        self.assertEqual(individual.vat, 'BECOMPANY')
-        individual.write({
-            'industry_id': False,
-            'vat': False,
-        })
-        self.assertEqual(company.industry_id, self.test_industries[1], 'No upstream support of reset')
-        self.assertEqual(company.vat, 'BECOMPANY', 'No upstream support of reset')
-        self.assertFalse(individual.industry_id)
-        self.assertFalse(individual.vat)
 
     def test_company_dependent_commercial_sync(self):
         ResPartner = self.env['res.partner']

@@ -8,7 +8,6 @@ from odoo.tests.common import tagged
 
 
 @tagged('hr_attendance_overtime')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrAttendanceOvertime(HttpCase):
     """ Tests for overtime """
 

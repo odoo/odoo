@@ -543,7 +543,6 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['preview'], [['foo', 'bar', 'aux'], ['1', '3', '5'], ['2', '4', '6']])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
     can be fed to Model.load

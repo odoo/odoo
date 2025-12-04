@@ -19,7 +19,6 @@ class TestPackingCommon(TestStockCommon):
         ])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPacking(TestPackingCommon):
 
     def test_put_in_pack(self):

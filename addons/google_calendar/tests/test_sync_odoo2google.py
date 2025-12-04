@@ -10,12 +10,10 @@ from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
-from odoo import tools
 
 
 @tagged('odoo2google', 'calendar_performance', 'is_query_count')
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSyncOdoo2Google(TestSyncGoogle):
 
     def setUp(self):

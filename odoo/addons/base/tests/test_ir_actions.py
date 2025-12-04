@@ -85,7 +85,61 @@ except:
         })
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestServerActionsAtInstall(TestServerActionsBase):
+    def test_50_groups(self):
+        """ check the action is returned only for groups dedicated to user """
+        Actions = self.env['ir.actions.actions']
+
+        group0 = self.env['res.groups'].create({'name': 'country group'})
+
+        self.context = {
+            'active_model': 'res.country',
+            'active_id': self.test_country.id,
+        }
+
+        # Do: update model and group
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+            'group_ids': [Command.link(group0.id)],
+            'code': 'record.write({"vat_label": "VatFromTest"})',
+        })
+
+        # Test: action is not returned
+        bindings = Actions.get_bindings('res.country')
+        self.assertFalse(bindings)
+
+        with self.assertRaises(AccessError):
+            self.action.with_context(self.context).run()
+        self.assertFalse(self.test_country.vat_label)
+
+        # add group to the user, and test again
+        self.env.user.write({'group_ids': [Command.link(group0.id)]})
+
+        bindings = Actions.get_bindings('res.country')
+        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
+
+        self.action.with_context(self.context).run()
+        self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
+
+    def test_60_sort(self):
+        """ check the actions sorted by sequence """
+        Actions = self.env['ir.actions.actions']
+
+        # Do: update model
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+        })
+        self.action2 = self.action.copy({'name': 'TestAction2', 'sequence': 1})
+
+        # Test: action returned by sequence
+        bindings = Actions.get_bindings('res.country')
+        self.assertEqual([vals.get('name') for vals in bindings['action']], ['TestAction2', 'TestAction'])
+        self.assertEqual([vals.get('sequence') for vals in bindings['action']], [1, 5])
+
+
 class TestServerActions(TestServerActionsBase):
     def test_00_server_action(self):
         with self.assertLogs('odoo.addons.base.models.ir_actions.server_action_safe_eval',
@@ -474,58 +528,6 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
                 'child_ids': [Command.set([self.action.id])]
             })
 
-    def test_50_groups(self):
-        """ check the action is returned only for groups dedicated to user """
-        Actions = self.env['ir.actions.actions']
-
-        group0 = self.env['res.groups'].create({'name': 'country group'})
-
-        self.context = {
-            'active_model': 'res.country',
-            'active_id': self.test_country.id,
-        }
-
-        # Do: update model and group
-        self.action.write({
-            'model_id': self.res_country_model.id,
-            'binding_model_id': self.res_country_model.id,
-            'group_ids': [Command.link(group0.id)],
-            'code': 'record.write({"vat_label": "VatFromTest"})',
-        })
-
-        # Test: action is not returned
-        bindings = Actions.get_bindings('res.country')
-        self.assertFalse(bindings)
-
-        with self.assertRaises(AccessError):
-            self.action.with_context(self.context).run()
-        self.assertFalse(self.test_country.vat_label)
-
-        # add group to the user, and test again
-        self.env.user.write({'group_ids': [Command.link(group0.id)]})
-
-        bindings = Actions.get_bindings('res.country')
-        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
-
-        self.action.with_context(self.context).run()
-        self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
-
-    def test_60_sort(self):
-        """ check the actions sorted by sequence """
-        Actions = self.env['ir.actions.actions']
-
-        # Do: update model
-        self.action.write({
-            'model_id': self.res_country_model.id,
-            'binding_model_id': self.res_country_model.id,
-        })
-        self.action2 = self.action.copy({'name': 'TestAction2', 'sequence': 1})
-
-        # Test: action returned by sequence
-        bindings = Actions.get_bindings('res.country')
-        self.assertEqual([vals.get('name') for vals in bindings['action']], ['TestAction2', 'TestAction'])
-        self.assertEqual([vals.get('sequence') for vals in bindings['action']], [1, 5])
-
     def test_70_copy_action(self):
         # first check that the base case (reset state) works normally
         r = self.env['ir.actions.todo'].create({
@@ -648,7 +650,58 @@ class TestCommonCustomFields(common.TransactionCase):
         })
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestCustomFieldsAtInstall(TestCommonCustomFields):
+    def test_related_field(self):
+        """ create a custom related field, and check filled values """
+        #
+        # Add a custom field equivalent to the following definition:
+        #
+        # class ResPartner(models.Model)
+        #     _inherit = 'res.partner'
+        #     x_oh_boy = fields.Char(related="country_id.code", store=True)
+        #
+
+        # pick N=100 records in comodel
+        countries = self.env['res.country'].search([('code', '!=', False)], limit=100)
+        self.assertEqual(len(countries), 100, "Not enough records in comodel 'res.country'")
+
+        # create records in model, with N distinct values for the related field
+        partners = self.env['res.partner'].create([
+            {'name': country.code, 'country_id': country.id} for country in countries
+        ])
+        self.env.flush_all()
+
+        # create a non-computed field, and assert how many queries it takes
+        model_id = self.env['ir.model']._get_id('res.partner')
+        query_count = 51
+        with self.assertQueryCount(query_count):
+            self.env.registry.clear_cache()
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
+                'name': 'x_oh_box',
+                'field_description': 'x_oh_box',
+                'ttype': 'char',
+                'store': True,
+            })
+
+        # same with a related field, it only takes 8 extra queries
+        with self.assertQueryCount(query_count + 8):
+            self.env.registry.clear_cache()
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
+                'name': 'x_oh_boy',
+                'field_description': 'x_oh_boy',
+                'ttype': 'char',
+                'related': 'country_id.code',
+                'store': True,
+            })
+
+        # check the computed values
+        for partner in partners:
+            self.assertEqual(partner.x_oh_boy, partner.country_id.code)
+
+
 class TestCustomFields(TestCommonCustomFields):
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
@@ -814,55 +867,6 @@ class TestCustomFields(TestCommonCustomFields):
         custom_binary = self.env[self.MODEL]._fields['x_image']
 
         self.assertTrue(custom_binary.attachment)
-
-    def test_related_field(self):
-        """ create a custom related field, and check filled values """
-        #
-        # Add a custom field equivalent to the following definition:
-        #
-        # class ResPartner(models.Model)
-        #     _inherit = 'res.partner'
-        #     x_oh_boy = fields.Char(related="country_id.code", store=True)
-        #
-
-        # pick N=100 records in comodel
-        countries = self.env['res.country'].search([('code', '!=', False)], limit=100)
-        self.assertEqual(len(countries), 100, "Not enough records in comodel 'res.country'")
-
-        # create records in model, with N distinct values for the related field
-        partners = self.env['res.partner'].create([
-            {'name': country.code, 'country_id': country.id} for country in countries
-        ])
-        self.env.flush_all()
-
-        # create a non-computed field, and assert how many queries it takes
-        model_id = self.env['ir.model']._get_id('res.partner')
-        query_count = 51
-        with self.assertQueryCount(query_count):
-            self.env.registry.clear_cache()
-            self.env['ir.model.fields'].create({
-                'model_id': model_id,
-                'name': 'x_oh_box',
-                'field_description': 'x_oh_box',
-                'ttype': 'char',
-                'store': True,
-            })
-
-        # same with a related field, it only takes 8 extra queries
-        with self.assertQueryCount(query_count + 8):
-            self.env.registry.clear_cache()
-            self.env['ir.model.fields'].create({
-                'model_id': model_id,
-                'name': 'x_oh_boy',
-                'field_description': 'x_oh_boy',
-                'ttype': 'char',
-                'related': 'country_id.code',
-                'store': True,
-            })
-
-        # check the computed values
-        for partner in partners:
-            self.assertEqual(partner.x_oh_boy, partner.country_id.code)
 
     def test_relation_of_a_custom_field(self):
         """ change the relation model of a custom field """

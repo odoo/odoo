@@ -6,10 +6,9 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestVirtualAvailable(TestStockCommon):
     @classmethod
     def setUpClass(cls):

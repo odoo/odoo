@@ -118,7 +118,6 @@ class TestMailComposer(MailCommon, TestRecipients):
 
 
 @tagged('mail_composer')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComposerForm(TestMailComposer):
 
     @classmethod
