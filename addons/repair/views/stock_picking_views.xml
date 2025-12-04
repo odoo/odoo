@@ -89,51 +89,54 @@
                         </div>
                     </div>
             </xpath>
-            <xpath expr='//div[@name="stock_picking"]' position="after">
-                <div t-if="record.code.raw_value == 'repair_operation'" class="px-2">
-                    <a t-if="!selection_mode" type="object" name="get_repair_stock_picking_action_picking_type">
-                        <field name="name" class="fw-bold fs-4"/>
-                    </a>
+            <xpath expr='//t[@name="stock_picking"]' position="after">
+                <t t-if="record.code.raw_value == 'repair_operation'">
+                    <span class="d-flex d-flew-row align-items-baseline px-2">
+                        <a t-if="!selection_mode" type="object" name="get_repair_stock_picking_action_picking_type">
+                            <field name="name" class="fw-bold fs-4"/>
+                        </a>
+                    </span>
                     <field t-if="selection_mode" name="name" class="fw-bold fs-4"/>
-                    <field class="d-block"  name="warehouse_id"  groups="stock.group_stock_multi_warehouses"/>
-                    <div t-if="!selection_mode" class="row mt-3">
-                        <div class="col-6">
-                            <button class="btn btn-primary" name="get_repair_stock_picking_action_picking_type" context="{'search_default_ready': 1}" type="object">
-                                <span t-if="record.count_repair_ready.raw_value > 0">
-                                    <field name="count_repair_ready"/> To Repair
-                                </span>
-                                <span t-else="">Open</span>
-                            </button>
-                        </div>
-                        <div class="col-6 stock-overview-links">
-                            <div t-if="record.count_repair_late.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_late': 1}" type="object">
-                                    <div class="row">
-                                        <span class="col-6">Late</span>
-                                        <field class="col-2 text-end" name="count_repair_late"/>
-                                    </div>
-                                </a>
+                    <field name="warehouse_id" class="d-block px-2" groups="stock.group_stock_multi_warehouses"/>
+                    <div class="container-fluid px-2">
+                        <div t-if="!selection_mode" class="row mt-3">
+                            <div class="col">
+                                <button class="btn btn-primary" name="get_repair_stock_picking_action_picking_type" context="{'search_default_ready': 1}" type="object">
+                                    <span t-if="record.count_repair_ready.raw_value > 0">
+                                        <field name="count_repair_ready"/> To Repair
+                                    </span>
+                                    <span t-else="">Open</span>
+                                </button>
                             </div>
-                            <div t-if="record.count_repair_confirmed.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_confirmed': 1}" type="object">
-                                    <div class="row">
-                                        <span class="col-6">Confirmed</span>
-                                        <field class="col-2 text-end" name="count_repair_confirmed"/>
-                                    </div>
-                                </a>
-                            </div>
-                            <div t-if="record.count_repair_under_repair.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_under_repair': 1}" type="object">
-                                    <div class="row">
-                                        <span class="col-6">Under Repair</span>
-                                        <field class="col-2 text-end" name="count_repair_under_repair"/>
-                                    </div>
-                                </a>
+                            <div class="col-auto stock-overview-links px-5">
+                                <div t-if="record.count_repair_late.raw_value > 0" class="row overflow-hidden">
+                                    <a class="text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_late': 1}" type="object">
+                                        <div class="row">
+                                            <span class="col">Late</span>
+                                            <field class="col text-end" name="count_repair_late"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div t-if="record.count_repair_confirmed.raw_value > 0" class="row overflow-hidden">
+                                    <a class="text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_confirmed': 1}" type="object">
+                                        <div class="row">
+                                            <span class="col">Confirmed</span>
+                                            <field class="col text-end" name="count_repair_confirmed"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div t-if="record.count_repair_under_repair.raw_value > 0" class="row overflow-hidden">
+                                    <a class="text-truncate" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_under_repair': 1}" type="object">
+                                        <div class="row">
+                                            <span class="col">Under Repair</span>
+                                            <field class="col text-end" name="count_repair_under_repair"/>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <field t-if="!selection_mode" class="mt-auto" name="kanban_dashboard_graph" graph_type="bar" widget="picking_type_dashboard_graph"/>
-                </div>
+                </t>
             </xpath>
         </field>
     </record>

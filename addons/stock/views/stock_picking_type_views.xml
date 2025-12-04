@@ -227,64 +227,69 @@
                         </div>
                     </t>
                     <t t-name="card">
-                        <div t-if="record.show_picking_type.raw_value" name="stock_picking" class="px-2">
-                            <a t-if="!selection_mode" type="object" name="get_stock_picking_action_picking_type">
-                                <field class="fw-bold fs-4" name="name"/>
-                            </a>
+                        <t t-if="record.show_picking_type.raw_value" name="stock_picking">
+                            <span class="d-flex d-flew-row align-items-baseline px-2">
+                                <a t-if="!selection_mode" type="object" name="get_stock_picking_action_picking_type">
+                                    <field class="fw-bold fs-4" name="name"/>
+                                </a>
+                            </span>
                             <field t-if="selection_mode" class="fw-bold fs-4" name="name"/>
-                            <field name="warehouse_id" class="d-block" groups="stock.group_stock_multi_warehouses"/>
-                            <div t-if="!selection_mode" class="row mt-3">
-                                <div class="col-6">
-                                    <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
-                                        <span t-if="record.count_picking_ready.raw_value > 0">
-                                            <field name="count_picking_ready"/>
-                                            <t t-if="record.code.raw_value === 'incoming'"> To Receive</t>
-                                            <t t-elif="record.code.raw_value === 'outgoing'" name="outgoing_label"> To Deliver</t>
-                                            <t t-else=""> To Process</t>
-                                        </span>
-                                        <span t-else="">Open</span>
-                                    </button>
-                                </div>
-                                <div class="col-6 stock-overview-links">
-                                    <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4 pe-0 text-truncate" name="get_action_picking_tree_waiting" type="object">
-                                            <div class="row">
-                                                <span class="col-6">Waiting</span>
-                                                <field class="col-2 text-end" name="count_picking_waiting"/>
-                                            </div>
-                                        </a>
+                            <field name="warehouse_id" class="d-block px-2" groups="stock.group_stock_multi_warehouses"/>
+                            <div class="container-fluid px-2">
+                                <div t-if="!selection_mode" class="row mt-3">
+                                    <div class="col">
+                                        <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
+                                            <span t-if="record.count_picking_ready.raw_value > 0">
+                                                <field name="count_picking_ready"/>
+                                                <t t-if="record.code.raw_value === 'incoming'"> To Receive</t>
+                                                <t t-elif="record.code.raw_value === 'outgoing'" name="outgoing_label"> To Deliver</t>
+                                                <t t-else=""> To Process</t>
+                                            </span>
+                                            <span t-else="">Open</span>
+                                        </button>
                                     </div>
+                                    <div class="col-auto stock-overview-links px-5">
+                                        <div t-if="record.count_picking_waiting.raw_value > 0" class="col-auto">
+                                            <a class="pe-0 text-truncate" name="get_action_picking_tree_waiting" type="object">
+                                                <div class="row overflow-hidden">
+                                                    <span class="col">Waiting</span>
+                                                    <field class="col text-end" name="count_picking_waiting"/>
+                                                </div>
+                                            </a>
+                                        </div>
 
-                                    <div t-if="record.count_picking_late.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4 pe-0 text-truncate" name="get_action_picking_tree_late" type="object">
-                                            <div class="row">
-                                                <span class="col-6">Late</span>
-                                                <field class="col-2 text-end" name="count_picking_late"/>
-                                            </div>
-                                        </a>
-                                    </div>
+                                        <div t-if="record.count_picking_late.raw_value > 0" class="col-auto">
+                                            <a class="pe-0 text-truncate" name="get_action_picking_tree_late" type="object">
+                                                <div class="row overflow-hidden">
+                                                    <span class="col">Late</span>
+                                                    <field class="col text-end" name="count_picking_late"/>
+                                                </div>
+                                            </a>
+                                        </div>
 
-                                    <div t-if="record.count_picking_backorders.raw_value > 0" class="row" name="picking_type_backorder_count">
-                                        <a class="col-8 offset-4 pe-0 text-truncate" name="get_action_picking_tree_backorder" type="object">
-                                            <div class="row">
-                                                <span class="col-6">Back Orders</span>
-                                                <field class="col-2 text-end" name="count_picking_backorders"/>
-                                            </div>
-                                        </a>
-                                    </div>
+                                        <div t-if="record.count_picking_backorders.raw_value > 0" class="col-auto" name="picking_type_backorder_count">
+                                            <a class="pe-0 text-truncate" name="get_action_picking_tree_backorder" type="object">
+                                                <div class="row overflow-hidden">
+                                                    <span class="col">Back Orders</span>
+                                                    <field class="col text-end" name="count_picking_backorders"/>
+                                                </div>
+                                            </a>
+                                        </div>
 
-                                    <div t-if="record.count_move_ready.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4 pe-0 text-truncate" name="get_action_picking_type_ready_moves" type="object">
-                                            <div class="row">
-                                                <span class="col-6">Operations</span>
-                                                <field class="col-2 text-end" name="count_move_ready"/>
-                                            </div>
-                                        </a>
+                                        <div t-if="record.count_move_ready.raw_value > 0" class="col-auto">
+                                            <a class="pe-0 text-truncate" name="get_action_picking_type_ready_moves" type="object">
+                                                <div class="row overflow-hidden">
+                                                    <span class="col">Operations</span>
+                                                    <field class="col text-end" name="count_move_ready"/>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <field t-if="!selection_mode" name="kanban_dashboard_graph" class="mt-auto" graph_type="bar" widget="picking_type_dashboard_graph"/>
-                        </div>
+                        </t>
+                            <field t-if="!selection_mode" name="kanban_dashboard_graph" class="px-2" graph_type="bar" widget="picking_type_dashboard_graph"/>
+                        <!-- </div> -->
                     </t>
                 </templates>
             </kanban>
