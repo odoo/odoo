@@ -2,7 +2,7 @@
 
 import re
 from collections import defaultdict
-from datetime import datetime, time, timedelta, date, UTC
+from datetime import UTC, date, datetime, time, timedelta
 from random import choice
 from string import digits
 from zoneinfo import ZoneInfo
@@ -10,14 +10,15 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, fields, models, _, tools
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.exceptions import ValidationError, AccessError, RedirectWarning, UserError
-from odoo.tools import SQL, convert, format_time, format_date, email_normalize
+from odoo.tools import SQL, convert, email_normalize, format_date, format_time
+from odoo.tools.float_utils import float_is_zero
 from odoo.tools.intervals import Intervals
+
 from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools.float_utils import float_is_zero
 
 # This sentinel object, when in the context, provides read access to the
 # model 'hr.employee' in certain situations, like when setting a many2many
@@ -667,11 +668,9 @@ class HrEmployee(models.Model):
         Return the version that should be used for the given date.
         If no valid version is found, we return the very first version of the employee.
         """
-        version = self.env['hr.version'].search([
-            ('employee_id', '=', self.id),
-            ('date_version', '<=', date)],
-            order='date_version desc', limit=1)
-        return version or self.version_ids[0]
+        self.ensure_one()
+        versions = self.version_ids.filtered_domain([('date_version', '<=', date)])
+        return max(versions, key=lambda v: v.date_version) if versions else self.version_ids[0]
 
     def create_version(self, values):
         self.ensure_one()
@@ -1801,17 +1800,42 @@ class HrEmployee(models.Model):
                 res[employee.id] = employee_versions_sudo[0].resource_calendar_id.sudo(False)
         return res
 
-    def _get_calendar_periods(self, start, stop):
+    def _get_version_periods(self, start, stop, field=None, check_contract=False):
         """
         :param date start: the start of the period
         :param date stop: the stop of the period
+        :param string field: the field mapped over the periods. Returns the versions if left empty
+        :param boolean check_contract: true means that we restrict valid versions only to contract periods
         """
-        calendar_periods_by_employee = defaultdict(list)
-        versions = self.sudo()._get_versions_with_contract_overlap_with_period(start, stop)
+        if field and field not in self:
+            raise UserError(self.env._(
+                "This field %(field_name)s doesn't exist on this model (hr.version).",
+                field_name=field,
+            ))
+        version_periods_by_employee = defaultdict(list)
+        if check_contract:
+            versions = self._get_versions_with_contract_overlap_with_period(start, stop)
+        else:
+            versions = self.version_ids.filtered_domain([
+                ('date_start', '<=', stop),
+                '|',
+                    ('date_end', '=', False),
+                    ('date_end', '>=', start),
+            ])
         for version in versions:
-            calendar_periods_by_employee[version.employee_id].append(
-                (max(version.contract_date_start, start), min(version.date_end or stop, stop), version.resource_calendar_id))
-        return calendar_periods_by_employee
+            date_end = version.date_end or stop
+            version_periods_by_employee[version.employee_id].append(
+                (max(version.date_start, start), min(date_end, stop), version[field] if field else version),
+            )
+        return version_periods_by_employee
+
+    def _get_calendar_periods(self, start, stop, check_contract=True):
+        """
+        :param date start: the start of the period
+        :param date stop: the stop of the period
+        :param boolean check_contract: true means that we restrict valid versions only to contract periods
+        """
+        return self.sudo()._get_version_periods(start, stop, 'resource_calendar_id', check_contract)
 
     @api.model
     def _get_all_versions_with_contract_overlap_with_period(self, date_from, date_to):
