@@ -1,8 +1,6 @@
 import { BuilderComponent } from "@html_builder/core/building_blocks/builder_component";
-import {
-    BuilderTextInputBase,
-    textInputBasePassthroughProps,
-} from "@html_builder/core/building_blocks/builder_text_input_base";
+import { BuilderTextInputBase } from "@html_builder/core/building_blocks/builder_text_input_base";
+import { textInputBasePassthroughProps } from "./builder_input_base";
 import {
     basicContainerBuilderComponentProps,
     useBuilderComponent,

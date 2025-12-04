@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import { pick } from "@web/core/utils/objects";
-import { BuilderTextInputBase, textInputBasePassthroughProps } from "./builder_text_input_base";
+import { BuilderTextInputBase } from "./builder_text_input_base";
+import { textInputBasePassthroughProps } from "./builder_input_base";
 import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,
@@ -13,7 +14,6 @@ export class BuilderTextInput extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         ...textInputBasePassthroughProps,
-        prefix: { type: String, optional: true },
         default: { type: String, optional: true },
     };
     static components = {
