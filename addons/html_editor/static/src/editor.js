@@ -51,6 +51,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
  * @property { Editor['dispatchTo'] } dispatchTo
  * @property { Editor['delegateTo'] } delegateTo
  * @property { Editor['processThrough'] } processThrough
+ * @property { Editor['checkPredicates'] } checkPredicates
  */
 
 /**
@@ -271,6 +272,7 @@ export class Editor {
             dispatchTo: this.dispatchTo.bind(this),
             delegateTo: this.delegateTo.bind(this),
             processThrough: this.processThrough.bind(this),
+            checkPredicates: this.checkPredicates.bind(this),
         };
     }
 
@@ -360,6 +362,34 @@ export class Editor {
             item = processor(item, ...args) || item;
         });
         return item;
+    }
+
+    /**
+     * Test the given arguments against all the predicates registered under
+     * `resourceId` (which ends with "_predicates" by convention), and return
+     * true if any predicate returns `true` and none returns `false` (ignoring
+     * those that return `undefined`).
+     *
+     * Important note: since this function treats booleans and nullish results
+     * differently, make sure that:
+     * 1. Predicates only return a boolean when it's meaningful.
+     * 2. Any call to `checkPredicates` involves the declaration of a default
+     *    value in case it returns `undefined`.
+     *
+     * Example:
+     * ```js
+     * const isTrue = this.checkPredicates("my_predicates", arg1, arg2) ?? true;
+     * ```
+     *
+     * @param {string} resourceId
+     * @param  {...any} args The arguments to pass to the predicates.
+     * @returns {boolean | undefined}
+     */
+    checkPredicates(resourceId, ...args) {
+        const results = this.getResource(resourceId)
+            .map((predicate) => predicate(...args))
+            .filter((result) => result !== undefined);
+        return results.length ? results.every(Boolean) : undefined;
     }
 
     getContent() {
