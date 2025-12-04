@@ -1004,13 +1004,18 @@ class MailCase(MockEmail):
                     mbody in message.body and message.message_type == mtype and
                     message.subtype_id == msubtype
                 ))
+                debug_info = '\n'.join(
+                    f'Msg: message_type {message.message_type}, subtype {message.subtype_id.name}, content {message.body}'
+                    for message in messages
+                )
             else:
                 message = self.env['mail.message'].sudo().search([
                     ('body', 'ilike', mbody),
                     ('message_type', '=', mtype),
                     ('subtype_id', '=', msubtype.id)
                 ], limit=1, order='id DESC')
-            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)' % (mbody, mtype, msubtype.name))
+                debug_info = ''
+            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s\n%s)' % (mbody, mtype, msubtype.name, debug_info))
 
             # check message values
             message_values = message_info.get('message_values', {})

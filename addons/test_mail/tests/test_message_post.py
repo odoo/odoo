@@ -49,6 +49,9 @@ class TestMessagePostCommon(TestMailCommon, TestRecipients):
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
+        cls.test_records_simple, _partners = cls._create_records_for_batch(
+            'mail.test.simple', 3,
+        )
         cls.test_record_container = cls.env['mail.test.container.mc'].create({
             'name': 'MC Container',
         })
@@ -879,43 +882,69 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         scheduled_datetime = now + timedelta(days=5)
         self.user_admin.write({'notification_type': 'inbox'})
 
-        test_record = self.test_record.with_env(self.env)
-        test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
+        test_records = self.test_records_simple.with_env(self.env)
+        test_records.message_subscribe((self.partner_1 | self.partner_admin).ids)
 
+        # handy shortcut variables
+        deleted_record = test_records[2]
+        remaining_records = test_records - deleted_record
+
+        messages = self.env['mail.message']
         with freeze_time(now), \
              self.assertMsgWithoutNotifications(), \
              self.capture_triggers(cron_id) as capt:
-            msg = test_record.message_post(
-                body='<p>Test</p>',
-                message_type='comment',
-                subject='Subject',
-                subtype_xmlid='mail.mt_comment',
-                scheduled_date=scheduled_datetime,
-            )
-        self.assertEqual(capt.records.call_at, scheduled_datetime,
-                         msg='Should have created a cron trigger for the scheduled sending')
+            for test_record in test_records:
+                messages += test_record.message_post(
+                    body=f'<p>Test on {test_record.name}</p>',
+                    message_type='comment',
+                    subject=f'Subject for {test_record.name}',
+                    subtype_xmlid='mail.mt_comment',
+                    scheduled_date=scheduled_datetime,
+                )
+        self.assertEqual(
+            capt.records.mapped('call_at'), [scheduled_datetime] * 3,
+            msg='Should have created a cron trigger / scheduled post')
         self.assertFalse(self._new_mails)
         self.assertFalse(self._mails)
 
-        schedules = self.env['mail.message.schedule'].sudo().search([('mail_message_id', '=', msg.id)])
-        self.assertEqual(len(schedules), 1, msg='Should have scheduled the message')
-        self.assertEqual(schedules.scheduled_datetime, scheduled_datetime)
+        schedules = self.env['mail.message.schedule'].sudo().search([('mail_message_id', 'in', messages.ids)])
+        self.assertEqual(len(schedules), 3, msg='Should have one scheduled record / message to post')
+        self.assertEqual(schedules.mapped('scheduled_datetime'), [scheduled_datetime] * 3)
 
         # trigger cron now -> should not sent as in future
         with freeze_time(now):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
-        self.assertTrue(schedules.exists(), msg='Should not have sent the message')
+        self.assertTrue(schedules.exists(), msg='Should not have sent the messages')
+
+        # In the mean time, some FK deletes the record where the message is
+        # # scheduled, skipping its unlink() override
+        test_record_names = test_records.mapped('name')
+        self.env.cr.execute(
+            f"DELETE FROM {test_records._table} WHERE id = %s", (deleted_record.id,)
+        )
+        test_records.invalidate_recordset()
 
         # Send the scheduled message from the cron at right date
         with freeze_time(now + timedelta(days=5)), self.mock_mail_gateway(mail_unlink_sent=True):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
-        self.assertFalse(schedules.exists(), msg='Should have sent the message')
+        self.assertFalse(schedules.exists(), msg='Should have sent the messages')
+
         # check notifications have been sent
-        recipients_info = [{'content': '<p>Test</p>', 'notif': [
-            {'partner': self.partner_admin, 'type': 'inbox'},
-            {'partner': self.partner_1, 'type': 'email'},
-        ]}]
-        self.assertMailNotifications(msg, recipients_info)
+        for msg, test_record, test_record_name in zip(messages, test_records, test_record_names):
+            with self.subTest(test_record_name=test_record_name):
+                if test_record != deleted_record:
+                    # unlinked record -> skip notification
+                    self.assertMailNotifications(msg, [{
+                        'content': f'Test on {test_record_name}',
+                        'email_values': {
+                            'subject': f'Subject for {test_record_name}',
+                        },
+                        'notif': [
+                            {'partner': self.partner_admin, 'type': 'inbox'},
+                            {'partner': self.partner_1, 'type': 'email'},
+                        ],
+                    }])
+        self.assertEqual(len(self._new_mails), len(remaining_records), 'Should have skipped unlinked record')
 
         # manually create a new schedule date, resend it -> should not crash (aka
         # don't create duplicate notifications, ...)
@@ -932,7 +961,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         with freeze_time(now), \
              self.mock_mail_gateway(mail_unlink_sent=False), \
              self.capture_triggers(cron_id) as capt:
-            msg = test_record.message_post(
+            msg = test_records[0].message_post(
                 body='<p>Test</p>',
                 message_type='comment',
                 subject='Subject',

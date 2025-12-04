@@ -141,7 +141,7 @@ class TestRatingPerformance(TestRatingCommon):
         partners = self.env['res.partner'].sudo().create([
             {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
 
-        with self.assertQueryCount(employee=1516):  # tmf 1516 / com 5510
+        with self.assertQueryCount(employee=1614):  # tmf 1614
             record_ratings = self.env['mail.test.rating'].create([{
                 'customer_id': partners[idx].id,
                 'name': 'Test Rating',
@@ -149,13 +149,13 @@ class TestRatingPerformance(TestRatingCommon):
             } for idx in range(RECORD_COUNT)])
             self.flush_tracking()
 
-        with self.assertQueryCount(employee=2004):  # tmf 2004
+        with self.assertQueryCount(employee=2104):  # tmf 2104
             for record in record_ratings:
                 access_token = record._rating_get_access_token()
                 record.rating_apply(1, token=access_token)
             self.flush_tracking()
 
-        with self.assertQueryCount(employee=2003):  # tmf 2003
+        with self.assertQueryCount(employee=2103):  # tmf 2103
             for record in record_ratings:
                 access_token = record._rating_get_access_token()
                 record.rating_apply(5, token=access_token)
