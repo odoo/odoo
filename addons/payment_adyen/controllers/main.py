@@ -86,7 +86,9 @@ class AdyenController(http.Controller):
 
         # Prepare the payment request to Adyen
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
-        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        tx_sudo = request.env['payment.transaction'].sudo().search([
+            ('provider_id', '=', provider_sudo.id), ('reference', '=', reference),
+        ])
         partner_country_code = (
             tx_sudo.partner_country_id.code or provider_sudo.company_id.country_id.code or 'NL'
         )
@@ -168,8 +170,16 @@ class AdyenController(http.Controller):
         """
         # Make the payment details request to Adyen
         provider_sudo = request.env['payment.provider'].browse(provider_id).sudo()
+        tx_sudo = request.env['payment.transaction'].sudo().search([
+            ('provider_id', '=', provider_sudo.id), ('reference', '=', reference),
+        ])
+
+        idempotency_key = payment_utils.generate_idempotency_key(
+            tx_sudo, scope='payment_details_request_controller'
+        )
+
         response_content = provider_sudo._send_api_request(
-            'POST', '/payments/details', json=payment_details
+            'POST', '/payments/details', json=payment_details, idempotency_key=idempotency_key,
         )
 
         # Process the payment data request response.
