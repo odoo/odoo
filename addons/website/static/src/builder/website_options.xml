@@ -369,4 +369,28 @@
             <media_list_item_option selector=".s_media_list_item" shouldHaveColor="true"/>
         </xpath>
     </t>
+
+    <t t-name="website.TranslationBuilderOptions" t-inherit="html_builder.BuilderOptions">
+        <xpath expr="//div" position="replace">
+            <div>
+                <translate_webpage_option selector="body" title="Translation" editableOnly="false"/>
+                <many2one_option
+                    selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+                    editableOnly="false"/>
+                <carousel_option
+                    template="website.CarouselOption"
+                    selector="section"
+                    exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)"
+                    applyTo=":scope > .carousel"/>
+                <carousel_bottom_controllers_option
+                    template="website.CarouselBottomControllersOption"
+                    selector="section"
+                    applyTo=".s_carousel_intro, .s_quotes_carousel_compact"/>
+                <carousel_cards_option
+                    template="website.CarouselCardsOption"
+                    selector="section"
+                    applyTo=".s_carousel_cards"/>
+            </div>
+        </xpath>
+    </t>
 </templates>
