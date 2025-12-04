@@ -1,13 +1,13 @@
 declare module "plugins" {
     import { AnchorShared } from "@html_builder/core/anchor/anchor_plugin";
     import { builder_components, BuilderComponentShared } from "@html_builder/core/builder_component_plugin";
-    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, change_current_options_containers_listeners, clone_disabled_reason_processors, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, keep_overlay_options, no_parent_containers, on_restore_containers_handlers, remove_disabled_reason_processors } from "@html_builder/core/builder_options_plugin";
+    import { builder_header_middle_buttons, builder_options, BuilderOptionsShared, change_current_options_containers_listeners, clone_disabled_reason_processors, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, keep_overlay_options_predicates, no_parent_containers, on_restore_containers_handlers, remove_disabled_reason_processors } from "@html_builder/core/builder_options_plugin";
     import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
     import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
     import { CustomizeTabShared } from "@html_builder/core/customize_tab_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
-    import { dropzone_selector, DropZoneShared, filter_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
+    import { dropzone_selector, DropZoneShared, valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
     import { after_replication_handlers } from "@html_builder/core/field_change_replication_plugin";
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
@@ -108,9 +108,9 @@ declare module "plugins" {
 
         // Predicates
         empty_node_predicates: empty_node_predicates;
-        filter_for_sibling_dropzone_predicates: filter_for_sibling_dropzone_predicates;
+        valid_for_sibling_dropzone_predicates: valid_for_sibling_dropzone_predicates;
         is_draggable_predicates: is_draggable_predicates;
-        keep_overlay_options: keep_overlay_options;
+        keep_overlay_options_predicates: keep_overlay_options_predicates;
         show_overlay_buttons_of_ancestor_predicates: show_overlay_buttons_of_ancestor_predicates;
 
         // Processors

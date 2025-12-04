@@ -86,7 +86,11 @@ export class ColumnPlugin extends Plugin {
                 text: _t("Empty column"),
             },
         ],
-        unremovable_node_predicates: isUnremovableColumn,
+        removable_node_predicates: (node, root) => {
+            if (isUnremovableColumn(node, root)) {
+                return false;
+            }
+        },
         power_buttons_visibility_predicates: ({ anchorNode }) => {
             if (closestElement(anchorNode, ".o_text_columns")) {
                 return false;

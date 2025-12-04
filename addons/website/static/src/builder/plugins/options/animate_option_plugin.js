@@ -63,7 +63,11 @@ export class AnimateOptionPlugin extends Plugin {
         },
         normalize_processors: this.normalize.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
-        unsplittable_node_predicates: (node) => node.classList?.contains("o_animated_text"),
+        splittable_node_predicates: (node) => {
+            if (node.classList?.contains("o_animated_text")) {
+                return false;
+            }
+        },
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
     };
 

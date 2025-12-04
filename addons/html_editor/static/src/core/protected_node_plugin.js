@@ -26,9 +26,18 @@ export class ProtectedNodePlugin extends Plugin {
         normalize_processors: withSequence(0, this.normalize.bind(this)),
 
         /** Predicates */
-        unsplittable_node_predicates: [
-            isProtecting, // avoid merge
-            isUnprotecting,
+        splittable_node_predicates: [
+            (node) => {
+                // avoid merge
+                if (isProtecting(node)) {
+                    return false;
+                }
+            },
+            (node) => {
+                if (isUnprotecting(node)) {
+                    return false;
+                }
+            },
         ],
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
 

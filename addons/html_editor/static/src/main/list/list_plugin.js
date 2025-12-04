@@ -205,15 +205,16 @@ export class ListPlugin extends Plugin {
                 const nonListChildren = childNodes(node).filter(
                     (n) => !["UL", "OL"].includes(n.nodeName)
                 );
-                if (!nonListChildren.length) {
-                    return;
+                if (nonListChildren.length) {
+                    const startLeaf = firstLeaf(nonListChildren[0]);
+                    const endLeaf = lastLeaf(nonListChildren[nonListChildren.length - 1]);
+                    if (
+                        range.isPointInRange(startLeaf, 0) &&
+                        range.isPointInRange(endLeaf, nodeSize(endLeaf))
+                    ) {
+                        return true;
+                    }
                 }
-                const startLeaf = firstLeaf(nonListChildren[0]);
-                const endLeaf = lastLeaf(nonListChildren[nonListChildren.length - 1]);
-                return (
-                    range.isPointInRange(startLeaf, 0) &&
-                    range.isPointInRange(endLeaf, nodeSize(endLeaf))
-                );
             }
         },
     };

@@ -52,10 +52,21 @@ export class QWebPlugin extends Plugin {
         clipboard_content_processors: this.clearDataAttributes.bind(this),
 
         /** Predicates */
-        unremovable_node_predicates: isUnremovableQWebElement,
-        unsplittable_node_predicates: isUnsplittableQWebElement,
-        legit_empty_link_predicates: (linkEl) =>
-            linkEl.getAttributeNames().some((name) => name.startsWith("t-")),
+        removable_node_predicates: (node) => {
+            if (isUnremovableQWebElement(node)) {
+                return false;
+            }
+        },
+        splittable_node_predicates: (node) => {
+            if (isUnsplittableQWebElement(node)) {
+                return false;
+            }
+        },
+        legit_empty_link_predicates: (linkEl) => {
+            if (linkEl.getAttributeNames().some((name) => name.startsWith("t-"))) {
+                return true;
+            }
+        },
 
         system_attributes: QWEB_DATA_ATTRIBUTES,
     };

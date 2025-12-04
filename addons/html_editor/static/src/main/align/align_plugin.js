@@ -66,7 +66,11 @@ export class AlignPlugin extends Plugin {
         remove_all_formats_handlers: this.setAlignment.bind(this),
 
         /** Predicates */
-        has_format_predicates: (node) => closestBlock(node)?.style.textAlign,
+        has_format_predicates: (node) => {
+            if (closestBlock(node)?.style.textAlign) {
+                return true;
+            }
+        },
     };
 
     setup() {

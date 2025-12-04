@@ -40,7 +40,11 @@ export class CollaborationPlugin extends Plugin {
         set_attribute_overrides: this.setAttribute.bind(this),
 
         history_step_processors: this.processHistoryStep.bind(this),
-        unreversible_step_predicates: this.isUnreversibleStep.bind(this),
+        reversible_step_predicates: (step) => {
+            if (step.peerId !== this.peerId) {
+                return false;
+            }
+        },
     };
     static shared = [
         "getBranchIds",
@@ -76,12 +80,6 @@ export class CollaborationPlugin extends Plugin {
     onHistoryReset() {
         const firstStep = this.dependencies.history.getHistorySteps()[0];
         this.snapshots = [{ step: firstStep }];
-    }
-    /**
-     * @param {HistoryStep} step
-     */
-    isUnreversibleStep(step) {
-        return step.peerId !== this.peerId;
     }
     /**
      * @param {Node} node

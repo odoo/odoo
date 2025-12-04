@@ -69,12 +69,17 @@ export class ColorPlugin extends Plugin {
         color_combination_getters: getColorCombinationFromClass,
 
         /** Predicates */
-        has_format_predicates: [
-            (node) => hasColor(closestElement(node), "color"),
-            (node) => hasColor(closestElement(node), "backgroundColor"),
-        ],
-        format_class_predicates: (className) =>
-            TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),
+        has_format_predicates: (node) => {
+            const el = closestElement(node);
+            if (hasColor(el, "color") || hasColor(el, "backgroundColor")) {
+                return true;
+            }
+        },
+        format_class_predicates: (className) => {
+            if (TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className)) {
+                return true;
+            }
+        },
 
         /** Processors */
         normalize_processors: this.normalize.bind(this),
