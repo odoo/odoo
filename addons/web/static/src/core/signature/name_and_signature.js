@@ -103,6 +103,10 @@ export class NameAndSignature extends Component {
     async drawCurrentName() {
         const font = this.fonts[this.currentFont];
         const text = this.getCleanedName();
+        if (text.trim() === "") {
+            this.clear();
+            return;
+        }
         const canvas = this.signatureRef.el;
         const img = this.getSVGText(font, text, canvas.width, canvas.height);
         await this.printImage(img);
