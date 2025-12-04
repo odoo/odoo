@@ -94,13 +94,21 @@ class PeppolRegistration(models.TransientModel):
                 and not wizard.company_id._check_peppol_endpoint_number(warning=True)
             ):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
+                    'level': 'warning',
                     'message': _("The endpoint number might not be correct. "
                                 "Please check if you entered the right identification number."),
                 }
             if wizard.peppol_endpoint and not wizard.smp_registration:
                 peppol_warnings['company_already_on_smp'] = {
+                    'level': 'info',
                     'message': _("Your company is already registered on an Access Point (%s) for receiving invoices. "
                                  "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
+                }
+            if wizard.peppol_eas == '9925':
+                peppol_warnings['be_9925_warning'] = {
+                    'level': 'warning',
+                    'message': _("You are about to register with your VAT number. Make sure you register with your "
+                                "Company Registry (BCE/KBO) first to be compliant with the new regulation."),
                 }
             wizard.peppol_warnings = peppol_warnings or False
 
