@@ -115,7 +115,6 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
-        is_project_manager = self.env.user.has_group('project.group_project_manager')
         projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:
@@ -125,8 +124,7 @@ class SaleOrder(models.Model):
             projects |= order.project_id
             projects |= order.order_line.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
-            if not is_project_manager:
-                projects = projects._filtered_access('read')
+            projects = projects._filtered_access('read')
             order.project_ids = projects
             order.project_count = len(projects.filtered('active'))
 
