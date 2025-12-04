@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import assets
+from . import digest
 from . import base_partner_merge
 from . import html_text_processor
 from . import ir_actions_server

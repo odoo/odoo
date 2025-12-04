@@ -15,6 +15,7 @@ class DigestDigest(models.Model):
     kpi_livechat_response_value = fields.Float(digits=(16, 2), compute='_compute_kpi_livechat_response_value')
 
     def _compute_kpi_livechat_rating_value(self):
+        self._raise_if_not_member_of('im_livechat.im_livechat_group_manager')
         channels = self.env['discuss.channel'].search([('channel_type', '=', 'livechat')])
         start, end, __ = self._get_kpi_compute_parameters()
         domain = [
@@ -28,6 +29,7 @@ class DigestDigest(models.Model):
         )
 
     def _compute_kpi_livechat_conversations_value(self):
+        self._raise_if_not_member_of('im_livechat.im_livechat_group_manager')
         start, end, __ = self._get_kpi_compute_parameters()
         self.kpi_livechat_conversations_value = self.env['discuss.channel'].search_count([
             ('channel_type', '=', 'livechat'),
@@ -35,6 +37,7 @@ class DigestDigest(models.Model):
         ])
 
     def _compute_kpi_livechat_response_value(self):
+        self._raise_if_not_member_of('im_livechat.im_livechat_group_manager')
         start, end, __ = self._get_kpi_compute_parameters()
         response_time = self.env['im_livechat.report.channel'].sudo()._read_group([
             ('start_date', '>=', start),
@@ -42,8 +45,12 @@ class DigestDigest(models.Model):
         ], [], ['time_to_answer:avg'])
         self.kpi_livechat_response_value = response_time[0][0]
 
-    def _compute_kpis_actions(self, company, user):
-        res = super()._compute_kpis_actions(company, user)
-        res['kpi_livechat_conversations'] = 'im_livechat.im_livechat_report_operator_action'
-        res['kpi_livechat_response'] = 'im_livechat.im_livechat_report_channel_time_to_answer_action'
+    def _get_kpi_custom_settings(self, company, user):
+        res = super()._get_kpi_custom_settings(company, user)
+        res['kpi_action']['kpi_livechat_conversations'] = 'im_livechat.im_livechat_report_channel_action'
+        res['kpi_action']['kpi_livechat_response'] = 'im_livechat.im_livechat_report_channel_time_to_answer_action'
+        res['is_cross_company'].update(('kpi_livechat_rating', 'kpi_livechat_conversations', 'kpi_livechat_response'))
+        res['kpi_sequence']['kpi_livechat_rating'] = 9500
+        res['kpi_sequence']['kpi_livechat_conversations'] = 9505
+        res['kpi_sequence']['kpi_livechat_response'] = 9510
         return res

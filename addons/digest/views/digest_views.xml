@@ -20,17 +20,18 @@
             <form string="KPI Digest">
                 <field name="is_subscribed" invisible="1"/>
                 <header>
-                    <button type="object" name="action_send_manual" string="Send Now"
-                        class="oe_highlight"
-                        invisible="state == 'deactivated'" groups="base.group_system"/>
-                    <button type="object" name="action_deactivate" string="Deactivate"
-                        invisible="state == 'deactivated'" groups="base.group_system"/>
                     <button type="object" name="action_activate" string="Activate"
                         class="oe_highlight"
                         invisible="state == 'activated'" groups="base.group_system"/>
-                    <field name="state" widget="statusbar" statusbar_visible="0"/>
+                    <button type="object" name="action_send_manual" string="Send Now"
+                        class="oe_highlight"
+                        invisible="state == 'deactivated'" groups="base.group_system"/>
+                    <button type="object" name="action_launch_test_wizard" string="Test" class="btn-secondary"/>
+                    <button type="object" name="action_deactivate" string="Deactivate"
+                        invisible="state == 'deactivated'" groups="base.group_system"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Deactivated" bg_color="text-bg-danger" invisible="state != 'deactivated'"/>
                     <div class="oe_title">
                         <label for="name" string="Digest Title"/>
                         <h1>
@@ -53,7 +54,7 @@
                                     <field name="kpi_res_users_connected"/>
                                     <field name="kpi_mail_message_total"/>
                                 </group>
-                                <group name="kpi_sales"/>
+                                <group name="kpi_sales" invisible="True"/>
                                 <group name="custom" string="Custom" groups="base.group_system">
                                     <div colspan="2">
                                         <p>Want to add your own KPIs?<br />

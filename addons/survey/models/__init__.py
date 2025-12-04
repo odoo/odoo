@@ -3,6 +3,7 @@
 
 from . import badge
 from . import challenge
+from . import digest
 from . import ir_http
 from . import res_lang
 from . import res_partner

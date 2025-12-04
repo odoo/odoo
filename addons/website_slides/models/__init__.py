@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import digest
 from . import gamification_challenge
 from . import gamification_karma_tracking
 from . import slide_slide_partner  # decorated m2m, import before
