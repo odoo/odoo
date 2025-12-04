@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <odoo>
     <data noupdate="1">
         <record id="hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule">
@@ -18,6 +18,25 @@
             <field name="timing_start" eval="0.0"/>
             <field name="timing_stop" eval="24.0"/>
             <field name="ruleset_id" ref="hr_attendance_default_ruleset"/>
+        </record>
+
+        <record id="l10n_mx_overtime_double" model="hr.attendance.overtime.rule">
+            <field name="name">MX: Overtime Double</field>
+            <field name="base_off">quantity</field>
+            <field name="expected_hours_from_contract" eval="True"/>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">2.0</field>
+            <field name="ruleset_id" ref="l10n_mx_overtime_ruleset"/>
+        </record>
+
+        <record id="l10n_mx_overtime_triple" model="hr.attendance.overtime.rule">
+            <field name="name">MX: Overtime Triple</field>
+            <field name="base_off">quantity</field>
+            <field name="expected_hours_from_contract" eval="False"/>
+            <field name="expected_hours">9.0</field>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">3.0</field>
+            <field name="ruleset_id" ref="l10n_mx_overtime_ruleset"/>
         </record>
     </data>
 </odoo>

@@ -7,5 +7,12 @@
             <field name="company_id" eval="False"/>
             <field name="rate_combination_mode">max</field>
         </record>
+
+        <record id="l10n_mx_overtime_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">MX: Overtime Double &amp; Triple</field>
+            <field name="country_id" ref="base.mx"/>
+            <field name="company_id" eval="False"/>
+            <field name="rate_combination_mode">max</field>
+        </record>
     </data>
 </odoo>
