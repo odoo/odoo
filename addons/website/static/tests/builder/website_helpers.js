@@ -38,6 +38,7 @@ import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { WebsiteBuilder } from "@website/builder/website_builder";
+import { getTranslatedElements } from "./translated_elements_getter.hoot";
 
 class Website extends models.Model {
     _name = "website";
@@ -142,6 +143,8 @@ export async function setupWebsiteBuilder(
     const editAssetsLoaded = new Promise((resolve) => {
         resolveEditAssetsLoaded = () => resolve();
     });
+
+    onRpc("/website/get_translated_elements", () => getTranslatedElements());
 
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
