@@ -69,21 +69,17 @@
                             <field name="description" placeholder="Topics discussed in this group..." readonly="not is_editable"/>
                         </group>
                         <notebook>
-                            <page string="Privacy" name="privacy">
+                            <page string="Privacy" name="privacy" invisible="channel_type != 'channel'">
                                 <group class="o_label_nowrap">
-                                    <field name="group_public_id"
-                                        invisible="channel_type != 'channel' or parent_channel_id" readonly="not is_editable"/>
-                                    <field name="group_ids" widget="many2many_tags"
-                                        invisible="channel_type != 'channel'"
-                                        string="Auto Subscribe Groups" readonly="not is_editable"/>
+                                    <field name="access_type" widget="radio" invisible="parent_channel_id" readonly="not is_editable"/>
+                                    <field name="group_ids" filter_domain="[]" widget="many2many_tags" string="Auto Subscribe Groups" readonly="not is_editable"/>
                                 </group>
                             </page>
                             <page string="Members" name="members">
-                                <field name="channel_type" invisible="1"/>
                                 <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
                                     <list string="Members" editable="bottom">
                                         <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
-                                        <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
+                                        <field name="guest_id" readonly="id or partner_id" required="not partner_id" column_invisible="parent.access_type != 'public'"/>
                                     </list>
                                 </field>
                             </page>

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from contextlib import suppress
 
 from odoo import api, fields, models
 from odoo.fields import Domain
@@ -93,8 +94,6 @@ class ResPartner(models.Model):
         if channel_id:
             channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
             domain &= Domain("channel_ids", "not in", channel.id)
-            if channel.group_public_id:
-                domain &= Domain("user_ids.all_group_ids", "in", channel.group_public_id.id)
         query = self._search(domain, limit=limit)
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
@@ -115,26 +114,31 @@ class ResPartner(models.Model):
     @api.readonly
     @api.model
     def get_mention_suggestions_from_channel(self, channel_id, search, limit=8):
-        """Return 'limit'-first partners' such that the name or email matches a 'search' string.
-        Prioritize partners that are also (internal) users, and then extend the research to all partners.
-        Only members of the given channel are returned.
+        """Return 'limit'-first partners' such that the name or email
+        matches a 'search' string. Prioritize partners that are also
+        (internal) users, and then extend the research to all partners
+        if the channel access type allows it.
+
+        :return: Partners data (as per returned by `_to_store()`).
         """
         channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             return []
-        domain = Domain([
-            self._get_mention_suggestions_domain(search),
-            ("channel_ids", "in", (channel.parent_channel_id | channel).ids)
-        ])
-        extra_domain = Domain([
-            ('user_ids', '!=', False),
-            ('user_ids.active', '=', True),
-            ('partner_share', '=', False),
-        ])
-        allowed_group = (channel.parent_channel_id or channel).group_public_id
-        if allowed_group:
-            extra_domain &= Domain("user_ids.all_group_ids", "in", allowed_group.id)
-        partners = self._search_mention_suggestions(domain, limit, extra_domain)
+        domain = Domain(
+            [
+                self._get_mention_suggestions_domain(search),
+                ("channel_ids", "in", (channel.parent_channel_id | channel).ids),
+            ],
+        )
+        partners = self._search_mention_suggestions(
+            domain,
+            limit,
+            extra_domain=(
+                Domain.FALSE
+                if channel.access_type == "invite_only"
+                else Domain("user_ids.active", "=", True) & Domain("partner_share", "=", False)
+            ),
+        )
         members_domain = [
             ("channel_id", "in", (channel.parent_channel_id | channel).ids),
             ("partner_id", "in", partners.ids)
@@ -149,13 +153,7 @@ class ResPartner(models.Model):
                 res.from_method("_store_mention_fields"),
             ),
         )
-        store.add(channel, ["group_public_id"])
-        if allowed_group:
-            for p in partners:
-                store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
-        try:
+        with suppress(AccessError):
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
-            store.add(roles, ["name"])
-        except AccessError:
-            pass
+            store.add(roles, "name")
         return store.get_result()

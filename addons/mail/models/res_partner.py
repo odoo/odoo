@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from contextlib import suppress
 
 from odoo import _, api, fields, models, tools
 from odoo.fields import Domain
@@ -298,11 +299,9 @@ class ResPartner(models.Model):
                 res.from_method("_store_mention_fields"),
             ),
         )
-        try:
+        with suppress(AccessError):
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
             store.add(roles, "name")
-        except AccessError:
-            pass
         return store.get_result()
 
     @api.model

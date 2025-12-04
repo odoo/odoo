@@ -5,9 +5,9 @@
             <field name="name">Alex</field>
         </record>
         <record model="discuss.channel" id="mail.channel_public_community_demo">
+            <field name="access_type">public</field>
             <field name="name">Public Community</field>
             <field name="description">A space for engaging discussions among employees, partners, and the public.</field>
-            <field name="group_public_id" eval="False"/>
         </record>
         <record model="mail.message" id="mail.channel_public_community_message_0_demo">
             <field name="model">discuss.channel</field>

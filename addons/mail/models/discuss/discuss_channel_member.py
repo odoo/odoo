@@ -207,6 +207,7 @@ class DiscussChannelMember(models.Model):
     def create(self, vals_list):
         if self.env.context.get("mail_create_bypass_create_check") is self._bypass_create_check:
             self = self.sudo()
+        channel = self.env["discuss.channel"]
         for vals in vals_list:
             if "channel_id" not in vals:
                 raise UserError(
@@ -227,6 +228,7 @@ class DiscussChannelMember(models.Model):
             )
         }
         res = super().create(vals_list)
+
         # help the ORM to detect changes
         res.partner_id.invalidate_recordset(["channel_ids"])
         res.guest_id.invalidate_recordset(["channel_ids"])

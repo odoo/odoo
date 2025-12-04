@@ -2,7 +2,6 @@ import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 
-import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 
@@ -64,7 +63,6 @@ export class Thread extends Record {
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
-    group_public_id = fields.One("res.groups");
     attachments = fields.Many("ir.attachment", {
         /**
          * @param {import("models").Attachment} a1
@@ -248,15 +246,6 @@ export class Thread extends Record {
             this.composerDisabledonUpdate();
         },
     });
-
-    get accessRestrictedToGroupText() {
-        if (!this.group_public_id?.full_name) {
-            return false;
-        }
-        return _t('Access restricted to group "%(groupFullName)s"', {
-            groupFullName: this.group_public_id.full_name,
-        });
-    }
 
     get busChannel() {
         return `${this.model}_${this.id}`;

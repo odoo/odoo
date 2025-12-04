@@ -7,10 +7,10 @@
             <field name="description">General announcements for all employees.</field>
         </record>
 
-        <record model="discuss.channel" id="mail.channel_admin">
-            <field name="name">Administrators</field>
+        <record model="discuss.channel" id="mail.channel_invite_only">
+            <field name="access_type">invite_only</field>
             <field name="description">General channel for administrators.</field>
-            <field name="group_public_id" ref="base.group_system"/>
+            <field name="name">Administrators</field>
         </record>
 
         <!-- notify all employees of module installation -->
@@ -38,14 +38,14 @@
             <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
         </record>
 
-        <record model="discuss.channel.member" id="channel_member_channel_admin_partner_admin">
+        <record model="discuss.channel.member" id="channel_member_channel_invite_only_partner_admin">
             <field name="partner_id" ref="base.partner_admin"/>
-            <field name="channel_id" ref="mail.channel_admin"/>
+            <field name="channel_id" ref="mail.channel_invite_only"/>
             <field name="is_favorite" eval="True"/>
         </record>
 
         <!-- link group after creating the members to avoid autosubscribe too early -->
-        <record model="discuss.channel" id="mail.channel_admin">
+        <record model="discuss.channel" id="mail.channel_invite_only">
             <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
     </data>

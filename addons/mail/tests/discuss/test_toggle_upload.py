@@ -8,7 +8,7 @@ from odoo.tools import file_open
 class TestToggleUpload(HttpCase):
     def test_upload_allowed(self):
         self.authenticate(None, None)
-        channel = self.env["discuss.channel"].create({"name": "General", "group_public_id": None})
+        channel = self.env["discuss.channel"].create({"access_type": "public", "name": "General"})
         guest = self.env["mail.guest"].create({"name": "Guest"})
         channel.write({"channel_member_ids": [Command.create({"guest_id": guest.id})]})
         with file_open("addons/web/__init__.py") as file:

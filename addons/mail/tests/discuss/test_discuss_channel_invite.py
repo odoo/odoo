@@ -73,14 +73,10 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             ._create_group(partners_to=john.partner_id.ids)
         )
         public_channel = self.env["discuss.channel"].create(
-            {"name": "public community", "group_public_id": False}
+            {"access_type": "public", "name": "public community"}
         )
         private_channel = self.env["discuss.channel"].create(
-            {
-                "name": "user restricted channel",
-                "channel_type": "channel",
-                "group_public_id": self.env.ref("base.group_user").id,
-            }
+            {"access_type": "internal", "name": "user restricted channel"},
         )
         for channel in [chat, private_channel]:
             with self.assertRaises(UserError) as exc:
@@ -148,15 +144,11 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         )
         group_chat._add_members(guests=alfred_guest)
         public_channel = self.env["discuss.channel"].create(
-            {"name": "public community", "group_public_id": False},
+            {"access_type": "public", "name": "public community"},
         )
         public_channel._add_members(guests=alfred_guest)
         private_channel = self.env["discuss.channel"].create(
-            {
-                "name": "user restricted channel",
-                "channel_type": "channel",
-                "group_public_id": self.env.ref("base.group_user").id,
-            },
+            {"access_type": "internal", "name": "user restricted channel"},
         )
         cases = [
             *product(

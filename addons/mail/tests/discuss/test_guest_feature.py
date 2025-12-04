@@ -10,7 +10,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         partner = self.env["res.partner"].create({"name": "John"})
         channel = self.env["discuss.channel"]._create_channel(
-            group_id=None, name="General"
+            access_type="public", name="General"
         )
         channel._add_members(guests=guest, partners=partner)
         channel.message_post(
@@ -45,7 +45,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
     def test_subscribe_to_discuss_channel(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         channel = self.env["discuss.channel"]._create_channel(
-            group_id=None, name="General"
+            access_type="public", name="General"
         )
         channel._add_members(guests=guest)
         self._reset_bus()

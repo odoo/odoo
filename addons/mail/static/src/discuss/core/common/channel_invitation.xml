@@ -58,7 +58,7 @@
                         <i class="fa fa-copy"/>
                     </button>
                 </div>
-                <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.channel.accessRestrictedToGroupText"/>
+                <div t-if="props.channel?.access_type === 'internal'" class="mt-2 text-muted smaller mx-1" t-esc="props.channel.accessRestrictedText"/>
             </div>
         </div>
     </t>

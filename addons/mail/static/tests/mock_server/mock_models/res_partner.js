@@ -6,6 +6,7 @@ import {
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
+import { Domain } from "@web/core/domain";
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
@@ -124,22 +125,16 @@ export class ResPartner extends webModels.ResPartner {
 
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResUsers} */
-        const ResUsers = this.env["res.users"];
         /** @type {import("mock_models").DiscussChannel} */
         const channel = this.env["discuss.channel"].browse(channel_id)[0];
         const searchLower = search.toLowerCase();
-
-        const extraDomain = [
-            ["user_ids", "!=", false],
-            ["active", "=", true],
-            ["partner_share", "=", false],
-        ];
-        const parent_channel = this.browse(channel.parent_channel_id);
-        const allowed_group = parent_channel?.group_public_id ?? channel.group_public_id;
-        if (allowed_group) {
-            extraDomain.push(["group_ids", "in", allowed_group]);
-        }
+        const extraDomain =
+            channel.access_type === "invite_only"
+                ? Domain.FALSE
+                : [
+                      ["user_ids.active", "!=", false],
+                      ["partner_share", "=", false],
+                  ];
         const baseDomain = search
             ? ["|", ["name", "ilike", searchLower], ["email", "ilike", searchLower]]
             : [];
@@ -154,11 +149,6 @@ export class ResPartner extends webModels.ResPartner {
             ["channel_id", "in", [channel.id, channel.parent_channel_id]],
             ["partner_id", "in", partners],
         ]);
-        const users = ResUsers.search([["partner_id", "in", partners]]).reduce((map, userId) => {
-            const [user] = ResUsers.browse(userId);
-            map[user.partner_id] = user;
-            return map;
-        }, {});
         for (const memberId of memberIds) {
             const [member] = DiscussChannelMember.browse(memberId);
             store.add(this.browse(member.partner_id));
@@ -168,13 +158,10 @@ export class ResPartner extends webModels.ResPartner {
             );
         }
         for (const partnerId of partners) {
-            const data = {
-                name: users[partnerId]?.name,
-                group_ids: users[partnerId]?.group_ids.includes(allowed_group)
-                    ? allowed_group
-                    : undefined,
-            };
-            store.add(this.browse(partnerId), data);
+            store.add(this.browse(partnerId), [
+                "name",
+                mailDataHelpers.Store.one("main_user_id", ["share"]),
+            ]);
         }
         const roleIds = this.env["res.role"].search(
             [["name", "ilike", searchLower || ""]],

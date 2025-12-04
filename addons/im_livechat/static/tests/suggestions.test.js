@@ -55,8 +55,8 @@ test("Cannot mention other channels in a livechat", async () => {
             ],
         },
         {
+            access_type: "public",
             channel_type: "channel",
-            group_public_id: false,
             name: "Link and Zelda",
         },
     ]);

@@ -33,14 +33,17 @@ class ResUsers(models.Model):
         return super().unlink()
 
     def _unsubscribe_from_non_public_channels(self):
-        """This method un-subscribes users from group restricted channels. Main purpose
+        """This method un-subscribes users from restricted channels. Main purpose
         of this method is to prevent sending internal communication to archived / deleted users.
         """
         domain = [("partner_id", "in", self.partner_id.ids)]
         # sudo: discuss.channel.member - removing member of other users based on channel restrictions
         current_cm = self.env["discuss.channel.member"].sudo().search(domain)
         current_cm.filtered(
-            lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
+            lambda cm: (
+                cm.channel_id.channel_type == "channel"
+                and cm.channel_id.access_type != "public"
+            )
         ).unlink()
 
     def _store_init_global_fields(self, res: Store.FieldList):

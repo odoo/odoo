@@ -40,7 +40,7 @@ class TestAvatarAcl(HttpCase):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         channel = self.env["discuss.channel"].create(
             {
-                "group_public_id": None,
+                "access_type": "public",
                 "name": "Test channel",
             }
         )
@@ -79,10 +79,7 @@ class TestAvatarAcl(HttpCase):
             }
         )
         channel = self.env["discuss.channel"].create(
-            {
-                "group_public_id": None,
-                "name": "Test channel",
-            }
+            {"access_type": "public", "name": "Test channel"},
         )
         channel._add_members(guests=guest, users=testuser)
         res = self.url_open(url=self.get_avatar_url(testuser.partner_id))
@@ -111,10 +108,7 @@ class TestAvatarAcl(HttpCase):
             }
         )
         channel = self.env["discuss.channel"].create(
-            {
-                "group_public_id": None,
-                "name": "Test channel",
-            }
+            {"access_type": "public", "name": "Test channel"},
         )
         channel._add_members(users=testuser | testuser2)
         res = self.url_open(url=self.get_avatar_url(testuser2.partner_id))
@@ -134,10 +128,7 @@ class TestAvatarAcl(HttpCase):
         self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
         guest2 = self.env["mail.guest"].create({"name": "Guest 2"})
         channel = self.env["discuss.channel"].create(
-            {
-                "group_public_id": None,
-                "name": "Test channel",
-            }
+            {"access_type": "public", "name": "Test channel"},
         )
         channel._add_members(guests=guest | guest2)
         res = self.url_open(url=self.get_avatar_url(guest2))
@@ -190,10 +181,7 @@ class TestAvatarAcl(HttpCase):
             }
         )
         channel = self.env["discuss.channel"].create(
-            {
-                "group_public_id": None,
-                "name": "Test channel",
-            }
+            {"access_type": "public", "name": "Test channel"},
         )
         channel._add_members(users=testuser | testuser2)
         res = self.url_open(url=self.get_avatar_url(testuser2.partner_id))

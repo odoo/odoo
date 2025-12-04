@@ -111,6 +111,7 @@ test("should log notification when channel/thread is renamed", async () => {
         parent_channel_id: channelId,
         create_uid: serverState.userId,
     });
+
     onRpc("discuss.channel", "channel_rename", ({ route }) => expect.step(route));
     await start();
     await openDiscuss(channelId);
@@ -1731,25 +1732,24 @@ test("'Invite People' button should not be displayed in the topbar of mailboxes"
     await contains("button[title='Invite People']", { count: 0 });
 });
 
-test("Thread avatar image is displayed in top bar of channels of type 'channel' limited to a group", async () => {
+test("Thread avatar image is displayed in top bar of internal channels", async () => {
     const pyEnv = await startServer();
-    const groupId = pyEnv["res.groups"].create({ name: "testGroup" });
     const channelId = pyEnv["discuss.channel"].create({
+        access_type: "internal",
         channel_type: "channel",
         name: "string",
-        group_public_id: groupId,
     });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar");
 });
 
-test("Thread avatar image is displayed in top bar of channels of type 'channel' not limited to any group", async () => {
+test("Thread avatar image is displayed in top bar of public channels", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
+        access_type: "public",
         channel_type: "channel",
         name: "string",
-        group_public_id: false,
     });
     await start();
     await openDiscuss(channelId);

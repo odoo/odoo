@@ -212,20 +212,20 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.user_root = self.env.ref('base.user_root')
         # create public channels
         self.channel_channel_public_1 = Channel._create_channel(
-            name="public channel 1", group_id=None
+            access_type="public", name="public channel 1"
         )
         self.channel_channel_public_1._add_members(users=self.users[0] | self.users[2] | self.users[3] | self.users[4] | self.users[8])
         self.channel_channel_public_2 = Channel._create_channel(
-            name="public channel 2", group_id=None
+            access_type="public", name="public channel 2"
         )
         self.channel_channel_public_2._add_members(users=self.users[0] | self.users[2] | self.users[4] | self.users[7] | self.users[9])
         # create group-restricted channels
         self.channel_channel_group_1 = Channel._create_channel(
-            name="group restricted channel 1", group_id=self.env.ref("base.group_user").id
+            access_type="internal", name="group restricted channel 1"
         )
         self.channel_channel_group_1._add_members(users=self.users[0] | self.users[2] | self.users[3] | self.users[6] | self.users[12])
         self.channel_channel_group_2 = Channel._create_channel(
-            name="group restricted channel 2", group_id=self.env.ref("base.group_user").id
+            access_type="internal", name="group restricted channel 2"
         )
         self.channel_channel_group_2._add_members(users=self.users[0] | self.users[2] | self.users[6] | self.users[7] | self.users[13])
         # create chats
@@ -646,6 +646,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
+                "access_type": "internal",
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.user_root.id,
@@ -655,7 +656,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
                 "group_ids": channel.group_ids.ids,
-                "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
@@ -668,6 +668,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1:
             return {
+                "access_type": "public",
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -677,7 +678,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
                 "group_ids": [],
-                "group_public_id": False,
                 "id": channel.id,
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
@@ -690,6 +690,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2:
             return {
+                "access_type": "public",
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -699,7 +700,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
                 "group_ids": [],
-                "group_public_id": False,
                 "id": channel.id,
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
@@ -712,6 +712,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1:
             return {
+                "access_type": "internal",
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -721,7 +722,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
                 "group_ids": [],
-                "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", [member_0.id]]],
                 "is_editable": True,
@@ -737,6 +737,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2:
             return {
+                "access_type": "internal",
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -746,7 +747,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
                 "group_ids": [],
-                "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,

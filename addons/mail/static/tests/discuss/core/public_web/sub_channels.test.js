@@ -223,23 +223,22 @@ test("sub thread is available for channel and group, not for chat", async () => 
 
 test("mention suggestions in thread match channel restrictions", async () => {
     const pyEnv = await startServer();
-    const groupId = pyEnv["res.groups"].create({ name: "testGroup" });
     const channelId = pyEnv["discuss.channel"].create({
+        access_type: "internal",
         name: "General",
-        group_public_id: groupId,
     });
     pyEnv["discuss.channel"].create({
+        access_type: "internal",
         name: "Thread",
         parent_channel_id: channelId,
     });
-    pyEnv["res.users"].write(serverState.userId, { group_ids: [Command.link(groupId)] });
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { email: "p1@odoo.com", name: "p1" },
         { email: "p2@odoo.com", name: "p2" },
     ]);
     pyEnv["res.users"].create([
-        { partner_id: partnerId_1, group_ids: [Command.link(groupId)] },
-        { partner_id: partnerId_2 },
+        { partner_id: partnerId_1 },
+        { partner_id: partnerId_2, share: true },
     ]);
     await start();
     await openDiscuss(channelId);

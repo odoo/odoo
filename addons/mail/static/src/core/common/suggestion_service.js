@@ -315,8 +315,8 @@ export class SuggestionService {
                 cleanTerm(channel.displayName).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
-            const isPublicChannel1 = c1.channel_type === "channel" && !c2.group_public_id;
-            const isPublicChannel2 = c2.channel_type === "channel" && !c2.group_public_id;
+            const isPublicChannel1 = c1.channel_type === "channel" && c1.access_type === "public";
+            const isPublicChannel2 = c2.channel_type === "channel" && c2.access_type === "public";
             if (isPublicChannel1 && !isPublicChannel2) {
                 return -1;
             }

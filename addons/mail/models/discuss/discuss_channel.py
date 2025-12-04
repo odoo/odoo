@@ -67,6 +67,23 @@ class DiscussChannel(models.Model):
     # description
     name = fields.Char('Name', required=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
+    access_type = fields.Selection(
+        compute="_compute_access_type",
+        help=(
+            "Controls who can access this channel:\n"
+            "- All internal users: Any internal user can access the channel.\n"
+            "- Invited members only: Only explicitly invited, internal users, can access the channel.\n"
+            "- Public: Anyone with the link can access the channel."
+        ),
+        recursive=True,
+        selection=[
+            ("invite_only", "Invited members only"),
+            ("internal", "All internal users"),
+            ("public", "Anyone with the link"),
+        ],
+        store=True,
+        string="Visibility",
+    )
     channel_type = fields.Selection([
         ('chat', 'Chat'),
         ('channel', 'Channel'),
@@ -114,7 +131,6 @@ class DiscussChannel(models.Model):
              "if necessary.")
     # access
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
-    group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', recursive=True, readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
     channel_name_member_ids = fields.One2many(
         "discuss.channel.member",
@@ -129,12 +145,13 @@ class DiscussChannel(models.Model):
         'UNIQUE(uuid)',
         'The channel UUID must be unique',
     )
-    _group_public_id_check = models.Constraint(
-        "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
-        'Group authorization and group auto-subscription are only supported on channels.',
+    _access_type_check = models.Constraint(
+        "CHECK (channel_type = 'channel' OR access_type IS NULL)",
+        'Access type is only supported on channels.',
     )
 
     # CONSTRAINTS
+
     @api.constrains("from_message_id")
     def _constraint_from_message_id(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
@@ -177,14 +194,42 @@ class DiscussChannel(models.Model):
             if len(ch.channel_member_ids) > 2:
                 raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
 
-    @api.constrains('group_public_id', 'group_ids')
+    @api.constrains("group_ids")
     def _constraint_group_id_channel(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
-        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
-        if failing_channels:
-            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+        if failing_channels := self.sudo().filtered(
+            lambda channel: channel.channel_type != "channel" and channel.group_ids
+        ):
+            raise ValidationError(
+                self.env._(
+                    "For %(channels)s, channel_type should be 'channel' to have the group auto-subscription.",
+                    channels=", ".join([ch.name for ch in failing_channels]),
+                )
+            )
+
+    # ONCHANGES
+
+    @api.onchange("access_type")
+    def _onchange_access_type(self):
+        if self.access_type in ("internal", "invite-only"):
+            user_group = self.env.ref("base.group_user")
+            self.group_ids &= self.group_ids.filtered(
+                lambda g: g.implied_ids & user_group,
+            )
+            self.channel_member_ids &= self.channel_member_ids.filtered(
+                lambda m: m.partner_id and not m.partner_id.partner_share,
+            )
 
     # COMPUTE / INVERSE
+
+    @api.depends("channel_type", "parent_channel_id.access_type")
+    def _compute_access_type(self):
+        channels = self.filtered(lambda c: c.channel_type == "channel")
+        (self - channels).access_type = None
+        for channel in channels:
+            if channel.access_type:
+                continue
+            channel.access_type = channel.parent_channel_id.access_type or "internal"
 
     @api.depends("channel_name_member_ids", "name")
     def _compute_display_name(self):
@@ -229,7 +274,7 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.channel_name_member_ids = channel_id_to_member_ids.get(channel.id)
 
-    @api.depends("channel_type", "is_member", "group_public_id")
+    @api.depends("access_type", "channel_type", "is_member")
     @api.depends_context("uid")
     def _compute_is_editable(self):
         for channel in self:
@@ -359,16 +404,6 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.message_count = message_count_by_channel_id.get(channel.id, 0)
 
-    @api.depends("channel_type", "parent_channel_id.group_public_id")
-    def _compute_group_public_id(self):
-        channels = self.filtered(lambda channel: channel.channel_type == "channel")
-        for channel in channels:
-            if channel.parent_channel_id:
-                channel.group_public_id = channel.parent_channel_id.group_public_id
-            elif not channel.group_public_id:
-                channel.group_public_id = self.env.ref("base.group_user")
-        (self - channels).group_public_id = None
-
     @api.depends('uuid')
     def _compute_invitation_url(self):
         for channel in self:
@@ -468,11 +503,11 @@ class DiscussChannel(models.Model):
                     channels=self.mapped("name"),
                 )
             )
-        if "group_public_id" in vals:
+        if "access_type" in vals:
             if failing_channels := self.filtered(lambda channel: channel.parent_channel_id):
                 raise UserError(
                     self.env._(
-                        "Cannot change authorized group of sub-channel: %(channels)s.",
+                        "Cannot change access type of sub-channel: %(channels)s.",
                         channels=failing_channels.mapped("name"),
                     )
                 )
@@ -490,7 +525,15 @@ class DiscussChannel(models.Model):
                             channels=", ".join(failing_channels.mapped("name")),
                         )
                     )
+        previous_channels_by_access = defaultdict(
+            self.env["discuss.channel"].browse, self.grouped("access_type")
+        )
         result = super().write(vals)
+        new_invite_only = (
+            self.filtered(lambda c: c.access_type == "invite_only" and not c.self_member_id)
+            - previous_channels_by_access["invite_only"]
+        )
+        new_invite_only._add_members(users=self.env.user)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
@@ -503,8 +546,7 @@ class DiscussChannel(models.Model):
         res[None].one("discuss_category_id", ["name", "sequence"], sudo=True)
         res[None].extend(["channel_type", "create_uid", "default_display_mode"])
         res[None].attr("description", predicate=is_channel_or_group)
-        res[None].many("group_ids", [], predicate=is_channel)
-        res[None].one("group_public_id", ["full_name"], predicate=is_channel)
+        res[None].attr("access_type", predicate=is_channel)
         res[None].extend(["last_interest_dt", "member_count", "name", "uuid"])
 
     # ------------------------------------------------------------
@@ -964,23 +1006,19 @@ class DiscussChannel(models.Model):
         return super()._get_allowed_message_params() | {"special_mentions", "parent_id"}
 
     def _get_allowed_message_partner_ids(self, partner_ids):
-        """Ensure only partners having access to the channel can be mentioned."""
-        partners = self.env["res.partner"].browse(partner_ids)
-        if self.channel_type == "channel":
-            if self.group_public_id:
-                partners = partners.filtered(
-                    lambda p: p.user_ids.all_group_ids & self.group_public_id,
-                )
-        else:
-            partners = (
-                self.env["discuss.channel.member"]
-                .search_fetch(
-                    [("channel_id", "=", self.id), ("partner_id", "in", partner_ids)],
-                    ["partner_id"],
-                )
-                .partner_id
+        """Ensure only partners having access to the channel can be
+        mentioned."""
+        domain = Domain("id", "in", partner_ids)
+        if self.access_type == "internal":
+            domain &= Domain("partner_share", "=", False)
+        elif self.access_type == "invite_only" or self.channel_type != "channel":
+            member_query = self.env["discuss.channel.member"]._search(
+                [("channel_id", "=", self.id), ("partner_id", "in", partner_ids)],
             )
-        return partners.ids
+            domain &= Domain(
+                "channel_member_ids", "in", member_query.subselect("discuss_channel_member.id")
+            )
+        return self.env["res.partner"].with_context(active_test=False).search_fetch(domain).ids
 
     def message_post(self, *, message_type="notification", partner_ids=None, **kwargs):
         # sudo: discuss.channel - write to discuss.channel is not accessible for most users
@@ -1219,6 +1257,7 @@ class DiscussChannel(models.Model):
         prefetch_store.add(all_members, "_store_member_fields")
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+        res.attr("access_type", predicate=is_channel)
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
         res.one("discuss_category_id", ["name", "sequence"], sudo=True)
@@ -1235,8 +1274,6 @@ class DiscussChannel(models.Model):
         res.attr("description", predicate=is_channel_or_group)
         res.one("from_message_id", "_store_message_fields", predicate=is_channel_or_group)
         # sudo: we are reading only the ids (comodel is inaccessible)
-        res.many("group_ids", [], predicate=is_channel, sudo=True)
-        res.one("group_public_id", ["full_name"], predicate=is_channel)
         res.many("invited_member_ids", "_store_avatar_card_fields", mode="ADD")
         res.attr("last_interest_dt")
         res.attr("member_count")
@@ -1369,9 +1406,7 @@ class DiscussChannel(models.Model):
         store.bus_send()
 
     def _allow_invite_by_email(self):
-        return self.channel_type == "group" or (
-            self.channel_type == "channel" and not self.group_public_id
-        )
+        return self.channel_type == "group" or self.access_type == "public"
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification
@@ -1450,24 +1485,22 @@ class DiscussChannel(models.Model):
         self._add_members(users=self.env.user)
 
     @api.model
-    def _create_channel(self, name, group_id):
-        """ Create a channel and add the current partner, broadcast it (to make the user directly
-            listen to it when polling)
-            :param name : the name of the channel to create
-            :param group_id : the group allowed to join the channel.
-            :return dict : channel header
+    def _create_channel(self, name, access_type):
+        """Create a channel, add the current partner as a member.
+
+        :param access_type: Channel access type: 'internal', 'invite_only' or 'public'.
+        :param name: Name of the channel to create.
+        :return: The created channel record.
+
         """
-        # create the channel
-        vals = {
-            'channel_type': 'channel',
-            'name': name,
-        }
-        new_channel = self.create(vals)
-        group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
-        new_channel.group_public_id = group.id if group else None
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
-        new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-        return new_channel
+        channel = self.create({"access_type": access_type, "channel_type": "channel", "name": name})
+        body = Markup('<div class="o_mail_notification">%s</div>') % self.env._(
+            "created this channel.",
+        )
+        channel.message_post(
+            body=body, message_type="notification", subtype_xmlid="mail.mt_comment"
+        )
+        return channel
 
     @api.model
     def _create_group(self, partners_to, default_display_mode=False, name=''):
@@ -1544,15 +1577,15 @@ class DiscussChannel(models.Model):
     @api.readonly
     @api.model
     def get_mention_suggestions(self, search, limit=8):
-        """ Return 'limit'-first channels' name, channel_type and group_public_id fields such that the
-            name matches a 'search' string. Exclude channels of type chat (DM) and group.
+        """Return 'limit'-first channels' name, channel_type and
+        access_type fields such that the name matches a 'search' string.
+        Exclude channels of type chat (DM) and group.
         """
         store = Store().add(
             self.search([("name", "ilike", search), ("channel_type", "=", "channel")], limit=limit),
             lambda res: (
-                res.extend(["name", "channel_type"]),
-                res.one("group_public_id", ["full_name"]),
-                res.attr("parent_channel_id"),
+                res.extend(["acecss_type", "channel_type", "name"]),
+                res.one("parent_channel_id", ["access_type"]),
             ),
         )
         return store.get_result()

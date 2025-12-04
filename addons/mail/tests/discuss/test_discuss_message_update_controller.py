@@ -8,7 +8,7 @@ class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
     def test_message_update_guest_as_owner(self):
         """Test only admin user and message author can update the message content in a channel."""
         channel = self.env["discuss.channel"].create(
-            {"group_public_id": None, "name": "public channel"}
+            {"access_type": "public", "name": "public channel"},
         )
         channel._add_members(guests=self.guest)
         # sudo: discuss.channel: posting a message as guest in a test is acceptable
@@ -32,7 +32,7 @@ class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
     def test_message_update_public_channel(self):
         """Test only admin user can update the message content of other authors in a channel."""
         channel = self.env["discuss.channel"].create(
-            {"group_public_id": None, "name": "public channel"}
+            {"access_type": "public", "name": "public channel"}
         )
         message = channel.message_post(
             body=self.message_body,

@@ -10,7 +10,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
     def test_attachment_allowed_upload_public_channel(self):
         """Test access to upload an attachment on an allowed upload public channel"""
         channel = self.env["discuss.channel"].create(
-            {"group_public_id": None, "name": "public channel"}
+            {"access_type": "public", "name": "public channel"},
         )
         channel._add_members(guests=self.guest)
         channel = channel.with_context(guest=self.guest)

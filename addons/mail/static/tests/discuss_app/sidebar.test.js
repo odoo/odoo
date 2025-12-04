@@ -734,9 +734,9 @@ test("sidebar channels should be ordered case insensitive alphabetically", async
 test("sidebar: public channel rendering", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        name: "channel1",
+        access_type: "public",
         channel_type: "channel",
-        group_public_id: false,
+        name: "channel1",
     });
     await start();
     await openDiscuss();

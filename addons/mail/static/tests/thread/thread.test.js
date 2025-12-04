@@ -38,11 +38,7 @@ defineMailModels();
 
 test("dragover files on thread with composer", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        group_public_id: false,
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel", name: "General" });
     const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
@@ -52,11 +48,7 @@ test("dragover files on thread with composer", async () => {
 
 test("load more messages from channel (auto-load on scroll)", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        group_public_id: false,
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel", name: "General" });
     let newestMessageId;
     for (let i = 0; i <= 60; i++) {
         newestMessageId = pyEnv["mail.message"].create({
@@ -83,11 +75,7 @@ test("load more messages from channel (auto-load on scroll)", async () => {
 
 test("show message subject when subject is not the same as the thread name", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        group_public_id: false,
-        name: "General",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel", name: "General" });
     pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
@@ -103,7 +91,6 @@ test("do not show message subject when subject is the same as the thread name", 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
-        group_public_id: false,
         name: "Salutations, voyageur",
     });
     pyEnv["mail.message"].create({
@@ -528,8 +515,8 @@ test("mention 2 different channels that have the same name", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         {
+            access_type: "public",
             channel_type: "channel",
-            group_public_id: false,
             name: "my channel",
         },
         {

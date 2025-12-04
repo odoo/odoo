@@ -25,12 +25,11 @@ const suggestionServicePatch = {
      * @override
      */
     getPartnerSuggestions(thread) {
+        const channel = thread?.channel;
         const isNonPublicChannel =
-            thread &&
-            (thread.channel?.channel_type === "group" ||
-                thread.channel?.channel_type === "chat" ||
-                (thread.channel?.channel_type === "channel" &&
-                    (thread.parent_channel_id || thread).group_public_id));
+            channel &&
+            (["group", "chat"].includes(channel.channel_type) ||
+                ["internal", "invite_only"].includes(channel.access_type));
         if (isNonPublicChannel) {
             // Only return the channel members when in the context of a
             // group restricted channel. Indeed, the message with the mention
@@ -39,15 +38,18 @@ const suggestionServicePatch = {
             // mentioned partner.
             const partnersById = new Map(
                 [
-                    ...(thread.channel?.channel_member_ids ?? []),
-                    ...(thread.parent_channel_id?.channel?.channel_member_ids ?? []),
+                    ...(channel.channel_member_ids ?? []),
+                    ...(channel.parent_channel_id?.channel?.channel_member_ids ?? []),
                 ]
                     .filter((m) => m.partner_id)
                     .map((m) => [m.partner_id.id, m.partner_id])
             );
-            if (thread.channel?.channel_type === "channel") {
-                const group = (thread.parent_channel_id || thread).group_public_id;
-                group.partners.forEach((partner) => partnersById.set(partner.id, partner));
+            if (channel.access_type === "internal") {
+                Object.values(this.store["res.partner"].records).forEach((partner) => {
+                    if (partner.main_user_id?.share === false && !partner.eq(this.store.odoobot)) {
+                        partnersById.set(partner.id, partner);
+                    }
+                });
             }
             return Array.from(partnersById.values());
         } else {

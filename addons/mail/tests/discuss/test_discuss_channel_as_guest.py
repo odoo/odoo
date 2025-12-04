@@ -28,7 +28,9 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         )
         guest = self.env['mail.guest'].create({'name': 'Guest Mario'})
 
-        self.channel = self.env['discuss.channel']._create_channel(group_id=None, name='Test channel')
+        self.channel = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Test channel"
+        )
         self.channel._add_members(users=portal_user)
         self.channel._add_members(users=internal_user)
         self.channel._add_members(guests=guest)
@@ -94,8 +96,10 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.assertEqual(len(channel), 1)
 
     def test_channel_invitation_from_token(self):
-        public_channel = self.env["discuss.channel"]._create_channel(name="Public Channel", group_id=None)
-        internal_channel = self.env["discuss.channel"]._create_channel(name="Internal Channel", group_id=self.env.ref("base.group_user").id)
+        public_channel = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Public Channel"
+        )
+        internal_channel = self.env["discuss.channel"]._create_channel(access_type="internal", name="Internal Channel")
 
         public_response = self.url_open(public_channel.invitation_url)
         self.assertEqual(public_response.status_code, 200)
@@ -105,8 +109,12 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
     def test_sidebar_in_public_page(self):
         guest = self.env['mail.guest'].create({'name': 'Guest'})
-        channel_1 = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
-        channel_2 = self.env["discuss.channel"]._create_channel(name="Channel 2", group_id=None)
+        channel_1 = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Channel 1"
+        )
+        channel_2 = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Channel 2"
+        )
         channel_1._add_members(guests=guest)
         channel_2._add_members(guests=guest)
         self.start_tour(f"/discuss/channel/{channel_1.id}", "sidebar_in_public_page_tour", cookies={guest._cookie_name: guest._format_auth_cookie()})

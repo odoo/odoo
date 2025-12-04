@@ -96,51 +96,45 @@ test("display partner mention suggestions on typing '@'", async () => {
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
 });
 
-test("[text composer] can @user in restricted (group_public_id) channels", async () => {
+test("[text composer] can @user in internal channels", async () => {
     const pyEnv = await startServer();
-    const groupId = pyEnv["res.groups"].create({
-        name: "Custom Channel Group",
-    });
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { email: "testpartner1@odoo.com", name: "TestPartner1" },
         { email: "testpartner2@odoo.com", name: "TestPartner2" },
     ]);
     pyEnv["res.users"].create([
-        { partner_id: partnerId_1, group_ids: [Command.link(groupId)] },
-        { partner_id: partnerId_2 },
+        { partner_id: partnerId_1 },
+        { partner_id: partnerId_2, share: true },
     ]);
     const channelId = pyEnv["discuss.channel"].create({
-        name: "Restricted Channel",
-        group_public_id: groupId,
+        access_type: "internal",
         channel_type: "channel",
+        name: "Restricted Channel",
     });
     await start();
     await openDiscuss(channelId);
     await click("button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation-invitationBox", {
-        text: 'Access restricted to group "Custom Channel Group"',
+        text: "Access to this channel is restricted to internal users",
     });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 2 });
 });
 
 test.tags("html composer");
-test("can @user in restricted (group_public_id) channels", async () => {
+test("can @user in internal channels", async () => {
     const pyEnv = await startServer();
-    const groupId = pyEnv["res.groups"].create({
-        name: "Custom Channel Group",
-    });
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { email: "testpartner1@odoo.com", name: "TestPartner1" },
         { email: "testpartner2@odoo.com", name: "TestPartner2" },
     ]);
     pyEnv["res.users"].create([
-        { partner_id: partnerId_1, group_ids: [Command.link(groupId)] },
-        { partner_id: partnerId_2 },
+        { partner_id: partnerId_1 },
+        { partner_id: partnerId_2, share: true },
     ]);
     const channelId = pyEnv["discuss.channel"].create({
+        access_type: "internal",
         name: "Restricted Channel",
-        group_public_id: groupId,
         channel_type: "channel",
     });
     await start();
@@ -149,7 +143,7 @@ test("can @user in restricted (group_public_id) channels", async () => {
     await openDiscuss(channelId);
     await click("button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation-invitationBox", {
-        text: 'Access restricted to group "Custom Channel Group"',
+        text: "Access to this channel is restricted to internal users",
     });
     await contains(".o-mail-Composer-html.odoo-editor-editable");
     const editor = {

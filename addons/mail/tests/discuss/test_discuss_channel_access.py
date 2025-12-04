@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import product
 from psycopg2.errors import UniqueViolation
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import mute_logger
 
 
@@ -12,189 +13,70 @@ class TestDiscussChannelAccess(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        channel_cases = {
+            *product(
+                ["portal", "public", "user"],
+                ["public", "internal", "invite_only"],
+                ["member", "outside"],
+                ["write", "read", "unlink"],
+            ),
+            *product(
+                ["public", "portal", "user"],
+                ["public", "internal", "invite_only"],
+                ["outside"],
+                ["create"],
+            ),
+        }
+        channel_allowed = {
+            # user, access_type, membership, operation
+            *product(["portal", "public"], ["public"], ["member", "outside"], ["read"]),
+            *product(["user"], ["internal", "public"], ["member", "outside"], ["read", "write"]),
+            *product(["user"], ["invite_only"], ["member"], ["read", "write"]),
+            *product(["user"], ["public", "internal", "invite_only"], ["outside"], ["create"]),
+        }
         cls._channel_type_channel_access_cases = [
-            ("public", "no_group", "member", "read", True),
-            ("public", "no_group", "member", "write", False),
-            ("public", "no_group", "member", "unlink", False),
-            ("public", "no_group", "outside", "create", False),
-            ("public", "no_group", "outside", "read", True),
-            ("public", "no_group", "outside", "write", False),
-            ("public", "no_group", "outside", "unlink", False),
-            ("public", "group_matching", "member", "read", True),
-            ("public", "group_matching", "member", "write", False),
-            ("public", "group_matching", "member", "unlink", False),
-            ("public", "group_matching", "outside", "create", False),
-            ("public", "group_matching", "outside", "read", True),
-            ("public", "group_matching", "outside", "write", False),
-            ("public", "group_matching", "outside", "unlink", False),
-            ("public", "group_failing", "member", "read", False),
-            ("public", "group_failing", "member", "write", False),
-            ("public", "group_failing", "member", "unlink", False),
-            ("public", "group_failing", "outside", "create", False),
-            ("public", "group_failing", "outside", "read", False),
-            ("public", "group_failing", "outside", "write", False),
-            ("public", "group_failing", "outside", "unlink", False),
-            ("portal", "no_group", "member", "read", True),
-            ("portal", "no_group", "member", "write", False),
-            ("portal", "no_group", "member", "unlink", False),
-            ("portal", "no_group", "outside", "create", False),
-            ("portal", "no_group", "outside", "read", True),
-            ("portal", "no_group", "outside", "write", False),
-            ("portal", "no_group", "outside", "unlink", False),
-            ("portal", "group_matching", "member", "read", True),
-            ("portal", "group_matching", "member", "write", False),
-            ("portal", "group_matching", "member", "unlink", False),
-            ("portal", "group_matching", "outside", "create", False),
-            ("portal", "group_matching", "outside", "read", True),
-            ("portal", "group_matching", "outside", "write", False),
-            ("portal", "group_matching", "outside", "unlink", False),
-            ("portal", "group_failing", "member", "read", False),
-            ("portal", "group_failing", "member", "write", False),
-            ("portal", "group_failing", "member", "unlink", False),
-            ("portal", "group_failing", "outside", "create", False),
-            ("portal", "group_failing", "outside", "read", False),
-            ("portal", "group_failing", "outside", "write", False),
-            ("portal", "group_failing", "outside", "unlink", False),
-            ("user", "no_group", "member", "read", True),
-            ("user", "no_group", "member", "write", True),
-            ("user", "no_group", "member", "unlink", False),
-            ("user", "no_group", "outside", "create", True),
-            ("user", "no_group", "outside", "read", True),
-            ("user", "no_group", "outside", "write", True),
-            ("user", "no_group", "outside", "unlink", False),
-            ("user", "group_matching", "member", "read", True),
-            ("user", "group_matching", "member", "write", True),
-            ("user", "group_matching", "member", "unlink", False),
-            ("user", "group_matching", "outside", "create", True),
-            ("user", "group_matching", "outside", "read", True),
-            ("user", "group_matching", "outside", "write", True),
-            ("user", "group_matching", "outside", "unlink", False),
-            ("user", "group_failing", "member", "read", False),
-            ("user", "group_failing", "member", "write", False),
-            ("user", "group_failing", "member", "unlink", False),
-            ("user", "group_failing", "outside", "create", False),
-            ("user", "group_failing", "outside", "read", False),
-            ("user", "group_failing", "outside", "write", False),
-            ("user", "group_failing", "outside", "unlink", False),
+            (*case, case in channel_allowed) for case in channel_cases
         ]
+        member_cases = {
+            *product(
+                ["portal", "public", "user"],
+                ["public", "internal", "invite_only"],
+                ["member"],
+                ["other", "self"],
+                ["create", "read", "unlink", "write"],
+            ),
+            *product(
+                ["portal", "public", "user"],
+                ["public", "internal", "invite_only"],
+                ["outside"],
+                ["other"],
+                ["create", "read", "unlink", "write"],
+            ),
+        }
+        member_allowed = {
+            # user, access_type, membership, target, operation
+            *product(["public", "portal"], ["public"], ["member", "outside"], ["other"], ["read"]),
+            *product(["public", "portal"], ["public"], ["outside"], ["self"], ["create"]),
+            *product(
+                ["public", "portal"], ["public"], ["member"], ["self"], ["read", "unlink", "write"]
+            ),
+            *product(
+                ["user"],
+                ["public", "internal"],
+                ["member", "outside"],
+                ["other"],
+                ["create", "read"],
+            ),
+            *product(["user"], ["public", "internal"], ["outside"], ["self"], ["create"]),
+            ("user", "invite_only", "member", "other", "create"),
+            *product(
+                ["user"], ["public", "internal"], ["member"], ["self"], ["read", "unlink", "write"]
+            ),
+            *product(["user"], ["invite_only"], ["member"], ["self", "other"], ["read"]),
+            *product(["user"], ["invite_only"], ["member"], ["self"], ["unlink", "write"]),
+        }
         cls._channel_type_channel_member_access_cases = [
-            ("public", "no_group", "member", "self", "create", False),
-            ("public", "no_group", "member", "self", "read", True),
-            ("public", "no_group", "member", "self", "write", True),
-            ("public", "no_group", "member", "self", "unlink", True),
-            ("public", "no_group", "member", "other", "create", False),
-            ("public", "no_group", "member", "other", "read", True),
-            ("public", "no_group", "member", "other", "write", False),
-            ("public", "no_group", "member", "other", "unlink", False),
-            ("public", "no_group", "outside", "self", "create", True),
-            ("public", "no_group", "outside", "other", "create", False),
-            ("public", "no_group", "outside", "other", "read", True),
-            ("public", "no_group", "outside", "other", "write", False),
-            ("public", "no_group", "outside", "other", "unlink", False),
-            ("public", "group_matching", "member", "self", "create", False),
-            ("public", "group_matching", "member", "self", "read", True),
-            ("public", "group_matching", "member", "self", "write", True),
-            ("public", "group_matching", "member", "self", "unlink", True),
-            ("public", "group_matching", "member", "other", "create", False),
-            ("public", "group_matching", "member", "other", "read", True),
-            ("public", "group_matching", "member", "other", "write", False),
-            ("public", "group_matching", "member", "other", "unlink", False),
-            ("public", "group_matching", "outside", "self", "create", True),
-            ("public", "group_matching", "outside", "other", "create", False),
-            ("public", "group_matching", "outside", "other", "read", True),
-            ("public", "group_matching", "outside", "other", "write", False),
-            ("public", "group_matching", "outside", "other", "unlink", False),
-            ("public", "group_failing", "member", "self", "create", False),
-            ("public", "group_failing", "member", "self", "read", False),
-            ("public", "group_failing", "member", "self", "write", False),
-            ("public", "group_failing", "member", "self", "unlink", False),
-            ("public", "group_failing", "member", "other", "create", False),
-            ("public", "group_failing", "member", "other", "read", False),
-            ("public", "group_failing", "member", "other", "write", False),
-            ("public", "group_failing", "member", "other", "unlink", False),
-            ("public", "group_failing", "outside", "self", "create", False),
-            ("public", "group_failing", "outside", "other", "create", False),
-            ("public", "group_failing", "outside", "other", "read", False),
-            ("public", "group_failing", "outside", "other", "write", False),
-            ("public", "group_failing", "outside", "other", "unlink", False),
-            ("portal", "no_group", "member", "self", "create", False),
-            ("portal", "no_group", "member", "self", "read", True),
-            ("portal", "no_group", "member", "self", "write", True),
-            ("portal", "no_group", "member", "self", "unlink", True),
-            ("portal", "no_group", "member", "other", "create", False),
-            ("portal", "no_group", "member", "other", "read", True),
-            ("portal", "no_group", "member", "other", "write", False),
-            ("portal", "no_group", "member", "other", "unlink", False),
-            ("portal", "no_group", "outside", "self", "create", True),
-            ("portal", "no_group", "outside", "other", "create", False),
-            ("portal", "no_group", "outside", "other", "read", True),
-            ("portal", "no_group", "outside", "other", "write", False),
-            ("portal", "no_group", "outside", "other", "unlink", False),
-            ("portal", "group_matching", "member", "self", "create", False),
-            ("portal", "group_matching", "member", "self", "read", True),
-            ("portal", "group_matching", "member", "self", "write", True),
-            ("portal", "group_matching", "member", "self", "unlink", True),
-            ("portal", "group_matching", "member", "other", "create", False),
-            ("portal", "group_matching", "member", "other", "read", True),
-            ("portal", "group_matching", "member", "other", "write", False),
-            ("portal", "group_matching", "member", "other", "unlink", False),
-            ("portal", "group_matching", "outside", "self", "create", True),
-            ("portal", "group_matching", "outside", "other", "create", False),
-            ("portal", "group_matching", "outside", "other", "read", True),
-            ("portal", "group_matching", "outside", "other", "write", False),
-            ("portal", "group_matching", "outside", "other", "unlink", False),
-            ("portal", "group_failing", "member", "self", "create", False),
-            ("portal", "group_failing", "member", "self", "read", False),
-            ("portal", "group_failing", "member", "self", "write", False),
-            ("portal", "group_failing", "member", "self", "unlink", False),
-            ("portal", "group_failing", "member", "other", "create", False),
-            ("portal", "group_failing", "member", "other", "read", False),
-            ("portal", "group_failing", "member", "other", "write", False),
-            ("portal", "group_failing", "member", "other", "unlink", False),
-            ("portal", "group_failing", "outside", "self", "create", False),
-            ("portal", "group_failing", "outside", "other", "create", False),
-            ("portal", "group_failing", "outside", "other", "read", False),
-            ("portal", "group_failing", "outside", "other", "write", False),
-            ("portal", "group_failing", "outside", "other", "unlink", False),
-            ("user", "no_group", "member", "self", "create", False),
-            ("user", "no_group", "member", "self", "read", True),
-            ("user", "no_group", "member", "self", "write", True),
-            ("user", "no_group", "member", "self", "unlink", True),
-            ("user", "no_group", "member", "other", "create", True),
-            ("user", "no_group", "member", "other", "read", True),
-            ("user", "no_group", "member", "other", "write", False),
-            ("user", "no_group", "member", "other", "unlink", False),
-            ("user", "no_group", "outside", "self", "create", True),
-            ("user", "no_group", "outside", "other", "create", True),
-            ("user", "no_group", "outside", "other", "read", True),
-            ("user", "no_group", "outside", "other", "write", False),
-            ("user", "no_group", "outside", "other", "unlink", False),
-            ("user", "group_matching", "member", "self", "create", False),
-            ("user", "group_matching", "member", "self", "read", True),
-            ("user", "group_matching", "member", "self", "write", True),
-            ("user", "group_matching", "member", "self", "unlink", True),
-            ("user", "group_matching", "member", "other", "create", True),
-            ("user", "group_matching", "member", "other", "read", True),
-            ("user", "group_matching", "member", "other", "write", False),
-            ("user", "group_matching", "member", "other", "unlink", False),
-            ("user", "group_matching", "outside", "self", "create", True),
-            ("user", "group_matching", "outside", "other", "create", True),
-            ("user", "group_matching", "outside", "other", "read", True),
-            ("user", "group_matching", "outside", "other", "write", False),
-            ("user", "group_matching", "outside", "other", "unlink", False),
-            ("user", "group_failing", "member", "self", "create", False),
-            ("user", "group_failing", "member", "self", "read", False),
-            ("user", "group_failing", "member", "self", "write", False),
-            ("user", "group_failing", "member", "self", "unlink", False),
-            ("user", "group_failing", "member", "other", "create", False),
-            ("user", "group_failing", "member", "other", "read", False),
-            ("user", "group_failing", "member", "other", "write", False),
-            ("user", "group_failing", "member", "other", "unlink", False),
-            ("user", "group_failing", "outside", "self", "create", False),
-            ("user", "group_failing", "outside", "other", "create", False),
-            ("user", "group_failing", "outside", "other", "read", False),
-            ("user", "group_failing", "outside", "other", "write", False),
-            ("user", "group_failing", "outside", "other", "unlink", False),
+            (*case, case in member_allowed) for case in member_cases
         ]
         cls._group_type_channel_access_cases = [
             ("public", "group", "member", "read", True),
@@ -260,47 +142,38 @@ class TestDiscussChannelAccess(MailCommon):
             ("user", "group", "outside", "other", "write", False),
             ("user", "group", "outside", "other", "unlink", False),
         ]
-        cls.secret_group = cls.env["res.groups"].create({"name": "Secret User Group"})
-        cls.env["ir.model.data"].create(
-            {
-                "name": "secret_group",
-                "module": "mail",
-                "model": cls.secret_group._name,
-                "res_id": cls.secret_group.id,
-            }
-        )
         cls.guest = cls.env["mail.guest"].create({"name": "A Guest"}).sudo(False)
         cls.users = {
             "public": mail_new_test_user(
                 cls.env,
                 login="public1",
                 name="A Public User",
-                groups="base.group_public,mail.secret_group",
+                groups="base.group_public",
             ),
             "portal": mail_new_test_user(
                 cls.env,
                 login="portal1",
                 name="A Portal User",
-                groups="base.group_portal,mail.secret_group",
+                groups="base.group_portal",
             ),
             "user": mail_new_test_user(
                 cls.env,
                 login="user1",
                 name="An Internal User",
-                groups="base.group_user,mail.secret_group",
+                groups="base.group_user",
             ),
         }
         cls.other_user = mail_new_test_user(
             cls.env,
             login="other1",
             name="Another User 1",
-            groups="base.group_user,mail.secret_group",
+            groups="base.group_user",
         )
         cls.other_user_2 = mail_new_test_user(
             cls.env,
             login="other2",
             name="Another User 2",
-            groups="base.group_user,mail.secret_group",
+            groups="base.group_user",
         )
 
     def _test_discuss_channel_access(self, cases, for_sub_channel):
@@ -311,9 +184,9 @@ class TestDiscussChannelAccess(MailCommon):
         :param cases: A list of test cases, where each tuple contains:
 
             - user_key (``"portal"`` | ``"public"`` | ``"user"``): The user performing the operation.
-            - group_key (``"chat"`` | ``"group"`` | ``"no_group"`` | ``"group_matching"`` |
-            ``"group_failing"``): The group specification to use. ``chat`` and ``group`` define the
-            channel type, while the others configure group setups for the channels.
+            - access_type (``"chat"`` | ``"group"`` | ``"internal"`` | ``"invite_only"`` | ``"public"``):
+            The access specification to use. ``chat`` and ``group`` define the channel type, while the
+            others configure access setups for the channels.
             - membership (``"member"`` | ``"outside"``): Whether the user is a member of the channel.
             - operation (``"create"`` | ``"read"`` | ``"write"`` | ``"unlink"``): The action being tested.
             - expected_result (bool): Whether the action is expected to be allowed (``True``) or denied
@@ -322,15 +195,15 @@ class TestDiscussChannelAccess(MailCommon):
         :param for_sub_channel: Whether the operation is being tested on a sub-channel. In this case, the
             ``cases`` parameter is used to configure the parent channel.
         """
-        for user_key, channel_key, membership, operation, result in cases:
+        for user_key, access_type, membership, operation, result in cases:
             if result:
                 try:
                     self._execute_action_channel(
-                        user_key, channel_key, membership, operation, result, for_sub_channel
+                        user_key, access_type, membership, operation, result, for_sub_channel
                     )
                 except Exception as e:  # noqa: BLE001 - re-raising, just with a more contextual message
                     raise AssertionError(
-                        f"{user_key, channel_key, membership, operation} should not raise"
+                        f"{user_key, access_type, membership, operation} should not raise"
                     ) from e
             else:
                 try:
@@ -340,11 +213,11 @@ class TestDiscussChannelAccess(MailCommon):
                         "odoo.models.unlink"
                     ):
                         self._execute_action_channel(
-                            user_key, channel_key, membership, operation, result, for_sub_channel
+                            user_key, access_type, membership, operation, result, for_sub_channel
                         )
                 except AssertionError as e:
                     raise AssertionError(
-                        f"{user_key, channel_key, membership, operation} should raise"
+                        f"{user_key, access_type, membership, operation} should raise"
                     ) from e
 
     def test_01_discuss_channel_access(self):
@@ -375,6 +248,9 @@ class TestDiscussChannelAccess(MailCommon):
     def test_02_discuss_sub_channel_access(self):
         cases = [
             *self._channel_type_channel_access_cases,
+            ("user", "invite_only", "member_of_parent", "read", True),
+            ("user", "invite_only", "member_of_parent", "write", True),
+            ("user", "invite_only", "member_of_parent", "unlink", False),
             *self._group_type_channel_access_cases,
         ]
         self._test_discuss_channel_access(cases, for_sub_channel=True)
@@ -387,12 +263,13 @@ class TestDiscussChannelAccess(MailCommon):
         :param cases: A list of test cases, where each tuple contains:
             - user_key (``"portal"`` | ``"public"`` | ``"user"``):
                 The user performing the operation.
-            - group_key (``"chat"`` | ``"group"`` | ``"no_group"`` | ``"group_matching"`` |
-            ``"group_failing"``):
+            - access_type (``"chat"`` | ``"group"`` | ``"internal"`` | ``"invite_only"`` |
+            ``"public"``):
                 The group specification to use. ``chat`` and ``group`` define the channel type, while the
                 others configure group setups for the channels.
-            - membership (``"member"`` | ``"outside"``):
-                Whether the user is a member of the channel.
+            - membership (``"member"`` | ``"outside"`` | ``"member_of_parent"``):
+                Whether the user is a member of the channel. ``member_of_parent`` means ``outside`` of the
+                sub-channel, but ``member`` of the parent channel.
             - target (``"self"`` | ``"other"``):
                 Whether the operation is executed on the self-member or another member.
             - operation (``"create"`` | ``"read"`` | ``"write"`` | ``"unlink"``):
@@ -403,14 +280,14 @@ class TestDiscussChannelAccess(MailCommon):
         :param for_sub_channel: Whether the operation is being tested on a sub-channel. In this case, the
             ``cases`` parameter is used to configure the parent channel's member.
         """
-        for user_key, channel_key, membership, target, operation, result in cases:
-            channel_id = self._get_channel_id(user_key, channel_key, membership, for_sub_channel)
+        for user_key, access_type, membership, target, operation, result in cases:
+            channel_id = self._get_channel_id(user_key, access_type, membership, for_sub_channel)
             if result:
                 try:
                     self._execute_action_member(channel_id, user_key, target, operation, result)
                 except Exception as e:  # noqa: BLE001 - re-raising, just with a more contextual message
                     raise AssertionError(
-                        f"{user_key, channel_key, membership, target, operation} should not raise"
+                        f"{user_key, access_type, membership, target, operation} should not raise"
                     ) from e
             else:
                 try:
@@ -427,7 +304,7 @@ class TestDiscussChannelAccess(MailCommon):
                             raise AccessError("expected errors as access error") from e
                 except AssertionError as e:
                     raise AssertionError(
-                        f"{user_key, channel_key, membership, target, operation} should raise access error"
+                        f"{user_key, access_type, membership, target, operation} should raise access error"
                     ) from e
 
     def test_10_discuss_channel_member_access(self):
@@ -472,10 +349,11 @@ class TestDiscussChannelAccess(MailCommon):
         cases = [
             *self._channel_type_channel_member_access_cases,
             *self._group_type_channel_member_access_cases,
+            ("user", "invite_only", "member_of_parent", "read", "other", True),
         ]
         self._test_discuss_channel_member_access(cases, for_sub_channel=True)
 
-    def _get_channel_id(self, user_key, channel_key, membership, sub_channel):
+    def _get_channel_id(self, user_key, access_type, membership, sub_channel):
         user = self.env["res.users"] if user_key == "public" else self.users[user_key]
         partner = user.partner_id
         guest = self.guest if user_key == "public" else self.env["mail.guest"]
@@ -483,48 +361,39 @@ class TestDiscussChannelAccess(MailCommon):
         if membership == "member":
             partners += partner
         DiscussChannel = self.env["discuss.channel"].with_user(self.other_user)
-        if channel_key == "group":
+        if access_type == "group":
             channel = DiscussChannel._create_group(partners.ids)
             if membership == "member":
                 channel._add_members(users=user, guests=guest)
-        elif channel_key == "chat":
+        elif access_type == "chat":
             channel = DiscussChannel._get_or_create_chat(partners.ids)
         else:
-            channel = DiscussChannel._create_channel("Channel", group_id=None)
+            channel = DiscussChannel._create_channel(access_type=access_type, name="Channel")
             if membership == "member":
-                channel._add_members(users=user, guests=guest)
-        if channel_key == "no_group":
-            channel.group_public_id = None
-        elif channel_key == "group_matching":
-            channel.group_public_id = self.secret_group
-        elif channel_key == "group_failing":
-            channel.group_public_id = self.env.ref("base.group_system")
+                channel.sudo()._add_members(users=user, guests=guest)
         if sub_channel:
             channel.sudo()._create_sub_channel()
             channel = channel.sub_channel_ids[0]
             if membership == "member":
                 channel.sudo()._add_members(users=user, guests=guest)
+            elif membership == "member_of_parent":
+                channel.parent_channel_id.sudo()._add_members(users=user, guests=guest)
         return channel.id
 
-    def _execute_action_channel(self, user_key, channel_key, membership, operation, result, for_sub_channel):
+    def _execute_action_channel(self, user_key, access_type, membership, operation, result, for_sub_channel):
         current_user = self.users[user_key]
         guest = self.guest if user_key == "public" else self.env["mail.guest"]
         ChannelAsUser = self.env["discuss.channel"].with_user(current_user).with_context(guest=guest)
         if operation == "create":
-            group_public_id = None
-            if channel_key == "group_matching":
-                group_public_id = self.secret_group.id
-            elif channel_key == "group_failing":
-                group_public_id = self.env.ref("base.group_system").id
             data = {
+                "access_type": access_type if access_type in ("internal", "invite_only", "public") else None,
                 "name": "Test Channel",
-                "channel_type": channel_key if channel_key in ("group", "chat") else "channel",
-                "group_public_id": group_public_id,
+                "channel_type": access_type if access_type in ("group", "chat") else "channel",
             }
             ChannelAsUser.create(data)
         else:
             channel = ChannelAsUser.browse(
-                self._get_channel_id(user_key, channel_key, membership, for_sub_channel)
+                self._get_channel_id(user_key, access_type, membership, for_sub_channel)
             )
             self.assertEqual(len(channel), 1, "should find the channel")
             if operation == "read":

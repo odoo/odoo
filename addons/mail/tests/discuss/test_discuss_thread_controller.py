@@ -28,7 +28,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
     def test_public_channel_message_post_access(self):
         """Test access of message_post on public channel."""
         channel = self.env["discuss.channel"].create(
-            {"name": "Public Channel", "group_public_id": None}
+            {"access_type": "public", "name": "Public Channel"}
         )
 
         def test_access(user, allowed, exp_author=None):
@@ -49,7 +49,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         """Test partner_ids of message_post on public channel.
         Non-internal users cannot use mentions without mention_token."""
         channel = self.env["discuss.channel"].create(
-            {"name": "Public Channel", "group_public_id": None}
+            {"access_type": "public", "name": "Public Channel"}
         )
         channel._add_members(users=self.user_employee_nopartner)
         partners = (
@@ -77,7 +77,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         """Test partner_emails of message_post on public channel can only be
         used by users of base.group_partner_manager."""
         channel = self.env["discuss.channel"].create(
-            {"name": "Public Channel", "group_public_id": None}
+            {"access_type": "public", "name": "Public Channel"}
         )
         no_emails = []
         existing_emails = [self.user_employee.email]

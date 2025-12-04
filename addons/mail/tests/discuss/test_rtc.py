@@ -20,7 +20,9 @@ class TestChannelRTC(MailCommon, HttpCase):
     def test_01_join_call(self):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
         self.maxDiff = None
-        channel = self.env['discuss.channel']._create_channel(name='Test Channel', group_id=self.env.ref('base.group_user').id)
+        channel = self.env["discuss.channel"]._create_channel(
+            access_type="internal", name="Test Channel"
+        )
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         last_rtc_session_id = channel_member.rtc_session_ids.id

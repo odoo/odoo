@@ -81,8 +81,8 @@ test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut f
 test("load messages from opening chat window from messaging menu", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
+        access_type: "public",
         channel_type: "channel",
-        group_public_id: false,
         name: "General",
     });
     for (let i = 0; i <= 20; i++) {

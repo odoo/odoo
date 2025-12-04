@@ -8,7 +8,7 @@ class TestMessageReactionController(MailControllerReactionCommon):
     def test_message_reaction_public_channel(self):
         """Test access of message reaction for a public channel."""
         channel = self.env["discuss.channel"].create(
-            {"group_public_id": None, "name": "public channel"}
+            {"access_type": "public", "name": "public channel"}
         )
         message = channel.message_post(body="public message")
         self._execute_subtests(

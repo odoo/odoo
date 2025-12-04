@@ -22,6 +22,14 @@ export class DiscussChannel extends models.ServerModel {
     _inherit = ["mail.thread"];
     _mail_post_access = "read";
 
+    access_type = fields.Selection({
+        selection: [
+            ["invite_only", "Invited members only"],
+            ["internal", "All internal users"],
+            ["public", "Anyone with the link"],
+        ],
+        default: (c) => (!c.channel_type || c.channel_type === "channel" ? "internal" : null),
+    });
     author_id = fields.Many2one({
         relation: "res.partner",
         default: () => serverState.partnerId,
@@ -41,9 +49,6 @@ export class DiscussChannel extends models.ServerModel {
     discuss_category_id = fields.Many2one({
         relation: "discuss.category",
         string: "Discuss Category",
-    });
-    group_public_id = fields.Generic({
-        default: () => serverState.groupId,
     });
     uuid = fields.Generic({
         default: () => uniqueId("discuss.channel_uuid-"),
@@ -218,10 +223,10 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      * @param {string} [group_id]
      */
-    _create_channel(name, group_id) {
-        const kwargs = getKwArgs(arguments, "name", "group_id");
+    _create_channel(name, access_type) {
+        const kwargs = getKwArgs(arguments, "name", "access_type");
         name = kwargs.name;
-        group_id = kwargs.group_id;
+        access_type = kwargs.access_type;
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
@@ -229,12 +234,12 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const id = this.create({
+            access_type: access_type,
             channel_member_ids: [Command.create({ partner_id: this.env.user.partner_id })],
             channel_type: "channel",
             name,
-            group_public_id: group_id,
         });
-        this.write([id], { group_public_id: group_id });
+        this.write([id], { access_type });
         this.message_post(
             id,
             makeKwArgs({
@@ -249,12 +254,12 @@ export class DiscussChannel extends models.ServerModel {
 
     _channel_basic_info_fields() {
         return [
+            "access_type",
             "avatar_cache_key",
             "channel_type",
             "create_uid",
             "default_display_mode",
             "description",
-            "group_public_id",
             "last_interest_dt",
             "name",
             "uuid",
@@ -275,14 +280,14 @@ export class DiscussChannel extends models.ServerModel {
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         Object.assign(data, {
             is_editable: (() => {
-                if (channel.channel_type === "channel") {
-                    // Match the ACL rules
-                    return (
-                        !channel.group_public_id ||
-                        this.env.user.group_ids.includes(channel.group_public_id)
-                    );
+                switch (channel.access_type) {
+                    case "internal":
+                        return !this.env.user.share;
+                    case "public":
+                        return true;
+                    default:
+                        return Boolean(memberOfCurrentUser);
                 }
-                return Boolean(memberOfCurrentUser);
             })(),
             group_ids: channel.group_ids,
             member_count: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
@@ -416,8 +421,6 @@ export class DiscussChannel extends models.ServerModel {
             const MailMessage = this.env["mail.message"];
             /** @type {import("mock_models").MailNotification} */
             const MailNotification = this.env["mail.notification"];
-            /** @type {import("mock_models").ResGroups}*/
-            const ResGroups = this.env["res.groups"];
             /** @type {import("mock_models").DiscussCategory} */
             const DiscussCategory = this.env["discuss.category"];
 
@@ -428,16 +431,13 @@ export class DiscussChannel extends models.ServerModel {
                     ["res_id", "=", channel.id],
                 ]);
                 const res = this._channel_basic_info([channel.id]);
+                res.access_type = channel.access_type;
                 res.fetchChannelInfoState = "fetched";
                 res.parent_channel_id = mailDataHelpers.Store.one(
                     this.env["discuss.channel"].browse(channel.parent_channel_id)
                 );
                 res.from_message_id = mailDataHelpers.Store.one(
                     MailMessage.browse(channel.from_message_id)
-                );
-                res.group_public_id = mailDataHelpers.Store.one(
-                    ResGroups.browse(channel.group_public_id),
-                    makeKwArgs({ fields: ["full_name"] })
                 );
                 res.discuss_category_id = mailDataHelpers.Store.one(
                     DiscussCategory.browse(channel.discuss_category_id),
@@ -652,9 +652,9 @@ export class DiscussChannel extends models.ServerModel {
         const [partner] = ResPartner._get_current_persona();
         const subChannels = this.browse(
             this.create({
+                access_type: self.access_type,
                 channel_member_ids: [Command.create({ partner_id: partner.id })],
                 channel_type: "channel",
-                group_public_id: self.group_public_id,
                 from_message_id: message?.id,
                 name: message
                     ? convertBrToLineBreak(markup(message.body)).substring(0, 30)
@@ -830,9 +830,9 @@ export class DiscussChannel extends models.ServerModel {
             mentionSuggestions,
             makeKwArgs({
                 fields: [
-                    "name",
+                    "access_type",
                     "channel_type",
-                    "group_public_id",
+                    "name",
                     mailDataHelpers.Store.one("parent_channel_id"),
                 ],
             })

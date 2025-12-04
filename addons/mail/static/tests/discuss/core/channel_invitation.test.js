@@ -8,7 +8,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
@@ -90,26 +90,18 @@ test("should be able to search for a new user to invite from an existing chat", 
     await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
 });
 
-test("Invitation form should display channel group restriction", async () => {
+test("Show the internal user only restriction in the invitation panel", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        email: "testpartner@odoo.com",
-        name: "TestPartner",
-    });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    const groupId = pyEnv["res.groups"].create({
-        name: "testGroup",
-    });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "TestChannel",
+    const internalChannelId = pyEnv["discuss.channel"].create({
+        access_type: "internal",
+        name: "Internal channel",
         channel_type: "channel",
-        group_public_id: groupId,
     });
     await start();
-    await openDiscuss(channelId);
+    await openDiscuss(internalChannelId);
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation div", {
-        text: 'Access restricted to group "testGroup"',
+    await waitFor(".o-discuss-ChannelInvitation div", {
+        text: "Access to this channel is restricted to internal users",
         after: ["button .fa.fa-copy"],
     });
 });

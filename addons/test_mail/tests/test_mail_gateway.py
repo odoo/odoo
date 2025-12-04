@@ -1277,11 +1277,13 @@ class TestMailgateway(MailGatewayCommon):
         yet_other_record = self.env['mail.test.gateway'].create({
             'email_from': f'Yet Another name <{self.partner_1.email.upper()}>'
         })
-        test_channel = self.env['discuss.channel'].create({
-            'name': 'Test',
-            'channel_partner_ids': [(4, self.partner_1.id)],
-            'group_public_id': None,
-        })
+        test_channel = self.env["discuss.channel"].create(
+            {
+                "access_type": "public",
+                "channel_partner_ids": [(4, self.partner_1.id)],
+                "name": "Test",
+            },
+        )
         self.fake_email.write({
             'model': 'discuss.channel',
             'res_id': test_channel.id,

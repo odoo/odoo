@@ -2,6 +2,7 @@ import { fields, Record } from "@mail/model/export";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { compareDatetime, effectWithCleanup } from "@mail/utils/common/misc";
+import { _t } from "@web/core/l10n/translation";
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
@@ -69,13 +70,17 @@ export class DiscussChannel extends Record {
         );
         return def;
     }
-
-    /** Equivalent to DiscussChannel._allow_invite_by_email */
-    get allow_invite_by_email() {
-        return (
-            this.channel_type === "group" ||
-            (this.channel_type === "channel" && !this.group_public_id)
-        );
+    /** @type {"internal"|"invite_only"|"public"|undefined} */
+    access_type;
+    get accessRestrictedText() {
+        switch (this.access_type) {
+            case "internal":
+                return _t("Access to this channel is restricted to internal users");
+            case "invite_only":
+                return _t("Access to this channel is restricted to members");
+            default:
+                return false;
+        }
     }
     get allowDescriptionsTypes() {
         return ["channel", "group"];

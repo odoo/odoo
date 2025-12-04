@@ -11,8 +11,12 @@ class TestGuest(MailCase):
         the guest's name is updated correctly and the appropriate bus notifications are sent.
         """
         guest = self.env['mail.guest'].create({'name': 'Guest'})
-        channel_1 = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
-        channel_2 = self.env["discuss.channel"]._create_channel(name="Channel 2", group_id=None)
+        channel_1 = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Channel 1"
+        )
+        channel_2 = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Channel 2"
+        )
         channel_1._add_members(guests=guest)
         channel_2._add_members(guests=guest)
 

@@ -17,10 +17,7 @@ class TestMessageController(HttpCaseWithUserDemo):
     def setUpClass(cls):
         super().setUpClass()
         cls.channel = cls.env["discuss.channel"].create(
-            {
-                "group_public_id": None,
-                "name": "Test channel",
-            }
+            {"access_type": "public", "name": "Test channel"}
         )
         cls.public_user = cls.env.ref("base.public_user")
         cls.attachments = (
@@ -319,7 +316,9 @@ class TestMessageLinks(MailCommon, HttpCase):
         super().setUpClass()
 
         cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
-        cls.public_channel = cls.env['discuss.channel']._create_channel(name='Public Channel1', group_id=None)
+        cls.public_channel = cls.env["discuss.channel"]._create_channel(
+            access_type="public", name="Public Channel1"
+        )
         cls.private_group = cls.env['discuss.channel']._create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
 
     @users('employee')

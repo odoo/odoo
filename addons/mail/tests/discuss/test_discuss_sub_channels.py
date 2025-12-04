@@ -64,7 +64,7 @@ class TestDiscussSubChannels(HttpCase):
     def test_04_sub_channel_panel_search(self):
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
         self.authenticate("bob_user", "bob_user")
-        channel = self.env["discuss.channel"]._create_channel(name="General", group_id=None)
+        channel = self.env["discuss.channel"]._create_channel(access_type="public", name="General")
         channel._add_members(users=bob_user)
         for i in range(100):
             channel._create_sub_channel(name=f"Sub Channel {i}")
@@ -136,25 +136,23 @@ class TestDiscussSubChannels(HttpCase):
         self.assertIn(baz_user.partner_id, parent_2_sub_channel.channel_member_ids.partner_id)
         self.assertIn(bob_user.partner_id, parent_3_sub_channel.channel_member_ids.partner_id)
 
-    def test_08_group_public_id_synced_with_parent(self):
+    def test_08_access_type_synced_with_parent(self):
         parent = self.env["discuss.channel"].create({"name": "General"})
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
-        self.assertEqual(parent.group_public_id, self.env.ref("base.group_user"))
-        self.assertEqual(sub_channel.group_public_id, parent.group_public_id)
-        parent.group_public_id = self.env.ref("base.group_system")
-        self.assertEqual(parent.group_public_id, self.env.ref("base.group_system"))
-        self.assertEqual(sub_channel.group_public_id, parent.group_public_id)
-        parent.group_public_id = None
-        self.assertEqual(parent.group_public_id, self.env["res.groups"])
-        self.assertEqual(sub_channel.group_public_id, parent.group_public_id)
+        self.assertEqual(parent.access_type, "internal")
+        self.assertEqual(sub_channel.access_type, "internal")
+        parent.access_type = "invite_only"
+        self.assertEqual(sub_channel.access_type, "invite_only")
+        parent.access_type = "public"
+        self.assertEqual(sub_channel.access_type, "public")
 
-    def test_09_cannot_change_group_public_id_of_sub_channel(self):
+    def test_09_cannot_change_access_type_of_sub_channel(self):
         parent = self.env["discuss.channel"].create({"name": "General"})
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
         with self.assertRaises(UserError):
-            sub_channel.group_public_id = self.env.ref("base.group_system")
+            sub_channel.access_type = "public"
 
     def test_10_sub_channel_message_author_member(self):
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")

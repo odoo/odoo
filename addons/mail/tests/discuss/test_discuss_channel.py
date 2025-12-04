@@ -24,7 +24,11 @@ class TestChannelInternals(MailCommon, HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.maxDiff = None
-        cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context)._create_channel(name='Channel', group_id=None)
+        cls.test_channel = (
+            cls.env["discuss.channel"]
+            .with_context(cls._test_context)
+            ._create_channel(access_type="public", name="Channel")
+        )
         cls.test_user = (
             cls.env["res.users"]
             .with_context(cls._test_context)
@@ -45,7 +49,9 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_member_cannot_be_public_user(self):
         """Public users can only join channels as guest."""
         user_public = mail_new_test_user(self.env, login='user_public', groups='base.group_public', name='Bert Tartignole')
-        public_channel = self.env['discuss.channel']._create_channel(name='Public Channel', group_id=None)
+        public_channel = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Public Channel"
+        )
         with self.assertRaises(ValidationError):
             public_channel._add_members(users=user_public)
 
@@ -312,7 +318,9 @@ class TestChannelInternals(MailCommon, HttpCase):
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
         """Archiving / deleting a user should automatically unsubscribe related partner from group restricted channels"""
-        group_restricted_channel = self.env['discuss.channel']._create_channel(name='Sic Mundus', group_id=self.env.ref('base.group_user').id)
+        group_restricted_channel = self.env["discuss.channel"]._create_channel(
+            access_type="internal", name="Sic Mundus"
+        )
 
         self.test_channel._add_members(users=self.user_employee | self.user_employee_nomail)
         group_restricted_channel._add_members(users=self.user_employee | self.user_employee_nomail)
@@ -509,16 +517,22 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_unsubscribe_auto(self):
         """ Archiving / deleting a user should automatically unsubscribe related
         partner from private channels """
-        test_user = self.env['res.users'].create({
-            "login": "adam",
-            "name": "Jonas",
-        })
+        test_user = self.env["res.users"].create({"login": "adam", "name": "Jonas"})
         test_partner = test_user.partner_id
-        group_restricted_channel = self.env['discuss.channel'].with_context(self._test_context).create({
-            'name': 'Sic Mundus',
-            'group_public_id': self.env.ref('base.group_user').id,
-            'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
-        })
+        internal_channel = (
+            self.env["discuss.channel"]
+            .with_context(self._test_context)
+            .create(
+                {
+                    "access_type": "internal",
+                    "channel_partner_ids": [
+                        Command.link(self.user_employee.partner_id.id),
+                        Command.link(test_partner.id),
+                    ],
+                    "name": "Sic Mundus",
+                }
+            )
+        )
         self.test_channel.with_context(self._test_context).write({
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
@@ -531,13 +545,13 @@ class TestChannelInternals(MailCommon, HttpCase):
         # Unsubscribe archived user from the private channels, but not from public channels and not from group
         self.user_employee.active = False
         (private_group | self.test_channel).invalidate_recordset(['channel_partner_ids'])
-        self.assertEqual(group_restricted_channel.channel_partner_ids, test_partner)
+        self.assertEqual(internal_channel.channel_partner_ids, test_partner)
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
         # Unsubscribe deleted user from the private channels, but not from public channels and not from group
         test_user.unlink()
-        self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(internal_channel.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
@@ -545,8 +559,12 @@ class TestChannelInternals(MailCommon, HttpCase):
     @mute_logger('odoo.models.unlink')
     def test_channel_private_unfollow(self):
         """ Test that a partner can leave (unfollow) a channel/group/chat. """
-        group_restricted_channel = self.env['discuss.channel']._create_channel(name='Channel for Groups', group_id=self.env.ref('base.group_user').id)
-        public_channel = self.env['discuss.channel']._create_channel(name='Channel for Everyone', group_id=None)
+        group_restricted_channel = self.env["discuss.channel"]._create_channel(
+            access_type="internal", name="Channel for Groups"
+        )
+        public_channel = self.env["discuss.channel"]._create_channel(
+            access_type="public", name="Channel for Everyone"
+        )
         private_group = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids, name="Group")
         chat_user_current = self.env['discuss.channel']._get_or_create_chat(self.env.user.partner_id.ids)
         self.assertEqual(len(group_restricted_channel.channel_member_ids), 1)
@@ -620,7 +638,9 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertFalse(messages)
 
     def test_channel_should_generate_correct_default_avatar(self):
-        test_channel = self.env['discuss.channel']._create_channel(name='Channel', group_id=self.env.ref('base.group_user').id)
+        test_channel = self.env["discuss.channel"]._create_channel(
+            access_type="internal", name="Channel"
+        )
         test_channel.uuid = 'channel-uuid'
         private_group = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
         private_group.uuid = 'group-uuid'
@@ -695,7 +715,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         all_test_user.res_users_settings_id.write({"channel_notifications": "all"})
         nothing_test_user.res_users_settings_id.write({"channel_notifications": "no_notif"})
 
-        channel = self.env["discuss.channel"]._create_channel(name="Channel", group_id=None)
+        channel = self.env["discuss.channel"]._create_channel(access_type="public", name="Channel")
         channel._add_members(users=self.user_employee | all_test_user | mentions_test_user | nothing_test_user)
 
         # sending normal message
@@ -1032,13 +1052,16 @@ class TestChannelInternals(MailCommon, HttpCase):
                         )
 
     def test_create_channel_with_partners_and_guests(self):
-        channel = self.env['discuss.channel'].create({
-            'name': 'test channel',
-            'channel_member_ids': [
-                (0, 0, {'guest_id': self.guest.id}),
-                (0, 0, {'partner_id': self.partner_employee.id})
-            ]
-        })
+        channel = self.env["discuss.channel"].create(
+            {
+                "access_type": "public",
+                "name": "test channel",
+                "channel_member_ids": [
+                    Command.create({"guest_id": self.guest.id}),
+                    Command.create({"partner_id": self.partner_employee.id}),
+                ],
+            },
+        )
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)

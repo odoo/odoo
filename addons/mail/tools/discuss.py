@@ -611,7 +611,7 @@ class Store:
                     self.target.subchannel == "internal_users"
                     or (
                         bus_record.channel_type == "channel"
-                        and env.ref("base.group_user") in bus_record.group_public_id.all_implied_ids
+                        and bus_record.access_type in ("internal", "invite_only")
                     )
                 )
             )
