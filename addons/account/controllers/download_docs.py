@@ -3,6 +3,8 @@
 import io
 import zipfile
 
+from itertools import chain
+
 from odoo import http, _
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
@@ -83,14 +85,7 @@ class AccountDocumentDownloadController(http.Controller):
                     seen[new_name] = 0
             return docs
 
-        docs_data = []
-        for move in moves:
-            if move.is_purchase_document(include_receipts=True):
-                if attachment := move.message_main_attachment_id:
-                    docs_data.append({'filename': attachment.name, 'filetype': attachment.mimetype, 'content': attachment.raw})
-            else:
-                docs_data += move._get_invoice_legal_documents_all() or []
-        if docs_data:
+        if docs_data := list(chain.from_iterable(move._get_move_zip_export_docs() for move in moves)):
             docs_data = rename_duplicates(docs_data)
             zip_content = _build_zip_from_data(docs_data)
             headers = _get_headers(request.env._("Invoices") + '.zip', 'zip', zip_content)
