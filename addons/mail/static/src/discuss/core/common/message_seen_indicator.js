@@ -33,7 +33,7 @@ class MessageSeenIndicatorDialog extends Component {
  */
 export class MessageSeenIndicator extends Component {
     static template = "mail.MessageSeenIndicator";
-    static props = ["message", "thread", "className?"];
+    static props = ["message", "className?"];
 
     setup() {
         super.setup();
@@ -42,8 +42,10 @@ export class MessageSeenIndicator extends Component {
 
     get summary() {
         if (this.props.message.hasEveryoneSeen) {
-            if (this.props.thread.channel?.channel_member_ids.length === 2) {
-                return _t("Seen by %(user)s", { user: this.props.thread.correspondent.name });
+            if (this.props.message.channel_id.channel_member_ids.length === 2) {
+                return _t("Seen by %(user)s", {
+                    user: this.props.message.channel_id.correspondent.name,
+                });
             }
             return _t("Seen by everyone");
         }

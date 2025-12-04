@@ -25,7 +25,7 @@
             <div class="text-truncate base-fs fw-bolder mb-0 mx-2 px-1" t-esc="props.chatWindow.channel.displayName"/>
             <t t-set="message" t-value="channel.newestPersistentOfAllMessage" />
             <div t-if="previewText" class="text-truncate small mx-2 px-1 text-muted">
-                <MessageSeenIndicator t-if="message.showSeenIndicator(channel.thread)" message="message" thread="channel.thread" />
+                <MessageSeenIndicator t-if="message.showSeenIndicator(channel.thread)" message="message"/>
                 <t t-out="message.previewText" />
             </div>
         </div>
