@@ -21,7 +21,7 @@ class CachedModel(Model):
 
     _cached_data_fields: tuple[str] = ()
     """the fields to cache for the records to cache. Please promise all these
-    fields don't depend on other models and context and are not translated."""
+    fields don't depend on other models and context."""
 
     @property
     def _clear_cache_on_fields(self):
@@ -35,7 +35,7 @@ class CachedModel(Model):
         """
         fnames = self._cached_data_fields
         assert fnames, "missing fields to cache"
-        records = self.sudo().with_context({'active_test': False}).search_fetch(
+        records = self.sudo().with_context({'active_test': False, 'prefetch_langs': True}).search_fetch(
             self._cached_data_domain, fnames, order='id')
 
         # each field is mapped to a tuple
@@ -49,7 +49,7 @@ class CachedModel(Model):
         if any(self._ids) and field.name in self._cached_data_fields:
             self.check_field_access(field, 'read')
             data = self._cached_data()
-            field._insert_cache(self.browse(data['id']), data[field.name])
+            field._insert_cache(self.with_context(prefetch_langs=True).browse(data['id']), data[field.name])
             data_ids = set(data['id'])
             if all(record_id in data_ids for record_id in self._ids):
                 self.check_access('read')
