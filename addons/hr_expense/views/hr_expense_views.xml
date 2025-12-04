@@ -222,7 +222,7 @@
                                 <field name="total_amount_currency" widget='monetary' options="{'currency_field': 'currency_id'}"
                                        readonly="not is_editable" class="oe_inline mw-50 me-0"/>
                                 <field name="currency_id" class="mw-25 ms-0" groups="base.group_multi_currency"
-                                       options="{'no_create': True}"
+                                       options="{'no_create': True, 'no_open': True}"
                                        readonly="not is_editable"/>
                                 <span class="d-flex" invisible="tax_amount == 0">(incl <field name="tax_amount" class="mx-1"/> tax)</span>
                             </div>
