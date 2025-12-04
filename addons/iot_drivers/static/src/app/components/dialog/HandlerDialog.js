@@ -106,15 +106,6 @@ export class HandlerDialog extends Component {
                     </div>
                     <div class="mb-3">
                         <h5>Global logs level</h5>
-                        <div class="form-check mb-3">
-                            <input name="log-to-server"
-                                id="log-to-server"
-                                class="form-check-input cursor-pointer"
-                                type="checkbox"
-                                t-att-checked="this.state.handlerData.is_log_to_server_activated"
-                                t-on-change="(ev) => this.onChange(ev.target.name, ev.target.checked)" />
-                            <label class="form-check-label cursor-pointer" for="log-to-server">IoT logs automatically send to server logs</label>
-                        </div>
                         <div t-foreach="Object.entries(this.state.globalLogger)" t-as="global" t-key="global[0]" class="input-group input-group-sm mb-3">
                             <label class="input-group-text w-50" t-att-for="global[0]" t-esc="global[0]" />
                             <select t-att-name="global[0]"
