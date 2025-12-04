@@ -14,6 +14,7 @@ import {
     splitTextNode,
     fillEmpty,
 } from "../utils/dom";
+import { fillClipboardData } from "../utils/clipboard";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -169,12 +170,7 @@ export class ClipboardPlugin extends Plugin {
             clonedContents = processor(clonedContents, selection) || clonedContents;
         }
         this.removeSystemProperties(clonedContents);
-        const dataHtmlElement = this.document.createElement("data");
-        dataHtmlElement.append(clonedContents);
-        prependOriginToImages(dataHtmlElement, window.location.origin);
-        const htmlContent = dataHtmlElement.innerHTML;
-        ev.clipboardData.setData("text/html", htmlContent);
-        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
+        fillClipboardData(ev, clonedContents);
     }
 
     /**
@@ -754,17 +750,4 @@ export function isHtmlContentSupported(node) {
         node,
         '[data-oe-model]:not([data-oe-field="arch"]):not([data-oe-type="html"]),[data-oe-translation-id]'
     );
-}
-
-/**
- * Add origin to relative img src.
- * @param {string} origin
- */
-function prependOriginToImages(doc, origin) {
-    doc.querySelectorAll("img").forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && !/^(http|\/\/|data:)/.test(src)) {
-            img.src = origin + (src.startsWith("/") ? src : "/" + src);
-        }
-    });
 }
