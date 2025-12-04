@@ -60,8 +60,8 @@ class EventSlot(models.Model):
             if not (event_start <= slot.start_datetime <= event_end) or not (event_start <= slot.end_datetime <= event_end):
                 raise ValidationError(_(
                     "A slot cannot be scheduled outside of its event time range.\n\n"
-                    "Event:\t\t%(event_start)s - %(event_end)s\n"
-                    "Slot:\t\t%(slot_name)s",
+                    "Event:\t%(event_start)s - %(event_end)s\n"
+                    "Slot:\t%(slot_name)s",
                     event_start=format_datetime(self.env, event_start, tz=slot.date_tz, dt_format='medium'),
                     event_end=format_datetime(self.env, event_end, tz=slot.date_tz, dt_format='medium'),
                     slot_name=slot.display_name,

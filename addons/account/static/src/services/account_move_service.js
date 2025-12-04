@@ -18,7 +18,7 @@ export class AccountMoveService {
         const isMoveEndOfChain = await this.orm.call("account.move", "check_move_sequence_chain", [moveIds]);
         if (!isMoveEndOfChain) {
             const message = _t("This operation will create a gap in the sequence.");
-            return markup`<div class="text-danger">${message}</div>${body}`;
+            return markup`<div class="alert alert-warning mt-2">${message}</div>${body}`;
         }
         return body;
     }

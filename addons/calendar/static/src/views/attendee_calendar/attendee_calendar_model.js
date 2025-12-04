@@ -193,6 +193,7 @@ export class AttendeeCalendarModel extends CalendarModel {
                     body: deleteConfirmationMessage,
                     confirm: resolve.bind(null, true),
                     confirmLabel: _t("Delete"),
+                    confirmClass: "btn-danger",
                     cancel: () => resolve.bind(null, false),
                     cancelLabel: _t("No, keep it"),
                 });

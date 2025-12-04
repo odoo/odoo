@@ -56,7 +56,7 @@ test("Confirmation dialog on delete contains a warning", async () => {
     });
     await contains(".o_cp_action_menus button").click();
     await contains(".o_menu_item:contains(Delete)").click();
-    expect(".o_dialog div.text-danger").toHaveText(
+    expect(".o_dialog div.alert.alert-warning").toHaveText(
         "This operation will create a gap in the sequence.",
         { message: "warning message has been added in the dialog" }
     );
