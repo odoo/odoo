@@ -12,7 +12,7 @@ from odoo.addons.rating.models import rating_data
 from odoo.addons.html_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_list, SQL, LazyTranslate, html_sanitize
-from odoo.addons.resource.models.utils import filter_domain_leaf
+from odoo.addons.resource.models.utils import filter_map_domain
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
 
@@ -1370,6 +1370,7 @@ class ProjectTask(models.Model):
             When specifically filtering on a comodel's field, the result of the `read_group` should contain all matching groups.
             However, if the search isn't filtered on any comodel's field, the result shouldn't be affected,
             which explains why we return `False` if `filtered_domain` is empty.
+            TODO This function can be replaced by extract_comodel_domain() in its entirety.
 
             Returns:
                 False or recordset of the comodel given in parameter.
@@ -1394,15 +1395,14 @@ class ProjectTask(models.Model):
                     new_domain.append(dom)
             return Domain(new_domain)
 
-        filtered_domain = filter_domain_leaf(domain, lambda field_to_check: field_to_check in [
-            field,
-            f"{field}.id",
-            f"{field}.name",
-        ], {
-            field: "name",
-            f"{field}.id": "id",
-            f"{field}.name": "name",
-        })
+        def _map_condition(condition):
+            if condition.field_expr in [field, f'{field}.name']:
+                return Domain('name', condition.operator, condition.value)
+            if condition.field_expr == f'{field}.id':
+                return Domain('id', condition.operator, condition.value)
+            return None
+
+        filtered_domain = filter_map_domain(domain, _map_condition)
         if filtered_domain.is_true():
             return self.env[comodel]
         filtered_domain = _change_operator(filtered_domain)

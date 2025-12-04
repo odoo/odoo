@@ -2,6 +2,7 @@
 
 from . import (
     test_calendar,
+    test_extract_comodel_domain,
     test_mixin,
     test_performance,
     test_resource,
