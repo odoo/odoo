@@ -85,6 +85,7 @@ class IrAttachment(models.Model):
             "name",
             Store.Attr("raw_access_token", lambda a: limited_field_access_token(a, "raw")),
             "res_name",
+            "res_model",
             Store.One("thread", [], as_thread=True),
             "type",
             "url",
