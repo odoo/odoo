@@ -494,3 +494,30 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.action_confirm()
         mo.button_mark_done()
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.category, 'manufacturing_order')
+
+    def test_unset_project_on_mo_unlinks_analytic_lines(self):
+        """ Ensure that unsetting the project on a done MO removes the analytic lines
+        from the raw materials moves, and that re-assigning the project re-generates them.
+        also ensure that the profitability of the project is correctly updated.
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'bom_id': self.bom.id,
+            'product_qty': 1.0,
+            'project_id': self.project.id,
+        })
+        self.project._create_analytic_account()
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertTrue(mo.move_raw_ids.analytic_account_line_ids)
+        mo.project_id = False
+        self.assertFalse(mo.move_raw_ids.analytic_account_line_ids)
+        # Ensure MO costs are not included when no project is linked
+        self.assertDictEqual(self.project._get_profitability_items(with_action=False), {
+            'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
+            'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
+        })
+        # Verify analytic lines are generated when re-assigning a project to a Done MO
+        mo.project_id = self.project
+        self.assertTrue(mo.move_raw_ids.analytic_account_line_ids)
