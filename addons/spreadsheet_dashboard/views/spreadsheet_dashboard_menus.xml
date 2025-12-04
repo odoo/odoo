@@ -26,19 +26,6 @@
         parent="spreadsheet_dashboard_menu_root"
         sequence="150"/>
 
-    <record id="spreadsheet_dashboard_action_configuration_dashboards" model="ir.actions.act_window">
-        <field name="name">Dashboards</field>
-        <field name="res_model">spreadsheet.dashboard</field>
-        <field name="view_mode">list,form</field>
-        <field name="context">{"search_default_groupby_dashboard_group_id" : True}</field>
-    </record>
-
-    <record id="spreadsheet_dashboard_group_action_configuration_sections" model="ir.actions.act_window">
-        <field name="name">Sections</field>
-        <field name="res_model">spreadsheet.dashboard.group</field>
-        <field name="view_mode">list</field>
-    </record>
-
     <menuitem
         id="spreadsheet_dashboard_menu_configuration_dashboards"
         name="Dashboards"
@@ -52,5 +39,17 @@
         parent="spreadsheet_dashboard_menu_configuration"
         action="spreadsheet_dashboard_group_action_configuration_sections"
         sequence="20"/>
+
+    <menuitem
+        id="spreadsheet_dashboard_menu_technical"
+        name="Dashboards"
+        parent="base.menu_custom"/>
+
+    <menuitem
+        id="spreadsheet_dashboard_menu_configuration_global_filters"
+        name="User-defined Dashboard Filters"
+        parent="spreadsheet_dashboard_menu_technical"
+        action="actions_spreadsheet_dashboard_favorite_filters_view"
+        sequence="1"/>
 
 </odoo>

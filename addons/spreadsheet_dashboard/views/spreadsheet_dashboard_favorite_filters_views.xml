@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_favorite_filters_view_form" model="ir.ui.view">
+        <field name="model">spreadsheet.dashboard.favorite.filters</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Filters">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_ids" string="Shared with" widget="many2many_tags_avatar" placeholder="All users"/>
+                            <field name="is_default" widget="boolean_toggle"/>
+                            <field name="dashboard_id" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="global_filters"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_favorite_filters_view_edit_form" model="ir.ui.view">
+        <field name="model">spreadsheet.dashboard.favorite.filters</field>
+        <field name="inherit_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">0</attribute>
+            </xpath>
+            <xpath expr="//group/field[@name='dashboard_id']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_favorite_filters_view_list" model="ir.ui.view">
+        <field name="model">spreadsheet.dashboard.favorite.filters</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="dashboard_id"/>
+                <field name="user_ids" widget="many2many_tags_avatar"/>
+                <field name="is_default"/>
+                <field name="global_filters" groups="base.group_no_one"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_favorite_filters_view_search" model="ir.ui.view">
+        <field name="model">spreadsheet.dashboard.favorite.filters</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Global" domain="[('user_ids','=',False)]" name="shared" help="Filters shared with all users"/>
+                <filter string="My filters" domain="[('user_ids','in',[uid])]" name="my_filters" help="Filters shared with myself"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="User" name="user" domain="[]" context="{'group_by':'user_ids'}"/>
+                    <filter string="Dashboard" name="dashboard" domain="[]" context="{'group_by':'dashboard_id'}"/>
+                </group>
+                <field name="dashboard_id"/>
+                <field name="user_ids"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="actions_spreadsheet_dashboard_favorite_filters_view" model="ir.actions.act_window">
+        <field name="name">User-defined Dashboard Filters</field>
+        <field name="res_model">spreadsheet.dashboard.favorite.filters</field>
+    </record>
+
+</odoo>
