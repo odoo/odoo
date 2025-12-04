@@ -52,6 +52,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                 "name": "__init__.py",
                                 "raw_access_token": attachment._get_raw_access_token(),
                                 "res_name": False,
+                                "res_model": attachment.res_model,
                                 "thread": False,
                                 "voice": False,
                                 "type": "cloud_storage",
