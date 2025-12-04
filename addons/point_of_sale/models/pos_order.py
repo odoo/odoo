@@ -58,6 +58,17 @@ class PosOrder(models.Model):
     def _load_pos_data_domain(self, data):
         return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'][0]['id'])]
 
+    def _load_pos_data(self, data):
+        domain = self._server_date_to_domain(self._load_pos_data_domain(data))
+        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
+        open_orders = self.search(domain)
+        orders = open_orders._ensure_refunded_orders()
+        return orders.read(fields, load=False)
+
+    def _ensure_refunded_orders(self):
+        refunded_order_ids = self.refunded_order_id + self.lines.refund_orderline_ids.order_id
+        return self + refunded_order_ids
+
     @api.model
     def _process_order(self, order, existing_order):
         """Create or update an pos.order from a given dictionary.
@@ -1200,9 +1211,9 @@ class PosOrder(models.Model):
 
     def read_pos_data(self, data, config_id):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-
+        orders = self._ensure_refunded_orders()
         return {
-            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order': orders.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.session': [],
             'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
