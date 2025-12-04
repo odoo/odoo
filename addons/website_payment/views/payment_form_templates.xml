@@ -12,9 +12,9 @@
 
     <!-- Display of /donation/pay -->
     <template id="website_payment.donation_pay" name="Donation payment">
-        <t t-call="portal.frontend_layout">
-            <t t-set="page_title">Donation</t>
-            <t t-set="additional_title"><t t-out="page_title"/></t>
+        <t t-set="page_title">Donation</t>
+        <t t-set="additional_title"><t t-out="page_title"/></t>
+        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
             <div class="wrap">
                 <div class="oe_structure" id="oe_structure_website_payment_donation_1"/>
                 <div class="container mb-3">
@@ -107,9 +107,7 @@
                             <input class="form-check-input" type="radio" id="other_amount" name="amount"
                                 t-att-value="amount" t-att-checked="not has_checked or None"/>
                             <label class="form-check-label mt-0 d-block" for="other_amount"/>
-                            <t t-call="website_payment.donation_input">
-                                <t t-set="amount" t-value="not has_checked and amount or ''"/>
-                            </t>
+                            <t t-call="website_payment.donation_input" amount="not has_checked and amount or ''"/>
                         </div>
                     </t>
                     <t t-else="">

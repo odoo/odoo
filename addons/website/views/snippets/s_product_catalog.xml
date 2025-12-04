@@ -12,41 +12,35 @@
                 <div class="col-lg-6 pt16 pb16">
                     <h3 class="h4-fs">Pastries</h3>
                     <ul class="list-unstyled my-3">
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Croissant</t>
-                            <t t-set="price">$1.50</t>
-                            <t t-set="description">A buttery, flaky pastry with a golden-brown crust, perfect for breakfast or a light snack.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Cinnamon Roll</t>
-                            <t t-set="price">$3.00</t>
-                            <t t-set="description">Soft, sweet dough rolled with cinnamon and sugar, topped with a rich cream cheese frosting.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Sourdough Bread</t>
-                            <t t-set="price">$5.00</t>
-                            <t t-set="description">A crusty loaf with a chewy interior, made with a naturally fermented sourdough starter for a tangy flavor.</t>
-                        </t>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Croissant"
+                            price.translate="$1.50"
+                            description.translate="A buttery, flaky pastry with a golden-brown crust, perfect for breakfast or a light snack."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Cinnamon Roll"
+                            price.translate="$3.00"
+                            description.translate="Soft, sweet dough rolled with cinnamon and sugar, topped with a rich cream cheese frosting."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Sourdough Bread"
+                            price.translate="$5.00"
+                            description.translate="A crusty loaf with a chewy interior, made with a naturally fermented sourdough starter for a tangy flavor."/>
                     </ul>
                 </div>
                 <div class="col-lg-6 pt16 pb16">
                     <h3 class="h4-fs">Cakes</h3>
                     <ul class="list-unstyled my-3">
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Classic Cheesecake</t>
-                            <t t-set="price">$25.00</t>
-                            <t t-set="description">A creamy, smooth cheesecake with a graham cracker crust, topped with a layer of fresh fruit or chocolate ganache.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Red Velvet Cake</t>
-                            <t t-set="price">$28.00</t>
-                            <t t-set="description">A moist, red-hued cake with layers of cream cheese frosting, perfect for any special occasion.</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Carrot Cake</t>
-                            <t t-set="price">$26.00</t>
-                            <t t-set="description">A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, topped with a tangy cream cheese frosting.</t>
-                        </t>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Classic Cheesecake"
+                            price.translate="$25.00"
+                            description.translate="A creamy, smooth cheesecake with a graham cracker crust, topped with a layer of fresh fruit or chocolate ganache."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Red Velvet Cake"
+                            price.translate="$28.00"
+                            description.translate="A moist, red-hued cake with layers of cream cheese frosting, perfect for any special occasion."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Carrot Cake"
+                            price.translate="$26.00"
+                            description.translate="A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, topped with a tangy cream cheese frosting."/>
                     </ul>
                 </div>
             </div>

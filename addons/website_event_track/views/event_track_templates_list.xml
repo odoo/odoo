@@ -2,10 +2,10 @@
 <odoo>
 
 <template id="tracks_session" name="Event Tracks">
-    <t t-call="website_event.layout">
+    <t t-call="website_event.layout"
+        option_track_wishlist="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')">
         <div class="o_wevent_online o_wesession_index container">
             <!-- Options -->
-            <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')"/>
             <!-- Topbar -->
             <t t-call="website_event_track.session_topbar"/>
             <!-- Drag/Drop Area -->
@@ -53,13 +53,13 @@
                 </div>
             </div>
             <div class="o_wevent_search d-flex w-100 w-lg-auto">
-                <t t-call="website.website_search_box_input">
-                    <t t-set="_classes" t-valuef="o_wevent_event_track_searchbar_form flex-grow-1"/>
-                    <t t-set="search_type" t-translation="off">track</t>
-                    <t t-set="action" t-value="'/event/%s/track' % (slug(event))"/>
-                    <t t-set="display_detail" t-valuef="false"/>
-                    <t t-set="search" t-value="search or searches and searches['search']"/>
-                    <t t-set="placeholder">Search a talk ...</t>
+                <t t-call="website.website_search_box_input"
+                    _classes.f="o_wevent_event_track_searchbar_form flex-grow-1"
+                    search_type.translate="track"
+                    action="'/event/%s/track' % (slug(event))"
+                    display_detail.f="false"
+                    search="search or searches and searches['search']"
+                    placeholder.translate="Search a talk ...">
                     <t t-foreach="searches" t-as="item">
                         <input t-if="item != 'search' and item_value != 'all'" type="hidden"
                             t-att-name="item" t-att-value="item_value"/>
@@ -209,17 +209,13 @@
         <div class="col-12">
             <h4>Live Now</h4>
         </div>
-        <t t-call="website_event_track.track_cards_section">
-            <t t-set="tracks" t-value="tracks_live"/>
-        </t>
+        <t t-call="website_event_track.track_cards_section" tracks="tracks_live"/>
     </div>
     <div class="row mb-3" t-if="tracks_soon">
         <div class="col-12">
             <h4>Coming soon ...</h4>
         </div>
-        <t t-call="website_event_track.track_cards_section">
-            <t t-set="tracks" t-value="tracks_soon"/>
-        </t>
+        <t t-call="website_event_track.track_cards_section" tracks="tracks_soon"/>
     </div>
 </template>
 
@@ -305,17 +301,13 @@
                 <div t-if="track.website_image_url" class="card-img-top"
                     t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
                     <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2 text-white" style="right: 0; top: 0;">
-                        <t t-call="website_event_track.track_widget_reminder">
-                            <t t-set="reminder_light" t-value="True"/>
-                        </t>
+                        <t t-call="website_event_track.track_widget_reminder" reminder_light="True"/>
                     </span>
                 </div>
                 <div t-else="" class="o_wesession_gradient card-img-top position-relative"
                     style="padding-top: 50%;">
                     <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2" style="right: 0; top: 0;">
-                        <t t-call="website_event_track.track_widget_reminder">
-                            <t t-set="reminder_light" t-value="True"/>
-                        </t>
+                        <t t-call="website_event_track.track_widget_reminder" reminder_light="True"/>
                     </span>
                     <i class="fa fa-glass fa-2x mx-2 mb-3 position-absolute text-white-75" style="right:0; bottom: 0;"/>
                 </div>
@@ -386,10 +378,9 @@
             <!-- reminder -->
             <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))"
                  class="d-none d-md-block py-1">
-                <t t-call="website_event_track.track_widget_reminder">
-                    <t t-set="reminder_small" t-value="False"/>
-                    <t t-set="reminder_light" t-value="False"/>
-                </t>
+                <t t-call="website_event_track.track_widget_reminder"
+                    reminder_small="False"
+                    reminder_light="False"/>
             </div>
         </div>
         <!-- Main column: name, speaker -->
@@ -431,7 +422,7 @@
             <i class="fa fa-bell mx-2 text-muted"/> Favorite Talks
             <a t-att-href="'/event/%s/track?%s' % (slug(event), keep_query('*', search_wishlist=''))"
                 class="btn border-0 py-1">
-                &#215;
+                ×
             </a>
         </span>
 
@@ -441,7 +432,7 @@
                 <t t-out="tag.display_name"/>
                 <span t-att-data-post="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True))"
                     class="post_link cursor-pointer btn border-0 py-1">
-                    &#215;
+                    ×
                 </span>
             </span>
         </t>

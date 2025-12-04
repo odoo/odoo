@@ -2,8 +2,7 @@
 <odoo>
 
 <template id="event_track_proposal">
-    <t t-call="website_event.layout">
-        <t t-set="hide_submenu" t-value="True"/>
+    <t t-call="website_event.layout" hide_submenu="True">
         <div class="oe_structure" id="oe_structure_website_event_track_proposal_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS"/>
         <div class="container">
             <t t-call="website_event.navbar"/>
@@ -158,7 +157,8 @@
 <template id="event_track_proposal_contact_details">
     <div id="event_track_proposal_additional_contact_section" class="col-12">
         <div class="mb-3">
-            <input name="add_contact_information" type= "checkbox" class="o_wetrack_add_contact_information_checkbox"/>
+            <input name="add_contact_information"
+                type="checkbox" class="o_wetrack_add_contact_information_checkbox"/>
             <label class="fw-normal" for="add_contact_information">Contact me through a different email/phone</label>
         </div>
         <div class="o_wetrack_contact_information d-none">

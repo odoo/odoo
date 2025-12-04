@@ -136,9 +136,8 @@
                         </p>
                         <div class="row col-12 align-items-center p-0" t-foreach="certification_badges" t-as="badge">
                             <div class="col-3">
-                                <t t-call="website_profile.badge_header">
-                                    <t t-if="badge.id in certification_badge_urls" t-set="badge_url" t-value="certification_badge_urls[badge.id]"/>
-                                </t>
+                                <t t-if="badge.id in certification_badge_urls" t-set="badge_url" t-value="certification_badge_urls[badge.id]"/>
+                                <t t-call="website_profile.badge_header" badge_url="badge_url"/>
                             </div>
                             <div class="col-6">
                                 <span t-field="badge.description"/>

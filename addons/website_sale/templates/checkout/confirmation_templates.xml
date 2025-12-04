@@ -3,21 +3,22 @@
 
     <!-- /shop/confirmation route -->
     <template id="website_sale.confirmation">
-        <t t-call="website_sale.checkout_layout">
-            <t t-set="show_wizard_checkout" t-value="False"/>
-            <t t-set="show_mobile_cart_summary" t-value="False"/>
-            <t t-set="show_navigation_button" t-value="False"/>
-            <t t-set="show_footer" t-value="True"/>
-            <t t-set="additional_title">Shop - Confirmed</t>
-            <t t-set="hide_promotions" t-value="True"/>
-            <t t-set="oe_structure">
-                <!-- This is the drag-and-drop area for website building blocs at the end of each
-                     checkout page. This is append at the of the page in `checkout_layout`. The
-                     templates created in the database to store blocs are hooked using XPath on the
-                     `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
-                     t-att-id) and each template needs to define a div element. -->
-                <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
-            </t>
+        <t t-set="oe_structure">
+            <!-- This is the drag-and-drop area for website building blocs at the end of each
+                 checkout page. This is append at the of the page in `checkout_layout`. The
+                 templates created in the database to store blocs are hooked using XPath on the
+                 `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                 t-att-id) and each template needs to define a div element. -->
+            <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
+        </t>
+        <t t-call="website_sale.checkout_layout"
+            show_wizard_checkout="False"
+            show_mobile_cart_summary="False"
+            show_navigation_button="False"
+            show_footer="True"
+            additional_title.translate="Shop - Confirmed"
+            hide_promotions="True"
+            oe_structure="oe_structure">
 
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div
@@ -57,12 +58,7 @@
             <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Shop' t-attf-data-event-params='{"CTA": "Order Confirmed", "amount": "#{"%3s-%3s" % (max(0, round(website_sale_order.amount_total/100)*100 - 50), round(website_sale_order.amount_total/100)*100 + 50)}"}' />
             <div class="d-lg-none">
                 <t t-call="website_sale.cart_summary_content"/>
-                <t t-call="website_sale.total">
-                    <t
-                        t-set="_cart_total_classes"
-                        t-valuef="border-top pt-2"
-                    />
-                </t>
+                <t t-call="website_sale.total" _cart_total_classes.f="border-top pt-2"/>
             </div>
         </t>
     </template>

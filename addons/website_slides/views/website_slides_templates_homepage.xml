@@ -90,13 +90,12 @@
                         <div t-if="invite_error_msg" role="alert" class="o_not_editable alert alert-danger text-center" t-out="invite_error_msg"/>
                         <div class="o_wslides_home_nav">
                             <div class="o_wprofile_email_validation_container">
-                                <t t-call="website_profile.email_validation_banner">
-                                    <t t-set="redirect_url" t-value="'/slides'"/>
-                                    <t t-set="send_alert_classes" t-value="'alert alert-danger alert-dismissable mt-4 mb-0'"/>
-                                    <t t-set="done_alert_classes" t-value="'alert alert-success alert-dismissable mt-4 mb-0'"/>
-                                    <t t-set="additional_validation_email_message"> and join this Community</t>
-                                    <t t-set="additional_validated_email_message"> You may now participate in our eLearning.</t>
-                                </t>
+                                <t t-call="website_profile.email_validation_banner"
+                                    redirect_url.f="/slides"
+                                    send_alert_classes.f="alert alert-danger alert-dismissable mt-4 mb-0"
+                                    done_alert_classes.f="alert alert-success alert-dismissable mt-4 mb-0"
+                                    additional_validation_email_message.translate="and join this Community"
+                                    additional_validated_email_message.translate="You may now participate in our eLearning."/>
                             </div>
                         </div>
                         <t t-call="website_slides.courses_my"/>
@@ -124,7 +123,7 @@
                     </t>
                 </div>
             </div>
-            <t t-call="website_slides.courses_footer"></t>
+            <t t-call="website_slides.courses_footer"/>
             <!-- Off canvas filters on mobile -->
             <div id="o_wslides_index_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
                 <div class="offcanvas-header">
@@ -181,14 +180,14 @@
                 <div class="modal-dialog modal-lg pt-5">
                     <div class="modal-content mt-5 bg-transparent border-0">
                         <div class="o_container_small">
-                            <t t-call="website.website_search_box_input">
-                                <t t-set="default_style" t-valuef="true"/>
-                                <t t-set="search_type" t-valuef="slides"/>
-                                <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
-                                <t t-set="_input_classes" t-valuef="border-0 p-3"/>
-                                <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-set="placeholder">Search courses</t>
-                                <t t-set="search" t-value="original_search or search_term"/>
+                            <t t-call="website.website_search_box_input"
+                                default_style.f="true"
+                                search_type.f="slides"
+                                _classes.f="input-group rounded o_cc o_cc1 mb-1"
+                                _input_classes.f="border-0 p-3"
+                                _submit_classes.f="px-4"
+                                placeholder.translate="Search courses"
+                                search="original_search or search_term">
                                 <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
                                 <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
                                 <input type="hidden" name="prevent_redirect" value="True"/>
@@ -231,14 +230,14 @@
                 </ul>
             </div>
             <div class="d-flex gap-2 align-items-center ms-auto">
-                <t t-call="website.website_search_box_input">
-                    <t t-set="_classes" t-valuef="d-none d-md-flex"/>
-                    <t t-set="search_type" t-valuef="slides"/>
+                <t t-call="website.website_search_box_input"
+                    _classes.f="d-none d-md-flex"
+                    search_type.f="slides"
+                    display_description.f="true"
+                    display_detail.f="false"
+                    placeholder.translate="Search courses"
+                    search="original_search or search_term">
                     <!-- No action: remain on same URL -->
-                    <t t-set="display_description" t-valuef="true"/>
-                    <t t-set="display_detail" t-valuef="false"/>
-                    <t t-set="placeholder">Search courses</t>
-                    <t t-set="search" t-value="original_search or search_term"/>
                     <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
                     <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
                     <input type="hidden" name="prevent_redirect" value="True"/>
@@ -264,9 +263,8 @@
                     />
                 </button>
                 <a t-if="not request.env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
-                    <t t-call="website_slides.slides_misc_user_image">
-                        <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
-                    </t>
+                    <t t-call="website_slides.slides_misc_user_image"
+                        img_class.f="o_wslides_user_avatar rounded-circle"/>
                 </a>
             </div>
         </div>
@@ -279,7 +277,7 @@
           <i class="fa fa-tag me-2 text-muted"/>
           My Courses
           <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term, prevent_redirect=True)"
-             class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
+             class="post_link cursor-pointer btn border-0 py-1">×</span>
         </span>
     </t>
     <t t-if="search_term">
@@ -287,7 +285,7 @@
           <i class="fa fa-tag me-2 text-muted"/>
           <t t-out="search_term"/>
           <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category, prevent_redirect=True)"
-                         class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
+                         class="post_link cursor-pointer btn border-0 py-1">×</span>
         </span>
     </t>
     <t t-foreach="search_tags" t-as="tag">
@@ -295,7 +293,7 @@
             <i class="fa fa-tag me-2 text-muted"/>
             <t t-out="tag.display_name"/>
             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
-                         class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
+                         class="post_link cursor-pointer btn border-0 py-1">×</span>
         </span>
     </t>
 </template>
@@ -388,8 +386,7 @@
 </template>
 
 <template id="course_card_information" name='Course Information'>
-    <t id="course_card_information_content">
-    </t>
+    <t id="course_card_information_content"/>
 </template>
 
 <template id="course_card_information_badge" inherit_id="website_slides.course_card_information"
@@ -419,9 +416,7 @@
 
 <template id='achievement_card' name="Achivement Card">
     <div class="d-flex gap-2">
-        <t t-call="website_slides.slides_misc_user_image">
-            <t t-set="user" t-value="achievement.user_id"/>
-        </t>
+        <t t-call="website_slides.slides_misc_user_image" user="achievement.user_id"/>
         <div>
             <div class="lh-1" t-out="achievement.user_id.name"/>
             <small class="text-muted" t-out="achievement.badge_id.name"/>
@@ -469,9 +464,8 @@
 <template id='slides_home_user_profile_small' name="User Profile">
     <div class="position-relative d-flex justify-content-between gap-3 mb-4">
         <div class="d-flex gap-2">
-            <t t-call="website_slides.slides_misc_user_image">
-                <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
-            </t>
+            <t t-call="website_slides.slides_misc_user_image"
+                img_class.f="o_wslides_user_avatar rounded-circle"/>
             <div class="lh-1">
                 <h6 t-out="user.name" class="mb-0"/>
                 <span class="text-muted"><t t-out="user.karma"/>XP</span>
