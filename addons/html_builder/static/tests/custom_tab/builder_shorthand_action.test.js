@@ -99,14 +99,14 @@ describe("styleAction", () => {
         );
         await setupHTMLBuilder(`<div class="test-options-target" style="width: 10px;">a</div>`);
         await contains(":iframe .test-options-target").click();
-        expect("input").toHaveValue("10");
+        expect("input").toHaveValue(10);
         expect(".options-container").toBeDisplayed();
         expect(":iframe .test-options-target").toHaveStyle({ width: "10px" });
         expect(":iframe .test-options-target").toHaveAttribute("style", "width: 10px;"); // no !important
 
         await contains("input").click();
         await fill("1");
-        expect("input").toHaveValue("101");
+        expect("input").toHaveValue(101);
         expect(":iframe .test-options-target").toHaveStyle({ width: "101px" });
         expect(":iframe .test-options-target").toHaveAttribute("style", "width: 101px;"); // no !important
 

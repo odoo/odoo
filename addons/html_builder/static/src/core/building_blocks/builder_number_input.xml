@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderNumberInput">
     <BuilderComponent>
-        <BuilderTextInputBase
+        <BuilderNumberInputBase
             t-props="textInputBaseProps"
             inputRef="inputRef"
             value="displayValue"
@@ -11,12 +11,17 @@
             inputClasses="props.inputClasses ? `o-hb-input-number text-end ${props.inputClasses}` : 'o-hb-input-number text-end'"
             commit="commit"
             preview="preview"
+            clampValue.bind="clampValue"
             onKeydown.bind="onKeydown"
             onInput.bind="onInput"
             onChange.bind="onChange"
+            composable="props.composable"
+            min="props.min"
+            max="props.max"
+            step="props.step"
             >
             <span class="o-hb-input-field-unit" t-out="props.unit" t-if="!props.placeholder or state.showUnit"/>
-        </BuilderTextInputBase>
+        </BuilderNumberInputBase>
     </BuilderComponent>
 </t>
 

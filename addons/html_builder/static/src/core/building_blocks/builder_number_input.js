@@ -8,7 +8,7 @@ import {
     useInputDebouncedCommit,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { BuilderTextInputBase } from "@html_builder/core/building_blocks/builder_text_input_base";
+import { BuilderNumberInputBase } from "@html_builder/core/building_blocks/builder_number_input_base";
 import { textInputBasePassthroughProps } from "./builder_input_base";
 import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
@@ -27,7 +27,7 @@ export class BuilderNumberInput extends Component {
         composable: { type: Boolean, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
     };
-    static components = { BuilderComponent, BuilderTextInputBase };
+    static components = { BuilderComponent, BuilderNumberInputBase };
     static defaultProps = {
         composable: false,
         applyWithUnit: true,
@@ -98,7 +98,7 @@ export class BuilderNumberInput extends Component {
     }
 
     clampValue(value) {
-        if (!value && value !== 0) {
+        if (this.props.composable && !value && value !== 0) {
             return value;
         }
         value = parseFloat(value);
@@ -115,24 +115,13 @@ export class BuilderNumberInput extends Component {
         if (!displayValue) {
             return displayValue;
         }
-        displayValue = displayValue.replace(/,/g, ".");
-        // Only accept 0-9, dot, - sign and space if multiple values are allowed
         if (this.props.composable) {
             displayValue = displayValue
                 .trim()
+                .replace(/,/g, ".")
                 .replace(/[^0-9.-\s]/g, "")
+                // Only accept "-" at the start or after a space
                 .replace(/(?<!^|\s)-/g, "");
-        } else {
-            displayValue = displayValue
-                .trim()
-                // Remove any space after a "-" to accept "- 10" as "-10"
-                .replace(/-\s*/g, "-")
-                .split(" ")[0]
-                .replace(/[^0-9.-]/g, "")
-                // Only keep "-" if it is at the start
-                .replace(/(?<!^)-/g, "")
-                // Only keep the first "."
-                .replace(/^([^.]*)\.?(.*)/, (_, a, b) => a + (b ? "." + b.replace(/\./g, "") : ""));
         }
         displayValue =
             displayValue.split(" ").map(this.clampValue.bind(this)).join(" ") || this.props.default;
@@ -185,21 +174,6 @@ export class BuilderNumberInput extends Component {
     }
 
     onKeydown(e) {
-        if (!["ArrowUp", "ArrowDown"].includes(e.key)) {
-            return;
-        }
-        const values = e.target.value.split(" ").map((number) => parseFloat(number) || 0);
-        if (e.key === "ArrowUp") {
-            values.forEach((value, i) => {
-                values[i] = this.clampValue(value + (this.props.step || 1));
-            });
-        } else if (e.key === "ArrowDown") {
-            values.forEach((value, i) => {
-                values[i] = this.clampValue(value - (this.props.step || 1));
-            });
-        }
-        e.target.value = values.join(" ");
-        this.preview(e.target.value);
         this.debouncedCommitValue();
     }
 
