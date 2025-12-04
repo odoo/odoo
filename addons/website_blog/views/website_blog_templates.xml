@@ -22,16 +22,17 @@ Used by 'All blogs' and 'blog' (to share the same layout options) and to display
 list of filtered posts (by date or tag).
 ============================================================================ -->
 <template id="blog_post_short" name="Blog Posts">
-    <t t-call="website_blog.index">
-        <t t-set="head">
-            <link t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
-            <meta t-if="active_tag_ids" name="robots" t-attf-content="none"/>
-        </t>
+    <t t-set="head">
+        <link t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
+        <meta t-if="active_tag_ids" name="robots" t-attf-content="none"/>
+    </t>
+    <t t-call="website_blog.index"
+        head="head"
+        opt_blog_readable="is_view_active('website_blog.opt_blog_readable')">
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_cards_design" t-value="is_view_active('website_blog.opt_blog_cards_design')"/>
         <t t-set="opt_blog_list_view" t-value="is_view_active('website_blog.opt_blog_list_view')"/>
-        <t t-set="opt_blog_readable" t-value="is_view_active('website_blog.opt_blog_readable')"/>
         <t t-set="opt_blog_sidebar_show" t-value="is_view_active('website_blog.opt_blog_sidebar_show')"/>
 
         <div id="o_wblog_blog_top">
@@ -53,10 +54,9 @@ list of filtered posts (by date or tag).
             </t>
         </div>
 
-        <t t-call="website_blog.blogs_nav">
-            <t t-set="search" t-value="original_search or search"/>
-            <t t-set="additional_classes" t-value="'mt-3'"/>
-        </t>
+        <t t-call="website_blog.blogs_nav"
+            search="original_search or search"
+            additional_classes.f="mt-3"/>
 
         <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
             <div class="container py-4">
@@ -66,14 +66,11 @@ list of filtered posts (by date or tag).
                 <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
                     <div id="o_wblog_posts_loop_container" t-attf-class="col #{'o_container_small mx-0' if opt_blog_list_view else ''}">
 
-                        <t t-call="website_blog.posts_loop">
-                            <t t-if="not blog" t-set="posts_list_show_parent_blog" t-value="True"/>
-                        </t>
+                        <t t-if="not blog" t-set="posts_list_show_parent_blog" t-value="True"/>
+                        <t t-call="website_blog.posts_loop"
+                            posts_list_show_parent_blog="posts_list_show_parent_blog"/>
 
-                        <t t-call="website.pager" >
-                            <t t-set="classname" t-valuef="justify-content-center"/>
-                            <t t-set="extraLinkClass" t-valuef="post_link"/>
-                        </t>
+                        <t t-call="website.pager" classname.f="justify-content-center" extraLinkClass.f="post_link" />
                     </div>
                 </div>
             </div>
@@ -93,10 +90,9 @@ list of filtered posts (by date or tag).
             <div class="row py-4">
                 <t t-if="blog">
                     <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
-                        <t t-call="website.record_cover">
-                            <t t-set="_record" t-value="blog"/>
-                            <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
-                        </t>
+                        <t t-call="website.record_cover"
+                            _record="blog"
+                            additionnal_classes.f="h-100 py-5 py-md-0 overflow-hidden rounded shadow"/>
                     </div>
                     <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
                         <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
@@ -119,11 +115,11 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Show latest-post as top banner : 'Full Width' design -->
 <template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True">
     <xpath expr="//div[hasclass('container')]" position="replace">
-        <t t-if="blog" t-call="website.record_cover">
-            <t t-set="_record" t-value="blog"/>
-            <t t-set="use_filters" t-value="True"/>
-            <t t-set="use_text_align" t-value="True"/>
-            <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
+        <t t-if="blog" t-call="website.record_cover"
+            _record="blog"
+            use_filters="True"
+            use_text_align="True"
+            additionnal_classes.f="o_wblog_post_page_cover o_record_has_cover cover_auto">
             <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title">
                     <span t-att-title="blog.name" class="text-white text-decoration-none">
@@ -169,23 +165,23 @@ list of filtered posts (by date or tag).
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
 <template id="website_blog.blog_post_complete" name="Blog Post" track="1">
-    <t t-call="website_blog.index">
+    <t t-call="website_blog.index"
+        opt_blog_post_regular_cover="is_view_active('website_blog.opt_blog_post_regular_cover')"
+        opt_blog_post_breadcrumb="is_view_active('website_blog.opt_blog_post_breadcrumb')">
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_post_readable" t-value="is_view_active('website_blog.opt_blog_post_readable')"/>
         <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>
-        <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
-        <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
 
         <section id="o_wblog_post_top">
             <div id="title" class="blog_header" t-ignore="True">
-                <t t-call="website.record_cover">
+                <t t-call="website.record_cover"
+                    snippet_autofocus="True"
+                    use_filters="True"
+                    use_size="True"
+                    display_opt_name.translate="Blog Post Cover"
+                    additionnal_classes.f="o_wblog_post_page_cover">
                     <t t-set="_record" t-value="blog_post"/>
-                    <t t-set="snippet_autofocus" t-value="True"/>
-                    <t t-set="use_filters" t-value="True"/>
-                    <t t-set="use_size" t-value="True"/>
-                    <t t-set="display_opt_name">Blog Post Cover</t>
-                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover'"/>
 
                     <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                         <div t-attf-class="o_wblog_post_title">
@@ -232,9 +228,8 @@ list of filtered posts (by date or tag).
 <!-- ====== Blog Post Content ==================================================
 ============================================================================ -->
 <template id="blog_post_content" name="Blog post content">
-    <t t-if="opt_blog_post_breadcrumb and not opt_blog_post_regular_cover" t-call="website_blog.post_breadcrumbs">
-        <t t-set="additionnal_classes" t-value="'mb-3 bg-transparent'"></t>
-    </t>
+    <t t-if="opt_blog_post_breadcrumb and not opt_blog_post_regular_cover" t-call="website_blog.post_breadcrumbs"
+        additionnal_classes.f="mb-3 bg-transparent"/>
     <t t-if="not opt_blog_post_regular_cover">
         <t t-call="website_blog.blog_post_info"/>
     </t>
@@ -275,9 +270,8 @@ list of filtered posts (by date or tag).
 
             <div id="title" t-attf-class="blog_header o_wblog_regular_cover_container #{readableClass}">
 
-                <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs">
-                    <t t-set="additionnal_classes" t-value="'mt-4 mb-3 bg-transparent'"></t>
-                </t>
+                <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs"
+                    additionnal_classes.f="mt-4 mb-3 bg-transparent"/>
 
                 <div t-att-class="not opt_blog_post_breadcrumb and 'pt-4'">
                     <div t-attf-class="o_wblog_post_title mb-3" t-ignore="False">
@@ -287,11 +281,10 @@ list of filtered posts (by date or tag).
                     <t t-call="website_blog.blog_post_info"/>
                 </div>
 
-                <t t-call="website.record_cover">
-                    <t t-set="_record" t-value="blog_post"/>
-                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_regular rounded shadow overflow-hidden'"/>
-                    <t t-set="use_size" t-value="True"/>
-                </t>
+                <t t-call="website.record_cover"
+                    _record="blog_post"
+                    additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_regular rounded shadow overflow-hidden"
+                    use_size="True"/>
             </div>
         </div>
     </xpath>
@@ -316,9 +309,7 @@ list of filtered posts (by date or tag).
                     <div groups="base.group_public" class="small mb-4">
                         <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
                     </div>
-                    <t t-call="portal.message_thread">
-                        <t t-set="object" t-value="blog_post"/>
-                    </t>
+                    <t t-call="portal.message_thread" object="blog_post"/>
                 </div>
             </div>
         </div>
@@ -347,10 +338,9 @@ list of filtered posts (by date or tag).
                                 </a>
                             </div>
                             <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25 flex-shrink-0">
-                                <t t-call="website.record_cover">
-                                    <t t-set="_record" t-value="next_post"/>
-                                    <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
-                                </t>
+                                <t t-call="website.record_cover"
+                                    _record="next_post"
+                                    additionnal_classes.f="rounded shadow-sm overflow-hidden h-100"/>
                             </a>
                         </div>
                     </div>
@@ -359,11 +349,11 @@ list of filtered posts (by date or tag).
             <t t-else="">
                 <div id="o_wblog_next_container" class="d-flex flex-column">
                     <button aria-labelledby="o_wblog_next_title" class="o_wblog_next_button o_button_area btn z-1"/>
-                    <t t-call="website.record_cover">
+                    <t t-call="website.record_cover"
+                        use_filters="True"
+                        additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover">
                         <t t-set="_record" t-value="next_post"/>
                         <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
-                        <t t-set="use_filters" t-value="True"/>
-                        <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover'"/>
 
                         <a id="o_wblog_next_post_info" class="d-none"
                            t-att-data-size="_cp.get('resize_class')"
@@ -389,8 +379,10 @@ list of filtered posts (by date or tag).
                             occupied  by the loader circle. For auto covers, an empty <div>
                             creates enought separation.
                             -->
-                            <div t-if="not next_cover_is_auto" class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
-                                <div class="rounded-circle bg-black-50"/>
+                            <div
+                                t-if="not next_cover_is_auto"
+                                class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
+                                <div class="rounded-circle bg-black-50"></div>
                             </div>
                             <div t-else="" class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
                         </div>

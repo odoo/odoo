@@ -2,16 +2,17 @@
 <odoo>
     <!-- /shop/l10n_tw_invoicing_info route -->
     <template id="l10n_tw_edi_invoicing_info">
-        <t t-call="website_sale.checkout_layout">
-            <t t-set="additional_title">ECpay information</t>
-            <t t-set="oe_structure">
-                <!-- This is the drag-and-drop area for website building blocs at the end of each
-                     checkout page. This is append at the of the page in `checkout_layout`. The
-                     templates created in the database to store blocs are hooked using XPath on the
-                     `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
-                     t-att-id) and each template needs to define a div element. -->
-                <div class="oe_structure" id="oe_structure_l10n_tw_edi_website_sale_extra_info_1"/>
-            </t>
+        <t t-set="oe_structure">
+            <!-- This is the drag-and-drop area for website building blocs at the end of each
+                 checkout page. This is append at the of the page in `checkout_layout`. The
+                 templates created in the database to store blocs are hooked using XPath on the
+                 `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                 t-att-id) and each template needs to define a div element. -->
+            <div class="oe_structure" id="oe_structure_l10n_tw_edi_website_sale_extra_info_1"/>
+        </t>
+        <t t-call="website_sale.checkout_layout"
+            additional_title.translate="ECpay information"
+            oe_structure="oe_structure">
             <section>
                 <div t-attf-class="container o_l10n_tw_edi_invoicing_info">
                     <h3>Invoicing Info</h3>

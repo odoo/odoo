@@ -24,9 +24,7 @@
                         <i class="oi oi-plus me-2"/>Add Address
                     </a>
                 </div>
-                <t t-call="portal.address_list">
-                    <t t-set="addresses" t-value="delivery_addresses"/>
-                </t>
+                <t t-call="portal.address_list" addresses="delivery_addresses"/>
                 <t t-set="address_type" t-valuef="billing"/>
                 <t
                         t-set="new_address_url"
@@ -59,9 +57,7 @@
                     id="billing_container"
                     t-attf-class="mt-3 {{'d-none' if use_delivery_as_billing else ''}}"
                 >
-                    <t t-call="portal.address_list">
-                        <t t-set="addresses" t-value="billing_addresses"/>
-                    </t>
+                    <t t-call="portal.address_list" addresses="billing_addresses"/>
                 </div>
             </section>
         </t>
@@ -73,19 +69,21 @@
             t-attf-class="o_portal_address_list d-flex flex-column gap-2"
         >
             <t t-foreach="addresses" t-as="address">
-                <t t-call="portal.address_card">
-                    <t t-set="contact" t-value="address"/>
+                <t
+                    t-set="can_be_edited"
+                    t-value="address._can_be_edited_by_current_customer()"
+                />
+                <t t-set="selected" t-value="address == selected_address"/>
+                <t t-call="portal.address_card"
+                    contact="address"
+                    can_be_edited="can_be_edited"
+                    selected="selected"
+                    show_removal="can_be_edited and not selected and not is_user_address">
                     <t t-set="is_user_address" t-value="address == request.env.user.partner_id"/>
                     <t t-if="is_user_address">
                         <!-- Edition of main address should go through dedicated page -->
                         <t t-set="address_update_url" t-valuef="/my/account?redirect=/my/addresses"/>
                     </t>
-                    <t
-                        t-set="can_be_edited"
-                        t-value="address._can_be_edited_by_current_customer()"
-                    />
-                    <t t-set="selected" t-value="address == selected_address"/>
-                    <t t-set="show_removal" t-value="can_be_edited and not selected and not is_user_address"/>
                 </t>
             </t>
         </div>
@@ -409,8 +407,7 @@
 
     <template id="portal.portal_my_details" name="Contact Details">
         <t t-set="no_footer" t-value="1"/>
-        <t t-call="portal.portal_layout">
-            <t t-set="additional_title">Contact Details</t>
+        <t t-call="portal.portal_layout" additional_title.translate="Contact Details">
             <div class="o_customer_address_fill">
                 <div class="row">
                     <div name="address_div" class="oe_clear_stucture col-12 col-lg-8">
@@ -438,8 +435,7 @@
 
     <template id="portal.address_management"  name="Address Management">
         <t t-set="no_footer" t-value="1"/>
-        <t t-call="portal.portal_layout">
-            <t t-set="additional_title">Address Management</t>
+        <t t-call="portal.portal_layout" additional_title.translate="Address Management">
             <div class="o_customer_address_fill">
                 <div class="row">
                     <div name="address_div" class="oe_clear_stucture col-12 col-lg-8">

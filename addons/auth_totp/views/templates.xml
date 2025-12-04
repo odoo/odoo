@@ -1,8 +1,7 @@
 <odoo>
 
     <template id="auth_totp_form" name="Two-Factor Authentication">
-        <t t-call="web.login_layout">
-            <t t-set="disable_footer">1</t>
+        <t t-call="web.login_layout" disable_footer.translate="1">
             <div class="oe_login_form">
                 <h5 class="card-title">Two-factor Authentication</h5>
                 <form method="POST" action="" class="">

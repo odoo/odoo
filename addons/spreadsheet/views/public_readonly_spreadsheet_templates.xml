@@ -2,14 +2,14 @@
 <odoo>
 
 <template id="spreadsheet.public_spreadsheet_layout" name="Public spreadsheet layout">
-    <t t-call="web.layout">
-        <t t-set="head">
-            <script>
-                odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
-                odoo.__session_info__.spreadsheet_public_props = <t t-out="json.dumps(props)"/>;
-            </script>
-            <t t-call-assets="spreadsheet.public_spreadsheet"/>
-        </t>
+    <t t-set="head">
+        <script>
+            odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+            odoo.__session_info__.spreadsheet_public_props = <t t-out="json.dumps(props)"/>;
+        </script>
+        <t t-call-assets="spreadsheet.public_spreadsheet"/>
+    </t>
+    <t t-call="web.layout" head="head">
         <div class="d-flex flex-column justify-content vh-100 o-public-spreadsheet">
             <header class="container-fluid p-0 d-flex align-items-center justify-content-between border-bottom">
                 <div t-out="spreadsheet_name" class="text-primary fw-bold ps-3"/>
@@ -20,15 +20,13 @@
                     </div>
                 </div>
                 <div class="nav d-table my-auto">
-                    <t t-call="portal.user_dropdown">
-                        <t t-set="_user_name" t-value="True"/>
-                        <t t-set="_item_class" t-valuef="nav-item d-table-cell text-center"/>
-                        <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
-                    </t>
-                    <t t-call="portal.user_sign_in_redirect">
-                        <t t-set="_item_class" t-valuef="nav-item d-table-cell text-center"/>
-                        <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
-                    </t>
+                    <t t-call="portal.user_dropdown"
+                        _user_name="True"
+                        _item_class.f="nav-item d-table-cell text-center"
+                        _link_class.f="nav-link fw-bold"/>
+                    <t t-call="portal.user_sign_in_redirect"
+                        _item_class.f="nav-item d-table-cell text-center"
+                        _link_class.f="nav-link fw-bold"/>
                 </div>
             </header>
             <main id="spreadsheet-mount-anchor" class="flex-fill"/>

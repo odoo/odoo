@@ -16,7 +16,7 @@
             <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="company" t-value="o.company_id"/>
 
-            <t t-call="l10n_cn.external_layout_standard">
+            <t t-call="l10n_cn.external_layout_standard" colspan="4">
                 <div class="page">
 
                     <div align="center">
@@ -47,7 +47,6 @@
                     <table class="table table-borderless o_main_table" name="entry_line_table">
                         <thead>
                             <tr>
-                                <t t-set="colspan" t-value="4"/>
                                 <th name="th_description" class="text-center"><span>Balance</span></th>
                                 <th name="th_account" class="text-center"><span>Account</span></th>
                                 <th name="th_debit" class="text-center"><span>Debit</span></th>

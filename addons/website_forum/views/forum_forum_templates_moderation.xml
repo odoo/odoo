@@ -3,13 +3,12 @@
     <data>
 
 <template id="moderation_display_post_question_block">
-    <t t-call="website_forum.display_post_question_block">
-        <t t-set="post_content">
-            <div class="clearfix">
-                <span t-field="question.content" class="oe_no_empty"/>
-            </div>
-        </t>
+    <t t-set="post_content">
+        <div class="clearfix">
+            <span t-field="question.content" class="oe_no_empty"/>
+        </div>
     </t>
+    <t t-call="website_forum.display_post_question_block" post_content="post_content"/>
 </template>
 
 <!-- Moderation: close a post -->
@@ -68,7 +67,7 @@
     <t t-set="website_forum_action" t-valuef="o_wforum_moderation_queue"/>
 
     <t t-call="website_forum.header">
-        <t t-call="website_forum.no_results_message"><t t-set="hide_alert" t-value="len(posts_ids) > 0"/></t>
+        <t t-call="website_forum.no_results_message" hide_alert="len(posts_ids) > 0"></t>
         <div id="queue_type" t-att-data-queue-type="queue_type"/>
 
         <div class="modal fade" t-att-data-spam-ids="str(posts_ids.ids)" id="markAllAsSpam" tabindex="-1" role="dialog" aria-labelledby="markAllAsSpam" aria-hidden="true">
@@ -164,14 +163,13 @@
                         <div t-foreach="question" t-as="answer" class="d-flex flex-column col-md-9 col-sm-8 mb-2">
                             <span t-field="answer.content" class="oe_no_empty flex-grow-1 mb-2"/>
                             <div class="mt-auto">
-                                <t t-call="website_forum.author_box">
-                                    <t t-set="object" t-value="question"/>
-                                    <t t-set="_image_classes" t-value="'rounded-circle'"/>
-                                    <t t-set="allow_biography" t-value="True"/>
-                                    <t t-set="show_image" t-value="True"/>
-                                    <t t-set="show_name" t-value="True"/>
-                                    <t t-set="compact" t-value="True"/>
-                                </t>
+                                <t t-call="website_forum.author_box"
+                                    object="question"
+                                    _image_classes.f="rounded-circle"
+                                    allow_biography="True"
+                                    show_image="True"
+                                    show_name="True"
+                                    compact="True"/>
                                 <small class="text-muted">
                                     <i class="fa fa-calendar ms-4 me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                                 </small>
@@ -181,14 +179,13 @@
                     <div t-if="not question.parent_id" class="d-flex flex-column col">
                         <span t-field="question.content" class="oe_no_empty flex-grow-1"/>
                         <div class="mt-auto">
-                            <t t-call="website_forum.author_box">
-                                <t t-set="object" t-value="question"/>
-                                <t t-set="_image_classes" t-value="'rounded-circle'"/>
-                                <t t-set="allow_biography" t-value="True"/>
-                                <t t-set="show_image" t-value="True"/>
-                                <t t-set="show_name" t-value="True"/>
-                                <t t-set="compact" t-value="True"/>
-                            </t>
+                            <t t-call="website_forum.author_box"
+                                object="question"
+                                _image_classes.f="rounded-circle"
+                                allow_biography="True"
+                                show_image="True"
+                                show_name="True"
+                                compact="True"/>
                             <small class="text-muted">
                                 <i class="fa fa-calendar ms-4 me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                             </small>
@@ -197,22 +194,20 @@
                     <t t-set="post_url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(question) }"/>
                     <div class="col-sm-3 o_wforum_validation_queue">
                         <div class="text-center d-flex flex-row gap-2 flex-lg-column align-items-stretch mt-2 mt-lg-0">
-                            <t t-if="queue_type == 'close'" t-call="website_forum.link_button">
-                                <t t-set="url" t-valuef="/forum/#{ slug(forum) }/question/#{ slug(question) }/reopen"/>
-                                <t t-set="label">Reopen</t>
-                                <t t-set="icon" t-value="'fa fa-folder-open'"/>
-                                <t t-set="karma" t-value="question.karma_close if not question.can_close else 0"/>
-                                <t t-set="form_classes" t-value="'d-flex'"/>
-                                <t t-set="classes" t-value="'btn-outline-primary flex-grow-1'"/>
-                            </t>
-                            <t t-if="queue_type == 'close'" t-call="website_forum.link_button">
-                                <t t-set="url" t-valuef="#{ post_url }/delete"/>
-                                <t t-set="label">Delete</t>
-                                <t t-set="icon" t-value="'fa fa-trash'"/>
-                                <t t-set="karma" t-value="question.karma_unlink if not question.can_unlink else 0"/>
-                                <t t-set="form_classes" t-value="'d-flex'"/>
-                                <t t-set="classes" t-value="'btn-outline-danger flex-grow-1'"/>
-                            </t>
+                            <t t-if="queue_type == 'close'" t-call="website_forum.link_button"
+                                url.f="/forum/#{ slug(forum) }/question/#{ slug(question) }/reopen"
+                                label.translate="Reopen"
+                                icon.f="fa fa-folder-open"
+                                karma="question.karma_close if not question.can_close else 0"
+                                form_classes.f="d-flex"
+                                classes.f="btn-outline-primary flex-grow-1"/>
+                            <t t-if="queue_type == 'close'" t-call="website_forum.link_button"
+                                url.f="#{ post_url }/delete"
+                                label.translate="Delete"
+                                icon.f="fa fa-trash"
+                                karma="question.karma_unlink if not question.can_unlink else 0"
+                                form_classes.f="d-flex"
+                                classes.f="btn-outline-danger flex-grow-1"/>
 
                             <form t-else="" method="POST" t-attf-action="#{ post_url }/validate" title="Validate" aria-label="Validate">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>

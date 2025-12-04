@@ -146,8 +146,8 @@
                         </a>
                     </h2>
                     <!-- Description -->
-                    <t t-call="website_sale.product_tile_element_visibility">
-                        <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_description'"/>
+                    <t t-call="website_sale.product_tile_element_visibility"
+                        visible_element_class.f="o_wsale_products_opt_has_description">
 
                         <div class="oe_subdescription_wrapper">
                             <div
@@ -162,14 +162,14 @@
                     <t
                         t-if="is_view_active('website_sale.product_comment')"
                         t-call="website_sale.product_tile_element_visibility"
+                        visible_element_class.f="o_wsale_products_opt_has_rating"
                     >
-                        <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_rating'"/>
 
                         <div class="o_wsale_product_rating_wrapper">
-                            <t t-call="portal_rating.rating_widget_stars_static">
+                            <t t-call="portal_rating.rating_widget_stars_static"
+                                rating_avg="product.sudo().rating_avg"
+                                rating_count="product.rating_count">
                                 <!-- sudo: product.product - visitor can access product average rating -->
-                                <t t-set="rating_avg" t-value="product.sudo().rating_avg"/>
-                                <t t-set="rating_count" t-value="product.rating_count"/>
                             </t>
                         </div>
                     </t>
@@ -225,8 +225,8 @@
             <t
                 t-if="product._website_show_quick_add()"
                 t-call="website_sale.product_tile_element_visibility"
+                visible_element_class.f="o_wsale_products_opt_has_cta"
             >
-                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_cta'"/>
                 <button
                     name="add_to_cart"
                     class="o_wsale_product_btn_primary btn btn-primary"

@@ -210,11 +210,10 @@
                         title="Unpublished"
                         class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
                     <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))">
-                        <t t-call="website_event_track.track_widget_reminder">
-                            <t t-set="reminder_light" t-value="False"/>
-                            <t t-set="reminder_small" t-value="True"/>
-                            <t t-set="light_theme" t-value="False"/>
-                        </t>
+                        <t t-call="website_event_track.track_widget_reminder"
+                            reminder_light="False"
+                            reminder_small="True"
+                            light_theme="False"/>
                     </span>
                 </div>
             </div>

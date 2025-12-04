@@ -2,10 +2,10 @@
 <odoo>
     <!-- Template rendered in route auth=None, for anonymous user. This allow them to see meeting details -->
     <template id="invitation_page_anonymous" name="Calendar Invitation Page for anonymous users">
-        <t t-call="web.layout">
-            <t t-set="head">
-                <t t-call-assets="web.assets_frontend" t-js="false"/>
-            </t>
+        <t t-set="head">
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+        </t>
+        <t t-call="web.layout" head="head">
 
             <div class="container">
                 <div class="o_logo">

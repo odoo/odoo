@@ -39,15 +39,14 @@
                     </th>
                 </tr>
             </thead>
-            <t t-foreach="question_ids" t-as="question" t-call="website_forum.display_post">
-                <t t-set="show_author_avatar" t-value="true"/>
-            </t>
+            <t t-foreach="question_ids" t-as="question" t-call="website_forum.display_post"
+                show_author_avatar="true"/>
         </table>
-        <t t-if="question_count == 0 or original_search" t-call="website_forum.no_results_message">
-            <t t-set="record_name_plural">posts</t>
-            <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
-            <t t-set="go_back_url" t-valuef="/forum/#{_forum_slug}/"/>
-        </t>
+        <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
+        <t t-if="question_count == 0 or original_search" t-call="website_forum.no_results_message"
+            record_name_plural.translate="posts"
+            _forum_slug="_forum_slug"
+            go_back_url.f="/forum/#{_forum_slug}/"/>
         <t t-call="website.pager"/>
     </t>
 </template>
@@ -260,14 +259,13 @@
         <div class="row g-0 mt-3 mb-5" t-if="tags">
             <div class="col-3 pe-3 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
                 <span t-attf-class="#{ 'd-block' if request.env.user._is_public() else 'd-flex align-items-baseline'}">
-                    <t t-call="website_forum.follow">
-                        <t t-set="email" t-value="user_id.email"/>
-                        <t t-set="object" t-value="tag"/>
-                        <t t-set="icons_design" t-value="True"/>
-                        <t t-set="div_class" t-value="'d-inline'"/>
-                        <t t-set="btn_classes" t-value="'px-2'"/>
-                        <t t-set="follow_btn_classes" t-value="'opacity-50'"/>
-                    </t>
+                    <t t-call="website_forum.follow"
+                        email="user_id.email"
+                        object="tag"
+                        icons_design="True"
+                        div_class.f="d-inline"
+                        btn_classes.f="px-2"
+                        follow_btn_classes.f="opacity-50"/>
                     <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.message_is_follower else 'text-muted' }"
                        t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
                         <t t-out="tag.name"/>&amp;nbsp;

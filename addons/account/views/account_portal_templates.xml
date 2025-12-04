@@ -13,12 +13,9 @@
     </template>
 
     <template id="portal_my_invoices" name="My Invoices and Payments">
-      <t t-call="portal.portal_layout">
-        <t t-set="breadcrumbs_searchbar" t-value="True"/>
+      <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-        <t t-call="portal.portal_searchbar">
-            <t t-set="title">Invoices</t>
-        </t>
+        <t t-call="portal.portal_searchbar" title.translate="Invoices"/>
         <t t-if="not invoices">
             <p class="alert alert-warning">There are currently no invoices and payments for your account.</p>
         </t>
@@ -85,11 +82,8 @@
     </template>
 
     <template id="portal_my_journal_mail_notifications" name="My journal email notification settings">
-        <t t-call="portal.portal_layout">
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Email Notifications</t>
-            </t>
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
+            <t t-call="portal.portal_searchbar" title.translate="Email Notifications"/>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -123,87 +117,89 @@
     </template>
 
     <template id="portal_invoice_page" name="Invoice/Bill" inherit_id="portal.portal_sidebar" primary="True">
-        <t t-call="portal.portal_layout" position="inside">
+        <t t-call="portal.portal_layout" position="before">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
-                <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/odoo/action-account.action_move_out_invoice_type/%s' % invoice.id"/>
-                </t>
+                <t t-call="portal.portal_back_in_edit_mode"
+                    backend_url="'/odoo/action-account.action_move_out_invoice_type/%s' % invoice.id"/>
             </t>
+        </t>
+        <t t-call="portal.portal_layout" position="attributes">
+            <attribute name="o_portal_fullwidth_alert">o_portal_fullwidth_alert</attribute>
         </t>
 
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div class="row o_portal_invoice_sidebar">
                 <!-- Sidebar -->
-                <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
-                    <t t-set="title">
-                        <h2 class="mb-0 text-break mx-auto">
-                            <span t-field="invoice.amount_total"/>
-                        </h2>
-                        <div class="my-1 w-100" t-if="payment_state in ('not_paid', 'partial')">
-                            <div class="alert alert-success px-2 py-1 text-center mb-2" t-if="payment_state == 'partial'">
-                                Already Paid: <span t-out="amount_paid" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                            </div>
-                            <div t-if="payment_state == 'partial'" class="alert alert-warning px-2 py-1 text-center mb-2">
-                                Left to Pay:
-                                <span t-out="amount_due" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                <div t-if="installment_state and is_last_installment" class="w-100 mt-2">
-                                    <i class="fa fa-clock-o"/>
-                                    <span class="o_portal_sidebar_timeago" t-att-datetime="due_date"/>
-                                </div>
-                            </div>
-                            <div t-if="installment_state == 'epd' and epd_discount_amount_currency" class="alert alert-warning px-2 py-1 text-center mb-2">
-                                <t t-out="epd_discount_msg"/>
+                <t t-set="title">
+                    <h2 class="mb-0 text-break mx-auto">
+                        <span t-field="invoice.amount_total"/>
+                    </h2>
+                    <div class="my-1 w-100" t-if="payment_state in ('not_paid', 'partial')">
+                        <div class="alert alert-success px-2 py-1 text-center mb-2" t-if="payment_state == 'partial'">
+                            Already Paid: <span t-out="amount_paid" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        </div>
+                        <div t-if="payment_state == 'partial'" class="alert alert-warning px-2 py-1 text-center mb-2">
+                            Left to Pay:
+                        <span t-out="amount_due" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                            <div t-if="installment_state and is_last_installment" class="w-100 mt-2">
+                                <i class="fa fa-clock-o"/>
+                                <span class="o_portal_sidebar_timeago" t-att-datetime="due_date"/>
                             </div>
                         </div>
-                        <t t-if="installment_state in ('next', 'overdue') and not is_last_installment and amount_due != 0.0 and payment_state != 'in_payment'">
-                            <h5 name="installment_title" class="w-100 text-center mb-0">
-                                <t t-if="installment_state == 'next'">Next Installment</t>
-                                <t t-elif="installment_state == 'overdue'">Overdue</t>
-                            </h5>
-                            <h4
-                                name="installment_amount"
-                                class="mb-0 text-break w-100 text-center"
-                                t-out="next_amount_to_pay"
-                                t-options="{'widget': 'monetary', 'display_currency': currency}"
-                            />
-                        </t>
-                        <div class="small w-100 text-center" t-if="payment_state in ('not_paid', 'partial') and not (is_last_installment and installment_state)">
-                            <i class="fa fa-clock-o"/>
-                            <span class="o_portal_sidebar_timeago ml4" t-att-datetime="next_due_date"/>
+                        <div t-if="installment_state == 'epd' and epd_discount_amount_currency" class="alert alert-warning px-2 py-1 text-center mb-2">
+                            <t t-out="epd_discount_msg"/>
                         </div>
+                    </div>
+                    <t t-if="installment_state in ('next', 'overdue') and not is_last_installment and amount_due != 0.0 and payment_state != 'in_payment'">
+                        <h5 name="installment_title" class="w-100 text-center mb-0">
+                            <t t-if="installment_state == 'next'">Next Installment</t>
+                            <t t-elif="installment_state == 'overdue'">Overdue</t>
+                        </h5>
+                        <h4
+                            name="installment_amount"
+                            class="mb-0 text-break w-100 text-center"
+                            t-out="next_amount_to_pay"
+                            t-options="{'widget': 'monetary', 'display_currency': currency}"
+                        />
                     </t>
-
-                    <t t-set="entries">
-                        <div class="d-flex flex-column gap-4 mt-3">
-                            <div class="d-flex flex-column gap-2">
-                                <div class="o_download_pdf d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
-                                    <a class="btn btn-light o_download_btn flex-grow-1" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download" role="button">
-                                        <i class="fa fa-download"/> Download
-                                    </a>
-                                </div>
-                            </div>
-                            <div t-if="invoice.invoice_user_id" class="flex-grow-1">
-                                <h6>
-                                    <small class="text-muted">
-                                        <t t-if="invoice.move_type == 'out_invoice'">
-                                            Salesperson
-                                        </t>
-                                        <t t-if="invoice.move_type == 'in_invoice'">
-                                            Purchase Representative
-                                        </t>
-                                    </small>
-                                </h6>
-                                <t t-call="portal.portal_my_contact">
-                                    <t t-set="_contactAvatar" t-value="image_data_uri(invoice.invoice_user_id.avatar_128)"/>
-                                    <t t-set="_contactName" t-value="invoice.invoice_user_id.name"/>
-                                    <t t-set="_contactLink" t-value="True"/>
-                                    <div t-field="invoice.invoice_user_id" t-options='{"widget": "contact", "fields": ["city", "phone"]}'/>
-                                </t>
-                            </div>
-                        </div>
-                    </t>
+                    <div class="small w-100 text-center" t-if="payment_state in ('not_paid', 'partial') and not (is_last_installment and installment_state)">
+                        <i class="fa fa-clock-o"/>
+                        <span class="o_portal_sidebar_timeago ml4" t-att-datetime="next_due_date"/>
+                    </div>
                 </t>
+                <t t-set="entries">
+                    <div class="d-flex flex-column gap-4 mt-3">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="o_download_pdf d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
+                                <a class="btn btn-light o_download_btn flex-grow-1" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download" role="button">
+                                    <i class="fa fa-download"/> Download
+                                </a>
+                            </div>
+                        </div>
+                        <div t-if="invoice.invoice_user_id" class="flex-grow-1">
+                            <h6>
+                                <small class="text-muted">
+                                    <t t-if="invoice.move_type == 'out_invoice'">
+                                        Salesperson
+                                    </t>
+                                    <t t-if="invoice.move_type == 'in_invoice'">
+                                        Purchase Representative
+                                    </t>
+                                </small>
+                            </h6>
+                            <t t-call="portal.portal_my_contact"
+                                _contactAvatar="image_data_uri(invoice.invoice_user_id.avatar_128)"
+                                _contactName="invoice.invoice_user_id.name"
+                                _contactLink="True">
+                                <div t-field="invoice.invoice_user_id" t-options='{"widget": "contact", "fields": ["city", "phone"]}'/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-call="portal.portal_record_sidebar"
+                    classes.f="col-lg-4 col-xxl-3 d-print-none"
+                    title="title"
+                    entries="entries"/>
 
                 <!-- Page Content -->
                 <div id="invoice_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">

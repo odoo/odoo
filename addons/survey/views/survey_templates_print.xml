@@ -3,8 +3,7 @@
 <data>
     <!-- Survey: printable page view (all pages) -->
     <template id="survey_page_print" name="Survey: print page">
-        <t t-call="survey.layout">
-            <t t-set="survey_form_readonly" t-value="true"/>
+        <t t-call="survey.layout" survey_form_readonly="true" question="False">
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
                 <div class="o_survey_print o_container_small">
@@ -123,7 +122,6 @@
                                 </t>
                             </t>
                             <!--Set question to false to avoid background miss match as last question is still in context and is used in survey.layout t-call.-->
-                            <t t-set="question" t-value="False"/>
                         </fieldset>
                     </div>
                 </div>

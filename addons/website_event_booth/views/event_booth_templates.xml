@@ -46,9 +46,7 @@
             <t t-if="event_booths and not event.is_finished">
                 <div class="d-flex flex-wrap align-items-center justify-content-between my-3">
                     <h1 class="my-0 h3-fs">Get A Booth</h1>
-                    <t t-call="website_event_booth.event_booth_order_progress">
-                        <t t-set="step" t-value="'STEP_BOOTH_SELECTION'"/>
-                    </t>
+                    <t t-call="website_event_booth.event_booth_order_progress" step.f="STEP_BOOTH_SELECTION"/>
                 </div>
                 <div class="oe_structure oe_empty" id="oe_structure_website_event_booth_inner_1"/>
                 <div t-attf-class="#{'col-lg-12' if available_booth_category_ids else 'col-lg-12'}">

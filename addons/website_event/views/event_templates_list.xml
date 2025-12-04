@@ -3,21 +3,21 @@
 
 <!-- Index -->
 <template id="index" name="Events" track="1">
-    <t t-call="website.layout">
-        <t t-set="head">
-            <meta t-if="search_tags" name="robots" content="none"/>
-        </t>
+    <t t-set="head">
+        <meta t-if="search_tags" name="robots" content="none"/>
+    </t>
+    <t t-call="website.layout"
+        head="head"
+        opt_events_list_cards="is_view_active('website_event.opt_events_list_cards')">
 
         <div id="wrap" class="o_wevent_index">
             <!-- Options -->
-            <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
             <t t-set="opt_events_list_columns" t-value="is_view_active('website_event.opt_events_list_columns')"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_we_index_0" class="oe_structure oe_empty"/>
             <!-- Topbar -->
-            <t t-call="website_event.index_topbar">
-                <t t-set="search" t-value="original_search or search or searches['search']"/>
-            </t>
+            <t t-call="website_event.index_topbar"
+                search="original_search or search or searches['search']"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_we_index_1" class="oe_structure oe_empty"/>
             <!-- Content -->
@@ -75,15 +75,15 @@
                 </div>
             </t>
             <div class="o_wevent_search d-flex w-100 w-lg-25">
-                <t t-call="website.website_search_box_input">
-                    <t t-set="_form_classes" t-valuef="flex-grow-1"/>
-                    <t t-set="_classes" t-valuef="o_wevent_event_searchbar_form"/>
-                    <t t-set="search_type" t-translation="off">events</t>
-                    <t t-set="action" t-value="'/event/'"/>
-                    <t t-set="display_description" t-valuef="true"/>
-                    <t t-set="display_detail" t-valuef="false"/>
-                    <t t-set="search" t-value="search or searches and searches['search']"/>
-                    <t t-set="placeholder">Search an event..</t>
+                <t t-call="website.website_search_box_input"
+                    _form_classes.f="flex-grow-1"
+                    _classes.f="o_wevent_event_searchbar_form"
+                    search_type.translate="events"
+                    action.f="/event/"
+                    display_description.f="true"
+                    display_detail.f="false"
+                    search="search or searches and searches['search']"
+                    placeholder.translate="Search an event..">
                     <t t-foreach="searches" t-as="item">
                         <input t-if="item != 'search' and item_value != 'all'" type="hidden"
                             t-att-name="item" t-att-value="item_value"/>
@@ -327,8 +327,7 @@
                     <header t-attf-class="card-header overflow-hidden bg-secondary p-0 border-0 rounded-0 #{opt_events_list_columns and 'col-12' or 'col-4 col-lg-3'} #{(not opt_events_list_cards) and 'shadow-sm'}">
                         <!-- Image + Link -->
                         <div class="d-block h-100 w-100">
-                            <t t-call="website.record_cover">
-                                <t t-set="_record" t-value="event"/>
+                            <t t-call="website.record_cover" _record="event">
                                 <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()"/>
                                 <!-- Short date + (optional) Country Flag -->
                                 <div t-if="opt_events_event_location" t-attf-class="o_wevent_date_with_flag o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">

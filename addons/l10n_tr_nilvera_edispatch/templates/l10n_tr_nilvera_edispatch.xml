@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <template id="nilvera_party_details"
+    <template
         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="nilvera_party_details">
         <cbc:WebsiteURI t-out="partner.website" />
         <cac:PartyIdentification>
             <t t-if="partner.country_id.code != 'TR'">
@@ -49,16 +49,16 @@
         </t>
     </template>
 
-    <template id="nilvera_party_template"
-        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+    <template
+        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" id="nilvera_party_template">
         <cac:Party>
             <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_details"/>
         </cac:Party>
     </template>
 
-    <template id="nilvera_dispatch_line"
+    <template
         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="nilvera_dispatch_line">
         <cac:DespatchLine>
             <cbc:ID t-out="line_id"/>
             <cbc:DeliveredQuantity t-att-unitCode="line.product_uom._get_unece_code()" t-out="line.quantity"/>
@@ -93,8 +93,7 @@
             xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
             xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
             xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-            xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2">
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2">
             <cbc:UBLVersionID t-out="ubl_version_id"/>
             <cbc:CustomizationID t-out="customization_id"/>
             <cbc:ProfileID t-out="dispatch_scenario"/>
@@ -112,31 +111,28 @@
                 <cbc:DocumentType>MATBU</cbc:DocumentType>
             </cac:AdditionalDocumentReference>
             <cac:DespatchSupplierParty>
-                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
-                    <t t-set="partner" t-value="current_company"/>
-                    <t t-set="tax_office_required" t-value="partner.country_code == 'TR'"/>
-                </t>
+                <t t-set="partner" t-value="current_company"/>
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template"
+                    partner="partner"
+                    tax_office_required="partner.country_code == 'TR'"/>
             </cac:DespatchSupplierParty>
             <cac:DeliveryCustomerParty>
-                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
-                    <t t-set="partner" t-value="picking.partner_id.commercial_partner_id"/>
-                    <t t-set="tax_office_required" t-value="partner.country_code == 'TR'"/>
-                </t>
+                <t t-set="partner" t-value="picking.partner_id.commercial_partner_id"/>
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template"
+                    partner="partner"
+                    tax_office_required="partner.country_code == 'TR'"/>
             </cac:DeliveryCustomerParty>
             <cac:BuyerCustomerParty t-if="picking.l10n_tr_nilvera_buyer_id">
-                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
-                    <t t-set="partner" t-value="picking.l10n_tr_nilvera_buyer_id"/>
-                </t>
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template"
+                    partner="picking.l10n_tr_nilvera_buyer_id"/>
             </cac:BuyerCustomerParty>
             <cac:SellerSupplierParty t-if="picking.l10n_tr_nilvera_seller_supplier_id">
-                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
-                    <t t-set="partner" t-value="picking.l10n_tr_nilvera_seller_supplier_id"/>
-                </t>
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template"
+                    partner="picking.l10n_tr_nilvera_seller_supplier_id"/>
             </cac:SellerSupplierParty>
             <cac:OriginatorCustomerParty t-if="picking.l10n_tr_nilvera_buyer_originator_id">
-                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
-                    <t t-set="partner" t-value="picking.l10n_tr_nilvera_buyer_originator_id"/>
-                </t>
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template"
+                    partner="picking.l10n_tr_nilvera_buyer_originator_id"/>
             </cac:OriginatorCustomerParty>
             <cac:Shipment>
                 <cbc:ID t-out="picking.id"/>
@@ -172,10 +168,10 @@
                         </cac:Country>
                     </cac:DeliveryAddress>
                     <cac:CarrierParty t-if="picking.l10n_tr_nilvera_carrier_id">
-                        <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_details">
-                            <t t-set="partner" t-value="picking.l10n_tr_nilvera_carrier_id"/>
-                            <t t-set="tax_office_required" t-value="partner.country_code == 'TR'"/>
-                        </t>
+                        <t t-set="partner" t-value="picking.l10n_tr_nilvera_carrier_id"/>
+                        <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_details"
+                            partner="partner"
+                            tax_office_required="partner.country_code == 'TR'"/>
                     </cac:CarrierParty>
                     <cac:Despatch>
                         <cbc:ActualDespatchDate t-out="actual_date"/>

@@ -30,9 +30,9 @@
 
 <!-- FAQ Layout -->
 <template id="faq" name="Frequently Asked Questions">
-    <t t-call="website_forum.header">
-        <t t-set="_page_name" t-value="'guidelines'"/>
-        <t t-set="_page_name_label">Guidelines</t>
+    <t t-call="website_forum.header"
+        _page_name.f="guidelines"
+        _page_name_label.translate="Guidelines">
         <div t-field="forum.description" class="mb-4"/>
         <div t-field="forum.faq"/>
     </t>

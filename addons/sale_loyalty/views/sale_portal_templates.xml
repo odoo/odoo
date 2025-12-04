@@ -6,7 +6,7 @@
             t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative">
             <span>
                 Code:
-                <t t-out="line.coupon_id.code[-4:].rjust(14, '&#8902;')"/>
+                <t t-out="line.coupon_id.code[-4:].rjust(14, '⋆')"/>
             </span>
             <t t-if="line.coupon_id.expiration_date">
                 <br/>
@@ -80,10 +80,7 @@
                t-call="sale_loyalty.used_gift_card"/>
         </xpath>
         <xpath expr="//div[@id='total']" position="after">
-            <t t-call="sale_loyalty.sale_purchased_gift_card">
-                <t t-set="order" t-value="sale_order"/>
-                <t t-set="hide_intro" t-value="1"/>
-            </t>
+            <t t-call="sale_loyalty.sale_purchased_gift_card" order="sale_order" hide_intro="1"/>
         </xpath>
         <xpath expr="//div[@id='total']/*" position="after">
             <t t-call="sale_loyalty.sale_order_portal_loyalty_content" />

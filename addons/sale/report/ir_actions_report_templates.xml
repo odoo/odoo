@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_saleorder_document">
-    <t t-call="web.external_layout">
-        <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
-        <t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
-        <t t-set="address">
-            <div t-field="doc.partner_id" class="mb-0"
-                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-            <p t-if="doc.partner_id.vat" class="mb-0">
-                <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label"/>
-                <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
-            </p>
-        </t>
+    <t t-set="address">
+        <div t-field="doc.partner_id" class="mb-0"
+            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+        <p t-if="doc.partner_id.vat" class="mb-0">
+            <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label"/>
+            <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
+        </p>
+    </t>
+    <t t-set="layout_document_title">
+        <span t-if="is_proforma">Pro Forma Invoice # </span>
+        <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
+        <span t-else="">Order # </span>
+        <span t-field="doc.name">SO0000</span>
+    </t>
+    <t t-call="web.external_layout"
+        forced_vat="doc.fiscal_position_id.foreign_vat"
+        address="address"
+        layout_document_title="layout_document_title">
+        <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" /> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
         <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
                              and doc.partner_invoice_id != doc.partner_id
                              or doc.partner_shipping_id != doc.partner_invoice_id">
@@ -37,12 +45,6 @@
             <div class="oe_structure"/>
 
             <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
-            <t t-set="layout_document_title">
-                <span t-if="is_proforma">Pro Forma Invoice # </span>
-                <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
-                <span t-else="">Order # </span>
-                <span t-field="doc.name">SO0000</span>
-            </t>
 
             <div class="row mb-4" id="informations">
                 <div t-if="doc.client_order_ref" class="col" name="informations_reference">
@@ -321,10 +323,7 @@
                     <div>
                         <table class="o_total_table table table-borderless ms-auto w-auto">
                             <!-- Tax totals -->
-                            <t t-call="sale.document_tax_totals">
-                                <t t-set="tax_totals" t-value="doc.tax_totals"/>
-                                <t t-set="currency" t-value="doc.currency_id"/>
-                            </t>
+                            <t t-call="sale.document_tax_totals" tax_totals="doc.tax_totals" currency="doc.currency_id"/>
                         </table>
                     </div>
                 </div>
@@ -378,8 +377,7 @@
 </template>
 
 <template id="report_saleorder_pro_forma">
-    <t t-call="web.html_container">
-        <t t-set="is_pro_forma" t-value="True"/>
+    <t t-call="web.html_container" is_pro_forma="True">
         <t t-set="docs" t-value="docs.with_context(proforma=True)"/>
         <t t-foreach="docs" t-as="doc">
             <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>

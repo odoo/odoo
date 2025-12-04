@@ -117,10 +117,11 @@
 
     <template id="report_timesheet">
         <t t-call="web.html_container">
-            <t t-call="web.internal_layout">
-                <t t-set="company" t-value="docs.project_id.sudo().company_id if len(docs.project_id) == 1 else docs.env.company"/>
-                <t t-set="show_task" t-value="bool(docs.task_id)"/>
-                <t t-set="show_project" t-value="len(docs.project_id) > 1"/>
+            <t t-call="web.internal_layout"
+                company="docs.project_id.sudo().company_id if len(docs.project_id) == 1 else docs.env.company"
+                show_task="bool(docs.task_id)"
+                show_project="len(docs.project_id) > 1"
+                lines="docs">
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row mt8">
@@ -134,7 +135,6 @@
                             </h2>
                         </div>
                     </div>
-                    <t t-set='lines' t-value='docs'/>
                     <t t-call="hr_timesheet.timesheet_table"/>
                     <div class="oe_structure"/>
                 </div>
@@ -145,10 +145,11 @@
     <!-- Project Task Timesheet Report for given timesheets -->
     <template id="report_timesheet_task">
         <t t-call="web.html_container">
-            <t t-call="web.internal_layout">
-                <t t-set="company" t-value="docs.project_id.company_id if len(docs.project_id) == 1 else docs.env.company"/>
-                <t t-set="show_task" t-value="len(docs.task_id) > 1"/>
-                <t t-set="show_project" t-value="False"/>
+            <t t-call="web.internal_layout"
+                company="docs.project_id.company_id if len(docs.project_id) == 1 else docs.env.company"
+                show_task="len(docs.task_id) > 1"
+                show_project="False"
+                lines="docs">
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row mt8">
@@ -162,7 +163,6 @@
                             </h2>
                         </div>
                     </div>
-                    <t t-set='lines' t-value='docs'/>
                     <t t-call="hr_timesheet.timesheet_table"/>
                     <div class="oe_structure"/>
                 </div>

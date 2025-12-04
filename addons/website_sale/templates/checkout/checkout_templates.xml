@@ -2,9 +2,7 @@
 <odoo>
 
     <template id="website_sale.wizard_checkout" name="Wizard Checkout">
-        <t t-call="website.step_wizard">
-            <t t-set="wizard_step" t-value="website._get_checkout_steps()"/>
-        </t>
+        <t t-call="website.step_wizard" wizard_step="website._get_checkout_steps()"/>
     </template>
 
     <!-- Called in `website_sale.reduction_code`. -->
@@ -56,9 +54,8 @@
                             <input type="hidden"
                                    name="csrf_token"
                                    t-att-value="request.csrf_token()"/>
-                            <t t-if="not hide_payment_button" t-call="payment.submit_button">
-                                <t t-set="submit_button_label">Confirm Order</t>
-                            </t>
+                            <t t-if="not hide_payment_button" t-call="payment.submit_button"
+                                submit_button_label.translate="Confirm Order"/>
                         </form>
                     </div>
                     <t t-elif="not hide_payment_button" t-call="payment.submit_button"/>
@@ -182,16 +179,16 @@
             - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
         -->
-        <t t-call="website.layout">
-            <t t-set="no_footer" t-value="True if show_footer is None else not show_footer"/>
+        <t t-call="website.layout"
+            no_footer="True if show_footer is None else not show_footer"
+            expand_order_summary="not show_navigation_button"
+            body_classname.f="o_website_sale_checkout">
             <t t-set="show_navigation_button" t-value="True if show_navigation_button is None else show_navigation_button"/>
-            <t t-set="expand_order_summary" t-value="not show_navigation_button"/>
             <t t-set="show_wizard_checkout" t-value="True if show_wizard_checkout is None else show_wizard_checkout"/>
             <t
                 t-set="show_mobile_cart_summary"
                 t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
             />
-            <t t-set="body_classname" t-value="'o_website_sale_checkout'"/>
             <div id="wrap" class="d-flex flex-column flex-grow-1">
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
@@ -222,12 +219,7 @@
                                 <div class="card-body p-lg-4 pt-lg-3">
                                     <div class="d-none d-lg-block">
                                         <t t-call="website_sale.cart_summary_content"/>
-                                        <t t-call="website_sale.total">
-                                            <t
-                                                t-set="_cart_total_classes"
-                                                t-valuef="pt-2"
-                                            />
-                                        </t>
+                                        <t t-call="website_sale.total" _cart_total_classes.f="pt-2"/>
                                     </div>
                                     <div
                                         t-if="show_navigation_button"
@@ -285,13 +277,9 @@
                                 <a href="/shop/cart" class="btn btn-link w-100">
                                     Coupon, Gift card, Promo-code?
                                 </a>
-                                <t t-call="website_sale.total">
-                                    <t t-set="hide_promotions" t-value="True"/>
-                                    <t
-                                        t-set="_cart_total_classes"
-                                        t-valuef="border-top px-3 pt-2 mx-n3"
-                                    />
-                                </t>
+                                <t t-call="website_sale.total"
+                                    hide_promotions="True"
+                                    _cart_total_classes.f="border-top px-3 pt-2 mx-n3"/>
                                 <button
                                     class="btn btn-light w-100"
                                     type="button"
@@ -319,12 +307,7 @@
             class="o_total_card card o_wsale_sticky_object sticky-lg-top"
         >
             <div class="card-body p-0 p-lg-4" name="o_cart_total_card_body">
-                <t t-call="website_sale.total">
-                    <t
-                        t-set="_cart_total_classes"
-                        t-valuef="o_checkout_cart_total pt-2 pt-lg-0"
-                    />
-                </t>
+                <t t-call="website_sale.total" _cart_total_classes.f="o_checkout_cart_total pt-2 pt-lg-0"/>
                 <t t-call="website_sale.navigation_buttons"/>
             </div>
         </div>
@@ -402,12 +385,7 @@
                             </td>
                             <td class="td-price pe-0 pt-3 text-end"
                                 name="website_sale_cart_summary_line_price">
-                                <t t-call="website_sale.cart_product_price">
-                                    <t
-                                        t-set="product_price"
-                                        t-value="line._get_cart_display_price()"
-                                    />
-                                </t>
+                                <t t-call="website_sale.cart_product_price" product_price="line._get_cart_display_price()"/>
                             </td>
                         </tr>
                     </tbody>

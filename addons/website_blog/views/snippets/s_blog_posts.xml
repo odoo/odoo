@@ -2,13 +2,13 @@
 <odoo>
 <!-- Snippet -->
 <template id="s_blog_posts" name="Blog Posts">
-    <t t-call="website.s_dynamic_snippet_template">
-        <t t-set="snippet_name" t-value="'s_blog_posts'"/>
-        <t t-set="main_page_url" t-value="'/blog'"/>
-        <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts %s' % snippet_extra_classes"/>
-        <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true, "blog_posts_post_category_active":true, "blog_posts_post_new_active":true}'/>
-        <t t-set="snippet_title" t-valuef="Latest Stories"/>
-        <t t-set="snippet_description" t-valuef="Explore fresh ideas and updates from our editorial team."/>
+    <t t-call="website.s_dynamic_snippet_template"
+        snippet_name.f="s_blog_posts"
+        main_page_url.f="/blog"
+        snippet_classes="'s_dynamic_snippet_blog_posts %s' % snippet_extra_classes"
+        custom_template_data.f='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true, "blog_posts_post_category_active":true, "blog_posts_post_new_active":true}'
+        snippet_title.f="Latest Stories"
+        snippet_description.f="Explore fresh ideas and updates from our editorial team.">
         <t t-out="0"/>
     </t>
 </template>
@@ -101,10 +101,10 @@
     <div t-foreach="records" t-as="data" class="s_blog_posts_post position-relative w-100">
         <t t-set="record" t-value="data['_record']"/>
         <a class="s_blog_posts_post_cover position-relative d-block h-100 rounded shadow-sm overflow-hidden text-decoration-none text-reset ratio ratio-1x1" t-att-title="'Read ' + data['name']" t-att-href="data['call_to_action_url']">
-            <t t-call="website.record_cover">
-                <t t-set="_record" t-value="record"/>
-                <t t-set="use_filters" t-value="True"/>
-                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute o_snippet_not_selectable'"/>
+            <t t-call="website.record_cover"
+                _record="record"
+                use_filters="True"
+                additionnal_classes.f="h-100 w-100 bg-600 position-absolute o_snippet_not_selectable">
 
                 <div class="s_blog_post_big_picture_infos position-absolute top-0 start-0 w-100 h-100 text-white">
                     <div class="s_blog_posts_post_cover_header d-flex flex-column justify-content-end w-100">
@@ -130,10 +130,9 @@
                 <div class="s_blog_posts_post_cover_col col mb-2 mb-md-0">
                     <a class="d-block h-100 text-decoration-none" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
                         <div class="s_blog_posts_post_cover h-100">
-                            <t t-call="website.record_cover">
-                                <t t-set="_record" t-value="record"/>
-                                <t t-set="additionnal_classes" t-value="'h-100 rounded-3 overflow-hidden o_snippet_not_selectable'"/>
-                            </t>
+                            <t t-call="website.record_cover"
+                                _record="record"
+                                additionnal_classes.f="h-100 rounded-3 overflow-hidden o_snippet_not_selectable"/>
                         </div>
                     </a>
                 </div>
@@ -141,9 +140,7 @@
                     <a class="mb-2 mb-md-5 text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
                         <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                         <h4 class="mb-2 mt-0" t-field="record.name"/>
-                        <t t-call="website_blog.s_dynamic_snippet_template_date">
-                            <t t-set="date_custom_class" t-value="'small'"/>
-                        </t>
+                        <t t-call="website_blog.s_dynamic_snippet_template_date" date_custom_class.f="small"/>
                         <p class="s_blog_posts_post_subtitle o_line_clamp mt-1 mb-0 lead" t-field="record.subtitle"/>
                     </a>
                     <div class="d-flex justify-content-between small">
@@ -166,17 +163,14 @@
         <div class="card h-100">
             <a class="text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
                 <div class="s_blog_posts_post_cover card-img-top ratio ratio-16x9">
-                    <t t-call="website.record_cover">
-                        <t t-set="_record" t-value="record"/>
-                        <t t-set="additionnal_classes" t-value="'position-absolute w-100 h-100 bg-600 o_snippet_not_selectable'"/>
-                    </t>
+                    <t t-call="website.record_cover"
+                        _record="record"
+                        additionnal_classes.f="position-absolute w-100 h-100 bg-600 o_snippet_not_selectable"/>
                 </div>
                 <div class="card-body">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <h5 class="text-truncate" t-field="record.name"/>
-                    <t t-call="website_blog.s_dynamic_snippet_template_date">
-                        <t t-set="date_custom_class" t-value="'small'"/>
-                    </t>
+                    <t t-call="website_blog.s_dynamic_snippet_template_date" date_custom_class.f="small"/>
                     <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
                 </div>
             </a>
@@ -211,9 +205,8 @@
                 <t t-call="website_blog.s_dynamic_snippet_template_category"/>
             </div>
             <a class="text-reset" t-att-title="'Read ' + record.name" t-att-href="data['call_to_action_url']">
-                <t t-call="website_blog.s_dynamic_snippet_template_teaser">
-                    <t t-set="teaser_custom_class" t-value="'lead h4-fs'"/>
-                </t>
+                <t t-call="website_blog.s_dynamic_snippet_template_teaser"
+                    teaser_custom_class.f="lead h4-fs"/>
             </a>
             <a class="btn btn-primary d-lg-none w-100 w-sm-auto mt-4" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="fa fa-long-arrow-right" role="presentation"/></a>
         </div>
@@ -238,16 +231,13 @@
                     <span class="text-muted mx-2" t-if="blog_posts_post_category_active and (blog_posts_post_date_active or blog_posts_post_author_active)">•</span>
                     <t t-call="website_blog.s_dynamic_snippet_template_category"/>
                 </div>
-                <t t-call="website_blog.s_dynamic_snippet_template_teaser">
-                    <t t-set="teaser_custom_class" t-value="'lead'"/>
-                </t>
+                <t t-call="website_blog.s_dynamic_snippet_template_teaser" teaser_custom_class.f="lead"/>
                 <a class="btn btn-primary" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="fa fa-long-arrow-right" role="presentation"/></a>
             </div>
             <div class="col-lg-5 order-1 order-lg-2 h-auto mb-4 mb-lg-0">
-                <t t-call="website.record_cover">
-                    <t t-set="_record" t-value="record"/>
-                    <t t-set="additionnal_classes" t-value="'ratio ratio-16x9 rounded overflow-hidden'"/>
-                </t>
+                <t t-call="website.record_cover"
+                    _record="record"
+                    additionnal_classes.f="ratio ratio-16x9 rounded overflow-hidden"/>
             </div>
         </div>
     </t>
@@ -263,10 +253,9 @@
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
         <div class="row">
             <div class="col-12 col-sm-5 mb-3 mb-lg-0">
-                <t t-call="website.record_cover">
-                    <t t-set="_record" t-value="record"/>
-                    <t t-set="additionnal_classes" t-value="'h-auto mx-auto me-sm-0 rounded-circle overflow-hidden ratio ratio-1x1'"/>
-                </t>
+                <t t-call="website.record_cover"
+                    _record="record"
+                    additionnal_classes.f="h-auto mx-auto me-sm-0 rounded-circle overflow-hidden ratio ratio-1x1"/>
             </div>
             <div class="col-12 col-sm-7 align-content-center">
                 <h2 t-field="record.name"/>

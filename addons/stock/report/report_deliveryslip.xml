@@ -2,45 +2,47 @@
 <odoo>
     <template id="report_delivery_document">
         <t t-call="web.html_container">
-            <t t-call="web.external_layout">
+            <t t-set="partner" t-value="o.partner_id or (o.move_ids and o.move_ids[0].partner_id) or False"/>
+            <t t-set="address">
+                <div name="div_outgoing_address">
+                    <div name="outgoing_delivery_address"
+                        t-if="o.should_print_delivery_address()">
+                        <strong>Delivery Address</strong>
+                        <div t-out="o.move_ids[0].partner_id or o.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                    <div name="outgoing_warehouse_address"
+                         t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
+                        <strong>Warehouse Address</strong>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </div>
+            </t>
+            <t t-set="information_block">
+                <div class="row">
+                    <div class="col-7" name="div_incoming_address">
+                        <t t-set="show_partner" t-value="False" />
+                        <div name="vendor_address" t-if="o.picking_type_id.code=='incoming' and partner">
+                            <strong>From</strong>
+                            <t t-set="show_partner" t-value="True" />
+                        </div>
+                        <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
+                            <strong>Customer</strong>
+                            <t t-set="show_partner" t-value="True" />
+                        </div>
+                        <div t-if="show_partner" name="partner_header">
+                            <div t-field="partner.commercial_partner_id"
+                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-call="web.external_layout"
+                partner="partner"
+                address="address"
+                information_block="information_block">
                 <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
-                <t t-set="partner" t-value="o.partner_id or (o.move_ids and o.move_ids[0].partner_id) or False"/>
-
-                <t t-set="address">
-                    <div name="div_outgoing_address">
-                        <div name="outgoing_delivery_address"
-                            t-if="o.should_print_delivery_address()">
-                            <strong>Delivery Address</strong>
-                            <div t-out="o.move_ids[0].partner_id or o.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        </div>
-                        <div name="outgoing_warehouse_address"
-                             t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
-                            <strong>Warehouse Address</strong>
-                            <div t-field="o.picking_type_id.warehouse_id.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        </div>
-                    </div>
-                </t>
-                <t t-set="information_block">
-                    <div class="row">
-                        <div class="col-7" name="div_incoming_address">
-                            <t t-set="show_partner" t-value="False" />
-                            <div name="vendor_address" t-if="o.picking_type_id.code=='incoming' and partner">
-                                <strong>From</strong>
-                                <t t-set="show_partner" t-value="True" />
-                            </div>
-                            <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
-                                <strong>Customer</strong>
-                                <t t-set="show_partner" t-value="True" />
-                            </div>
-                            <div t-if="show_partner" name="partner_header">
-                                <div t-field="partner.commercial_partner_id"
-                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
-                            </div>
-                        </div>
-                    </div>
-                </t>
                 <div class="page">
                     <h2 style="margin-top: 15px;">
                         <span t-out="o.picking_type_id._get_code_report_name()"/>

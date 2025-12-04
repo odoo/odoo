@@ -19,13 +19,13 @@
                 <attribute name="t-if">not invoice_gcc_title</attribute>
             </t>
             <t name="invoice_title" position="after">
-                <t t-else="" name="invoice_gcc_title" t-out="invoice_gcc_title"></t>
+                <t t-else="" name="invoice_gcc_title" t-out="invoice_gcc_title"/>
             </t>
             <span t-field='o.name' position="after">
                 <t t-if="display_in_ar and not proforma" t-translation="off">
                     <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                         <t t-if="not invoice_gcc_title_sec" name="invoice_title_ar">فاتورة</t>
-                        <t t-else="" name="invoice_gcc_title_ar" t-out="invoice_gcc_title_sec"></t>
+                        <t t-else="" name="invoice_gcc_title_ar" t-out="invoice_gcc_title_sec"/>
                     </span>
                     <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
                         <t name="draft_invoice_title_ar">مسودة فاتورة</t>
@@ -52,7 +52,7 @@
                 <t t-elif="display_in_en and not proforma" t-translation="off">
                     <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'" dir="rtl">
                         <t t-if="not invoice_gcc_title_sec" name="invoice_title_en">Invoice</t>
-                        <t t-else="" name="invoice_gcc_title_en" t-out="invoice_gcc_title_sec"></t>
+                        <t t-else="" name="invoice_gcc_title_en" t-out="invoice_gcc_title_sec"/>
                     </span>
                     <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'" dir="rtl">
                         <t name="draft_invoice_title_en">Draft Invoice</t>

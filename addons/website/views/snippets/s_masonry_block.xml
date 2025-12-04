@@ -41,8 +41,7 @@ Use t-snippet-call and fill it with its inner grid-mode row.
 </template>
 
 <template id="s_masonry_block_reversed_template" name="Masonry">
-    <t t-snippet-call="website.s_masonry_block">
-        <t t-set="container_class" t-valuef="container-fluid"/>
+    <t t-snippet-call="website.s_masonry_block" container_class.f="container-fluid">
         <div class="row o_grid_mode" data-row-count="10">
             <div class="o_grid_item o_cc o_cc3 g-height-5 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
                 style="grid-area: 1 / 1 / 6 / 4; z-index: 1; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-2) 100%);">
@@ -123,14 +122,14 @@ Use t-snippet-call and fill it with its inner grid-mode row.
         <div class="row o_grid_mode" data-row-count="4" style="gap: 16px;">
             <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-start rounded" data-name="Block" style="z-index: 1; grid-area: 1 / 1 / 5 / 4; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
                 <h2 class="h4-fs">Incredible <br class="d-none d-lg-inline"/>Features</h2>
-                <p>&#160;</p>
+                <p> </p>
             </div>
             <div class="o_grid_item o_grid_item_image g-height-4 g-col-lg-3 col-lg-3 rounded" data-name="Block" style="z-index: 2; grid-area: 1 / 4 / 5 / 7;">
                 <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
             </div>
             <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-start rounded" data-name="Block" style="z-index: 3; grid-area: 1 / 7 / 5 / 10; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
                 <h2 class="h4-fs">Advanced <br class="d-none d-lg-inline"/>Capabilities</h2>
-                <p>&#160;</p>
+                <p> </p>
             </div>
             <div class="o_grid_item o_grid_item_image g-height-4 g-col-lg-3 col-lg-3 rounded" data-name="Block" style="z-index: 4; grid-area: 1 / 10 / 5 / 13;">
                 <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
@@ -140,8 +139,7 @@ Use t-snippet-call and fill it with its inner grid-mode row.
 </template>
 
 <template id="s_masonry_block_alternation_image_text_template" name="Masonry">
-    <t t-snippet-call="website.s_masonry_block">
-        <t t-set="container_class" t-valuef="container-fluid"/>
+    <t t-snippet-call="website.s_masonry_block" container_class.f="container-fluid">
         <div class="row o_grid_mode" data-row-count="10">
             <div class="o_grid_item o_grid_item_image g-height-10 g-col-lg-3 col-lg-3 text-center" data-name="Block" style="grid-area: 1 / 1 / 11 / 4; z-index: 1;">
                 <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>

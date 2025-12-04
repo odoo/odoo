@@ -19,16 +19,12 @@
                         <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                     </a>
                     <ul id="top_menu" class="nav navbar-nav ms-auto">
-                        <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_item_class" t-value="'nav-item'"/>
-                            <t t-set="_link_class" t-value="'nav-link'"/>
-                        </t>
-                        <t t-call="portal.user_dropdown">
-                            <t t-set="_user_name" t-value="true"/>
-                            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
-                            <t t-set="_link_class" t-value="'nav-link'"/>
-                            <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
-                        </t>
+                        <t t-call="portal.placeholder_user_sign_in" _item_class.f="nav-item" _link_class.f="nav-link"/>
+                        <t t-call="portal.user_dropdown"
+                            _user_name="true"
+                            _item_class.f="nav-item dropdown"
+                            _link_class.f="nav-link"
+                            _dropdown_menu_class.f="dropdown-menu-end"/>
                     </ul>
                 </div>
             </nav>
@@ -141,8 +137,7 @@
     </template>
 
     <template id="portal_layout" name="Portal Layout">
-        <t t-call="portal.frontend_layout">
-            <t t-set="is_portal" t-value="True"/>
+        <t t-call="portal.frontend_layout" is_portal="True">
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -170,9 +165,7 @@
                                 <t t-call="portal.side_content"/>
                             </div>
                             <div class="offcanvas offcanvas-start d-lg-none" id="accountOffCanvas">
-                                <t t-call="portal.side_content">
-                                    <t t-set="isOffcanvas" t-value="true"/>
-                                </t>
+                                <t t-call="portal.side_content" isOffcanvas="true"/>
                             </div>
                         </div>
                     </t>
@@ -201,51 +194,41 @@
     </template>
 
     <template id="portal_my_home" name="My Portal">
-        <t t-call="portal.portal_layout">
-            <t t-set="my_details" t-value="True"/>
+        <t t-call="portal.portal_layout" my_details="True">
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <div class="o_portal_docs row g-2">
                     <div t-if="portal_entries.get('alert', [])"
                         class="o_portal_category row g-2 mt-3 o_not_editable" id="portal_alert_category">
                         <t t-foreach="portal_entries.get('alert', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry">
-                                <t t-set="bg_color" t-value="'alert alert-primary align-items-center'"/>
-                                <t t-set="show_count" t-value="True"/>
-                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
-                            </t>
+                            <t t-call="portal.portal_docs_entry"
+                                bg_color.f="alert alert-primary align-items-center"
+                                show_count="True"
+                                placeholder_count="entry.placeholder_count"/>
                         </t>
                     </div>
                     <div t-if="portal_entries.get('client_category', [])"
                         class="o_portal_category row g-2 mt-3" id="portal_client_category">
                         <t t-foreach="portal_entries.get('client_category', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry">
-                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
-                            </t>
+                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
                         </t>
                     </div>
                     <div t-if="portal_entries.get('service_category', [])"
                         class="o_portal_category row g-2 mt-3" id="portal_service_category">
                         <t t-foreach="portal_entries.get('service_category', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry">
-                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
-                            </t>
+                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
                         </t>
                     </div>
                     <div t-if="portal_entries.get('vendor_category', [])"
                         class="o_portal_category row g-2 mt-3" id="portal_vendor_category">
                         <t t-foreach="portal_entries.get('vendor_category', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry">
-                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
-                            </t>
+                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
                         </t>
                     </div>
                     <div t-if="portal_entries.get('common_category', [])"
                         class="o_portal_category row g-2 mt-3" id="portal_common_category">
                         <t t-foreach="portal_entries.get('common_category', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry">
-                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
-                            </t>
+                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
                         </t>
                     </div>
                     <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
@@ -454,9 +437,7 @@
     </template>
 
     <template id="portal_my_security">
-        <t t-call="portal.portal_layout"><div class="o_portal_security_body w-md-75 w-lg-50 pb-5">
-            <t t-set="additional_title">Security</t>
-            <t t-set="no_breadcrumbs" t-value="1"/>
+        <t t-call="portal.portal_layout" additional_title.translate="Security" no_breadcrumbs="1"><div class="o_portal_security_body w-md-75 w-lg-50 pb-5">
             <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
                 <t t-out="errors"/>
             </div>

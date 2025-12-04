@@ -45,7 +45,7 @@
 </template>
 
 <template id="account_invoice_it_FatturaPA_export">
-<p:FatturaElettronica t-att-versione="formato_trasmissione" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+<p:FatturaElettronica xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" t-att-versione="formato_trasmissione" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
     <FatturaElettronicaHeader>
         <DatiTrasmissione>
             <IdTrasmittente>
@@ -79,10 +79,9 @@
                 </Anagrafica>
                 <RegimeFiscale t-out="regime_fiscale"/>
             </DatiAnagrafici>
-            <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
-                <t t-set="partner" t-value="seller"/>
-                <t t-set="partner_info" t-value="seller_info"/>
-            </t>
+            <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede"
+                partner="seller"
+                partner_info="seller_info"/>
             <IscrizioneREA t-if="not is_self_invoice and company.l10n_it_has_eco_index">
                 <Ufficio t-out="company.l10n_it_eco_index_office.code"/>
                 <NumeroREA t-out="format_alphanumeric(company.l10n_it_eco_index_number)"/>
@@ -126,10 +125,9 @@
                     </t>
                 </Anagrafica>
             </DatiAnagrafici>
-            <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
-                <t t-set="partner" t-value="buyer"/>
-                <t t-set="partner_info" t-value="buyer_info"/>
-            </t>
+            <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede"
+                partner="buyer"
+                partner_info="buyer_info"/>
         </CessionarioCommittente>
     </FatturaElettronicaHeader>
     <FatturaElettronicaBody>

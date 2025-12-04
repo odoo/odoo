@@ -81,12 +81,12 @@
                 </t>
             </div>
             <!-- 'Search Box' -->
-            <t t-call="website.website_search_box_input">
-                <t t-set="_form_classes" t-valuef="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0"/>
-                <t t-set="search_type" t-valuef="blogs"/>
-                <t t-set="action" t-value="blog_url(tag=tag,search=search)"/>
-                <t t-set="display_description" t-valuef="true"/>
-                <t t-set="display_detail" t-valuef="false"/>
+            <t t-call="website.website_search_box_input"
+                _form_classes.f="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0"
+                search_type.f="blogs"
+                action="blog_url(tag=tag,search=search)"
+                display_description.f="true"
+                display_detail.f="false">
                 <input type="hidden" name="tag" t-att-value="tag"/>
                 <input type="hidden" name="date_begin" t-att-value="date_begin"/>
                 <input type="hidden" name="date_end" t-att-value="date_end"/>
@@ -105,7 +105,7 @@
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
                     <i class="fa fa-tag me-2"/>
                     <t t-out="tag.name"/>
-                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
+                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">×</a>
                 </span>
                 <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
             </t>
@@ -180,10 +180,9 @@
         <span t-if="blog_post.published_date" t-field="blog_post.published_date" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
         <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
         <span style="display: inline-flex">by
-            <t t-call="website_blog.post_author">
-                <t t-set="additionnal_classes" t-value="'d-inline-flex me-2 ms-2'"/>
-                <t t-set="hide_date" t-value="True"/>
-            </t>
+            <t t-call="website_blog.post_author"
+                additionnal_classes.f="d-inline-flex me-2 ms-2"
+                hide_date="True"/>
         </span>
         <t t-if="is_view_active('website_blog.opt_blog_post_comment')">
             <span t-if="blog_post.message_ids" class="text-nowrap o_not_editable">|
@@ -230,11 +229,10 @@ Options:
             </div>
             <t t-snippet-call="website.s_social_media"/>
 
-            <t t-call="website_mail.follow" t-if="blog">
-                <t t-set="email" t-value="user_id.email"/>
-                <t t-set="object" t-value="blog"/>
-                <t t-set="div_class" t-value="'pt-2'"/>
-            </t>
+            <t t-call="website_mail.follow" t-if="blog"
+                email="user_id.email"
+                object="blog"
+                div_class.f="pt-2"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_3"/>
     </xpath>
@@ -263,18 +261,16 @@ Options:
             </div>
             <div class="h5">
                 <t t-foreach="tag_category" t-as="nav_tag_category">
-                    <t t-call="website_blog.tags_list">
-                        <t t-set='categ_title' t-value="nav_tag_category.name"/>
-                        <t t-set='tags' t-value='nav_tag_category.tag_ids' />
-                        <t t-set="showInactive" t-value="True"/>
-                    </t>
+                    <t t-call="website_blog.tags_list"
+                        categ_title="nav_tag_category.name"
+                        tags="nav_tag_category.tag_ids"
+                        showInactive="True"/>
                 </t>
-                <t t-call="website_blog.tags_list">
-                    <t t-set='hide_title' t-value='not len(tag_category)' />
-                    <t t-set='categ_title'>Others</t>
-                    <t t-set='tags' t-value='other_tags'/>
-                    <t t-set="showInactive" t-value="True"/>
-                </t>
+                <t t-call="website_blog.tags_list"
+                    hide_title="not len(tag_category)"
+                    categ_title.translate="Others"
+                    tags="other_tags"
+                    showInactive="True"/>
             </div>
         </div>
 
@@ -301,9 +297,7 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="True" priority="1">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
-            <t t-call="website_blog.post_author">
-                <t t-set="additionnal_classes" t-value="'h5 d-flex align-items-center'"/>
-            </t>
+            <t t-call="website_blog.post_author" additionnal_classes.f="h5 d-flex align-items-center"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_2"/>
     </xpath>

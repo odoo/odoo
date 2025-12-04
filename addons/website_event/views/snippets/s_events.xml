@@ -2,13 +2,13 @@
 <odoo>
 <!-- Snippet -->
 <template id="s_events" name="Events">
-    <t t-call="website.s_dynamic_snippet_template">
-        <t t-set="snippet_name" t-value="'s_events'"/>
-        <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet %s' % snippet_extra_classes"/>
-        <t t-set="main_page_url" t-value="'/event'"/>
-        <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true, "events_event_location_active":true}'/>
-        <t t-set="snippet_title" t-valuef="Upcoming Events"/>
-        <t t-set="snippet_description" t-valuef="Explore what’s happening next and join the moments that matter."/>
+    <t t-call="website.s_dynamic_snippet_template"
+        snippet_name.f="s_events"
+        snippet_classes="'s_event_upcoming_snippet %s' % snippet_extra_classes"
+        main_page_url.f="/event"
+        custom_template_data.f='{"events_event_time_active":true, "events_event_location_active":true}'
+        snippet_title.f="Upcoming Events"
+        snippet_description.f="Explore what’s happening next and join the moments that matter.">
         <t t-out="0"/>
     </t>
 </template>
@@ -74,13 +74,12 @@
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
         <a class="s_events_event_cover position-relative d-flex align-items-center rounded overflow-hidden text-decoration-none ratio ratio-1x1"
            t-att-href="data['call_to_action_url']">
-            <t t-call="website.record_cover">
-                <t t-set="_record" t-value="record"/>
-                <t t-set="_resize_height" t-value="512"/>
-                <t t-set="_resize_width" t-value="512"/>
-                <t t-set="use_filters" t-value="True"/>
-                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute'"/>
-            </t>
+            <t t-call="website.record_cover"
+                _record="record"
+                _resize_height="512"
+                _resize_width="512"
+                use_filters="True"
+                additionnal_classes.f="h-100 w-100 bg-600 position-absolute"/>
 
             <div class="text-center w-100 h-100 px-3 d-flex flex-column justify-content-center flex-grow-1">
                 <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -106,10 +105,10 @@
         <t t-set="record" t-value="data['_record']._set_tz_context()"/>
         <a t-att-href="data['call_to_action_url']" class="s_events_event card h-100 text-decoration-none">
             <div class="s_events_event_cover">
-                <t t-call="website.record_cover">
-                    <t t-set="_record" t-value="record"/>
-                    <t t-set="_resize_height" t-value="512"/>
-                    <t t-set="_resize_width" t-value="512"/>
+                <t t-call="website.record_cover"
+                    _record="record"
+                    _resize_height="512"
+                    _resize_width="512">
 
                     <div class="s_events_event_date position-absolute bg-white shadow-sm text-dark">
                         <span t-field="record.date_begin" t-options="{'format': 'LLL', 'tz_name': record.date_tz}"
@@ -307,10 +306,9 @@
                 </div>
             </div>
             <div class="col-12 col-lg-6 order-1 order-lg-2 h-auto mb-4 mb-lg-0">
-                <t t-call="website.record_cover">
-                    <t t-set="_record" t-value="record"/>
-                    <t t-set="additionnal_classes" t-value="'ratio ratio-16x9 rounded overflow-hidden'"/>
-                </t>
+                <t t-call="website.record_cover"
+                    _record="record"
+                    additionnal_classes.f="ratio ratio-16x9 rounded overflow-hidden"/>
             </div>
         </div>
     </t>
