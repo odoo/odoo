@@ -677,8 +677,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_contact_id" ref="hr.work_contact_chs"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_chs-image.jpg"/>
             <field name="create_date">2010-01-01 00:00:00</field>
-            <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
-            <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="date_version" eval="(DateTime.today() - relativedelta(years=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_start" eval="(DateTime.today() - relativedelta(years=2)).strftime('%Y-%m')+'-01'"/>
             <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
             <field name="contract_type_id" ref="contract_type_permanent"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
