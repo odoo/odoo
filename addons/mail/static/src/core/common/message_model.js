@@ -151,6 +151,8 @@ export class Message extends Record {
         },
     });
     partner_ids = fields.Many("res.partner");
+    /** @type {string} */
+    reply_to;
     subtype_id = fields.One("mail.message.subtype");
     thread = fields.One("mail.thread");
     threadAsNeedaction = fields.One("mail.thread", {

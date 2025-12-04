@@ -1145,6 +1145,11 @@ class MailMessage(models.Model):
         res.attr("pinned_at")
         # sudo: mail.message - reading reactions on accessible message is allowed
         res.many("reactions", [], value=lambda m: m.sudo().reaction_ids)
+        res.attr(
+            "reply_to",
+            predicate=lambda m: res.is_for_internal_users()
+            or (not m.author_id and not m.author_guest_id)
+        )
         # keep "record_name" and "res_id" for iOS app
         res.extend(["record_name", "res_id"])
         # sudo - mail.poll: reading poll of accessible message is allowed.
