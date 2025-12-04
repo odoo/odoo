@@ -48,17 +48,13 @@ class ResPartner(models.Model):
         res.attr("invite_by_self_count", lambda p: invite_by_self_count_by_partner[p])
         res.attr("is_available", lambda p: p in active_livechat_partners)
         res.attr("lang_name", lambda p: languages_by_partner[p][0])
-        # sudo: res.users.settings - operator can access other operators expertises
-        res.attr(
-            "livechat_expertise",
-            lambda p: p.user_ids.sudo().livechat_expertise_ids.mapped("name"),
-        )
         res.attr("livechat_languages", lambda p: languages_by_partner[p][1:])
         # sudo: res.users.settings - operator can access other operators livechat usernames
         res.attr("user_livechat_username", sudo=True)
         # sudo - res.partner: checking if operator is in call for live
         # chat invitation is acceptable.
         res.attr("is_in_call", sudo=True)
+        res.one("main_user_id", lambda res: res.many("livechat_expertise_ids", ["name"]))
 
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):

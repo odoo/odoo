@@ -8,8 +8,6 @@ const resPartnerPatch = {
         super.setup();
         /** @type {String[]} */
         this.livechat_languages = [];
-        /** @type {String[]} */
-        this.livechat_expertise = [];
     },
     _computeDisplayName() {
         return super._computeDisplayName() || this.user_livechat_username;

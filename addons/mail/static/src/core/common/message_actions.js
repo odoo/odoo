@@ -100,7 +100,7 @@ registerMessageAction("reply-to", {
 });
 registerMessageAction("toggle-star", {
     condition: ({ message }) => message.canToggleStar,
-    icon: ({ message }) => (message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o"),
+    icon: ({ message }) => (message.starred ? "fa fa-star o-mail-starred" : "fa fa-star-o"),
     name: ({ message }) => (message.starred ? _t("Remove Star") : _t("Add Star")),
     onSelected: ({ message }) => message.toggleStar(),
     sequence: 30,

@@ -9,6 +9,7 @@ export class DiscussChannel extends Record {
     static id = "id";
 
     static new() {
+        /** @type {import("models").DiscussChannel} */
         const channel = super.new(...arguments);
         // Handles subscriptions for non-members. Subscriptions for channels
         // that the user is a member of are handled by

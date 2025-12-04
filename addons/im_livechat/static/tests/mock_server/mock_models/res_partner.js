@@ -1,4 +1,5 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { getKwArgs, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 
@@ -14,8 +15,6 @@ export class ResPartner extends mailModels.ResPartner {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").LivechatChannel} */
         const LivechatChannel = this.env["im_livechat.channel"];
-        /** @type {import("mock_models").Im_LivechatExpertise} */
-        const Im_LivechatExpertise = this.env["im_livechat.expertise"];
         /** @type {import("mock_models").ResLang} */
         const ResLang = this.env["res.lang"];
         /** @type {import("mock_models").ResPartner} */
@@ -50,14 +49,22 @@ export class ResPartner extends mailModels.ResPartner {
                         .map((langId) => ResLang.browse(langId)[0])
                         .filter((lang) => lang.name !== data.lang_name);
                     data.livechat_languages = userLangs.map((lang) => lang.name);
-                    data.livechat_expertise = user.livechat_expertise_ids.map(
-                        (expId) => Im_LivechatExpertise.browse(expId)[0].name
-                    );
                 }
             }
             store.add(this.browse(partner.id), makeKwArgs({ fields: ["user_livechat_username"] }));
             store.add(this.browse(partner.id), data);
-            store.add(this.browse(partner.id), makeKwArgs({ extra_fields: ["is_in_call"] }));
+            store.add(
+                this.browse(partner.id),
+                makeKwArgs({
+                    extra_fields: [
+                        "is_in_call",
+                        mailDataHelpers.Store.one(
+                            "main_user_id",
+                            mailDataHelpers.Store.many("livechat_expertise_ids", "name")
+                        ),
+                    ],
+                })
+            );
         }
     }
     /**
