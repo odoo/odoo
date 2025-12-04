@@ -76,8 +76,11 @@ export class CalendarModel extends Model {
         }
         browser.localStorage.setItem(this.storageKey, this.meta.scale);
         const data = { ...this.data };
-        // notify with basic data to render a simple calendar before updating them
-        this.notify();
+        if (params.date) {
+            // notify with basic data to render a simple calendar before updating them
+            // to avoid flickering on date change
+            this.notify();
+        }
         await this.keepLast.add(this.updateData(data));
         this.data = data;
         this.notify();

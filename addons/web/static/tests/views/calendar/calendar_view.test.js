@@ -5807,7 +5807,7 @@ test(`calendar view with show_unusual_days`, async () => {
     ]);
 });
 
-test(`calendar renderer is rendered again after search refresh`, async () => {
+test(`calendar renderer is rendered once after search refresh`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
         setup() {
             super.setup();
@@ -5831,11 +5831,76 @@ test(`calendar renderer is rendered again after search refresh`, async () => {
         `,
     });
     expect.verifySteps(["before load", "after load", "rendered"], {
-        message: "model trigger two notify before the initial render",
+        message: "no additional notify",
     });
     await validateSearch();
+    expect.verifySteps(["before load", "after load", "rendered"], {
+        message: "no additional notify",
+    });
+});
+
+test(`calendar renderer is rendered once after event drag and drop`, async () => {
+    patchWithCleanup(CalendarRenderer.prototype, {
+        setup() {
+            super.setup();
+            onRendered(() => expect.step("rendered"));
+        },
+    });
+    patchWithCleanup(CalendarModel.prototype, {
+        async load(params) {
+            expect.step("before load");
+            await super.load(params);
+            expect.step("after load");
+        },
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <filter name="user_id"/>
+            </calendar>
+        `,
+    });
+    expect.verifySteps(["before load", "after load", "rendered"], {
+        message: "no additional notify",
+    });
+    await moveEventToTime(1, "2016-12-12 08:00:00");
+    expect.verifySteps(["before load", "after load", "rendered"], {
+        message: "no additional notify",
+    });
+});
+
+test.tags("desktop");
+test(`calendar renderer is rendered twice after date change`, async () => {
+    patchWithCleanup(CalendarRenderer.prototype, {
+        setup() {
+            super.setup();
+            onRendered(() => expect.step("rendered"));
+        },
+    });
+    patchWithCleanup(CalendarModel.prototype, {
+        async load(params) {
+            expect.step("before load");
+            await super.load(params);
+            expect.step("after load");
+        },
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <filter name="user_id"/>
+            </calendar>
+        `,
+    });
+    expect.verifySteps(["before load", "after load", "rendered"], {
+        message: "no additional notify",
+    });
+    await contains(".o_calendar_button_next").click();
     expect.verifySteps(["before load", "rendered", "after load", "rendered"], {
-        message: "model trigger two rerender, one the load",
+        message: "additional notify is called to prerender the view and avoid flickering",
     });
 });
 
