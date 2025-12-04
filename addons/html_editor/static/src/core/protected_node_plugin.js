@@ -133,13 +133,16 @@ export class ProtectedNodePlugin extends Plugin {
      */
     isMutationRecordSavable(record) {
         if (record.type === "childList") {
-            return !(
+            if (
                 (this.protectedNodes.has(record.target) &&
                     !record.target.matches(UNPROTECTED_SELECTOR)) ||
                 record.target.matches(PROTECTED_SELECTOR)
-            );
+            ) {
+                return false;
+            }
+        } else if (this.protectedNodes.has(record.target)) {
+            return false;
         }
-        return !this.protectedNodes.has(record.target);
     }
 
     forEachProtectingElem(elem, callback) {

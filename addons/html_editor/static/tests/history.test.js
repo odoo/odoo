@@ -700,7 +700,6 @@ describe("destroy", () => {
                     expect.step("dispatch");
                     return false;
                 }
-                return true;
             }
             destroy() {
                 this.dependencies.dom.insert(

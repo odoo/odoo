@@ -67,9 +67,8 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     isMutationRecordSavable(record) {
-        const info = this.nodeMap.get(record.target);
         if (
-            info &&
+            this.nodeMap.get(record.target) &&
             record.type === "attributes" &&
             record.attributeName === "data-embedded-props"
         ) {
@@ -77,7 +76,6 @@ export class EmbeddedComponentPlugin extends Plugin {
             // through `data-embedded-state` attribute mutations.
             return false;
         }
-        return true;
     }
 
     /**

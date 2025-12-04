@@ -598,9 +598,8 @@ export class ToggleBlockPlugin extends Plugin {
     }
 
     showPowerButtons(selection) {
-        return (
-            selection.isCollapsed &&
-            !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`)
-        );
+        if (selection.isCollapsed) {
+            return !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`);
+        }
     }
 }

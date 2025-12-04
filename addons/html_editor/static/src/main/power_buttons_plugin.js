@@ -138,9 +138,7 @@ export class PowerButtonsPlugin extends Plugin {
             !this.services.ui.isSmall &&
             !closestElement(documentSelection.anchorNode, "td, th, li") &&
             !block.style.textAlign &&
-            this.getResource("power_buttons_visibility_predicates").every((predicate) =>
-                predicate(documentSelection)
-            )
+            (this.checkPredicates("power_buttons_visibility_predicates", documentSelection) ?? true)
         ) {
             this.powerButtonsContainer.classList.remove("d-none");
             const direction = closestElement(block, "[dir]")?.getAttribute("dir");

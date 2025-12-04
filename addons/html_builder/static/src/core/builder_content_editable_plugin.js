@@ -56,11 +56,13 @@ export class BuilderContentEditablePlugin extends Plugin {
             }
             return !notEditableEl.closest("[data-snippet]");
         };
-        return (
-            !contentEditableEl.matches("input, [data-oe-readonly]") &&
-            contentEditableEl.closest(".o_savable") &&
-            !isDescendantOfNotEditableNotSnippet(contentEditableEl)
-        );
+        if (
+            contentEditableEl.matches("input, [data-oe-readonly]") ||
+            !contentEditableEl.closest(".o_savable") ||
+            isDescendantOfNotEditableNotSnippet(contentEditableEl)
+        ) {
+            return false;
+        }
     }
 }
 registry
