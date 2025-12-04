@@ -9,7 +9,7 @@
     <t t-set="wblog_all_title_string">All Blogs</t>
 
     <div t-attf-class="mt-4 #{opt_blog_fullwidth and 'container-fluid' or 'container'}">
-        <h1 t-if="not website.is_view_active('website_blog.opt_blog_cover_post')" class="d-none">Blog Posts</h1>
+        <h1 t-if="not website.is_view_active('website_blog.opt_blog_cover_post')" class="visually-hidden">Blog Posts</h1>
         <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap #{additionnal_classes} #{len(blogs) == 1 and not website.is_view_active('website_blog.opt_blog_cover_post') and 'align-items-center'}">
             <!-- Desktop -->
             <ul t-if="len(blogs) > 1" class="o_wblog_category list-unstyled d-none d-lg-flex flex-wrap gap-2 mb-0">
@@ -19,7 +19,7 @@
                 <li t-foreach="blogs" t-as="nav_blog">
                     <a t-attf-href="/blog/#{slug(nav_blog)}"
                        t-attf-class="btn btn-light #{(blog and nav_blog.id == blog.id) and 'active border-primary bg-primary-subtle' or ''}">
-                        <t t-out="nav_blog.name"/>
+                        <span t-out="nav_blog.name"/>
                     </a>
                 </li>
             </ul>
@@ -54,7 +54,7 @@
                                     <a t-attf-href="/blog/#{slug(nav_blog)}"
                                        t-attf-class="{{(blog and nav_blog.id == blog.id) and 'active d-flex justify-content-between' or ' text-reset'}}"
                                        t-att-title="nav_blog.name">
-                                        <span t-field="nav_blog.name"/>
+                                        <span t-out="nav_blog.name"/>
                                         <i t-if="(blog and nav_blog.id == blog.id)" class="fa fa-check" role="img"/>
                                     </a>
                                 </li>
@@ -79,7 +79,7 @@
                             <a t-attf-href="/blog/#{slug(nav_blog)}"
                                t-attf-class="dropdown-item #{(blog and nav_blog.id == blog.id) and 'active' or ''}"
                                t-att-title="nav_blog.name">
-                                <span t-field="nav_blog.name"/>
+                                <span t-out="nav_blog.name"/>
                             </a>
                         </li>
                     </ul>
@@ -402,7 +402,7 @@ Display a sidebar beside the post content.
             <h2 class="h6">Our blogs</h2>
             <ul class="list-unstyled">
                 <li t-foreach="blogs" t-as="nav_blog" class="mb-2">
-                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}" t-field="nav_blog.name"/>
+                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}" t-out="nav_blog.name"/>
                 </li>
             </ul>
         </div>

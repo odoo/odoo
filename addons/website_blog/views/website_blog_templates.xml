@@ -206,7 +206,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_post_header_share_links_display" t-value="is_view_active('website_blog.opt_blog_post_header_share_links_display')"/>
         <t t-set="opt_blog_post_header_tags_display" t-value="is_view_active('website_blog.opt_blog_post_header_tags_display')"/>
 
-        <section id="o_wblog_post_top">
+        <section id="o_wblog_post_top" t-attf-class="#{not (opt_blog_post_breadcrumb or opt_blog_post_header_tags_display) and 'mt-4' or ''}">
             <div id="title" class="blog_header" t-ignore="True">
                 <t t-call="website.record_cover"
                     _record="_record"
