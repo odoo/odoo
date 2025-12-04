@@ -139,10 +139,21 @@ export class TablePlugin extends Plugin {
         color_apply_overrides: this.applyTableColor.bind(this),
 
         /** Predicates */
-        unremovable_node_predicates: isUnremovableTableComponent,
-        unsplittable_node_predicates: (node) =>
-            node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
-        fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
+        removable_node_predicates: (node, root) => {
+            if (isUnremovableTableComponent(node, root)) {
+                return false;
+            }
+        },
+        splittable_node_predicates: (node) => {
+            if (node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName)) {
+                return false;
+            }
+        },
+        fully_selected_node_predicates: (node) => {
+            if (closestElement(node, ".o_selected_td")) {
+                return true;
+            }
+        },
         selection_blocker_predicates: (node) => {
             if (node.nodeName === "TABLE") {
                 return true;

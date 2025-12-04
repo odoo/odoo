@@ -27,8 +27,8 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  */
 
 /**
- * @typedef {((link: HTMLLinkElement) => boolean)[]} ineligible_link_for_selection_indication_predicates
- * @typedef {((link: HTMLLinkElement) => boolean)[]} ineligible_link_for_zwnbsp_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean | void)[]} eligible_link_for_selection_indication_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean | void)[]} eligible_link_for_zwnbsp_predicates
  */
 
 export class LinkSelectionPlugin extends Plugin {
@@ -81,16 +81,15 @@ export class LinkSelectionPlugin extends Plugin {
             this.editable.contains(link) &&
             !isProtected(link) &&
             !isProtecting(link) &&
-            !this.getResource("ineligible_link_for_zwnbsp_predicates").some((p) => p(link))
+            (this.checkPredicates("eligible_link_for_zwnbsp_predicates", link) ?? true)
         );
     }
 
     isLinkEligibleForVisualIndication(link) {
         return (
             this.isLinkEligibleForZwnbsp(link) &&
-            !this.getResource("ineligible_link_for_selection_indication_predicates").some(
-                (predicate) => predicate(link)
-            )
+            (this.checkPredicates("eligible_link_for_selection_indication_predicates", link) ??
+                true)
         );
     }
 

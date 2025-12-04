@@ -47,7 +47,7 @@ class PopupOptionPlugin extends Plugin {
         },
         empty_node_predicates: (el) => {
             if (!el.matches?.(".s_popup")) {
-                return false;
+                return;
             }
             const popupModalChildrenEls = [...(el.querySelector(".modal-content")?.children ?? [])];
             return popupModalChildrenEls.every((child) => child.matches(".s_popup_close"));

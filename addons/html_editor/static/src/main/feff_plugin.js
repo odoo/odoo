@@ -15,7 +15,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
  */
 
 /**
- * @typedef {((node: Node) => boolean)[]} legit_feff_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} legit_feff_predicates
  * @typedef {((root: EditorContext["editable"], cursors: Cursors) => Node[])[]} feff_providers
  * @typedef {(() => string)[]} selectors_for_feff_providers
  */
@@ -36,9 +36,12 @@ export class FeffPlugin extends Plugin {
     resources = {
         normalize_processors: this.updateFeffs.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
-        intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
+        tangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) => {
             // Skip first FEFF, but not the second one (unless shift is pressed).
-            char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
+            if (char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF")) {
+                return false;
+            }
+        },
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         clipboard_text_processors: (text) => text.replace(/\ufeff/g, ""),
     };
@@ -74,9 +77,7 @@ export class FeffPlugin extends Plugin {
                 cursors,
                 (node) =>
                     node.hasAttribute("data-oe-zws-empty-inline") ||
-                    this.getResource("unremovable_node_predicates").some((predicate) =>
-                        predicate(node)
-                    )
+                    !(this.checkPredicates("removable_node_predicates", node) ?? true)
             );
             restoreSpaces();
         }
@@ -163,7 +164,7 @@ export class FeffPlugin extends Plugin {
         this.removeFeffs(root, cursors, {
             exclude: (node) =>
                 feffNodesToKeep.has(node) ||
-                this.getResource("legit_feff_predicates").some((predicate) => predicate(node)),
+                (this.checkPredicates("legit_feff_predicates", node) ?? false),
         });
         cursors.restore();
     }

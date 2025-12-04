@@ -143,9 +143,9 @@ async function fetchAttachmentMetaData(url, ormService) {
  */
 
 /**
- * @typedef {((link: HTMLLinkElement) => boolean)[]} is_link_editable_predicates
- * @typedef {((link: HTMLLinkElement) => boolean)[]} legit_empty_link_predicates
- * @typedef {(() => boolean)[]} link_compatible_selection_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_link_editable_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} legit_empty_link_predicates
+ * @typedef {(() => boolean | undefined)[]} link_compatible_selection_predicates
  * @typedef {CSSSelector[]} immutable_link_selectors
  * @typedef {{
  *      PopoverClass: Component;
@@ -291,7 +291,11 @@ export class LinkPlugin extends Plugin {
             ":has(>[data-oe-model])",
             ".o_prevent_link_editor a",
         ],
-        legit_empty_link_predicates: (linkEl) => linkEl.hasAttribute("data-mimetype"),
+        legit_empty_link_predicates: (linkEl) => {
+            if (linkEl.hasAttribute("data-mimetype")) {
+                return true;
+            }
+        },
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
@@ -459,7 +463,7 @@ export class LinkPlugin extends Plugin {
     }
 
     isLinkAllowedOnSelection() {
-        if (this.getResource("link_compatible_selection_predicates").some((p) => p())) {
+        if (this.checkPredicates("link_compatible_selection_predicates") ?? false) {
             return true;
         }
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
@@ -830,9 +834,8 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            const isLinkEditable = this.getResource("is_link_editable_predicates").some((p) =>
-                p(closestLinkElement)
-            );
+            const isLinkEditable =
+                this.checkPredicates("is_link_editable_predicates", closestLinkElement) ?? false;
             if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkTools(closestLinkElement);
@@ -1046,7 +1049,7 @@ export class LinkPlugin extends Plugin {
                 [...link.childNodes].some(isVisible) ||
                 !link.parentElement.isContentEditable ||
                 this.dependencies.delete.isUnremovable(link) ||
-                this.getResource("legit_empty_link_predicates").some((p) => p(link))
+                (this.checkPredicates("legit_empty_link_predicates", link) ?? false)
             ) {
                 continue;
             }

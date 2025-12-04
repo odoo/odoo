@@ -33,7 +33,11 @@ export class FilePlugin extends Plugin {
             commandId: "uploadFile",
             description: _t("Upload a file"),
         }),
-        unsplittable_node_predicates: (node) => node.classList?.contains("o_file_box"),
+        splittable_node_predicates: (node) => {
+            if (node.classList?.contains("o_file_box")) {
+                return false;
+            }
+        },
         ...(this.config.allowFile &&
             this.config.allowMediaDocuments && {
                 media_dialog_extra_tabs: {
@@ -44,8 +48,11 @@ export class FilePlugin extends Plugin {
                 },
             }),
         selectors_for_feff_providers: () => ".o_file_box",
-        functional_empty_node_predicates: (node) =>
-            node?.nodeName === "SPAN" && node.classList.contains("o_file_box"),
+        functional_empty_node_predicates: (node) => {
+            if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
+                return true;
+            }
+        },
         is_node_editable_predicates: (node) => {
             if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
                 return false;

@@ -27,7 +27,7 @@ import { childNodeIndex } from "@html_editor/utils/position";
  */
 
 /**
- * @typedef {((node: Node) => boolean)[]} invalid_for_base_container_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} valid_for_base_container_predicates
  */
 
 export class BaseContainerPlugin extends Plugin {
@@ -50,31 +50,42 @@ export class BaseContainerPlugin extends Plugin {
             }
             this.cleanEmptyStructuralContainers();
         },
-        unsplittable_node_predicates: (node) => {
-            if (node.nodeName !== "DIV") {
+        splittable_node_predicates: (node) => {
+            if (
+                node.nodeName === "DIV" &&
+                !this.isCandidateForBaseContainerAllowUnsplittable(node)
+            ) {
                 return false;
             }
-            return !this.isCandidateForBaseContainerAllowUnsplittable(node);
         },
-        invalid_for_base_container_predicates: [
-            (node) =>
-                !node ||
-                node.nodeType !== Node.ELEMENT_NODE ||
-                !this.config.baseContainers.includes(node.tagName) ||
-                isProtected(node) ||
-                isProtecting(node) ||
-                isMediaElement(node),
-            (element, options) => {
-                if (!options?.allowUnsplittable) {
-                    return this.getResource("unsplittable_node_predicates").some((p) => p(element));
+        valid_for_base_container_predicates: [
+            (node) => {
+                if (
+                    !node ||
+                    node.nodeType !== Node.ELEMENT_NODE ||
+                    !this.config.baseContainers.includes(node.tagName) ||
+                    isProtected(node) ||
+                    isProtecting(node) ||
+                    isMediaElement(node)
+                ) {
+                    return false;
                 }
             },
             (element, options) => {
-                if (!options?.shallow) {
-                    return (
-                        element?.nodeType === Node.ELEMENT_NODE &&
-                        containsAnyNonPhrasingContent(element)
-                    );
+                if (
+                    !options?.allowUnsplittable &&
+                    !(this.checkPredicates("splittable_node_predicates", element) ?? true)
+                ) {
+                    return false;
+                }
+            },
+            (element, options) => {
+                if (
+                    !options?.shallow &&
+                    element?.nodeType === Node.ELEMENT_NODE &&
+                    containsAnyNonPhrasingContent(element)
+                ) {
+                    return false;
                 }
             },
         ],
@@ -99,9 +110,7 @@ export class BaseContainerPlugin extends Plugin {
         const closestEditable = (n) =>
             isContentEditable(n.parentElement) ? closestEditable(n.parentElement) : n;
 
-        const isUnsplittable = this.getResource("unsplittable_node_predicates").some((p) =>
-            p(node)
-        );
+        const isUnsplittable = !(this.checkPredicates("splittable_node_predicates", node) ?? true);
         const isCandidateForBase = this.isCandidateForBaseContainerAllowUnsplittable(node);
 
         if (isUnsplittable || !isCandidateForBase) {
@@ -112,7 +121,7 @@ export class BaseContainerPlugin extends Plugin {
         if (
             anchorNode === closestEditable(node) ||
             !this.config.baseContainers.includes(anchorNode.nodeName) ||
-            this.getResource("unremovable_node_predicates").some((p) => p(anchorNode))
+            !(this.checkPredicates("removable_node_predicates", anchorNode) ?? true)
         ) {
             return;
         }
@@ -139,27 +148,26 @@ export class BaseContainerPlugin extends Plugin {
      * This function considers unsplittable and childNodes.
      */
     isCandidateForBaseContainer(element) {
-        return !this.getResource("invalid_for_base_container_predicates").some((fn) => fn(element));
+        return this.checkPredicates("valid_for_base_container_predicates", element) ?? true;
     }
 
     /**
      * Evaluate if an element would be eligible to become a baseContainer
      * without considering unsplittable.
      *
-     * This function is only meant to be used during `unsplittable_node_predicates` to
+     * This function is only meant to be used during `splittable_node_predicates` to
      * avoid an infinite loop:
      * Considering a `DIV`,
-     * - During `unsplittable_node_predicates`, one predicate should return true
+     * - During `splittable_node_predicates`, one predicate should return false
      *   if the `DIV` is NOT a baseContainer candidate (Odoo specification),
-     *   therefore `invalid_for_base_container_predicates` should be evaluated.
-     * - During `invalid_for_base_container_predicates`, one predicate should
-     *   return true if the `DIV` is unsplittable, because a node has to be
+     *   therefore `valid_for_base_container_predicates` should be evaluated.
+     * - During `valid_for_base_container_predicates`, one predicate should
+     *   return false if the `DIV` is unsplittable, because a node has to be
      *   splittable to use the featureSet associated with paragraphs.
      * Each resource has to call the other. To avoid the issue, during
-     * `unsplittable_node_predicates`, the baseContainer predicate will execute
-     * all predicates for `invalid_for_base_container_predicates` except
-     * the one using `unsplittable_node_predicates`, since it is already being
-     * evaluated.
+     * `splittable_node_predicates`, the baseContainer predicate will execute
+     * all predicates for `valid_for_base_container_predicates` except the one
+     * using `splittable_node_predicates`, since it is already being evaluated.
      *
      * In simpler terms:
      * A `DIV` is unsplittable by default;
@@ -168,10 +176,10 @@ export class BaseContainerPlugin extends Plugin {
      * oe_unbreakable) => it stays unsplittable.
      */
     isCandidateForBaseContainerAllowUnsplittable(element) {
-        return !this.getResource("invalid_for_base_container_predicates").some((p) =>
-            p(element, {
+        return (
+            this.checkPredicates("valid_for_base_container_predicates", element, {
                 allowUnsplittable: true,
-            })
+            }) ?? true
         );
     }
 
@@ -183,10 +191,10 @@ export class BaseContainerPlugin extends Plugin {
      * compute childNodes multiple times in more complex operations.
      */
     shallowIsCandidateForBaseContainer(element) {
-        return !this.getResource("invalid_for_base_container_predicates").some((p) =>
-            p(element, {
+        return (
+            this.checkPredicates("valid_for_base_container_predicates", element, {
                 shallow: true,
-            })
+            }) ?? true
         );
     }
 

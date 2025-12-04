@@ -59,7 +59,11 @@ export class HighlightPlugin extends Plugin {
                 node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
             }
         },
-        format_class_predicates: (className) => className.startsWith("o_text_highlight"),
+        format_class_predicates: (className) => {
+            if (className.startsWith("o_text_highlight")) {
+                return true;
+            }
+        },
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
         remove_all_formats_handlers: () => {
             // we rely on the normalize handler to start it again

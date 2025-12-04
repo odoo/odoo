@@ -111,7 +111,11 @@ export class DomPlugin extends Plugin {
             this.removeEmptyClassAndStyleAttributes(root);
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
-        functional_empty_node_predicates: [isSelfClosingElement, isEditorTab],
+        functional_empty_node_predicates: (node) => {
+            if (isSelfClosingElement(node) || isEditorTab(node)) {
+                return true;
+            }
+        },
     };
 
     setup() {
