@@ -213,8 +213,8 @@ registerThreadAction("mark-read", {
 registerThreadAction("delete-thread", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: DeleteThreadDialog,
-    actionPanelComponentProps({ action, thread }) {
-        return { close: () => action.actionPanelClose(), thread };
+    actionPanelComponentProps({ action, channel }) {
+        return { channel, close: () => action.actionPanelClose() };
     },
     actionPanelOuterClass: "bg-100",
     condition({ owner, store, thread }) {
@@ -227,14 +227,14 @@ registerThreadAction("delete-thread", {
     icon: "fa fa-fw fa-trash",
     iconLarge: "fa fa-fw fa-lg fa-trash",
     name: _t("Delete Thread"),
-    actionPanelOpen: ({ owner, store, thread }) => {
+    actionPanelOpen: ({ channel, owner, store }) => {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
-                title: thread.name,
+                title: channel.name,
                 contentComponent: DeleteThreadDialog,
                 contentProps: {
                     close: () => store.env.services.dialog.closeAll(),
-                    thread,
+                    channel,
                 },
             });
         }
