@@ -50,7 +50,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
 
         cls.user_responsible = mail_new_test_user(cls.env, login='Titus', groups='base.group_user,hr_holidays.group_hr_holidays_responsible')
         cls.user_responsible_id = cls.user_responsible.id
-        cls.user_employee = mail_new_test_user(cls.env, login='enguerran', password='enguerran', groups='base.group_user')
+        cls.user_employee = mail_new_test_user(cls.env, login='enguerran', password='enguerran', groups='hr_holidays.group_hr_holidays_employee')
         cls.user_employee_id = cls.user_employee.id
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
         cls.external_user_employee_id = cls.external_user_employee.id

@@ -240,8 +240,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         """
-        user_david = mail_new_test_user(self.env, login='david', groups='base.group_user')
-        user_timeoff_officer_david = mail_new_test_user(self.env, login='timeoff_officer', groups='base.group_user')
+        user_david = mail_new_test_user(self.env, login='david', groups='base.group_user,hr_holidays.group_hr_holidays_employee')
+        user_timeoff_officer_david = mail_new_test_user(self.env, login='timeoff_officer', groups='base.group_user,hr_holidays.group_hr_holidays_employee')
 
         employee_david = self.env['hr.employee'].create({
             'name': 'David Employee',

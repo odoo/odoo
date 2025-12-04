@@ -24,9 +24,9 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'resource_calendar_id': cls.default_calendar.id,
         })
 
-        cls.employee_user = new_test_user(cls.env, login='user', groups='base.group_user', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
+        cls.employee_user = new_test_user(cls.env, login='user', groups='base.group_user,hr_holidays.group_hr_holidays_employee', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
         cls.manager_user = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_manager', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
-        cls.user_emp_leave_manager = new_test_user(cls.env, login='employee_leave_manager', groups='base.group_user', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
+        cls.user_emp_leave_manager = new_test_user(cls.env, login='employee_leave_manager', groups='base.group_user,hr_holidays.group_hr_holidays_employee', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
         cls.hr_user = new_test_user(cls.env, login='HR_user', groups='hr_holidays.group_hr_holidays_manager', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
 
         cls.leave_manager = cls.env['hr.employee'].create({

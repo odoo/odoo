@@ -25,7 +25,7 @@ class TestCancelTimeOff(TransactionCase):
             login='test_user',
             name='Test User',
             company_id=cls.company.id,
-            groups='base.group_user,hr_timesheet.group_hr_timesheet_user',
+            groups='base.group_user,hr_timesheet.group_hr_timesheet_user,hr_holidays.group_hr_holidays_employee',
         )
         cls.employee = cls.env['hr.employee'].create({
             'name': 'Test Employee',

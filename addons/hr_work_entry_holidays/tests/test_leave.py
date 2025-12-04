@@ -73,6 +73,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'name': 'User Employee',
             'login': 'jul',
             'password': 'julpassword',
+            'group_ids': [(4, self.env.ref('hr_holidays.group_hr_holidays_employee').id)],
         })
         self.richard_emp.user_id = user
         with freeze_time(datetime(2022, 3, 21)):

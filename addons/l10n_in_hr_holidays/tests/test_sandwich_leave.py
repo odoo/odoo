@@ -38,7 +38,7 @@ class TestSandwichLeave(TransactionCase):
         self.demo_user = self.env["res.users"].with_company(self.indian_company).create({
             "login": "piyush",
             "name": "piyush_demo",
-            "group_ids": [Command.link(self.env.ref("base.group_user").id)]
+            "group_ids": [Command.link(self.env.ref("base.group_user").id), Command.link(self.env.ref("hr_holidays.group_hr_holidays_employee").id)],
         })
 
         self.demo_employee = self.env['hr.employee'].with_company(self.indian_company).create({
