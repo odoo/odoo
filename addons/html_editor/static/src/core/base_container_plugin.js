@@ -12,7 +12,6 @@ import { Plugin } from "../plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import {
     BASE_CONTAINER_CLASS,
-    SUPPORTED_BASE_CONTAINER_NAMES,
     baseContainerGlobalSelector,
     createBaseContainer,
 } from "../utils/base_container";
@@ -74,7 +73,7 @@ export class BaseContainerPlugin extends Plugin {
             (node) =>
                 !node ||
                 node.nodeType !== Node.ELEMENT_NODE ||
-                !SUPPORTED_BASE_CONTAINER_NAMES.includes(node.tagName) ||
+                !this.config.baseContainers.includes(node.tagName) ||
                 isProtected(node) ||
                 isProtecting(node) ||
                 isMediaElement(node),
@@ -112,7 +111,7 @@ export class BaseContainerPlugin extends Plugin {
         let anchorNode = node.parentElement;
         if (
             anchorNode === closestEditable(node) ||
-            !SUPPORTED_BASE_CONTAINER_NAMES.includes(anchorNode.nodeName) ||
+            !this.config.baseContainers.includes(anchorNode.nodeName) ||
             this.getResource("unremovable_node_predicates").some((p) => p(anchorNode))
         ) {
             return;
