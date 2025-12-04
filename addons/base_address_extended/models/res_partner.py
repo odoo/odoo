@@ -60,3 +60,17 @@ class ResPartner(models.Model):
         super()._onchange_country_id()
         if self.country_id and self.country_id != self.city_id.country_id:
             self.city_id = False
+
+    @api.model
+    def _get_res_city_by_name(self, name, country_id):
+        ResCity = self.env['res.city']
+        if not name or not country_id:
+            return ResCity
+
+        if self.env.user._is_public():
+            ResCity = ResCity.sudo()
+
+        return ResCity.search([
+            ('name', '=ilike', name),
+            ('country_id', '=', country_id),
+        ], limit=1)

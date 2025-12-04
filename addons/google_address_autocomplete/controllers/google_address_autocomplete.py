@@ -60,12 +60,24 @@ class AutoCompleteController(http.Controller):
                         )
                         continue
                     state = request.env['res.country.state'].search(
-                        [('code', '=', google_field['short_name'].upper()),
-                         ('country_id', '=', standard_data['country'][0])])
+                        [
+                            ('country_id', '=', standard_data['country'][0]),
+                            '|',
+                            ('code', '=', google_field['short_name'].upper()),
+                            ('name', 'ilike', google_field['long_name']),
+                        ],
+                    )
                     if len(state) == 1:
                         standard_data[field_standard] = [state.id, state.name]
                 else:
                     standard_data[field_standard] = google_field['long_name']
+        city_name = standard_data.get('city')
+        country = standard_data.get('country')
+        country_id = country[0] if country else False
+        if city := self.env['res.partner']._get_res_city_by_name(city_name, country_id):
+            standard_data['city_id'] = [city.id, city.name]
+            if not standard_data.get('state') and city.state_id:  # Derive state from city if missing
+                standard_data['state'] = [city.state_id.id, city.state_id.name]
         return standard_data
 
     def _guess_number_from_input(self, source_input, standard_address):
