@@ -5,7 +5,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.models import TableSQL
 from odoo.tools import SQL
-from odoo.addons.resource.models.utils import filter_domain_leaf
+from odoo.addons.resource.models.utils import filter_map_domain
 
 
 class ProjectTaskBurndownChartReport(models.AbstractModel):
@@ -227,14 +227,28 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         * A domain that only contains fields that are specific to `project.task.burndown.chart.report`
         * A domain that only contains fields that are specific to `project.task`
 
-        See `filter_domain_leaf` for more details on the new domains.
+        See `filter_map_domain` for more details on the new domains.
 
         :param domain: The domain that has been passed to the read_group.
         :return: A tuple containing the non `project.task` specific domain and the `project.task` specific domain.
         """
         burndown_chart_specific_fields = list(set(self._fields) - set(self.task_specific_fields))
-        task_specific_domain = filter_domain_leaf(domain, lambda field: field not in burndown_chart_specific_fields)
-        non_task_specific_domain = filter_domain_leaf(domain, lambda field: field not in self.task_specific_fields)
+        task_specific_domain = filter_map_domain(
+            domain,
+            lambda condition: (
+                None
+                if condition.field_expr in burndown_chart_specific_fields
+                else condition
+            ),
+        )
+        non_task_specific_domain = filter_map_domain(
+            domain,
+            lambda condition: (
+                None
+                if condition.field_expr in self.task_specific_fields
+                else condition
+            ),
+        )
         return non_task_specific_domain, task_specific_domain
 
     def _read_group_select(self, table, aggregate_spec):
