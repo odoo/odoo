@@ -108,6 +108,13 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "ownership_token": self.attachments[0]._get_ownership_token(),
                     "raw_access_token": self.attachments[0]._get_raw_access_token(),
                     "res_name": "Test channel",
+<<<<<<< a2b3a10255dba290ea462b9193ae11c54d8dd5e0
+||||||| 7ed14164e2099bc46258ed30e66fc765604337f3
+                    "mimetype": "application/octet-stream",
+=======
+                    "res_model": self.attachments[0].res_model,
+                    "mimetype": "application/octet-stream",
+>>>>>>> f6546d381dae111d30d311ffb19c078f39886d10
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
                     "thumbnail_access_token": self.attachments[0]._get_thumbnail_token(),
                     "voice_ids": [],
@@ -173,6 +180,13 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "ownership_token": self.attachments[0]._get_ownership_token(),
                     "raw_access_token": self.attachments[0]._get_raw_access_token(),
                     "res_name": "Test channel",
+<<<<<<< a2b3a10255dba290ea462b9193ae11c54d8dd5e0
+||||||| 7ed14164e2099bc46258ed30e66fc765604337f3
+                    "mimetype": "application/octet-stream",
+=======
+                    "res_model": self.attachments[0].res_model,
+                    "mimetype": "application/octet-stream",
+>>>>>>> f6546d381dae111d30d311ffb19c078f39886d10
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
                     "thumbnail_access_token": self.attachments[0]._get_thumbnail_token(),
                     "voice_ids": [],
@@ -190,6 +204,13 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "ownership_token": self.attachments[1]._get_ownership_token(),
                     "raw_access_token": self.attachments[1]._get_raw_access_token(),
                     "res_name": "Test channel",
+<<<<<<< a2b3a10255dba290ea462b9193ae11c54d8dd5e0
+||||||| 7ed14164e2099bc46258ed30e66fc765604337f3
+                    "mimetype": "application/octet-stream",
+=======
+                    "res_model": self.attachments[1].res_model,
+                    "mimetype": "application/octet-stream",
+>>>>>>> f6546d381dae111d30d311ffb19c078f39886d10
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
                     "thumbnail_access_token": self.attachments[1]._get_thumbnail_token(),
                     "voice_ids": [],
@@ -199,6 +220,112 @@ class TestMessageController(HttpCaseWithUserDemo):
             ],
             "guest should be allowed to add attachment with token when updating message",
         )
+<<<<<<< a2b3a10255dba290ea462b9193ae11c54d8dd5e0
+||||||| 7ed14164e2099bc46258ed30e66fc765604337f3
+        # test message update: own attachment ok
+        res5 = self.url_open(
+            url="/mail/message/update_content",
+            data=json.dumps(
+                {
+                    "params": {
+                        "message_id": data2["mail.message"][0]["id"],
+                        "body": "test",
+                        "attachment_ids": [self.attachments[1].id],
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res5.status_code, 200)
+        data3 = res5.json()["result"]
+        self.assertEqual(
+            data3["ir.attachment"],
+            [
+                {
+                    "checksum": False,
+                    "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
+                    "id": self.attachments[0].id,
+                    "name": "File 1",
+                    "raw_access_token": self.attachments[0]._get_raw_access_token(),
+                    "res_name": "Test channel",
+                    "mimetype": "application/octet-stream",
+                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
+                    "voice": False,
+                    'type': 'binary',
+                    'url': False,
+                },
+                {
+                    "checksum": False,
+                    "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
+                    "file_size": 0,
+                    "id": self.attachments[1].id,
+                    "name": "File 2",
+                    "raw_access_token": self.attachments[1]._get_raw_access_token(),
+                    "res_name": "Test channel",
+                    "mimetype": "application/octet-stream",
+                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
+                    "voice": False,
+                    'type': 'binary',
+                    'url': False,
+                },
+            ],
+            "guest should be allowed to add own attachment without token when updating message",
+        )
+=======
+        # test message update: own attachment ok
+        res5 = self.url_open(
+            url="/mail/message/update_content",
+            data=json.dumps(
+                {
+                    "params": {
+                        "message_id": data2["mail.message"][0]["id"],
+                        "body": "test",
+                        "attachment_ids": [self.attachments[1].id],
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res5.status_code, 200)
+        data3 = res5.json()["result"]
+        self.assertEqual(
+            data3["ir.attachment"],
+            [
+                {
+                    "checksum": False,
+                    "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
+                    "id": self.attachments[0].id,
+                    "name": "File 1",
+                    "raw_access_token": self.attachments[0]._get_raw_access_token(),
+                    "res_name": "Test channel",
+                    "res_model": self.attachments[0].res_model,
+                    "mimetype": "application/octet-stream",
+                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
+                    "voice": False,
+                    'type': 'binary',
+                    'url': False,
+                },
+                {
+                    "checksum": False,
+                    "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
+                    "file_size": 0,
+                    "id": self.attachments[1].id,
+                    "name": "File 2",
+                    "raw_access_token": self.attachments[1]._get_raw_access_token(),
+                    "res_name": "Test channel",
+                    "res_model": self.attachments[1].res_model,
+                    "mimetype": "application/octet-stream",
+                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
+                    "voice": False,
+                    'type': 'binary',
+                    'url': False,
+                },
+            ],
+            "guest should be allowed to add own attachment without token when updating message",
+        )
+>>>>>>> f6546d381dae111d30d311ffb19c078f39886d10
 
     @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")
     def test_mail_partner_from_email_unauthenticated(self):

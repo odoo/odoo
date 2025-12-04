@@ -99,6 +99,7 @@ class IrAttachment(models.Model):
             "name",
             Store.Attr("raw_access_token", lambda a: a._get_raw_access_token()),
             "res_name",
+            "res_model",
             Store.One("thread", [], as_thread=True),
             Store.Attr("thumbnail_access_token", lambda a: a._get_thumbnail_token()),
             "type",
