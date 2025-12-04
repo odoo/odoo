@@ -36,4 +36,8 @@ export class Typing extends Component {
             user2: typingMemberNames[1],
         });
     }
+
+    get showTypingIcon() {
+        return true;
+    }
 }
