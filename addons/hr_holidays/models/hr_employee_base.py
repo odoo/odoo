@@ -87,6 +87,11 @@ class HrEmployeeBase(models.AbstractModel):
         return self.env.user.employee_id
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
+        """
+        :context precomputed_allocations: context variable (recordset) can be used to pass allocation that are considered to be already computed.
+        This method won't call `_get_future_leaves_on` for the allocations contained by this variable (it will only use the current value of
+        the`number_of_days` of the allocation, alias `number_of_hours_display`)
+        """
         employees = self or self._get_contextual_employee()
         leaves_domain = [
             ('holiday_status_id', 'in', leave_types.ids),
@@ -162,10 +167,16 @@ class HrEmployeeBase(models.AbstractModel):
                 'to_recheck_leaves': self.env['hr.leave']
             })
         )
+        precomputed_allocations = self.env.context.get('precomputed_allocations')
         for allocation in allocations:
             allocation_data = allocations_leaves_consumed[allocation.employee_id][allocation.holiday_status_id][allocation]
+            precomputed = False
+            if precomputed_allocations:
+                if allocation.id in precomputed_allocations.ids:
+                    allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
+                    precomputed = True
             future_leaves = 0
-            if allocation.allocation_type == 'accrual':
+            if allocation.allocation_type == 'accrual' and not precomputed:
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
                 if allocation.holiday_status_id.request_unit in ['hour']\
@@ -189,7 +200,11 @@ class HrEmployeeBase(models.AbstractModel):
                         allocations_with_date_to |= leave_allocation
                     else:
                         allocations_without_date_to |= leave_allocation
-                sorted_leave_allocations = allocations_with_date_to.sorted(key='date_to') + allocations_without_date_to
+                # Defines the order in which allocation will be used to take the leaves in priority
+                sorted_leave_allocations = (
+                    allocations_with_date_to.sorted(key='date_to') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'accrual') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'regular'))
 
                 if leave_type.request_unit in ['day', 'half_day']:
                     leave_duration_field = 'number_of_days'
