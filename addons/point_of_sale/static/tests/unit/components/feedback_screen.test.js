@@ -26,3 +26,17 @@ test("Total on receipt always incl", async () => {
     total = queryOne(".feedback-screen .amount-container .amount");
     expect(total).toHaveText("17.85");
 });
+
+test("canEditPayment", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const feedbackScreen = await mountWithCleanup(FeedbackScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    store.config.iface_print_auto = true;
+    expect(feedbackScreen.canEditPayment).toBe(false);
+    store.config.iface_print_auto = false;
+    expect(feedbackScreen.canEditPayment).toBe(true);
+    order.nb_print = 1;
+    expect(feedbackScreen.canEditPayment).toBe(false);
+});
