@@ -8,4 +8,14 @@ patch(PosStore.prototype, {
             this.router.state.current !== "LoginScreen" && super.shouldResetIdleTimer(...arguments)
         );
     },
+    get showEditPlanButton() {
+        if (
+            this.config.module_pos_restaurant &&
+            (!this.config.module_pos_hr || this.employeeIsAdmin)
+        ) {
+            return super.showEditPlanButton;
+        } else {
+            return false;
+        }
+    },
 });

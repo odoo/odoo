@@ -1,8 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, Command
+import uuid
+from base64 import b64decode
+
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.mimetypes import guess_mimetype
+
+FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES = {
+    'image/gif': '.gif',
+    'image/jpe': '.jpe',
+    'image/jpeg': '.jpeg',
+    'image/jpg': '.jpg',
+    'image/png': '.png',
+    'image/svg+xml': '.svg',
+    'image/webp': '.webp',
+}
 
 
 class RestaurantFloor(models.Model):
@@ -14,12 +30,10 @@ class RestaurantFloor(models.Model):
 
     name = fields.Char('Floor Name', required=True)
     pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]")
-    background_image = fields.Binary('Background Image')
-    background_color = fields.Char('Background Color', help='The background color of the floor in a html-compatible format')
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
-    floor_background_image = fields.Image(string='Floor Background Image')
+    floor_plan_layout = fields.Json(string='Floor Plan Layout')
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -27,7 +41,7 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image']
+        return ['name', 'table_ids', 'sequence', 'pos_config_ids']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -55,23 +69,6 @@ class RestaurantFloor(models.Model):
 
         return super().write(vals)
 
-    @api.model
-    def sync_from_ui(self, name, background_color, config_id):
-        floor_fields = {
-            "name": name,
-            "background_color": background_color,
-        }
-        pos_floor = self.create(floor_fields)
-        pos_floor.pos_config_ids = [Command.link(config_id)]
-        return {
-            'id': pos_floor.id,
-            'name': pos_floor.name,
-            'background_color': pos_floor.background_color,
-            'table_ids': [],
-            'sequence': pos_floor.sequence,
-            'tables': [],
-        }
-
     def deactivate_floor(self, session_id):
         draft_orders = self.env['pos.order'].search([('session_id', '=', session_id), ('state', '=', 'draft'), ('table_id.floor_id', '=', self.id)])
         if draft_orders:
@@ -82,6 +79,41 @@ class RestaurantFloor(models.Model):
 
         return True
 
+    @api.model
+    def add_floor_plan_image(self, name, data):
+        img = b64decode(data)
+        mimetype = guess_mimetype(img)
+        if mimetype not in FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES:
+            raise UserError(_("Uploaded image's format is not supported. Try with: %s", ', '.join(FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES.values())))
+        IrAttachment = self.env['ir.attachment']
+        checksum = IrAttachment._compute_checksum(img)
+        if not name:
+            name = f"{str(uuid.uuid4())[:6]}{FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES[mimetype]}"
+        attachment_data = {
+            'name': name,
+            'res_model': 'restaurant.floor',
+            'res_id': 0,  # linked later
+        }
+        domain = [(field, '=', value) for field, value in attachment_data.items()]
+        domain.append(('checksum', '=', checksum))
+        attachment = IrAttachment.search(domain, limit=1) or None
+        if not attachment:
+            attachment_data['raw'] = img
+            attachment = IrAttachment.create(attachment_data)
+        return {'id': attachment.id, 'url': attachment.image_src}
+
+    @api.autovacuum
+    def _gc_embeddings(self):
+        """
+        Autovacuum: Cleanup floor plan images not associated
+        """
+        self.env['ir.attachment'].search([
+            ('res_model', '=', 'restaurant.floor'),
+            ('res_field', '=', False),
+            ('res_id', '=', 0),
+            ('write_date', '<', fields.Datetime.now() - relativedelta(days=1))
+        ]).unlink()
+
 
 class RestaurantTable(models.Model):
     _name = 'restaurant.table'
@@ -91,17 +123,11 @@ class RestaurantTable(models.Model):
 
     floor_id = fields.Many2one('restaurant.floor', string='Floor', index='btree_not_null')
     table_number = fields.Integer('Table Number', required=True, help='The number of the table as displayed on the floor plan', default=0)
-    shape = fields.Selection([('square', 'Square'), ('round', 'Round')], string='Shape', required=True, default='square')
-    position_h = fields.Float('Horizontal Position', default=10,
-        help="The table's horizontal position from the left side to the table's center, in pixels")
-    position_v = fields.Float('Vertical Position', default=10,
-        help="The table's vertical position from the top to the table's center, in pixels")
-    width = fields.Float('Width', default=50, help="The table's width in pixels")
-    height = fields.Float('Height', default=50, help="The table's height in pixels")
     seats = fields.Integer('Seats', default=1, help="The default number of customer served at this table.")
-    color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value")
     parent_id = fields.Many2one('restaurant.table', string='Parent Table', help="The parent table if this table is part of a group of tables")
+    parent_side = fields.Selection(string='Parent Side', selection=[('left', 'Left'), ('right', 'Right'), ('top', 'Top'), ('bottom', 'Bottom')], help="The parent table side where this table will be displayed")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
+    floor_plan_layout = fields.Json(string='Floor Plan Layout')
 
     @api.depends('table_number', 'floor_id')
     def _compute_display_name(self):
@@ -114,7 +140,7 @@ class RestaurantTable(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['table_number', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active']
+        return ['table_number', 'parent_id', 'parent_side', 'floor_id', 'seats', 'active']
 
     def are_orders_still_in_draft(self):
         draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])

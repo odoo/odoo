@@ -4,309 +4,378 @@
         <!-- Floors: Main Floor -->
         <record id="floor_main" model="restaurant.floor">
             <field name="name">Main Floor</field>
-            <field name="background_color">white</field>
-            <field name="floor_background_image" type="base64" file="pos_restaurant/static/img/floor_main.jpeg" />
+            <field name="floor_plan_layout" eval="{'bgColor': 'texture-wood-v'}"></field>
         </record>
 
         <record id="table_01" model="restaurant.table">
             <field name="table_number">1</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">407</field>
-            <field name="position_v">88</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '9adce4d8fff5e0ed',
+                'color': 'green',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 407,
+                'top': 88,
+            }"/>
         </record>
 
         <record id="table_02" model="restaurant.table">
             <field name="table_number">2</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">582</field>
-            <field name="position_v">88</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'b7c4a91f3e2d4c88',
+                'color': 'green',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 582,
+                'top': 88,
+            }"/>
         </record>
 
         <record id="table_03" model="restaurant.table">
             <field name="table_number">3</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">165</field>
-            <field name="height">100</field>
-            <field name="position_h">762</field>
-            <field name="position_v">83</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'c4f2e8a97123bb10',
+                'color': 'green',
+                'shape': 'square',
+                'width': 165,
+                'height': 100,
+                'left': 762,
+                'top': 83,
+            }"/>
         </record>
 
         <record id="table_04" model="restaurant.table">
             <field name="table_number">4</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">407</field>
-            <field name="position_v">247</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'e38b6f2109ac44de',
+                'color': 'green',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 407,
+                'top': 247,
+            }"/>
         </record>
 
         <record id="table_05" model="restaurant.table">
             <field name="table_number">5</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">582</field>
-            <field name="position_v">247</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'f019d7c52a6be3af',
+                'color': 'green',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 582,
+                'top': 247,
+            }"/>
         </record>
 
         <record id="table_06" model="restaurant.table">
             <field name="table_number">6</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">165</field>
-            <field name="height">100</field>
-            <field name="position_h">762</field>
-            <field name="position_v">325</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'a6d40b2c89f1e735',
+                'color': 'green',
+                'shape': 'square',
+                'width': 165,
+                'height': 100,
+                'left': 762,
+                'top': 325,
+            }"/>
         </record>
 
         <record id="table_07" model="restaurant.table">
             <field name="table_number">7</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(235,109,109)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">407</field>
-            <field name="position_v">406</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'd9cbe71234ab88fe',
+                'color': 'red',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 407,
+                'top': 406,
+            }"/>
         </record>
 
         <record id="table_08" model="restaurant.table">
             <field name="table_number">8</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">4</field>
-            <field name="color">rgb(235,109,109)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">582</field>
-            <field name="position_v">406</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '0f41bd9a67c3e210',
+                'color': 'red',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 582,
+                'top': 406,
+            }"/>
         </record>
 
         <record id="table_09" model="restaurant.table">
             <field name="table_number">9</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">6</field>
-            <field name="color">rgb(235,109,109)</field>
-            <field name="shape">square</field>
-            <field name="width">165</field>
-            <field name="height">100</field>
-            <field name="position_h">120</field>
-            <field name="position_v">560</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '8b5a2ce4f7d1093a',
+                'color': 'red',
+                'shape': 'square',
+                'width': 165,
+                'height': 100,
+                'left': 120,
+                'top': 560,
+            }"/>
         </record>
 
         <record id="table_10" model="restaurant.table">
             <field name="table_number">10</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">6</field>
-            <field name="color">rgb(235,109,109)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">407</field>
-            <field name="position_v">565</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '2e7f1acb90de54f1',
+                'color': 'red',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 407,
+                'top': 565,
+            }"/>
         </record>
 
         <record id="table_11" model="restaurant.table">
             <field name="table_number">11</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">2</field>
-            <field name="color">rgb(172,109,173)</field>
-            <field name="shape">square</field>
-            <field name="width">90</field>
-            <field name="height">90</field>
-            <field name="position_h">582</field>
-            <field name="position_v">565</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '7a13d9f0bc52e6d4',
+                'color': 'purple',
+                'shape': 'square',
+                'width': 90,
+                'height': 90,
+                'left': 582,
+                'top': 565,
+            }"/>
         </record>
 
         <record id="table_12" model="restaurant.table">
             <field name="table_number">12</field>
-            <field name="floor_id" ref="pos_restaurant.floor_main" />
+            <field name="floor_id" ref="pos_restaurant.floor_main"/>
             <field name="seats">2</field>
-            <field name="color">rgb(172,109,173)</field>
-            <field name="shape">square</field>
-            <field name="width">165</field>
-            <field name="height">100</field>
-            <field name="position_h">762</field>
-            <field name="position_v">560</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '1f8e03b6a4d2c7e9',
+                'color': 'purple',
+                'shape': 'square',
+                'width': 165,
+                'height': 100,
+                'left': 762,
+                'top': 560,
+            }"/>
         </record>
 
         <!-- Restaurant Floor: Patio -->
-
         <record id="floor_patio" model="restaurant.floor">
             <field name="name">Patio</field>
-            <field name="background_color">white</field>
         </record>
 
         <!-- Patio: Left table row -->
 
         <record id="table_21" model="restaurant.table">
             <field name="table_number">101</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">100</field>
-            <field name="position_v">50</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '4c79a5e1d0b23f8a',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 100,
+                'top': 50,
+            }"/>
         </record>
 
         <record id="table_22" model="restaurant.table">
             <field name="table_number">102</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">100</field>
-            <field name="position_v">166</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'e0b1c2d3f495a6b7',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 100,
+                'top': 166,
+            }"/>
         </record>
 
         <record id="table_23" model="restaurant.table">
             <field name="table_number">103</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">100</field>
-            <field name="position_v">283</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '5d7e9fa2103bc4e8',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 100,
+                'top': 283,
+            }"/>
         </record>
 
         <record id="table_24" model="restaurant.table">
             <field name="table_number">104</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">100</field>
-            <field name="position_v">400</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '9ac4b2e07d18f3a5',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 100,
+                'top': 400,
+            }"/>
         </record>
 
         <!-- Patio: Right table row -->
 
         <record id="table_25" model="restaurant.table">
             <field name="table_number">105</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">800</field>
-            <field name="position_v">50</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '3fb8a9c6d2e4017e',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 800,
+                'top': 50,
+            }"/>
         </record>
 
         <record id="table_26" model="restaurant.table">
             <field name="table_number">106</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">800</field>
-            <field name="position_v">166</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'a1d2f304b5c6e789',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 800,
+                'top': 166,
+            }"/>
         </record>
 
         <record id="table_27" model="restaurant.table">
             <field name="table_number">107</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">800</field>
-            <field name="position_v">283</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'c8e1f0a297b3d654',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 800,
+                'top': 283,
+            }"/>
         </record>
 
         <record id="table_28" model="restaurant.table">
             <field name="table_number">108</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">2</field>
-            <field name="color">rgb(53,211,116)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">85</field>
-            <field name="position_h">800</field>
-            <field name="position_v">400</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '6e70b1c2d3f4a589',
+                'color': 'green',
+                'shape': 'square',
+                'width': 130,
+                'height': 85,
+                'left': 800,
+                'top': 400,
+            }"/>
         </record>
 
         <!-- Patio: Center table block -->
 
         <record id="table_29" model="restaurant.table">
             <field name="table_number">109</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
-            <field name="color">rgb(235,191,109)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">120</field>
-            <field name="position_h">330</field>
-            <field name="position_v">100</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'f4d1c2b3a596e780',
+                'color': 'yellow',
+                'shape': 'square',
+                'width': 130,
+                'height': 120,
+                'left': 330,
+                'top': 100,
+            }"/>
         </record>
 
         <record id="table_30" model="restaurant.table">
             <field name="table_number">110</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
-            <field name="color">rgb(235,191,109)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">120</field>
-            <field name="position_h">560</field>
-            <field name="position_v">100</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '0a1b2c3d4e5f6789',
+                'color': 'yellow',
+                'shape': 'square',
+                'width': 130,
+                'height': 120,
+                'left': 560,
+                'top': 100,
+            }"/>
         </record>
 
         <record id="table_31" model="restaurant.table">
             <field name="table_number">111</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
-            <field name="color">rgb(235,191,109)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">120</field>
-            <field name="position_h">330</field>
-            <field name="position_v">315</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': 'b9c8d7e6f5a40312',
+                'color': 'yellow',
+                'shape': 'square',
+                'width': 130,
+                'height': 120,
+                'left': 330,
+                'top': 315,
+            }"/>
         </record>
 
         <record id="table_32" model="restaurant.table">
             <field name="table_number">112</field>
-            <field name="floor_id" ref="pos_restaurant.floor_patio" />
+            <field name="floor_id" ref="pos_restaurant.floor_patio"/>
             <field name="seats">4</field>
-            <field name="color">rgb(235,191,109)</field>
-            <field name="shape">square</field>
-            <field name="width">130</field>
-            <field name="height">120</field>
-            <field name="position_h">560</field>
-            <field name="position_v">315</field>
+            <field name="floor_plan_layout" eval="{
+                'uuid': '718293a4b5c6d7e8',
+                'color': 'yellow',
+                'shape': 'square',
+                'width': 130,
+                'height': 120,
+                'left': 560,
+                'top': 315,
+            }"/>
         </record>
 
     </data>

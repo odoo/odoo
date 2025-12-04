@@ -5,15 +5,16 @@ import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { isSamePosDevice } from "@point_of_sale/app/utils/devices_synchronisation";
+import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 
 patch(PosStore.prototype, {
     /**
      * @override
      */
     async setup() {
-        this.isEditMode = false;
         this.tableSyncing = false;
         this.tableSelectorState = false;
         await super.setup(...arguments);
@@ -469,15 +470,11 @@ patch(PosStore.prototype, {
     },
     //@override
     async afterProcessServerData() {
-        this.floorPlanStyle =
-            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
-
-        if (this.config.module_pos_restaurant) {
-            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
-        }
-
         const data = await super.afterProcessServerData(...arguments);
         this.restoreSampleDataState();
+        if (this.config.module_pos_restaurant) {
+            this.initFloorPlan();
+        }
         return data;
     },
     //@override
@@ -717,9 +714,8 @@ patch(PosStore.prototype, {
         return Boolean(table.getOrders().length);
     },
     getTableFromElement(el) {
-        return this.models["restaurant.table"].get(
-            [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
-        );
+        const tableId = el.dataset.table_id;
+        return this.models["restaurant.table"].get(tableId);
     },
     getOrderFromElement(el) {
         const uuid = el.getAttribute("orderUuid");
@@ -863,25 +859,7 @@ patch(PosStore.prototype, {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);
         return tableOrders.reduce((count, order) => count + order.getCustomerCount(), 0);
     },
-    toggleEditMode() {
-        this.isEditMode = !this.isEditMode;
-        if (this.isEditMode) {
-            this.tableSelectorState = false;
-        }
-    },
-    storeFloorScrollPosition(floorId, position) {
-        if (!floorId) {
-            return;
-        }
-        this.floorScrollPositions = this.floorScrollPositions || {};
-        this.floorScrollPositions[floorId] = position;
-    },
-    getFloorScrollPositions(floorId) {
-        if (!floorId || !this.floorScrollPositions) {
-            return;
-        }
-        return this.floorScrollPositions[floorId];
-    },
+
     shouldCreatePendingOrder(order) {
         return super.shouldCreatePendingOrder(order) || order.course_ids?.length > 0;
     },
@@ -1030,6 +1008,69 @@ patch(PosStore.prototype, {
         super.setPartnerToCurrentOrder(partner);
         if (this.config.module_pos_restaurant) {
             this.addPendingOrder([this.getOrder().id]);
+        }
+    },
+    getChangeCount(tableId) {
+        // This information in uiState came by websocket
+        // If the table is not synced, we need to count the unsynced orders
+        let changeCount = 0;
+        const tableOrders = this.models["pos.order"].filter(
+            (o) => o.table_id?.id === tableId && !o.finalized
+        );
+
+        for (const order of tableOrders) {
+            const changes = getOrderChanges(order, this.config.preparationCategories);
+            changeCount += changes.nbrOfChanges;
+        }
+
+        return { changes: changeCount };
+    },
+
+    initFloorPlan() {
+        if (!this.config.module_pos_restaurant) {
+            return;
+        }
+        this.floorPlan = this.env.services["pos_floor_plan"];
+        this.floorPlan.init(this);
+        this.data.connectWebSocket("FLOOR_PLAN_UPD", this.onFloorPlanUpdate.bind(this));
+    },
+
+    get currentFloor() {
+        if (!this.floorPlan) {
+            return null;
+        }
+        const floor = this.floorPlan.getSelectedFloor();
+        return floor?.record;
+    },
+
+    set currentFloor(floor) {
+        this.floorPlan?.selectFloorById(floor?.id);
+    },
+
+    get showEditPlanButton() {
+        return true;
+    },
+
+    async onFloorPlanUpdate(payload) {
+        const { session_id, device_identifier } = payload;
+        const isSameDevice = isSamePosDevice(session_id, device_identifier, this);
+        logPosMessage(
+            "Synchronisation",
+            "FLOOR_PLAN_UPD",
+            `Incoming synchronization from ${isSameDevice ? "this" : "another"} device`,
+            CONSOLE_COLOR
+        );
+
+        if (isSameDevice) {
+            return;
+        }
+
+        try {
+            await this.floorPlan.refreshFloorPlan(true);
+        } catch (e) {
+            logPosMessage("Synchronisation", "FLOOR_PLAN_UPD", "Unable to sync", CONSOLE_COLOR, [
+                e,
+            ]);
         }
     },
 });

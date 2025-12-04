@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template">
+    <t t-name="pos_restaurant.floor_editor.toolbar">
+        <div class="o_fp_edit_toolbar d-flex p-2">
+            <div class="d-flex me-3 me-sm-4">
+                <Dropdown menuClass="'py-1'">
+                    <div class="button btn btn-secondary btn-lg px-3 lh-lg text-nowrap text-body  o-dropdown-caret o-dropdown dropdown-toggle dropdown">
+                        <t t-out="floorStore.selectedFloor?.name"/>
+                    </div>
+                    <t t-set-slot="content">
+                        <t t-if="floorStore.floors.length > 1">
+                            <t t-foreach="floorStore.floors" t-as="floor" t-key="floor.uuid">
+                                <DropdownItem class="{'btn btn-lg ps-2 py-2':true}"
+                                              onSelected="()=>this.selectFloor(floor.uuid)">
+                                    <i class="fa fa-fw fa-check me-1 fs-5" style="color:var(--success)"
+                                       t-attf-class="{{floor === floorStore.selectedFloor ? 'visible' : 'invisible' }}"/>
+                                    <span t-esc="floor.name"/>
+                                </DropdownItem>
+                            </t>
+                            <div class="dropdown-divider mx-1 my-1"/>
+                        </t>
+                        <DropdownItem class="{'btn btn-lg ps-2 py-2':true}" onSelected="()=>this.addFloor()">
+                            <i class="fa fa-fw fa-plus me-1 fs-5"/>Add Floor
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+            <div class="d-flex  gap-3">
+                <button t-on-click="addTable" class="btn btn-outline-secondary btn-lg" title="Add Table">
+                    <span class="text-nowrap d-none d-sm-inline ">Add Table</span>
+                    <i class="fa fa-fw fa-plus d-sm-none "/>
+                </button>
+                <button t-on-click="addDecor" class="d-none d-sm-block btn btn-outline-secondary btn-lg">
+                    <span class="text-nowrap">Add Decor</span>
+                </button>
+                <Dropdown menuClass="'py-1'">
+                    <button class="d-flex d-sm-none o-dropdown dropdown-toggle dropdown btn btn-lg btn-outline-secondary align-items-center"
+                            title="More">
+                        <i class="oi oi-fw oi-ellipsis-v"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="()=>this.addDecor()" class="'py-2'">Add decor</DropdownItem>
+                        <DropdownItem onSelected="()=>this.editFloor()" class="'py-2'">Edit Floor</DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+            <div class="d-none d-sm-flex flex-fill justify-content-end ">
+                <button class="btn btn-secondary  btn-lg  d-flex align-items-center" title="Edit Floor"
+                        t-on-click="editFloor">
+                    <i class="fa fa-fw fa-pencil "/>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

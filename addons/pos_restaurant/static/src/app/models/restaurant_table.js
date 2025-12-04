@@ -11,7 +11,6 @@ export class RestaurantTable extends Base {
     initState() {
         super.initState();
         this.uiState = {
-            initialPosition: {},
             orderCount: 0,
             changeCount: 0,
         };
@@ -21,50 +20,6 @@ export class RestaurantTable extends Base {
     }
     getParent() {
         return this.parent_id?.getParent() || this;
-    }
-    getParentSide() {
-        if (!this.parent_id) {
-            return;
-        }
-        const dx = this.position_h - this.parent_id.getX();
-        const dy = this.position_v - this.parent_id.getY();
-        if (Math.abs(dx) > Math.abs(dy)) {
-            return dx < 0 ? "right" : "left";
-        }
-        return dy > 0 ? "bottom" : "top";
-    }
-    getX() {
-        if (!this.parent_id) {
-            return this.position_h;
-        }
-        const parent_side = this.parent_side || this.getParentSide();
-        if (["top", "bottom"].includes(parent_side)) {
-            return this.parent_id.getX();
-        }
-        if (parent_side === "left") {
-            return this.parent_id.getX() + this.parent_id.width;
-        }
-        return this.parent_id.getX() - this.width;
-    }
-    getY() {
-        if (!this.parent_id) {
-            return this.position_v;
-        }
-        const parent_side = this.parent_side || this.getParentSide();
-        this.parent_side = parent_side;
-        if (["left", "right"].includes(parent_side)) {
-            return this.parent_id.getY();
-        }
-        if (parent_side === "bottom") {
-            return this.parent_id.getY() + this.parent_id.height;
-        }
-        return this.parent_id.getY() - this.height;
-    }
-    getCenter() {
-        return {
-            x: this.getX() + this.width / 2,
-            y: this.getY() + this.height / 2,
-        };
     }
     getOrders() {
         return this.models["pos.order"].filter(
@@ -79,13 +34,6 @@ export class RestaurantTable extends Base {
             this.parent_id?.getOrder?.() ||
             this.backLink("<-pos.order.table_id").find((o) => !o.finalized)
         );
-    }
-    setPositionAsIfLinked(parent, side) {
-        this.parent_id = parent;
-        this.parent_side = side;
-        this.position_h = this.getX();
-        this.position_v = this.getY();
-        this.parent_id = null;
     }
     getName() {
         return this.table_number.toString();

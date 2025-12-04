@@ -49,10 +49,6 @@ export class NumpadDropdown extends Component {
         }
     }
 
-    toggleTableSelector() {
-        this.pos.tableSelectorState = !this.pos.tableSelectorState;
-    }
-
     get isSmall() {
         return utils.getSize() <= SIZES.SM;
     }

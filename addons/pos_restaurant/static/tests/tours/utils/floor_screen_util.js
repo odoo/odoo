@@ -2,7 +2,7 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
-    let trigger = `.floor-map .table${withClass}`;
+    let trigger = `.o_fp_canvas .o_fp_table${withClass}`;
     if (withoutClass) {
         trigger += `:not(${withoutClass})`;
     }
@@ -71,7 +71,7 @@ export function goTo(name) {
         ...clickTableSelectorButton(),
         ...Numpad.enterValue(name),
         {
-            trigger: ".floor-screen .right-buttons .jump-button",
+            trigger: ".floor-screen .jump-button",
             run: "click",
         },
     ];
@@ -105,10 +105,12 @@ export function isShown() {
         },
     ];
 }
+
+const LINK_DND_DELAY = 500;
+
 export function linkTables(child, parent) {
     async function drag_multiple_and_then_drop(helpers, ...drags) {
         const dragEffectDelay = async () => {
-            console.log(helpers.delay);
             await new Promise((resolve) => requestAnimationFrame(resolve));
             await new Promise((resolve) => setTimeout(resolve, helpers.delay));
         };
@@ -125,7 +127,6 @@ export function linkTables(child, parent) {
         });
         await dragEffectDelay();
         for (const [selector, options] of drags) {
-            console.log("Selector", selector, options);
             const target = await helpers.waitFor(selector, {
                 visible: true,
                 timeout: 500,
@@ -140,7 +141,8 @@ export function linkTables(child, parent) {
         content: `Drag table ${child} onto table ${parent} in order to link them`,
         trigger: table({ name: child }).trigger,
         async run(helpers) {
-            helpers.delay = 500;
+            const oldDelay = helpers.delay;
+            helpers.delay = LINK_DND_DELAY;
             await drag_multiple_and_then_drop(
                 helpers,
                 [
@@ -158,6 +160,7 @@ export function linkTables(child, parent) {
                     },
                 ]
             );
+            helpers.delay = oldDelay;
         },
     };
 }
@@ -166,19 +169,22 @@ export function unlinkTables(child, parent) {
         content: `Drag table ${child} away from table ${parent} to unlink them`,
         trigger: table({ name: child }).trigger,
         async run(helpers) {
+            const oldDelay = helpers.delay;
+            helpers.delay = LINK_DND_DELAY;
             await helpers.drag_and_drop(`div.floor-map`, {
                 position: {
                     bottom: 0,
                 },
                 relative: true,
             });
+            helpers.delay = oldDelay;
         },
     };
 }
 export function isChildTable(child) {
     return {
         content: `Verify that table ${child} is a child table`,
-        trigger: table({ name: child }).trigger + ` .info.opacity-25`,
+        trigger: table({ name: child }).trigger + ` .opacity-50`,
     };
 }
 export function clickNewOrder() {
