@@ -590,6 +590,9 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         return self.move_id.picking_type_id or self.is_inventory or self.lot_id or self.move_id.scrap_id
 
+    def _should_check_lot_number(self):
+        return True
+
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
@@ -661,7 +664,7 @@ class StockMoveLine(models.Model):
                 else:
                     ml_ids_tracked_without_lot.add(ml.id)
 
-        if ml_ids_tracked_without_lot:
+        if self._should_check_lot_number() and ml_ids_tracked_without_lot:
             mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
             products_list = "\n".join(f"- {product_name}" for product_name in mls_tracked_without_lot.mapped("product_id.display_name"))
             raise UserError(
