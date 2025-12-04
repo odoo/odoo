@@ -66,7 +66,7 @@ export class MapDescriptionAction extends BuilderAction {
         editingElement.querySelector(".description").remove();
     }
 }
-class MapDescriptionTextAction extends BuilderAction {
+export class MapDescriptionTextAction extends BuilderAction {
     static id = "mapDescriptionTextValue";
     getValue({ editingElement }) {
         return (

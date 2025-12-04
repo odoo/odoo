@@ -154,7 +154,7 @@ export class ClassAction extends BuilderAction {
     }
 }
 
-class AttributeAction extends BuilderAction {
+export class AttributeAction extends BuilderAction {
     static id = "attributeAction";
     getValue({ editingElement, params: { mainParam: attributeName } = {} }) {
         return editingElement.getAttribute(attributeName);
@@ -215,7 +215,7 @@ export class DataAttributeAction extends BuilderAction {
 }
 
 // TODO maybe find a better place for this
-class SetClassRangeAction extends BuilderAction {
+export class SetClassRangeAction extends BuilderAction {
     static id = "setClassRange";
     getValue({ editingElement, params: { mainParam: classNames } }) {
         for (const index in classNames) {

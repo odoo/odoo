@@ -14,7 +14,7 @@ import { uniqueId } from "@web/core/utils/functions";
 /**
  * Action to translate the entire webpage using AI.
  */
-class TranslateToAction extends BuilderAction {
+export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
     static dependencies = ["translateWebpageOption"];
 

@@ -1504,14 +1504,14 @@ export class SetDependencyValueListAction extends BuilderAction {
     }
 }
 
-class PropertyAction extends BuilderAction {
+export class PropertyAction extends BuilderAction {
     static id = "property";
 
     apply({ editingElement, params: { property, format } = {}, value }) {
         editingElement[property] = format ? format(value) : value;
     }
 }
-class SetMultipleFilesAction extends BuilderAction {
+export class SetMultipleFilesAction extends BuilderAction {
     static id = "setMultipleFiles";
     apply({ editingElement }) {
         editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;

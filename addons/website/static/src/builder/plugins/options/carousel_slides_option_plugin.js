@@ -35,7 +35,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
     }
 }
 
-class MakeSlideClickableAction extends BuilderAction {
+export class MakeSlideClickableAction extends BuilderAction {
     static id = "makeSlideClickable";
     setup() {
         this.preview = false;
@@ -51,7 +51,7 @@ class MakeSlideClickableAction extends BuilderAction {
  * Custom action to add, update, or remove a slide-link for clickable carousel
  * slides.
  */
-class SetSlideAnchorUrlAction extends BuilderAction {
+export class SetSlideAnchorUrlAction extends BuilderAction {
     static id = "setSlideAnchorUrl";
     setup() {
         this.preview = false;

@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-class SetItemTextAction extends BuilderAction {
+export class SetItemTextAction extends BuilderAction {
     static id = "setItemTextAction";
     static dependencies = ["edit_interaction"];
 

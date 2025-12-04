@@ -41,7 +41,7 @@ export class EcommCategoriesShowcaseOptionPlugin extends Plugin {
     }
 }
 
-class BlockCountAction extends BuilderAction {
+export class BlockCountAction extends BuilderAction {
     static id = "blockCount";
 
     getValue({ editingElement }) {
@@ -95,7 +95,7 @@ class BlockCountAction extends BuilderAction {
     }
 }
 
-class SpacingToggleAction extends BuilderAction {
+export class SpacingToggleAction extends BuilderAction {
     static id = "spacingToggle";
 
     isApplied({ editingElement }) {
