@@ -8,10 +8,8 @@ import {
     useInputDebouncedCommit,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import {
-    BuilderTextInputBase,
-    textInputBasePassthroughProps,
-} from "@html_builder/core/building_blocks/builder_text_input_base";
+import { BuilderTextInputBase } from "@html_builder/core/building_blocks/builder_text_input_base";
+import { textInputBasePassthroughProps } from "./builder_input_base";
 import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 
