@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 def handle_message(message_type: str, **kwargs: dict) -> dict:
     """General handler for messages received from the Odoo server either
-    via WebSocket or WebRTC.
+    via WebSocket or HTTP.
 
     :param message_type: The type of message received.
     :param kwargs: Additional parameters passed with the message.
