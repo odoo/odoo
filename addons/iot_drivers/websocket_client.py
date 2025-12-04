@@ -9,7 +9,6 @@ from threading import Thread
 
 from odoo.addons.iot_drivers.tools import communication, helpers, system
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
-from odoo.addons.iot_drivers.webrtc_client import webrtc_client
 
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
@@ -62,16 +61,9 @@ class WebsocketClient(Thread):
             if payload.get('iot_identifier') != IOT_IDENTIFIER:
                 continue
 
-            if message_type == 'webrtc_offer':
-                answer = webrtc_client.offer(payload['offer'])
-                send_to_controller({
-                    'iot_box_identifier': IOT_IDENTIFIER,
-                    'answer': answer,
-                }, method="webrtc_answer")
-            else:
-                result = communication.handle_message(message_type, **payload)
-                if result:
-                    send_to_controller(result)
+            result = communication.handle_message(message_type, **payload)
+            if result:
+                send_to_controller(result)
 
     def on_close(self, ws, close_status_code, close_msg):
         _logger.debug("websocket closed with status: %s", close_status_code)
