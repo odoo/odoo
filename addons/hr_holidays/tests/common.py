@@ -98,6 +98,16 @@ class TestHrHolidaysCommon(common.TransactionCase):
             self.assertEqual(allocation_data[employee][0][1]['remaining_leaves'],
                 value, f"Virtual leaves for date '{date}' are incorrect.")
 
+    def _take_leave(self, employee, leave_type, date_from, date_to):
+        leave = self.env['hr.leave'].create({
+            'name': 'Leave',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date_from,
+            'request_date_to': date_to,
+        })
+        return leave
+
     def _create_form_test_accrual_allocation(self, leave_type, date_from, employee, accrual_plan, date_to=None, creator_user=None):
         allocation = self.env['hr.leave.allocation']
         if creator_user:
@@ -109,6 +119,21 @@ class TestHrHolidaysCommon(common.TransactionCase):
             form.employee_id = employee
             form.holiday_status_id = leave_type
             form.date_from = date_from
+            if date_to:
+                form.date_to = date_to
+        return form.record
+
+    def _create_form_test_regular_allocation(self, leave_type, date_from, employee, number_of_days, date_to=None, creator_user=None):
+        allocation = self.env['hr.leave.allocation']
+        if creator_user:
+            allocation = allocation.with_user(creator_user)
+        with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
+            form.name = 'Test regular allocation'
+            form.allocation_type = 'regular'
+            form.employee_id = employee
+            form.holiday_status_id = leave_type
+            form.date_from = date_from
+            form.number_of_days_display = number_of_days
             if date_to:
                 form.date_to = date_to
         return form.record
