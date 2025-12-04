@@ -3,13 +3,13 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
-import {  NewsletterSubscribeCommonOptionBase } from "./newsletter_subscribe_common_option";
+import { NewsletterSubscribeCommonOption } from "./newsletter_subscribe_common_option";
 import { getElementsWithOption, filterExtends } from "@html_builder/utils/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class MailingListSubscribeOptionPlugin extends Plugin {
     static id = "mailingListSubscribeOption";
-    static dependencies = ["savePlugin"];
+    static dependencies = ["savePlugin", "builderOptions"];
     static shared = ["fetchMailingLists"];
     resources = {
         builder_actions: {
@@ -21,10 +21,8 @@ export class MailingListSubscribeOptionPlugin extends Plugin {
 
     setup() {
         // TODO DUAU: check how to manage that
-        this.newsletterOptions = filterExtends(
-            this.getResource("builder_options"),
-            NewsletterSubscribeCommonOptionBase,
-        );
+        const builderOptions = this.dependencies.builderOptions.getBuilderOptions();
+        this.newsletterOptions = filterExtends(builderOptions, NewsletterSubscribeCommonOption);
     }
 
     async onSnippetDropped({ snippetEl }) {
