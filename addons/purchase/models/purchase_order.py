@@ -12,7 +12,7 @@ from odoo import api, Command, fields, models, _
 from odoo.osv import expression
 from odoo.tools import format_amount, format_date, formatLang, groupby
 from odoo.tools.float_utils import float_is_zero
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 
 
 class PurchaseOrder(models.Model):
@@ -702,6 +702,8 @@ class PurchaseOrder(models.Model):
         """ This function returns the values to populate the custom dashboard in
             the purchase order views.
         """
+        if not self.env.user._is_internal():
+            raise AccessDenied()
         self.check_access_rights('read')
 
         result = {
