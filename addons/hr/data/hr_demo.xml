@@ -221,8 +221,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="private_phone">+1 555-555-5555</field>
             <field name="private_email">admin@yourcompany.example.com</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_3')])]"/>
-            <field name="date_version" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="contract_date_start" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date_version" eval="'2020-01-01'"/>
+            <field name="contract_date_start" eval="'2020-01-01'"/>
             <field name="contract_date_end" eval="False"/>
             <field name="contract_type_id" ref="contract_type_permanent"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
