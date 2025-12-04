@@ -1498,6 +1498,11 @@ class Picking(models.Model):
         """Whether the different transfers should be displayed on the pre action done wizards."""
         return len(self) > 1
 
+    def _should_ignore_backorders(self):
+        """ Checks if the `create_backorder` setting from the picking type should be ignored.
+        """
+        return bool(self.return_id)
+
     def _get_without_quantities_error_message(self):
         """ Returns the error message raised in validation if no quantities are reserved.
         The purpose of this method is to be overridden in case we want to adapt this message.
