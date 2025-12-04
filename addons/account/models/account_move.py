@@ -6798,15 +6798,31 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
-        if posted_moves := self.filtered(lambda m: m.state == 'posted' and m.is_move_sent):
+        if moves_to_export := self.filtered(lambda m: m._get_move_zip_export_docs()):
             return [
                 {
                     'key': 'download_all',
                     'description': _("Export ZIP"),
-                    **posted_moves.action_move_download_all(),
+                    **moves_to_export.action_move_download_all(),
                 },
             ]
         return []
+
+    def _get_move_zip_export_docs(self):
+        self.ensure_one()
+
+        if self.state != 'posted':
+            return []
+
+        if self.is_purchase_document(include_receipts=True):
+            attachment = self.message_main_attachment_id
+            return [{
+                'filename': attachment.name,
+                'filetype': attachment.mimetype,
+                'content': attachment.raw,
+            }] if attachment else []
+
+        return self._get_invoice_legal_documents_all()
 
     @staticmethod
     def _can_commit():
