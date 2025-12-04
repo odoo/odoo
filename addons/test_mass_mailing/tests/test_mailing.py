@@ -479,6 +479,17 @@ class TestMassMailing(TestMassMailCommon):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_w_blacklist_reset(self):
+        """Check that we automatically use the exclusion list for mailing lists and contacts."""
+        self.assertTrue(self.mailing_bl.use_exclusion_list)
+        for model in ('mailing.list', 'mailing.contact'):
+            mailing = self.mailing_bl.copy()
+            mailing.use_exclusion_list = False
+            mailing.mailing_model_id = self.env['ir.model']._get(model)
+            self.assertTrue(mailing.use_exclusion_list)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_w_blacklist_nomixin(self):
         """Test that blacklist is applied even if the target model doesn't inherit
         from mail.thread.blacklist."""

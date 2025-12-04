@@ -254,6 +254,9 @@ class CardCampaign(models.Model):
                 'default_card_campaign_id': self.id,
                 'default_mailing_model_id': self.env['ir.model']._get_id(self.res_model),
                 'default_body_arch': self._action_share_get_default_body(),
+                # even if excluded, consider communication to speaker might be important
+                # (main usage of marketing card)
+                'default_use_exclusion_list': False,
             },
             'views': [[False, 'form']],
             'target': 'current',

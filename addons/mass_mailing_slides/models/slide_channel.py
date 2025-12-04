@@ -18,6 +18,9 @@ class SlideChannel(models.Model):
             context=dict(
                 default_mailing_model_id=self.env.ref('base.model_res_partner').id,
                 default_mailing_domain=domain,
+                # even if excluded, consider attendee communication might be important
+                # (update on courses, etc)
+                default_use_exclusion_list=False,
             ),
         )
         return mass_mailing_action

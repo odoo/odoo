@@ -172,7 +172,8 @@ class MailingMailing(models.Model):
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
     use_exclusion_list = fields.Boolean(
-        'Use Exclusion List', default=True, copy=False,
+        'Use Exclusion List', default=True, copy=False, store=True,
+        readonly=False, compute='_compute_use_exclusion_list',
         help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
     # Mailing Filter
     mailing_filter_id = fields.Many2one(
@@ -446,6 +447,15 @@ class MailingMailing(models.Model):
                 mailing.mailing_domain = mailing.mailing_filter_id.mailing_domain
             else:
                 mailing.mailing_domain = repr(mailing._get_default_mailing_domain() or [])
+
+    @api.depends('mailing_model_id')
+    def _compute_use_exclusion_list(self):
+        """Always reset to using exclusion list for mailing lists and contacts."""
+        mailing_list_model_id = self.env['ir.model']._get('mailing.list')
+        mailing_contact_model_id = self.env['ir.model']._get('mailing.contact')
+        self.filtered(
+            lambda m: m.mailing_model_id in (mailing_list_model_id, mailing_contact_model_id)
+        ).use_exclusion_list = True
 
     @api.depends('mailing_model_name')
     def _compute_mailing_filter_id(self):

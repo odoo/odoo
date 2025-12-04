@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.MassMailingDomainSelector" t-inherit="web.DomainSelector">
+        <xpath expr="//CheckBox[@value='includeArchived']" position="replace">
+            <CheckBox
+                t-if="props.resModel !== 'mailing.contact'"
+                value="!props.useExclusionList"
+                disabled="props.readonly"
+                className="'form-switch'"
+                onChange.bind="(value) => props.updateUseExclusionList(!value)"
+            >
+                Include Blacklisted Recipients
+            </CheckBox>
+        </xpath>
+    </t>
+</templates>
