@@ -12,7 +12,6 @@ from . import interface
 from . import main
 from . import tools
 from . import websocket_client
-from . import webrtc_client
 from . import iot_handlers
 
 for interface_thread in main.interfaces.values():
