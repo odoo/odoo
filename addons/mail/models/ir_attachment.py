@@ -93,6 +93,7 @@ class IrAttachment(models.Model):
         res.extend(["checksum", "create_date", "file_size", "has_thumbnail", "mimetype", "name"])
         res.attr("raw_access_token", lambda a: a._get_raw_access_token())
         res.attr("res_name")
+        res.attr("res_model")
         res.one("thread", [], as_thread=True)
         res.attr("thumbnail_access_token", lambda a: a._get_thumbnail_token())
         res.extend(["type", "url"])
