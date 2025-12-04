@@ -16,11 +16,7 @@ from odoo.addons.iot_drivers.tools.system import IS_RPI, IOT_IDENTIFIER, IOT_SYS
 from odoo.addons.iot_drivers.main import iot_devices, unsupported_devices
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
-from odoo.addons.iot_drivers.server_logger import (
-    check_and_update_odoo_config_log_to_server_option,
-    get_odoo_config_log_to_server_option,
-    close_server_log_sender_handler,
-)
+from odoo.addons.iot_drivers.server_logger import server_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +106,8 @@ class IotBoxOwlHomePage(http.Controller):
     @route.iot_route('/iot_drivers/server_clear', type='http', cors='*')
     def clear_server_configuration(self):
         helpers.disconnect_from_server()
-        close_server_log_sender_handler()
+        if server_logger:
+            server_logger.close()
         return json.dumps({
             'status': 'success',
             'message': 'Successfully disconnected from server',
@@ -233,7 +230,6 @@ class IotBoxOwlHomePage(http.Controller):
             'drivers_list': drivers_list,
             'interfaces_list': interfaces_list,
             'server': helpers.get_odoo_server_url(),
-            'is_log_to_server_activated': get_odoo_config_log_to_server_option(),
             'root_logger_log_level': self._get_logger_effective_level_str(logging.getLogger()),
             'odoo_current_log_level': self._get_logger_effective_level_str(logging.getLogger('odoo')),
             'recommended_log_level': 'warning',
@@ -360,9 +356,6 @@ class IotBoxOwlHomePage(http.Controller):
                 'status': 'error',
                 'message': 'Invalid logger name',
             }
-
-        if name == 'log-to-server':
-            check_and_update_odoo_config_log_to_server_option(value)
 
         name = name[len(IOT_LOGGING_PREFIX):]
         if name == 'root':
