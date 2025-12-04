@@ -459,6 +459,7 @@ class MrpWorkorder(models.Model):
 
     def write(self, values):
         new_workcenter = False
+        workorders_with_new_wc = self.env['mrp.workorder']
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
         if 'workcenter_id' in values:
@@ -468,9 +469,7 @@ class MrpWorkorder(models.Model):
                     if workorder.state in ('progress', 'done', 'cancel'):
                         raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
                     workorder.leave_id.resource_id = new_workcenter.resource_id
-                    workorder.duration_expected = workorder._get_duration_expected()
-                    if workorder.date_start:
-                        workorder.date_finished = workorder.with_context(new_workcenter_id=new_workcenter)._calculate_date_finished()
+                    workorders_with_new_wc |= workorder
         if 'date_start' in values or 'date_finished' in values:
             for workorder in self:
                 date_start = fields.Datetime.to_datetime(values.get('date_start', workorder.date_start))
@@ -496,7 +495,12 @@ class MrpWorkorder(models.Model):
                         workorder.production_id.with_context(force_date=True).write({
                             'date_finished': fields.Datetime.to_datetime(values['date_finished'])
                         })
-        return super(MrpWorkorder, self).write(values)
+        res = super().write(values)
+        for workorder in workorders_with_new_wc:
+            workorder.duration_expected = workorder._get_duration_expected()
+            if workorder.date_start:
+                workorder.date_finished = workorder._calculate_date_finished()
+        return res
 
     @api.model_create_multi
     def create(self, values):
