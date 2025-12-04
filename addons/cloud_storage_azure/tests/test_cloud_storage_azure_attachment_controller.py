@@ -68,6 +68,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                         attachment, "raw"
                                     ),
                                     "res_name": False,
+                                    "res_model": attachment.res_model,
                                     "thread": False,
                                     "voice": False,
                                     "type": "cloud_storage",
