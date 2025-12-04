@@ -446,3 +446,59 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertEqual(po.order_line.product_uom_id, self.env.ref('uom.product_uom_pack_6'))
         self.assertEqual(po.order_line.product_qty, 2.5)
         self.assertEqual(po.order_line.price_unit, 5)
+
+    def test_fifo_multiple_simultaneous_purchases_and_sales(self):
+        """ Make sure that when validating the receipt of multiple PO at the same time, the move value is
+            correctly set in the following sale orders deliveries.
+        """
+        fifo_categ = self.env['product.category'].create({
+            'name': 'Fifo',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'fifo',
+        })
+        product = self.env['product.product'].create({
+            'name': 'Fifou',
+            'is_storable': True,
+            'categ_id': fifo_categ.id,
+        })
+
+        po1, po2, po3 = self.env['purchase.order'].create([{
+            'partner_id': self.vendor.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1,
+                'price_unit': price_unit,
+            })],
+        } for price_unit in [10, 20, 30]])
+        (po1 | po2 | po3).button_confirm()
+
+        receipts = (po1 | po2 | po3).picking_ids
+        self.assertEqual(len(receipts), 3)
+        receipts.button_validate()
+
+        self.assertRecordValues(receipts.move_ids, [
+            {'purchase_line_id': po1.order_line.id, 'value': 10.0},
+            {'purchase_line_id': po2.order_line.id, 'value': 20.0},
+            {'purchase_line_id': po3.order_line.id, 'value': 30.0},
+        ])
+
+        so1, so2 = self.env['sale.order'].create([{
+            'partner_id': self.customer.id,
+            'warehouse_id': self.warehouse.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'price_unit': 50,
+            })]
+        } for _ in range(2)])
+        (so1 | so2).action_confirm()
+
+        deliveries = (so1 | so2).picking_ids
+        self.assertEqual(len(deliveries), 2)
+        deliveries.button_validate()
+
+        self.assertRecordValues(deliveries.move_ids, [
+            {'sale_line_id': so1.order_line.id, 'value': 10.0},
+            {'sale_line_id': so2.order_line.id, 'value': 20.0},
+        ])
