@@ -9,7 +9,8 @@ import {
     useInputBuilderComponent,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { BuilderTextInputBase, textInputBasePassthroughProps } from "./builder_text_input_base";
+import { BuilderTextInputBase } from "./builder_text_input_base";
+import { textInputBasePassthroughProps } from "./builder_input_base";
 
 const { DateTime } = luxon;
 
