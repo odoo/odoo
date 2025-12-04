@@ -101,7 +101,7 @@
                 t-att-required="field.required || field.modelRequired || None"
                 t-attf-value="#{field.value}"
                 t-att-data-fill-with="field.fillWith"
-                t-att-placeholder="field.placeholder"
+                t-att-placeholder="field.placeholder || ''"
                 t-att-id="field.id"
             />
         </t>
@@ -129,7 +129,7 @@
                 class="form-control s_website_form_input"
                 t-att-name="field.name"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-placeholder="field.placeholder"
+                t-att-placeholder="field.placeholder || ''"
                 t-att-id="field.id"
                 t-att-rows="field.rows || 3"
                 t-esc="field.value"
@@ -156,7 +156,7 @@
                 step="1"
                 t-att-required="field.required || field.modelRequired || None"
                 t-attf-value="#{field.value}"
-                t-att-placeholder="field.placeholder"
+                t-att-placeholder="field.placeholder || ''"
                 t-att-id="field.id"
             />
         </t>
@@ -172,7 +172,7 @@
                 step="any"
                 t-att-required="field.required || field.modelRequired || None"
                 t-attf-value="#{field.value}"
-                t-att-placeholder="field.placeholder"
+                t-att-placeholder="field.placeholder || ''"
                 t-att-id="field.id"
             />
         </t>
@@ -188,7 +188,7 @@
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
                         t-attf-value="#{field.value}"
-                        t-att-placeholder="field.placeholder"
+                        t-att-placeholder="field.placeholder || ''"
                         t-att-id="field.id"
                 />
                 <div class="input-group-text o_input_group_date_icon"><i class="fa fa-calendar"></i></div>
@@ -206,7 +206,7 @@
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
                         t-attf-value="#{field.value}"
-                        t-att-placeholder="field.placeholder"
+                        t-att-placeholder="field.placeholder || ''"
                         t-att-id="field.id"
                 />
                 <div class="input-group-text o_input_group_date_icon"><i class="fa fa-calendar"></i></div>
