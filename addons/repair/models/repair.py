@@ -193,6 +193,8 @@ class RepairOrder(models.Model):
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
     picking_type_visible = fields.Boolean(compute='_compute_picking_type_visible')
+    display_repair_end = fields.Boolean(compute='_compute_repair_visibility')
+    confirm_at_repair_end = fields.Boolean(compute='_compute_repair_visibility')
 
     def _compute_picking_type_visible(self):
         repair_type_by_company = dict(self.env['stock.picking.type']._read_group([
@@ -333,6 +335,12 @@ class RepairOrder(models.Model):
                 repair.state in ('confirmed', 'under_repair') and
                 any(not move.picked and move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in repair.move_ids)
             )
+
+    @api.depends('has_uncomplete_moves', 'state')
+    def _compute_repair_visibility(self):
+        for repair in self:
+            repair.display_repair_end = repair.state == 'under_repair' and not repair.has_uncomplete_moves
+            repair.confirm_at_repair_end = repair.state == 'under_repair' and repair.has_uncomplete_moves
 
     def _search_date_category(self, operator, value):
         if operator != 'in':

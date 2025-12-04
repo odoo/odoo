@@ -188,11 +188,11 @@
                     <field name="show_lock" invisible="1"/>
                     <field name="show_produce" invisible="1"/>
                     <field name="show_produce_all" invisible="1"/>
-                    <button name="button_mark_done" invisible="not move_raw_ids or not show_produce" string="Produce" type="object" class="oe_highlight" data-hotkey="g"/>
-                    <button name="button_mark_done" invisible="not move_raw_ids or not show_produce_all" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"/>
-                    <button name="button_mark_done" invisible="move_raw_ids or not show_produce" string="Produce" type="object" class="oe_highlight" data-hotkey="g"
+                    <button name="button_mark_done" invisible="not (display_produce_all and show_produce)" string="Produce" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button name="button_mark_done" invisible="not (display_produce_all and show_produce_all)" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button name="button_mark_done" invisible="not (confirm_at_produce and show_produce)" string="Produce" type="object" class="oe_highlight" data-hotkey="g"
                             confirm="There are no components to consume. Are you still sure you want to continue?"/>
-                    <button name="button_mark_done" invisible="move_raw_ids or not show_produce_all" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"
+                    <button name="button_mark_done" invisible="not (confirm_at_produce and show_produce_all)" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"
                             confirm="There are no components to consume. Are you still sure you want to continue?"/>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
                     <button name="button_plan" invisible="state not in ('confirmed', 'progress', 'to_close') or is_planned" type="object" string="Plan" class="oe_highlight" data-hotkey="z"/>

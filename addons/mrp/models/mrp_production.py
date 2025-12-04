@@ -302,6 +302,8 @@ class MrpProduction(models.Model):
         search='_search_date_category', readonly=True
     )
     serial_numbers_count = fields.Integer("Count of serial numbers", compute='_compute_serial_numbers_count')
+    display_produce_all = fields.Boolean(compute='_compute_produce_visibility')
+    confirm_at_produce = fields.Boolean(compute='_compute_produce_visibility')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -868,6 +870,12 @@ class MrpProduction(models.Model):
             qty_none_or_all = production.qty_producing in (0, production.product_qty)
             production.show_produce_all = state_ok and qty_none_or_all
             production.show_produce = state_ok and not qty_none_or_all
+
+    @api.depends('move_raw_ids')
+    def _compute_produce_visibility(self):
+        for production in self:
+            production.display_produce_all = production.move_raw_ids
+            production.confirm_at_produce = not production.move_raw_ids
 
     def _search_is_delayed(self, operator, value):
         if operator not in ('in', 'not in'):
