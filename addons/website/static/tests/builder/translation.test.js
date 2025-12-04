@@ -1,6 +1,6 @@
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
-import { insertText, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -20,6 +20,7 @@ import {
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { uniqueId } from "@web/core/utils/functions";
 import { TranslationPlugin } from "@website/builder/plugins/translation/translation_plugin";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -267,6 +268,36 @@ test("translate select", async () => {
     expect(queryAllTexts(":iframe [data-initial-translation-value='Option 2']")).toEqual([
         "Option fr 2",
     ]);
+});
+
+describe("paste in translate", () => {
+    test("paste html in a translated span should not add blocks", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+        });
+        setSelection({ anchorNode: queryOne(":iframe b") });
+        pasteHtml(getEditor(), `<h1><u>hello</u></h1>`);
+        expect(":iframe b u").toHaveText("hello");
+        expect(":iframe h1").toHaveCount(0);
+    });
+
+    test("paste html in translate mode should not add img", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+        });
+        setSelection({ anchorNode: queryOne(":iframe b") });
+        pasteHtml(getEditor(), `<img src="${dummyBase64Img}"/>`);
+        expect(":iframe img").toHaveCount(0);
+    });
+
+    test("paste html in translate mode should add o_translate_inline on `a` element", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+        });
+        setSelection({ anchorNode: queryOne(":iframe b") });
+        pasteHtml(getEditor(), `<a href="/">link</a>`);
+        expect(":iframe b a").toHaveClass("o_translate_inline");
+    });
 });
 
 test("test that powerbox should not open in translate mode", async () => {

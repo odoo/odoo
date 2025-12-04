@@ -28,7 +28,7 @@ from odoo.http import SessionExpiredException, request
 from odoo.tools import OrderedSet, escape_psql, py_to_js_locale
 from odoo.tools import html_escape as escape
 from odoo.tools.json import scriptsafe as json
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -231,6 +231,10 @@ class Website(Home):
     @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True, readonly=True)
     def website_languages(self, **kwargs):
         return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in request.website.language_ids]
+
+    @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", readonly=True)
+    def translated_elements(self, **kwargs):
+        return list(TRANSLATED_ELEMENTS)
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
