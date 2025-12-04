@@ -11,7 +11,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_repr, cleanup_xml_node, float_is_zero
+from odoo.tools import float_compare, float_repr, float_round, cleanup_xml_node, float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -422,7 +422,7 @@ class AccountMove(models.Model):
             return None
         tax = tax_data['tax']
         return {
-            'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
+            'tax_amount_field': -23.0 if tax.amount in (-11.5, -4.6) else tax.amount,
             'tax_amount_type_field': tax.amount_type,
             'skip': tax_data['is_reverse_charge'] or self._l10n_it_edi_is_neg_split_payment(tax_data),
         }
@@ -443,7 +443,7 @@ class AccountMove(models.Model):
             tax_exigibility_code = None
 
         return {
-            'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
+            'tax_amount_field': -23.0 if tax.amount in (-11.5, -4.6) else tax.amount,
             'l10n_it_exempt_reason': tax.l10n_it_exempt_reason,
             'l10n_it_law_reference': tax.l10n_it_law_reference,
             'tax_exigibility_code': tax_exigibility_code,
@@ -518,8 +518,9 @@ class AccountMove(models.Model):
             base_line['discount_amount_before_dispatching'] = gross_price_subtotal_before_discount - price_subtotal
 
             # The tax "23% Ritenuta Agenti e Rappresentanti" is not supported because it's supposed to be a tax of 23% based on
-            # 50% of the base amount. It's currently implemented as a -11.5% tax. So on 1000, it gives an amount of -115.
-            # We need to fix the base amount from 1000 to 500.0.
+            # 50% or 20% of the base amount. It's currently implemented as a -11.5% or -4.6% tax respectively. So on 1000, it
+            # gives an amount of -115(for 50%) or -46(for 20%).
+            # We need to fix the base amount from 1000 to 500.0 or 200.0.
             for tax_data in tax_details['taxes_data']:
                 tax = tax_data['tax']
                 tax_data['_tax_amount'] = tax.amount
@@ -527,6 +528,10 @@ class AccountMove(models.Model):
                     tax_data['_tax_amount'] = -23.0
                     tax_data['raw_base_amount'] *= 0.5
                     tax_data['raw_base_amount_currency'] *= 0.5
+                elif tax.amount == -4.6:
+                    tax_data['_tax_amount'] = -23.0
+                    tax_data['raw_base_amount'] *= 0.2
+                    tax_data['raw_base_amount_currency'] *= 0.2
 
             if not is_downpayment:
                 # Negative lines linked to down payment should stay negative
@@ -989,12 +994,6 @@ class AccountMove(models.Model):
         """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
             and matches the percentage found in the XML for the company. """
 
-        # The tax "23% Ritenuta Agenti e Rappresentanti" is not supported because it's supposed to be a tax of 23% based on
-        # 50% of the base amount. It's currently implemented as a -11.5% tax. So on 1000, it gives an amount of -115.
-        # We need to fix the base amount from 1000 to 500.0.
-        if percentage == -23.0:
-            percentage = -11.5
-
         domain = [
             *self.env['account.tax']._check_company_domain(company),
             ('amount_type', '=', 'percent'),
@@ -1289,6 +1288,19 @@ class AccountMove(models.Model):
             percentage = get_float(element, './/AliquotaIVA')
             if price_unit := get_float(element, './/PrezzoUnitario'):
                 move_line.price_unit = price_unit
+
+            # This tax is supposed to be 23% but applied to only a portion (50% or 20%) of the base amount
+            # It's implemented as -11.5% (for 50% base) or -4.6% (for 20% base) instead of -23%
+            # We need to calculate the actual effective percentage based on the ImponibileImporto/PrezzoTotale ratio
+            # Example:
+            # - If base is 50% of total: -23% * 0.5 = -11.5% (actual tax rate)
+            # - If base is 20% of total: -23% * 0.2 = -4.6% (actual tax rate)
+            if percentage == -23.0 and (prezzo_totale := get_float(element, './/PrezzoTotale')):
+                body_tree = element.xpath('//FatturaElettronicaBody')[0]
+                for riepilogo in body_tree.xpath('.//DatiRiepilogo'):
+                    if get_float(riepilogo, './/AliquotaIVA') == percentage and (imponibile := get_float(riepilogo, './/ImponibileImporto')):
+                        percentage = -float_round(23.0 * (imponibile / prezzo_totale), 1)
+                        break
         elif amount := get_float(element, './/Importo'):
             percentage = get_float(element, './/Aliquota')
             if not percentage and (tax_amount := get_float(element, './/Imposta')):
