@@ -614,6 +614,9 @@ class Store:
                         and env.ref("base.group_user") in bus_record.group_public_id.all_implied_ids
                     )
                 )
+            ) or (
+                isinstance(bus_record, env.registry["res.groups"])
+                and env.ref("base.group_user") in bus_record.all_implied_ids
             )
 
         def target_guest(self):

@@ -291,6 +291,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": operator.id,
                     "is_admin": False,
                     "is_livechat_manager": False,
+                    "livechat_expertise_ids": [],
                     "notification_type": "email",
                     "partner_id": operator.partner_id.id,
                     "share": False,

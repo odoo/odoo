@@ -25,11 +25,7 @@ const discussChannelPatch = {
         });
         this.isDisplayInSidebar = fields.Attr(false, {
             compute() {
-                return (
-                    this.displayToSelf ||
-                    this.isLocallyPinned ||
-                    this.sub_channel_ids.some((thread) => thread.channel?.isDisplayInSidebar)
-                );
+                return this._computeIsDisplayInSidebar();
             },
         });
         this.subChannelsInSidebar = fields.Many("mail.thread", {
@@ -37,6 +33,13 @@ const discussChannelPatch = {
                 return this.sub_channel_ids?.filter((thread) => thread.channel?.isDisplayInSidebar);
             },
         });
+    },
+    _computeIsDisplayInSidebar() {
+        return (
+            this.displayToSelf ||
+            this.isLocallyPinned ||
+            this.sub_channel_ids.some((thread) => thread.channel?.isDisplayInSidebar)
+        );
     },
     delete() {
         this.store.env.services.bus_service.deleteChannel(this.busChannel);

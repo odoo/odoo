@@ -13,10 +13,14 @@ export class DiscussApp extends Record {
     thread = fields.One("mail.thread", {
         /** @this {import("models").DiscussApp} */
         onUpdate() {
-            this.lastActiveId = this.store["mail.thread"].localIdToActiveId(this.thread?.localId);
+            this._threadOnUpdate();
         },
     });
     hasRestoredThread = false;
+
+    _threadOnUpdate() {
+        this.lastActiveId = this.store["mail.thread"].localIdToActiveId(this.thread?.localId);
+    }
 }
 
 DiscussApp.register();

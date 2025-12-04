@@ -42,7 +42,9 @@ patch(Thread.prototype, {
     },
     get autoOpenChatWindowOnNewMessage() {
         return (
-            (this.channel?.channel_type === "livechat" && !this.store.chatHub.compact) ||
+            (this.channel?.channel_type === "livechat" &&
+                !this.store.chatHub.compact &&
+                this.self_member_id) ||
             super.autoOpenChatWindowOnNewMessage
         );
     },

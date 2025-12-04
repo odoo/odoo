@@ -4,11 +4,13 @@ declare module "models" {
     export interface DiscussCategory extends DiscussCategoryClass {}
 
     export interface DiscussChannel {
+        _computeIsDisplayInSidebar: () => boolean;
         allowedToLeaveChannelTypes: Readonly<string[]>;
         allowedToUnpinChannelTypes: Readonly<string[]>;
         canLeave: Readonly<boolean>;
         canUnpin: Readonly<boolean>;
         discuss_category_id: DiscussCategory;
+        displayToSelf: boolean;
         isDisplayInSidebar: boolean;
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
