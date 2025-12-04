@@ -251,6 +251,47 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
         self.assertEqual(self.manager.total_overtime, 8, 'Should have 8 hours of overtime (there is one hour of lunch)')
 
+    def test_worked_leave_type_overtime(self):
+        """ Test that an attendance during a worked time off doesn't count as overtime. """
+        calendar = self.env['resource.calendar'].create({'name': 'Calendar'})
+        self.env['hr.version'].create({
+            'date_version': datetime(2021, 1, 1),
+            'contract_date_start': datetime(2021, 1, 1),
+            'contract_date_end': datetime(2021, 12, 31),
+            'name': 'Contract 2021',
+            'resource_calendar_id': calendar.id,
+            'wage': 5000.0,
+            'employee_id': self.employee.id,
+        })
+
+        leave_type_worked = self.env['hr.leave.type'].create({
+            'name': 'Worked Leave Type',
+            'company_id': self.company.id,
+            'requires_allocation': False,
+            'overtime_deductible': False,
+            'time_type': 'other',
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'no overtime',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type_worked.id,
+            'request_date_from': datetime(2021, 1, 5),
+            'request_date_to': datetime(2021, 1, 5),
+        })
+        leave._action_validate()
+
+        att = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 5, 8),
+            'check_out': datetime(2021, 1, 5, 16),
+        })
+
+        self.assertEqual(att.overtime_hours, 0)
+        self.assertEqual(att.worked_hours, 7)
+
+        self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
+
     def test_overtime_approval_after_refusal(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
         self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 16))
