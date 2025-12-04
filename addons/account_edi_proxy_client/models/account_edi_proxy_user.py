@@ -111,13 +111,16 @@ class AccountEdiProxyClientUser(models.Model):
             raise AccountEdiProxyError("block_demo_mode", "Can't access the proxy in demo mode")
 
         try:
-            response = requests.post(
+            res = requests.post(
                 url,
                 json=payload,
                 timeout=TIMEOUT,
                 headers={'content-type': 'application/json'},
-                auth=OdooEdiProxyAuth(user=self)).json()
-        except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
+                auth=OdooEdiProxyAuth(user=self))
+            res.raise_for_status()
+            response = res.json()
+        except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+            _logger.warning('Connection error <%(url)s>: %(error)s', {'url': url, 'error': e})
             raise AccountEdiProxyError('connection_error',
                 _('The url that this service requested returned an error. The url it tried to contact was %s', url))
 
