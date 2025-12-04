@@ -2,6 +2,7 @@
 
 from . import gamification_challenge
 from . import gamification_karma_tracking
+from . import ir_http
 from . import slide_slide_partner  # decorated m2m, import before
 from . import slide_slide
 from . import slide_question
