@@ -30,9 +30,6 @@ export class ImageSize extends BaseOptionComponent {
                 imageCacheSize.set(src, size);
             }
         }
-        if (size === undefined) {
-            return;
-        }
         return `${(size / 1024).toFixed(1)} kB`;
     }
 }
