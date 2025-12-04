@@ -413,25 +413,25 @@ test("change background size", async () => {
         '[data-action-id="setBackgroundSize"][data-action-param="height"] > input'
     );
 
-    expect(heightInput).toHaveValue("");
+    expect(heightInput).toHaveValue(NaN);
 
     await contains(heightInput).edit("0");
     await animationFrame();
-    expect(heightInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(heightInput).toHaveValue(1, { message: "minimum value is 1" });
     expect(section).toHaveStyle("background-size: 100px 1px");
 
     await contains(heightInput).edit("");
-    expect(heightInput).toHaveValue("");
+    expect(heightInput).toHaveValue(NaN);
     expect(section).toHaveStyle("background-size: 100px");
 
     await contains(widthInput).edit("");
-    expect(widthInput).toHaveValue("");
-    expect(heightInput).toHaveValue("", { message: "height input should stay empty" });
+    expect(widthInput).toHaveValue(NaN, { message: "height input should stay empty" });
+    expect(heightInput).toHaveValue(NaN, { message: "height input should stay empty" });
     expect(section).toHaveStyle("background-size: auto");
 
     await contains(widthInput).edit("0");
     await animationFrame();
-    expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(widthInput).toHaveValue(1, { message: "minimum value is 1" });
     expect(section).toHaveStyle("background-size: 1px");
 });
 
