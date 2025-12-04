@@ -2835,6 +2835,10 @@ export class PosStore extends WithLazyGetterTrap {
     get showSaveOrderButton() {
         return this.config.raw.trusted_config_ids.length > 0;
     }
+
+    canEditPayment(order) {
+        return order.nb_print === 0;
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
