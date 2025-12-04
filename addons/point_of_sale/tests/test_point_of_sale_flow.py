@@ -1971,3 +1971,32 @@ class TestPointOfSaleFlow(CommonPosTest):
             and l.partner_id == self.partner
         ).balance
         self.assertEqual(order_balance + payment_balance, 0)
+
+    def test_draft_orders_products_loading(self):
+        """ Test that products are correctly loaded when limited product loading is enabled and there are draft orders. """
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', 1)
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        self.env['pos.order'].create([{
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': product.id,
+                    'qty': 1,
+                    'price_subtotal': 1,
+                    'price_subtotal_incl': 1,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 1,
+            'amount_paid': 1,
+            'amount_return': 0.0,
+            'state': 'draft',
+        } for product in (self.product_a, self.product_b)])
+
+        data = current_session.with_context(pos_limited_loading=True).load_data([])
+        loaded_product_ids = [p['id'] for p in data['product.product']]
+        self.assertIn(self.product_a.id, loaded_product_ids)
+        self.assertIn(self.product_b.id, loaded_product_ids)
