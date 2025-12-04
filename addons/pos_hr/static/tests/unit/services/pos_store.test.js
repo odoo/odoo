@@ -48,3 +48,14 @@ test("addLineToCurrentOrder", async () => {
     });
     expect(result.order_id.employee_id.id).toBe(2);
 });
+test("canEditPayment", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const admin = store.models["hr.employee"].get(2);
+    store.setCashier(admin);
+    expect(store.canEditPayment(order)).toBe(true);
+    const emp = store.models["hr.employee"].get(3);
+    store.setCashier(emp);
+    expect(store.canEditPayment(order)).toBe(false);
+});

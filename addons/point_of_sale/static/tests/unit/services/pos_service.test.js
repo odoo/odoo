@@ -447,6 +447,14 @@ describe("pos_store.js", () => {
         expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
     });
 
+    test("canEditPayment", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        expect(store.canEditPayment(order)).toBe(true);
+        order.nb_print = 1;
+        expect(store.canEditPayment(order)).toBe(false);
+    });
+
     describe("cacheReceiptLogo", () => {
         function getCompanyLogo256Url(companyId) {
             const fullUrl = imageUrl("res.company", companyId, "logo", {

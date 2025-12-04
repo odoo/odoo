@@ -143,4 +143,7 @@ patch(PosStore.prototype, {
         }
         return await super.allowProductCreation();
     },
+    canEditPayment(order) {
+        return super.canEditPayment(order) && (!this.config.module_pos_hr || this.employeeIsAdmin);
+    },
 });
