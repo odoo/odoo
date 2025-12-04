@@ -66,6 +66,11 @@ class AutoCompleteController(http.Controller):
                         standard_data[field_standard] = [state.id, state.name]
                 else:
                     standard_data[field_standard] = google_field['long_name']
+        city_name = standard_data.get('city')
+        country = standard_data.get('country')
+        country_id = country[0] if country else False
+        if city := self.env['res.partner']._get_res_city_by_name(city_name, country_id):
+            standard_data['city_id'] = [city.id, city.name]
         return standard_data
 
     def _guess_number_from_input(self, source_input, standard_address):

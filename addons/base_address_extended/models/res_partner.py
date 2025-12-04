@@ -54,3 +54,13 @@ class ResPartner(models.Model):
             self.city = False
             self.zip = False
             self.state_id = False
+
+    @api.model
+    def _get_res_city_by_name(self, name, country_id):
+        if not name or not country_id:
+            return self.env['res.city']
+
+        return self.env['res.city'].search([
+            ('name', '=ilike', name),
+            ('country_id', '=', country_id),
+        ], limit=1)

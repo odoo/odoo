@@ -9,13 +9,18 @@ export class AddressForm extends Interaction {
     static selectorHas = "input[name='street'][data-autocomplete-enabled='1']";
     dynamicContent = {
         "input[name='street']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
+        "input[name='street_name']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
         ".js_autocomplete_result": { "t-on-click.withTarget": this.onClickAutocompleteResult },
     };
 
     setup() {
         this.streetAndNumberInput = this.el.querySelector("input[name='street']");
+        this.streetNameInput = this.el.querySelector("input[name='street_name']");
+        this.streetNumberInput = this.el.querySelector("input[name='street_number']");
+        this.street2Input = this.el.querySelector("input[name='street2']");
         this.cityInput = this.el.querySelector("input[name='city']");
         this.zipInput = this.el.querySelector("input[name='zip']");
+        this.citySelect = this.el.querySelector("select[name='city_id']");
         this.countrySelect = this.el.querySelector("select[name='country_id']");
         this.stateSelect = this.el.querySelector("select[name='state_id']");
         this.keepLast = new KeepLast();
@@ -64,9 +69,16 @@ export class AddressForm extends Interaction {
         if (address.formatted_street_number) {
             this.streetAndNumberInput.value = address.formatted_street_number;
         }
+        if (this.streetNameInput && address.street) {
+            this.streetNameInput.value = address.street;
+        }
+        if (this.streetNumberInput && address.number) {
+            this.streetNumberInput.value = address.number;
+        }
         // Text fields, empty if no value in order to avoid the user missing old data.
         this.zipInput.value = address.zip || "";
         this.cityInput.value = address.city || "";
+        this.street2Input.value = address.street2 || "";
 
         // Selects based on odoo ids
         if (address.country) {
@@ -80,6 +92,15 @@ export class AddressForm extends Interaction {
                 this.stateSelect.value = address.state[0];
                 observer.disconnect();
             }).observe(this.stateSelect, {
+                childList: true, // Trigger only if the options change
+            });
+        }
+        if (this.citySelect && address.city_id) {
+            // Waits for the citySelect to update before setting the city.
+            new MutationObserver((entries, observer) => {
+                this.citySelect.value = address.city_id[0];
+                observer.disconnect();
+            }).observe(this.citySelect, {
                 childList: true, // Trigger only if the options change
             });
         }
