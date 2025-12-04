@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.floor_editor.edit_decor_properties">
+
+        <t t-if="element.shape === 'line' || element.isOnlyBorder">
+            <div class="fs-4 fw-bold mt-3 mb-2">Color</div>
+            <div class="d-flex flex-wrap gap-2 pt-1 pb-1">
+                <t t-foreach="getColors()" t-as="color" t-key="color.key">
+                    <button class="rounded-circle o_fp_color_item"
+                            t-att-class="{'selected': element.color === color.key}"
+                            t-attf-style="background-color: {{color.value}}"
+                            t-on-click='()=>this.updateElement({ color: color.key })'/>
+                </t>
+            </div>
+
+            <div class="fs-4 fw-bold d-flex justify-content-between mt-3 mb-2 ">
+                <span>Thickness</span>
+                <span class="fs-5 fw-normal" t-out="element.thickness"/>
+            </div>
+            <input min="1" max="100" class="w-100" type="range"
+                   t-att-value="element.thickness" t-on-input="(e)=>this.updateElementValueFromInput('thickness',e)"
+                   t-on-change="(e)=>this.commitElementValueFromInput('thickness',e)"/>
+
+            <div class="fs-4 fw-bold mt-3 mb-2">Style</div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary"
+                        t-att-class="{'active': element.style === 'solid' and !element.rounded }"
+                        t-on-click="() => this.updateElement({style:'solid',rounded: false})" title="Solid">
+                    <div style="width:32px;height:3px" class="my-2 bg-black"/>
+                </button>
+                <button class="btn btn-outline-secondary" t-att-class="{'active': element.style === 'dashed'}"
+                        t-on-click="() => this.updateElement({'style':'dashed'})" title="Dashed">
+                    <div style="width:32px; border-top:3px dashed " class="my-2 border-black"/>
+                </button>
+                <button class="btn btn-outline-secondary" t-att-class="{'active': element.style === 'dotted'}"
+                        t-on-click="() => this.updateElement({'style':'dotted'})" title="Dotted">
+                    <div style="width:32px; border-top:4px dotted " class="my-2 border-black"/>
+                </button>
+                <button class="btn btn-outline-secondary" t-if="!element.isOnlyBorder and element.type !='double' "
+                        t-att-class="{'active': element.style === 'solid' and element.rounded}"
+                        t-on-click="() => this.updateElement({style:'solid', rounded: true})" title="Rounded">
+                    <div style="width:32px;height:4px;border-radius:999rem" class="my-2 bg-black"/>
+                </button>
+            </div>
+            <t t-set="innerText" t-value="false"/>
+            <t t-call="pos.floor_screen_edit_decor_properties.layers"/>
+        </t>
+
+        <t t-elif="element.shape === 'text'">
+            <button class="btn btn-outline-secondary fs-4 w-100 text-center mt-4" t-if="!this.props.isTextContentEditable" t-on-click="()=>this.editTextOnly()">Edit text</button>
+            <t t-set="innerText" t-value="false"/>
+            <t t-call="pos.floor_screen_edit_decor_properties.text"/>
+            <t t-call="pos.floor_screen_edit_decor_properties.layers"/>
+        </t>
+        <t t-elif="element.shape === 'image'">
+            <t t-set="innerText" t-value="false"/>
+            <t t-call="pos.floor_screen_edit_decor_properties.layers"/>
+        </t>
+        <t t-else="">
+            <div class="fs-4 fw-bold mt-3 mb-2">Border</div>
+            <div class="d-flex flex-wrap gap-2 pt-1">
+                <button class="rounded-circle o_fp_color_item no-color"
+                        t-att-class="{'selected': !element.borderColor}"
+                        t-on-click='()=>this.selectBorderColor(null)'/>
+                <t t-foreach="getColors()" t-as="color" t-key="color.key">
+                    <button class="rounded-circle o_fp_color_item"
+                            t-att-class="{'selected': element.borderColor === color.key}"
+                            t-attf-style="background-color: {{color.value}}"
+                            t-on-click='()=>this.selectBorderColor(color.key)'/>
+                </t>
+            </div>
+
+            <t t-if="element.borderColor">
+                <div class="fs-5 d-flex justify-content-between mt-3 mb-2 ">
+                    <span>Thickness</span>
+                    <span  t-out="element.borderWidth||0"/>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <input min="2" class="w-100" max="100" type="range"
+                           t-att-value="element.borderWidth||0"
+                           t-on-input="(e)=>this.updateElementValueFromInput('borderWidth',e)"
+                           t-on-change="(e)=>this.commitElementValueFromInput('borderWidth',e)"/>
+                </div>
+                <div class="fs-5 mt-3 mb-2">Style</div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary"
+                            t-att-class="{'active': !element.borderStyle ||  element.borderStyle === 'solid'  }"
+                            t-on-click="() => this.updateElement({borderStyle:'solid'})">
+                        <div style="width:32px;height:3px" class="my-2 bg-black"/>
+                    </button>
+                    <button class="btn btn-outline-secondary" t-att-class="{'active': element.borderStyle === 'dashed'}"
+                            t-on-click="() => this.updateElement({borderStyle:'dashed'})">
+                        <div style="width:32px; border-top:3px dashed " class="my-2 border-black"/>
+                    </button>
+                    <button class="btn btn-outline-secondary" t-att-class="{'active': element.borderStyle === 'dotted'}"
+                            t-on-click="() => this.updateElement({borderStyle:'dotted'})">
+                        <div style="width:32px; border-top:3px dotted " class="my-2 border-black"/>
+                    </button>
+
+                </div>
+                <t t-if="element.shape === 'square' || element.shape === 'rect'">
+                     <div class="fs-5 d-flex justify-content-between mt-3 mb-2 ">
+                        <span>Corner rounding</span>
+                        <span t-out="element.roundedCorner||0"/>
+                    </div>
+                    <input min="0" class="w-100" max="100" type="range" t-att-value="element.roundedCorner||0"
+                           t-on-input="(e)=>this.updateElementValueFromInput('roundedCorner',e)"
+                           t-on-change="(e)=>this.commitElementValueFromInput('roundedCorner',e)"/>
+                </t>
+                <div class="border-bottom border-color mt-3"/>
+            </t>
+
+            <div class="fs-4 fw-bold mt-3 mb-2">Background</div>
+            <div class="d-flex flex-wrap gap-2 pt-1">
+                <button class="rounded-circle o_fp_color_item no-color" t-if="element.borderColor"
+                        t-att-class="{'selected': !element.color}"
+                        t-on-click='()=>this.updateElement({ color: null})'/>
+
+                <t t-foreach="getColors()" t-as="color" t-key="color.key">
+                    <button class="rounded-circle o_fp_color_item"
+                            t-att-class="{'selected': element.color === color.key}"
+                            t-attf-style="background-color: {{color.value}}"
+                            t-on-click='()=>this.updateElement({ color: color.key})'/>
+                </t>
+            </div>
+            <t t-if="element.color">
+                <div class="fs-5 d-flex justify-content-between mt-3 mb-2 ">
+                    <span>Transparency</span>
+                    <span t-out="getElementTransparency()"/>
+                </div>
+                <input min="10" max="100" class="w-100" type="range"
+                       t-att-value="getElementTransparency()"
+                       t-on-input="(e)=>this.updateElementValueFromInput('transparency',e)"
+                       t-on-change="(e)=>this.commitElementValueFromInput('transparency',e)"/>
+            </t>
+            <div class="border-bottom border-color mt-3"/>
+            <t t-if="element.text">
+                <div class="fs-4 fw-bold mt-3 mb-2">Text</div>
+            </t>
+            <t t-else="">
+                <div class="mt-3"/>
+            </t>
+            <button class="btn btn-outline-secondary fs-4 w-100 text-center" t-on-click="()=>this.addText('text')">Edit text</button>
+            <t t-if="element.text">
+                <t t-set="innerText" t-value="true"/>
+                <t t-call="pos.floor_screen_edit_decor_properties.text"/>
+            </t>
+            <div class="border-bottom border-color mt-3"/>
+            <t t-set="innerText" t-value="false"/>
+            <t t-call="pos.floor_screen_edit_decor_properties.layers"/>
+
+        </t>
+    </t>
+    <t t-name="pos.floor_screen_edit_decor_properties.layers">
+        <t t-if="innerText">
+            <t t-set="headerClass" t-value="'fs-5 mt-3'"/>
+        </t>
+        <t t-else="">
+            <t t-set="headerClass" t-value="'fs-4 mt-3 fw-bold'"/>
+        </t>
+        <div t-attf-class="{{ headerClass }} mb-2">Layers</div>
+        <div class="d-flex flex-wrap gap-2">
+             <button class="btn btn-outline-secondary align-items-center"
+                     t-on-click="() => this.moveLayer('bottom')" title="Send to back">
+                    <i class="fa fa-arrow-down" style="border-bottom: 2px solid; padding-bottom:1px; transform: scale(0.8);"/>
+             </button>
+             <button class="btn btn-outline-secondary"
+                     t-on-click="() => this.moveLayer('down')" title="Send backward">
+                 <i class="fa fa-arrow-down"/>
+             </button>
+             <button class="btn btn-outline-secondary"
+                     t-on-click="() => this.moveLayer('up')" title="Bring forward">
+                 <i class="fa fa-arrow-up"/>
+             </button>
+            <button class="btn btn-outline-secondary d-flex align-items-center"
+                     t-on-click="() => this.moveLayer('top')" title="Send to front">
+                    <i class="fa fa-arrow-up" style="border-top: 2px solid; padding-top:1px; transform: scale(0.8);"/>
+             </button>
+        </div>
+    </t>
+
+    <t t-name="pos.floor_screen_edit_decor_properties.text">
+        <t t-if="innerText">
+            <t t-set="headerClass" t-value="'fs-5 mt-3'"/>
+        </t>
+        <t t-else="">
+            <t t-set="headerClass" t-value="'fs-4 fw-bold mt-3'"/>
+        </t>
+
+        <div t-attf-class="{{ headerClass }} mb-2">Color</div>
+        <div class="d-flex flex-wrap gap-2 pt-1">
+            <t t-foreach="getColors()" t-as="color" t-key="color.key">
+                <button class="rounded-circle o_fp_color_item"
+                        t-att-class="{'selected': element.textcolor === color.key}"
+                        t-attf-style="background-color: {{color.value}}"
+                        t-on-click='()=>this.updateElement({ textcolor: color.key})'/>
+            </t>
+        </div>
+        <div t-attf-class="{{ headerClass }} mb-2 d-flex justify-content-between">
+            <span>Size</span>
+            <span class="fs-5 fw-normal" t-out="formatFontSize(element.fontSize * element.scale)"/>
+        </div>
+        <input min="1" max="100" class="w-100" type="range"
+               t-att-value="formatFontSize(element.fontSize * element.scale)"
+               t-on-input="(e)=>this.updateElementValueFromInput('fontSize',e) "
+               t-on-change="(e)=>this.commitElementValueFromInput('fontSize',e)"/>
+        <div t-attf-class=" {{ headerClass }} mb-2 ">Style</div>
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-outline-secondary"
+                    t-att-class="{'active': element.fontWeight  === 'bold'  }"
+                    t-on-click="() => this.toggleElementValue('fontWeight','bold')" title="Bold">
+                <i class="fa fa-bold fa-fw"/>
+            </button>
+            <button class="btn btn-outline-secondary"
+                    t-att-class="{'active': element.fontStyle  === 'italic'  }"
+                    t-on-click="() => this.toggleElementValue('fontStyle','italic')" title="Italic">
+                <i class="fa fa-italic fa-fw"/>
+            </button>
+            <button class="btn btn-outline-secondary"
+                    t-att-class="{'active': element.textDecoration  === 'underline'  }"
+                    t-on-click="() => this.toggleElementValue('textDecoration', 'underline')" title="Underline">
+                <i class="fa fa-underline fa-fw"/>
+            </button>
+        </div>
+
+        <div t-attf-class="{{ headerClass }} mb-2">Alignment</div>
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-outline-secondary"
+                    t-att-class="{'active': element.textAlign  === 'left'  }"
+                    t-on-click="() => this.updateElement({textAlign:'left'})">
+                <i class="fa fa-align-left fa-fw"/>
+            </button>
+            <button class="btn btn-outline-secondary"
+                    t-att-class="{'active': element.textAlign  === 'center'  }"
+                    t-on-click="() => this.updateElement({textAlign:'center'})">
+                <i class="fa fa-align-center fa-fw"/>
+            </button>
+            <button class="btn btn-outline-secondary"
+                    t-att-class="{'active': element.textAlign  === 'right'  }"
+                    t-on-click="() => this.updateElement({textAlign:'right'})">
+                <i class="fa fa-align-right fa-fw"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

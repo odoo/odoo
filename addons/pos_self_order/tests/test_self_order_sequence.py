@@ -19,15 +19,13 @@ class TestSelfOrderSequence(SelfOrderCommonTest):
             'table_number': 101,
             'floor_id': main_floor.id,
             'seats': 4,
-            'position_h': 150,
-            'position_v': 100,
+            'floor_plan_layout': {'top': 100, 'left': 150, 'width': 100, 'height': 100, 'color': 'green'},
         })
         self.env['restaurant.table'].create({
             'table_number': 103,
             'floor_id': main_floor.id,
             'seats': 4,
-            'position_h': 100,
-            'position_v': 100,
+            'floor_plan_layout': {'top': 100, 'left': 100, 'width': 100, 'height': 100, 'color': 'green'},
         })
         self.pos_config.write({
             'self_ordering_mode': 'mobile',

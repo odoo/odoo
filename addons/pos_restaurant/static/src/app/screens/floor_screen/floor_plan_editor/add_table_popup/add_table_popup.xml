@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template">
+    <t t-name="pos_restaurant.floor_editor.add_table_popup">
+        <Dialog bodyClass="'o_fp_table_format_popover'" size="'md'" footer="false">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break flex-grow-1">Select Table Shape</h4>
+                <button type="button" t-on-click="this.props.close" class="btn-close" aria-label="Close" tabindex="-1"/>
+            </t>
+            <div class="row g-3">
+                <div class="col-6">
+                    <button class="w-100 btn btn-outline-secondary d-flex flex-column align-items-center p-3"
+                            t-on-click="()=>this.addTable('square')">
+                        <div class="icon-table icon-table-square mb-3"/>
+                        <span class="fs-4">Square</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button class="w-100 btn btn-outline-secondary p-3 d-flex flex-column align-items-center p-3"
+                            t-on-click="()=>this.addTable('rect')">
+                        <div class="icon-table icon-table-rect mb-3"/>
+                        <span class="fs-4">Rectangular</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button class=" w-100  btn btn-outline-secondary p-3 d-flex flex-column align-items-center p-3"
+                            t-on-click="()=>this.addTable('circle')">
+                        <div class="icon-table icon-table-round mb-3"/>
+                        <span class="fs-4">Round</span>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button class=" w-100 btn btn-outline-secondary p-3 d-flex flex-column align-items-center p-3"
+                            t-on-click="()=>this.addTable('oval')">
+                        <div class="icon-table icon-table-oval mb-3"/>
+                        <span class="fs-4">Oval</span>
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

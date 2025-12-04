@@ -77,39 +77,32 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'table_number': 5,
             'floor_id': cls.main_floor.id,
             'seats': 4,
-            'position_h': 100,
-            'position_v': 100,
+            'floor_plan_layout': {'top': 100, 'left': 100, 'width': 100, 'height': 100, 'color': 'green'},
         }])
         cls.env['restaurant.table'].create([{
             'table_number': 4,
             'floor_id': cls.main_floor.id,
             'seats': 4,
-            'shape': 'square',
-            'position_h': 350,
-            'position_v': 100,
+            'floor_plan_layout': {'top': 100, 'left': 350, 'width': 100, 'height': 100, 'color': 'green'},
         },
         {
             'table_number': 2,
             'floor_id': cls.main_floor.id,
             'seats': 4,
-            'position_h': 250,
-            'position_v': 100,
+            'floor_plan_layout': {'top': 100, 'left': 250, 'width': 100, 'height': 100, 'color': 'green'},
         },
         {
 
             'table_number': 1,
             'floor_id': cls.second_floor.id,
             'seats': 4,
-            'shape': 'square',
-            'position_h': 100,
-            'position_v': 150,
+            'floor_plan_layout': {'top': 150, 'left': 100, 'width': 100, 'height': 100, 'color': 'green'},
         },
         {
             'table_number': 3,
             'floor_id': cls.second_floor.id,
             'seats': 4,
-            'position_h': 100,
-            'position_v': 250,
+            'floor_plan_layout': {'top': 250, 'left': 100, 'width': 100, 'height': 100, 'color': 'green'},
         }])
 
         cls.env['ir.default'].set(
@@ -477,10 +470,6 @@ class TestFrontend(TestFrontendCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_course_restaurant_preparation_tour', login="pos_user")
-
-    def test_create_floor_tour(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_create_floor_tour', login="pos_admin")
 
     def test_combo_preparation_receipt(self):
         setup_product_combo_items(self)

@@ -224,9 +224,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'table_number': 1,
             'floor_id': self.pos_main_floor.id,
             'seats': 4,
-            'shape': 'square',
-            'position_h': 150,
-            'position_v': 100,
+            'floor_plan_layout': {'top': 100, 'left': 150, 'width': 100, 'height': 100, 'color': 'green'},
         })
 
         # we need a default tax fixed at 15% to all product because in the test prices are based on this tax.

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template">
+    <t t-name="pos_restaurant.floor_editor.navbar">
+        <div class="o_fp_edit_navbar d-flex align-items-center justify-content-between gap-1 p-2 bg-view">
+            <div class="btn btn-lg lh-lg p-0">
+                <span class="fs-3 ms-2 d-none d-sm-inline">Floor plan editor</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-end gap-2 ">
+                <div class="me-3 d-flex">
+                    <button class="btn btn-lg lh-lg btn px-2" t-on-click="()=>this.floorPlanStore.undo()"
+                            t-att-class="{'disabled': !this.floorPlanStore.canUndo()}">
+                        <i class="fa fa-fw fa-undo"/>
+                    </button>
+                    <button class="btn btn-lg lh-lg btn px-2" t-on-click="()=>this.floorPlanStore.redo()"
+                            t-att-class="{'disabled': !this.floorPlanStore.canRedo()}">
+                        <i class="fa fa-fw fa-repeat"/>
+                    </button>
+                </div>
+                <button class="btn btn-outline-secondary btn-lg lh-lg" t-on-click="onDiscardChanges"
+                        title="Discard all changes">
+                    <span class="d-none d-sm-inline">Discard</span>
+                    <i class="fa fa-times fa-fw d-sm-none"/>
+                </button>
+                <button class="btn btn-primary btn-lg lh-lg" t-on-click="onSave" title="Save">
+                    <span class="d-none d-sm-inline">Save</span>
+                    <i class="fa fa-cloud-upload fa-fw d-sm-none"/>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

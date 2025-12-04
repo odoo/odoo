@@ -10,20 +10,14 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name="active" invisible="1"/>
-                        <field name="floor_background_image" widget='image' class="oe_avatar" options='{"preview_image": "floor_background_image"}'/>
                         <group col="4">
                             <field name="name" />
                             <field name="pos_config_ids" widget="many2many_tags"/>
-                            <field name="background_color" groups="base.group_no_one" />
                         </group>
                         <field name="table_ids">
                             <list string='Tables' editable="bottom">
                                 <field name="table_number" />
                                 <field name="seats" />
-                                <field name="shape" />
-                                <field name="height" optional="hide" />
-                                <field name="width" optional="hide" />
-                                <field name="color" widget="color" optional="hide" />
                                 <field name="active" optional="hide" />
                             </list>
                         </field>
@@ -95,14 +89,6 @@
                         <group col="2">
                             <field name="table_number" />
                             <field name="seats" />
-                        </group>
-                        <group col="4" string="Appearance" groups="base.group_no_one">
-                            <field name="shape" />
-                            <field name="color" />
-                            <field name="position_h" />
-                            <field name="position_v" />
-                            <field name="width" />
-                            <field name="height" />
                         </group>
                     </sheet>
                 </form>

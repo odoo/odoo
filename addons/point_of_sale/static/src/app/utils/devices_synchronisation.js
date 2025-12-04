@@ -63,8 +63,7 @@ export default class DevicesSynchronisation {
      */
     async collect(data) {
         const { static_records, session_id, device_identifier } = data;
-        const isSameDevice =
-            odoo.pos_session_id != session_id || device_identifier == this.pos.device.identifier;
+        const isSameDevice = isSamePosDevice(session_id, device_identifier, this.pos);
 
         logPosMessage(
             "Synchronisation",
@@ -231,4 +230,8 @@ export default class DevicesSynchronisation {
 
         return { domain: domainByModel, recordIds: recordIdsByModel };
     }
+}
+
+export function isSamePosDevice(session_id, device_identifier, posStore) {
+    return odoo.pos_session_id != session_id || device_identifier == posStore.device.identifier;
 }

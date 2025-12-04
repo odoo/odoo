@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.floor_editor.edit_table_properties">
+        <div class="fs-4 fw-bold mb-2 mt-3">Table Number</div>
+        <input type="number" class="form-control form-control-lg" t-att-value="table.tableNumber" inputmode="numeric" pattern="[0-9]+" t-on-input="updateTableNumber"/>
+        <div class="fs-4 fw-bold mb-2 mt-3">Number of Seats</div>
+        <div class="d-flex align-items-center">
+            <button class="button btn btn-secondary py-2" t-att-class="{'disabled': table.seats === 0}" t-on-click="()=>this.incrNumberOfSeats(-1)"><i class="fa fa-minus fa-fw"/></button>
+            <span class="fs-4 mx-3 text-center" style="font-variant-numeric:tabular-nums;min-width: 2ch;" t-esc="table.seats"/>
+            <button class="button btn btn-secondary py-2" t-on-click="()=>this.incrNumberOfSeats(1)" ><i class="fa fa-plus fa-fw"/></button>
+        </div>
+
+        <div class="fs-4 fw-bold mb-2 mt-3">Color</div>
+        <div class="d-flex flex-wrap gap-2 pt-1">
+            <t t-foreach="getTableColors()" t-as="color" t-key="color.key">
+                <button class="rounded-circle o_fp_color_item"
+                        t-att-class="{'selected': defaultTableColor() === color.key}"
+                        t-attf-style="background-color: {{color.value}}"
+                        t-on-click='()=>this.selectTableColor(color.key)'/>
+            </t>
+        </div>
+        <div class="fs-4 fw-bold mb-2 mt-3">Shape</div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" t-att-class="{'active': table.shape === 'square'}"
+                    t-on-click="() => this.changeTableShape('square')">
+                <svg width="32" height="32" viewBox="0 0 32 32">
+                    <rect x="6" y="6" width="20" height="20" rx="3" ry="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </button>
+            <button class="btn btn-outline-secondary" t-att-class="{'active': table.shape === 'rect'}"
+                    t-on-click="() => this.changeTableShape('rect')">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <rect x="2" y="8" width="28" height="16" rx="3" ry="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+            </button>
+            <button class="btn btn-outline-secondary" t-att-class="{'active': table.shape === 'circle'}"
+                    t-on-click="() => this.changeTableShape('circle')">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+             </button>
+            <button class="btn btn-outline-secondary" t-att-class="{'active': table.shape === 'oval'}"
+                    t-on-click="() => this.changeTableShape('oval')">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <rect x="2" y="8" width="28" height="16" rx="8" ry="8" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+             </button>
+        </div>
+        <t t-if="table.shape === 'square' || table.shape === 'rect'">
+            <div class="fs-4 fw-bold d-flex justify-content-between mt-3 mb-2 ">
+                <span>Corner rounding</span>
+                <span class="fs-5 fw-normal" t-out="table.roundedCorner||0"/>
+            </div>
+            <input min="0" class="w-100" t-att-max="100" type="range"
+                   t-att-value="table.roundedCorner||0" t-on-input="updateRoundedCornerValue" t-on-change="commitRoundedCornerValue"/>
+        </t>
+    </t>
+</templates>
