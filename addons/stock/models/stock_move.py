@@ -2284,15 +2284,15 @@ Please change the quantity done or the rounding precision of your unit of measur
                 continue
 
             # find a quant similar to the move line on which we can reserve
-            ml_quants = self.env['stock.quant']._get_reserve_quantity(self.product_id,
-                                                                      ml.location_id,
-                                                                      qty,
-                                                                      lot_id=ml.lot_id,
-                                                                      package_id=ml.package_id,
-                                                                      owner_id=ml.owner_id,
-                                                                      strict=True)
-            avail_qty = sum(q[1] for q in ml_quants)
-            # the quant did not add the quantity reserved on this specific move line
+            ml_quants = self.env['stock.quant']
+            if not ml.location_id.should_bypass_reservation() and product.is_storable:
+                ml_quants = self.env['stock.quant']._get_reserve_quantity(
+                    self.product_id, ml.location_id, qty, lot_id=ml.lot_id,
+                    package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                avail_qty = sum(q[1] for q in ml_quants)
+            else:
+                avail_qty = qty
+            # the quant did not add the quantity reserved on this specific move lines
             consumed_quant |= {q[0].id for q in ml_quants}
             if float_compare(avail_qty, qty, precision_rounding=self.product_uom.rounding) <= 0:
                 qty -= avail_qty  # decrease the target quantity for the next move lines
